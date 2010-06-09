@@ -1,0 +1,133 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-02-23 17:32+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: admin.py:13 admin.py:23
+msgid "Basic"
+msgstr "Grundlagen"
+
+#: models.py:9
+msgid "Account Number"
+msgstr "Kontonummer"
+
+#: models.py:10
+msgid "Account Title"
+msgstr "Kontobezeichnung"
+
+#: models.py:11
+msgid "Account Type"
+msgstr "Kontotyp"
+
+#: models.py:12
+msgid "Value at start of Business Year"
+msgstr "Wert zum Jahresbeginn"
+
+#: models.py:16
+msgid "Account"
+msgstr "Konto"
+
+#: models.py:17
+msgid "Accounts"
+msgstr "Konten"
+
+#: models.py:20
+msgid "From Account"
+msgstr "Vom Konto (Soll)"
+
+#: models.py:21
+msgid "To Account"
+msgstr "Zu Konto (Haben)"
+
+#: models.py:22
+msgid "Amount"
+msgstr "Betrag"
+
+#: models.py:23
+msgid "Description"
+msgstr "Beschreibung"
+
+#: models.py:25
+msgid "Booking at"
+msgstr "Buchung am"
+
+#: models.py:26
+msgid "Reference Staff"
+msgstr "Zuständiger Mitarbeiter"
+
+#: models.py:27
+msgid "Created at"
+msgstr "Erstellt am"
+
+#: models.py:28
+msgid "Last modified"
+msgstr "Zuletzt verändert"
+
+#: models.py:29
+msgid "Last modified by"
+msgstr "Zuletzt verändert von"
+
+#: models.py:33
+msgid "Booking"
+msgstr "Buchung"
+
+#: models.py:34
+msgid "Bookings"
+msgstr "Buchungen"
+
+#: models.py:37
+msgid "Title"
+msgstr "Titel"
+
+#: models.py:38
+msgid "All Earnings"
+msgstr "Alle Einnahmen"
+
+#: models.py:39
+msgid "All Spendings"
+msgstr "Alle Ausgaben"
+
+#: models.py:40
+msgid "All Activas"
+msgstr "Alle Aktiven"
+
+#: models.py:41
+msgid "All Passivas"
+msgstr "Alle Passiven"
+
+#: models.py:50
+msgid "CRP Calculation Unit"
+msgstr "Geschäftsjahr/quartal"
+
+#: models.py:51
+msgid "CRP Calculation Units"
+msgstr "Geschäftsjahre/quartale"
+
+#: const/accountTypeChoices.py:6
+msgid "Earnings"
+msgstr "Einnahmen"
+
+#: const/accountTypeChoices.py:7
+msgid "Spendings"
+msgstr "Ausgaben"
+
+#: const/accountTypeChoices.py:8
+msgid "Passiv"
+msgstr "Passiva"
+
+#: const/accountTypeChoices.py:9
+msgid "Activ"
+msgstr "Aktiva"
