@@ -221,6 +221,21 @@ class Invoice(SalesContract):
       app_label = "crm"
       verbose_name = _('Invoice')
       verbose_name_plural = _('Invoices') 
+
+class Unit(models.Model):
+   description = models.CharField(verbose_name = _("Description"), max_length=100)
+   shortName = models.CharField(verbose_name = _("Displayed Name After Quantity"), max_length=100)
+   isAFractionOf = models.ForeignKey('self', blank=True, null=True, verbose_name = _("Is A Fraction Of"))
+   fractionFactorToNextHigherUnit = models.IntegerField(verbose_name = _("Factor Between This And Next Higher Unit"), blank=True, null=True)
+
+   def __unicode__(self):
+      return  self.shortName
+
+   class Meta:
+      app_label = "crm"
+      verbose_name = _('Unit')
+      verbose_name_plural = _('Units') 
+      
 	
 class Product(models.Model):
    description = models.TextField(verbose_name = _("Description"), blank=True) 
@@ -229,6 +244,7 @@ class Product(models.Model):
    dateofcreation = models.DateTimeField(verbose_name = _("Created at"))
    lastmodification = models.DateTimeField(verbose_name = _("Last modified"), blank=True, null=True)
    lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, verbose_name = _("Last modified by"))
+   unit = models.ForeignKey(Unit, blank=False)
 
    def getPrice(self, date):
       price = Price.objects.get(product=self.id)

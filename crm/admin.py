@@ -231,11 +231,11 @@ class ProductPrice(admin.TabularInline):
    allow_add = True
 
 class OptionProduct(admin.ModelAdmin):
-   list_display = ('productNumber', 'title',)
+   list_display = ('productNumber', 'title','unit')
    list_display_links = ('productNumber',)
    fieldsets = (
       (_('Basics'), {
-         'fields': ('productNumber', 'title', 'description')
+         'fields': ('productNumber', 'title', 'description', 'unit')
       }),)
    inlines = [ProductPrice]
    
@@ -290,6 +290,13 @@ class OptionShipmentPartner(admin.ModelAdmin):
    fieldsets = (('', {'fields': ('name',)}),)
    inlines = [ContactPostalAddress, ContactPhoneAddress, ContactEmailAddress]
    allow_add = True
+   
+   
+class OptionUnit(admin.ModelAdmin):
+   list_display = ('id', 'description', 'shortName', 'isAFractionOf', 'fractionFactorToNextHigherUnit')
+   fieldsets = (('', {'fields': ('description', 'shortName', 'isAFractionOf', 'fractionFactorToNextHigherUnit')}),)
+   allow_add = True
+
 
  
 admin.site.register(Customer, OptionCustomer)
@@ -297,6 +304,7 @@ admin.site.register(Distributor, OptionDistributor)
 admin.site.register(ShipmentPartner, OptionShipmentPartner)
 admin.site.register(Quote, OptionQuote)
 admin.site.register(Invoice, OptionInvoice)
+admin.site.register(Unit, OptionUnit)
 admin.site.register(Contract, OptionContract)
 admin.site.register(PurchaseOrder, OptionPurchaseOrder)
 admin.site.register(Product, OptionProduct)
