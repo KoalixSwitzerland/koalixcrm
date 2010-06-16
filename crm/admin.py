@@ -124,7 +124,24 @@ class InlineQuote(admin.TabularInline):
    extra = 1
    fieldsets = (
       (_('Basics'), {
-         'fields': ('contract', 'customer', 'validuntil', 'state')
+         'fields': ('description', 'contract', 'customer', 'validuntil', 'state')
+      }),
+      (_('Advanced (not editable)'), {
+         'classes': ('collapse',),
+         'fields': ('lastPricingDate', 'lastCalculatedPrice')
+      }),
+   )
+   allow_add = True
+   
+   inlines = [SalesContractInlinePosition, SalesContractPostalAddress, SalesContractPhoneAddress, SalesContractEmailAddress]
+   
+class InlineInvoice(admin.TabularInline):
+   model = Invoice
+   classes = ('collapse-open')
+   extra = 1
+   fieldsets = (
+      (_('Basics'), {
+         'fields': ('description', 'contract', 'customer', 'payableuntil', 'state')
       }),
       (_('Advanced (not editable)'), {
          'classes': ('collapse',),
@@ -136,15 +153,15 @@ class InlineQuote(admin.TabularInline):
    inlines = [SalesContractInlinePosition, SalesContractPostalAddress, SalesContractPhoneAddress, SalesContractEmailAddress]
 
 class OptionContract(admin.ModelAdmin):
-   list_display = ('id', 'description', 'staff')
-   list_display_links = ('id','description')
+   list_display = ('id', 'description', 'defaultcustomer', 'defaultdistributor', 'staff')
+   list_display_links = ('id','description', 'defaultcustomer', 'defaultdistributor')
    fieldsets = (
       (_('Basics'), {
-         'fields': ('description',)
+         'fields': ('description', 'defaultcustomer', 'defaultdistributor')
       }),
    )
    save_as = True
-   inlines = [ContractPostalAddress, ContractPhoneAddress, ContractEmailAddress, InlineQuote]
+   inlines = [ContractPostalAddress, ContractPhoneAddress, ContractEmailAddress, InlineQuote, InlineInvoice]
 
 
 class PurchaseOrderInlinePosition(admin.TabularInline):
@@ -160,11 +177,11 @@ class PurchaseOrderInlinePosition(admin.TabularInline):
 
 
 class OptionInvoice(admin.ModelAdmin):
-   list_display = ('contract', 'id', 'customer', 'payableuntil', 'state', 'staff', 'lastmodification', 'lastmodifiedby')
+   list_display = ('id', 'description', 'contract', 'customer', 'payableuntil', 'state', 'staff', 'lastmodification', 'lastmodifiedby')
    list_display_links = ('contract','customer')
    fieldsets = (
       (_('Basics'), {
-         'fields': ('contract', 'customer', 'payableuntil', 'state')
+         'fields': ('contract', 'description', 'customer', 'payableuntil', 'state')
       }),
       (_('Advanced (not editable)'), {
          'classes': ('collapse',),
@@ -182,11 +199,11 @@ class OptionInvoice(admin.ModelAdmin):
 
 
 class OptionQuote(admin.ModelAdmin):
-   list_display = ('contract', 'id', 'customer', 'validuntil', 'state', 'staff', 'lastmodification', 'lastmodifiedby')
+   list_display = ('id', 'description', 'contract', 'customer', 'validuntil', 'state', 'staff', 'lastmodification', 'lastmodifiedby')
    list_display_links = ('contract','customer')
    fieldsets = (
       (_('Basics'), {
-         'fields': ('contract', 'customer', 'validuntil', 'state')
+         'fields': ('contract', 'description', 'customer', 'validuntil', 'state')
       }),
       (_('Advanced (not editable)'), {
          'classes': ('collapse',),

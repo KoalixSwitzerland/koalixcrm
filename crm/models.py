@@ -87,6 +87,8 @@ class ShipmentPartner(Contact):
 class Contract(models.Model):
    staff = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True, verbose_name = _("Staff"), related_name="db_relcontractstaff")
    description = models.TextField(verbose_name = _("Description"))
+   defaultcustomer = models.ForeignKey(Customer, verbose_name = _("Default Customer"), null=True, blank=True)
+   defaultdistributor = models.ForeignKey(Distributor, verbose_name = _("Default Distributor"), null=True, blank=True)
    dateofcreation = models.DateTimeField(verbose_name = _("Created at"))
    lastmodification = models.DateTimeField(verbose_name = _("Last modified"), blank=True, null=True)
    lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, verbose_name = _("Last modified by"), related_name="db_contractlstmodified")
@@ -121,6 +123,7 @@ class SalesContract(models.Model):
    contract = models.ForeignKey(Contract)
    externalReference = models.CharField(verbose_name = _("External Reference"), max_length=100, blank=True)
    discount = models.DecimalField(max_digits=5, decimal_places=2, verbose_name = _("Discount"), blank=True, null=True)
+   description = models.CharField(verbose_name=_("Description"), max_length=100, blank=True)
    lastPricingDate = models.DateField(verbose_name = _("Last Pricing Date"), blank=True, null=True)
    lastCalculatedPrice = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Price"), blank=True, null=True)
    customer = models.ForeignKey(Customer, verbose_name = _("Customer"))
