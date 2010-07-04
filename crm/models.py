@@ -10,6 +10,9 @@ from middleware import threadlocals
 from datetime import date
 from django.utils.translation import ugettext as _
 from decimal import Decimal
+import libxslt
+import libxml2
+from django.core import serializers
 import copy
 
 class PostalAddress(models.Model):
@@ -206,6 +209,18 @@ class Quote(SalesContract):
          return
       except Quote.DoesNotExist:  
          return
+
+   def createPDF(self):
+     XMLSerializer = serializers.get_serializer("xml")
+     xml_serializer = XMLSerializer()
+     out = open("/tmp/quote_"+str(self.id)+".xml", "w")
+     objectsToSerialize = list(Quote.objects.filter(id=self.id)) + list(SalesContract.objects.filter(id=self.id)) + list(Contact.objects.filter(id=self.customer.id))
+     for address in list(PostalAddressForContact.objects.filter()):
+         objectsToSerialize += list(PostalAddress.objects.filter(id=address.id))
+     for position in list(SalesContractPosition.objects.filter(contract=self.id)):
+         objectsToSerialize += list(Position.objects.filter(id=position.id))
+     xml_serializer.serialize(objectsToSerialize, stream=out)
+
 
    class Meta:
       app_label = "crm"

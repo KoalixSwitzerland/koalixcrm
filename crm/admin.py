@@ -222,8 +222,13 @@ class OptionQuote(admin.ModelAdmin):
       for obj in queryset:
          obj.createInvoice()
    createInvoice.short_description = _("Create Invoice")
+         
+   def createPDF(sefl, request, queryset):
+      for obj in queryset:
+         obj.createPDF()
+   createPDF.short_description = _("Create PDF")
 
-   actions = ['recalculatePrices', 'createInvoice']
+   actions = ['recalculatePrices', 'createInvoice', 'createPDF']
 
 class OptionPurchaseOrder(admin.ModelAdmin):
    list_display = ('distributor', 'state',)
