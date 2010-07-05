@@ -14,6 +14,7 @@ import libxslt
 import libxml2
 from django.core import serializers
 import copy
+from django.contrib import auth
 
 class PostalAddress(models.Model):
    prefix = models.CharField(max_length=1, choices=POSTALADDRESSPREFIX, verbose_name = _("Prefix"), blank=True)
@@ -215,11 +216,21 @@ class Quote(SalesContract):
      xml_serializer = XMLSerializer()
      out = open("/tmp/quote_"+str(self.id)+".xml", "w")
      objectsToSerialize = list(Quote.objects.filter(id=self.id)) + list(SalesContract.objects.filter(id=self.id)) + list(Contact.objects.filter(id=self.customer.id))
-     for address in list(PostalAddressForContact.objects.filter()):
+     objectsToSerialize += list(auth.models.User.objects.filter(id=self.staff.id))
+     objectsToSerialize += list(auth.models.User.objects.filter(id=self.lastmodifiedby.id))
+     for address in list(PostalAddressForContact.objects.filter(person=self.customer.id)):
          objectsToSerialize += list(PostalAddress.objects.filter(id=address.id))
      for position in list(SalesContractPosition.objects.filter(contract=self.id)):
          objectsToSerialize += list(Position.objects.filter(id=position.id))
-     xml_serializer.serialize(objectsToSerialize, stream=out)
+     xml_serializer.serialize(objectsToSerialize, stream=out, indent=3)
+     styledoc = libxml2.parseFile("/var/www/koalixcrm/quote.xsl")
+     style = libxslt.parseStylesheetDoc(styledoc)
+     doc = libxml2.parseFile("/tmp/quote_"+str(self.id)+".xml")
+     result = style.applyStylesheet(doc, None)
+     style.saveResultToFilename("/tmp/quote_"+str(self.id)+"_fop.xml", result, 0)
+     style.freeStylesheet()
+     doc.freeDoc()
+     result.freeDoc()
 
 
    class Meta:
