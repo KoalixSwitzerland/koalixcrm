@@ -173,13 +173,6 @@ class Quote(SalesContract):
    state = models.CharField(max_length=1, choices=QUOTESTATES)
 
 # TODO:   def createSalesOrderPDF():
-# TODO:   def createQuotePDF():
-#      objectsToGenerateXML = list(Quote.objects.filter(id=self.id)) + list(Position.objects.filter(contract=self.id))
-#      destinationFile = "/home/aaron/quote.xml"
-#      file = open(destinationFile, 'w')
-#      data = serializers.serialize('xml', objectsToGenerateXML)
-#      file.write(data)
-#      file.close()
 
    def createInvoice(self):
       invoice = Invoice()
@@ -253,7 +246,7 @@ class Invoice(SalesContract):
 
 class Unit(models.Model):
    description = models.CharField(verbose_name = _("Description"), max_length=100)
-   shortName = models.CharField(verbose_name = _("Displayed Name After Quantity"), max_length=100)
+   shortName = models.CharField(verbose_name = _("Displayed Name After Quantity In The Position"), max_length=100)
    isAFractionOf = models.ForeignKey('self', blank=True, null=True, verbose_name = _("Is A Fraction Of"))
    fractionFactorToNextHigherUnit = models.IntegerField(verbose_name = _("Factor Between This And Next Higher Unit"), blank=True, null=True)
 
@@ -293,6 +286,7 @@ class Price(models.Model):
    price = models.DecimalField(max_digits=17, decimal_places=2, verbose_name = _("Price"))
    validfrom = models.DateField(verbose_name = _("Valid from"))
    validuntil = models.DateField(verbose_name = _("Valid until"))
+   factorPricePerProductUnit = models.DecimalField(verbose_name = _(""))
 
    class Meta:
       app_label = "crm"
