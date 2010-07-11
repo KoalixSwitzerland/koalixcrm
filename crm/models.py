@@ -70,6 +70,10 @@ class Customer(Contact):
    def __unicode__(self):
       return str(self.id) + ' ' + self.name
 
+class CustomerGroup(models.Model)
+   customer = models.ManyToManyField(Customer)
+   name = models.CharField(max_length=300)
+
 class Distributor(Contact):
    class Meta:
       app_label = "crm"
@@ -124,7 +128,7 @@ class PurchaseOrder(models.Model):
       return str(self.contract.id) + " " + str(self.id)
 
 class SalesContract(models.Model):
-   contract = models.ForeignKey(Contract)
+   contract = models.ForeignKey(Contract, verbose_name=_('Contract'))
    externalReference = models.CharField(verbose_name = _("External Reference"), max_length=100, blank=True)
    discount = models.DecimalField(max_digits=5, decimal_places=2, verbose_name = _("Discount"), blank=True, null=True)
    description = models.CharField(verbose_name=_("Description"), max_length=100, blank=True)
@@ -170,7 +174,7 @@ class SalesContract(models.Model):
 
 class Quote(SalesContract):
    validuntil = models.DateField(verbose_name = _("Valid until"))
-   state = models.CharField(max_length=1, choices=QUOTESTATES)
+   state = models.CharField(max_length=1, choices=QUOTESTATES, verbose_name=_('State'))
 
 # TODO:   def createSalesOrderPDF():
 
@@ -266,12 +270,13 @@ class Product(models.Model):
    dateofcreation = models.DateTimeField(verbose_name = _("Created at"))
    lastmodification = models.DateTimeField(verbose_name = _("Last modified"), blank=True, null=True)
    lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, verbose_name = _("Last modified by"))
-   unit = models.ForeignKey(Unit, blank=False)
 
-   def getPrice(self, date):
-      price = Price.objects.get(product=self.id)
-      # TODO: Filter for date 
-      return price;
+   def getPrice(self, date, unit):
+      prices = Price.objects.get(product=self.id)
+      for price in list(prices):
+          if price.matchesDateAndUnit(date, unit, customerGroup):
+              return price;
+      return 
 
    def __unicode__(self):
       return str(self.productNumber) + ' ' + self.title
@@ -283,10 +288,11 @@ class Product(models.Model):
 
 class Price(models.Model):
    product = models.ForeignKey(Product, verbose_name = _("Product"))
-   price = models.DecimalField(max_digits=17, decimal_places=2, verbose_name = _("Price"))
+   unit = models.ForeignKey(Unit, blank=False, verbose_name('Unit'))
+   customerGroup = models.ForeignKey(CustomerGroup, blank=False, verbose_name('Customer Group'))
+   price = models.DecimalField(max_digits=17, decimal_places=2, verbose_name = _("Price Per Unit"))
    validfrom = models.DateField(verbose_name = _("Valid from"))
    validuntil = models.DateField(verbose_name = _("Valid until"))
-   factorPricePerProductUnit = models.DecimalField(verbose_name = _(""))
 
    class Meta:
       app_label = "crm"
@@ -303,10 +309,11 @@ class Position(models.Model):
    shipmentPartner = models.ForeignKey(ShipmentPartner, verbose_name = _("Shipment Partner"), blank=True, null=True)
    shipmentID = models.CharField(max_length=100, verbose_name = _("Shipment ID"), blank=True, null=True)
    overwriteProductPrice = models.BooleanField(verbose_name=_('Overwrite Product Price'))
-   positionPricePerUnit = models.DecimalField(max_digits=17, decimal_places=2)
+   unit = models.ForeignKey(Unit, blank=False, verbose_name('Unit'))
+   positionPricePerUnit = models.DecimalField(max_digits=17, decimal_places=2 verbose_name=_('Price Per Unit'))
    lastPricingDate = models.DateField(verbose_name = _("Last Pricing Date"), blank=True, null=True)
    lastCalculatedPrice = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Price"), blank=True, null=True)
-   lastReferedPrice = models.ForeignKey(Price, blank=True, null=True)
+   lastReferedPrice = models.ForeignKey(Price, blank=True, null=True, verbose_name=_('Last Referded Price'))
 
    def recalculatePrices(self, pricingDate):
       if self.overwriteProductPrice :
@@ -315,7 +322,7 @@ class Position(models.Model):
          else:
             self.lastCalculatedPrice = self.positionPricePerUnit*self.quantity
       else:
-         self.lastReferedPrice = self.product.getPrice(pricingDate)
+         self.lastReferedPrice = self.product.getPrice(pricingDate, self.unit)
          if type(self.discount) == Decimal:
             self.lastCalculatedPrice = self.lastReferedPrice.price*self.quantity*self.discount
          else:
