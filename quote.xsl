@@ -27,7 +27,7 @@
           <fo:table-row height="2cm" border-bottom-color="black" border-bottom-style="solid" border-bottom-width="0.5pt">
             <fo:table-cell padding-bottom="3pt" >
               <fo:block text-align="left" >
-                <fo:external-graphic src="/opt/koalix/vorlage/Pictures/logo.jpg" content-width="6.0cm"/>
+                <fo:external-graphic src="/var/www/koalixcrm/logo.jpg" content-width="6.0cm"/>
               </fo:block>
             </fo:table-cell>
           </fo:table-row>
@@ -65,7 +65,7 @@
               text-align="left">Postkonto:</fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
-              text-align="left">Zahlbar bis:</fo:block>
+              text-align="left">Gültig bis:</fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
               text-align="left">&#8201; </fo:block>
@@ -84,7 +84,7 @@
               font-family="BitstreamVeraSans"
               text-align="left"
               font-weight="bold">
-                <xsl:value-of select="substring(object[@model='crm.salescontract']/field[@name='dateofcreation'], 9, 2)"/><xsl:text>.</xsl:text><xsl:value-of select="substring(object[@model='crm.salescontract']/field[@name='dateofcreation'], 6, 2)"/><xsl:text>.</xsl:text><xsl:value-of select="substring(object[@model='crm.salescontract']/field[@name='dateofcreation'], 1, 4)"/>
+                <xsl:value-of select="substring(object[@model='crm.salescontract']/field[@name='dateofcreation'], 9, 2)"/><xsl:text>.</xsl:text><xsl:value-of select="substring(object[@model='crm.salescontract']/field[@name='dateofcreation'], 6, 2)"/><xsl:text>.</xsl:text><xsl:value-of select="substring(object[@model='crm.salescontract']/field[@name='dateofcreation'], 1, 4)"/></fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
               text-align="left">&#8201; </fo:block>
@@ -93,7 +93,7 @@
               text-align="left">KU-<xsl:value-of select="object[@model='crm.contact']/@pk"/></fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
-              text-align="left">RE-<xsl:value-of select="object[@model='crm.salescontract']/field[@name='contract']"/></fo:block>
+              text-align="left">OF-<xsl:value-of select="object[@model='crm.salescontract']/field[@name='contract']"/></fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
               text-align="left">&#8201; </fo:block>
@@ -111,136 +111,74 @@
               text-align="left">&#8201; </fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
-              text-align="left"><xsl:value-of select="_object/salesRep/segment/org.opencrx.kernel.account1.Segment/_content/account/org.opencrx.kernel.account1.Contact/_object/firstName"/>&#8201;  <xsl:value-of select="_object/salesRep/segment/org.opencrx.kernel.account1.Segment/_content/account/org.opencrx.kernel.account1.Contact/_object/lastName"/></fo:block>
+              text-align="left"><xsl:value-of select="object[@model='auth.user']/field[@name='first_name']"/>&#8201;  <xsl:value-of select="object[@model='auth.user']/field[@name='last_name']"/></fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
-              text-align="left">
-            <xsl:for-each select="_object/salesRep/segment/org.opencrx.kernel.account1.Segment/_content/account/org.opencrx.kernel.account1.Contact/_content/address/org.opencrx.kernel.account1.PhoneNumber/_object">
-              <xsl:choose>
-                <xsl:when test="phoneNumberFull">
-                  <xsl:value-of select="phoneNumberFull"/>
-                </xsl:when>
-              </xsl:choose>
-            </xsl:for-each></fo:block>
+              text-align="left"></fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
-              text-align="left">
-            <xsl:for-each select="_object/salesRep/segment/org.opencrx.kernel.account1.Segment/_content/account/org.opencrx.kernel.account1.Contact/_content/address/org.opencrx.kernel.account1.EMailAddress/_object">
-              <xsl:choose>
-                <xsl:when test="emailAddress">
-                  <xsl:value-of select="emailAddress"/>
-                </xsl:when>
-              </xsl:choose>
-            </xsl:for-each></fo:block>
+              text-align="left"><xsl:value-of select="object[@model='auth.user']/field[@name='email']"/></fo:block>
           </fo:table-cell>
           <fo:table-cell>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
               text-align="left"
-              text-decoration="underline">koalix GmbH, Nelkenstrasse 12, CH-9500 Wil SG</fo:block>
+              text-decoration="underline">Aaron Riedener,  Brunnenhof, CH-9602 Bazenheid</fo:block>
             <fo:block font-size="8pt"
               font-family="BitstreamVeraSans"
               text-align="left">&#8201; </fo:block>
             <xsl:choose>
-              <xsl:when  test="_object/customer/segment/org.opencrx.kernel.account1.Segment/_content/account/org.opencrx.kernel.account1.Contact/_object/lastName">
+              <xsl:when  test="object[@model='crm.postaladdressforcontact']/field[@name='purpose']">
               <fo:block font-size="9pt"
               font-family="BitstreamVeraSans"
               text-align="left">
-              <xsl:value-of select="_object/customer/segment/org.opencrx.kernel.account1.Segment/_content/account/org.opencrx.kernel.account1.Contact/_object/firstName"/>&#8201; <xsl:value-of select="_object/customer/segment/org.opencrx.kernel.account1.Segment/_content/account/org.opencrx.kernel.account1.Contact/_object/lastName"/>
+              <xsl:value-of select="object[@model='crm.postaladdress']/field[@name='prename']"/>&#8201; <xsl:value-of select="object[@model='crm.postaladdress']/field[@name='name']"/>
               </fo:block>
               <xsl:choose>
-                <xsl:when test="_object/customer/segment/org.opencrx.kernel.account1.Segment/_content/account/org.opencrx.kernel.account1.Contact/_content/address/org.opencrx.kernel.account1.PostalAddress/_object/postalStreet/_item[position()=1]">
+                <xsl:when test="object[@model='crm.postaladdress']/field[@name='addressline1']">
               <fo:block font-size="9pt"
               font-family="BitstreamVeraSans"
               text-align="left">
-                  <xsl:value-of select="_object/customer/segment/org.opencrx.kernel.account1.Segment/_content/account/org.opencrx.kernel.account1.Contact/_content/address/org.opencrx.kernel.account1.PostalAddress/_object/postalStreet/_item[position()=1]"/>
+                  <xsl:value-of select="object[@model='crm.postaladdress']/field[@name='addressline1']"/>
               </fo:block>
                 </xsl:when>
               </xsl:choose>
               <xsl:choose>
-                <xsl:when test="_object/customer/segment/org.opencrx.kernel.account1.Segment/_content/account/org.opencrx.kernel.account1.Contact/_content/address/org.opencrx.kernel.account1.PostalAddress/_object/postalStreet/_item[position()=2]">
+                <xsl:when test="object[@model='crm.postaladdress']/field[@name='addressline2']">
               <fo:block font-size="9pt"
               font-family="BitstreamVeraSans"
               text-align="left">
-                  <xsl:value-of select="_object/customer/segment/org.opencrx.kernel.account1.Segment/_content/account/org.opencrx.kernel.account1.Contact/_content/address/org.opencrx.kernel.account1.PostalAddress/_object/postalStreet/_item[position()=2]"/>
+                  <xsl:value-of select="object[@model='crm.postaladdress']/field[@name='addressline2']"/>
+              </fo:block>
+                </xsl:when>
+              </xsl:choose>
+              <xsl:choose>
+                <xsl:when test="object[@model='crm.postaladdress']/field[@name='addressline3']">
+              <fo:block font-size="9pt"
+              font-family="BitstreamVeraSans"
+              text-align="left">
+                  <xsl:value-of select="object[@model='crm.postaladdress']/field[@name='addressline3']"/>
+              </fo:block>
+                </xsl:when>
+              </xsl:choose>
+              <xsl:choose>
+                <xsl:when test="object[@model='crm.postaladdress']/field[@name='addressline4']">
+              <fo:block font-size="9pt"
+              font-family="BitstreamVeraSans"
+              text-align="left">
+                  <xsl:value-of select="object[@model='crm.postaladdress']/field[@name='addressline4']"/>
               </fo:block>
                 </xsl:when>
               </xsl:choose>
               <fo:block font-size="9pt"
               font-family="BitstreamVeraSans"
               text-align="left">
-              <xsl:value-of select="_object/customer/segment/org.opencrx.kernel.account1.Segment/_content/account/org.opencrx.kernel.account1.Contact/_content/address/org.opencrx.kernel.account1.PostalAddress/_object/postalCode"/> &#8201;  <xsl:value-of select="_object/customer/segment/org.opencrx.kernel.account1.Segment/_content/account/org.opencrx.kernel.account1.Contact/_content/address/org.opencrx.kernel.account1.PostalAddress/_object/postalCity"/>
+              <xsl:value-of select="object[@model='crm.postaladdress']/field[@name='zipcode']"/> &#8201;  <xsl:value-of select="object[@model='crm.postaladdress']/field[@name='town']"/>
               </fo:block>
             </xsl:when>
-            <xsl:otherwise>
-              <fo:block font-size="9pt"
-              font-family="BitstreamVeraSans"
-              text-align="left">
-              <xsl:value-of  select="_object/customer/segment/org.opencrx.kernel.account1.Segment/_content/account/org.opencrx.kernel.account1.LegalEntity/_object/fullName"/>
-              </fo:block>
-              <fo:block font-size="9pt"
-              font-family="BitstreamVeraSans"
-              text-align="left">
-              <xsl:value-of select="_object/customer/segment/org.opencrx.kernel.account1.Segment/_content/account/org.opencrx.kernel.account1.LegalEntity/_content/address/org.opencrx.kernel.account1.PostalAddress/_object/postalStreet/_item"/>
-              </fo:block>
-              <fo:block font-size="9pt"
-              font-family="BitstreamVeraSans"
-              text-align="left">
-              <xsl:value-of select="_object/customer/segment/org.opencrx.kernel.account1.Segment/_content/account/org.opencrx.kernel.account1.LegalEntity/_content/address/org.opencrx.kernel.account1.PostalAddress/_object/postalCode"/>&#8201;  <xsl:value-of select="_object/customer/segment/org.opencrx.kernel.account1.Segment/_content/account/org.opencrx.kernel.account1.LegalEntity/_content/address/org.opencrx.kernel.account1.PostalAddress/_object/postalCity"/>
-              </fo:block>
-           </xsl:otherwise>
          </xsl:choose>
         </fo:table-cell>
-        </fo:table-row>
-        <fo:table-row >
-          <fo:table-cell number-columns-spanned="2">
-            <fo:block font-size="14pt"
-              font-family="BitstreamVeraSans"
-              text-align="left">&#8201; </fo:block>
-	  <xsl:for-each select="_content/address/org.opencrx.kernel.contract1.PostalAddress/_object">
-           <xsl:choose>
-            <xsl:when test="usage/_item = '10200'">
-            <fo:block font-size="7pt"
-              font-family="BitstreamVeraSans"
-              text-align="left">Lieferanschrift:</fo:block>
-            <fo:block font-size="7pt"
-              font-family="BitstreamVeraSans"
-              text-align="left">
-              <xsl:choose>
-                <xsl:when test="postalStreet/_item[position()=1] != ''">
-                  <xsl:value-of select="postalStreet/_item[position()=1]"/>,
-                </xsl:when>
-              </xsl:choose>
-              <xsl:choose>
-                <xsl:when test="postalStreet/_item[position()=2] != ''">
-                  <xsl:value-of select="postalStreet/_item[position()=2]"/>,
-                </xsl:when>
-              </xsl:choose>
-              <xsl:choose>
-                <xsl:when test="postalStreet/_item[position()=3] != ''">
-                  <xsl:value-of select="postalStreet/_item[position()=3]"/>,
-                </xsl:when>
-              </xsl:choose>
-              <xsl:choose>
-                <xsl:when test="postalStreet/_item[position()=4] != ''">
-                  <xsl:value-of select="postalStreet/_item[position()=4]"/>,
-                </xsl:when>
-              </xsl:choose>
-              <xsl:choose>
-                <xsl:when test="postalCode">
-                  <xsl:value-of select="postalCode"/>&#8201; 
-                </xsl:when>
-              </xsl:choose>
-              <xsl:choose>
-                <xsl:when test="postalCity">
-                  <xsl:value-of select="postalCity"/>
-                </xsl:when>
-              </xsl:choose></fo:block>
-            </xsl:when>
-           </xsl:choose>
-	  </xsl:for-each>
-          </fo:table-cell>
-        </fo:table-row>
+       </fo:table-row>
 	</fo:table-body>
        </fo:table>
         <fo:block font-size="8pt"
@@ -253,7 +191,7 @@
               color="black"
               text-align="left"
               font-weight="bold">
-        Rechnung RE-<xsl:value-of select="_object/contractNumber"/>
+        Offerte OF-<xsl:value-of select="object[@model='crm.salescontract']/@pk"/>
        </fo:block>
       </fo:static-content>
     <fo:static-content flow-name="xsl-region-after" >
@@ -278,7 +216,7 @@
             <fo:block font-size="8pt"
               font-family="BitstreamVeraSans"
               font-weight="bold"
-              text-align="start">koalix GmbH &#8201;  &#8201;  &#8201;  &#8201; Nelkenstrasse 12 &#8201;  &#8201;  &#8201;  &#8201; 9500 Wil &#8201;  &#8201;  &#8201;  &#8201; +41 (0)71 511 21 18 &#8201;  &#8201;  &#8201;  &#8201; info@koalix.com</fo:block>
+              text-align="start">Aaron Riedener &#8201;  &#8201;  &#8201;  &#8201; Brunnenhof &#8201;  &#8201;  &#8201;  &#8201; 9602 Bazenheid &#8201;  &#8201;  &#8201;  &#8201; +41 (0)71 511 21 18 &#8201;  &#8201;  &#8201;  &#8201; info@koalix.com</fo:block>
            </fo:table-cell>
            <fo:table-cell>
             <fo:block font-size="8pt"
@@ -291,39 +229,6 @@
        </fo:table> 
     </fo:static-content>
       <fo:flow flow-name="xsl-region-body">
-	  <xsl:for-each select="_content/note/org.opencrx.kernel.generic.Note/_object">
-           <xsl:choose>
-            <xsl:when test="title = 'Begrüssung'">
-              <fo:block font-size="9pt"
-              font-family="BitstreamVeraSans"
-              text-align="left">
-              <xsl:choose>
-                <xsl:when test="text">
-                  <xsl:value-of select="text"/>
-                </xsl:when>
-              </xsl:choose>
-             </fo:block>
-              <fo:block font-size="9pt"
-              font-family="BitstreamVeraSans"
-              text-align="left">&#8201;  </fo:block>
-            </xsl:when>
-           </xsl:choose>
-	  </xsl:for-each>
-	  <xsl:for-each select="_content/note/org.opencrx.kernel.generic.Note/_object">
-           <xsl:choose>
-            <xsl:when test="title = 'Einführung'">
-              <fo:block font-size="9pt"
-              font-family="BitstreamVeraSans"
-              text-align="left">
-              <xsl:choose>
-                <xsl:when test="text">
-                  <xsl:value-of select="text"/>
-                </xsl:when>
-              </xsl:choose>
-             </fo:block>
-            </xsl:when>
-           </xsl:choose>
-	  </xsl:for-each>
 
        <fo:block font-size="9pt"
               font-family="BitstreamVeraSans"
@@ -370,21 +275,21 @@
              </fo:table-header>
           <fo:table-body font-size="9pt"
                          font-family="BitstreamVeraSans">
-         <xsl:for-each select="_content/position/org.opencrx.kernel.contract1.InvoicePosition/_object">
-          <xsl:sort select="positionNumber" data-type="number"/>
+         <xsl:for-each select="object[@model='crm.position']">
+          <xsl:sort select="field[@name=positionNumber]" data-type="number"/>
              <fo:table-row keep-together="always">
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="start" >
-                      <xsl:value-of select="positionNumber"/>
+                      <xsl:value-of select="field[@name='positionNumber']"/>
                    </fo:block>
                 </fo:table-cell>
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="start" >
                       <xsl:choose>
-                         <xsl:when test="description">
-                      <xsl:value-of select="description"/></xsl:when>
+                         <xsl:when test="field[@name='description']">
+                      <xsl:value-of select="field[@name='description']"/></xsl:when>
                          <xsl:otherwise>
-                      <xsl:value-of select="productDetailedDescription"/>
+                      <xsl:value-of select="field[@name='description']"/>
                          </xsl:otherwise>
                       </xsl:choose>
                    </fo:block>
@@ -392,9 +297,9 @@
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="end" >
                       <xsl:choose>
-                         <xsl:when test="quantity = '0E-15'">-</xsl:when>
+                         <xsl:when test="field[@name='description'] = '0E-15'">-</xsl:when>
                          <xsl:otherwise>
-                            <xsl:value-of select="format-number(quantity, '#.##0,00', 'european')"/>&#8201;  <xsl:value-of select="uomDescription"/>&#8201; 
+                            <xsl:value-of select="format-number(field[@name='quantity'], '#.##0,00', 'european')"/>&#8201;  <xsl:value-of select="uomDescription"/>&#8201; 
                          </xsl:otherwise>
                       </xsl:choose>
                    </fo:block>
@@ -402,9 +307,9 @@
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="end" >
                       <xsl:choose>
-                         <xsl:when test="pricePerUnit = '0E-15'">-</xsl:when>
+                         <xsl:when test="field[@name='positionPricePerUnit']/None">-</xsl:when>
                          <xsl:otherwise>
-                            <xsl:value-of select="format-number(pricePerUnit, '#.##0,00', 'european')"/> CHF
+                            <xsl:value-of select="format-number(field[@name='positionPricePerUnit'], '#.##0,00', 'european')"/> CHF
                          </xsl:otherwise>
                       </xsl:choose>
                    </fo:block>
@@ -412,16 +317,9 @@
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="end" >
                       <xsl:choose>
-                         <xsl:when test="discountAmount = '0E-15'">-</xsl:when> 
+                         <xsl:when test="field[@name='discount']/None">-</xsl:when> 
                          <xsl:otherwise>
-                            <xsl:choose>
-                              <xsl:when test="discountIsPercentage = 'true'">
-                                <xsl:value-of select="format-number(discount, '#.##0,00', 'european')"/> %
-                              </xsl:when>
-                              <xsl:otherwise>
-                                <xsl:value-of select="format-number(discountAmount, '#.##0,00', 'european')"/> CHF
-                              </xsl:otherwise>
-                            </xsl:choose>
+                              <xsl:value-of select="format-number(field[@name='discount'], '#.##0,00', 'european')"/> %
                          </xsl:otherwise>
                       </xsl:choose>
                    </fo:block>
@@ -429,13 +327,9 @@
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="end" >
                       <xsl:choose>
-                         <xsl:when test="baseAmount = '0E-15'">-</xsl:when>
-			 <xsl:when test="discountAmount = '0E-15'">
-                           <xsl:value-of select="format-number(baseAmount, '#.##0,00', 'european')"/> CHF
-                         </xsl:when>
+                         <xsl:when test="field[@name='lastCalculatedPrice']/None">-</xsl:when>
                          <xsl:otherwise>
-                           <xsl:variable  name="amountWithDiscount"><xsl:value-of select="baseAmount - discountAmount"/></xsl:variable>
-                           <xsl:value-of select="format-number($amountWithDiscount, '#.##0,00', 'european')"/> CHF
+                           <xsl:value-of select="format-number(field[@name='lastCalculatedPrice'], '#.##0,00', 'european')"/> CHF
                          </xsl:otherwise>
                       </xsl:choose>
                    </fo:block>
@@ -459,10 +353,10 @@
                 <fo:table-cell number-columns-spanned="2" border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="end" >
                       <xsl:choose>
-                         <xsl:when test="_object/totalAmount= '0E-15'">-</xsl:when>
-                         <xsl:otherwise>
-                            <xsl:value-of select="format-number(_object/totalAmount, '#.##0,00', 'european')"/> CHF
-                         </xsl:otherwise>
+                        <xsl:when test="object[@model='crm.salescontract']/field[@name='lastCalculatedPrice']/None">-</xsl:when>
+                        <xsl:otherwise>
+                        <xsl:value-of select="format-number(object[@model='crm.salescontract']/field[@name='lastCalculatedPrice'], '#.##0,00', 'european')"/> CHF
+                        </xsl:otherwise>
                       </xsl:choose>
                    </fo:block>
                 </fo:table-cell>
@@ -479,31 +373,13 @@
                 </fo:table-cell>
                 <fo:table-cell number-columns-spanned="2" border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="end" >
-                      <xsl:choose>
-                         <xsl:when test="_object/totalTaxAmount = '0E-15'">-</xsl:when>
-                         <xsl:otherwise>
-                            <xsl:value-of select="format-number(_object/totalTaxAmount, '#.##0,00', 'european')"/> CHF
-                         </xsl:otherwise>
-                      </xsl:choose>
-                   </fo:block>
-                </fo:table-cell>
-             </fo:table-row>
-             <fo:table-row keep-together="always" keep-with-previous="always">
-                <fo:table-cell number-columns-spanned="2">
-                   <fo:block  text-align="start" >
-                   </fo:block>
-                </fo:table-cell>
-                <fo:table-cell number-columns-spanned="2" border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
-                   <fo:block  text-align="start" >Akonto</fo:block>
-                </fo:table-cell>
-                <fo:table-cell number-columns-spanned="2" border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
-                   <fo:block  text-align="end" >
              <xsl:choose>
-               <xsl:when test="_object/userNumber0 = '0E-15'">-</xsl:when>
+               <xsl:when test="object[@model='crm.salescontract']/field[@name='lastCalculatedTax']/None">-</xsl:when>
                <xsl:otherwise>
-               <xsl:value-of select="format-number(_object/userNumber0, '#.##0,00', 'european')"/> CHF
+               <xsl:value-of select="format-number(object[@model='crm.salescontract']/field[@name='lastCalculatedTax'], '#.##0,00', 'european')"/> CHF
                </xsl:otherwise>
-             </xsl:choose></fo:block>
+             </xsl:choose>
+                   </fo:block>
                 </fo:table-cell>
              </fo:table-row>
              <fo:table-row keep-together="always" keep-with-previous="always">
@@ -517,16 +393,13 @@
                    </fo:block>
                 </fo:table-cell>
                 <fo:table-cell number-columns-spanned="2" border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
-                   <fo:block  text-align="end" font-weight="bold"><xsl:choose>
-                <xsl:when test="_object/totalAmountIncludingTax = '0E-15'">-</xsl:when>
-		<xsl:when test="_object/userNumber0 = '0E-15'">
-                  <xsl:value-of select="format-number(_object/totalAmountIncludingTax, '#.##0,00', 'european')"/> CHF
-                </xsl:when>
-                <xsl:otherwise>
-                  <xsl:variable  name="totalamountwithakonto"><xsl:value-of select="_object/totalAmountIncludingTax - _object/userNumber0"/></xsl:variable>
-                  <xsl:value-of select="format-number($totalamountwithakonto, '#.##0,00', 'european')"/> CHF
-                </xsl:otherwise>
-              </xsl:choose>
+                   <fo:block  text-align="end" font-weight="bold">
+             <xsl:choose>
+               <xsl:when test="object[@model='crm.salescontract']/field[@name='lastCalculatedPrice']/None">-</xsl:when>
+               <xsl:otherwise>
+               <xsl:value-of select="format-number(object[@model='crm.salescontract']/field[@name='lastCalculatedPrice']+object[@model='crm.salescontract']/field[@name='lastCalculatedTax'], '#.##0,00', 'european')"/> CHF
+               </xsl:otherwise>
+             </xsl:choose>
                    </fo:block>
                 </fo:table-cell>
              </fo:table-row>
@@ -537,23 +410,6 @@
               text-align="left"
               line-height="0.5cm" >&#8201; 
              </fo:block>
-	  <xsl:for-each select="_content/note/org.opencrx.kernel.generic.Note/_object">
-           <xsl:choose>
-            <xsl:when test="title = 'Endtext'">
-              <fo:block font-size="10pt"
-              font-family="BitstreamVeraSans"
-              text-align="left"
-              line-height="13pt" 
-              margin-bottom="20pt">
-              <xsl:choose>
-                <xsl:when test="text">
-                  <xsl:value-of select="text"/>
-                </xsl:when>
-              </xsl:choose>
-             </fo:block>
-            </xsl:when>
-           </xsl:choose>
-	  </xsl:for-each>
 
               <fo:block font-size="10pt"
               font-family="BitstreamVeraSans"

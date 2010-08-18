@@ -112,7 +112,7 @@ class SalesContractInlinePosition(admin.TabularInline):
     classes = ('collapse-open',)
     fieldsets = (
         ('', {
-            'fields': ('positionNumber', 'quantity', 'product', 'description', 'discount', 'overwriteProductPrice', 'positionPricePerUnit', 'sentOn', 'shipmentPartner')
+            'fields': ('positionNumber', 'quantity', 'unit', 'product', 'description', 'discount', 'overwriteProductPrice', 'positionPricePerUnit', 'sentOn', 'shipmentPartner')
         }),
     )
     allow_add = True
@@ -154,7 +154,10 @@ class InlineInvoice(admin.TabularInline):
 
 class OptionContract(admin.ModelAdmin):
    list_display = ('id', 'description', 'defaultcustomer', 'defaultdistributor', 'staff')
-   list_display_links = ('id','description', 'defaultcustomer', 'defaultdistributor')
+   list_display_links = ('id','description', 'defaultcustomer', 'defaultdistributor')       
+   list_filter    = ('defaultcustomer', 'defaultdistributor', 'staff')
+   ordering       = ('id', 'defaultcustomer')
+   search_fields  = ('id','contract')
    fieldsets = (
       (_('Basics'), {
          'fields': ('description', 'defaultcustomer', 'defaultdistributor')
@@ -178,7 +181,10 @@ class PurchaseOrderInlinePosition(admin.TabularInline):
 
 class OptionInvoice(admin.ModelAdmin):
    list_display = ('id', 'description', 'contract', 'customer', 'payableuntil', 'state', 'staff', 'lastmodification', 'lastmodifiedby')
-   list_display_links = ('contract','customer')
+   list_display_links = ('id','contract','customer')       
+   list_filter    = ('customer', 'contract', 'staff', 'state', 'lastmodification')
+   ordering       = ('contract', 'customer')
+   search_fields  = ('contract__id', 'customer__name')
    fieldsets = (
       (_('Basics'), {
          'fields': ('contract', 'description', 'customer', 'payableuntil', 'state')
@@ -192,15 +198,24 @@ class OptionInvoice(admin.ModelAdmin):
    inlines = [SalesContractInlinePosition, SalesContractPostalAddress, SalesContractPhoneAddress, SalesContractEmailAddress]
 
    def recalculatePrices(self, request, queryset):
-      for obj in queryset:
-         obj.recalculatePrices(date.today().__str__())
+     try:
+        for obj in queryset:
+            obj.recalculatePrices(date.today())
+        self.message_user(request, "Successfully recalculated Prices")
+     except Product.NoPriceFound as e : 
+        self.message_user(request, "Unsuccessfull in updating the Prices "+ e.__str__())
+        return;
    recalculatePrices.short_description = _("Recalculate Prices")
    actions = ['recalculatePrices']
 
 
 class OptionQuote(admin.ModelAdmin):
    list_display = ('id', 'description', 'contract', 'customer', 'validuntil', 'state', 'staff', 'lastmodification', 'lastmodifiedby')
-   list_display_links = ('contract','customer')
+   list_display_links = ('id','contract','customer')        
+   list_filter    = ('customer', 'contract', 'staff', 'state', 'lastmodification')
+   ordering       = ('contract', 'customer')
+   search_fields  = ('contract__id', 'customer__name')
+
    fieldsets = (
       (_('Basics'), {
          'fields': ('contract', 'description', 'customer', 'validuntil', 'state')
@@ -214,8 +229,13 @@ class OptionQuote(admin.ModelAdmin):
    inlines = [SalesContractInlinePosition, SalesContractPostalAddress, SalesContractPhoneAddress, SalesContractEmailAddress]
 
    def recalculatePrices(self, request, queryset):
-      for obj in queryset:
-         obj.recalculatePrices(date.today().__str__())
+     try:
+        for obj in queryset:
+           obj.recalculatePrices(date.today())
+           self.message_user(request, "Successfully recalculated Prices")
+     except Product.NoPriceFound as e : 
+        self.message_user(request, "Unsuccessfull in updating the Prices "+ e.__str__())
+        return;
    recalculatePrices.short_description = _("Recalculate Prices")
 
    def createInvoice(self, request, queryset):
@@ -247,17 +267,17 @@ class ProductPrice(admin.TabularInline):
    classes = ('collapse-open',)
    fieldsets = (
       ('', {
-         'fields': ('price', 'validfrom', 'validuntil')
+         'fields': ('price', 'validfrom', 'validuntil', 'unit', 'customerGroup')
       }),
    )
    allow_add = True
 
 class OptionProduct(admin.ModelAdmin):
-   list_display = ('productNumber', 'title','unit')
+   list_display = ('productNumber', 'title','defaultunit', 'tax')
    list_display_links = ('productNumber',)
    fieldsets = (
       (_('Basics'), {
-         'fields': ('productNumber', 'title', 'description', 'unit')
+         'fields': ('productNumber', 'title', 'description', 'defaultunit', 'tax')
       }),)
    inlines = [ProductPrice]
    
@@ -300,6 +320,11 @@ class OptionCustomer(admin.ModelAdmin):
    inlines = [ContactPostalAddress, ContactPhoneAddress, ContactEmailAddress]
    allow_add = True
 
+class OptionCustomerGroup(admin.ModelAdmin):
+   list_display = ('id', 'name' )
+   fieldsets = (('', {'fields': ('name', 'member')}),)
+   allow_add = True
+
 class OptionDistributor(admin.ModelAdmin):
    list_display = ('id', 'name')
    fieldsets = (('', {'fields': ('name',)}),)
@@ -313,20 +338,26 @@ class OptionShipmentPartner(admin.ModelAdmin):
    inlines = [ContactPostalAddress, ContactPhoneAddress, ContactEmailAddress]
    allow_add = True
    
-   
 class OptionUnit(admin.ModelAdmin):
    list_display = ('id', 'description', 'shortName', 'isAFractionOf', 'fractionFactorToNextHigherUnit')
    fieldsets = (('', {'fields': ('description', 'shortName', 'isAFractionOf', 'fractionFactorToNextHigherUnit')}),)
+   allow_add = True
+   
+class OptionTax(admin.ModelAdmin):
+   list_display = ('id', 'taxrate', 'name')
+   fieldsets = (('', {'fields': ('taxrate', 'name',)}),)
    allow_add = True
 
 
  
 admin.site.register(Customer, OptionCustomer)
+admin.site.register(CustomerGroup, OptionCustomerGroup)
 admin.site.register(Distributor, OptionDistributor)
 admin.site.register(ShipmentPartner, OptionShipmentPartner)
 admin.site.register(Quote, OptionQuote)
 admin.site.register(Invoice, OptionInvoice)
 admin.site.register(Unit, OptionUnit)
+admin.site.register(Tax, OptionTax)
 admin.site.register(Contract, OptionContract)
 admin.site.register(PurchaseOrder, OptionPurchaseOrder)
 admin.site.register(Product, OptionProduct)

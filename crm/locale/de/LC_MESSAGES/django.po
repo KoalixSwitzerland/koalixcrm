@@ -223,11 +223,11 @@ msgstr "Multiplikator zwischen dieser und der nächst höheren Einheit"
 
 #: models.py:239
 msgid "Unit"
-msgstr "Einheit"
+msgstr "Masseinheit"
 
 #: models.py:240
 msgid "Units"
-msgstr "Einheiten"
+msgstr "Masseinheiten"
 
 #: models.py:245
 msgid "Title"

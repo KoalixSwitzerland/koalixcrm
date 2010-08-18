@@ -70,9 +70,23 @@ class Customer(Contact):
    def __unicode__(self):
       return str(self.id) + ' ' + self.name
 
-class CustomerGroup(models.Model)
-   customer = models.ManyToManyField(Customer)
+class CustomerGroup(models.Model):
+   member = models.ManyToManyField(Customer)
    name = models.CharField(max_length=300)
+   
+   def hasMember(self, customer):
+      for member in self.member.all():
+         if (customer == member):
+            return 1
+      return 0
+      
+   def __unicode__(self):
+      return str(self.id) + ' ' + self.name
+      
+   class Meta:
+      app_label = "crm"
+      verbose_name = _('Customer Group')
+      verbose_name_plural = _('Customer Groups')
 
 class Distributor(Contact):
    class Meta:
@@ -133,7 +147,8 @@ class SalesContract(models.Model):
    discount = models.DecimalField(max_digits=5, decimal_places=2, verbose_name = _("Discount"), blank=True, null=True)
    description = models.CharField(verbose_name=_("Description"), max_length=100, blank=True)
    lastPricingDate = models.DateField(verbose_name = _("Last Pricing Date"), blank=True, null=True)
-   lastCalculatedPrice = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Price"), blank=True, null=True)
+   lastCalculatedPrice = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Price With Tax"), blank=True, null=True)
+   lastCalculatedTax = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Tax"), blank=True, null=True)
    customer = models.ForeignKey(Customer, verbose_name = _("Customer"))
    staff = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True, verbose_name = _("Staff"), related_name="db_relscstaff")
    dateofcreation = models.DateTimeField(verbose_name = _("Created at"))
@@ -141,26 +156,32 @@ class SalesContract(models.Model):
    lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, verbose_name = _("Last modified by"), related_name="db_lstscmodified")
       
    def recalculatePrices(self, pricingDate):
-      self.lastCalculatedPrice = self.getPrice(pricingDate)
+      self.setPrice(pricingDate)
       self.lastPricingDate = pricingDate
       self.save()
    
-   def getPrice(self, pricingDate):
+   def setPrice(self, pricingDate):
       price = 0
+      tax = 0
       try:
          positions = SalesContractPosition.objects.filter(contract=self.id)
          if type(positions) == SalesContractPosition:
             if type(self.discount) == Decimal:
-               price = positions.recalculatePrices(pricingDate)*self.discount
+               price = positions.recalculatePrices(pricingDate, self.customer)*self.discount
+               tax = positions.recalculateTax()*self.discount
             else:
-               price = positions.recalculatePrices(pricingDate)
+               price = positions.recalculatePrices(pricingDate, self.customer)
+               tax = positions.recalculateTax()
          else:
             for position in positions:
                if type(self.discount) == Decimal:
-                  price += position.recalculatePrices(pricingDate)*self.discount
+                  price += position.recalculatePrices(pricingDate, self.customer)*self.discount
+                  tax += position.recalculateTax()*self.discount
                else:
-                  price += position.recalculatePrices(pricingDate)
-         return price
+                  price += position.recalculatePrices(pricingDate, self.customer)
+                  tax += position.recalculateTax()
+         self.lastCalculatedPrice = price
+         self.lastCalculatedTax = tax
       except Quote.DoesNotExist:  
          return 0
 
@@ -187,6 +208,7 @@ class Quote(SalesContract):
       invoice.state = 'C'
       invoice.derivatedFromQuote = self
       invoice.payableuntil = date.today().__str__()
+      invoice.dateofcreation = date.today().__str__()
 # TODO: today is not correct it has to be replaced
       invoice.save()
       try:
@@ -212,22 +234,27 @@ class Quote(SalesContract):
      XMLSerializer = serializers.get_serializer("xml")
      xml_serializer = XMLSerializer()
      out = open("/tmp/quote_"+str(self.id)+".xml", "w")
-     objectsToSerialize = list(Quote.objects.filter(id=self.id)) + list(SalesContract.objects.filter(id=self.id)) + list(Contact.objects.filter(id=self.customer.id))
-     objectsToSerialize += list(auth.models.User.objects.filter(id=self.staff.id))
-     objectsToSerialize += list(auth.models.User.objects.filter(id=self.lastmodifiedby.id))
-     for address in list(PostalAddressForContact.objects.filter(person=self.customer.id)):
-         objectsToSerialize += list(PostalAddress.objects.filter(id=address.id))
+     objectsToSerialize = list(Quote.objects.filter(id=self.id)) 
+     objectsToSerialize += list(SalesContract.objects.filter(id=self.id)) 
+     objectsToSerialize += list(Contact.objects.filter(id=self.customer.id))
+     objectsToSerialize += list(SalesContractPosition.objects.filter(contract=self.id))
      for position in list(SalesContractPosition.objects.filter(contract=self.id)):
          objectsToSerialize += list(Position.objects.filter(id=position.id))
+         objectsToSerialize += list(Product.objects.filter(id=position.product.id))
+     objectsToSerialize += list(auth.models.User.objects.filter(id=self.staff.id))
+     objectsToSerialize += list(auth.models.User.objects.filter(id=self.lastmodifiedby.id))
+     objectsToSerialize += list(PostalAddressForContact.objects.filter(person=self.customer.id))
+     for address in list(PostalAddressForContact.objects.filter(person=self.customer.id)):
+         objectsToSerialize += list(PostalAddress.objects.filter(id=address.id))
      xml_serializer.serialize(objectsToSerialize, stream=out, indent=3)
      styledoc = libxml2.parseFile("/var/www/koalixcrm/quote.xsl")
-     style = libxslt.parseStylesheetDoc(styledoc)
-     doc = libxml2.parseFile("/tmp/quote_"+str(self.id)+".xml")
-     result = style.applyStylesheet(doc, None)
-     style.saveResultToFilename("/tmp/quote_"+str(self.id)+"_fop.xml", result, 0)
-     style.freeStylesheet()
-     doc.freeDoc()
-     result.freeDoc()
+     #style = libxslt.parseStylesheetDoc(styledoc)
+     #doc = libxml2.parseFile("/tmp/quote_"+str(self.id)+".xml")
+     #result = style.applyStylesheet(doc, None)
+     #style.saveResultToFilename("/tmp/quote_"+str(self.id)+"_fop.xml", result, 0)
+     #style.freeStylesheet()
+     #doc.freeDoc()
+     #result.freeDoc()
 
 
    class Meta:
@@ -262,21 +289,42 @@ class Unit(models.Model):
       verbose_name = _('Unit')
       verbose_name_plural = _('Units') 
       
+      
+class Tax(models.Model):
+   taxrate = models.DecimalField(max_digits=5, decimal_places=2, verbose_name = _("Taxrate in Percentage"))
+   name = models.CharField(verbose_name = _("Taxname"), max_length=100)
+
+   def getTaxRate(self):
+      return self.taxrate;
+
+   def __unicode__(self):
+      return  self.name
+
+   class Meta:
+      app_label = "crm"
+      verbose_name = _('Tax')
+      verbose_name_plural = _('Taxes') 
+      
 	
 class Product(models.Model):
    description = models.TextField(verbose_name = _("Description"), blank=True) 
    title = models.CharField(verbose_name = _("Title"), max_length=200)
    productNumber = models.IntegerField(verbose_name = _("Product Number"))
    dateofcreation = models.DateTimeField(verbose_name = _("Created at"))
+   defaultunit = models.ForeignKey(Unit, verbose_name = _("Unit"))
    lastmodification = models.DateTimeField(verbose_name = _("Last modified"), blank=True, null=True)
    lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, verbose_name = _("Last modified by"))
+   tax = models.ForeignKey(Tax, blank=False)
 
-   def getPrice(self, date, unit):
-      prices = Price.objects.get(product=self.id)
+   def getPrice(self, date, unit, customer):
+      prices = Price.objects.filter(product=self.id)
       for price in list(prices):
-          if price.matchesDateAndUnit(date, unit, customerGroup):
+          if (price.matchesDateAndUnit(date, unit, customer) ==  1):
               return price;
-      return 
+      raise Product.NoPriceFound(customer, unit, date, self)
+
+   def getTaxRate(self):
+      return self.tax.getTaxRate();
 
    def __unicode__(self):
       return str(self.productNumber) + ' ' + self.title
@@ -285,14 +333,30 @@ class Product(models.Model):
       app_label = "crm"
       verbose_name = _('Product')
       verbose_name_plural = _('Products')
+      
+   class NoPriceFound(Exception):
+     def __init__(self, customer, unit, date, product):
+       self.customer = customer
+       self.unit = unit
+       self.date = date
+       self.product = product
+       return 
+     def __str__ (self):
+       return "There is no Price for this product: "+ self.product.__unicode__() +" that matches the date: "+self.date.__str__() +" , customer:"+self.customer.__unicode__()+" and unit:"+ self.unit.__unicode__()
 
 class Price(models.Model):
    product = models.ForeignKey(Product, verbose_name = _("Product"))
-   unit = models.ForeignKey(Unit, blank=False, verbose_name('Unit'))
-   customerGroup = models.ForeignKey(CustomerGroup, blank=False, verbose_name('Customer Group'))
+   unit = models.ForeignKey(Unit, blank=False, verbose_name= _("Unit"))
+   customerGroup = models.ForeignKey(CustomerGroup, blank=False, verbose_name = _("Customer Group"))
    price = models.DecimalField(max_digits=17, decimal_places=2, verbose_name = _("Price Per Unit"))
    validfrom = models.DateField(verbose_name = _("Valid from"))
    validuntil = models.DateField(verbose_name = _("Valid until"))
+
+   def matchesDateAndUnit(self, date, unit, customer):
+      if ((self.validfrom - date).days < 0) & ((date - self.validuntil).days < 0) & (unit == self.unit) & self.customerGroup.hasMember(customer):
+        return 1
+      else:
+        return 0
 
    class Meta:
       app_label = "crm"
@@ -305,31 +369,37 @@ class Position(models.Model):
    description = models.TextField(verbose_name = _("Description"), blank=True, null=True)
    discount = models.DecimalField(max_digits=5, decimal_places=2, verbose_name = _("Discount"), blank=True, null=True)
    product = models.ForeignKey(Product, verbose_name = _("Product"), blank=True, null=True)
+   unit = models.ForeignKey(Unit, verbose_name = _("Unit"), blank=True, null=True)
    sentOn = models.DateField(verbose_name = _("Shipment on"), blank=True, null=True)
    shipmentPartner = models.ForeignKey(ShipmentPartner, verbose_name = _("Shipment Partner"), blank=True, null=True)
    shipmentID = models.CharField(max_length=100, verbose_name = _("Shipment ID"), blank=True, null=True)
    overwriteProductPrice = models.BooleanField(verbose_name=_('Overwrite Product Price'))
-   unit = models.ForeignKey(Unit, blank=False, verbose_name('Unit'))
-   positionPricePerUnit = models.DecimalField(max_digits=17, decimal_places=2 verbose_name=_('Price Per Unit'))
+   positionPricePerUnit = models.DecimalField(max_digits=17, decimal_places=2, blank=True, null=True)
    lastPricingDate = models.DateField(verbose_name = _("Last Pricing Date"), blank=True, null=True)
    lastCalculatedPrice = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Price"), blank=True, null=True)
-   lastReferedPrice = models.ForeignKey(Price, blank=True, null=True, verbose_name=_('Last Referded Price'))
+   lastCalculatedTax = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Tax"), blank=True, null=True)
+   lastReferedPrice = models.ForeignKey(Price, blank=True, null=True)
+   lastCalculatedTax = models.BooleanField(verbose_name=_('Overwrite Product Price'))
 
-   def recalculatePrices(self, pricingDate):
-      if self.overwriteProductPrice :
-         if type(self.discount) == Decimal:
-            self.lastCalculatedPrice = self.positionPricePerUnit*self.quantity*self.discount
-         else:
-            self.lastCalculatedPrice = self.positionPricePerUnit*self.quantity
-      else:
-         self.lastReferedPrice = self.product.getPrice(pricingDate, self.unit)
-         if type(self.discount) == Decimal:
-            self.lastCalculatedPrice = self.lastReferedPrice.price*self.quantity*self.discount
-         else:
-            self.lastCalculatedPrice = self.lastReferedPrice.price*self.quantity
-      self.lastPricingDate = pricingDate
-      self.save()
-      return self.lastCalculatedPrice
+   def recalculatePrices(self, pricingDate, customer):
+     if self.overwriteProductPrice == False:
+       self.lastReferedPrice = self.product.getPrice(pricingDate, self.unit, customer)
+       self.positionPricePerUnit = self.lastReferedPrice.price
+     if type(self.discount) == Decimal:
+       self.lastCalculatedPrice = self.positionPricePerUnit*self.quantity*self.discount
+     else:
+       self.lastCalculatedPrice = self.positionPricePerUnit*self.quantity
+     self.lastPricingDate = pricingDate
+     self.save()
+     return self.lastCalculatedPrice
+     
+   def recalculateTax(self):
+     if type(self.discount) == Decimal:
+       self.lastCalculatedTax = self.product.getTaxRate()/100*self.positionPricePerUnit*self.quantity*self.discount
+     else:
+       self.lastCalculatedTax = self.product.getTaxRate()/100*self.positionPricePerUnit*self.quantity
+     self.save()
+     return self.lastCalculatedTax
 
    class Meta:
       app_label = "crm"
