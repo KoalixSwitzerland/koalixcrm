@@ -285,6 +285,7 @@
                 </fo:table-cell>
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="start" >
+                      <xsl:value-of select="/object[@model='crm.product' and @pk='1']/field[@name='Title']"/>
                       <xsl:choose>
                          <xsl:when test="field[@name='description']">
                       <xsl:value-of select="field[@name='description']"/></xsl:when>

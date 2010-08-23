@@ -243,9 +243,10 @@ class OptionQuote(admin.ModelAdmin):
          obj.createInvoice()
    createInvoice.short_description = _("Create Invoice")
          
-   def createPDF(sefl, request, queryset):
+   def createPDF(self, request, queryset):
       for obj in queryset:
          obj.createPDF()
+         self.message_user(request, "PDF created")
    createPDF.short_description = _("Create PDF")
 
    actions = ['recalculatePrices', 'createInvoice', 'createPDF']

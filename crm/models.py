@@ -12,6 +12,7 @@ from django.utils.translation import ugettext as _
 from decimal import Decimal
 import libxslt
 import libxml2
+import os
 from django.core import serializers
 import copy
 from django.contrib import auth
@@ -247,14 +248,16 @@ class Quote(SalesContract):
      for address in list(PostalAddressForContact.objects.filter(person=self.customer.id)):
          objectsToSerialize += list(PostalAddress.objects.filter(id=address.id))
      xml_serializer.serialize(objectsToSerialize, stream=out, indent=3)
+     out.close()
      styledoc = libxml2.parseFile("/var/www/koalixcrm/quote.xsl")
-     #style = libxslt.parseStylesheetDoc(styledoc)
-     #doc = libxml2.parseFile("/tmp/quote_"+str(self.id)+".xml")
-     #result = style.applyStylesheet(doc, None)
-     #style.saveResultToFilename("/tmp/quote_"+str(self.id)+"_fop.xml", result, 0)
-     #style.freeStylesheet()
-     #doc.freeDoc()
-     #result.freeDoc()
+     style = libxslt.parseStylesheetDoc(styledoc)
+     doc = libxml2.parseFile("/tmp/quote_"+str(self.id)+".xml")
+     result = style.applyStylesheet(doc, None)
+     style.saveResultToFilename("/tmp/quote_"+str(self.id)+"_fop.xml", result, 0)
+     style.freeStylesheet()
+     doc.freeDoc()
+     result.freeDoc()
+     os.system("fop -c /var/www/koalixcrm/verasans.xml /tmp/quote_"+str(self.id)+"_fop.xml /tmp/quote_"+str(self.id)+".pdf")
 
 
    class Meta:
