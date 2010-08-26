@@ -206,7 +206,19 @@ class OptionInvoice(admin.ModelAdmin):
         self.message_user(request, "Unsuccessfull in updating the Prices "+ e.__str__())
         return;
    recalculatePrices.short_description = _("Recalculate Prices")
-   actions = ['recalculatePrices']
+         
+   def createInvoicePDF(self, request, queryset):
+      for obj in queryset:
+         obj.createPDF(purchaseconfirmation=False)
+         self.message_user(request, "PDF created")
+   createInvoicePDF.short_description = _("Create PDF of Invoice")
+         
+   def createDeliveryOrderPDF(self, request, queryset):
+      for obj in queryset:
+         obj.createPDF(deliveryorder=True)
+         self.message_user(request, "PDF created")
+   createDeliveryOrderPDF.short_description = _("Create PDF of Delivery Order")
+   actions = ['recalculatePrices', 'createDeliveryOrderPDF', 'createInvoicePDF']
 
 
 class OptionQuote(admin.ModelAdmin):
@@ -241,15 +253,22 @@ class OptionQuote(admin.ModelAdmin):
    def createInvoice(self, request, queryset):
       for obj in queryset:
          obj.createInvoice()
+         self.message_user(request, _("Invoice created"))
    createInvoice.short_description = _("Create Invoice")
          
-   def createPDF(self, request, queryset):
+   def createQuotePDF(self, request, queryset):
       for obj in queryset:
-         obj.createPDF()
-         self.message_user(request, "PDF created")
-   createPDF.short_description = _("Create PDF")
+         obj.createPDF(purchaseconfirmation=False)
+         self.message_user(request, _("Quote PDF created"))
+   createQuotePDF.short_description = _("Create PDF of Quote")
+         
+   def createPurchseConfirmationPDF(self, request, queryset):
+      for obj in queryset:
+         obj.createPDF(purchaseconfirmation=True)
+         self.message_user(request, _("Purchase Confirmation PDF created"))
+   createPurchseConfirmationPDF.short_description = _("Create PDF of Purchase Confirmation")
 
-   actions = ['recalculatePrices', 'createInvoice', 'createPDF']
+   actions = ['recalculatePrices', 'createInvoice', 'createQuotePDF', 'createPurchseConfirmationPDF']
 
 class OptionPurchaseOrder(admin.ModelAdmin):
    list_display = ('distributor', 'state',)
@@ -348,6 +367,8 @@ class OptionTax(admin.ModelAdmin):
    list_display = ('id', 'taxrate', 'name')
    fieldsets = (('', {'fields': ('taxrate', 'name',)}),)
    allow_add = True
+
+class RegisterPaymentPage(admin.AdminSite):
 
 
  

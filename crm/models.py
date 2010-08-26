@@ -10,9 +10,7 @@ from middleware import threadlocals
 from datetime import date
 from django.utils.translation import ugettext as _
 from decimal import Decimal
-import libxslt
-import libxml2
-import os
+from os import system
 from django.core import serializers
 import copy
 from django.contrib import auth
@@ -231,7 +229,7 @@ class Quote(SalesContract):
       except Quote.DoesNotExist:  
          return
 
-   def createPDF(self):
+   def createPDF(self, purchaseconfirmation):
      XMLSerializer = serializers.get_serializer("xml")
      xml_serializer = XMLSerializer()
      out = open("/tmp/quote_"+str(self.id)+".xml", "w")
@@ -249,16 +247,10 @@ class Quote(SalesContract):
          objectsToSerialize += list(PostalAddress.objects.filter(id=address.id))
      xml_serializer.serialize(objectsToSerialize, stream=out, indent=3)
      out.close()
-     styledoc = libxml2.parseFile("/var/www/koalixcrm/quote.xsl")
-     style = libxslt.parseStylesheetDoc(styledoc)
-     doc = libxml2.parseFile("/tmp/quote_"+str(self.id)+".xml")
-     result = style.applyStylesheet(doc, None)
-     style.saveResultToFilename("/tmp/quote_"+str(self.id)+"_fop.xml", result, 0)
-     style.freeStylesheet()
-     doc.freeDoc()
-     result.freeDoc()
-     os.system("fop -c /var/www/koalixcrm/verasans.xml /tmp/quote_"+str(self.id)+"_fop.xml /tmp/quote_"+str(self.id)+".pdf")
-
+     if (purchaseconfirmation == False) :
+         system("fop -c /var/www/koalixcrm/verasans.xml -xml /tmp/quote_"+str(self.id)+".xml -xsl /var/www/koalixcrm/quote.xsl -pdf /tmp/quote_"+str(self.id)+".pdf")
+     else:
+         system("fop -c /var/www/koalixcrm/verasans.xml -xml /tmp/quote_"+str(self.id)+".xml -xsl /var/www/koalixcrm/purchaseconfirmation.xsl -pdf /tmp/purchaseconfirmation_"+str(self.id)+".pdf")
 
    class Meta:
       app_label = "crm"
@@ -271,7 +263,31 @@ class Invoice(SalesContract):
    paymentBankReference = models.CharField(verbose_name = _("Payment Bank Reference"), max_length=100, blank=True)
    state = models.CharField(max_length=1, choices=INVOICESTATES)
 
-# TODO:   def printDeliveryOrder():
+   def createPDF(self, deliveryorder):
+     XMLSerializer = serializers.get_serializer("xml")
+     xml_serializer = XMLSerializer()
+     out = open("/tmp/invoice_"+str(self.id)+".xml", "w")
+     objectsToSerialize = list(Invoice.objects.filter(id=self.id)) 
+     objectsToSerialize += list(SalesContract.objects.filter(id=self.id)) 
+     objectsToSerialize += list(Contact.objects.filter(id=self.customer.id))
+     objectsToSerialize += list(SalesContractPosition.objects.filter(contract=self.id))
+     for position in list(SalesContractPosition.objects.filter(contract=self.id)):
+         objectsToSerialize += list(Position.objects.filter(id=position.id))
+         objectsToSerialize += list(Product.objects.filter(id=position.product.id))
+     objectsToSerialize += list(auth.models.User.objects.filter(id=self.staff.id))
+     objectsToSerialize += list(auth.models.User.objects.filter(id=self.lastmodifiedby.id))
+     objectsToSerialize += list(PostalAddressForContact.objects.filter(person=self.customer.id))
+     for address in list(PostalAddressForContact.objects.filter(person=self.customer.id)):
+         objectsToSerialize += list(PostalAddress.objects.filter(id=address.id))
+     xml_serializer.serialize(objectsToSerialize, stream=out, indent=3)
+     out.close()
+     if (deliveryorder == False):
+        system("fop -c /var/www/koalixcrm/verasans.xml -xml /tmp/invoice_"+str(self.id)+".xml -xsl /var/www/koalixcrm/invoice.xsl -pdf /tmp/invoice_"+str(self.id)+".pdf")
+     else:
+        system("fop -c /var/www/koalixcrm/verasans.xml -xml /tmp/invoice_"+str(self.id)+".xml -xsl /var/www/koalixcrm/deliveryorder.xsl -pdf /tmp/deliveryorder_"+str(self.id)+".pdf")
+
+   def registerPayment(self, amount, registerpaymentincrp)
+      
 
    class Meta:
       app_label = "crm"
