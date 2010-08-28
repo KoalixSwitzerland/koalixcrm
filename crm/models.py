@@ -196,8 +196,6 @@ class Quote(SalesContract):
    validuntil = models.DateField(verbose_name = _("Valid until"))
    state = models.CharField(max_length=1, choices=QUOTESTATES, verbose_name=_('State'))
 
-# TODO:   def createSalesOrderPDF():
-
    def createInvoice(self):
       invoice = Invoice()
       invoice.contact = self.contract
