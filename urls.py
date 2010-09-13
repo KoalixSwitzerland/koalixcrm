@@ -9,6 +9,5 @@ urlpatterns = patterns('',
     (r'^$', 'django.views.generic.simple.redirect_to', {'url': '/'}),
     (r'^grappelli/', include('grappelli.urls')),
     (r'^admin/filebrowser/', include('filebrowser.urls')),
-    (r'^tinymce/', include('tinymce.urls')),
     (r'^admin/', include(admin.site.urls)),
 )

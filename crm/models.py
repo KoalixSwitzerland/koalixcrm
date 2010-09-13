@@ -249,7 +249,7 @@ class Quote(SalesContract):
          system("fop -c /var/www/koalixcrm/verasans.xml -xml /tmp/quote_"+str(self.id)+".xml -xsl /var/www/koalixcrm/quote.xsl -pdf /tmp/quote_"+str(self.id)+".pdf")
      else:
          system("fop -c /var/www/koalixcrm/verasans.xml -xml /tmp/quote_"+str(self.id)+".xml -xsl /var/www/koalixcrm/purchaseconfirmation.xsl -pdf /tmp/purchaseconfirmation_"+str(self.id)+".pdf")
-
+     return "/tmp/quote_"+str(self.id)+".pdf"
    class Meta:
       app_label = "crm"
       verbose_name = _('Quote')
@@ -284,7 +284,7 @@ class Invoice(SalesContract):
      else:
         system("fop -c /var/www/koalixcrm/verasans.xml -xml /tmp/invoice_"+str(self.id)+".xml -xsl /var/www/koalixcrm/deliveryorder.xsl -pdf /tmp/deliveryorder_"+str(self.id)+".pdf")
 
-   def registerPayment(self, amount, registerpaymentincrp)
+#  TODO: def registerPayment(self, amount, registerpaymentincrp):
       
 
    class Meta:

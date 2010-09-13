@@ -10,68 +10,26 @@ from xml.dom.minidom import Document
    
 class CRPCalculationUnit(models.Model):
    title =  models.CharField(max_length=200, verbose_name=_("Title")) # For example "Year 2009", "1st Quarter 2009"
-   allEarnings = models.DecimalField(max_digits=20, decimal_places=2, null=True, blank=True, verbose_name=_("All Earnings"))
-   allSpendings = models.DecimalField(max_digits=20, decimal_places=2, null=True, blank=True, verbose_name=_("All Spendings"))
-   allActivas = models.DecimalField(max_digits=20, decimal_places=2, null=True, blank=True, verbose_name=_("All Activas"))
-   allPassivas = models.DecimalField(max_digits=20, decimal_places=2, null=True, blank=True, verbose_name=_("All Passivas"))
-   dateOfLastCalculation =  models.DateField(null=True, blank=True)
-   begin = models.DateField()
-   end = models.DateField()
-              
-   def calculateResults()
-      earnings = 0;
-      spendings = 0;
-      passivas = 0;
-      activas = 0;
-      bookings = Bookings.objects.filter(crpCalculationUnit = self.id)
-      for booking in list(bookings):
-         if (booking.toAccount.accountType == 'E'):
-            earnings += booking.amount
-         elif (booking.toAccount.accountType == 'S'):
-            spendings += booking.amount
-         elif (booking.toAccount.accountType == 'P'):
-            passivas += booking.amount
-         elif (booking.toAccount.accountType == 'A'):
-            activas += booking.amount
-         if (booking.fromAccount.accountType == 'E'):
-            earnings -= booking.amount
-         elif (booking.fromAccount.accountType == 'S'):
-            spendings -= booking.amount
-         elif (booking.fromAccount.accountType == 'P'):
-            passivas -= booking.amount
-         elif (booking.fromAccount.accountType == 'A'):
-            activas -= booking.amount
-      self.allEarnings = earnings
-      self.allSpendings = spendings
-      self.allPassivas = passivas
-      self.allActivas = activas
-      self.save()
+   begin = models.DateField(verbose_name=_("Begin"))
+   end = models.DateField(verbose_name=_("End"))
             
-   def createBalanceSheetPDF(self)
+   def createBalanceSheetPDF(self):
+      out = open("/tmp/balancesheet_"+str(self.id)+".xml","w")
       doc = Document()
-
-      # Create the <wml> base element
-      wml = doc.createElement("wml")
-      doc.appendChild(wml)
-
-      # Create the main <card> element
-      maincard = doc.createElement("card")
-      maincard.setAttribute("id", "main")
-      wml.appendChild(maincard)
-
-      # Create a <p> element
-      paragraph1 = doc.createElement("p")
-      maincard.appendChild(paragraph1)
-
-      # Give the <p> elemenet some text
-      ptext = doc.createTextNode("This is a test!")
-      paragraph1.appendChild(ptext)
-
-      # Print our newly created XML
-      print doc.toprettyxml(indent="  ")
-
-
-     system("fop -c /var/www/koalixcrm/verasans.xml -xml /tmp/balancesheet_"+str(self.id)+".xml -xsl /var/www/koalixcrm/balancesheet.xsl -pdf /tmp/balancesheet_"+str(self.id)+".pdf")
+      main = doc.createElement("koalixcrmbalacesheet")
+      datetimetext = doc.createTextNode("This is a test!")
+      main.appendChild(datetimetext)
+      doc.appendChild(main)
+      accounts = Account.objects.all()
+      for account in accounts :
+         currentValue = account.valueNow(self)
+         if (currentValue != 0):
+            currentAccountElement = doc.createElement("Account")
+            currentAccountElement.setAttribute("accountNumber", account.accountNumber)
+            currentAccountElement.setAttribute("currentValue", currentValue)
+            currentAccountElement.appendChild(doc.createTextNode(account.title))
+      out.write(doc.toprettyxml(indent="  "))
+      system("fop -c /var/www/koalixcrm/verasans.xml -xml /tmp/balancesheet_"+str(self.id)+".xml -xsl /var/www/koalixcrm/balancesheet.xsl -pdf /tmp/balancesheet_"+str(self.id)+".pdf")
      
 # TODO: def createProfitAndLossStatementPDF() Erfolgsrechnung
 
@@ -88,10 +46,10 @@ class Account(models.Model):
    accountType = models.CharField(verbose_name=_("Account Type"), max_length=1, choices=ACCOUNTTYPECHOICES)
    
    
-   def valueNow(self):
-      sum = self.allBookings(fromAccount = False) - self.allBookings(fromAccount = True)
+   def valueNow(self, crpCalculationUnit):
+      sum = self.allBookings(fromAccount = False, crpCalculationUnit = crpCalculationUnit) - self.allBookings(fromAccount = True, crpCalculationUnit = crpCalculationUnit)
       return sum
-   
+
    def allBookings(self, fromAccount, crpCalculationUnit):
       sum = 0
       if (fromAccount == True):

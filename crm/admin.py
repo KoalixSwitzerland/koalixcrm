@@ -1,10 +1,15 @@
 # -*- coding: utf-8 -*-
+import os
 from django import forms
 from django.core.urlresolvers import reverse
 from datetime import date
 from crm.models import *
 from django.utils.translation import ugettext as _
 from django.contrib import admin
+from django.http import HttpResponse
+from django.core.servers.basehttp import FileWrapper
+
+
 
    
 class ContractPostalAddress(admin.StackedInline):
@@ -258,8 +263,9 @@ class OptionQuote(admin.ModelAdmin):
          
    def createQuotePDF(self, request, queryset):
       for obj in queryset:
-         obj.createPDF(purchaseconfirmation=False)
-         self.message_user(request, _("Quote PDF created"))
+         response = HttpResponse(FileWrapper(file(pdf)), mimetype='application/pdf')
+         response['Content-Length'] = os.path.getsize(pdf)
+      return response
    createQuotePDF.short_description = _("Create PDF of Quote")
          
    def createPurchseConfirmationPDF(self, request, queryset):
@@ -368,7 +374,7 @@ class OptionTax(admin.ModelAdmin):
    fieldsets = (('', {'fields': ('taxrate', 'name',)}),)
    allow_add = True
 
-class RegisterPaymentPage(admin.AdminSite):
+#class RegisterPaymentPage(admin.AdminSite):
 
 
  

@@ -17,30 +17,30 @@ class OptionBooking(admin.ModelAdmin):
       obj.staff = request.user
       obj.lastmodifiedby = request.user
       obj.save()
-
+   
 class OptionAccount(admin.ModelAdmin):
    list_display = ('accountNumber', 'accountType', 'title')
    list_display_links = ('accountNumber', 'accountType', 'title')
    fieldsets = ((_('Basic'), {'fields': ('accountNumber', 'accountType', 'title' )}),)
    save_as = True
 
-class InlineAccountUsage(admin.TabularInline):
-   model = AccountUsage
-   extra = 1
-   classes = ('collapse-open',)
-   fieldsets = ((_('Basic'), {'fields': ('account', 'valueAtStartOfBusinessYear')}),)
-   allow_add = True
-
 class OptionCRPCalculationUnit(admin.ModelAdmin):
-   list_display = ('title', 'allEarnings', 'allSpendings', 'allActivas', 'allPassivas', 'begin', 'end')
+   list_display = ('title', 'begin', 'end')
    list_display_links = ('title', 'begin', 'end')
    fieldsets = (
       (_('Basics'), {
-         'fields': ('title', 'allEarnings', 'allSpendings', 'allActivas', 'allPassivas', 'begin', 'end')
+         'fields': ('title', 'begin', 'end')
       }),
    )
    save_as = True
-   inlines = [InlineAccountUsage]   
+   
+   def createBalanceSheetPDF(self, request, queryset):
+      for obj in queryset:
+         obj.createBalanceSheetPDF()
+         self.message_user(request, _("Balance Sheet PDF created"))
+   createBalanceSheetPDF.short_description = _("Create PDF of Balance Sheet")
+   
+   actions = ['createBalanceSheetPDF',]
    
 admin.site.register(Account, OptionAccount)
 admin.site.register(Booking, OptionBooking)
