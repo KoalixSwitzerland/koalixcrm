@@ -7,6 +7,7 @@ from crm.models import *
 from django.utils.translation import ugettext as _
 from django.contrib import admin
 from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from django.core.servers.basehttp import FileWrapper
 
 
@@ -263,9 +264,8 @@ class OptionQuote(admin.ModelAdmin):
          
    def createQuotePDF(self, request, queryset):
       for obj in queryset:
-         response = HttpResponse(FileWrapper(file(pdf)), mimetype='application/pdf')
-         response['Content-Length'] = os.path.getsize(pdf)
-      return response
+         response = HttpResponseRedirect('/export/quote/'+str(obj.id))
+         return response
    createQuotePDF.short_description = _("Create PDF of Quote")
          
    def createPurchseConfirmationPDF(self, request, queryset):

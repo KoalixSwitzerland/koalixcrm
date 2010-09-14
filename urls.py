@@ -9,5 +9,6 @@ urlpatterns = patterns('',
     (r'^$', 'django.views.generic.simple.redirect_to', {'url': '/'}),
     (r'^grappelli/', include('grappelli.urls')),
     (r'^admin/filebrowser/', include('filebrowser.urls')),
+    (r'^export/quote/(?P<quoteid>\d+)/$', 'crm.views.createQuotePDF'),
     (r'^admin/', include(admin.site.urls)),
 )

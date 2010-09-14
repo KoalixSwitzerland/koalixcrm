@@ -52,6 +52,8 @@ $(document).ready(function(){
     // SUBMIT FORM WITHOUT "RUN"-BUTTON
     $('div.actions select').change(function(){
         if ($(this).val()) {
+            newwindow = window.open(window.location,"_blank")
+            window.focus()
             $('div.changelist-content form').submit();
         }
     });
