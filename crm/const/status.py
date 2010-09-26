@@ -2,7 +2,7 @@
 
 from django.utils.translation import ugettext as _
 
-INVOICESTATES = (
+INVOICESTATUS = (
     ('P', _('Payed')),
     ('C', _('Invoice created')),
     ('I', _('Invoice sent')),
@@ -12,7 +12,7 @@ INVOICESTATES = (
     ('D', _('Deleted')),
 )
 
-QUOTESTATES = (
+QUOTESTATUS = (
     ('S', _('Success')),
     ('I', _('Quote created')),
     ('Q', _('Quote sent')),
@@ -21,7 +21,7 @@ QUOTESTATES = (
     ('D', _('Deleted')),
 )
 
-PURCHASEORDERSTATES = (
+PURCHASEORDERSTATUS = (
     ('O', _('Ordered')),
     ('D', _('Delayed')),
     ('Y', _('Delivered')),

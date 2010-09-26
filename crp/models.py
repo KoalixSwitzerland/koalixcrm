@@ -30,6 +30,9 @@ class CRPCalculationUnit(models.Model):
             currentAccountElement.appendChild(doc.createTextNode(account.title))
       out.write(doc.toprettyxml(indent="  "))
       system("fop -c /var/www/koalixcrm/verasans.xml -xml /tmp/balancesheet_"+str(self.id)+".xml -xsl /var/www/koalixcrm/balancesheet.xsl -pdf /tmp/balancesheet_"+str(self.id)+".pdf")
+      
+   def __unicode__(self):
+      return  self.title
      
 # TODO: def createProfitAndLossStatementPDF() Erfolgsrechnung
 
@@ -62,6 +65,9 @@ class Account(models.Model):
          
       return sum
       
+   def __unicode__(self):
+      return  self.accountNumber.__str__()  + " " + self.title
+      
    class Meta:
       app_label = "crp"
       verbose_name = _('Account')
@@ -81,6 +87,9 @@ class Booking(models.Model):
    lastmodification = models.DateTimeField(auto_now=True, verbose_name = _("Last modified"), null=True, blank=True)
    lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True, verbose_name = _("Last modified by"), related_name="db_booking_lstmodified")
    
+   def __unicode__(self):
+      return  self.fromAccount.__str__()  + " " + self.toAccount.__str__()  + " " + self.amount.__str__() 
+      
    class Meta:
       app_label = "crp"
       verbose_name = _('Booking')

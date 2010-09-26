@@ -60,17 +60,18 @@ class Contact(models.Model):
       verbose_name = _('Contact')
       verbose_name_plural = _('Contact')
 
-class Customer(Contact):
+class ModeOfPayment(models.Model):
+   name = models.CharField(max_length=300, verbose_name = _("Name"))
+   timeToPaymentDate = models.IntegerField(verbose_name = _("Days To Payment Date"))
    class Meta:
       app_label = "crm"
-      verbose_name = _('Customer')
-      verbose_name_plural = _('Customers')
+      verbose_name = _('Mode of Payment')
+      verbose_name_plural = _('Modes of Payment')
 
    def __unicode__(self):
       return str(self.id) + ' ' + self.name
 
 class CustomerGroup(models.Model):
-   member = models.ManyToManyField(Customer)
    name = models.CharField(max_length=300)
    
    def hasMember(self, customer):
@@ -86,6 +87,17 @@ class CustomerGroup(models.Model):
       app_label = "crm"
       verbose_name = _('Customer Group')
       verbose_name_plural = _('Customer Groups')
+
+class Customer(Contact):
+   defaultModeOfPayment = models.ForeignKey('ModeOfPayment', verbose_name= _('Default Mode of Payment'))
+   ismemberof = models.ManyToManyField(CustomerGroup, verbose_name = _('Is member of'), blank=True)
+   class Meta:
+      app_label = "crm"
+      verbose_name = _('Customer')
+      verbose_name_plural = _('Customers')
+
+   def __unicode__(self):
+      return str(self.id) + ' ' + self.name
 
 class Distributor(Contact):
    class Meta:
@@ -118,6 +130,43 @@ class Contract(models.Model):
       app_label = "crm"
       verbose_name = _('Contract')
       verbose_name_plural = _('Contracts')
+      
+   def createInvoice(self):
+      invoice = Invoice()
+      invoice.contract = self
+      invoice.discount = 0
+      invoice.customer = self.defaultcustomer
+      invoice.status = 'C'
+      invoice.payableuntil = date.today().__str__()
+      invoice.dateofcreation = date.today().__str__()
+# TODO: today is not correct it has to be replaced
+      invoice.save()
+      return invoice
+      
+   def createQuote(self):
+      quote = Quote()
+      quote.contract = self
+      quote.discount = 0
+      quote.customer = self.defaultcustomer
+      quote.status = 'C'
+      quote.validuntil = date.today().__str__()
+      quote.dateofcreation = date.today().__str__()
+# TODO: today is not correct it has to be replaced
+      quote.save()
+      return quote
+      
+   def createPurchaseOrder(self):
+      purchaseorder = PurchaseOrder()
+      purchaseorder.contract = self.contract
+      purchaseorder.description = self.description
+      purchaseorder.discount = 0
+      purchaseorder.customer = self.defaultdistributor
+      purchaseorder.status = 'C'
+      purchaseorder.derivatedFromQuote = self
+      purchaseorder.dateofcreation = date.today().__str__()
+# TODO: today is not correct it has to be replaced
+      invoice.save()
+      return invoice
 
    def __unicode__(self):
       return str(self.id)
@@ -126,7 +175,10 @@ class PurchaseOrder(models.Model):
    contract = models.ForeignKey(Contract, verbose_name = _("Contract"))
    externalReference = models.CharField(verbose_name = _("External Reference"), max_length=100, blank=True)
    distributor = models.ForeignKey(Distributor, verbose_name = _("Distributor"))
-   state = models.CharField(max_length=1, choices=PURCHASEORDERSTATES)
+   description = models.CharField(verbose_name=_("Description"), max_length=100, blank=True)
+   lastPricingDate = models.DateField(verbose_name = _("Last Pricing Date"), blank=True, null=True)
+   lastCalculatedPrice = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Price With Tax"), blank=True, null=True)
+   status = models.CharField(max_length=1, choices=PURCHASEORDERSTATUS)
    staff = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True, verbose_name = _("Staff"), related_name="db_relpostaff")
    dateofcreation = models.DateTimeField(verbose_name = _("Created at"))
    lastmodification = models.DateTimeField(verbose_name = _("Last modified"), blank=True, null=True)
@@ -194,7 +246,7 @@ class SalesContract(models.Model):
 
 class Quote(SalesContract):
    validuntil = models.DateField(verbose_name = _("Valid until"))
-   state = models.CharField(max_length=1, choices=QUOTESTATES, verbose_name=_('State'))
+   status = models.CharField(max_length=1, choices=QUOTESTATUS, verbose_name=_('Status'))
 
    def createInvoice(self):
       invoice = Invoice()
@@ -202,7 +254,7 @@ class Quote(SalesContract):
       invoice.description = self.description
       invoice.discount = self.discount
       invoice.customer = self.customer
-      invoice.state = 'C'
+      invoice.status = 'C'
       invoice.derivatedFromQuote = self
       invoice.payableuntil = date.today().__str__()
       invoice.dateofcreation = date.today().__str__()
@@ -259,7 +311,8 @@ class Invoice(SalesContract):
    payableuntil = models.DateField(verbose_name = _("To pay until"))
    derivatedFromQuote = models.ForeignKey(Quote, blank=True, null=True)
    paymentBankReference = models.CharField(verbose_name = _("Payment Bank Reference"), max_length=100, blank=True)
-   state = models.CharField(max_length=1, choices=INVOICESTATES)
+   modeOfPayment = models.ForeignKey('ModeOfPayment', verbose_name= _('Mode of Payment'))
+   status = models.CharField(max_length=1, choices=INVOICESTATUS)
 
    def createPDF(self, deliveryorder):
      XMLSerializer = serializers.get_serializer("xml")
@@ -305,8 +358,7 @@ class Unit(models.Model):
       app_label = "crm"
       verbose_name = _('Unit')
       verbose_name_plural = _('Units') 
-      
-      
+
 class Tax(models.Model):
    taxrate = models.DecimalField(max_digits=5, decimal_places=2, verbose_name = _("Taxrate in Percentage"))
    name = models.CharField(verbose_name = _("Taxname"), max_length=100)
@@ -361,6 +413,21 @@ class Product(models.Model):
      def __str__ (self):
        return "There is no Price for this product: "+ self.product.__unicode__() +" that matches the date: "+self.date.__str__() +" , customer:"+self.customer.__unicode__()+" and unit:"+ self.unit.__unicode__()
 
+      
+class UnitTransform(models.Model):
+   fromUnit = models.ForeignKey('Unit', verbose_name = _("From Unit"), related_name="db_reltransfromfromunit")
+   toUnit = models.ForeignKey('Unit', verbose_name = _("To Unit"), related_name="db_reltransfromtounit")
+   product = models.ForeignKey('Product', verbose_name = _("Product"))
+   factor = models.IntegerField(verbose_name = _("Factor between From and To Unit"), blank=True, null=True)
+
+   def __unicode__(self):
+      return  self.shortName
+
+   class Meta:
+      app_label = "crm"
+      verbose_name = _('Unit Transfrom')
+      verbose_name_plural = _('Unit Transfroms') 
+           
 class Price(models.Model):
    product = models.ForeignKey(Product, verbose_name = _("Product"))
    unit = models.ForeignKey(Unit, blank=False, verbose_name= _("Unit"))
@@ -430,7 +497,7 @@ class PurchaseOrderPosition(Position):
    contract = models.ForeignKey(PurchaseOrder, verbose_name = _("Contract"))
 
 class PhoneAddressForContact(PhoneAddress):
-   purpose = models.CharField(max_length=1, choices=PURPOSESADDRESSINCUSTOMER)
+   purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCUSTOMER)
    person = models.ForeignKey(Contact)
 
    class Meta:
@@ -442,7 +509,7 @@ class PhoneAddressForContact(PhoneAddress):
       return str(self.phone)
 
 class EmailAddressForContact(EmailAddress):
-   purpose = models.CharField(max_length=1, choices=PURPOSESADDRESSINCUSTOMER)
+   purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCUSTOMER)
    person = models.ForeignKey(Contact)
 
    class Meta:
@@ -454,7 +521,7 @@ class EmailAddressForContact(EmailAddress):
       return str(self.email)
 
 class PostalAddressForContact(PostalAddress):
-   purpose = models.CharField(max_length=1, choices=PURPOSESADDRESSINCUSTOMER)
+   purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCUSTOMER)
    person = models.ForeignKey(Contact)
 
    class Meta:
@@ -466,7 +533,7 @@ class PostalAddressForContact(PostalAddress):
       return self.prename + ' ' + self.name + ' ' + self.addressline1
    
 class PostalAddressForContract(PostalAddress):
-   purpose = models.CharField(max_length=1, choices=PURPOSESADDRESSINCONTRACT)
+   purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT)
    contract = models.ForeignKey(Contract)
 
    class Meta:
@@ -478,7 +545,7 @@ class PostalAddressForContract(PostalAddress):
       return self.prename + ' ' + self.name + ' ' + self.addressline1
    
 class PostalAddressForPurchaseOrder(PostalAddress):
-   purpose = models.CharField(max_length=1, choices=PURPOSESADDRESSINCONTRACT)
+   purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT)
    contract = models.ForeignKey(PurchaseOrder)
 
    class Meta:
@@ -490,7 +557,7 @@ class PostalAddressForPurchaseOrder(PostalAddress):
       return self.prename + ' ' + self.name + ' ' + self.addressline1
    
 class PostalAddressForSalesContract(PostalAddress):
-   purpose = models.CharField(max_length=1, choices=PURPOSESADDRESSINCONTRACT)
+   purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT)
    contract = models.ForeignKey(SalesContract)
 
    class Meta:
@@ -502,7 +569,7 @@ class PostalAddressForSalesContract(PostalAddress):
       return self.prename + ' ' + self.name + ' ' + self.addressline1
 
 class PhoneAddressForContract(PhoneAddress):
-   purpose = models.CharField(max_length=1, choices=PURPOSESADDRESSINCONTRACT)
+   purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT)
    contract = models.ForeignKey(Contract)
 
    class Meta:
@@ -514,7 +581,7 @@ class PhoneAddressForContract(PhoneAddress):
       return str(self.phone)
 
 class PhoneAddressForSalesContract(PhoneAddress):
-   purpose = models.CharField(max_length=1, choices=PURPOSESADDRESSINCONTRACT)
+   purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT)
    contract = models.ForeignKey(SalesContract)
 
    class Meta:
@@ -526,7 +593,7 @@ class PhoneAddressForSalesContract(PhoneAddress):
       return str(self.phone)
 
 class PhoneAddressForPurchaseOrder(PhoneAddress):
-   purpose = models.CharField(max_length=1, choices=PURPOSESADDRESSINCONTRACT)
+   purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT)
    contract = models.ForeignKey(PurchaseOrder)
 
    class Meta:
@@ -538,7 +605,7 @@ class PhoneAddressForPurchaseOrder(PhoneAddress):
       return str(self.phone)
 
 class EmailAddressForContract(EmailAddress):
-   purpose = models.CharField(max_length=1, choices=PURPOSESADDRESSINCONTRACT) 
+   purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT) 
    contract = models.ForeignKey(Contract)
 
    class Meta:
@@ -550,7 +617,7 @@ class EmailAddressForContract(EmailAddress):
       return str(self.email)
 
 class EmailAddressForSalesContract(EmailAddress):
-   purpose = models.CharField(max_length=1, choices=PURPOSESADDRESSINCONTRACT) 
+   purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT) 
    contract = models.ForeignKey(SalesContract)
 
    class Meta:
@@ -562,7 +629,7 @@ class EmailAddressForSalesContract(EmailAddress):
       return str(self.email)
 
 class EmailAddressForPurchaseOrder(EmailAddress):
-   purpose = models.CharField(max_length=1, choices=PURPOSESADDRESSINCONTRACT) 
+   purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT) 
    contract = models.ForeignKey(PurchaseOrder)
 
    class Meta:
