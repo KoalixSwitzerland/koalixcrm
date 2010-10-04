@@ -93,7 +93,7 @@
               text-align="left">KU-<xsl:value-of select="object[@model='crm.contact']/@pk"/></fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
-              text-align="left">OF-<xsl:value-of select="object[@model='crm.salescontract']/field[@name='contract']"/></fo:block>
+              text-align="left">AU-<xsl:value-of select="object[@model='crm.salescontract']/field[@name='contract']"/></fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
               text-align="left">&#8201; </fo:block>
@@ -114,7 +114,7 @@
               text-align="left"><xsl:value-of select="object[@model='auth.user']/field[@name='first_name']"/>&#8201;  <xsl:value-of select="object[@model='auth.user']/field[@name='last_name']"/></fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
-              text-align="left"></fo:block>
+              text-align="left">&#8201; </fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
               text-align="left"><xsl:value-of select="object[@model='auth.user']/field[@name='email']"/></fo:block>
@@ -123,7 +123,7 @@
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
               text-align="left"
-              text-decoration="underline">Aaron Riedener,  Brunnenhof, CH-9602 Bazenheid</fo:block>
+              text-decoration="underline"><xsl:value-of select="object[@model='auth.user']/field[@name='first_name']"/>&#8201;  <xsl:value-of select="object[@model='auth.user']/field[@name='last_name']"/>,  Brunnenhof, CH-9602 Bazenheid</fo:block>
             <fo:block font-size="8pt"
               font-family="BitstreamVeraSans"
               text-align="left">&#8201; </fo:block>
@@ -216,7 +216,7 @@
             <fo:block font-size="8pt"
               font-family="BitstreamVeraSans"
               font-weight="bold"
-              text-align="start">Aaron Riedener &#8201;  &#8201;  &#8201;  &#8201; Brunnenhof &#8201;  &#8201;  &#8201;  &#8201; 9602 Bazenheid &#8201;  &#8201;  &#8201;  &#8201; +41 (0)71 511 21 18 &#8201;  &#8201;  &#8201;  &#8201; info@koalix.com</fo:block>
+              text-align="start"><xsl:value-of select="object[@model='auth.user']/field[@name='first_name']"/>&#8201;  <xsl:value-of select="object[@model='auth.user']/field[@name='last_name']"/> &#8201;  &#8201;  &#8201;  &#8201; Brunnenhof &#8201;  &#8201;  &#8201;  &#8201; 9602 Bazenheid &#8201;  &#8201;  &#8201;  &#8201; +41 (0)71 511 21 18 &#8201;  &#8201;  &#8201;  &#8201; info@koalix.com</fo:block>
            </fo:table-cell>
            <fo:table-cell>
             <fo:block font-size="8pt"

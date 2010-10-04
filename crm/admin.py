@@ -187,7 +187,7 @@ class OptionContract(admin.ModelAdmin):
       for obj in queryset:
          purchaseorder = obj.createPurchaseOrder()
          self.message_user(request, _("PurchaseOrder created"))
-         response = HttpResponseRedirect('/admin/crm/quote/'+str(purchaseorder.id))
+         response = HttpResponseRedirect('/admin/crm/purchaseorder/'+str(purchaseorder.id))
    createPurchaseOrder.short_description = _("Create Purchaseorder")
    
    def createQuote(self, request, queryset):
@@ -202,7 +202,7 @@ class OptionContract(admin.ModelAdmin):
       for obj in queryset:
          invoice = obj.createInvoice()
          self.message_user(request, _("Invoice created"))
-         response = HttpResponseRedirect('/admin/crm/quote/'+str(invoice.id))
+         response = HttpResponseRedirect('/admin/crm/invoice/'+str(invoice.id))
    createInvoice.short_description = _("Create Invoice")
    actions = ['createQuote', 'createInvoice', 'createPurchaseOrder']
 
@@ -284,9 +284,9 @@ class OptionQuote(admin.ModelAdmin):
      try:
         for obj in queryset:
            obj.recalculatePrices(date.today())
-           self.message_user(request, "Successfully recalculated Prices")
+           self.message_user(request, _("Successfully recalculated Prices"))
      except Product.NoPriceFound as e : 
-        self.message_user(request, "Unsuccessfull in updating the Prices "+ e.__str__())
+        self.message_user(request, _("Unsuccessfull in updating the Prices ")+ e.__str__())
         return;
    recalculatePrices.short_description = _("Recalculate Prices")
 

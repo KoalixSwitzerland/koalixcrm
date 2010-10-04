@@ -73,12 +73,6 @@ class ModeOfPayment(models.Model):
 
 class CustomerGroup(models.Model):
    name = models.CharField(max_length=300)
-   
-   def hasMember(self, customer):
-      for member in self.member.all():
-         if (customer == member):
-            return 1
-      return 0
       
    def __unicode__(self):
       return str(self.id) + ' ' + self.name
@@ -91,6 +85,13 @@ class CustomerGroup(models.Model):
 class Customer(Contact):
    defaultModeOfPayment = models.ForeignKey('ModeOfPayment', verbose_name= _('Default Mode of Payment'))
    ismemberof = models.ManyToManyField(CustomerGroup, verbose_name = _('Is member of'), blank=True)
+   
+   def isInGroup(self, customerGroup):
+      for customerGroupMembership in self.ismemberof.all():
+         if (customerGroupMembership.id == customerGroup.id):
+            return 1
+      return 0
+   
    class Meta:
       app_label = "crm"
       verbose_name = _('Customer')
@@ -157,19 +158,18 @@ class Contract(models.Model):
       
    def createPurchaseOrder(self):
       purchaseorder = PurchaseOrder()
-      purchaseorder.contract = self.contract
+      purchaseorder.contract = self
       purchaseorder.description = self.description
       purchaseorder.discount = 0
-      purchaseorder.customer = self.defaultdistributor
+      purchaseorder.distributor = self.defaultdistributor
       purchaseorder.status = 'C'
-      purchaseorder.derivatedFromQuote = self
       purchaseorder.dateofcreation = date.today().__str__()
 # TODO: today is not correct it has to be replaced
-      invoice.save()
-      return invoice
+      purchaseorder.save()
+      return purchaseorder
 
    def __unicode__(self):
-      return str(self.id)
+      return _("Contract") + " " + str(self.id)
 
 class PurchaseOrder(models.Model):
    contract = models.ForeignKey(Contract, verbose_name = _("Contract"))
@@ -190,7 +190,7 @@ class PurchaseOrder(models.Model):
       verbose_name_plural = _('Purchase Order')
 
    def __unicode__(self):
-      return str(self.contract.id) + " " + str(self.id)
+      return _("Purchase Order")+ ": " + str(self.id) + " "+ _("from Contract") + ": " + str(self.contract.id) 
 
 class SalesContract(models.Model):
    contract = models.ForeignKey(Contract, verbose_name=_('Contract'))
@@ -207,11 +207,6 @@ class SalesContract(models.Model):
    lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, verbose_name = _("Last modified by"), related_name="db_lstscmodified")
       
    def recalculatePrices(self, pricingDate):
-      self.setPrice(pricingDate)
-      self.lastPricingDate = pricingDate
-      self.save()
-   
-   def setPrice(self, pricingDate):
       price = 0
       tax = 0
       try:
@@ -233,6 +228,8 @@ class SalesContract(models.Model):
                   tax += position.recalculateTax()
          self.lastCalculatedPrice = price
          self.lastCalculatedTax = tax
+         self.lastPricingDate = pricingDate
+         self.save()
       except Quote.DoesNotExist:  
          return 0
 
@@ -242,8 +239,8 @@ class SalesContract(models.Model):
       verbose_name_plural = _('Sales Contracts')
 
    def __unicode__(self):
-      return str(self.contract.id) + " " + str(self.id)
-
+      return _("Sales Contract")+ ": " + str(self.id) + " "+_("from Contract")+": " + str(self.contract.id) 
+      
 class Quote(SalesContract):
    validuntil = models.DateField(verbose_name = _("Valid until"))
    status = models.CharField(max_length=1, choices=QUOTESTATUS, verbose_name=_('Status'))
@@ -302,6 +299,10 @@ class Quote(SalesContract):
      else:
          system("fop -c /var/www/koalixcrm/verasans.xml -xml /tmp/quote_"+str(self.id)+".xml -xsl /var/www/koalixcrm/purchaseconfirmation.xsl -pdf /tmp/purchaseconfirmation_"+str(self.id)+".pdf")
      return "/tmp/quote_"+str(self.id)+".pdf"
+     
+   def __unicode__(self):
+      return _("Quote")+ ": " + str(self.id) + " "+_("from Contract")+": " + str(self.contract.id) 
+      
    class Meta:
       app_label = "crm"
       verbose_name = _('Quote')
@@ -338,8 +339,9 @@ class Invoice(SalesContract):
         system("fop -c /var/www/koalixcrm/verasans.xml -xml /tmp/invoice_"+str(self.id)+".xml -xsl /var/www/koalixcrm/deliveryorder.xsl -pdf /tmp/deliveryorder_"+str(self.id)+".pdf")
 
 #  TODO: def registerPayment(self, amount, registerpaymentincrp):
+   def __unicode__(self):
+      return _("Invoice")+ ": " + str(self.id) + " "+_("from Contract")+": " + str(self.contract.id) 
       
-
    class Meta:
       app_label = "crm"
       verbose_name = _('Invoice')
@@ -387,10 +389,29 @@ class Product(models.Model):
 
    def getPrice(self, date, unit, customer):
       prices = Price.objects.filter(product=self.id)
+      unitTransforms = UnitTransform.objects.filter(product=self.id)
+      customerGroupTransforms = CustomerGroupTransform.objects.filter(product=self.id)
+      validpriceslist = list()
       for price in list(prices):
-          if (price.matchesDateAndUnit(date, unit, customer) ==  1):
-              return price;
-      raise Product.NoPriceFound(customer, unit, date, self)
+         for customerGroup in CustomerGroup.objects.filter(customer=customer):
+            if price.matchesDateUnitCustomerGroup(date, unit, customerGroup):
+               validpriceslist.append(price.price);
+            else:
+               for customerGroupTransform in customerGroupTransforms:
+                  if price.matchesDateUnitCustomerGroup(date, unit, customerGroupTransfrom.transform(customerGroup)):
+                     validpriceslist.append(price.price*customerGroup.factor);
+                  else:
+                     for unitTransfrom in list(unitTransforms):
+                        if price.matchesDateUnitCustomerGroup(date, unitTransfrom.transfrom(unit).transform(unitTransfrom)):
+                           validpriceslist.append(price.price*customerGroupTransform.factor*unitTransform.factor);
+      if (len(validpriceslist) >0):
+         lowestprice = validpriceslist[0]
+         for price in validpriceslist:
+            if (price < lowestprice):
+               lowestprice = price
+         return lowestprice
+      else:           
+         raise Product.NoPriceFound(customer, unit, date, self)
 
    def getTaxRate(self):
       return self.tax.getTaxRate();
@@ -411,7 +432,7 @@ class Product(models.Model):
        self.product = product
        return 
      def __str__ (self):
-       return "There is no Price for this product: "+ self.product.__unicode__() +" that matches the date: "+self.date.__str__() +" , customer:"+self.customer.__unicode__()+" and unit:"+ self.unit.__unicode__()
+       return _("There is no Price for this product")+": "+ self.product.__unicode__() + _("that matches the date")+": "+self.date.__str__() +" ,"+ _("customer")+ ": " +self.customer.__unicode__()+_(" and unit")+":"+ self.unit.__unicode__()
 
       
 class UnitTransform(models.Model):
@@ -420,13 +441,39 @@ class UnitTransform(models.Model):
    product = models.ForeignKey('Product', verbose_name = _("Product"))
    factor = models.IntegerField(verbose_name = _("Factor between From and To Unit"), blank=True, null=True)
 
+   def transform(self, unit):
+      if (self.fromUnit == unit):
+         return self.toUnit
+      else:
+         return unit
+         
    def __unicode__(self):
-      return  self.shortName
+      return  "From " + self.fromUnit.shortName + " to " + self.toUnit.shortName
 
    class Meta:
       app_label = "crm"
       verbose_name = _('Unit Transfrom')
       verbose_name_plural = _('Unit Transfroms') 
+           
+class CustomerGroupTransform(models.Model):
+   fromCustomerGroup = models.ForeignKey('CustomerGroup', verbose_name = _("From Unit"), related_name="db_reltransfromfromcustomergroup")
+   toCustomerGroup = models.ForeignKey('CustomerGroup', verbose_name = _("To Unit"), related_name="db_reltransfromtocustomergroup")
+   product = models.ForeignKey('Product', verbose_name = _("Product"))
+   factor = models.IntegerField(verbose_name = _("Factor between From and To Customer Group"), blank=True, null=True)
+
+   def transform(self, customerGroup):
+      if (self.fromCustomerGroup == customerGroup):
+         return self.toCustomerGroup
+      else:
+         return unit
+         
+   def __unicode__(self):
+      return  "From " + self.fromCustomerGroup.name + " to " + self.toCustomerGroup.name
+
+   class Meta:
+      app_label = "crm"
+      verbose_name = _('Customer Group Price Transfrom')
+      verbose_name_plural = _('Customer Group Price Transfroms') 
            
 class Price(models.Model):
    product = models.ForeignKey(Product, verbose_name = _("Product"))
@@ -436,8 +483,8 @@ class Price(models.Model):
    validfrom = models.DateField(verbose_name = _("Valid from"))
    validuntil = models.DateField(verbose_name = _("Valid until"))
 
-   def matchesDateAndUnit(self, date, unit, customer):
-      if ((self.validfrom - date).days < 0) & ((date - self.validuntil).days < 0) & (unit == self.unit) & self.customerGroup.hasMember(customer):
+   def matchesDateUnitCustomerGroup(self, date, unit, customerGroup):
+      if ((self.validfrom - date).days < 0) & ((date - self.validuntil).days < 0) & (unit == self.unit) & (self.customerGroup == customerGroup):
         return 1
       else:
         return 0
@@ -458,17 +505,14 @@ class Position(models.Model):
    shipmentPartner = models.ForeignKey(ShipmentPartner, verbose_name = _("Shipment Partner"), blank=True, null=True)
    shipmentID = models.CharField(max_length=100, verbose_name = _("Shipment ID"), blank=True, null=True)
    overwriteProductPrice = models.BooleanField(verbose_name=_('Overwrite Product Price'))
-   positionPricePerUnit = models.DecimalField(max_digits=17, decimal_places=2, blank=True, null=True)
+   positionPricePerUnit = models.DecimalField(verbose_name="Price per Unit", max_digits=17, decimal_places=2, blank=True, null=True)
    lastPricingDate = models.DateField(verbose_name = _("Last Pricing Date"), blank=True, null=True)
    lastCalculatedPrice = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Price"), blank=True, null=True)
    lastCalculatedTax = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Tax"), blank=True, null=True)
-   lastReferedPrice = models.ForeignKey(Price, blank=True, null=True)
-   lastCalculatedTax = models.BooleanField(verbose_name=_('Overwrite Product Price'))
 
    def recalculatePrices(self, pricingDate, customer):
      if self.overwriteProductPrice == False:
-       self.lastReferedPrice = self.product.getPrice(pricingDate, self.unit, customer)
-       self.positionPricePerUnit = self.lastReferedPrice.price
+       self.positionPricePerUnit = self.product.getPrice(pricingDate, self.unit, customer)
      if type(self.discount) == Decimal:
        self.lastCalculatedPrice = self.positionPricePerUnit*self.quantity*self.discount
      else:
@@ -484,6 +528,9 @@ class Position(models.Model):
        self.lastCalculatedTax = self.product.getTaxRate()/100*self.positionPricePerUnit*self.quantity
      self.save()
      return self.lastCalculatedTax
+     
+   def __unicode__(self):
+      return _("Position")+ ": " + str(self.id)
 
    class Meta:
       app_label = "crm"

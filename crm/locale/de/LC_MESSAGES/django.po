@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-09-20 17:46+0200\n"
+"POT-Creation-Date: 2010-10-04 18:24+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <aaron.riedener@koalix.ch>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: admin.py:132 admin.py:147 admin.py:162 admin.py:179 admin.py:229
-#: admin.py:272 admin.py:317 admin.py:339
+#: admin.py:272 admin.py:317 admin.py:350
 msgid "Basics"
 msgstr "Standard"
 
@@ -133,15 +133,15 @@ msgstr "Telefonnummer"
 msgid "Email Address"
 msgstr "Email Adresse"
 
-#: models.py:54 models.py:125 models.py:183 models.py:205 models.py:382
+#: models.py:54 models.py:126 models.py:183 models.py:205 models.py:387
 msgid "Created at"
 msgstr "Erstelldatum"
 
-#: models.py:55 models.py:126 models.py:184 models.py:206 models.py:384
+#: models.py:55 models.py:127 models.py:184 models.py:206 models.py:389
 msgid "Last modified"
 msgstr "Zuletzt geändert"
 
-#: models.py:56 models.py:127 models.py:185 models.py:207 models.py:385
+#: models.py:56 models.py:128 models.py:185 models.py:207 models.py:390
 msgid "Last modified by"
 msgstr "Zuletzt geändert durch"
 
@@ -153,7 +153,7 @@ msgstr "Kontakt"
 msgid "Days To Payment Date"
 msgstr "Tage bis zur Fälligkeit"
 
-#: models.py:68 models.py:75
+#: models.py:68 models.py:318
 msgid "Mode of Payment"
 msgstr "Zahlungsmodalität"
 
@@ -161,56 +161,65 @@ msgstr "Zahlungsmodalität"
 msgid "Modes of Payment"
 msgstr "Zahlungsmodalitäten"
 
-#: models.py:78 models.py:203
-msgid "Customer"
-msgstr "Kunde"
-
-#: models.py:79
-msgid "Customers"
-msgstr "Kunden"
-
-#: models.py:99 models.py:419
+#: models.py:82 models.py:484
 msgid "Customer Group"
 msgstr "Kundengruppe"
 
-#: models.py:100
+#: models.py:83
 msgid "Customer Groups"
 msgstr "Kundengruppen"
 
-#: models.py:105 models.py:177
+#: models.py:86
+msgid "Default Mode of Payment"
+msgstr "Standard Zahlungsmodalität"
+
+#: models.py:87
+msgid "Is member of"
+msgstr "Ist Mitglied von"
+
+#: models.py:97 models.py:203
+msgid "Customer"
+msgstr "Kunde"
+
+#: models.py:98
+msgid "Customers"
+msgstr "Kunden"
+
+#: models.py:106 models.py:177
 msgid "Distributor"
 msgstr "Lieferant"
 
-#: models.py:106
+#: models.py:107
 msgid "Distributors"
 msgstr "Lieferanten"
 
-#: models.py:114 models.py:115 models.py:443
+#: models.py:115 models.py:116 models.py:508
 msgid "Shipment Partner"
 msgstr "Versandunternehmen"
 
-#: models.py:121 models.py:182 models.py:204
+#: models.py:122 models.py:182 models.py:204
 msgid "Staff"
 msgstr "Mitarbeiter"
 
-#: models.py:122 models.py:178 models.py:199 models.py:348 models.py:379
-#: models.py:438
+#: models.py:123 models.py:178 models.py:199 models.py:354 models.py:384
+#: models.py:503
 msgid "Description"
 msgstr "Beschreibung"
 
-#: models.py:123
+#: models.py:124
 msgid "Default Customer"
 msgstr "Standard Kunde"
 
-#: models.py:124
+#: models.py:125
 msgid "Default Distributor"
 msgstr "Standard Lieferant"
 
-#: models.py:131 models.py:175 models.py:196 models.py:479 models.py:482
+#: models.py:132 models.py:172 models.py:175 models.py:196 models.py:544
+#: models.py:547
 msgid "Contract"
 msgstr "Auftrag"
 
-#: models.py:132
+#: models.py:133
 msgid "Contracts"
 msgstr "Aufträge"
 
@@ -218,7 +227,7 @@ msgstr "Aufträge"
 msgid "External Reference"
 msgstr "Externe Referenz"
 
-#: models.py:179 models.py:200 models.py:447
+#: models.py:179 models.py:200 models.py:512
 msgid "Last Pricing Date"
 msgstr "Datum der letze Preisberechnung"
 
@@ -226,19 +235,23 @@ msgstr "Datum der letze Preisberechnung"
 msgid "Last Calculted Price With Tax"
 msgstr "Zuletzt berechneter Preis mit Steuer"
 
-#: models.py:189 models.py:190
+#: models.py:189 models.py:190 models.py:193
 msgid "Purchase Order"
 msgstr "Bestellung"
 
-#: models.py:198 models.py:439
+#: models.py:193 models.py:245 models.py:307 models.py:346
+msgid "from Contract"
+msgstr "vom Auftrag"
+
+#: models.py:198 models.py:504
 msgid "Discount"
 msgstr "Rabatt"
 
-#: models.py:202 models.py:449
+#: models.py:202 models.py:514
 msgid "Last Calculted Tax"
 msgstr "Zuletzt berechnete Steuer"
 
-#: models.py:241
+#: models.py:241 models.py:245
 msgid "Sales Contract"
 msgstr "Verkaufsauftrag"
 
@@ -246,7 +259,7 @@ msgstr "Verkaufsauftrag"
 msgid "Sales Contracts"
 msgstr "Verkaufsaufträge"
 
-#: models.py:248 models.py:422
+#: models.py:248 models.py:487
 msgid "Valid until"
 msgstr "Gültig bis"
 
@@ -254,160 +267,208 @@ msgstr "Gültig bis"
 msgid "Status"
 msgstr "Status"
 
-#: models.py:307
+#: models.py:307 models.py:311
 msgid "Quote"
 msgstr "Offerte"
 
-#: models.py:308
+#: models.py:312
 msgid "Quotes"
 msgstr "Offerten"
 
-#: models.py:311
+#: models.py:315
 msgid "To pay until"
 msgstr "Zahlbar bis"
 
-#: models.py:313
+#: models.py:317
 msgid "Payment Bank Reference"
 msgstr "Zahlungsreferenz der Bank"
 
-#: models.py:344
+#: models.py:346 models.py:350
 msgid "Invoice"
 msgstr "Rechnung"
 
-#: models.py:345
+#: models.py:351
 msgid "Invoices"
 msgstr "Rechnungen"
 
-#: models.py:349
+#: models.py:355
 msgid "Displayed Name After Quantity In The Position"
 msgstr "Angezeigt nach der Anzahl in der Position"
 
-#: models.py:350
+#: models.py:356
 msgid "Is A Fraction Of"
 msgstr "Ist eine Untereinheit von"
 
-#: models.py:351
+#: models.py:357
 msgid "Factor Between This And Next Higher Unit"
 msgstr "Multiplikator zwischen dieser und der nächst höheren Einheit"
 
-#: models.py:358 models.py:383 models.py:418 models.py:441
+#: models.py:364 models.py:388 models.py:483 models.py:506
 msgid "Unit"
 msgstr "Masseinheit"
 
-#: models.py:359
+#: models.py:365
 msgid "Units"
 msgstr "Masseinheiten"
 
-#: models.py:363
+#: models.py:368
 msgid "Taxrate in Percentage"
 msgstr "Steuersatz in Prozent"
 
-#: models.py:364
+#: models.py:369
 msgid "Taxname"
 msgstr "Name der Steuer"
 
-#: models.py:374
+#: models.py:379
 msgid "Tax"
 msgstr "Steuer"
 
-#: models.py:375
+#: models.py:380
 msgid "Taxes"
 msgstr "Steuern"
 
-#: models.py:380
+#: models.py:385
 msgid "Title"
 msgstr "Titel"
 
-#: models.py:381
+#: models.py:386
 msgid "Product Number"
 msgstr "Produktnummer"
 
-#: models.py:403 models.py:417 models.py:440
+#: models.py:427 models.py:444 models.py:464 models.py:482 models.py:505
 msgid "Product"
 msgstr "Produkt"
 
-#: models.py:404
+#: models.py:428
 msgid "Products"
 msgstr "Produkte"
 
-#: models.py:420
+#: models.py:438
+msgid "There is no Price for this product"
+msgstr "Es existiert kein Preis für dieses Produkt"
+
+#: models.py:438
+msgid "that matches the date"
+msgstr "welches übereinstimmt mit Datum"
+
+#: models.py:438
+msgid "customer"
+msgstr "Kunde"
+
+#: models.py:438
+msgid " and unit"
+msgstr "und Einheit"
+
+#: models.py:442 models.py:462
+msgid "From Unit"
+msgstr "Von Masseinheit"
+
+#: models.py:443 models.py:463
+msgid "To Unit"
+msgstr "Zu Masseinheit"
+
+#: models.py:445
+msgid "Factor between From and To Unit"
+msgstr "Multiplikator zwischen der einen und der anderen Einheit"
+
+#: models.py:458
+msgid "Unit Transfrom"
+msgstr "Einheiten Umrechnung"
+
+#: models.py:459
+msgid "Unit Transfroms"
+msgstr "Einheiten Umrechnungen"
+
+#: models.py:465
+msgid "Factor between From and To Customer Group"
+msgstr "Prismultiplikator zwischen der einen und der anderen Kundengruppe"
+
+#: models.py:478
+msgid "Customer Group Price Transfrom"
+msgstr "Kundengruppe Preisumrechnung"
+
+#: models.py:479
+msgid "Customer Group Price Transfroms"
+msgstr "Kundengruppen Preisumrechnungen"
+
+#: models.py:485
 msgid "Price Per Unit"
 msgstr "Preis pro Einheit"
 
-#: models.py:421
+#: models.py:486
 msgid "Valid from"
 msgstr "Gültig vom"
 
-#: models.py:432
+#: models.py:497
 msgid "Price"
 msgstr "Preis"
 
-#: models.py:433
+#: models.py:498
 msgid "Prices"
 msgstr "Preise"
 
-#: models.py:436
+#: models.py:501
 msgid "Position Number"
 msgstr "Positionsnummer"
 
-#: models.py:437
+#: models.py:502
 msgid "Quantity"
 msgstr "Anzahl"
 
-#: models.py:442
+#: models.py:507
 msgid "Shipment on"
 msgstr "Verschickt am"
 
-#: models.py:444
+#: models.py:509
 msgid "Shipment ID"
 msgstr "Lieferungs ID"
 
-#: models.py:445 models.py:451
+#: models.py:510
 msgid "Overwrite Product Price"
 msgstr "Überschreie Produkt Preis"
 
-#: models.py:448
+#: models.py:513
 msgid "Last Calculted Price"
 msgstr "Zuletzt berechneter Preis"
 
-#: models.py:475
+#: models.py:536 models.py:540
 msgid "Position"
 msgstr "Position"
 
-#: models.py:476
+#: models.py:541
 msgid "Positions"
 msgstr "Positionen"
 
-#: models.py:485 models.py:497 models.py:509 models.py:521 models.py:533
-#: models.py:545 models.py:557 models.py:569 models.py:581 models.py:593
-#: models.py:605 models.py:617
+#: models.py:550 models.py:562 models.py:574 models.py:586 models.py:598
+#: models.py:610 models.py:622 models.py:634 models.py:646 models.py:658
+#: models.py:670 models.py:682
 msgid "Purpose"
 msgstr "Verwendungszweck"
 
-#: models.py:490 models.py:491
+#: models.py:555 models.py:556
 msgid "Phone Address For Contact"
 msgstr "Telefonnummer für Kontakte"
 
-#: models.py:502 models.py:503
+#: models.py:567 models.py:568
 msgid "Email Address For Contact"
 msgstr "Email Adresse für Kontakte"
 
-#: models.py:514 models.py:515
+#: models.py:579 models.py:580
 msgid "Postal Address For Contact"
 msgstr "Postadresse für Kontakte"
 
-#: models.py:526 models.py:527 models.py:538 models.py:539 models.py:550
-#: models.py:551
+#: models.py:591 models.py:592 models.py:603 models.py:604 models.py:615
+#: models.py:616
 msgid "Postal Address For Contracts"
 msgstr "Postadresse für Aufträge"
 
-#: models.py:562 models.py:563 models.py:574 models.py:575 models.py:586
-#: models.py:587
+#: models.py:627 models.py:628 models.py:639 models.py:640 models.py:651
+#: models.py:652
 msgid "Phone Address For Contracts"
 msgstr "Telefonnummer für Aufträge"
 
-#: models.py:598 models.py:599 models.py:610 models.py:611 models.py:622
-#: models.py:623
+#: models.py:663 models.py:664 models.py:675 models.py:676 models.py:687
+#: models.py:688
 msgid "Email Address For Contracts"
 msgstr "Email Adresse für Aufträge"
 
