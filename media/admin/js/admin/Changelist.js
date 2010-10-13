@@ -51,7 +51,7 @@ $(document).ready(function(){
     
     // SUBMIT FORM WITHOUT "RUN"-BUTTON
     $('div.actions select').change(function(){
-         if ($(this).val() == "createQuotePDF") {
+         if ($(this).val() == "createQuotePDF" || $(this).val() == "createBalanceSheetPDF") {
             newwindow = window.open(window.location,"_blank")
             window.focus()
             $('div.changelist-content form').submit();

@@ -10,5 +10,6 @@ urlpatterns = patterns('',
     (r'^grappelli/', include('grappelli.urls')),
     (r'^admin/filebrowser/', include('filebrowser.urls')),
     (r'^export/quote/(?P<quoteid>\d+)/$', 'crm.views.createQuotePDF'),
+    (r'^export/balancesheet/(?P<calculationunitid>\d+)/$', 'crp.views.createBalanceSheetPDF'),
     (r'^admin/', include(admin.site.urls)),
 )

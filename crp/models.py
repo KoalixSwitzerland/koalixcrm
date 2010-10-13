@@ -16,20 +16,37 @@ class CRPCalculationUnit(models.Model):
    def createBalanceSheetPDF(self):
       out = open("/tmp/balancesheet_"+str(self.id)+".xml","w")
       doc = Document()
-      main = doc.createElement("koalixcrmbalacesheet")
-      datetimetext = doc.createTextNode("This is a test!")
-      main.appendChild(datetimetext)
-      doc.appendChild(main)
+      main = doc.createElement("koalixcrpbalacesheet")
+      calculationUnitName = doc.createElement("calculationUnitName")
+      calculationUnitName.appendChild(doc.createTextNode(self.__unicode__()))
+      main.appendChild(calculationUnitName)
+      calculationUnitTo = doc.createElement("calculationUnitTo")
+      calculationUnitTo.appendChild(doc.createTextNode(self.end.year.__str__()))
+      main.appendChild(calculationUnitTo)
+      calculationUnitFrom = doc.createElement("calculationUnitFrom")
+      calculationUnitFrom.appendChild(doc.createTextNode(self.begin.year.__str__()))
+      main.appendChild(calculationUnitFrom)
+      accountNumber = doc.createElement("AccountNumber")
       accounts = Account.objects.all()
-      for account in accounts :
+      for account in list(accounts) :
          currentValue = account.valueNow(self)
          if (currentValue != 0):
             currentAccountElement = doc.createElement("Account")
-            currentAccountElement.setAttribute("accountNumber", account.accountNumber)
-            currentAccountElement.setAttribute("currentValue", currentValue)
-            currentAccountElement.appendChild(doc.createTextNode(account.title))
+            accountNumber = doc.createElement("AccountNumber")
+            accountNumber.appendChild(doc.createTextNode(account.accountNumber.__str__()))
+            currentValueElement = doc.createElement("currentValue")
+            currentValueElement.appendChild(doc.createTextNode(currentValue.__str__()))
+            accountNameElement = doc.createElement("accountName")
+            accountNameElement.appendChild(doc.createTextNode(account.title))
+            currentAccountElement.setAttribute("accountType", account.accountType.__str__())
+            currentAccountElement.appendChild(accountNumber)
+            currentAccountElement.appendChild(accountNameElement)
+            currentAccountElement.appendChild(currentValueElement)
+            main.appendChild(currentAccountElement)
+      doc.appendChild(main)
       out.write(doc.toprettyxml(indent="  "))
       system("fop -c /var/www/koalixcrm/verasans.xml -xml /tmp/balancesheet_"+str(self.id)+".xml -xsl /var/www/koalixcrm/balancesheet.xsl -pdf /tmp/balancesheet_"+str(self.id)+".pdf")
+      return "/tmp/balancesheet_"+str(self.id)+".pdf"
       
    def __unicode__(self):
       return  self.title

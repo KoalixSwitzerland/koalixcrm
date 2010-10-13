@@ -134,7 +134,7 @@ class InlineQuote(admin.TabularInline):
       }),
       (_('Advanced (not editable)'), {
          'classes': ('collapse',),
-         'fields': ('lastPricingDate', 'lastCalculatedPrice')
+         'fields': ('lastPricingDate', 'lastCalculatedPrice', 'lastCalculatedTax',)
       }),
    )
    allow_add = False
@@ -149,7 +149,7 @@ class InlineInvoice(admin.TabularInline):
       }),
       (_('Advanced (not editable)'), {
          'classes': ('collapse',),
-         'fields': ('lastPricingDate', 'lastCalculatedPrice')
+         'fields': ('lastPricingDate', 'lastCalculatedPrice', 'lastCalculatedTax',)
       }),
    )
    allow_add = False
@@ -231,7 +231,7 @@ class OptionInvoice(admin.ModelAdmin):
       }),
       (_('Advanced (not editable)'), {
          'classes': ('collapse',),
-         'fields': ('lastPricingDate', 'lastCalculatedPrice')
+         'fields': ('lastPricingDate', 'lastCalculatedPrice', 'lastCalculatedTax',)
       }),
    )
    save_as = True
@@ -274,7 +274,7 @@ class OptionQuote(admin.ModelAdmin):
       }),
       (_('Advanced (not editable)'), {
          'classes': ('collapse',),
-         'fields': ('lastPricingDate', 'lastCalculatedPrice')
+         'fields': ('lastPricingDate', 'lastCalculatedPrice', 'lastCalculatedTax',)
       }),
    )
    save_as = True

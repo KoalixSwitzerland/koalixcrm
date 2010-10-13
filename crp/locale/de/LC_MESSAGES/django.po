@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-23 17:32+0100\n"
+"POT-Creation-Date: 2010-10-12 07:13+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,118 +16,119 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: admin.py:13 admin.py:23
+#: admin.py:13 admin.py:24
 msgid "Basic"
 msgstr "Grundlagen"
 
-#: models.py:9
-msgid "Account Number"
-msgstr "Kontonummer"
+#: admin.py:31
+msgid "Basics"
+msgstr "Grundlagen"
 
-#: models.py:10
-msgid "Account Title"
-msgstr "Kontobezeichnung"
+#: admin.py:40
+msgid "Balance Sheet PDF created"
+msgstr "PDF der Bilanz erzeugt"
 
-#: models.py:11
-msgid "Account Type"
-msgstr "Kontotyp"
+#: admin.py:41
+msgid "Create PDF of Balance Sheet"
+msgstr "Erzeuge ein PDF der Bilanz"
 
 #: models.py:12
-msgid "Value at start of Business Year"
-msgstr "Wert zum Jahresbeginn"
-
-#: models.py:16
-msgid "Account"
-msgstr "Konto"
-
-#: models.py:17
-msgid "Accounts"
-msgstr "Konten"
-
-#: models.py:20
-msgid "From Account"
-msgstr "Vom Konto (Soll)"
-
-#: models.py:21
-msgid "To Account"
-msgstr "Zu Konto (Haben)"
-
-#: models.py:22
-msgid "Amount"
-msgstr "Betrag"
-
-#: models.py:23
-msgid "Description"
-msgstr "Beschreibung"
-
-#: models.py:25
-msgid "Booking at"
-msgstr "Buchung am"
-
-#: models.py:26
-msgid "Reference Staff"
-msgstr "Zuständiger Mitarbeiter"
-
-#: models.py:27
-msgid "Created at"
-msgstr "Erstellt am"
-
-#: models.py:28
-msgid "Last modified"
-msgstr "Zuletzt verändert"
-
-#: models.py:29
-msgid "Last modified by"
-msgstr "Zuletzt verändert von"
-
-#: models.py:33
-msgid "Booking"
-msgstr "Buchung"
-
-#: models.py:34
-msgid "Bookings"
-msgstr "Buchungen"
-
-#: models.py:37
 msgid "Title"
 msgstr "Titel"
 
-#: models.py:38
-msgid "All Earnings"
-msgstr "Alle Einnahmen"
+#: models.py:13
+msgid "Begin"
+msgstr "Anfang"
 
-#: models.py:39
-msgid "All Spendings"
-msgstr "Alle Ausgaben"
+#: models.py:14
+msgid "End"
+msgstr "Ende"
 
-#: models.py:40
-msgid "All Activas"
-msgstr "Alle Aktiven"
-
-#: models.py:41
-msgid "All Passivas"
-msgstr "Alle Passiven"
-
-#: models.py:50
+#: models.py:51
 msgid "CRP Calculation Unit"
 msgstr "Geschäftsjahr/quartal"
 
-#: models.py:51
+#: models.py:52
 msgid "CRP Calculation Units"
 msgstr "Geschäftsjahre/quartale"
 
+#: models.py:55
+msgid "Account Number"
+msgstr "Kontonummer"
+
+#: models.py:56
+msgid "Account Title"
+msgstr "Kontobezeichnung"
+
+#: models.py:57
+msgid "Account Type"
+msgstr "Kontotyp"
+
+#: models.py:81 models.py:82
+msgid "Account"
+msgstr "Konto"
+
+#: models.py:86
+msgid "From Account"
+msgstr "Vom Konto (Soll)"
+
+#: models.py:87
+msgid "To Account"
+msgstr "Zu Konto (Haben)"
+
+#: models.py:88
+msgid "Amount"
+msgstr "Betrag"
+
+#: models.py:89
+msgid "Description"
+msgstr "Beschreibung"
+
+#: models.py:91
+msgid "Booking at"
+msgstr "Buchung am"
+
+#: models.py:92
+msgid "CRPCalculationUnit"
+msgstr "Geschäftsjahr/quartal"
+
+#: models.py:93
+msgid "Reference Staff"
+msgstr "Zuständiger Mitarbeiter"
+
+#: models.py:94
+msgid "Created at"
+msgstr "Erstellt am"
+
+#: models.py:95
+msgid "Last modified"
+msgstr "Zuletzt verändert"
+
+#: models.py:96
+msgid "Last modified by"
+msgstr "Zuletzt verändert von"
+
+#: models.py:103
+msgid "Booking"
+msgstr "Buchung"
+
+#: models.py:104
+msgid "Bookings"
+msgstr "Buchungen"
+
 #: const/accountTypeChoices.py:6
 msgid "Earnings"
-msgstr "Einnahmen"
+msgstr "Erflog (Einnahmen)"
 
 #: const/accountTypeChoices.py:7
 msgid "Spendings"
-msgstr "Ausgaben"
+msgstr "Aufwand (Ausgaben)"
 
 #: const/accountTypeChoices.py:8
 msgid "Passiv"
-msgstr "Passiva"
+msgstr "Passiva (Schulden)"
 
 #: const/accountTypeChoices.py:9
 msgid "Activ"
-msgstr "Aktiva"
+msgstr "Aktiva (Vermögen)"
+

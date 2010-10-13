@@ -213,16 +213,16 @@ class SalesContract(models.Model):
          positions = SalesContractPosition.objects.filter(contract=self.id)
          if type(positions) == SalesContractPosition:
             if type(self.discount) == Decimal:
-               price = positions.recalculatePrices(pricingDate, self.customer)*self.discount
-               tax = positions.recalculateTax()*self.discount
+               price = positions.recalculatePrices(pricingDate, self.customer)*(1+self.discount)
+               tax = positions.recalculateTax()*(1+self.discount)
             else:
                price = positions.recalculatePrices(pricingDate, self.customer)
                tax = positions.recalculateTax()
          else:
             for position in positions:
                if type(self.discount) == Decimal:
-                  price += position.recalculatePrices(pricingDate, self.customer)*self.discount
-                  tax += position.recalculateTax()*self.discount
+                  price += position.recalculatePrices(pricingDate, self.customer)*(1+self.discount)
+                  tax += position.recalculateTax()*(1+self.discount)
                else:
                   price += position.recalculatePrices(pricingDate, self.customer)
                   tax += position.recalculateTax()
@@ -230,6 +230,7 @@ class SalesContract(models.Model):
          self.lastCalculatedTax = tax
          self.lastPricingDate = pricingDate
          self.save()
+         return 1
       except Quote.DoesNotExist:  
          return 0
 
@@ -505,7 +506,7 @@ class Position(models.Model):
    shipmentPartner = models.ForeignKey(ShipmentPartner, verbose_name = _("Shipment Partner"), blank=True, null=True)
    shipmentID = models.CharField(max_length=100, verbose_name = _("Shipment ID"), blank=True, null=True)
    overwriteProductPrice = models.BooleanField(verbose_name=_('Overwrite Product Price'))
-   positionPricePerUnit = models.DecimalField(verbose_name="Price per Unit", max_digits=17, decimal_places=2, blank=True, null=True)
+   positionPricePerUnit = models.DecimalField(verbose_name=_("Price Per Unit"), max_digits=17, decimal_places=2, blank=True, null=True)
    lastPricingDate = models.DateField(verbose_name = _("Last Pricing Date"), blank=True, null=True)
    lastCalculatedPrice = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Price"), blank=True, null=True)
    lastCalculatedTax = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Tax"), blank=True, null=True)
@@ -514,7 +515,7 @@ class Position(models.Model):
      if self.overwriteProductPrice == False:
        self.positionPricePerUnit = self.product.getPrice(pricingDate, self.unit, customer)
      if type(self.discount) == Decimal:
-       self.lastCalculatedPrice = self.positionPricePerUnit*self.quantity*self.discount
+       self.lastCalculatedPrice = self.positionPricePerUnit*self.quantity*(1+self.discount)
      else:
        self.lastCalculatedPrice = self.positionPricePerUnit*self.quantity
      self.lastPricingDate = pricingDate
@@ -523,7 +524,7 @@ class Position(models.Model):
      
    def recalculateTax(self):
      if type(self.discount) == Decimal:
-       self.lastCalculatedTax = self.product.getTaxRate()/100*self.positionPricePerUnit*self.quantity*self.discount
+       self.lastCalculatedTax = self.product.getTaxRate()/100*self.positionPricePerUnit*self.quantity*(1+self.discount)
      else:
        self.lastCalculatedTax = self.product.getTaxRate()/100*self.positionPricePerUnit*self.quantity
      self.save()

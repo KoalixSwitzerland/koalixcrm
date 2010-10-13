@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 from django import forms
 from django.core.urlresolvers import reverse
-
 from crm.models import *
 from crp.models import *
 from django.utils.translation import ugettext as _
-
 from django.contrib import admin
+from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 
 class OptionBooking(admin.ModelAdmin):
    list_display = ('fromAccount', 'toAccount', 'amount', 'bookingDate', 'staff')
-   fieldsets = ((_('Basic'), {'fields' : ('fromAccount', 'toAccount', 'amount', 'bookingDate', 'staff', 'description', 'bookingReference')}),)
+   fieldsets = ((_('Basic'), {'fields' : ('fromAccount', 'toAccount', 'amount', 'bookingDate', 'staff', 'description', 'bookingReference', 'crpCalculationUnit')}),)
    save_as = True
 
    def save_model(self, request, obj, form, change):
@@ -36,8 +36,8 @@ class OptionCRPCalculationUnit(admin.ModelAdmin):
    
    def createBalanceSheetPDF(self, request, queryset):
       for obj in queryset:
-         obj.createBalanceSheetPDF()
-         self.message_user(request, _("Balance Sheet PDF created"))
+         response = HttpResponseRedirect('/export/balancesheet/'+str(obj.id))
+         return response
    createBalanceSheetPDF.short_description = _("Create PDF of Balance Sheet")
    
    actions = ['createBalanceSheetPDF',]

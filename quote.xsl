@@ -284,16 +284,36 @@
                    </fo:block>
                 </fo:table-cell>
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
-                   <fo:block  text-align="start" >
-                      <xsl:value-of select="/object[@model='crm.product' and @pk='1']/field[@name='Title']"/>
+                   <fo:block  text-align="start"
+                              font-weight="bold"
+                              font-size="9pt"
+                              font-family="BitstreamVeraSans"
+                              line-height="12pt">
+                      <xsl:variable name ="productinthisposition" select="field[@name='product']"/>
+                      <xsl:value-of select="../object[@model='crm.product' and @pk='$productinthisposition']/field[@name='title']"/>
+                   </fo:block>
                       <xsl:choose>
-                         <xsl:when test="field[@name='description']">
-                      <xsl:value-of select="field[@name='description']"/></xsl:when>
+                         <xsl:when test="../object[@model='crm.product' and @pk='1']/field[@name='description']/None">
+                           <fo:block  text-align="start"
+                                       font-size="7pt"
+                                       font-family="BitstreamVeraSans">
+                           <xsl:value-of select="field[@name='description']"/>
+                           </fo:block>
+                         </xsl:when>
                          <xsl:otherwise>
-                      <xsl:value-of select="field[@name='description']"/>
+                           <fo:block  text-align="start"
+                                       font-size="7pt"
+                                       font-family="BitstreamVeraSans">
+                           <xsl:value-of select="../object[@model='crm.product' and @pk='1']/field[@name='description']"/>
+                           </fo:block>
+                           <fo:block  text-align="start"
+                                       font-size="7pt"
+                                       font-family="BitstreamVeraSans"
+                                       padding-top="0.1cm">
+                           <xsl:value-of select="field[@name='description']"/>
+                           </fo:block>
                          </xsl:otherwise>
                       </xsl:choose>
-                   </fo:block>
                 </fo:table-cell>
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="end" >
