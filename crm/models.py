@@ -339,7 +339,7 @@ class Invoice(SalesContract):
      else:
         system("fop -c /var/www/koalixcrm/verasans.xml -xml /tmp/invoice_"+str(self.id)+".xml -xsl /var/www/koalixcrm/deliveryorder.xsl -pdf /tmp/deliveryorder_"+str(self.id)+".pdf")
 
-#  TODO: def registerPayment(self, amount, registerpaymentincrp):
+#  TODO: def registerPayment(self, amount, registerpaymentinaccounting):
    def __unicode__(self):
       return _("Invoice")+ ": " + str(self.id) + " "+_("from Contract")+": " + str(self.contract.id) 
       

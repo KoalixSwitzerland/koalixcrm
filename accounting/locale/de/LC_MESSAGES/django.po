@@ -45,11 +45,11 @@ msgid "End"
 msgstr "Ende"
 
 #: models.py:51
-msgid "CRP Calculation Unit"
+msgid "Accounting Calculation Unit"
 msgstr "Geschäftsjahr/quartal"
 
 #: models.py:52
-msgid "CRP Calculation Units"
+msgid "Accounting Calculation Units"
 msgstr "Geschäftsjahre/quartale"
 
 #: models.py:55
@@ -89,7 +89,7 @@ msgid "Booking at"
 msgstr "Buchung am"
 
 #: models.py:92
-msgid "CRPCalculationUnit"
+msgid "AccountingCalculationUnit"
 msgstr "Geschäftsjahr/quartal"
 
 #: models.py:93

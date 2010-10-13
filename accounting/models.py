@@ -8,7 +8,7 @@ from os import system
 from xml.dom.minidom import Document
 
    
-class CRPCalculationUnit(models.Model):
+class AccountingCalculationUnit(models.Model):
    title =  models.CharField(max_length=200, verbose_name=_("Title")) # For example "Year 2009", "1st Quarter 2009"
    begin = models.DateField(verbose_name=_("Begin"))
    end = models.DateField(verbose_name=_("End"))
@@ -16,7 +16,7 @@ class CRPCalculationUnit(models.Model):
    def createBalanceSheetPDF(self):
       out = open("/tmp/balancesheet_"+str(self.id)+".xml","w")
       doc = Document()
-      main = doc.createElement("koalixcrpbalacesheet")
+      main = doc.createElement("koalixaccountingbalacesheet")
       calculationUnitName = doc.createElement("calculationUnitName")
       calculationUnitName.appendChild(doc.createTextNode(self.__unicode__()))
       main.appendChild(calculationUnitName)
@@ -56,9 +56,9 @@ class CRPCalculationUnit(models.Model):
 # TODO: def createNewCalculationUnit() Neues Geschäftsjahr erstellen
    
    class Meta:
-      app_label = "crp"
-      verbose_name = _('CRP Calculation Unit')
-      verbose_name_plural = _('CRP Calculation Units')
+      app_label = "accounting"
+      verbose_name = _('Accounting Calculation Unit')
+      verbose_name_plural = _('Accounting Calculation Units')
            
 class Account(models.Model):
    accountNumber = models.IntegerField(verbose_name=_("Account Number"))
@@ -66,16 +66,16 @@ class Account(models.Model):
    accountType = models.CharField(verbose_name=_("Account Type"), max_length=1, choices=ACCOUNTTYPECHOICES)
    
    
-   def valueNow(self, crpCalculationUnit):
-      sum = self.allBookings(fromAccount = False, crpCalculationUnit = crpCalculationUnit) - self.allBookings(fromAccount = True, crpCalculationUnit = crpCalculationUnit)
+   def valueNow(self, accountingCalculationUnit):
+      sum = self.allBookings(fromAccount = False, accountingCalculationUnit = accountingCalculationUnit) - self.allBookings(fromAccount = True, accountingCalculationUnit = accountingCalculationUnit)
       return sum
 
-   def allBookings(self, fromAccount, crpCalculationUnit):
+   def allBookings(self, fromAccount, accountingCalculationUnit):
       sum = 0
       if (fromAccount == True):
-         bookings = Booking.objects.filter(fromAccount=self.id, crpCalculationUnit=crpCalculationUnit.id)
+         bookings = Booking.objects.filter(fromAccount=self.id, accountingCalculationUnit=accountingCalculationUnit.id)
       else:
-         bookings = Booking.objects.filter(toAccount=self.id, crpCalculationUnit=crpCalculationUnit.id)
+         bookings = Booking.objects.filter(toAccount=self.id, accountingCalculationUnit=accountingCalculationUnit.id)
       
       for booking in list(bookings):
          sum = sum + booking.amount
@@ -86,7 +86,7 @@ class Account(models.Model):
       return  self.accountNumber.__str__()  + " " + self.title
       
    class Meta:
-      app_label = "crp"
+      app_label = "accounting"
       verbose_name = _('Account')
       verbose_name_plural = _('Account')
       ordering = ['accountNumber']
@@ -98,7 +98,7 @@ class Booking(models.Model):
    description = models.TextField(verbose_name=_("Description"), blank=True)
    bookingReference = models.ForeignKey(Contract, null=True, blank=True)
    bookingDate = models.DateTimeField(verbose_name = _("Booking at"))
-   crpCalculationUnit = models.ForeignKey(CRPCalculationUnit, verbose_name=_("CRPCalculationUnit"))
+   accountingCalculationUnit = models.ForeignKey(AccountingCalculationUnit, verbose_name=_("AccountingCalculationUnit"))
    staff = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True, verbose_name = _("Reference Staff"), related_name="db_booking_refstaff")
    dateofcreation = models.DateTimeField(auto_now_add=True, verbose_name = _("Created at"))
    lastmodification = models.DateTimeField(auto_now=True, verbose_name = _("Last modified"), null=True, blank=True)
@@ -108,6 +108,6 @@ class Booking(models.Model):
       return  self.fromAccount.__str__()  + " " + self.toAccount.__str__()  + " " + self.amount.__str__() 
       
    class Meta:
-      app_label = "crp"
+      app_label = "accounting"
       verbose_name = _('Booking')
       verbose_name_plural = _('Bookings')
