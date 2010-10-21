@@ -288,6 +288,7 @@ class Quote(SalesContract):
      for position in list(SalesContractPosition.objects.filter(contract=self.id)):
          objectsToSerialize += list(Position.objects.filter(id=position.id))
          objectsToSerialize += list(Product.objects.filter(id=position.product.id))
+         objectsToSerialize += list(Unit.objects.filter(id=position.unit.id))
      objectsToSerialize += list(auth.models.User.objects.filter(id=self.staff.id))
      objectsToSerialize += list(auth.models.User.objects.filter(id=self.lastmodifiedby.id))
      objectsToSerialize += list(PostalAddressForContact.objects.filter(person=self.customer.id))

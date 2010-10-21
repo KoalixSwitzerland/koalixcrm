@@ -2,7 +2,7 @@
      xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
      xmlns:fo="http://www.w3.org/1999/XSL/Format">
 <xsl:decimal-format name="european" decimal-separator="," grouping-separator="."/>
-<xsl:template match ="koalixcrpbalacesheet">
+<xsl:template match ="koalixaccountingbalacesheet">
   <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
     <!-- defines page layout -->
     <fo:layout-master-set>

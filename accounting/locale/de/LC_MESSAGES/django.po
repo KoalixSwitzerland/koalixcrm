@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-12 07:13+0200\n"
+"POT-Creation-Date: 2010-10-13 20:24+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,10 +23,6 @@ msgstr "Grundlagen"
 #: admin.py:31
 msgid "Basics"
 msgstr "Grundlagen"
-
-#: admin.py:40
-msgid "Balance Sheet PDF created"
-msgstr "PDF der Bilanz erzeugt"
 
 #: admin.py:41
 msgid "Create PDF of Balance Sheet"
@@ -44,75 +40,75 @@ msgstr "Anfang"
 msgid "End"
 msgstr "Ende"
 
-#: models.py:51
+#: models.py:60
 msgid "Accounting Calculation Unit"
 msgstr "Geschäftsjahr/quartal"
 
-#: models.py:52
+#: models.py:61
 msgid "Accounting Calculation Units"
 msgstr "Geschäftsjahre/quartale"
 
-#: models.py:55
+#: models.py:64
 msgid "Account Number"
 msgstr "Kontonummer"
 
-#: models.py:56
+#: models.py:65
 msgid "Account Title"
 msgstr "Kontobezeichnung"
 
-#: models.py:57
+#: models.py:66
 msgid "Account Type"
 msgstr "Kontotyp"
 
-#: models.py:81 models.py:82
+#: models.py:90 models.py:91
 msgid "Account"
 msgstr "Konto"
 
-#: models.py:86
+#: models.py:95
 msgid "From Account"
 msgstr "Vom Konto (Soll)"
 
-#: models.py:87
+#: models.py:96
 msgid "To Account"
 msgstr "Zu Konto (Haben)"
 
-#: models.py:88
+#: models.py:97
 msgid "Amount"
 msgstr "Betrag"
 
-#: models.py:89
+#: models.py:98
 msgid "Description"
 msgstr "Beschreibung"
 
-#: models.py:91
+#: models.py:100
 msgid "Booking at"
 msgstr "Buchung am"
 
-#: models.py:92
+#: models.py:101
 msgid "AccountingCalculationUnit"
 msgstr "Geschäftsjahr/quartal"
 
-#: models.py:93
+#: models.py:102
 msgid "Reference Staff"
 msgstr "Zuständiger Mitarbeiter"
 
-#: models.py:94
+#: models.py:103
 msgid "Created at"
 msgstr "Erstellt am"
 
-#: models.py:95
+#: models.py:104
 msgid "Last modified"
 msgstr "Zuletzt verändert"
 
-#: models.py:96
+#: models.py:105
 msgid "Last modified by"
 msgstr "Zuletzt verändert von"
 
-#: models.py:103
+#: models.py:112
 msgid "Booking"
 msgstr "Buchung"
 
-#: models.py:104
+#: models.py:113
 msgid "Bookings"
 msgstr "Buchungen"
 
@@ -132,3 +128,5 @@ msgstr "Passiva (Schulden)"
 msgid "Activ"
 msgstr "Aktiva (Vermögen)"
 
+#~ msgid "Balance Sheet PDF created"
+#~ msgstr "PDF der Bilanz erzeugt"

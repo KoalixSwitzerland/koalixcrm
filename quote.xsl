@@ -236,7 +236,8 @@
               line-height="13pt" >&#8201;  </fo:block>
        <fo:table table-layout="fixed" width="100%">
           <fo:table-column column-width="1.0cm"/>
-          <fo:table-column column-width="8.4cm"/>
+          <fo:table-column column-width="6.6cm"/>
+          <fo:table-column column-width="1.8cm"/>
           <fo:table-column column-width="1.8cm"/>
           <fo:table-column column-width="2.5cm"/>
           <fo:table-column column-width="1.8cm"/>
@@ -255,6 +256,11 @@
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="end" >
                       Anzahl
+                   </fo:block>
+                </fo:table-cell>
+                <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
+                   <fo:block  text-align="end" >
+                      Einheit
                    </fo:block>
                 </fo:table-cell>
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
@@ -327,6 +333,17 @@
                 </fo:table-cell>
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="end" >
+                      <xsl:variable name ="unitinthisposition" select="field[@name='unit']"/>
+                      <xsl:choose>
+                         <xsl:when test="field[../object[@model='crm.unit' and @pk='$unitinthisposition']/shortName/None]">-</xsl:when>
+                         <xsl:otherwise>
+                            <xsl:value-of select="../object[@model='crm.unit' and @pk='$unitinthisposition']/shortName"/>
+                         </xsl:otherwise>
+                      </xsl:choose>
+                   </fo:block>
+                </fo:table-cell>
+                <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
+                   <fo:block  text-align="end" >
                       <xsl:choose>
                          <xsl:when test="field[@name='positionPricePerUnit']/None">-</xsl:when>
                          <xsl:otherwise>
@@ -383,7 +400,7 @@
                 </fo:table-cell>
              </fo:table-row>
              <fo:table-row keep-together="always" keep-with-previous="always">
-                <fo:table-cell number-columns-spanned="2">
+                <fo:table-cell number-columns-spanned="3">
                    <fo:block  text-align="start" >
                    </fo:block>
                 </fo:table-cell>
@@ -404,7 +421,7 @@
                 </fo:table-cell>
              </fo:table-row>
              <fo:table-row keep-together="always" keep-with-previous="always">
-                <fo:table-cell number-columns-spanned="2">
+                <fo:table-cell number-columns-spanned="3">
                    <fo:block  text-align="start" >
                    </fo:block>
                 </fo:table-cell>
