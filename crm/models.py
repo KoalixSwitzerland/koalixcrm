@@ -140,6 +140,7 @@ class Contract(models.Model):
       invoice.status = 'C'
       invoice.payableuntil = date.today().__str__()
       invoice.dateofcreation = date.today().__str__()
+      invoice.modeOfPayment = self.defaultcustomer.defaultModeOfPayment
 # TODO: today is not correct it has to be replaced
       invoice.save()
       return invoice
@@ -248,7 +249,7 @@ class Quote(SalesContract):
 
    def createInvoice(self):
       invoice = Invoice()
-      invoice.contact = self.contract
+      invoice.contract = self.contract
       invoice.description = self.description
       invoice.discount = self.discount
       invoice.customer = self.customer
@@ -256,24 +257,17 @@ class Quote(SalesContract):
       invoice.derivatedFromQuote = self
       invoice.payableuntil = date.today().__str__()
       invoice.dateofcreation = date.today().__str__()
+      invoice.modeOfPayment = self.customer.defaultModeOfPayment
 # TODO: today is not correct it has to be replaced
       invoice.save()
       try:
          quotePositions = SalesContractPosition.objects.filter(contract=self.id)
-         if type(quotePositions) == SalesContractPosition:
+         for quotePosition in list(quotePositions):
             invoicePosition = Position()
-            invoicePosition = copy.copy(quotePositions)
-            invoicePosition.pk = None
+            invoicePosition = copy.copy(quotePosition)
             invoicePosition.contract = invoice
             invoicePosition.save()
-         else:
-            for quotePosition in quotePositions:
-               invoicePosition = Position()
-               invoicePosition = copy.copy(quotePosition)
-               invoicePosition.pk = None
-               invoicePosition.contract = invoice
-               invoicePosition.save()
-         return
+         return invoice
       except Quote.DoesNotExist:  
          return
 
@@ -328,6 +322,7 @@ class Invoice(SalesContract):
      for position in list(SalesContractPosition.objects.filter(contract=self.id)):
          objectsToSerialize += list(Position.objects.filter(id=position.id))
          objectsToSerialize += list(Product.objects.filter(id=position.product.id))
+         objectsToSerialize += list(Unit.objects.filter(id=position.unit.id))
      objectsToSerialize += list(auth.models.User.objects.filter(id=self.staff.id))
      objectsToSerialize += list(auth.models.User.objects.filter(id=self.lastmodifiedby.id))
      objectsToSerialize += list(PostalAddressForContact.objects.filter(person=self.customer.id))
@@ -339,6 +334,7 @@ class Invoice(SalesContract):
         system("fop -c /var/www/koalixcrm/verasans.xml -xml /tmp/invoice_"+str(self.id)+".xml -xsl /var/www/koalixcrm/invoice.xsl -pdf /tmp/invoice_"+str(self.id)+".pdf")
      else:
         system("fop -c /var/www/koalixcrm/verasans.xml -xml /tmp/invoice_"+str(self.id)+".xml -xsl /var/www/koalixcrm/deliveryorder.xsl -pdf /tmp/deliveryorder_"+str(self.id)+".pdf")
+     return "/tmp/invoice_"+str(self.id)+".pdf"
 
 #  TODO: def registerPayment(self, amount, registerpaymentinaccounting):
    def __unicode__(self):

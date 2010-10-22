@@ -188,6 +188,7 @@ class OptionContract(admin.ModelAdmin):
          purchaseorder = obj.createPurchaseOrder()
          self.message_user(request, _("PurchaseOrder created"))
          response = HttpResponseRedirect('/admin/crm/purchaseorder/'+str(purchaseorder.id))
+      return response
    createPurchaseOrder.short_description = _("Create Purchaseorder")
    
    def createQuote(self, request, queryset):
@@ -203,6 +204,7 @@ class OptionContract(admin.ModelAdmin):
          invoice = obj.createInvoice()
          self.message_user(request, _("Invoice created"))
          response = HttpResponseRedirect('/admin/crm/invoice/'+str(invoice.id))
+      return response
    createInvoice.short_description = _("Create Invoice")
    actions = ['createQuote', 'createInvoice', 'createPurchaseOrder']
 
@@ -249,8 +251,8 @@ class OptionInvoice(admin.ModelAdmin):
          
    def createInvoicePDF(self, request, queryset):
       for obj in queryset:
-         obj.createPDF(purchaseconfirmation=False)
-         self.message_user(request, "PDF created")
+         response = HttpResponseRedirect('/export/invoice/'+str(obj.id))
+         return response
    createInvoicePDF.short_description = _("Create PDF of Invoice")
          
    def createDeliveryOrderPDF(self, request, queryset):
@@ -292,8 +294,10 @@ class OptionQuote(admin.ModelAdmin):
 
    def createInvoice(self, request, queryset):
       for obj in queryset:
-         obj.createInvoice()
+         invoice = obj.createInvoice()
          self.message_user(request, _("Invoice created"))
+         response = HttpResponseRedirect('/admin/crm/invoice/'+str(invoice.id))
+      return response
    createInvoice.short_description = _("Create Invoice")
          
    def createQuotePDF(self, request, queryset):

@@ -10,3 +10,10 @@ def createQuotePDF(request, quoteid):
    response = HttpResponse(FileWrapper(file(pdf)), mimetype='application/pdf')
    response['Content-Length'] = path.getsize(pdf)
    return response
+   
+def createInvoicePDF(request, invoiceid):
+   invoice = Invoice.objects.get(id=invoiceid)
+   pdf = invoice.createPDF(deliveryorder=False)
+   response = HttpResponse(FileWrapper(file(pdf)), mimetype='application/pdf')
+   response['Content-Length'] = path.getsize(pdf)
+   return response

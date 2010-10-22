@@ -290,16 +290,16 @@
                    </fo:block>
                 </fo:table-cell>
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
+                   <xsl:variable name ="productinthisposition" select="field[@name='product']"/>
                    <fo:block  text-align="start"
                               font-weight="bold"
                               font-size="9pt"
                               font-family="BitstreamVeraSans"
                               line-height="12pt">
-                      <xsl:variable name ="productinthisposition" select="field[@name='product']"/>
-                      <xsl:value-of select="../object[@model='crm.product' and @pk='$productinthisposition']/field[@name='title']"/>
+                      <xsl:value-of select="../object[@model='crm.product' and @pk=$productinthisposition]/field[@name='title']"/>
                    </fo:block>
                       <xsl:choose>
-                         <xsl:when test="../object[@model='crm.product' and @pk='1']/field[@name='description']/None">
+                         <xsl:when test="../object[@model='crm.product' and @pk=$productinthisposition]/field[@name='description']/None">
                            <fo:block  text-align="start"
                                        font-size="7pt"
                                        font-family="BitstreamVeraSans">
@@ -310,7 +310,7 @@
                            <fo:block  text-align="start"
                                        font-size="7pt"
                                        font-family="BitstreamVeraSans">
-                           <xsl:value-of select="../object[@model='crm.product' and @pk='1']/field[@name='description']"/>
+                           <xsl:value-of select="../object[@model='crm.product' and @pk=$productinthisposition]/field[@name='description']"/>
                            </fo:block>
                            <fo:block  text-align="start"
                                        font-size="7pt"
@@ -335,9 +335,9 @@
                    <fo:block  text-align="end" >
                       <xsl:variable name ="unitinthisposition" select="field[@name='unit']"/>
                       <xsl:choose>
-                         <xsl:when test="field[../object[@model='crm.unit' and @pk='$unitinthisposition']/shortName/None]">-</xsl:when>
+                         <xsl:when test="field[../object[@model='crm.unit' and @pk=$unitinthisposition]/field[@name='shortName']/None]">-</xsl:when>
                          <xsl:otherwise>
-                            <xsl:value-of select="../object[@model='crm.unit' and @pk='$unitinthisposition']/shortName"/>
+                            <xsl:value-of select="../object[@model='crm.unit' and @pk=$unitinthisposition]/field[@name='shortName']"/>
                          </xsl:otherwise>
                       </xsl:choose>
                    </fo:block>
@@ -379,7 +379,7 @@
                    </fo:block></fo:table-cell>
              </fo:table-row>
               <fo:table-row keep-together="always" keep-with-previous="always">
-                <fo:table-cell number-columns-spanned="2">
+                <fo:table-cell number-columns-spanned="3">
                    <fo:block  text-align="start" >&#8201; 
                    </fo:block>
                 </fo:table-cell>
