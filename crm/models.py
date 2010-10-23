@@ -291,9 +291,9 @@ class Quote(SalesContract):
      xml_serializer.serialize(objectsToSerialize, stream=out, indent=3)
      out.close()
      if (purchaseconfirmation == False) :
-         system("fop -c /var/www/koalixcrm/verasans.xml -xml /tmp/quote_"+str(self.id)+".xml -xsl /var/www/koalixcrm/quote.xsl -pdf /tmp/quote_"+str(self.id)+".pdf")
+         system('bash -c "fop -c /var/www/koalixcrm/verasans.xml -xml /tmp/quote_'+str(self.id)+'.xml -xsl /var/www/koalixcrm/quote.xsl -pdf /tmp/quote_'+str(self.id)+'.pdf"')
      else:
-         system("fop -c /var/www/koalixcrm/verasans.xml -xml /tmp/quote_"+str(self.id)+".xml -xsl /var/www/koalixcrm/purchaseconfirmation.xsl -pdf /tmp/purchaseconfirmation_"+str(self.id)+".pdf")
+         system('bash -c "fop -c /var/www/koalixcrm/verasans.xml -xml /tmp/quote_'+str(self.id)+'.xml -xsl /var/www/koalixcrm/purchaseconfirmation.xsl -pdf /tmp/purchaseconfirmation_'+str(self.id)+'.pdf"')
      return "/tmp/quote_"+str(self.id)+".pdf"
      
    def __unicode__(self):
@@ -331,9 +331,9 @@ class Invoice(SalesContract):
      xml_serializer.serialize(objectsToSerialize, stream=out, indent=3)
      out.close()
      if (deliveryorder == False):
-        system("fop -c /var/www/koalixcrm/verasans.xml -xml /tmp/invoice_"+str(self.id)+".xml -xsl /var/www/koalixcrm/invoice.xsl -pdf /tmp/invoice_"+str(self.id)+".pdf")
+        system('bash -c "fop -c /var/www/koalixcrm/verasans.xml -xml /tmp/invoice_'+str(self.id)+'.xml -xsl /var/www/koalixcrm/invoice.xsl -pdf /tmp/invoice_'+str(self.id)+'.pdf"')
      else:
-        system("fop -c /var/www/koalixcrm/verasans.xml -xml /tmp/invoice_"+str(self.id)+".xml -xsl /var/www/koalixcrm/deliveryorder.xsl -pdf /tmp/deliveryorder_"+str(self.id)+".pdf")
+        system('bash -c "fop -c /var/www/koalixcrm/verasans.xml -xml /tmp/invoice_'+str(self.id)+'.xml -xsl /var/www/koalixcrm/deliveryorder.xsl -pdf /tmp/deliveryorder_'+str(self.id)+'".pdf"')
      return "/tmp/invoice_"+str(self.id)+".pdf"
 
 #  TODO: def registerPayment(self, amount, registerpaymentinaccounting):
