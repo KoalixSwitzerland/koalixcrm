@@ -16,17 +16,17 @@ import copy
 from django.contrib import auth
 
 class PostalAddress(models.Model):
-   prefix = models.CharField(max_length=1, choices=POSTALADDRESSPREFIX, verbose_name = _("Prefix"), blank=True)
-   name = models.CharField(max_length=100, verbose_name = _("Name"), blank=True)
-   prename = models.CharField(max_length=100, verbose_name = _("Prename"), blank=True)
-   addressline1 = models.CharField(max_length=200, verbose_name = _("Addressline 1"), blank=True)
-   addressline2 = models.CharField(max_length=200, verbose_name = _("Addressline 2"), blank=True)
-   addressline3 = models.CharField(max_length=200, verbose_name = _("Addressline 3"), blank=True)
-   addressline4 = models.CharField(max_length=200, verbose_name = _("Addressline 4"), blank=True)
-   zipcode = models.IntegerField(verbose_name = _("Zipcode"), blank=True)
-   town = models.CharField(max_length=100, verbose_name = _("City"), blank=True)
-   state = models.CharField(max_length=100, verbose_name = _("State"), blank=True)
-   country = models.CharField(max_length=2, choices=[(x[0], x[3]) for x in COUNTRIES], verbose_name = _("Country"), blank=True)
+   prefix = models.CharField(max_length=1, choices=POSTALADDRESSPREFIX, verbose_name = _("Prefix"), blank=True, null=True)
+   name = models.CharField(max_length=100, verbose_name = _("Name"), blank=True, null=True)
+   prename = models.CharField(max_length=100, verbose_name = _("Prename"), blank=True, null=True)
+   addressline1 = models.CharField(max_length=200, verbose_name = _("Addressline 1"), blank=True, null=True)
+   addressline2 = models.CharField(max_length=200, verbose_name = _("Addressline 2"), blank=True, null=True)
+   addressline3 = models.CharField(max_length=200, verbose_name = _("Addressline 3"), blank=True, null=True)
+   addressline4 = models.CharField(max_length=200, verbose_name = _("Addressline 4"), blank=True, null=True)
+   zipcode = models.IntegerField(verbose_name = _("Zipcode"), blank=True, null=True)
+   town = models.CharField(max_length=100, verbose_name = _("City"), blank=True, null=True)
+   state = models.CharField(max_length=100, verbose_name = _("State"), blank=True, null=True)
+   country = models.CharField(max_length=2, choices=[(x[0], x[3]) for x in COUNTRIES], verbose_name = _("Country"), blank=True, null=True)
 
    class Meta:
       app_label = "crm"
@@ -84,8 +84,24 @@ class CustomerGroup(models.Model):
 
 class Customer(Contact):
    defaultModeOfPayment = models.ForeignKey('ModeOfPayment', verbose_name= _('Default Mode of Payment'))
-   ismemberof = models.ManyToManyField(CustomerGroup, verbose_name = _('Is member of'), blank=True)
+   ismemberof = models.ManyToManyField(CustomerGroup, verbose_name = _('Is member of'), blank=True, null=True)
    
+   def createContract(self):
+      contract = Contract()
+      contract.defaultcustomer = self
+      contract.save()
+      return contract
+   
+   def createInvoice(self):
+      contract = self.createContract()
+      invoice = contract.createInvoice()
+      return invoice
+      
+   def createQuote(self):
+      contract = self.createContract()
+      quote = contract.createQuote()
+      return quote
+
    def isInGroup(self, customerGroup):
       for customerGroupMembership in self.ismemberof.all():
          if (customerGroupMembership.id == customerGroup.id):
@@ -134,14 +150,7 @@ class Contract(models.Model):
       
    def createInvoice(self):
       invoice = Invoice()
-      invoice.contract = self
-      invoice.discount = 0
-      invoice.customer = self.defaultcustomer
-      invoice.status = 'C'
-      invoice.payableuntil = date.today().__str__()
-      invoice.dateofcreation = date.today().__str__()
-      invoice.modeOfPayment = self.defaultcustomer.defaultModeOfPayment
-# TODO: today is not correct it has to be replaced
+      invoice.createFromContract(contract)
       invoice.save()
       return invoice
       
@@ -174,7 +183,7 @@ class Contract(models.Model):
 
 class PurchaseOrder(models.Model):
    contract = models.ForeignKey(Contract, verbose_name = _("Contract"))
-   externalReference = models.CharField(verbose_name = _("External Reference"), max_length=100, blank=True)
+   externalReference = models.CharField(verbose_name = _("External Reference"), max_length=100, blank=True, null=True)
    distributor = models.ForeignKey(Distributor, verbose_name = _("Distributor"))
    description = models.CharField(verbose_name=_("Description"), max_length=100, blank=True)
    lastPricingDate = models.DateField(verbose_name = _("Last Pricing Date"), blank=True, null=True)
@@ -263,9 +272,23 @@ class Quote(SalesContract):
       try:
          quotePositions = SalesContractPosition.objects.filter(contract=self.id)
          for quotePosition in list(quotePositions):
-            invoicePosition = Position()
-            invoicePosition = copy.copy(quotePosition)
-            invoicePosition.contract = invoice
+            invoicePosition = SalesContractPosition()
+            invoicePosition.product = quotePosition.product 
+            invoicePosition.positionNumber = quotePosition.positionNumber 
+            invoicePosition.quantity = quotePosition.quantity 
+            invoicePosition.description = quotePosition.description 
+            invoicePosition.discount = quotePosition.discount 
+            invoicePosition.product = quotePosition.product 
+            invoicePosition.unit = quotePosition.unit 
+            invoicePosition.sentOn = quotePosition.sentOn 
+            invoicePosition.shipmentPartner = quotePosition.shipmentPartner 
+            invoicePosition.shipmentID = quotePosition.shipmentID 
+            invoicePosition.overwriteProductPrice = quotePosition.overwriteProductPrice 
+            invoicePosition.positionPricePerUnit = quotePosition.positionPricePerUnit 
+            invoicePosition.lastPricingDate = quotePosition.lastPricingDate 
+            invoicePosition.lastCalculatedPrice = quotePosition.lastCalculatedPrice 
+            invoicePosition.lastCalculatedTax = quotePosition.lastCalculatedTax 
+            invoicePosition.contract = invoice 
             invoicePosition.save()
          return invoice
       except Quote.DoesNotExist:  
@@ -309,7 +332,17 @@ class Invoice(SalesContract):
    derivatedFromQuote = models.ForeignKey(Quote, blank=True, null=True)
    paymentBankReference = models.CharField(verbose_name = _("Payment Bank Reference"), max_length=100, blank=True)
    modeOfPayment = models.ForeignKey('ModeOfPayment', verbose_name= _('Mode of Payment'))
-   status = models.CharField(max_length=1, choices=INVOICESTATUS)
+   status = models.CharField(max_length=1, choices=INVOICESTATUS)      
+   
+   def createFromContract(contract):
+      invoice.contract = contract
+      invoice.discount = 0
+      invoice.customer = contract.defaultcustomer
+      invoice.status = 'C'
+      invoice.payableuntil = date.today().__str__()
+      invoice.dateofcreation = date.today().__str__()
+      invoice.modeOfPayment = contract.defaultcustomer.defaultModeOfPayment
+# TODO: today is not correct it has to be replaced
 
    def createPDF(self, deliveryorder):
      XMLSerializer = serializers.get_serializer("xml")
@@ -512,7 +545,7 @@ class Position(models.Model):
      if self.overwriteProductPrice == False:
        self.positionPricePerUnit = self.product.getPrice(pricingDate, self.unit, customer)
      if type(self.discount) == Decimal:
-       self.lastCalculatedPrice = self.positionPricePerUnit*self.quantity*(1+self.discount)
+       self.lastCalculatedPrice = self.positionPricePerUnit*self.quantity*(1-self.discount)
      else:
        self.lastCalculatedPrice = self.positionPricePerUnit*self.quantity
      self.lastPricingDate = pricingDate
@@ -521,7 +554,7 @@ class Position(models.Model):
      
    def recalculateTax(self):
      if type(self.discount) == Decimal:
-       self.lastCalculatedTax = self.product.getTaxRate()/100*self.positionPricePerUnit*self.quantity*(1+self.discount)
+       self.lastCalculatedTax = self.product.getTaxRate()/100*self.positionPricePerUnit*self.quantity*(1-self.discount)
      else:
        self.lastCalculatedTax = self.product.getTaxRate()/100*self.positionPricePerUnit*self.quantity
      self.save()
@@ -537,9 +570,26 @@ class Position(models.Model):
 
 class SalesContractPosition(Position):
    contract = models.ForeignKey(SalesContract, verbose_name = _("Contract"))
+   
+   class Meta:
+      app_label = "crm"
+      verbose_name = _('Salescontract Position')
+      verbose_name_plural = _('Salescontract Positions')
+      
+   def __unicode__(self):
+      return _("Salescontract Position")+ ": " + str(self.id)
+
 
 class PurchaseOrderPosition(Position):
    contract = models.ForeignKey(PurchaseOrder, verbose_name = _("Contract"))
+   
+   class Meta:
+      app_label = "crm"
+      verbose_name = _('Purchaseorder Position')
+      verbose_name_plural = _('Purchaseorder Positions')
+      
+   def __unicode__(self):
+      return _("Purchaseorder Position")+ ": " + str(self.id)
 
 class PhoneAddressForContact(PhoneAddress):
    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCUSTOMER)

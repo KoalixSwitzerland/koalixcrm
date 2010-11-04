@@ -264,8 +264,8 @@ class OptionInvoice(admin.ModelAdmin):
 
 
 class OptionQuote(admin.ModelAdmin):
-   list_display = ('id', 'description', 'contract', 'customer', 'validuntil', 'status', 'staff', 'lastmodification', 'lastmodifiedby')
-   list_display_links = ('id','contract','customer')        
+   list_display = ('id', 'description', 'contract', 'customer', 'validuntil', 'status', 'staff', 'lastmodifiedby', 'lastCalculatedPrice', 'lastPricingDate', 'lastmodification')
+   list_display_links = ('id','contract','customer', )        
    list_filter    = ('customer', 'contract', 'staff', 'status', 'lastmodification')
    ordering       = ('contract', 'customer')
    search_fields  = ('contract__id', 'customer__name')
@@ -394,6 +394,28 @@ class OptionCustomer(admin.ModelAdmin):
    fieldsets = (('', {'fields': ('name', 'defaultModeOfPayment', 'ismemberof',)}),)
    inlines = [ContactPostalAddress, ContactPhoneAddress, ContactEmailAddress]
    allow_add = True
+   
+   def createContract(self, request, queryset):
+      for obj in queryset:
+         contract = obj.createContract()
+         response = HttpResponseRedirect('/admin/crm/contract/'+str(contract.id))
+      return response
+   createContract.short_description = _("Create Contract")
+   
+   def createQuote(self, request, queryset):
+      for obj in queryset:
+         quote = obj.createQuote()
+         response = HttpResponseRedirect('/admin/crm/quote/'+str(quote.id))
+      return response
+   createQuote.short_description = _("Create Quote")
+   
+   def createInvoice(self, request, queryset):
+      for obj in queryset:
+         invoice = obj.createInvoice()
+         response = HttpResponseRedirect('/admin/crm/invoice/'+str(invoice.id))
+      return response
+   createInvoice.short_description = _("Create Invoice")
+   actions = ['createContract', 'createInvoice', 'createQuote']
 
 class OptionCustomerGroup(admin.ModelAdmin):
    list_display = ('id', 'name' )
