@@ -9,8 +9,8 @@ PURPOSESADDRESSINCONTRACT = (
 )
 
 PURPOSESADDRESSINCUSTOMER = (
-    ('H', _('Home')),
-    ('O', _('Office')),
+    ('H', _('Private')),
+    ('O', _('Business')),
     ('P', _('Mobile Private')),
     ('B', _('Mobile Business')),
 )

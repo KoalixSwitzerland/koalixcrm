@@ -439,6 +439,11 @@ class OptionUnit(admin.ModelAdmin):
    list_display = ('id', 'description', 'shortName', 'isAFractionOf', 'fractionFactorToNextHigherUnit')
    fieldsets = (('', {'fields': ('description', 'shortName', 'isAFractionOf', 'fractionFactorToNextHigherUnit')}),)
    allow_add = True
+      
+class OptionCurrency(admin.ModelAdmin):
+   list_display = ('id', 'description', 'shortName', 'rounding')
+   fieldsets = (('', {'fields': ('description', 'shortName', 'rounding')}),)
+   allow_add = True
    
 class OptionTax(admin.ModelAdmin):
    list_display = ('id', 'taxrate', 'name')
@@ -460,6 +465,7 @@ admin.site.register(ShipmentPartner, OptionShipmentPartner)
 admin.site.register(Quote, OptionQuote)
 admin.site.register(Invoice, OptionInvoice)
 admin.site.register(Unit, OptionUnit)
+admin.site.register(Currency, OptionCurrency)
 admin.site.register(Tax, OptionTax)
 admin.site.register(ModeOfPayment, OptionModeOfPayment)
 admin.site.register(Contract, OptionContract)

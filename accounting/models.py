@@ -57,6 +57,7 @@ class AccountingCalculationUnit(models.Model):
    
    class Meta:
       app_label = "accounting"
+      app_label_koalix = _("Accounting")
       verbose_name = _('Accounting Calculation Unit')
       verbose_name_plural = _('Accounting Calculation Units')
            
@@ -87,6 +88,7 @@ class Account(models.Model):
       
    class Meta:
       app_label = "accounting"
+      app_label_koalix = _("Accounting")
       verbose_name = _('Account')
       verbose_name_plural = _('Account')
       ordering = ['accountNumber']
@@ -109,5 +111,6 @@ class Booking(models.Model):
       
    class Meta:
       app_label = "accounting"
+      app_label_koalix = _("Accounting")
       verbose_name = _('Booking')
       verbose_name_plural = _('Bookings')

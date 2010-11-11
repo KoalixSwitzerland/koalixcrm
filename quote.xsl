@@ -27,7 +27,11 @@
           <fo:table-row height="2cm" border-bottom-color="black" border-bottom-style="solid" border-bottom-width="0.5pt">
             <fo:table-cell padding-bottom="3pt" >
               <fo:block text-align="left" >
-                <fo:external-graphic src="/var/www/koalixcrm/logo.jpg" content-width="6.0cm"/>
+                <fo:external-graphic content-width="6.0cm">
+                  <xsl:attribute name="src">
+                     <xsl:value-of select="object[@model='djangoUserExtention.templateset']/field[@name='logo']"/>
+                  </xsl:attribute>
+                </fo:external-graphic>
               </fo:block>
             </fo:table-cell>
           </fo:table-row>

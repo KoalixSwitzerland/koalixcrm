@@ -13,7 +13,10 @@ from decimal import Decimal
 from os import system
 from django.core import serializers
 import copy
+import settings
+import djangoUserExtention
 from django.contrib import auth
+
 
 class PostalAddress(models.Model):
    prefix = models.CharField(max_length=1, choices=POSTALADDRESSPREFIX, verbose_name = _("Prefix"), blank=True, null=True)
@@ -30,6 +33,7 @@ class PostalAddress(models.Model):
 
    class Meta:
       app_label = "crm"
+      app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Postal Address')
       verbose_name_plural = _('Postal Address')
 
@@ -38,6 +42,7 @@ class PhoneAddress(models.Model):
 
    class Meta:
       app_label = "crm"
+      app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Phone Address')
       verbose_name_plural = _('Phone Address')
 
@@ -46,6 +51,7 @@ class EmailAddress(models.Model):
 
    class Meta:
       app_label = "crm"
+      app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Email Address')
       verbose_name_plural = _('Email Address')
 
@@ -57,6 +63,7 @@ class Contact(models.Model):
 
    class Meta:
       app_label = "crm"
+      app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Contact')
       verbose_name_plural = _('Contact')
 
@@ -65,6 +72,7 @@ class ModeOfPayment(models.Model):
    timeToPaymentDate = models.IntegerField(verbose_name = _("Days To Payment Date"))
    class Meta:
       app_label = "crm"
+      app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Mode of Payment')
       verbose_name_plural = _('Modes of Payment')
 
@@ -79,6 +87,7 @@ class CustomerGroup(models.Model):
       
    class Meta:
       app_label = "crm"
+      app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Customer Group')
       verbose_name_plural = _('Customer Groups')
 
@@ -110,6 +119,7 @@ class Customer(Contact):
    
    class Meta:
       app_label = "crm"
+      app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Customer')
       verbose_name_plural = _('Customers')
 
@@ -119,6 +129,7 @@ class Customer(Contact):
 class Distributor(Contact):
    class Meta:
       app_label = "crm"
+      app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Distributor')
       verbose_name_plural = _('Distributors')
 
@@ -128,6 +139,7 @@ class Distributor(Contact):
 class ShipmentPartner(Contact):
    class Meta:
       app_label = "crm"
+      app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Shipment Partner')
       verbose_name_plural = _('Shipment Partner')
 
@@ -145,6 +157,7 @@ class Contract(models.Model):
 
    class Meta:
       app_label = "crm"
+      app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Contract')
       verbose_name_plural = _('Contracts')
       
@@ -196,6 +209,7 @@ class PurchaseOrder(models.Model):
 
    class Meta:
       app_label = "crm"
+      app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Purchase Order')
       verbose_name_plural = _('Purchase Order')
 
@@ -223,16 +237,16 @@ class SalesContract(models.Model):
          positions = SalesContractPosition.objects.filter(contract=self.id)
          if type(positions) == SalesContractPosition:
             if type(self.discount) == Decimal:
-               price = positions.recalculatePrices(pricingDate, self.customer)*(1+self.discount)
-               tax = positions.recalculateTax()*(1+self.discount)
+               price = positions.recalculatePrices(pricingDate, self.customer)*(1-self.discount/100)
+               tax = positions.recalculateTax()*(1-self.discount/100)
             else:
                price = positions.recalculatePrices(pricingDate, self.customer)
                tax = positions.recalculateTax()
          else:
             for position in positions:
                if type(self.discount) == Decimal:
-                  price += position.recalculatePrices(pricingDate, self.customer)*(1+self.discount)
-                  tax += position.recalculateTax()*(1+self.discount)
+                  price += position.recalculatePrices(pricingDate, self.customer)*(1-self.discount/100)
+                  tax += position.recalculateTax()*(1-self.discount/100)
                else:
                   price += position.recalculatePrices(pricingDate, self.customer)
                   tax += position.recalculateTax()
@@ -246,6 +260,7 @@ class SalesContract(models.Model):
 
    class Meta:
       app_label = "crm"
+      app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Sales Contract')
       verbose_name_plural = _('Sales Contracts')
 
@@ -307,6 +322,10 @@ class Quote(SalesContract):
          objectsToSerialize += list(Product.objects.filter(id=position.product.id))
          objectsToSerialize += list(Unit.objects.filter(id=position.unit.id))
      objectsToSerialize += list(auth.models.User.objects.filter(id=self.staff.id))
+     userExtention = djangoUserExtention.models.UserExtention.objects.filter(user=self.staff.id)
+     objectsToSerialize += list(userExtention)
+     templateset = djangoUserExtention.models.TemplateSet.objects.filter(id=userExtention[0].defaultTemplateSet.id)
+     objectsToSerialize += list(templateset)
      objectsToSerialize += list(auth.models.User.objects.filter(id=self.lastmodifiedby.id))
      objectsToSerialize += list(PostalAddressForContact.objects.filter(person=self.customer.id))
      for address in list(PostalAddressForContact.objects.filter(person=self.customer.id)):
@@ -314,9 +333,9 @@ class Quote(SalesContract):
      xml_serializer.serialize(objectsToSerialize, stream=out, indent=3)
      out.close()
      if (purchaseconfirmation == False) :
-         system('bash -c "fop -c /var/www/koalixcrm/verasans.xml -xml /tmp/quote_'+str(self.id)+'.xml -xsl /var/www/koalixcrm/quote.xsl -pdf /tmp/quote_'+str(self.id)+'.pdf"')
+         system('bash -c "fop -c /var/www/koalixcrm/verasans.xml -xml /tmp/quote_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.quoteXSLFile.xslfile.name+' -pdf /tmp/quote_'+str(self.id)+'.pdf"')
      else:
-         system('bash -c "fop -c /var/www/koalixcrm/verasans.xml -xml /tmp/quote_'+str(self.id)+'.xml -xsl /var/www/koalixcrm/purchaseconfirmation.xsl -pdf /tmp/purchaseconfirmation_'+str(self.id)+'.pdf"')
+         system('bash -c "fop -c /var/www/koalixcrm/verasans.xml -xml /tmp/quote_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.purchaseconfirmationXSLFile.xslfile.name+' -pdf /tmp/purchaseconfirmation_'+str(self.id)+'.pdf"')
      return "/tmp/quote_"+str(self.id)+".pdf"
      
    def __unicode__(self):
@@ -324,6 +343,7 @@ class Quote(SalesContract):
       
    class Meta:
       app_label = "crm"
+      app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Quote')
       verbose_name_plural = _('Quotes')
 
@@ -357,6 +377,10 @@ class Invoice(SalesContract):
          objectsToSerialize += list(Product.objects.filter(id=position.product.id))
          objectsToSerialize += list(Unit.objects.filter(id=position.unit.id))
      objectsToSerialize += list(auth.models.User.objects.filter(id=self.staff.id))
+     userExtention = djangoUserExtention.models.UserExtention.objects.filter(user=self.staff.id)
+     objectsToSerialize += list(userExtention)
+     templateset = djangoUserExtention.models.TemplateSet.objects.filter(id=userExtention[0].defaultTemplateSet.id)
+     objectsToSerialize += list(templateset)
      objectsToSerialize += list(auth.models.User.objects.filter(id=self.lastmodifiedby.id))
      objectsToSerialize += list(PostalAddressForContact.objects.filter(person=self.customer.id))
      for address in list(PostalAddressForContact.objects.filter(person=self.customer.id)):
@@ -364,9 +388,9 @@ class Invoice(SalesContract):
      xml_serializer.serialize(objectsToSerialize, stream=out, indent=3)
      out.close()
      if (deliveryorder == False):
-        system('bash -c "fop -c /var/www/koalixcrm/verasans.xml -xml /tmp/invoice_'+str(self.id)+'.xml -xsl /var/www/koalixcrm/invoice.xsl -pdf /tmp/invoice_'+str(self.id)+'.pdf"')
+        system('bash -c "fop -c /var/www/koalixcrm/verasans.xml -xml /tmp/invoice_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.invoiceXSLFile.xslfile.name+' -pdf /tmp/invoice_'+str(self.id)+'.pdf"')
      else:
-        system('bash -c "fop -c /var/www/koalixcrm/verasans.xml -xml /tmp/invoice_'+str(self.id)+'.xml -xsl /var/www/koalixcrm/deliveryorder.xsl -pdf /tmp/deliveryorder_'+str(self.id)+'".pdf"')
+        system('bash -c "fop -c /var/www/koalixcrm/verasans.xml -xml /tmp/invoice_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.deilveryorderXSLFile.xslfile.name+' -pdf /tmp/deliveryorder_'+str(self.id)+'.pdf"')
      return "/tmp/invoice_"+str(self.id)+".pdf"
 
 #  TODO: def registerPayment(self, amount, registerpaymentinaccounting):
@@ -375,12 +399,28 @@ class Invoice(SalesContract):
       
    class Meta:
       app_label = "crm"
+      app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Invoice')
       verbose_name_plural = _('Invoices') 
 
+class Currency (models.Model):
+   description = models.CharField(verbose_name = _("Description"), max_length=100)
+   shortName = models.CharField(verbose_name = _("Displayed Name After Price In The Position"), max_length=3)
+   rounding = models.DecimalField(max_digits=5, decimal_places=2, verbose_name = _("Rounding"), blank=True, null=True)
+
+   def __unicode__(self):
+      return  self.shortName
+   
+   class Meta:
+      app_label = "crm"
+      app_label_koalix = _('Customer Relationship Management (CRM)')
+      verbose_name = _('Currency')
+      verbose_name_plural = _('Currency') 
+   
+   
 class Unit(models.Model):
    description = models.CharField(verbose_name = _("Description"), max_length=100)
-   shortName = models.CharField(verbose_name = _("Displayed Name After Quantity In The Position"), max_length=100)
+   shortName = models.CharField(verbose_name = _("Displayed Name After Quantity In The Position"), max_length=3)
    isAFractionOf = models.ForeignKey('self', blank=True, null=True, verbose_name = _("Is A Fraction Of"))
    fractionFactorToNextHigherUnit = models.IntegerField(verbose_name = _("Factor Between This And Next Higher Unit"), blank=True, null=True)
 
@@ -389,6 +429,7 @@ class Unit(models.Model):
 
    class Meta:
       app_label = "crm"
+      app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Unit')
       verbose_name_plural = _('Units') 
 
@@ -404,6 +445,7 @@ class Tax(models.Model):
 
    class Meta:
       app_label = "crm"
+      app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Tax')
       verbose_name_plural = _('Taxes') 
       
@@ -452,6 +494,7 @@ class Product(models.Model):
 
    class Meta:
       app_label = "crm"
+      app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Product')
       verbose_name_plural = _('Products')
       
@@ -483,6 +526,7 @@ class UnitTransform(models.Model):
 
    class Meta:
       app_label = "crm"
+      app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Unit Transfrom')
       verbose_name_plural = _('Unit Transfroms') 
            
@@ -503,6 +547,7 @@ class CustomerGroupTransform(models.Model):
 
    class Meta:
       app_label = "crm"
+      app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Customer Group Price Transfrom')
       verbose_name_plural = _('Customer Group Price Transfroms') 
            
@@ -522,6 +567,7 @@ class Price(models.Model):
 
    class Meta:
       app_label = "crm"
+      app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Price')
       verbose_name_plural = _('Prices')
 
@@ -545,7 +591,7 @@ class Position(models.Model):
      if self.overwriteProductPrice == False:
        self.positionPricePerUnit = self.product.getPrice(pricingDate, self.unit, customer)
      if type(self.discount) == Decimal:
-       self.lastCalculatedPrice = self.positionPricePerUnit*self.quantity*(1-self.discount)
+       self.lastCalculatedPrice = self.positionPricePerUnit*self.quantity*(1-self.discount/100)
      else:
        self.lastCalculatedPrice = self.positionPricePerUnit*self.quantity
      self.lastPricingDate = pricingDate
@@ -554,7 +600,7 @@ class Position(models.Model):
      
    def recalculateTax(self):
      if type(self.discount) == Decimal:
-       self.lastCalculatedTax = self.product.getTaxRate()/100*self.positionPricePerUnit*self.quantity*(1-self.discount)
+       self.lastCalculatedTax = self.product.getTaxRate()/100*self.positionPricePerUnit*self.quantity*(1-self.discount/100)
      else:
        self.lastCalculatedTax = self.product.getTaxRate()/100*self.positionPricePerUnit*self.quantity
      self.save()
@@ -565,6 +611,7 @@ class Position(models.Model):
 
    class Meta:
       app_label = "crm"
+      app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Position')
       verbose_name_plural = _('Positions')
 
@@ -573,6 +620,7 @@ class SalesContractPosition(Position):
    
    class Meta:
       app_label = "crm"
+      app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Salescontract Position')
       verbose_name_plural = _('Salescontract Positions')
       
@@ -585,6 +633,7 @@ class PurchaseOrderPosition(Position):
    
    class Meta:
       app_label = "crm"
+      app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Purchaseorder Position')
       verbose_name_plural = _('Purchaseorder Positions')
       
@@ -597,6 +646,7 @@ class PhoneAddressForContact(PhoneAddress):
 
    class Meta:
       app_label = "crm"
+      app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Phone Address For Contact')
       verbose_name_plural = _('Phone Address For Contact')
 
@@ -609,6 +659,7 @@ class EmailAddressForContact(EmailAddress):
 
    class Meta:
       app_label = "crm"
+      app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Email Address For Contact')
       verbose_name_plural = _('Email Address For Contact')
 
@@ -621,6 +672,7 @@ class PostalAddressForContact(PostalAddress):
 
    class Meta:
       app_label = "crm"
+      app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Postal Address For Contact')
       verbose_name_plural = _('Postal Address For Contact')
 
@@ -633,6 +685,7 @@ class PostalAddressForContract(PostalAddress):
 
    class Meta:
       app_label = "crm"
+      app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Postal Address For Contracts')
       verbose_name_plural = _('Postal Address For Contracts')
 
@@ -645,6 +698,7 @@ class PostalAddressForPurchaseOrder(PostalAddress):
 
    class Meta:
       app_label = "crm"
+      app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Postal Address For Contracts')
       verbose_name_plural = _('Postal Address For Contracts')
 
@@ -657,6 +711,7 @@ class PostalAddressForSalesContract(PostalAddress):
 
    class Meta:
       app_label = "crm"
+      app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Postal Address For Contracts')
       verbose_name_plural = _('Postal Address For Contracts')
 
@@ -669,6 +724,7 @@ class PhoneAddressForContract(PhoneAddress):
 
    class Meta:
       app_label = "crm"
+      app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Phone Address For Contracts')
       verbose_name_plural = _('Phone Address For Contracts')
 
@@ -681,6 +737,7 @@ class PhoneAddressForSalesContract(PhoneAddress):
 
    class Meta:
       app_label = "crm"
+      app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Phone Address For Contracts')
       verbose_name_plural = _('Phone Address For Contracts')
 
@@ -693,6 +750,7 @@ class PhoneAddressForPurchaseOrder(PhoneAddress):
 
    class Meta:
       app_label = "crm"
+      app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Phone Address For Contracts')
       verbose_name_plural = _('Phone Address For Contracts')
 
@@ -705,6 +763,7 @@ class EmailAddressForContract(EmailAddress):
 
    class Meta:
       app_label = "crm"
+      app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Email Address For Contracts')
       verbose_name_plural = _('Email Address For Contracts')
 
@@ -717,6 +776,7 @@ class EmailAddressForSalesContract(EmailAddress):
 
    class Meta:
       app_label = "crm"
+      app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Email Address For Contracts')
       verbose_name_plural = _('Email Address For Contracts')
 
@@ -729,6 +789,7 @@ class EmailAddressForPurchaseOrder(EmailAddress):
 
    class Meta:
       app_label = "crm"
+      app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Email Address For Contracts')
       verbose_name_plural = _('Email Address For Contracts')
 
