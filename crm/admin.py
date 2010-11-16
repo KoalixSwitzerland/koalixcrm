@@ -170,14 +170,14 @@ class InlinePurchaseOrder(admin.TabularInline):
    allow_add = False
 
 class OptionContract(admin.ModelAdmin):
-   list_display = ('id', 'description', 'defaultcustomer', 'defaultdistributor', 'staff')
-   list_display_links = ('id','description', 'defaultcustomer', 'defaultdistributor')       
-   list_filter    = ('defaultcustomer', 'defaultdistributor', 'staff')
-   ordering       = ('id', 'defaultcustomer')
-   search_fields  = ('id','contract')
+   list_display = ('id', 'description', 'defaultcustomer', 'defaultdistributor', 'staff', 'defaultcurrency')
+   list_display_links = ('id','description', 'defaultcustomer', 'defaultdistributor', 'defaultcurrency')       
+   list_filter    = ('defaultcustomer', 'defaultdistributor', 'staff', 'defaultcurrency')
+   ordering       = ('id', 'defaultcustomer', 'defaultcurrency')
+   search_fields  = ('id','contract', 'defaultcurrency__description')
    fieldsets = (
       (_('Basics'), {
-         'fields': ('description', 'defaultcustomer', 'defaultdistributor')
+         'fields': ('description', 'defaultcustomer', 'defaultdistributor', 'defaultcurrency')
       }),
    )
    save_as = True
@@ -215,21 +215,21 @@ class PurchaseOrderInlinePosition(admin.TabularInline):
     classes = ('collapse-open',)
     fieldsets = (
         ('', {
-            'fields': ('positionNumber', 'quantity', 'product', 'description', 'discount', 'positionPricePerUnit', 'sentOn', 'shipmentPartner')
+            'fields': ('positionNumber', 'quantity', 'unit', 'product', 'description', 'discount', 'overwriteProductPrice', 'positionPricePerUnit', 'sentOn', 'shipmentPartner')
         }),
     )
     allow_add = True
 
 
 class OptionInvoice(admin.ModelAdmin):
-   list_display = ('id', 'description', 'contract', 'customer', 'payableuntil', 'status', 'staff', 'lastmodification', 'lastmodifiedby')
+   list_display = ('id', 'description', 'contract', 'customer', 'payableuntil', 'status', 'currency', 'staff', 'lastmodification', 'lastmodifiedby')
    list_display_links = ('id','contract','customer')       
-   list_filter    = ('customer', 'contract', 'staff', 'status', 'lastmodification')
-   ordering       = ('contract', 'customer')
-   search_fields  = ('contract__id', 'customer__name')
+   list_filter    = ('customer', 'contract', 'staff', 'status', 'currency', 'lastmodification')
+   ordering       = ('contract', 'customer', 'currency')
+   search_fields  = ('contract__id', 'customer__name', 'currency__description')
    fieldsets = (
       (_('Basics'), {
-         'fields': ('contract', 'description', 'customer', 'payableuntil', 'status')
+         'fields': ('contract', 'description', 'customer', 'currency', 'payableuntil', 'status')
       }),
       (_('Advanced (not editable)'), {
          'classes': ('collapse',),
@@ -264,15 +264,15 @@ class OptionInvoice(admin.ModelAdmin):
 
 
 class OptionQuote(admin.ModelAdmin):
-   list_display = ('id', 'description', 'contract', 'customer', 'validuntil', 'status', 'staff', 'lastmodifiedby', 'lastCalculatedPrice', 'lastPricingDate', 'lastmodification')
-   list_display_links = ('id','contract','customer', )        
-   list_filter    = ('customer', 'contract', 'staff', 'status', 'lastmodification')
-   ordering       = ('contract', 'customer')
-   search_fields  = ('contract__id', 'customer__name')
+   list_display = ('id', 'description', 'contract', 'customer', 'currency', 'validuntil', 'status', 'staff', 'lastmodifiedby', 'lastCalculatedPrice', 'lastPricingDate', 'lastmodification')
+   list_display_links = ('id','contract','customer', 'currency')        
+   list_filter    = ('customer', 'contract', 'currency', 'staff', 'status', 'lastmodification')
+   ordering       = ('contract', 'customer', 'currency')
+   search_fields  = ('contract__id', 'customer__name', 'currency__description')
 
    fieldsets = (
       (_('Basics'), {
-         'fields': ('contract', 'description', 'customer', 'validuntil', 'status')
+         'fields': ('contract', 'description', 'customer', 'currency', 'validuntil', 'status')
       }),
       (_('Advanced (not editable)'), {
          'classes': ('collapse',),
@@ -315,11 +315,19 @@ class OptionQuote(admin.ModelAdmin):
    actions = ['recalculatePrices', 'createInvoice', 'createQuotePDF', 'createPurchseConfirmationPDF']
 
 class OptionPurchaseOrder(admin.ModelAdmin):
-   list_display = ('distributor', 'status',)
-   list_display_links = ('distributor', 'status')
+   list_display = ('id', 'description', 'contract', 'distributor', 'status', 'currency', 'staff', 'lastmodifiedby', 'lastCalculatedPrice', 'lastPricingDate', 'lastmodification')
+   list_display_links = ('id','contract','distributor', )        
+   list_filter    = ('distributor', 'contract', 'staff', 'status', 'currency', 'lastmodification')
+   ordering       = ('contract', 'distributor', 'currency')
+   search_fields  = ('contract__id', 'distributor__name', 'currency_description')
+
    fieldsets = (
       (_('Basics'), {
-         'fields': ('distributor', 'status', 'externalReference')
+         'fields': ('contract', 'description', 'distributor', 'currency', 'status')
+      }),
+      (_('Advanced (not editable)'), {
+         'classes': ('collapse',),
+         'fields': ('lastPricingDate', 'lastCalculatedPrice', 'lastCalculatedTax',)
       }),
    )
    save_as = True
@@ -331,7 +339,7 @@ class ProductPrice(admin.TabularInline):
    classes = ('collapse-open',)
    fieldsets = (
       ('', {
-         'fields': ('price', 'validfrom', 'validuntil', 'unit', 'customerGroup')
+         'fields': ('price', 'validfrom', 'validuntil', 'unit', 'customerGroup', 'currency')
       }),
    )
    allow_add = True
@@ -392,8 +400,10 @@ class ContactEmailAddress(admin.TabularInline):
 class OptionCustomer(admin.ModelAdmin):
    list_display = ('id', 'name', 'defaultModeOfPayment', )
    fieldsets = (('', {'fields': ('name', 'defaultModeOfPayment', 'ismemberof',)}),)
+   allow_add = True   
+   ordering       = ('id', 'name')
+   search_fields  = ('id', 'name')
    inlines = [ContactPostalAddress, ContactPhoneAddress, ContactEmailAddress]
-   allow_add = True
    
    def createContract(self, request, queryset):
       for obj in queryset:
@@ -454,8 +464,6 @@ class OptionModeOfPayment(admin.ModelAdmin):
    list_display = ('id', 'timeToPaymentDate', 'name')
    fieldsets = (('', {'fields': ('timeToPaymentDate', 'name',)}),)
    allow_add = True
-
-
 
  
 admin.site.register(Customer, OptionCustomer)
