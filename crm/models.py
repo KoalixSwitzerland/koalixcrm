@@ -8,6 +8,7 @@ from const.status import *
 from django.db.models import signals
 from middleware import threadlocals
 from datetime import date
+from datetime import timedelta
 from django.utils.translation import ugettext as _
 from decimal import Decimal
 from os import system
@@ -182,11 +183,10 @@ class Contract(models.Model):
       invoice.customer = self.defaultcustomer
       invoice.status = 'C'
       invoice.currency = self.defaultcurrency
-      invoice.validuntil = date.today().__str__()
+      invoice.payableuntil = date.today()+timedelta(days=self.defaultcustomer.defaultModeOfPayment.timeToPaymentDate)
       invoice.dateofcreation = date.today().__str__()
-# TODO: today is not correct it has to be replaced
-      quote.save()
-      return quote
+      invoice.save()
+      return invoice
       
    def createQuote(self):
       quote = Quote()
@@ -197,7 +197,6 @@ class Contract(models.Model):
       quote.currency = self.defaultcurrency
       quote.validuntil = date.today().__str__()
       quote.dateofcreation = date.today().__str__()
-# TODO: today is not correct it has to be replaced
       quote.save()
       return quote
       
@@ -333,7 +332,8 @@ class Quote(SalesContract):
       invoice.customer = self.customer
       invoice.status = 'C'
       invoice.derivatedFromQuote = self
-      invoice.payableuntil = date.today()+self.customer.defaultModeOfPayment.timeToPaymentDate
+      invoice.currency = self.currency
+      invoice.payableuntil = date.today()+timedelta(days=self.customer.defaultModeOfPayment.timeToPaymentDate)
       invoice.dateofcreation = date.today().__str__()
       invoice.modeOfPayment = self.customer.defaultModeOfPayment
 # TODO: today is not correct it has to be replaced
