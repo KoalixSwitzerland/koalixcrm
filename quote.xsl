@@ -240,9 +240,8 @@
               line-height="13pt" >&#8201;  </fo:block>
        <fo:table table-layout="fixed" width="100%">
           <fo:table-column column-width="1.0cm"/>
-          <fo:table-column column-width="6.6cm"/>
-          <fo:table-column column-width="1.8cm"/>
-          <fo:table-column column-width="1.8cm"/>
+          <fo:table-column column-width="7.7cm"/>
+          <fo:table-column column-width="2.5cm"/>
           <fo:table-column column-width="2.5cm"/>
           <fo:table-column column-width="1.8cm"/>
           <fo:table-column column-width="2.5cm"/>
@@ -260,11 +259,6 @@
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="end" >
                       Anzahl
-                   </fo:block>
-                </fo:table-cell>
-                <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
-                   <fo:block  text-align="end" >
-                      Einheit
                    </fo:block>
                 </fo:table-cell>
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
@@ -328,19 +322,10 @@
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="end" >
                       <xsl:choose>
-                         <xsl:when test="field[@name='description'] = '0E-15'">-</xsl:when>
+                         <xsl:when test="field[@name='quantity'] = '0E-15'">-</xsl:when>
                          <xsl:otherwise>
-                            <xsl:value-of select="format-number(field[@name='quantity'], '#.##0,00', 'european')"/>&#8201;  <xsl:value-of select="uomDescription"/>&#8201; 
-                         </xsl:otherwise>
-                      </xsl:choose>
-                   </fo:block>
-                </fo:table-cell>
-                <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
-                   <fo:block  text-align="end" >
-                      <xsl:variable name ="unitinthisposition" select="field[@name='unit']"/>
-                      <xsl:choose>
-                         <xsl:when test="field[../object[@model='crm.unit' and @pk=$unitinthisposition]/field[@name='shortName']/None]">-</xsl:when>
-                         <xsl:otherwise>
+                            <xsl:value-of select="format-number(field[@name='quantity'], '#.##0,00', 'european')"/>&#8201;
+                            <xsl:variable name ="unitinthisposition" select="field[@name='unit']"/>
                             <xsl:value-of select="../object[@model='crm.unit' and @pk=$unitinthisposition]/field[@name='shortName']"/>
                          </xsl:otherwise>
                       </xsl:choose>
@@ -351,7 +336,7 @@
                       <xsl:choose>
                          <xsl:when test="field[@name='positionPricePerUnit']/None">-</xsl:when>
                          <xsl:otherwise>
-                            <xsl:value-of select="format-number(field[@name='positionPricePerUnit'], '#.##0,00', 'european')"/> CHF
+                            <xsl:value-of select="format-number(field[@name='positionPricePerUnit'], '#.##0,00', 'european')"/>&#8201;<xsl:value-of select="../object[@model='crm.currency']/field[@name='shortName']"/>
                          </xsl:otherwise>
                       </xsl:choose>
                    </fo:block>
@@ -371,7 +356,7 @@
                       <xsl:choose>
                          <xsl:when test="field[@name='lastCalculatedPrice']/None">-</xsl:when>
                          <xsl:otherwise>
-                           <xsl:value-of select="format-number(field[@name='lastCalculatedPrice'], '#.##0,00', 'european')"/> CHF
+                           <xsl:value-of select="format-number(field[@name='lastCalculatedPrice'], '#.##0,00', 'european')"/>&#8201;<xsl:value-of select="../object[@model='crm.currency']/field[@name='shortName']"/>
                          </xsl:otherwise>
                       </xsl:choose>
                    </fo:block>
@@ -383,7 +368,7 @@
                    </fo:block></fo:table-cell>
              </fo:table-row>
               <fo:table-row keep-together="always" keep-with-previous="always">
-                <fo:table-cell number-columns-spanned="3">
+                <fo:table-cell number-columns-spanned="2">
                    <fo:block  text-align="start" >&#8201; 
                    </fo:block>
                 </fo:table-cell>
@@ -397,14 +382,14 @@
                       <xsl:choose>
                         <xsl:when test="object[@model='crm.salescontract']/field[@name='lastCalculatedPrice']/None">-</xsl:when>
                         <xsl:otherwise>
-                        <xsl:value-of select="format-number(object[@model='crm.salescontract']/field[@name='lastCalculatedPrice'], '#.##0,00', 'european')"/> CHF
+                        <xsl:value-of select="format-number(object[@model='crm.salescontract']/field[@name='lastCalculatedPrice'], '#.##0,00', 'european')"/>&#8201;<xsl:value-of select="object[@model='crm.currency']/field[@name='shortName']"/>
                         </xsl:otherwise>
                       </xsl:choose>
                    </fo:block>
                 </fo:table-cell>
              </fo:table-row>
              <fo:table-row keep-together="always" keep-with-previous="always">
-                <fo:table-cell number-columns-spanned="3">
+                <fo:table-cell number-columns-spanned="2">
                    <fo:block  text-align="start" >
                    </fo:block>
                 </fo:table-cell>
@@ -418,14 +403,14 @@
              <xsl:choose>
                <xsl:when test="object[@model='crm.salescontract']/field[@name='lastCalculatedTax']/None">-</xsl:when>
                <xsl:otherwise>
-               <xsl:value-of select="format-number(object[@model='crm.salescontract']/field[@name='lastCalculatedTax'], '#.##0,00', 'european')"/> CHF
+               <xsl:value-of select="format-number(object[@model='crm.salescontract']/field[@name='lastCalculatedTax'], '#.##0,00', 'european')"/>&#8201;<xsl:value-of select="object[@model='crm.currency']/field[@name='shortName']"/>
                </xsl:otherwise>
              </xsl:choose>
                    </fo:block>
                 </fo:table-cell>
              </fo:table-row>
              <fo:table-row keep-together="always" keep-with-previous="always">
-                <fo:table-cell number-columns-spanned="3">
+                <fo:table-cell number-columns-spanned="2">
                    <fo:block  text-align="start" >
                    </fo:block>
                 </fo:table-cell>
@@ -439,7 +424,7 @@
              <xsl:choose>
                <xsl:when test="object[@model='crm.salescontract']/field[@name='lastCalculatedPrice']/None">-</xsl:when>
                <xsl:otherwise>
-               <xsl:value-of select="format-number(object[@model='crm.salescontract']/field[@name='lastCalculatedPrice']+object[@model='crm.salescontract']/field[@name='lastCalculatedTax'], '#.##0,00', 'european')"/> CHF
+               <xsl:value-of select="format-number(object[@model='crm.salescontract']/field[@name='lastCalculatedPrice']+object[@model='crm.salescontract']/field[@name='lastCalculatedTax'], '#.##0,00', 'european')"/>&#8201;<xsl:value-of select="object[@model='crm.currency']/field[@name='shortName']"/>
                </xsl:otherwise>
              </xsl:choose>
                    </fo:block>

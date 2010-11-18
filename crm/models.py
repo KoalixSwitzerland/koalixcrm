@@ -258,6 +258,32 @@ class PurchaseOrder(models.Model):
          return 1
       except Quote.DoesNotExist:  
          return 0
+         
+   def createPDF(self, purchaseconfirmation):
+     XMLSerializer = serializers.get_serializer("xml")
+     xml_serializer = XMLSerializer()
+     out = open("/tmp/purchaseorder_"+str(self.id)+".xml", "w")
+     objectsToSerialize = list(PurchaseOrder.objects.filter(id=self.id)) 
+     objectsToSerialize += list(Contact.objects.filter(id=self.distributor.id))
+     objectsToSerialize += list(Currency.objects.filter(id=self.currency.id))
+     objectsToSerialize += list(PurchaseOrderPosition.objects.filter(contract=self.id))
+     for position in list(PurchaseOrderPosition.objects.filter(contract=self.id)):
+         objectsToSerialize += list(Position.objects.filter(id=position.id))
+         objectsToSerialize += list(Product.objects.filter(id=position.product.id))
+         objectsToSerialize += list(Unit.objects.filter(id=position.unit.id))
+     objectsToSerialize += list(auth.models.User.objects.filter(id=self.staff.id))
+     userExtention = djangoUserExtention.models.UserExtention.objects.filter(user=self.staff.id)
+     objectsToSerialize += list(userExtention)
+     templateset = djangoUserExtention.models.TemplateSet.objects.filter(id=userExtention[0].defaultTemplateSet.id)
+     objectsToSerialize += list(templateset)
+     objectsToSerialize += list(auth.models.User.objects.filter(id=self.lastmodifiedby.id))
+     objectsToSerialize += list(PostalAddressForContact.objects.filter(person=self.distributor.id))
+     for address in list(PostalAddressForContact.objects.filter(person=self.distributor.id)):
+         objectsToSerialize += list(PostalAddress.objects.filter(id=address.id))
+     xml_serializer.serialize(objectsToSerialize, stream=out, indent=3)
+     out.close()
+     system('bash -c "fop -c /var/www/koalixcrm/verasans.xml -xml /tmp/purchaseorder_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.purchaseorderXSLFile.xslfile.name+' -pdf /tmp/purchaseorder_'+str(self.id)+'.pdf"')
+     return "/tmp/purchaseorder_"+str(self.id)+".pdf"    
 
    class Meta:
       app_label = "crm"
@@ -370,6 +396,7 @@ class Quote(SalesContract):
      objectsToSerialize = list(Quote.objects.filter(id=self.id)) 
      objectsToSerialize += list(SalesContract.objects.filter(id=self.id)) 
      objectsToSerialize += list(Contact.objects.filter(id=self.customer.id))
+     objectsToSerialize += list(Currency.objects.filter(id=self.currency.id))
      objectsToSerialize += list(SalesContractPosition.objects.filter(contract=self.id))
      for position in list(SalesContractPosition.objects.filter(contract=self.id)):
          objectsToSerialize += list(Position.objects.filter(id=position.id))
@@ -424,6 +451,7 @@ class Invoice(SalesContract):
      objectsToSerialize = list(Invoice.objects.filter(id=self.id)) 
      objectsToSerialize += list(SalesContract.objects.filter(id=self.id)) 
      objectsToSerialize += list(Contact.objects.filter(id=self.customer.id))
+     objectsToSerialize += list(Currency.objects.filter(id=self.currency.id))
      objectsToSerialize += list(SalesContractPosition.objects.filter(contract=self.id))
      for position in list(SalesContractPosition.objects.filter(contract=self.id)):
          objectsToSerialize += list(Position.objects.filter(id=position.id))
