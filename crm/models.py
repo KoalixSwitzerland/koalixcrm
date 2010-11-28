@@ -7,8 +7,7 @@ from const.purpose import *
 from const.status import *
 from django.db.models import signals
 from middleware import threadlocals
-from datetime import date
-from datetime import timedelta
+from datetime import *
 from django.utils.translation import ugettext as _
 from decimal import Decimal
 from os import system
@@ -415,9 +414,9 @@ class Quote(SalesContract):
      xml_serializer.serialize(objectsToSerialize, stream=out, indent=3)
      out.close()
      if (purchaseconfirmation == False) :
-         system('bash -c "fop -c /var/www/koalixcrm/verasans.xml -xml /tmp/quote_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.quoteXSLFile.xslfile.name+' -pdf /tmp/quote_'+str(self.id)+'.pdf"')
+         system('bash -c "fop -c /var/www/koalixcrm/verasans.xml -xml /tmp/quote_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+'/uploads/'+userExtention[0].defaultTemplateSet.quoteXSLFile.xslfile.name+' -pdf /tmp/quote_'+str(self.id)+'.pdf"')
      else:
-         system('bash -c "fop -c /var/www/koalixcrm/verasans.xml -xml /tmp/quote_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.purchaseconfirmationXSLFile.xslfile.name+' -pdf /tmp/purchaseconfirmation_'+str(self.id)+'.pdf"')
+         system('bash -c "fop -c /var/www/koalixcrm/verasans.xml -xml /tmp/quote_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+'/uploads/'+userExtention[0].defaultTemplateSet.purchaseconfirmationXSLFile.xslfile.name+' -pdf /tmp/purchaseconfirmation_'+str(self.id)+'.pdf"')
      return "/tmp/quote_"+str(self.id)+".pdf"
      
    def __unicode__(self):
@@ -489,6 +488,9 @@ class Invoice(SalesContract):
      xml_serializer.serialize(objectsToSerialize, stream=out, indent=3)
      out.close()
      if (deliveryorder == False):
+        log = open("/tmp/log.txt", "w")
+        log.write('bash -c "fop -c /var/www/koalixcrm/verasans.xml -xml /tmp/invoice_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.invoiceXSLFile.xslfile.name+' -pdf /tmp/invoice_'+str(self.id)+'.pdf"')
+        log.close()
         system('bash -c "fop -c /var/www/koalixcrm/verasans.xml -xml /tmp/invoice_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.invoiceXSLFile.xslfile.name+' -pdf /tmp/invoice_'+str(self.id)+'.pdf"')
      else:
         system('bash -c "fop -c /var/www/koalixcrm/verasans.xml -xml /tmp/invoice_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.deilveryorderXSLFile.xslfile.name+' -pdf /tmp/deliveryorder_'+str(self.id)+'.pdf"')
@@ -911,11 +913,11 @@ class EmailAddressForPurchaseOrder(EmailAddress):
 
 def postInitAutoUserHandler(sender, instance, **kwarg):
    instance.staff = threadlocals.get_current_user()
-   instance.dateofcreation = date.today().__str__()
+   instance.dateofcreation = datetime.now()
 
 def preSaveAutoNowUserHandler(sender, instance, **kwarg):
    instance.lastmodifiedby = threadlocals.get_current_user()
-   instance.lastmodification = date.today().__str__()
+   instance.lastmodification = datetime.now()
    if instance is PurchaseOrder:
       instance.overwriteProductPrice = True;
 

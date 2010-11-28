@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from django.db import models
+from os import system
 from const.accountTypeChoices import *
 from crm.models import Contract
+from django.db import models
+from django.contrib.contenttypes import generic
 from django.utils.translation import ugettext as _
-from os import system
+from django.db.models import signals
 from xml.dom.minidom import Document
 
    
@@ -101,12 +103,12 @@ class Account(models.Model):
       verbose_name_plural = _('Account')
       ordering = ['accountNumber']
       
-class ProductCategorie(models.Model)
-   title = CharField(verbose_name=_("Product Categorie Title"), max_length=50)
-   profitAccount = ForeignKey(Account, verbose_name=_("Profit Account"), limit_choices_to="accountType=E")
-   lossAccount = ForeignKey(Account, verbose_name=_("Loss Account"),  limit_choices_to="accountType=S")
+class ProductCategorie(models.Model):
+   title = models.CharField(verbose_name=_("Product Categorie Title"), max_length=50)
+   profitAccount = models.ForeignKey(Account, verbose_name=_("Profit Account"), limit_choices_to="accountType=E", related_name="db_profit_account")
+   lossAccount = models.ForeignKey(Account, verbose_name=_("Loss Account"),  limit_choices_to="accountType=S", related_name="db_loss_account")
    
-   class Meta
+   class Meta:
       app_label = "accounting"
       app_label_koalix = _("Accounting")
       verbose_name = _('Product Categorie')
@@ -117,7 +119,7 @@ class Booking(models.Model):
    toAccount = models.ForeignKey(Account, verbose_name=_("To Account"), related_name="db_booking_toaccount")
    amount = models.DecimalField(max_digits=20, decimal_places=2, verbose_name=_("Amount"))
    description = models.TextField(verbose_name=_("Description"), null=True, blank=True)
-   bookingReference = models.GenericKey(null=True, blank=True)
+   bookingReference = models.ForeignKey('crm.Invoice', verbose_name=_("Booking Reference"), null=True, blank=True)
    bookingDate = models.DateTimeField(verbose_name = _("Booking at"))
    accountingCalculationUnit = models.ForeignKey(AccountingCalculationUnit, verbose_name=_("AccountingCalculationUnit"))
    staff = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True, verbose_name = _("Reference Staff"), related_name="db_booking_refstaff")
@@ -157,7 +159,6 @@ def preSaveCheckFlags(sender, instance, **kwarg):
       elif (Account.objects.filter(isopeninterestaccount=True) != None):
          instance.isopeninterestaccount = False
          #TODO: Correct Action when there is already a isopenreliabilitiesaccount account
-   isACustomerPaymentAccount = models.BooleanField(verbose_name=_("Is a Customer Payment Account"))
       if (instance.accountType != "A" ):
          instance.isACustomerPaymentAccount = False
          #TODO: Correct Action when not Activa
