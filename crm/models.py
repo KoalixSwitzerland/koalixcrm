@@ -17,6 +17,7 @@ import copy
 import settings
 import djangoUserExtention
 from django.contrib import auth
+import accounting 
 
 class Currency (models.Model):
    description = models.CharField(verbose_name = _("Description"), max_length=100)
@@ -220,7 +221,7 @@ class PurchaseOrder(models.Model):
    contract = models.ForeignKey(Contract, verbose_name = _("Contract"))
    externalReference = models.CharField(verbose_name = _("External Reference"), max_length=100, blank=True, null=True)
    distributor = models.ForeignKey(Distributor, verbose_name = _("Distributor"))
-   description = models.CharField(verbose_name=_("Description"), max_length=100, blank=True)
+   description = models.CharField(verbose_name=_("Description"), max_length=100, blank=True, null=True)
    lastPricingDate = models.DateField(verbose_name = _("Last Pricing Date"), blank=True, null=True)
    lastCalculatedPrice = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Price With Tax"), blank=True, null=True)
    lastCalculatedTax = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Tax"), blank=True, null=True)
@@ -298,7 +299,7 @@ class SalesContract(models.Model):
    contract = models.ForeignKey(Contract, verbose_name=_('Contract'))
    externalReference = models.CharField(verbose_name = _("External Reference"), max_length=100, blank=True)
    discount = models.DecimalField(max_digits=5, decimal_places=2, verbose_name = _("Discount"), blank=True, null=True)
-   description = models.CharField(verbose_name=_("Description"), max_length=100, blank=True)
+   description = models.CharField(verbose_name=_("Description"), max_length=100, blank=True, null=True)
    lastPricingDate = models.DateField(verbose_name = _("Last Pricing Date"), blank=True, null=True)
    lastCalculatedPrice = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Price With Tax"), blank=True, null=True)
    lastCalculatedTax = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Tax"), blank=True, null=True)
@@ -431,18 +432,37 @@ class Quote(SalesContract):
 class Invoice(SalesContract):
    payableuntil = models.DateField(verbose_name = _("To pay until"))
    derivatedFromQuote = models.ForeignKey(Quote, blank=True, null=True)
-   paymentBankReference = models.CharField(verbose_name = _("Payment Bank Reference"), max_length=100, blank=True)
-   status = models.CharField(max_length=1, choices=INVOICESTATUS)      
+   paymentBankReference = models.CharField(verbose_name = _("Payment Bank Reference"), max_length=100, blank=True, null=True)
+   status = models.CharField(max_length=1, choices=INVOICESTATUS) 
    
-   def createFromContract(contract):
-      invoice.contract = contract
-      invoice.discount = 0
-      invoice.customer = contract.defaultcustomer
-      invoice.status = 'C'
-      invoice.payableuntil = date.today().__str__()
-      invoice.dateofcreation = date.today().__str__()
-      invoice.modeOfPayment = contract.defaultcustomer.defaultModeOfPayment
-# TODO: today is not correct it has to be replaced
+   def registerinvoiceinaccounting(self, date):
+      listofprofitaccounts = ()
+      activaaccount = accounting.Account.objects.filter(isopeninterestaccount=True)
+      for position in list(SalesContractPosition.objects.filter(contract=self.id)):
+         profitaccount = position.product.accoutingProductCategorie.account.profitAccount
+         if listofprofitaccounts.get(proftiaccount):
+            listofprofitaccounts.get(proftiaccount).value += positon.lastCalculatedPrice
+         else:
+            listofprofitaccounts.attach({proftiaccount: positon.lastCalculatedPrice})
+         # TODO: not correct anndled taxbooking
+         listofprofitaccounts.attach({proftiaccount: positon.lastCalculatedTax})
+         
+      for profitaccount in listofprofitaccounts:
+         booking = accounting.Booking()
+         booking.fromAccount = activaaccount
+         booking.toAccount = profitaaccount.key
+         booking.bookingdate = date
+         booking.amount = profitaccount.value
+      # TODO: not finised here
+      
+   def registerpaymentinaccounting(self, paymentaccount, amount, date):
+      activaaccount = accounting.Account.objects.filter(isopeninterestaccount=True)
+      booking = accounting.Booking()
+      booking.fromAccount = activaaccount
+      booking.toAccount = paymentaccount
+      booking.bookingdate = date
+      booking.bookingReference = self
+      booking.amount = self.lastCalculatedPrice
 
    def createPDF(self, deliveryorder):
      XMLSerializer = serializers.get_serializer("xml")
@@ -502,6 +522,8 @@ class Unit(models.Model):
 class Tax(models.Model):
    taxrate = models.DecimalField(max_digits=5, decimal_places=2, verbose_name = _("Taxrate in Percentage"))
    name = models.CharField(verbose_name = _("Taxname"), max_length=100)
+   accountActiva = models.ForeignKey('accounting.Account', verbose_name=_("Activa Account"), related_name="db_relaccountactiva", null=True, blank=True)
+   accountPassiva = models.ForeignKey('accounting.Account', verbose_name=_("Passiva Account"), related_name="db_relaccountpassiva", null=True, blank=True)
 
    def getTaxRate(self):
       return self.taxrate;
@@ -517,7 +539,7 @@ class Tax(models.Model):
       
 	
 class Product(models.Model):
-   description = models.TextField(verbose_name = _("Description"), blank=True) 
+   description = models.TextField(verbose_name = _("Description"),null=True, blank=True) 
    title = models.CharField(verbose_name = _("Title"), max_length=200)
    productNumber = models.IntegerField(verbose_name = _("Product Number"))
    dateofcreation = models.DateTimeField(verbose_name = _("Created at"))
@@ -525,6 +547,7 @@ class Product(models.Model):
    lastmodification = models.DateTimeField(verbose_name = _("Last modified"), blank=True, null=True)
    lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, verbose_name = _("Last modified by"))
    tax = models.ForeignKey(Tax, blank=False)
+   accoutingProductCategorie = models.ForeignKey('accounting.ProductCategorie', verbose_name=_("Accounting Product Categorie"), null=True, blank="True")
 
    def getPrice(self, date, unit, customer, currency):
       prices = Price.objects.filter(product=self.id)

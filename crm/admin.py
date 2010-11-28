@@ -254,13 +254,32 @@ class OptionInvoice(admin.ModelAdmin):
          response = HttpResponseRedirect('/export/invoice/'+str(obj.id))
          return response
    createInvoicePDF.short_description = _("Create PDF of Invoice")
-         
+   
    def createDeliveryOrderPDF(self, request, queryset):
       for obj in queryset:
-         obj.createPDF(deliveryorder=True)
-         self.message_user(request, "PDF created")
+         response = HttpResponseRedirect('/export/deilveryorder/'+str(obj.id))
+         return response
    createDeliveryOrderPDF.short_description = _("Create PDF of Delivery Order")
-   actions = ['recalculatePrices', 'createDeliveryOrderPDF', 'createInvoicePDF']
+         
+   def registerInvoiceInAccounting(self, request, queryset):
+      for obj in queryset:
+         obj.register()
+         self.message_user(request, _("Successfully registered Invoice in the Accounting"))
+   registerInvoiceInAccounting.short_description = _("Register Invoice in Accounting")
+   
+   def unregisterInvoiceInAccounting(self, request, queryset):
+      for obj in queryset:
+         obj.createPDF(deliveryorder=True)
+         self.message_user(request, _("Successfully unregistered Invoice in the Accounting"))
+   unregisterInvoiceInAccounting.short_description = _("Unregister Invoice in Accounting")
+   
+   def registerPaymentInAccounting(self, request, queryset):
+      for obj in queryset:
+         obj.createPDF(deliveryorder=True)
+         self.message_user(request, _("Successfully registered Payment in the Accounting"))
+   registerPaymentInAccounting.short_description = _("Register Payment in Accounting")
+   
+   actions = ['recalculatePrices', 'createDeliveryOrderPDF', 'createInvoicePDF', 'registerInvoiceInAccounting', 'unregisterInvoiceInAccounting', 'registerPaymentInAccounting']
 
 
 class OptionQuote(admin.ModelAdmin):
@@ -456,8 +475,8 @@ class OptionCurrency(admin.ModelAdmin):
    allow_add = True
    
 class OptionTax(admin.ModelAdmin):
-   list_display = ('id', 'taxrate', 'name')
-   fieldsets = (('', {'fields': ('taxrate', 'name',)}),)
+   list_display = ('id', 'taxrate', 'name', 'accountActiva', 'accountPassiva')
+   fieldsets = (('', {'fields': ('taxrate', 'name', 'accountActiva', 'accountPassiva')}),)
    allow_add = True
    
 class OptionModeOfPayment(admin.ModelAdmin):
