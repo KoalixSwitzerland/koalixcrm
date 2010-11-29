@@ -13,4 +13,6 @@ urlpatterns = patterns('',
     (r'^export/invoice/(?P<invoiceid>\d+)/$', 'crm.views.createInvoicePDF'),
     (r'^export/balancesheet/(?P<calculationunitid>\d+)/$', 'accounting.views.createBalanceSheetPDF'),
     (r'^admin/', include(admin.site.urls)),
+    (r'^i18n/', include('django.conf.urls.i18n')),
+
 )

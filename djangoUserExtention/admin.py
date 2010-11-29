@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
 from djangoUserExtention.models import *
 
@@ -64,7 +64,7 @@ class OptionTemplateSet(admin.ModelAdmin):
       (_('Basics'), {
          'fields': ('title', 'invoiceXSLFile', 'quoteXSLFile', 'purchaseconfirmationXSLFile',
    'deilveryorderXSLFile', 'profitLossStatementXSLFile', 'balancesheetXSLFile', 
-   'logo', 'footerTextsalesorders', 'headerTextsalesorders', 
+   'logo', 'fopConfigurationFile', 'footerTextsalesorders', 'headerTextsalesorders', 
    'headerTextpurchaseorders', 'footerTextpurchaseorders')
       }),
    )

@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 from django.db import models
+from filebrowser.fields import FileBrowseField
 from const.purpose import *
 import crm
    
 class XSLFile(models.Model):
    title = models.CharField(verbose_name = _("Title"), max_length=100, blank=True, null=True)
-   xslfile = models.FileField(verbose_name=_("XSL File"), upload_to="uploads/")
+   xslfile = FileBrowseField(verbose_name=_("XSL File"), max_length=200)
    
    class Meta:
       app_label = "djangoUserExtention"
@@ -39,7 +40,8 @@ class TemplateSet(models.Model):
    deilveryorderXSLFile = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Deilvery Order"), related_name="db_reltemplatedeliveryorder")
    profitLossStatementXSLFile = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Profit Loss Statement"), related_name="db_reltemplateprofitlossstatement")
    balancesheetXSLFile = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Balancesheet"), related_name="db_reltemplatebalancesheet")
-   logo = models.FileField(verbose_name=_("Logo for the PDF generation"), upload_to="/var/www/koalixcrm/media/uploads/")
+   logo = FileBrowseField(verbose_name=_("Logo for the PDF generation"), blank=True, null=True, max_length=200)
+   fopConfigurationFile = FileBrowseField(verbose_name=_("FOP Configuration File"), blank=True, null=True, max_length=200)
    footerTextsalesorders = models.TextField(verbose_name=_("Footer Text On Salesorders"), blank=True, null=True)
    headerTextsalesorders = models.TextField(verbose_name=_("Header Text On Salesorders"), blank=True, null=True)
    headerTextpurchaseorders = models.TextField(verbose_name=_("Header Text On Purchaseorders"), blank=True, null=True)
