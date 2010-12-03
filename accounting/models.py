@@ -5,9 +5,11 @@ from const.accountTypeChoices import *
 from crm.models import Contract
 from django.db import models
 from django.contrib.contenttypes import generic
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
 from django.db.models import signals
 from xml.dom.minidom import Document
+from middleware import threadlocals
+from datetime import *
 
    
 class AccountingCalculationUnit(models.Model):

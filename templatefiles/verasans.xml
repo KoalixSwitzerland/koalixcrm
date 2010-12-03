@@ -93,10 +93,10 @@ the location of this file.
           <font-triplet name="ArialMT" style="normal" weight="bold"/>
         </font>
         -->
-	<font metrics-url="/var/www/koalixcrm/DejaVuSans.xml" kerning="yes" embed-url="/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf">
+	<font metrics-url="/var/www/koalixcrm/media/uploads/dejavusans.xml" kerning="yes" embed-url="/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf">
           <font-triplet name="BitstreamVeraSans" style="normal" weight="normal"/>
         </font>
-	<font metrics-url="/var/www/koalixcrm/DejaVuSans-Bold.xml" kerning="yes" embed-url="/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans-Bold.ttf">
+	<font metrics-url="/var/www/koalixcrm/media/uploads/dejavusans-bold.xml" kerning="yes" embed-url="/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans-Bold.ttf">
 		<font-triplet name="BitstreamVeraSans" style="normal" weight="bold"/>
         </font>
 

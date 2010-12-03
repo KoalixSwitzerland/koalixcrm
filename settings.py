@@ -24,6 +24,8 @@ TIME_FORMAT = 'G:i'
 YEAR_MONTH_FORMAT = 'F Y'
 TIME_ZONE = 'Europe/Zurich'
 
+LANGUAGE_CODE = 'de'
+
 LANGUAGES = (
   ('de', 'German'),
   ('en', 'English'),

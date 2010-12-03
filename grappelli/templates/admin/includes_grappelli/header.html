@@ -31,7 +31,6 @@
         {% if docsroot %}
         <li><a href="{{ docsroot }}">{% trans 'Documentation' %}</a></li>
         {% endif %}
-        {% include 'admin/includes_grappelli/change_language.html' %}
         <!-- Change Password -->
         {% url admin:password_change as password_change_url %}
         {% if password_change_url %}

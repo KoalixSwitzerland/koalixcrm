@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from os import system
 from django.db import models
 from const.country import *
 from const.postaladdressprefix import *
@@ -8,15 +9,14 @@ from const.status import *
 from django.db.models import signals
 from middleware import threadlocals
 from datetime import *
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
 from decimal import Decimal
-from os import system
 from django.core import serializers
-import copy
-import settings
 import djangoUserExtention
 from django.contrib import auth
 import accounting 
+import settings
+import copy
 
 class Currency (models.Model):
    description = models.CharField(verbose_name = _("Description"), max_length=100)
@@ -282,7 +282,7 @@ class PurchaseOrder(models.Model):
          objectsToSerialize += list(PostalAddress.objects.filter(id=address.id))
      xml_serializer.serialize(objectsToSerialize, stream=out, indent=3)
      out.close()
-     system('bash -c "fop -c /var/www/koalixcrm/verasans.xml -xml /tmp/purchaseorder_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.purchaseorderXSLFile.xslfile.name+' -pdf /tmp/purchaseorder_'+str(self.id)+'.pdf"')
+     system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile.path+'  -xml /tmp/purchaseorder_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.purchaseorderXSLFile.xslfile.path+' -pdf /tmp/purchaseorder_'+str(self.id)+'.pdf"')
      return "/tmp/purchaseorder_"+str(self.id)+".pdf"    
 
    class Meta:
@@ -414,9 +414,15 @@ class Quote(SalesContract):
      xml_serializer.serialize(objectsToSerialize, stream=out, indent=3)
      out.close()
      if (purchaseconfirmation == False) :
-         system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile.name+' -xml /tmp/quote_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+'/uploads/'+userExtention[0].defaultTemplateSet.quoteXSLFile.xslfile.name+' -pdf /tmp/quote_'+str(self.id)+'.pdf"')
+        log = open("/tmp/log.txt", "w")
+        log.write('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/quote_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.quoteXSLFile.xslfile.path+' -pdf /tmp/quote_'+str(self.id)+'.pdf"')
+        log.close()
+        system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/quote_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.quoteXSLFile.xslfile.path+' -pdf /tmp/quote_'+str(self.id)+'.pdf"')
      else:
-         system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile+'  -xml /tmp/quote_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+'/uploads/'+userExtention[0].defaultTemplateSet.purchaseconfirmationXSLFile.xslfile+' -pdf /tmp/purchaseconfirmation_'+str(self.id)+'.pdf"')
+        log = open("/tmp/log.txt", "w")
+        log.write('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/quote_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.purchaseconfirmationXSLFile.xslfile.path+' -pdf /tmp/quote_'+str(self.id)+'.pdf"')
+        log.close()
+        system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile.path+'  -xml /tmp/quote_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.purchaseconfirmationXSLFile.xslfile.path+' -pdf /tmp/purchaseconfirmation_'+str(self.id)+'.pdf"')
      return "/tmp/quote_"+str(self.id)+".pdf"
      
    def __unicode__(self):
@@ -489,11 +495,11 @@ class Invoice(SalesContract):
      out.close()
      if (deliveryorder == False):
         log = open("/tmp/log.txt", "w")
-        log.write('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile+' -xml /tmp/invoice_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.invoiceXSLFile.xslfile+' -pdf /tmp/invoice_'+str(self.id)+'.pdf"')
+        log.write('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/invoice_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.invoiceXSLFile.xslfile.path+' -pdf /tmp/invoice_'+str(self.id)+'.pdf"')
         log.close()
-        system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile+' -xml /tmp/invoice_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.invoiceXSLFile.xslfile+' -pdf /tmp/invoice_'+str(self.id)+'.pdf"')
+        system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/invoice_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.invoiceXSLFile.xslfile.path+' -pdf /tmp/invoice_'+str(self.id)+'.pdf"')
      else:
-        system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile+' -xml /tmp/invoice_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.deilveryorderXSLFile.xslfile+' -pdf /tmp/deliveryorder_'+str(self.id)+'.pdf"')
+        system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/invoice_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.deilveryorderXSLFile.xslfile.path+' -pdf /tmp/deliveryorder_'+str(self.id)+'.pdf"')
      return "/tmp/invoice_"+str(self.id)+".pdf"
 
 #  TODO: def registerPayment(self, amount, registerpaymentinaccounting):

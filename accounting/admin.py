@@ -3,7 +3,7 @@ from django import forms
 from django.core.urlresolvers import reverse
 from crm.models import *
 from accounting.models import *
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
 from django.contrib import admin
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
