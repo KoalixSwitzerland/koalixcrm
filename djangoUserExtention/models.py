@@ -12,7 +12,7 @@ class XSLFile(models.Model):
    
    class Meta:
       app_label = "djangoUserExtention"
-      app_label_koalix = _('Djang User Extention')
+      #app_label_koalix = _('Djang User Extention')
       verbose_name = _('XSL File')
       verbose_name_plural = _('XSL Files')
       
@@ -25,7 +25,7 @@ class UserExtention(models.Model):
    
    class Meta:
       app_label = "djangoUserExtention"
-      app_label_koalix = _('Djang User Extention')
+      #app_label_koalix = _('Djang User Extention')
       verbose_name = _('User Extention')
       verbose_name_plural = _('User Extentions')
       
@@ -49,7 +49,7 @@ class TemplateSet(models.Model):
       
    class Meta:
       app_label = "djangoUserExtention"
-      app_label_koalix = _('Djang User Extention')
+      #app_label_koalix = _('Djang User Extention')
       verbose_name = _('Templateset')
       verbose_name_plural = _('Templatesets')
       
@@ -66,7 +66,7 @@ class UserExtentionPostalAddress(crm.models.PostalAddress):
    
    class Meta:
       app_label = "djangoUserExtention"
-      app_label_koalix = _('Djang User Extention')
+      #app_label_koalix = _('Djang User Extention')
       verbose_name = _('Postal Address for User Extention')
       verbose_name_plural = _('Postal Address for User Extention')
    
@@ -79,7 +79,7 @@ class UserExtentionPhoneAddress(crm.models.PhoneAddress):
    
    class Meta:
       app_label = "djangoUserExtention"
-      app_label_koalix = _('Djang User Extention')
+      #app_label_koalix = _('Djang User Extention')
       verbose_name = _('Phonenumber for User Extention')
       verbose_name_plural = _('Phonenumber for User Extention')
 
@@ -92,6 +92,6 @@ class UserExtentionEmailAddress(crm.models.EmailAddress):
    
    class Meta:
       app_label = "djangoUserExtention"
-      app_label_koalix = _('Djang User Extention')
+      #app_label_koalix = _('Djang User Extention')
       verbose_name = _('Email Address for User Extention')
       verbose_name_plural = _('Email Address for User Extention')
