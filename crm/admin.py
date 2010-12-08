@@ -206,6 +206,8 @@ class OptionContract(admin.ModelAdmin):
          response = HttpResponseRedirect('/admin/crm/invoice/'+str(invoice.id))
       return response
    createInvoice.short_description = _("Create Invoice")
+   
+  
    actions = ['createQuote', 'createInvoice', 'createPurchaseOrder']
 
 
