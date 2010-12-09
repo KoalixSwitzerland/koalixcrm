@@ -108,7 +108,7 @@
               text-align="left">keine</fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
-              text-align="left">PC 85-28819-4</fo:block>
+              text-align="left"><xsl:value-of select="object[@model='djangoUserExtention.templateset']/field[@name='bankingaccountref']"/></fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
               text-align="left"><xsl:value-of select="substring(object[@model='crm.invoice']/field[@name='payableuntil'], 9, 2)"/><xsl:text>.</xsl:text><xsl:value-of select="substring(object[@model='crm.invoice']/field[@name='payableuntil'], 6, 2)"/><xsl:text>.</xsl:text><xsl:value-of select="substring(object[@model='crm.invoice']/field[@name='payableuntil'], 1, 4)"/></fo:block>
@@ -130,7 +130,7 @@
               font-family="BitstreamVeraSans"
 	      text-decoration="underline"
               text-align="start"
-	      margin-bottom="0.5cm"><xsl:value-of select="object[@model='auth.user']/field[@name='first_name']"/><xsl:text> </xsl:text>  <xsl:value-of select="object[@model='auth.user']/field[@name='last_name']"/>,  Brunnenhof, CH-9602 Bazenheid</fo:block>
+	      margin-bottom="0.5cm"><xsl:value-of select="object[@model='djangoUserExtention.templateset']/field[@name='addresser']"/></fo:block>
             <xsl:choose>
               <xsl:when  test="object[@model='crm.postaladdressforcontact']/field[@name='purpose']">
               <fo:block font-size="9pt"
