@@ -14,6 +14,7 @@ from decimal import Decimal
 from django.core import serializers
 import djangoUserExtention
 from django.contrib import auth
+from lxml import etree
 import accounting 
 import settings
 import copy
@@ -117,6 +118,7 @@ class Customer(Contact):
    
    def createInvoice(self):
       contract = self.createContract()
+
       invoice = contract.createInvoice()
       return invoice
       
@@ -413,6 +415,11 @@ class Quote(SalesContract):
          objectsToSerialize += list(PostalAddress.objects.filter(id=address.id))
      xml_serializer.serialize(objectsToSerialize, stream=out, indent=3)
      out.close()
+     xml = etree.parse("/tmp/quote_"+str(self.id)+".xml")
+     rootelement = xml.getroot()
+     projectroot = etree.SubElement(rootelement, "projectroot")
+     projectroot.text = settings.PROJECT_ROOT
+     xml.write("/tmp/quote_"+str(self.id)+".xml")
      if (purchaseconfirmation == False) :
         log = open("/tmp/log.txt", "w")
         log.write('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/quote_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.quoteXSLFile.xslfile.path+' -pdf /tmp/quote_'+str(self.id)+'.pdf"')

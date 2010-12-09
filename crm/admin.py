@@ -391,7 +391,7 @@ class ContactPostalAddress(admin.StackedInline):
    classes = ('collapse-open',)
    fieldsets = (
       ('Basics', {
-         'fields': ('prename', 'name', 'addressline1', 'addressline2', 'addressline3', 'addressline4', 'zipcode', 'town', 'state', 'country', 'purpose')
+         'fields': ('prefix', 'prename', 'name', 'addressline1', 'addressline2', 'addressline3', 'addressline4', 'zipcode', 'town', 'state', 'country', 'purpose')
       }),
    )
    allow_add = True

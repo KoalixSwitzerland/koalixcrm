@@ -35,6 +35,7 @@ LOCALE_PATHS = ('crm/locale', 'accounting/locale')
 SITE_ID = 1
 USE_I18N = True
 MEDIA_ROOT = '/var/www/koalixcrm/media/'
+PROJECT_ROOT = '/var/www/koalixcrm/'
 MEDIA_URL = '/media/'
 ADMIN_MEDIA_PREFIX = '/media/admin/'
 
