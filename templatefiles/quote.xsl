@@ -442,7 +442,8 @@
               font-family="BitstreamVeraSans"
               color="black"
               text-align="left"
-              margin-top="1cm">
+              margin-top="1cm"
+              id="last-page">
       <xsl:value-of select="object[@model='djangoUserExtention.templateset']/field[@name='footerTextsalesorders']"/>
       </fo:block>
     </fo:flow>

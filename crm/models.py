@@ -420,15 +420,12 @@ class Quote(SalesContract):
      projectroot = etree.SubElement(rootelement, "projectroot")
      projectroot.text = settings.PROJECT_ROOT
      xml.write("/tmp/quote_"+str(self.id)+".xml")
+     log = open("/tmp/log.txt", "w")
+     log.write('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/quote_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.quoteXSLFile.xslfile.path+' -pdf /tmp/quote_'+str(self.id)+'.pdf"')
+     log.close()
      if (purchaseconfirmation == False) :
-        log = open("/tmp/log.txt", "w")
-        log.write('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/quote_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.quoteXSLFile.xslfile.path+' -pdf /tmp/quote_'+str(self.id)+'.pdf"')
-        log.close()
         system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/quote_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.quoteXSLFile.xslfile.path+' -pdf /tmp/quote_'+str(self.id)+'.pdf"')
      else:
-        log = open("/tmp/log.txt", "w")
-        log.write('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/quote_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.purchaseconfirmationXSLFile.xslfile.path+' -pdf /tmp/quote_'+str(self.id)+'.pdf"')
-        log.close()
         system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile.path+'  -xml /tmp/quote_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.purchaseconfirmationXSLFile.xslfile.path+' -pdf /tmp/purchaseconfirmation_'+str(self.id)+'.pdf"')
      return "/tmp/quote_"+str(self.id)+".pdf"
      
@@ -500,10 +497,15 @@ class Invoice(SalesContract):
          objectsToSerialize += list(PostalAddress.objects.filter(id=address.id))
      xml_serializer.serialize(objectsToSerialize, stream=out, indent=3)
      out.close()
+     xml = etree.parse("/tmp/invoice_"+str(self.id)+".xml")
+     rootelement = xml.getroot()
+     projectroot = etree.SubElement(rootelement, "projectroot")
+     projectroot.text = settings.PROJECT_ROOT
+     xml.write("/tmp/invoice_"+str(self.id)+".xml")
+     log = open("/tmp/log.txt", "w")
+     log.write('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/invoice_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.invoiceXSLFile.xslfile.path+' -pdf /tmp/invoice_'+str(self.id)+'.pdf"')
+     log.close()
      if (deliveryorder == False):
-        log = open("/tmp/log.txt", "w")
-        log.write('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/invoice_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.invoiceXSLFile.xslfile.path+' -pdf /tmp/invoice_'+str(self.id)+'.pdf"')
-        log.close()
         system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/invoice_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.invoiceXSLFile.xslfile.path+' -pdf /tmp/invoice_'+str(self.id)+'.pdf"')
      else:
         system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/invoice_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.deilveryorderXSLFile.xslfile.path+' -pdf /tmp/deliveryorder_'+str(self.id)+'.pdf"')
