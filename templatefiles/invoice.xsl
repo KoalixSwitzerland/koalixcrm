@@ -128,7 +128,7 @@
           <fo:table-cell>
             <fo:block font-size="6pt"
               font-family="BitstreamVeraSans"
-	      font-decoration="underline"
+	      text-decoration="underline"
               text-align="start"
 	      margin-bottom="0.5cm"><xsl:value-of select="object[@model='auth.user']/field[@name='first_name']"/><xsl:text> </xsl:text>  <xsl:value-of select="object[@model='auth.user']/field[@name='last_name']"/>,  Brunnenhof, CH-9602 Bazenheid</fo:block>
             <xsl:choose>
