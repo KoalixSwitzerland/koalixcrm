@@ -111,7 +111,7 @@
               text-align="left">PC 85-28819-4</fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
-              text-align="left"><xsl:value-of select="substring(object[@model='crm.invoice']/field[@name='validuntil'], 9, 2)"/><xsl:text>.</xsl:text><xsl:value-of select="substring(object[@model='crm.invoice']/field[@name='validuntil'], 6, 2)"/><xsl:text>.</xsl:text><xsl:value-of select="substring(object[@model='crm.invoice']/field[@name='validuntil'], 1, 4)"/></fo:block>
+              text-align="left"><xsl:value-of select="substring(object[@model='crm.invoice']/field[@name='payableuntil'], 9, 2)"/><xsl:text>.</xsl:text><xsl:value-of select="substring(object[@model='crm.invoice']/field[@name='payableuntil'], 6, 2)"/><xsl:text>.</xsl:text><xsl:value-of select="substring(object[@model='crm.invoice']/field[@name='payableuntil'], 1, 4)"/></fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
               text-align="left"><xsl:text> </xsl:text> </fo:block>

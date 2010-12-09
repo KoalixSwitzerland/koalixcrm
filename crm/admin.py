@@ -224,7 +224,7 @@ class PurchaseOrderInlinePosition(admin.TabularInline):
 
 
 class OptionInvoice(admin.ModelAdmin):
-   list_display = ('id', 'description', 'contract', 'customer', 'payableuntil', 'status', 'currency', 'staff', 'lastmodification', 'lastmodifiedby')
+   list_display = ('id', 'description', 'contract', 'customer', 'payableuntil', 'status', 'currency', 'staff',  'lastCalculatedPrice', 'lastPricingDate', 'lastmodification', 'lastmodifiedby')
    list_display_links = ('id','contract','customer')       
    list_filter    = ('customer', 'contract', 'staff', 'status', 'currency', 'lastmodification')
    ordering       = ('contract', 'customer', 'currency')
