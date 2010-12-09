@@ -125,13 +125,11 @@
               text-align="left"><xsl:value-of select="object[@model='auth.user']/field[@name='email']"/></fo:block>
           </fo:table-cell>
           <fo:table-cell>
-            <fo:block font-size="7pt"
+            <fo:block font-size="6pt"
               font-family="BitstreamVeraSans"
               text-align="left"
-              text-decoration="underline"><xsl:value-of select="object[@model='auth.user']/field[@name='first_name']"/><xsl:text> </xsl:text>  <xsl:value-of select="object[@model='auth.user']/field[@name='last_name']"/>,  Brunnenhof, CH-9602 Bazenheid</fo:block>
-            <fo:block font-size="8pt"
-              font-family="BitstreamVeraSans"
-              text-align="left"><xsl:text> </xsl:text> </fo:block>
+              text-decoration="underline"
+	      margin-bottom="0.5cm"><xsl:value-of select="object[@model='auth.user']/field[@name='first_name']"/><xsl:text> </xsl:text>  <xsl:value-of select="object[@model='auth.user']/field[@name='last_name']"/>,  Brunnenhof, CH-9602 Bazenheid</fo:block>
             <xsl:choose>
               <xsl:when  test="object[@model='crm.postaladdressforcontact']/field[@name='purpose']">
               <fo:block font-size="9pt"

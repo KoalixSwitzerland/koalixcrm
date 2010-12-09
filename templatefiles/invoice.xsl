@@ -126,9 +126,9 @@
               text-align="left"><xsl:value-of select="object[@model='auth.user']/field[@name='email']"/></fo:block>
           </fo:table-cell>
           <fo:table-cell>
-            <fo:block font-size="8pt"
+            <fo:block font-size="6pt"
               font-family="BitstreamVeraSans"
-	      font-style="underline"
+	      font-decoration="underline"
               text-align="start"
 	      margin-bottom="0.5cm"><xsl:value-of select="object[@model='auth.user']/field[@name='first_name']"/><xsl:text> </xsl:text>  <xsl:value-of select="object[@model='auth.user']/field[@name='last_name']"/>,  Brunnenhof, CH-9602 Bazenheid</fo:block>
             <xsl:choose>
@@ -406,7 +406,7 @@
                       <xsl:choose>
                         <xsl:when test="object[@model='crm.salescontract']/field[@name='lastCalculatedPrice']/None">-</xsl:when>
                         <xsl:otherwise>
-                        <xsl:value-of select="format-number(object[@model='crm.salescontract']/field[@name='lastCalculatedPrice'], '#.##0,00', 'european')"/><xsl:text> </xsl:text><xsl:value-of select="../object[@model='crm.currency']/field[@name='shortName']"/>
+                        <xsl:value-of select="format-number(object[@model='crm.salescontract']/field[@name='lastCalculatedPrice'], '#.##0,00', 'european')"/><xsl:text> </xsl:text><xsl:value-of select="object[@model='crm.currency']/field[@name='shortName']"/>
                         </xsl:otherwise>
                       </xsl:choose>
                    </fo:block>
