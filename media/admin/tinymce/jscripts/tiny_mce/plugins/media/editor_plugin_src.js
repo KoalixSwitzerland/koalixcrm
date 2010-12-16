@@ -1,11 +1,8 @@
 /**
- * editor_plugin_src.js
+ * $Id: editor_plugin_src.js 906 2008-08-24 16:47:29Z spocke $
  *
- * Copyright 2009, Moxiecode Systems AB
- * Released under LGPL License.
- *
- * License: http://tinymce.moxiecode.com/license
- * Contributing: http://tinymce.moxiecode.com/contributing
+ * @author Moxiecode
+ * @copyright Copyright © 2004-2008, Moxiecode Systems AB, All rights reserved.
  */
 
 (function() {
@@ -24,7 +21,7 @@
 
 			ed.onPreInit.add(function() {
 				// Force in _value parameter this extra parameter is required for older Opera versions
-				ed.serializer.addRules('param[name|value|_mce_value]');
+				ed.serializer.addRules('param[name|value|_value]');
 			});
 
 			// Register commands
@@ -64,7 +61,7 @@
 				if (ed.settings.content_css !== false)
 					ed.dom.loadCSS(url + "/css/content.css");
 
-				if (ed.theme && ed.theme.onResolveName) {
+				if (ed.theme.onResolveName) {
 					ed.theme.onResolveName.add(function(th, o) {
 						if (o.name == 'img') {
 							each(lo, function(v, k) {
@@ -165,17 +162,17 @@
 			});
 
 			ed.onPostProcess.add(function(ed, o) {
-				o.content = o.content.replace(/_mce_value=/g, 'value=');
+				o.content = o.content.replace(/_value=/g, 'value=');
 			});
 
-			function getAttr(s, n) {
-				n = new RegExp(n + '=\"([^\"]+)\"', 'g').exec(s);
+			if (ed.getParam('media_use_script')) {
+				function getAttr(s, n) {
+					n = new RegExp(n + '=\"([^\"]+)\"', 'g').exec(s);
 
-				return n ? ed.dom.decode(n[1]) : '';
-			};
+					return n ? ed.dom.decode(n[1]) : '';
+				};
 
-			ed.onPostProcess.add(function(ed, o) {
-				if (ed.getParam('media_use_script')) {
+				ed.onPostProcess.add(function(ed, o) {
 					o.content = o.content.replace(/<img[^>]+>/g, function(im) {
 						var cl = getAttr(im, 'class');
 
@@ -188,8 +185,8 @@
 
 						return im;
 					});
-				}
-			});
+				});
+			}
 		},
 
 		getInfo : function() {
@@ -217,58 +214,41 @@
 			h = h.replace(/<embed([^>]*)>/gi, '<span class="mceItemEmbed" $1>');
 			h = h.replace(/<\/(object)([^>]*)>/gi, '</span>');
 			h = h.replace(/<\/embed>/gi, '');
-			h = h.replace(/<param([^>]*)>/gi, function(a, b) {return '<span ' + b.replace(/value=/gi, '_mce_value=') + ' class="mceItemParam"></span>'});
+			h = h.replace(/<param([^>]*)>/gi, function(a, b) {return '<span ' + b.replace(/value=/gi, '_value=') + ' class="mceItemParam"></span>'});
 			h = h.replace(/\/ class=\"mceItemParam\"><\/span>/gi, 'class="mceItemParam"></span>');
 
 			o.content = h;
 		},
 
 		_buildObj : function(o, n) {
-			var ob, ed = this.editor, dom = ed.dom, p = this._parse(n.title), stc;
-			
-			stc = ed.getParam('media_strict', true) && o.type == 'application/x-shockwave-flash';
+			var ob, ed = this.editor, dom = ed.dom, p = this._parse(n.title);
 
 			p.width = o.width = dom.getAttrib(n, 'width') || 100;
 			p.height = o.height = dom.getAttrib(n, 'height') || 100;
 
+			ob = dom.create('span', {
+				mce_name : 'object',
+				classid : "clsid:" + o.classid,
+				codebase : o.codebase,
+				width : o.width,
+				height : o.height
+			});
+
 			if (p.src)
 				p.src = ed.convertURL(p.src, 'src', n);
 
-			if (stc) {
-				ob = dom.create('span', {
-					id : p.id,
-					_mce_name : 'object',
-					type : 'application/x-shockwave-flash',
-					data : p.src,
-					style : dom.getAttrib(n, 'style'),
-					width : o.width,
-					height : o.height
-				});
-			} else {
-				ob = dom.create('span', {
-					id : p.id,
-					_mce_name : 'object',
-					classid : "clsid:" + o.classid,
-					style : dom.getAttrib(n, 'style'),
-					codebase : o.codebase,
-					width : o.width,
-					height : o.height
-				});
-			}
-
 			each (p, function(v, k) {
-				if (!/^(width|height|codebase|classid|id|_cx|_cy)$/.test(k)) {
+				if (!/^(width|height|codebase|classid|_cx|_cy)$/.test(k)) {
 					// Use url instead of src in IE for Windows media
-					if (o.type == 'application/x-mplayer2' && k == 'src' && !p.url)
+					if (o.type == 'application/x-mplayer2' && k == 'src')
 						k = 'url';
 
 					if (v)
-						dom.add(ob, 'span', {_mce_name : 'param', name : k, '_mce_value' : v});
+						dom.add(ob, 'span', {mce_name : 'param', name : k, '_value' : v});
 				}
 			});
 
-			if (!stc)
-				dom.add(ob, 'span', tinymce.extend({_mce_name : 'embed', type : o.type, style : dom.getAttrib(n, 'style')}, p));
+			dom.add(ob, 'span', tinymce.extend({mce_name : 'embed', type : o.type}, p));
 
 			return ob;
 		},
@@ -342,21 +322,18 @@
 		},
 
 		_createImg : function(cl, n) {
-			var im, dom = this.editor.dom, pa = {}, ti = '', args;
-
-			args = ['id', 'name', 'width', 'height', 'bgcolor', 'align', 'flashvars', 'src', 'wmode', 'allowfullscreen', 'quality', 'data'];	
+			var im, dom = this.editor.dom, pa = {}, ti = '';
 
 			// Create image
 			im = dom.create('img', {
 				src : this.url + '/img/trans.gif',
 				width : dom.getAttrib(n, 'width') || 100,
 				height : dom.getAttrib(n, 'height') || 100,
-				style : dom.getAttrib(n, 'style'),
 				'class' : cl
 			});
 
 			// Setup base parameters
-			each(args, function(na) {
+			each(['id', 'name', 'width', 'height', 'bgcolor', 'align', 'flashvars', 'src', 'wmode', 'allowfullscreen', 'quality'], function(na) {
 				var v = dom.getAttrib(n, na);
 
 				if (v)
@@ -366,30 +343,13 @@
 			// Add optional parameters
 			each(dom.select('span', n), function(n) {
 				if (dom.hasClass(n, 'mceItemParam'))
-					pa[dom.getAttrib(n, 'name')] = dom.getAttrib(n, '_mce_value');
+					pa[dom.getAttrib(n, 'name')] = dom.getAttrib(n, '_value');
 			});
 
 			// Use src not movie
 			if (pa.movie) {
 				pa.src = pa.movie;
 				delete pa.movie;
-			}
-
-			// No src try data
-			if (!pa.src) {
-				pa.src = pa.data;
-				delete pa.data;
-			}
-
-			// Merge with embed args
-			n = dom.select('.mceItemEmbed', n)[0];
-			if (n) {
-				each(args, function(na) {
-					var v = dom.getAttrib(n, na);
-
-					if (v && !pa[na])
-						pa[na] = v;
-				});
 			}
 
 			delete pa.width;

@@ -1,30 +1,72 @@
 
-
-
-/*  Global Settings
+/*  typography.css: 
+    2009 / vonautomatisch werkstaetten / vonautomatisch.at
 ------------------------------------------------------------------------------------------------------ */
-
-h1, h2, h3, h4, h5 { font-weight: bold; }
-
-p, ol, ul, dl { margin: 0; }
 
 
 
 /*  Headings
 ------------------------------------------------------------------------------------------------------ */
 
+h1, h2, h3, h4 {
+    font-weight: bold;
+}
+
 h1 {
-    position: relative; z-index: 800;
+    position: relative;
+    z-index: 800;
     margin: 26px 0 10px;
-    font-size: 16px; line-height: 20px;
+    font-size: 16px;
+    line-height: 20px;
 }
 .pretitle + h1 {
     margin-top: 0;
 }
-h2 { font-size: 16px; }
-h3 { font-size: 14px; }
-h4 { font-size: 12px; }
-h5 { font-size: 10px; }
+h2 {
+    font-size: 13px;
+}
+h3 {
+    font-size: 12px;
+}
+h4, h5 {
+    font-size: 11px;
+}
+
+
+
+/*  Paragraphs
+------------------------------------------------------------------------------------------------------ */
+
+.module p.help, 
+p.help {
+    padding: 5px 0;
+    font-size: 10px !important;
+    line-height: 12px;
+}
+
+p.readonly {
+    margin: 0 !important;
+    padding: 3px 0 !important;
+    color: #666;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.fb_show + p.help a {
+    display: inline-block;
+    padding: 3px;
+    font-size: 0;
+    line-height: 0;
+}
+.fb_show + p.help a img {
+    margin: 0;
+    font-size: 0;
+    line-height: 0;
+}
+.container-grid > p:first-child, .container-flexible > p:first-child, 
+.container-grid .column > p:first-child, .container-flexible .column > p:first-child {
+    margin: 0 0 10px;
+}
 
 
 
@@ -34,194 +76,20 @@ h5 { font-size: 10px; }
 a {
     text-decoration: none;
     outline: none;
+    cursor: pointer;
+}
+a.back {
+    font-weight: bold;
 }
 
-a:link, a:visited { color: #309bbf; }
-a:hover, a:active { color: #444; }
-
-a.inverse:link, a.inverse:visited { color: #444 !important; }
-a.inverse:hover, a.inverse:active { color: #309bbf !important; }
-
-
-/*  Images in Links ........................................... */
-
-a img {
-    border: none;
-    outline: none;
-}
-a:link img.preview, a:visited img.preview {
-    margin-top: 5px; padding: 5px;
-    border: 1px solid #309bbf;
-    -moz-border-radius: 3px; -webkit-border-radius: 3px;
-    background: #fff;
-}
-a:hover img.preview, a:active img.preview {
-    border-color: #666;
-}
-
-
-/*  Section ........................................... */
-
-a.section:link, a.section:visited { color: #fff; }
-
-
-/*  Pretitle ........................................... */
-
-.pretitle {
-    margin: -16px 0 0;
-}
-.pretitle a {
-    font-size: 11px; line-height: 15px; font-weight: bold;
-}
-
-
-
-/*  Iconic Links
------------------------------------------------------------------------------------------------------- */
-
-a.addlink, a.changelink, a.deletelink,
-a.add-another, a.related-lookup, 
-a.fb_show {
-    background-repeat: no-repeat;
-    background-color: transparent;
-}
-
-
-/*  Hide Images in Templates ........................................... */
-
-a.add-another img, a.related-lookup img { opacity: 0; }
-a.related-lookup img { display: none; }
-
-
-/*  Add, Change, Delete, Add-Another ........................................... */
-
-a.addlink, a.changelink, a.deletelink {
-    position: relative; top: 0;
-    margin: 0 0 -1px 10px; padding: 1px 0 0 14px;
-    background-position: 0 50%;
-}
-a.addlink:link, a.addlink:visited {
-    background-image: url('../img/icons/icon-addlink.png');
-}
-a.addlink:hover, a.addlink:active {
-    background-image: url('../img/icons/icon-addlink-hover.png');
-}
-a.changelink:link, a.changelink:visited {
-    background-image: url('../img/icons/icon-changelink.png');
-}
-a.changelink:hover, a.changelink:active {
-    background-image: url('../img/icons/icon-changelink-hover.png');
-}
-
-a.deletelink { margin: 0; }
-
-a.add-another {
-    position: relative; top: -2px;
-    margin-left: 3px;
-    vertical-align: top;
-    font-size: 11px; line-height: 16px;
-    background-position: 50% 50%;
-}
-a.add-another:link, a.add-another:visited {
-    background-image: url('../img/icons/icon-add_another.png');
-}
-a.add-another:hover, a.add-another:active {
-    background-image: url('../img/icons/icon-add_another-hover.png');
-}
-
-.change-list form table tbody td a.add-another, .change-list form table tbody th a.add-another {
-    position: relative; top: -7px;
-}
-
-.radiolist.inline + a.add-another, .checkboxlist.inline + a.add-another {
-    margin-left: -4px;
-}
-
-.vAutocompleteRawIdAdminField + a.add-another, 
-.vM2MAutocompleteRawIdAdminField + a.add-another {
-    /*margin-left: -8px;*/
-}
-#changelist .result-list .vAutocompleteRawIdAdminField + a.add-another, 
-#changelist .result-list .vM2MAutocompleteRawIdAdminField + a.add-another {
-    /*margin-left: -9px;*/
-}
-
-
-/*  Related Lookup ........................................... */
-
-a.related-lookup {
-    background-position: 5px 5px;
-}
-a.related-lookup:link, a.related-lookup:visited {
-    position: relative; top: 1px;
-    padding: 6px 12px 5px;
-    line-height: 0 !important;
-    background-image: url('../img/icons/icon-related_lookup.png');
-}
-a.related-lookup:hover, a.related-lookup:active {
-    background-image: url('../img/icons/icon-related_lookup-hover.png');
-}
-a.related-lookup + strong {
-    position: relative; top: 1px; left: -6px;
-    color: #555; font-size: 11px; font-weight: bold;
-}
-#changelist .result-list a.related-lookup {
-    top: -1px;
-}
-
-
-/*  Filebrowser ........................................... */
-
-a.fb_show img {
-    width: 0; height: 0;
-    opacity: 0;
-}
-a.fb_show {
-    background-position: 2px 3px;
-}
-a.fb_show:link, a.fb_show:visited {
-    position: relative;
-    padding: 7px 14px;
-    line-height: 0 !important;
-    border: none;
-    background-image: url('../img/icons/icon-fb_show.png');
-}
-a.fb_show:hover, a.fb_show:active {
-    background-image: url('../img/icons/icon-fb_show-hover.png');
-}
-
-
-/*  Paragraphs
------------------------------------------------------------------------------------------------------- */
-
-p { padding: 0; }
-h1 + p { margin: 0 0 15px; }
-
-.object-history p {
-    padding: 5px 10px;
-}
 
 
 /*  Listings
 ------------------------------------------------------------------------------------------------------ */
 
-ul li { list-style-type: none; padding: 1px 0; }
-ul.plainlist { margin-left: 0; }
-ul.plainlist li { list-style-type: none; }
-#content ul {
-    font-weight: bold;
+ul, li {
+    list-style-type: none;
 }
-#content p + ul, 
-#content ul + ul { margin: 0 0 15px; }
-#content li ul {
-    margin: 5px 0 0 15px;
-    font-weight: normal;
-}
-dt {
-    font-weight: bold;
-    margin-top: 4px;
-}
-dd { margin-left: 0; }
 
 
 
@@ -229,62 +97,172 @@ dd { margin-left: 0; }
 ------------------------------------------------------------------------------------------------------ */
 
 blockquote {
-    margin-left: 2px; padding-left: 4px;
-    color: #777; font-size: 11px;
-    border-left: 5px solid #ddd;
+    margin-left: 2px;
+    padding-left: 4px;
+    font-size: 11px;
 }
 
 code, pre {
-    color: #666; font-size: 11px; font-family: "Bitstream Vera Sans Mono", Monaco, "Courier New", Courier, monospace;
-    background: inherit;
+    font-size: 11px;
+    font-family: "Bitstream Vera Sans Mono", Monaco, "Courier New", Courier, monospace;
 }
 
 pre.literal-block {
-    margin-top: 10px; padding: 6px 8px;
-    background: #eee;
+    margin: 10px;
+    padding: 6px 8px;
 }
-
-code strong { color: #930; }
 
 hr {
     clear: both;
-    margin: 0; padding: 0;
+    margin: 0;
+    padding: 0;
     height: 1px;
-    color: #eee; font-size: 1px; line-height: 1px;
-    border: none;
-    background-color: #eee;
+    font-size: 1px;
+    line-height: 1px;
 }
 
 
 
-/*  Text Styles & Modifiers
+/*  Table Typography
 ------------------------------------------------------------------------------------------------------ */
 
-.small { font-size: 11px; }
-
-.tiny { font-size: 10px; }
-p.tiny { margin-top: -2px; }
-
-.mini { font-size: 9px; }
-p.mini { margin-top: -3px; }
-
-.help, p.help { color: #999; font-size: 10px !important; }
-
-p img, h1 img, h2 img, h3 img, h4 img, td img { vertical-align: middle; }
-
-.quiet, a.quiet:link, a.quiet:visited { color: #999 !important; font-weight: normal !important; }
-.quiet strong { font-weight: bold !important; }
-
-.float-right { float: right; }
-.float-left { float: left; }
-.clear { clear: both; }
-
-.align-left { text-align: left; }
-.align-right { text-align: right; }
-
-.example {
-    margin: 10px 0; padding: 5px 10px;
-    background: #efefef;
+th.focus, 
+td.focus {
+    font-weight: bold;
 }
 
-.nowrap { white-space: nowrap; }
+
+
+/*  RTE (Rich Text Edited)
+------------------------------------------------------------------------------------------------------ */
+
+.rte h2.subhead {
+    margin: 0;
+    font-size: 12px;
+}
+.rte h3 {
+    margin: 10px -10px 10px;
+    padding: 7px 10px 6px;
+    font-size: 12px !important;
+}
+.rte h2 + h3 {
+    margin-top: -11px !important;
+}
+.rte h4 {
+    margin: 10px 0 0;
+    font-size: 12px;
+}
+
+.rte p {
+    margin: 10px 0;
+}
+.rte .module p {
+    margin: 10px 0;
+    padding: 0 10px;
+}
+.rte > p:first-child {
+    margin-top: 0;
+}
+
+.rte .group h2 + p, 
+.rte .module h2 + p {
+    margin: 5px 0;
+    padding: 0 10px;
+    font-size: 11px;
+}
+
+.rte table p {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/*  Workaround for problem reported in django-ticket #11817 */
+.rte h2 p, 
+.rte h4 p {
+    margin: 0 !important;
+    padding: 0 !important;
+    font-weight: normal;
+}
+.rte h2 p {
+    font-weight: bold !important;
+}
+.rte h4:empty, 
+.rte p:empty, 
+.rte hr, 
+.rte br:first-child {
+    display: none !important;
+}
+
+.rte ul, .rte ol {
+    margin: 10px 0 0 20px;
+    padding: 0 0 0 10px;
+    font-weight: normal !important;
+}
+ul.rte ul, ul.rte ol, 
+ol.rte ul, ol.rte ol {
+    margin: 0 0 0 20px;
+    font-size: 12px;
+    line-height: 14px;
+}
+.rte ul li, .rte ol li {
+    margin: 0;
+    padding: 0;
+}
+.rte ul li {
+    list-style-type: disc;
+}
+.rte ol li {
+    list-style-type: decimal;
+}
+
+.delete-confirmation ul.rte>li {
+    padding-bottom: 9px;
+    font-weight: bold;
+}
+.delete-confirmation ul.rte>li:last-child {
+    padding-bottom: 0;
+}
+.delete-confirmation ul.rte>li+li {
+    padding-top: 8px !important;
+}
+.delete-confirmation ul.rte>li>ul {
+    margin-top: 2px;
+}
+.delete-confirmation ul.rte>li>ul>li {
+    list-style-type: none;
+    margin: 0 0 0 -30px !important;
+    padding: 5px 0;
+}
+.delete-confirmation ul.rte>li>ul>li:last-child {
+    padding-bottom: 0;
+}
+.delete-confirmation ul.rte>li>ul>li>ul>li {
+    font-size: 11px;
+}
+
+.rte dd ul, .rte dd ol {
+    margin-top: 0;
+}
+.rte blockquote {
+    margin: 10px;
+}
+.rte dl, .rte dt, .rte dd {
+    margin: 0;
+}
+.rte dl {
+    padding: 5px 10px;
+}
+.rte dt {
+    font-weight: bold;
+}
+.rte dd + dt {
+    margin-top: 5px;
+}
+
+
+
+/*  Other Styles
+------------------------------------------------------------------------------------------------------ */
+
+.small { font-size: 10px; }
+.fw-normal { font-weight: normal; }

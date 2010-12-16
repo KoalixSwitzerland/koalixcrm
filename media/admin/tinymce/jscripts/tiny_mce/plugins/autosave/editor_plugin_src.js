@@ -52,9 +52,6 @@
 		unloadHandlerAdded,
 		Dispatcher = tinymce.util.Dispatcher;
 
-	// Load language pack for the autosave plugin
-	tinymce.PluginManager.requireLangPack(PLUGIN_NAME);
-
 	/**
 	 * This plugin adds auto-save capability to the TinyMCE text editor to rescue content
 	 * inadvertently lost. By using localStorage.
@@ -109,7 +106,7 @@
 			ed.addButton(RESTORE_DRAFT, {
 				title : PLUGIN_NAME + ".restore_content",
 				onclick : function() {
-					if (ed.getContent().replace(/\s|&nbsp;|<\/?p[^>]*>|<br[^>]*>/gi, "").length > 0) {
+					if (ed.getContent({draft: true}).replace(/\s|&nbsp;|<\/?p[^>]*>|<br[^>]*>/gi, "").length > 0) {
 						// Show confirm dialog if the editor isn't empty
 						ed.windowManager.confirm(
 							PLUGIN_NAME + ".warning_message",
@@ -306,7 +303,7 @@
 					return;
 
 				// Store contents if the contents if longer than the minlength of characters
-				content = editor.getContent();
+				content = editor.getContent({draft: true});
 				if (content.length > editor.settings.autosave_minlength) {
 					expires = self.getExpDate();
 

@@ -125,7 +125,7 @@
 					ed.onNodeChange.add(t._nodeChanged, t);
 
 				if (ed.settings.content_css !== false)
-					ed.dom.loadCSS(ed.baseURI.toAbsolute("themes/advanced/skins/" + ed.settings.skin + "/content.css"));
+					ed.dom.loadCSS(ed.baseURI.toAbsolute(url + "/skins/" + ed.settings.skin + "/content.css"));
 			});
 
 			ed.onSetProgressState.add(function(ed, b, ti) {
@@ -203,7 +203,8 @@
 
 					ed.formatter.register(name, {
 						inline : 'span',
-						classes : o['class']
+						attributes : {'class' : o['class']},
+						selector : '*'
 					});
 
 					ctrl.add(o['class'], name);
@@ -218,8 +219,24 @@
 			ctrl = ctrlMan.createListBox('styleselect', {
 				title : 'advanced.style_select',
 				onselect : function(name) {
+					var matches, formatNames = [];
+
+					each(ctrl.items, function(item) {
+						formatNames.push(item.value);
+					});
+
 					ed.focus();
-					ed.formatter.toggle(name);
+					ed.undoManager.add();
+
+					// Toggle off the current format
+					matches = ed.formatter.matchAll(formatNames);
+					if (!name || matches[0] == name)
+						ed.formatter.remove(matches[0]);
+					else
+						ed.formatter.apply(name);
+
+					ed.undoManager.add();
+					ed.nodeChanged();
 
 					return false; // No auto select
 				}
@@ -251,7 +268,8 @@
 
 							ed.formatter.register(name, {
 								inline : 'span',
-								classes : val
+								classes : val,
+								selector : '*'
 							});
 
 							ctrl.add(t.editor.translate(key), name);
@@ -282,7 +300,20 @@
 			c = ed.controlManager.createListBox('fontselect', {
 				title : 'advanced.fontdefault',
 				onselect : function(v) {
+					var cur = c.items[c.selectedIndex];
+
+					if (!v && cur) {
+						ed.execCommand('FontName', false, cur.value);
+						return;
+					}
+
 					ed.execCommand('FontName', false, v);
+
+					// Fake selection, execCommand will fire a nodeChange and update the selection
+					c.select(function(sv) {
+						return v == sv;
+					});
+
 					return false; // No auto select
 				}
 			});
@@ -300,16 +331,35 @@
 			var t = this, ed = t.editor, c, i = 0, cl = [];
 
 			c = ed.controlManager.createListBox('fontsizeselect', {title : 'advanced.font_size', onselect : function(v) {
-				if (v.fontSize)
-					ed.execCommand('FontSize', false, v.fontSize);
-				else {
-					each(t.settings.theme_advanced_font_sizes, function(v, k) {
-						if (v['class'])
-							cl.push(v['class']);
-					});
+				var cur = c.items[c.selectedIndex];
 
-					ed.editorCommands._applyInlineStyle('span', {'class' : v['class']}, {check_classes : cl});
+				if (!v && cur) {
+					cur = cur.value;
+
+					if (cur['class']) {
+						ed.formatter.toggle('fontsize_class', {value : cur['class']});
+						ed.undoManager.add();
+						ed.nodeChanged();
+					} else {
+						ed.execCommand('FontSize', false, cur.fontSize);
+					}
+
+					return;
 				}
+
+				if (v['class']) {
+					ed.focus();
+					ed.undoManager.add();
+					ed.formatter.toggle('fontsize_class', {value : v['class']});
+					ed.undoManager.add();
+					ed.nodeChanged();
+				} else
+					ed.execCommand('FontSize', false, v.fontSize);
+
+				// Fake selection, execCommand will fire a nodeChange and update the selection
+				c.select(function(sv) {
+					return v == sv;
+				});
 
 				return false; // No auto select
 			}});
@@ -522,7 +572,7 @@
 		},
 
 		resizeTo : function(w, h) {
-			var ed = this.editor, s = ed.settings, e = DOM.get(ed.id + '_tbl'), ifr = DOM.get(ed.id + '_ifr'), dh;
+			var ed = this.editor, s = this.settings, e = DOM.get(ed.id + '_tbl'), ifr = DOM.get(ed.id + '_ifr');
 
 			// Boundery fix box
 			w = Math.max(s.theme_advanced_resizing_min_width || 100, w);
@@ -530,12 +580,18 @@
 			w = Math.min(s.theme_advanced_resizing_max_width || 0xFFFF, w);
 			h = Math.min(s.theme_advanced_resizing_max_height || 0xFFFF, h);
 
-			// Calc difference between iframe and container
-			dh = e.clientHeight - ifr.clientHeight;
-
 			// Resize iframe and container
-			DOM.setStyle(ifr, 'height', h - dh);
-			DOM.setStyles(e, {width : w, height : h});
+			DOM.setStyle(e, 'height', '');
+			DOM.setStyle(ifr, 'height', h);
+
+			if (s.theme_advanced_resize_horizontal) {
+				DOM.setStyle(e, 'width', '');
+				DOM.setStyle(ifr, 'width', w);
+
+				// Make sure that the size is never smaller than the over all ui
+				if (w < e.clientWidth)
+					DOM.setStyle(ifr, 'width', e.clientWidth);
+			}
 		},
 
 		destroy : function() {
@@ -749,99 +805,53 @@
 						if (!o)
 							return;
 
-						if (s.theme_advanced_resize_horizontal)
-							c.style.width = Math.max(10, o.cw) + 'px';
-
-						c.style.height = Math.max(10, o.ch) + 'px';
-						DOM.get(ed.id + '_ifr').style.height = Math.max(10, parseInt(o.ch) + t.deltaHeight) + 'px';
+						t.resizeTo(o.cw, o.ch);
 					});
 				}
 
 				ed.onPostRender.add(function() {
 					Event.add(ed.id + '_resize', 'mousedown', function(e) {
-						var c, p, w, h, n, pa;
+						var mouseMoveHandler1, mouseMoveHandler2,
+							mouseUpHandler1, mouseUpHandler2,
+							startX, startY, startWidth, startHeight, width, height, ifrElm;
 
-						// Measure container
-						c = DOM.get(ed.id + '_tbl');
-						w = c.clientWidth;
-						h = c.clientHeight;
+						function resizeOnMove(e) {
+							width = startWidth + (e.screenX - startX);
+							height = startHeight + (e.screenY - startY);
 
-						miw = s.theme_advanced_resizing_min_width || 100;
-						mih = s.theme_advanced_resizing_min_height || 100;
-						maw = s.theme_advanced_resizing_max_width || 0xFFFF;
-						mah = s.theme_advanced_resizing_max_height || 0xFFFF;
-
-						// Setup placeholder
-						p = DOM.add(DOM.get(ed.id + '_parent'), 'div', {'class' : 'mcePlaceHolder'});
-						DOM.setStyles(p, {width : w, height : h});
-
-						// Replace with placeholder
-						DOM.hide(c);
-						DOM.show(p);
-
-						// Create internal resize obj
-						r = {
-							x : e.screenX,
-							y : e.screenY,
-							w : w,
-							h : h,
-							dx : null,
-							dy : null
+							t.resizeTo(width, height);
 						};
 
-						// Start listening
-						mf = Event.add(DOM.doc, 'mousemove', function(e) {
-							var w, h;
-
-							// Calc delta values
-							r.dx = e.screenX - r.x;
-							r.dy = e.screenY - r.y;
-
-							// Boundery fix box
-							w = Math.max(miw, r.w + r.dx);
-							h = Math.max(mih, r.h + r.dy);
-							w = Math.min(maw, w);
-							h = Math.min(mah, h);
-
-							// Resize placeholder
-							if (s.theme_advanced_resize_horizontal)
-								p.style.width = w + 'px';
-
-							p.style.height = h + 'px';
-
-							return Event.cancel(e);
-						});
-
-						me = Event.add(DOM.doc, 'mouseup', function(e) {
-							var ifr;
-
+						function endResize(e) {
 							// Stop listening
-							Event.remove(DOM.doc, 'mousemove', mf);
-							Event.remove(DOM.doc, 'mouseup', me);
+							Event.remove(DOM.doc, 'mousemove', mouseMoveHandler1);
+							Event.remove(ed.getDoc(), 'mousemove', mouseMoveHandler2);
+							Event.remove(DOM.doc, 'mouseup', mouseUpHandler1);
+							Event.remove(ed.getDoc(), 'mouseup', mouseUpHandler2);
 
-							c.style.display = '';
-							DOM.remove(p);
-
-							if (r.dx === null)
-								return;
-
-							ifr = DOM.get(ed.id + '_ifr');
-
-							if (s.theme_advanced_resize_horizontal)
-								c.style.width = Math.max(10, r.w + r.dx) + 'px';
-
-							c.style.height = Math.max(10, r.h + r.dy) + 'px';
-							ifr.style.height = Math.max(10, ifr.clientHeight + r.dy) + 'px';
-
+							// Store away the size
 							if (s.theme_advanced_resizing_use_cookie) {
 								Cookie.setHash("TinyMCE_" + ed.id + "_size", {
-									cw : r.w + r.dx,
-									ch : r.h + r.dy
+									cw : width,
+									ch : height
 								});
 							}
-						});
+						};
 
-						return Event.cancel(e);
+						e.preventDefault();
+
+						// Get the current rect size
+						startX = e.screenX;
+						startY = e.screenY;
+						ifrElm = DOM.get(t.editor.id + '_ifr');
+						startWidth = width = ifrElm.clientWidth;
+						startHeight = height = ifrElm.clientHeight;
+
+						// Register envent handlers
+						mouseMoveHandler1 = Event.add(DOM.doc, 'mousemove', resizeOnMove);
+						mouseMoveHandler2 = Event.add(ed.getDoc(), 'mousemove', resizeOnMove);
+						mouseUpHandler1 = Event.add(DOM.doc, 'mouseup', endResize);
+						mouseUpHandler2 = Event.add(ed.getDoc(), 'mouseup', endResize);
 					});
 				});
 			}
@@ -851,7 +861,7 @@
 		},
 
 		_nodeChanged : function(ed, cm, n, co, ob) {
-			var t = this, p, de = 0, v, c, s = t.settings, cl, fz, fn;
+			var t = this, p, de = 0, v, c, s = t.settings, cl, fz, fn, formatNames, matches;
 
 			tinymce.each(t.stateControls, function(c) {
 				cm.setActive(c, ed.queryCommandState(t.controls[c][1]));
@@ -892,11 +902,6 @@
 
 			if (c = cm.get('anchor')) {
 				c.setActive(!!p && p.name);
-
-				if (tinymce.isWebKit) {
-					p = getParent('IMG');
-					c.setActive(!!p && DOM.getAttrib(p, 'mce_name') == 'a');
-				}
 			}
 
 			p = getParent('IMG');
@@ -906,10 +911,13 @@
 			if (c = cm.get('styleselect')) {
 				t._importClasses();
 
-				// Check each format and update
-				c.select(function(fmt) {
-					return !!ed.formatter.match(fmt);
+				formatNames = [];
+				each(c.items, function(item) {
+					formatNames.push(item.value);
 				});
+
+				matches = ed.formatter.matchAll(formatNames);
+				c.select(matches[0]);
 			}
 
 			if (c = cm.get('formatselect')) {
@@ -1009,9 +1017,6 @@
 							break;
 
 						case 'font':
-							if (s.convert_fonts_to_spans)
-								na = 'span';
-
 							if (v = DOM.getAttrib(n, 'face'))
 								ti += 'font: ' + v + ' ';
 
@@ -1072,7 +1077,7 @@
 			var ed = this.editor;
 
 			ed.windowManager.open({
-				url : tinymce.baseURL + '/themes/advanced/anchor.htm',
+				url : this.url + '/anchor.htm',
 				width : 320 + parseInt(ed.getLang('advanced.anchor_delta_width', 0)),
 				height : 90 + parseInt(ed.getLang('advanced.anchor_delta_height', 0)),
 				inline : true
@@ -1085,7 +1090,7 @@
 			var ed = this.editor;
 
 			ed.windowManager.open({
-				url : tinymce.baseURL + '/themes/advanced/charmap.htm',
+				url : this.url + '/charmap.htm',
 				width : 550 + parseInt(ed.getLang('advanced.charmap_delta_width', 0)),
 				height : 250 + parseInt(ed.getLang('advanced.charmap_delta_height', 0)),
 				inline : true
@@ -1098,7 +1103,7 @@
 			var ed = this.editor;
 
 			ed.windowManager.open({
-				url : tinymce.baseURL + '/themes/advanced/about.htm',
+				url : this.url + '/about.htm',
 				width : 480,
 				height : 380,
 				inline : true
@@ -1113,7 +1118,7 @@
 			v = v || {};
 
 			ed.windowManager.open({
-				url : tinymce.baseURL + '/themes/advanced/color_picker.htm',
+				url : this.url + '/color_picker.htm',
 				width : 375 + parseInt(ed.getLang('advanced.colorpicker_delta_width', 0)),
 				height : 250 + parseInt(ed.getLang('advanced.colorpicker_delta_height', 0)),
 				close_previous : false,
@@ -1129,7 +1134,7 @@
 			var ed = this.editor;
 
 			ed.windowManager.open({
-				url : tinymce.baseURL + '/themes/advanced/source_editor.htm',
+				url : this.url + '/source_editor.htm',
 				width : parseInt(ed.getParam("theme_advanced_source_editor_width", 720)),
 				height : parseInt(ed.getParam("theme_advanced_source_editor_height", 580)),
 				inline : true,
@@ -1148,7 +1153,7 @@
 				return;
 
 			ed.windowManager.open({
-				url : tinymce.baseURL + '/themes/advanced/image.htm',
+				url : this.url + '/image.htm',
 				width : 355 + parseInt(ed.getLang('advanced.image_delta_width', 0)),
 				height : 275 + parseInt(ed.getLang('advanced.image_delta_height', 0)),
 				inline : true
@@ -1161,7 +1166,7 @@
 			var ed = this.editor;
 
 			ed.windowManager.open({
-				url : tinymce.baseURL + '/themes/advanced/link.htm',
+				url : this.url + '/link.htm',
 				width : 310 + parseInt(ed.getLang('advanced.link_delta_width', 0)),
 				height : 200 + parseInt(ed.getLang('advanced.link_delta_height', 0)),
 				inline : true

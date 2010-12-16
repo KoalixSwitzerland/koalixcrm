@@ -38,9 +38,8 @@ document.getElementsBySelector = function(selector) {
       var tagName = bits[0];
       var id = bits[1];
       var element = document.getElementById(id);
-      //if (tagName && element.nodeName.toLowerCase() != tagName) {
-      if (!element || (tagName && element.nodeName.toLowerCase() != tagName))
-        // tag with that ID not found, return false
+      if (!element || (tagName && element.nodeName.toLowerCase() != tagName)) {
+        // ID not found or tag with that ID not found, return false.
         return new Array();
       }
       // Set currentContext to contain just this element
@@ -81,7 +80,7 @@ document.getElementsBySelector = function(selector) {
           currentContext[currentContextIndex++] = found[k];
         }
       }
-      //continue; // Skip to next token
+      continue; // Skip to next token
     }
     // Code to deal with attribute selectors
     if (token.match(/^(\w*)\[(\w+)([=~\|\^\$\*]?)=?"?([^\]"]*)"?\]$/)) {
@@ -140,7 +139,7 @@ document.getElementsBySelector = function(selector) {
         }
       }
       // alert('Attribute Selector: '+tagName+' '+attrName+' '+attrOperator+' '+attrValue);
-      //continue; // Skip to next token
+      continue; // Skip to next token
     }
     // If we get here, token is JUST an element (not a class or ID selector)
     tagName = token;
@@ -154,8 +153,8 @@ document.getElementsBySelector = function(selector) {
     }
     currentContext = found;
   }
-  //return currentContext;
-//}
+  return currentContext;
+}
 
 /* That revolting regular expression explained 
 /^(\w+)\[(\w+)([=~\|\^\$\*]?)=?"?([^\]"]*)"?\]$/

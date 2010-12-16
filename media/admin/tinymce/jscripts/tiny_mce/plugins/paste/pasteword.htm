@@ -4,24 +4,20 @@
 	<title>{#paste.paste_word_desc}</title>
 	<script type="text/javascript" src="../../tiny_mce_popup.js"></script>
 	<script type="text/javascript" src="js/pasteword.js"></script>
+	<!-- <link href="css/pasteword.css" rel="stylesheet" type="text/css" /> -->
+	<base target="_self" />
 </head>
-<body onresize="PasteWordDialog.resize();" style="display:none; overflow:hidden;">
-	<form name="source" onsubmit="return PasteWordDialog.insert();" action="#">
-		<div class="title">{#paste.paste_word_desc}</div>
-
-		<div>{#paste_dlg.word_title}</div>
-
-		<div id="iframecontainer"></div>
-
-		<div class="mceActionPanel">
-			<div style="float: left">
-				<input type="submit" id="insert" name="insert" value="{#insert}" />
-			</div>
-
-			<div style="float: right">
-				<input type="button" id="cancel" name="cancel" value="{#cancel}" onclick="tinyMCEPopup.close();" />
-			</div>
-		</div>
-	</form>
+<body onresize="resizeInputs();" style="display:none; overflow:visible;">
+    <form name="source" onsubmit="saveContent();" action="#">
+        <div class="title">{#paste.paste_word_desc}</div>
+        <p class="helptext">{#paste_dlg.word_title}</p>
+        <div id="iframecontainer"></div>
+        <div class="mceActionPanel module submit-row">
+            <ul class="submit-row">
+                <li class="cancel-button-container left"><input type="button" id="cancel" class="cancel" name="cancel" value="{#cancel}" onclick="tinyMCEPopup.close();" /></li>
+                <li class="submit-button-container"><input type="submit" id="insert" class="default" name="insert" value="{#insert}" onclick="saveContent();" /></li>
+            </ul>
+        </div>
+    </form>
 </body>
 </html>
