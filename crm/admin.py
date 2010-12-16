@@ -233,10 +233,6 @@ class OptionInvoice(admin.ModelAdmin):
       (_('Basics'), {
          'fields': ('contract', 'description', 'customer', 'currency', 'payableuntil', 'status')
       }),
-      (_('Advanced (not editable)'), {
-         'classes': ('collapse',),
-         'fields': ('lastPricingDate', 'lastCalculatedPrice', 'lastCalculatedTax',)
-      }),
    )
    save_as = True
    inlines = [SalesContractInlinePosition, SalesContractPostalAddress, SalesContractPhoneAddress, SalesContractEmailAddress]
@@ -295,10 +291,6 @@ class OptionQuote(admin.ModelAdmin):
       (_('Basics'), {
          'fields': ('contract', 'description', 'customer', 'currency', 'validuntil', 'status')
       }),
-      (_('Advanced (not editable)'), {
-         'classes': ('collapse',),
-         'fields': ('lastPricingDate', 'lastCalculatedPrice', 'lastCalculatedTax',)
-      }),
    )
    save_as = True
    inlines = [SalesContractInlinePosition, SalesContractPostalAddress, SalesContractPhoneAddress, SalesContractEmailAddress]
@@ -345,10 +337,6 @@ class OptionPurchaseOrder(admin.ModelAdmin):
    fieldsets = (
       (_('Basics'), {
          'fields': ('contract', 'description', 'distributor', 'currency', 'status')
-      }),
-      (_('Advanced (not editable)'), {
-         'classes': ('collapse',),
-         'fields': ('lastPricingDate', 'lastCalculatedPrice', 'lastCalculatedTax',)
       }),
    )
    save_as = True
