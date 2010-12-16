@@ -10,18 +10,17 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-DATABASE_ENGINE = 'postgresql_psycopg2'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-DATABASE_NAME = 'koalixcrm'             # Or path to database file if using sqlite3.
-DATABASE_USER = 'koalixcrm'             # Not used with sqlite3.
-DATABASE_PASSWORD = 'koalix5crm1234'         # Not used with sqlite3.
-DATABASE_HOST = 'localhost'             # Set to empty string for localhost. Not used with sqlite3.
-DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'koalixcrm',                      # Or path to database file if using sqlite3.
+        'USER': 'koalixcrm',                      # Not used with sqlite3.
+        'PASSWORD': 'koalix5crm1234',                  # Not used with sqlite3.
+        'HOST': 'localhost',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+    }
+}
 
-DATE_FORMAT = 'j M Y'
-DATETIME_FORMAT = 'j M Y G:i' 
-MONTH_DAY_FORMAT = 'j F'
-TIME_FORMAT = 'G:i'
-YEAR_MONTH_FORMAT = 'F Y'
 TIME_ZONE = 'Europe/Zurich'
 
 LANGUAGE_CODE = 'de'
@@ -34,16 +33,28 @@ LOCALE_PATHS = ('crm/locale', 'accounting/locale')
 
 SITE_ID = 1
 USE_I18N = True
+USE_L10N = True
 MEDIA_ROOT = '/var/www/koalixcrm/media/'
 PROJECT_ROOT = '/var/www/koalixcrm/'
 MEDIA_URL = '/media/'
+
+STATIC_ROOT = ''
+
+STATIC_URL = '/media/'
+
 ADMIN_MEDIA_PREFIX = '/media/admin/'
+
 
 SECRET_KEY = '+d37i!a)&736a^mxykah*l#68)^$4(6ikgbx%4(+1$l98(ktv*'
 
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+)
+
 TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.load_template_source',
-    'django.template.loaders.app_directories.load_template_source',
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -53,11 +64,11 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 MIDDLEWARE_CLASSES = (
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'middleware.threadlocals.ThreadLocals',
+    'django.contrib.messages.middleware.MessageMiddleware',
 )
 
 ROOT_URLCONF = 'urls'
@@ -71,6 +82,8 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
     'accounting',
     'djangoUserExtention',
     'crm',
