@@ -448,9 +448,9 @@ class Invoice(SalesContract):
    paymentBankReference = models.CharField(verbose_name = _("Payment Bank Reference"), max_length=100, blank=True, null=True)
    status = models.CharField(max_length=1, choices=INVOICESTATUS) 
    
-   def registerinvoiceinaccounting(self, date):
+   def registerinvoiceinaccounting(self):
       listofprofitaccounts = ()
-      activaaccount = accounting.Account.objects.filter(isopeninterestaccount=True)
+      activaaccount = accounting.models.Account.objects.filter(isopeninterestaccount=True)
       for position in list(SalesContractPosition.objects.filter(contract=self.id)):
          profitaccount = position.product.accoutingProductCategorie.account.profitAccount
          if listofprofitaccounts.get(proftiaccount):

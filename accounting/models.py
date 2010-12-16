@@ -78,7 +78,11 @@ class Account(models.Model):
    isACustomerPaymentAccount = models.BooleanField(verbose_name=_("Is a Customer Payment Account"))
    # TODO: This can only be set when accountType is Activa and can not be product inventry as well
    
-   
+   def value()
+      sum self.allBookings(fromAccount = False, accountingCalculationUnit = accountingCalculationUnit) - self.allBookings(fromAccount = True, accountingCalculationUnit = accountingCalculationUnit)
+      if (self.accountType == 'P' or self.accountType == 'E'):
+        sum = 0 - sum
+      return sum
    def valueNow(self, accountingCalculationUnit):
       sum = self.allBookings(fromAccount = False, accountingCalculationUnit = accountingCalculationUnit) - self.allBookings(fromAccount = True, accountingCalculationUnit = accountingCalculationUnit)
       return sum
@@ -148,21 +152,28 @@ def preSaveAutoNowUserHandler(sender, instance, **kwarg):
       
 def preSaveCheckFlags(sender, instance, **kwarg):
    if (instance.isopenreliabilitiesaccount):
+      openinterestaccounts = Account.objects.filter(isopenreliabilitiesaccount=True)
       if (instance.accountType != "P" ):
          instance.isopenreliabilitiesaccount = False
          #TODO: Correct Action when not Passiva
-      elif (Account.objects.filter(isopenreliabilitiesaccount=True) != None):
+      elif openinterestaccounts:
          instance.isopenreliabilitiesaccount = False
          #TODO: Correct Action when there is already a isopenreliabilitiesaccount account
    if (instance.isopeninterestaccount):
+      openinterestaccounts = Account.objects.filter(isopeninterestaccount=True)
       if (instance.accountType != "A" ):
          instance.isopeninterestaccount = False
          #TODO: Correct Action when not Activa
-      elif (Account.objects.filter(isopeninterestaccount=True) != None):
+      elif openinterestaccounts:
          instance.isopeninterestaccount = False
          #TODO: Correct Action when there is already a isopenreliabilitiesaccount account
+   if (instance.isACustomerPaymentAccount):
       if (instance.accountType != "A" ):
          instance.isACustomerPaymentAccount = False
+         #TODO: Correct Action when not Activa
+   if (instance.isProductInventoryActiva):
+      if (instance.accountType != "A" ):
+         instance.isProductInventoryActiva = False
          #TODO: Correct Action when not Activa
    
 signals.post_init.connect(postInitAutoUserHandler, Booking)

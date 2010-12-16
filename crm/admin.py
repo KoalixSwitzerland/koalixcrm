@@ -265,7 +265,7 @@ class OptionInvoice(admin.ModelAdmin):
          
    def registerInvoiceInAccounting(self, request, queryset):
       for obj in queryset:
-         obj.register()
+         obj.registerinvoiceinaccounting()
          self.message_user(request, _("Successfully registered Invoice in the Accounting"))
    registerInvoiceInAccounting.short_description = _("Register Invoice in Accounting")
    
