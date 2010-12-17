@@ -112,14 +112,16 @@ class Account(models.Model):
       
 class ProductCategorie(models.Model):
    title = models.CharField(verbose_name=_("Product Categorie Title"), max_length=50)
-   profitAccount = models.ForeignKey(Account, verbose_name=_("Profit Account"), limit_choices_to="accountType=E", related_name="db_profit_account")
-   lossAccount = models.ForeignKey(Account, verbose_name=_("Loss Account"),  limit_choices_to="accountType=S", related_name="db_loss_account")
+   profitAccount = models.ForeignKey(Account, verbose_name=_("Profit Account"), limit_choices_to={"accountType" : "E"}, related_name="db_profit_account")
+   lossAccount = models.ForeignKey(Account, verbose_name=_("Loss Account"),  limit_choices_to={"accountType" : "S"}, related_name="db_loss_account")
    
    class Meta:
       app_label = "accounting"
       #app_label_koalix = _("Accounting")
       verbose_name = _('Product Categorie')
       verbose_name_plural = _('Product Categorie')
+   def __unicode__(self):
+      return  self.title
 
 class Booking(models.Model):
    fromAccount = models.ForeignKey(Account, verbose_name=_("From Account"), related_name="db_booking_fromaccount")

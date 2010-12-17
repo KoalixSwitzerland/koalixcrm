@@ -273,7 +273,7 @@ class OptionInvoice(admin.ModelAdmin):
    
    def registerPaymentInAccounting(self, request, queryset):
       for obj in queryset:
-         obj.createPDF(deliveryorder=True)
+         obj.registerpaymentinaccounting()
          self.message_user(request, _("Successfully registered Payment in the Accounting"))
    registerPaymentInAccounting.short_description = _("Register Payment in Accounting")
    
@@ -365,11 +365,11 @@ class ProductUnitTransform(admin.TabularInline):
    allow_add = True
 
 class OptionProduct(admin.ModelAdmin):
-   list_display = ('productNumber', 'title','defaultunit', 'tax')
+   list_display = ('productNumber', 'title','defaultunit', 'tax', 'accoutingProductCategorie')
    list_display_links = ('productNumber',)
    fieldsets = (
       (_('Basics'), {
-         'fields': ('productNumber', 'title', 'description', 'defaultunit', 'tax')
+         'fields': ('productNumber', 'title', 'description', 'defaultunit', 'tax', 'accoutingProductCategorie')
       }),)
    inlines = [ProductPrice, ProductUnitTransform]
    

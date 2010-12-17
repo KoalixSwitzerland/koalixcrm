@@ -43,7 +43,7 @@ STATIC_ROOT = ''
 STATIC_URL = '/media/'
 
 ADMIN_MEDIA_PREFIX = '/media/admin/'
-
+LOGIN_REDIRECT_URL = '/admin/'
 
 SECRET_KEY = '+d37i!a)&736a^mxykah*l#68)^$4(6ikgbx%4(+1$l98(ktv*'
 

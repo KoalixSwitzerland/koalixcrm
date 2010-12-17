@@ -311,7 +311,7 @@ class SalesContract(models.Model):
    dateofcreation = models.DateTimeField(verbose_name = _("Created at"))
    currency = models.ForeignKey(Currency, verbose_name=_("Currency"), blank=False, null=False)
    lastmodification = models.DateTimeField(verbose_name = _("Last modified"), blank=True, null=True)
-   lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, verbose_name = _("Last modified by"), related_name="db_lstscmodified")
+   lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, verbose_name = _("Last modified by"), related_name="db_lstscmodified", null=True, blank="True")
       
    def recalculatePrices(self, pricingDate):
       price = 0
@@ -452,12 +452,12 @@ class Invoice(SalesContract):
       listofprofitaccounts = ()
       activaaccount = accounting.models.Account.objects.filter(isopeninterestaccount=True)
       for position in list(SalesContractPosition.objects.filter(contract=self.id)):
-         profitaccount = position.product.accoutingProductCategorie.account.profitAccount
-         if listofprofitaccounts.get(proftiaccount):
-            listofprofitaccounts.get(proftiaccount).value += positon.lastCalculatedPrice
+         profitaccount = position.product.accoutingProductCategorie.profitAccount
+         if listofprofitaccounts.get(profitaccount):
+            listofprofitaccounts.get(profitaccount).value += positon.lastCalculatedPrice
          else:
             listofprofitaccounts.attach({proftiaccount: positon.lastCalculatedPrice})
-         # TODO: not correct anndled taxbooking
+         # TODO: not correct handled taxbooking
          listofprofitaccounts.attach({proftiaccount: positon.lastCalculatedTax})
          
       for profitaccount in listofprofitaccounts:
@@ -466,7 +466,7 @@ class Invoice(SalesContract):
          booking.toAccount = profitaaccount.key
          booking.bookingdate = date
          booking.amount = profitaccount.value
-      # TODO: not finised here
+         booking.save()
       
    def registerpaymentinaccounting(self, paymentaccount, amount, date):
       activaaccount = accounting.Account.objects.filter(isopeninterestaccount=True)
@@ -568,7 +568,7 @@ class Product(models.Model):
    dateofcreation = models.DateTimeField(verbose_name = _("Created at"))
    defaultunit = models.ForeignKey(Unit, verbose_name = _("Unit"))
    lastmodification = models.DateTimeField(verbose_name = _("Last modified"), blank=True, null=True)
-   lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, verbose_name = _("Last modified by"))
+   lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, verbose_name = _("Last modified by"), null=True, blank="True")
    tax = models.ForeignKey(Tax, blank=False)
    accoutingProductCategorie = models.ForeignKey('accounting.ProductCategorie', verbose_name=_("Accounting Product Categorie"), null=True, blank="True")
 

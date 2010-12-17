@@ -41,7 +41,18 @@ class OptionAccountingCalculationUnit(admin.ModelAdmin):
    createBalanceSheetPDF.short_description = _("Create PDF of Balance Sheet")
    
    actions = ['createBalanceSheetPDF',]
+            
+class OptionProductCategorie(admin.ModelAdmin):
+   list_display = ('title', 'profitAccount', 'lossAccount')
+   list_display_links = ('title', 'profitAccount', 'lossAccount')
+   fieldsets = (
+      (_('Basics'), {
+         'fields': ('title', 'profitAccount', 'lossAccount')
+      }),
+   )
+   save_as = True
    
 admin.site.register(Account, OptionAccount)
 admin.site.register(Booking, OptionBooking)
+admin.site.register(ProductCategorie, OptionProductCategorie)
 admin.site.register(AccountingCalculationUnit, OptionAccountingCalculationUnit)
