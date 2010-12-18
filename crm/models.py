@@ -72,8 +72,8 @@ class EmailAddress(models.Model):
 
 class Contact(models.Model):
    name = models.CharField(max_length=300, verbose_name = _("Name"))
-   dateofcreation = models.DateTimeField(verbose_name = _("Created at"))
-   lastmodification = models.DateTimeField(verbose_name = _("Last modified"), blank=True, null=True)
+   dateofcreation = models.DateTimeField(verbose_name = _("Created at"), auto_now=True)
+   lastmodification = models.DateTimeField(verbose_name = _("Last modified"), auto_now_add=True)
    lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True, verbose_name = _("Last modified by"), editable=True)
 
    class Meta:
@@ -167,9 +167,9 @@ class Contract(models.Model):
    description = models.TextField(verbose_name = _("Description"))
    defaultcustomer = models.ForeignKey(Customer, verbose_name = _("Default Customer"), null=True, blank=True)
    defaultdistributor = models.ForeignKey(Distributor, verbose_name = _("Default Distributor"), null=True, blank=True)
-   dateofcreation = models.DateTimeField(verbose_name = _("Created at"))
    defaultcurrency = models.ForeignKey(Currency, verbose_name=_("Default Currency"), blank=False, null=False)
-   lastmodification = models.DateTimeField(verbose_name = _("Last modified"), blank=True, null=True)
+   dateofcreation = models.DateTimeField(verbose_name = _("Created at"), auto_now=True)
+   lastmodification = models.DateTimeField(verbose_name = _("Last modified"), auto_now_add=True)
    lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, verbose_name = _("Last modified by"), related_name="db_contractlstmodified")
 
    class Meta:
@@ -228,9 +228,9 @@ class PurchaseOrder(models.Model):
    lastCalculatedTax = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Tax"), blank=True, null=True)
    status = models.CharField(max_length=1, choices=PURCHASEORDERSTATUS)
    staff = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True, verbose_name = _("Staff"), related_name="db_relpostaff", null=True)
-   dateofcreation = models.DateTimeField(verbose_name = _("Created at"))
    currency = models.ForeignKey(Currency, verbose_name=_("Currency"), blank=False, null=False)
-   lastmodification = models.DateTimeField(verbose_name = _("Last modified"), blank=True, null=True)
+   dateofcreation = models.DateTimeField(verbose_name = _("Created at"), auto_now=True)
+   lastmodification = models.DateTimeField(verbose_name = _("Last modified"), auto_now_add=True)
    lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, verbose_name = _("Last modified by"), related_name="db_polstmodified")
    
    def recalculatePrices(self, pricingDate):
@@ -308,9 +308,9 @@ class SalesContract(models.Model):
    lastCalculatedTax = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Tax"), blank=True, null=True)
    customer = models.ForeignKey(Customer, verbose_name = _("Customer"))
    staff = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True, verbose_name = _("Staff"), related_name="db_relscstaff", null=True)
-   dateofcreation = models.DateTimeField(verbose_name = _("Created at"))
    currency = models.ForeignKey(Currency, verbose_name=_("Currency"), blank=False, null=False)
-   lastmodification = models.DateTimeField(verbose_name = _("Last modified"), blank=True, null=True)
+   dateofcreation = models.DateTimeField(verbose_name = _("Created at"), auto_now=True)
+   lastmodification = models.DateTimeField(verbose_name = _("Last modified"), auto_now_add=True)
    lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, verbose_name = _("Last modified by"), related_name="db_lstscmodified", null=True, blank="True")
       
    def recalculatePrices(self, pricingDate):
@@ -448,34 +448,46 @@ class Invoice(SalesContract):
    paymentBankReference = models.CharField(verbose_name = _("Payment Bank Reference"), max_length=100, blank=True, null=True)
    status = models.CharField(max_length=1, choices=INVOICESTATUS) 
    
-   def registerinvoiceinaccounting(self):
-      listofprofitaccounts = ()
+   def registerinvoiceinaccounting(self, request):
+      dictprices = dict()
+      dicttax = dict()
+      exists = False
       activaaccount = accounting.models.Account.objects.filter(isopeninterestaccount=True)
       for position in list(SalesContractPosition.objects.filter(contract=self.id)):
-         profitaccount = position.product.accoutingProductCategorie.profitAccount
-         if listofprofitaccounts.get(profitaccount):
-            listofprofitaccounts.get(profitaccount).value += positon.lastCalculatedPrice
-         else:
-            listofprofitaccounts.attach({proftiaccount: positon.lastCalculatedPrice})
-         # TODO: not correct handled taxbooking
-         listofprofitaccounts.attach({proftiaccount: positon.lastCalculatedTax})
+        profitaccount = position.product.accoutingProductCategorie.profitAccount
+        for dictprice in dictprices:
+          if (dictprice.id == profitaccount.id):
+            exists = True
+        if exists:
+          dictprices[profitaccount] += position.lastCalculatedPrice
+          dicttax[profitaccount] += position.lastCalculatedTax
+        else:
+          dictprices[profitaccount] = position.lastCalculatedPrice
+          dicttax[profitaccount] = position.lastCalculatedTax
          
-      for profitaccount in listofprofitaccounts:
-         booking = accounting.Booking()
-         booking.fromAccount = activaaccount
-         booking.toAccount = profitaaccount.key
-         booking.bookingdate = date
-         booking.amount = profitaccount.value
+      for profitaccount, amount in dictprices.iteritems():
+         booking = accounting.models.Booking()
+         booking.toAccount = activaaccount[0]
+         booking.fromAccount = profitaccount
+         booking.accountingCalculationUnit = accounting.models.AccountingCalculationUnit.objects.all()[0]
+         booking.bookingDate = date.today().__str__()
+         booking.staff = request.user
+         booking.amount = amount
+         booking.lastmodifiedby = request.user
          booking.save()
       
-   def registerpaymentinaccounting(self, paymentaccount, amount, date):
+   def registerpaymentinaccounting(self, request, paymentaccount, amount, date):
       activaaccount = accounting.Account.objects.filter(isopeninterestaccount=True)
       booking = accounting.Booking()
-      booking.fromAccount = activaaccount
-      booking.toAccount = paymentaccount
-      booking.bookingdate = date
+      booking.toAccount = activaaccount
+      booking.fromAccount = paymentaccount
+      booking.bookingDate = date.today().__str__()
       booking.bookingReference = self
+      booking.accountingCalculationUnit = accounting.models.AccountingCalculationUnit.objects.all()[0]
       booking.amount = self.lastCalculatedPrice
+      booking.staff = request.user
+      booking.lastmodifiedby = request.user
+      booking.save()
 
    def createPDF(self, deliveryorder):
      XMLSerializer = serializers.get_serializer("xml")
@@ -565,9 +577,9 @@ class Product(models.Model):
    description = models.TextField(verbose_name = _("Description"),null=True, blank=True) 
    title = models.CharField(verbose_name = _("Title"), max_length=200)
    productNumber = models.IntegerField(verbose_name = _("Product Number"))
-   dateofcreation = models.DateTimeField(verbose_name = _("Created at"))
    defaultunit = models.ForeignKey(Unit, verbose_name = _("Unit"))
-   lastmodification = models.DateTimeField(verbose_name = _("Last modified"), blank=True, null=True)
+   dateofcreation = models.DateTimeField(verbose_name = _("Created at"), auto_now=True)
+   lastmodification = models.DateTimeField(verbose_name = _("Last modified"), auto_now_add=True)
    lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, verbose_name = _("Last modified by"), null=True, blank="True")
    tax = models.ForeignKey(Tax, blank=False)
    accoutingProductCategorie = models.ForeignKey('accounting.ProductCategorie', verbose_name=_("Accounting Product Categorie"), null=True, blank="True")
@@ -931,30 +943,3 @@ class EmailAddressForPurchaseOrder(EmailAddress):
 
    def __unicode__(self):
       return str(self.email)
-
-def postInitAutoUserHandler(sender, instance, **kwarg):
-   instance.staff = threadlocals.get_current_user()
-   instance.dateofcreation = datetime.now()
-
-def preSaveAutoNowUserHandler(sender, instance, **kwarg):
-   instance.lastmodifiedby = threadlocals.get_current_user()
-   instance.lastmodification = datetime.now()
-   if instance is PurchaseOrder:
-      instance.overwriteProductPrice = True;
-
-signals.post_init.connect(postInitAutoUserHandler, Invoice)
-signals.post_init.connect(postInitAutoUserHandler, Quote)
-signals.post_init.connect(postInitAutoUserHandler, Contract)
-signals.post_init.connect(postInitAutoUserHandler, PurchaseOrder)
-signals.post_init.connect(postInitAutoUserHandler, Customer)
-signals.post_init.connect(postInitAutoUserHandler, Distributor)
-signals.post_init.connect(postInitAutoUserHandler, ShipmentPartner)
-signals.post_init.connect(postInitAutoUserHandler, Product)
-signals.pre_save.connect(preSaveAutoNowUserHandler, Invoice)
-signals.pre_save.connect(preSaveAutoNowUserHandler, Quote)
-signals.pre_save.connect(preSaveAutoNowUserHandler, Contract)
-signals.pre_save.connect(preSaveAutoNowUserHandler, PurchaseOrder)
-signals.pre_save.connect(preSaveAutoNowUserHandler, Customer)
-signals.pre_save.connect(preSaveAutoNowUserHandler, Distributor)
-signals.pre_save.connect(preSaveAutoNowUserHandler, ShipmentPartner)
-signals.pre_save.connect(preSaveAutoNowUserHandler, Product)

@@ -183,6 +183,10 @@ class OptionContract(admin.ModelAdmin):
    save_as = True
    inlines = [ContractPostalAddress, ContractPhoneAddress, ContractEmailAddress, InlineQuote, InlineInvoice, InlinePurchaseOrder]
  
+   def save_model(self, request, obj, form, change):
+      obj.staff = request.user
+      obj,save()
+      
    def createPurchaseOrder(self, request, queryset):
       for obj in queryset:
          purchaseorder = obj.createPurchaseOrder()
@@ -237,6 +241,10 @@ class OptionInvoice(admin.ModelAdmin):
    save_as = True
    inlines = [SalesContractInlinePosition, SalesContractPostalAddress, SalesContractPhoneAddress, SalesContractEmailAddress]
 
+   def save_model(self, request, obj, form, change):
+      obj.staff = request.user
+      obj,save()
+      
    def recalculatePrices(self, request, queryset):
      try:
         for obj in queryset:
@@ -261,7 +269,7 @@ class OptionInvoice(admin.ModelAdmin):
          
    def registerInvoiceInAccounting(self, request, queryset):
       for obj in queryset:
-         obj.registerinvoiceinaccounting()
+         obj.registerinvoiceinaccounting(request)
          self.message_user(request, _("Successfully registered Invoice in the Accounting"))
    registerInvoiceInAccounting.short_description = _("Register Invoice in Accounting")
    
@@ -273,7 +281,7 @@ class OptionInvoice(admin.ModelAdmin):
    
    def registerPaymentInAccounting(self, request, queryset):
       for obj in queryset:
-         obj.registerpaymentinaccounting()
+         obj.registerpaymentinaccounting(request)
          self.message_user(request, _("Successfully registered Payment in the Accounting"))
    registerPaymentInAccounting.short_description = _("Register Payment in Accounting")
    
@@ -294,6 +302,10 @@ class OptionQuote(admin.ModelAdmin):
    )
    save_as = True
    inlines = [SalesContractInlinePosition, SalesContractPostalAddress, SalesContractPhoneAddress, SalesContractEmailAddress]
+
+   def save_model(self, request, obj, form, change):
+      obj.staff = request.user
+      obj,save()
 
    def recalculatePrices(self, request, queryset):
      try:
@@ -339,6 +351,11 @@ class OptionPurchaseOrder(admin.ModelAdmin):
          'fields': ('contract', 'description', 'distributor', 'currency', 'status')
       }),
    )
+   
+   def save_model(self, request, obj, form, change):
+      obj.staff = request.user
+      obj,save()
+   
    save_as = True
    inlines = [PurchaseOrderInlinePosition, PurchaseOrderPostalAddress, PurchaseOrderPhoneAddress, PurchaseOrderEmailAddress]
 
@@ -413,7 +430,7 @@ class OptionCustomer(admin.ModelAdmin):
    ordering       = ('id', 'name')
    search_fields  = ('id', 'name')
    inlines = [ContactPostalAddress, ContactPhoneAddress, ContactEmailAddress]
-   
+
    def createContract(self, request, queryset):
       for obj in queryset:
          contract = obj.createContract()

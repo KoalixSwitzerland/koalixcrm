@@ -14,8 +14,11 @@ class OptionBooking(admin.ModelAdmin):
    save_as = True
 
    def save_model(self, request, obj, form, change):
-      obj.staff = request.user
-      obj.lastmodifiedby = request.user
+      if (change == True):
+        obj.lastmodifiedby = request.user
+      else:
+        obj.lastmodifiedby = request.user
+        obj.staff = request.user
       obj.save()
    
 class OptionAccount(admin.ModelAdmin):

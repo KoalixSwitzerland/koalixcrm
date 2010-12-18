@@ -132,8 +132,8 @@ class Booking(models.Model):
    bookingDate = models.DateTimeField(verbose_name = _("Booking at"))
    accountingCalculationUnit = models.ForeignKey(AccountingCalculationUnit, verbose_name=_("AccountingCalculationUnit"))
    staff = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True, verbose_name = _("Reference Staff"), related_name="db_booking_refstaff")
-   dateofcreation = models.DateTimeField(auto_now_add=True, verbose_name = _("Created at"))
-   lastmodification = models.DateTimeField(auto_now=True, verbose_name = _("Last modified"), null=True, blank=True)
+   dateofcreation = models.DateTimeField(verbose_name = _("Created at"), auto_now=True)
+   lastmodification = models.DateTimeField(verbose_name = _("Last modified"), auto_now_add=True)
    lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True, verbose_name = _("Last modified by"), related_name="db_booking_lstmodified")
    
    def __unicode__(self):
@@ -145,14 +145,6 @@ class Booking(models.Model):
       verbose_name = _('Booking')
       verbose_name_plural = _('Bookings')
 
-def postInitAutoUserHandler(sender, instance, **kwarg):
-   instance.staff = threadlocals.get_current_user()
-   instance.dateofcreation = date.today().__str__()
-
-def preSaveAutoNowUserHandler(sender, instance, **kwarg):
-   instance.lastmodifiedby = threadlocals.get_current_user()
-   instance.lastmodification = date.today().__str__()
-      
 def preSaveCheckFlags(sender, instance, **kwarg):
    if (instance.isopenreliabilitiesaccount):
       openinterestaccounts = Account.objects.filter(isopenreliabilitiesaccount=True)
@@ -178,7 +170,4 @@ def preSaveCheckFlags(sender, instance, **kwarg):
       if (instance.accountType != "A" ):
          instance.isProductInventoryActiva = False
          #TODO: Correct Action when not Activa
-   
-signals.post_init.connect(postInitAutoUserHandler, Booking)
-signals.pre_save.connect(preSaveAutoNowUserHandler, Booking)
 signals.pre_save.connect(preSaveCheckFlags, Account)
