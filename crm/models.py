@@ -7,7 +7,6 @@ from const.postaladdressprefix import *
 from const.purpose import *
 from const.status import *
 from django.db.models import signals
-from middleware import threadlocals
 from datetime import *
 from django.utils.translation import ugettext as _
 from decimal import Decimal

@@ -88,7 +88,6 @@ INSTALLED_APPS = (
     'djangoUserExtention',
     'crm',
     'filebrowser',
-    'tinymce',
     'grappelli',
     'django.contrib.admin',
 )

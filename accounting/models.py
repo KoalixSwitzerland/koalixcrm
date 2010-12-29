@@ -8,7 +8,6 @@ from django.contrib.contenttypes import generic
 from django.utils.translation import ugettext as _
 from django.db.models import signals
 from xml.dom.minidom import Document
-from middleware import threadlocals
 from datetime import *
 
    
