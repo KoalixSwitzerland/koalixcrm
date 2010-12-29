@@ -1,5 +1,0 @@
-To run koalixcrm with best results its a good idea to do following changes on your django installation:
-
-/usr/lib/pymodules/python2.6/django/db/models/options.py
-/usr/lib/pymodules/python2.6/django/contrib/admin/sites.py
-/usr/lib/pymodules/python2.6/django/core/serializers/xml_serializer.py
