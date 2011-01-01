@@ -207,8 +207,12 @@ class OptionContract(admin.ModelAdmin):
    createInvoice.short_description = _("Create Invoice")
     
    def save_model(self, request, obj, form, change):
-      obj.staff = request.user
-      obj.save()
+     if (change == True):
+       obj.lastmodifiedby = request.user
+     else:
+       obj.lastmodifiedby = request.user
+       obj.staff = request.user
+     obj.save()
       
    actions = ['createQuote', 'createInvoice', 'createPurchaseOrder']
 
