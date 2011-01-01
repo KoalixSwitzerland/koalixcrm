@@ -89,5 +89,6 @@ INSTALLED_APPS = (
     'crm',
     'filebrowser',
     'grappelli',
+    'south',
     'django.contrib.admin',
 )
