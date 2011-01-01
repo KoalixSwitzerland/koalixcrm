@@ -117,7 +117,6 @@ class Customer(Contact):
    
    def createInvoice(self):
       contract = self.createContract()
-
       invoice = contract.createInvoice()
       return invoice
       

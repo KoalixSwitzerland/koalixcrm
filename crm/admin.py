@@ -331,13 +331,13 @@ class OptionQuote(admin.ModelAdmin):
          return response
    createQuotePDF.short_description = _("Create PDF of Quote")
          
-   def createPurchseConfirmationPDF(self, request, queryset):
+   def createPurchaseConfirmationPDF(self, request, queryset):
       for obj in queryset:
-         obj.createPDF(purchaseconfirmation=True)
-         self.message_user(request, _("Purchase Confirmation PDF created"))
-   createPurchseConfirmationPDF.short_description = _("Create PDF of Purchase Confirmation")
+         response = HttpResponseRedirect('/export/purchaseconfirmation/'+str(obj.id))
+         return response
+   createPurchaseConfirmationPDF.short_description = _("Create PDF of Purchase Confirmation")
 
-   actions = ['recalculatePrices', 'createInvoice', 'createQuotePDF', 'createPurchseConfirmationPDF']
+   actions = ['recalculatePrices', 'createInvoice', 'createQuotePDF', 'createPurchaseConfirmationPDF']
 
 class OptionPurchaseOrder(admin.ModelAdmin):
    list_display = ('id', 'description', 'contract', 'distributor', 'status', 'currency', 'staff', 'lastmodifiedby', 'lastCalculatedPrice', 'lastPricingDate', 'lastmodification')
@@ -355,6 +355,14 @@ class OptionPurchaseOrder(admin.ModelAdmin):
    def save_model(self, request, obj, form, change):
       obj.staff = request.user
       obj,save()
+         
+   def createPurchseOrderPDF(self, request, queryset):
+      for obj in queryset:
+         response = HttpResponseRedirect('/export/purchaseorder/'+str(obj.id))
+         return response
+   createPurchseOrderPDF.short_description = _("Create PDF of Purchase Order")
+   
+   actions = ['createPurchseOrderPDF']
    
    save_as = True
    inlines = [PurchaseOrderInlinePosition, PurchaseOrderPostalAddress, PurchaseOrderPhoneAddress, PurchaseOrderEmailAddress]

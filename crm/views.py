@@ -11,15 +11,32 @@ def createQuotePDF(request, quoteid):
    response['Content-Length'] = path.getsize(pdf)
    return response
    
+def createPurchaseConfirmationPDF(request, quoteid):
+   quote = Quote.objects.get(id=quoteid)
+   pdf = quote.createPDF(purchaseconfirmation=True)
+   response = HttpResponse(FileWrapper(file(pdf)), mimetype='application/pdf')
+   response['Content-Length'] = path.getsize(pdf)
+   return response
+   
 def createInvoicePDF(request, invoiceid):
-  if seladdress == 'true' :
-    selectaddress(invoiceid)
-  else:
-    invoice = Invoice.objects.get(id=invoiceid)
-    pdf = invoice.createPDF(deliveryorder=False)
-    response = HttpResponse(FileWrapper(file(pdf)), mimetype='application/pdf')
-    response['Content-Length'] = path.getsize(pdf)
-    return response
+  invoice = Invoice.objects.get(id=invoiceid)
+  pdf = invoice.createPDF(deliveryorder=False)
+  response = HttpResponse(FileWrapper(file(pdf)), mimetype='application/pdf')
+  response['Content-Length'] = path.getsize(pdf)
+  return response
+  
+def createDeliveryOrderPDF(request, invoiceid):
+  invoice = Invoice.objects.get(id=invoiceid)
+  pdf = invoice.createPDF(deliveryorder=True)
+  response = HttpResponse(FileWrapper(file(pdf)), mimetype='application/pdf')
+  response['Content-Length'] = path.getsize(pdf)
+  return response
+ 
+def createPurchaseOrderPDF(request, purchaseorderid):
+  purchaseorder = PurchaseOrder.objects.get(id=purchaseorderid)
+  response = HttpResponse(FileWrapper(file(pdf)), mimetype='application/pdf')
+  response['Content-Length'] = path.getsize(pdf)
+  return response
    
 def selectaddress(invoiceid):
   invoice = Invoice.objects.get(id=invoiceid)
