@@ -180,13 +180,8 @@ class OptionContract(admin.ModelAdmin):
          'fields': ('description', 'defaultcustomer', 'defaultdistributor', 'defaultcurrency')
       }),
    )
-   save_as = True
    inlines = [ContractPostalAddress, ContractPhoneAddress, ContractEmailAddress, InlineQuote, InlineInvoice, InlinePurchaseOrder]
- 
-   def save_model(self, request, obj, form, change):
-      obj.staff = request.user
-      obj,save()
-      
+
    def createPurchaseOrder(self, request, queryset):
       for obj in queryset:
          purchaseorder = obj.createPurchaseOrder()
@@ -210,8 +205,11 @@ class OptionContract(admin.ModelAdmin):
          response = HttpResponseRedirect('/admin/crm/invoice/'+str(invoice.id))
       return response
    createInvoice.short_description = _("Create Invoice")
-   
-  
+    
+   def save_model(self, request, obj, form, change):
+      obj.staff = request.user
+      obj.save()
+      
    actions = ['createQuote', 'createInvoice', 'createPurchaseOrder']
 
 
@@ -243,7 +241,7 @@ class OptionInvoice(admin.ModelAdmin):
 
    def save_model(self, request, obj, form, change):
       obj.staff = request.user
-      obj,save()
+      obj.save()
       
    def recalculatePrices(self, request, queryset):
      try:
@@ -305,7 +303,7 @@ class OptionQuote(admin.ModelAdmin):
 
    def save_model(self, request, obj, form, change):
       obj.staff = request.user
-      obj,save()
+      obj.save()
 
    def recalculatePrices(self, request, queryset):
      try:
@@ -354,7 +352,7 @@ class OptionPurchaseOrder(admin.ModelAdmin):
    
    def save_model(self, request, obj, form, change):
       obj.staff = request.user
-      obj,save()
+      obj.save()
          
    def createPurchseOrderPDF(self, request, queryset):
       for obj in queryset:
@@ -459,6 +457,14 @@ class OptionCustomer(admin.ModelAdmin):
          response = HttpResponseRedirect('/admin/crm/invoice/'+str(invoice.id))
       return response
    createInvoice.short_description = _("Create Invoice")
+   
+   def save_model(self, request, obj, form, change):
+     if (change == True):
+       obj.lastmodifiedby = request.user
+     else:
+       obj.lastmodifiedby = request.user
+       obj.staff = request.user
+     obj.save()
    actions = ['createContract', 'createInvoice', 'createQuote']
 
 class OptionCustomerGroup(admin.ModelAdmin):
@@ -471,6 +477,14 @@ class OptionDistributor(admin.ModelAdmin):
    fieldsets = (('', {'fields': ('name',)}),)
    inlines = [ContactPostalAddress, ContactPhoneAddress, ContactEmailAddress]
    allow_add = True
+   
+   def save_model(self, request, obj, form, change):
+     if (change == True):
+       obj.lastmodifiedby = request.user
+     else:
+       obj.lastmodifiedby = request.user
+       obj.staff = request.user
+     obj.save()
 
 
 class OptionShipmentPartner(admin.ModelAdmin):
