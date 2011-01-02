@@ -102,7 +102,7 @@
               text-align="left">keine</fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
-              text-align="left">PC 85-28819-4</fo:block>
+              text-align="left">PC 000054545</fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
               text-align="left"><xsl:value-of select="substring(object[@model='crm.invoice']/field[@name='validuntil'], 9, 2)"/><xsl:text>.</xsl:text><xsl:value-of select="substring(object[@model='crm.invoice']/field[@name='validuntil'], 6, 2)"/><xsl:text>.</xsl:text><xsl:value-of select="substring(object[@model='crm.invoice']/field[@name='validuntil'], 1, 4)"/></fo:block>
@@ -114,7 +114,7 @@
               text-align="left"><xsl:value-of select="object[@model='auth.user']/field[@name='first_name']"/>&#8201;  <xsl:value-of select="object[@model='auth.user']/field[@name='last_name']"/></fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
-              text-align="left">+41(0)792910725</fo:block>
+              text-align="left">+41(0)545878948</fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
               text-align="left"><xsl:value-of select="object[@model='auth.user']/field[@name='email']"/></fo:block>
@@ -123,7 +123,7 @@
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
               text-align="left"
-              text-decoration="underline">Aaron Riedener,  Brunnenhof, CH-9602 Bazenheid</fo:block>
+              text-decoration="underline">Guest Guesterich,  Gueststreet, CH-9602 Bazenheid</fo:block>
             <fo:block font-size="8pt"
               font-family="BitstreamVeraSans"
               text-align="left">&#8201; </fo:block>
@@ -216,7 +216,7 @@
             <fo:block font-size="8pt"
               font-family="BitstreamVeraSans"
               font-weight="bold"
-              text-align="start">Aaron Riedener &#8201;  &#8201;  &#8201;  &#8201; Brunnenhof &#8201;  &#8201;  &#8201;  &#8201; 9602 Bazenheid &#8201;  &#8201;  &#8201;  &#8201; +41 (0)71 511 21 18 &#8201;  &#8201;  &#8201;  &#8201; info@koalix.com</fo:block>
+              text-align="start">Guest Guesterich &#8201;  &#8201;  &#8201;  &#8201; Gueststreet &#8201;  &#8201;  &#8201;  &#8201; 9602 Bazenheid &#8201;  &#8201;  &#8201;  &#8201; +41 (0)71 511 21 18 &#8201;  &#8201;  &#8201;  &#8201; info@koalix.com</fo:block>
            </fo:table-cell>
            <fo:table-cell>
             <fo:block font-size="8pt"
@@ -428,7 +428,7 @@
               font-family="BitstreamVeraSans"
               text-align="left"
               line-height="13pt"
-              id="last-page">Aaron Riedener
+              id="last-page">Guest Guesterich
              </fo:block>
     </fo:flow>
      <xsl:apply-templates/>

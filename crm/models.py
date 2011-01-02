@@ -180,6 +180,7 @@ class Contract(models.Model):
       invoice = Invoice()
       invoice.contract = self
       invoice.discount = 0
+      invoice.staff = self.staff
       invoice.customer = self.defaultcustomer
       invoice.status = 'C'
       invoice.currency = self.defaultcurrency
@@ -192,6 +193,7 @@ class Contract(models.Model):
       quote = Quote()
       quote.contract = self
       quote.discount = 0
+      invoice.staff = self.staff
       quote.customer = self.defaultcustomer
       quote.status = 'C'
       quote.currency = self.defaultcurrency
