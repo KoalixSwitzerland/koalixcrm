@@ -7,8 +7,8 @@ admin.autodiscover()
 urlpatterns = patterns('',
     (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': '/var/www/koalixcrm/media'}),
     (r'^$', 'django.views.generic.simple.redirect_to', {'url': '/'}),
-    (r'^grappelli/', include('grappelli.urls')),
     (r'^admin_tools/', include('admin_tools.urls')),
+    (r'^grappelli/', include('grappelli.urls')),
     (r'^admin/filebrowser/', include('filebrowser.urls')),
     (r'^export/quote/(?P<quoteid>\d+)/$', 'crm.views.createQuotePDF'),
     (r'^export/purchaseconfirmation/(?P<quoteid>\d+)/$', 'crm.views.createPurchaseConfirmationPDF'),
@@ -18,6 +18,4 @@ urlpatterns = patterns('',
     (r'^export/balancesheet/(?P<calculationunitid>\d+)/$', 'accounting.views.createBalanceSheetPDF'),
     (r'^export/profitlossstatement/(?P<calculationunitid>\d+)/$', 'accounting.views.createProfitLossStatementPDF'),
     (r'^admin/', include(admin.site.urls)),
-    (r'^i18n/', include('django.conf.urls.i18n')),
-
 )
