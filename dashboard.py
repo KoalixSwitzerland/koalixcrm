@@ -78,9 +78,9 @@ class CustomIndexDashboard(Dashboard):
         
         # append a feed module
         self.children.append(modules.Feed(
-            title=_('Latest Django News'),
+            title=_('Latest koalixcrm News'),
             css_classes=['column_2'],
-            feed_url='http://www.djangoproject.com/rss/weblog/',
+            feed_url='http://www.koalix.org/projects/koalixcrm/news.atom',
             limit=5
         ))
         
@@ -90,18 +90,13 @@ class CustomIndexDashboard(Dashboard):
             css_classes=['column_3'],
             children=[
                 {
-                    'title': _('Django documentation'),
-                    'url': 'http://docs.djangoproject.com/',
+                    'title': _('koalixcrm documentation'),
+                    'url': 'http://docs.koalix.org/',
                     'external': True,
                 },
                 {
-                    'title': _('Django "django-users" mailing list'),
-                    'url': 'http://groups.google.com/group/django-users',
-                    'external': True,
-                },
-                {
-                    'title': _('Django irc channel'),
-                    'url': 'irc://irc.freenode.net/django',
+                    'title': _('koalixcrm "koalixcrm-user" mailing list'),
+                    'url': 'http://groups.google.com/group/koalixcrm-users',
                     'external': True,
                 },
             ]
