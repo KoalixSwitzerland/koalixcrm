@@ -14,7 +14,8 @@ Every such real world objects is represented in the dashboard (admin start page)
 objects has a name - of cause - an add and a modifie button. When you want to create a customer you just press the "add"
 button in the customer row and you will soon get a form to fill out save your customer.
 You find three groups of such objects: crm, accounting and djangoUserExtentions.
-.. image:: images/applicationlist.png
+
+.. image:: /images/applicationlist.png
 
 
 
