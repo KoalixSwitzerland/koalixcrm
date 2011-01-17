@@ -1,0 +1,6 @@
+.. highlight:: rst
+
+Installation
+============
+
+
