@@ -59,13 +59,17 @@ action you want to apply on ths objects. Serveral things can be done with this a
 Aplly A Filter On The List Of Objects
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 On some list of objects your may apply filter functions. This filter functions can be found on the right side of the page.
+Depending on the filter you apply on the list you get a smaller amount of objects
 
 .. image:: /images/filter.png
 
 Do A Search Through All Objects
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 The more objects you registered in your system, the more difficult it gets to find the one you are looking for.
+On some object lists you will find a search box. The keywords you enter in this searbox will be searched in the objects
+name, id, description and so on. All objects that include your selected keywords will be displaieed in the list.
 
+..image:: /images/searchbox.png
 
 object_modify_view
 ------------------
