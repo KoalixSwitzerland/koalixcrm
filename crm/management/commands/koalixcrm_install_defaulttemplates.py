@@ -3,6 +3,7 @@
 from django.utils.translation import ugettext as _
 from shutil import copy
 from os import path
+from os import mkdir
 from django.core.management.base import BaseCommand, CommandError
 import djangoUserExtention
 import crm
@@ -40,10 +41,13 @@ class Command(BaseCommand):
         templateset.title = 'defaultTemplateSet'
         for template in listoftemplatefiles:
           if path.exists('templatefiles/'+listoftemplatefiles[template]):
-            copy('templatefiles/'+listoftemplatefiles[template], settings.DIRECTORY+'templatefiles/'+listoftemplatefiles[template])
+            try:
+              mkdir(settings.MEDIA_ROOT+settings.DIRECTORY+'templatefiles')
+            except OSError:
+              print("folder exists")
+            copy('templatefiles/'+listoftemplatefiles[template], settings.MEDIA_ROOT+settings.DIRECTORY+'templatefiles/'+listoftemplatefiles[template])
             xslfile = djangoUserExtention.models.XSLFile()
-            xslfile.title(template)
-            xslfile.title(settings.DIRECTORY+'templatefiles/'+listoftemplatefiles[template])
+            xslfile.title = settings.MEDIA_ROOT+settings.DIRECTORY+'templatefiles/'+listoftemplatefiles[template]
             xslfile.save()
             if template == 'invoice' :
               templateset.invoiceXSLFile = xslfile
