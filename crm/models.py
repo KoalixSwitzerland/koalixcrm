@@ -11,6 +11,8 @@ from datetime import *
 from django.utils.translation import ugettext as _
 from decimal import Decimal
 from django.core import serializers
+from exceptions import TemplateSetMissing
+from exceptions import UserExtentionMissing
 import djangoUserExtention
 from django.contrib import auth
 from lxml import etree
@@ -219,84 +221,91 @@ class Contract(models.Model):
       return _("Contract") + " " + str(self.id)
 
 class PurchaseOrder(models.Model):
-   contract = models.ForeignKey(Contract, verbose_name = _("Contract"))
-   externalReference = models.CharField(verbose_name = _("External Reference"), max_length=100, blank=True, null=True)
-   distributor = models.ForeignKey(Distributor, verbose_name = _("Distributor"))
-   description = models.CharField(verbose_name=_("Description"), max_length=100, blank=True, null=True)
-   lastPricingDate = models.DateField(verbose_name = _("Last Pricing Date"), blank=True, null=True)
-   lastCalculatedPrice = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Price With Tax"), blank=True, null=True)
-   lastCalculatedTax = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Tax"), blank=True, null=True)
-   status = models.CharField(max_length=1, choices=PURCHASEORDERSTATUS)
-   staff = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True, verbose_name = _("Staff"), related_name="db_relpostaff", null=True)
-   currency = models.ForeignKey(Currency, verbose_name=_("Currency"), blank=False, null=False)
-   dateofcreation = models.DateTimeField(verbose_name = _("Created at"), auto_now=True)
-   lastmodification = models.DateTimeField(verbose_name = _("Last modified"), auto_now_add=True)
-   lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, verbose_name = _("Last modified by"), related_name="db_polstmodified")
+  contract = models.ForeignKey(Contract, verbose_name = _("Contract"))
+  externalReference = models.CharField(verbose_name = _("External Reference"), max_length=100, blank=True, null=True)
+  distributor = models.ForeignKey(Distributor, verbose_name = _("Distributor"))
+  description = models.CharField(verbose_name=_("Description"), max_length=100, blank=True, null=True)
+  lastPricingDate = models.DateField(verbose_name = _("Last Pricing Date"), blank=True, null=True)
+  lastCalculatedPrice = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Price With Tax"), blank=True, null=True)
+  lastCalculatedTax = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Tax"), blank=True, null=True)
+  status = models.CharField(max_length=1, choices=PURCHASEORDERSTATUS)
+  staff = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True, verbose_name = _("Staff"), related_name="db_relpostaff", null=True)
+  currency = models.ForeignKey(Currency, verbose_name=_("Currency"), blank=False, null=False)
+  dateofcreation = models.DateTimeField(verbose_name = _("Created at"), auto_now=True)
+  lastmodification = models.DateTimeField(verbose_name = _("Last modified"), auto_now_add=True)
+  lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, verbose_name = _("Last modified by"), related_name="db_polstmodified")
    
-   def recalculatePrices(self, pricingDate):
-      price = 0
-      tax = 0
-      try:
-         positions = PurchaseOrderPosition.objects.filter(contract=self.id)
-         if type(positions) == PurchaseOrderPosition:
-            if type(self.discount) == Decimal:
-               price = int(positions.recalculatePrices(pricingDate, self.customer, self.currency)*(1-self.discount/100)/self.currency.rounding)*self.currency.rounding
-               tax = int(positions.recalculateTax(self.currency)*(1-self.discount/100)/self.currency.rounding)*self.currency.rounding
-            else:
-               price = positions.recalculatePrices(pricingDate, self.customer, self.currency)
-               tax = positions.recalculateTax(self.currency)
-         else:
-            for position in positions:
-               if type(self.discount) == Decimal:
-                  price += int(position.recalculatePrices(pricingDate, self.customer, self.currency)*(1-self.discount/100)/self.currency.rounding)*self.currency.rounding
-                  tax += int(position.recalculateTax(self.currency)*(1-self.discount/100)/self.currency.rounding)*self.currency.rounding
-               else:
-                  price += position.recalculatePrices(pricingDate, self.customer, self.currency)
-                  tax += position.recalculateTax(self.currency)
-         self.lastCalculatedPrice = price
-         self.lastCalculatedTax = tax
-         self.lastPricingDate = pricingDate
-         self.save()
-         return 1
-      except Quote.DoesNotExist:  
-         return 0
+  def recalculatePrices(self, pricingDate):
+    price = 0
+    tax = 0
+    try:
+        positions = PurchaseOrderPosition.objects.filter(contract=self.id)
+        if type(positions) == PurchaseOrderPosition:
+          if type(self.discount) == Decimal:
+              price = int(positions.recalculatePrices(pricingDate, self.customer, self.currency)*(1-self.discount/100)/self.currency.rounding)*self.currency.rounding
+              tax = int(positions.recalculateTax(self.currency)*(1-self.discount/100)/self.currency.rounding)*self.currency.rounding
+          else:
+              price = positions.recalculatePrices(pricingDate, self.customer, self.currency)
+              tax = positions.recalculateTax(self.currency)
+        else:
+          for position in positions:
+              if type(self.discount) == Decimal:
+                price += int(position.recalculatePrices(pricingDate, self.customer, self.currency)*(1-self.discount/100)/self.currency.rounding)*self.currency.rounding
+                tax += int(position.recalculateTax(self.currency)*(1-self.discount/100)/self.currency.rounding)*self.currency.rounding
+              else:
+                price += position.recalculatePrices(pricingDate, self.customer, self.currency)
+                tax += position.recalculateTax(self.currency)
+        self.lastCalculatedPrice = price
+        self.lastCalculatedTax = tax
+        self.lastPricingDate = pricingDate
+        self.save()
+        return 1
+    except Quote.DoesNotExist, e:  
+        print "ERROR "+e.__str__()
+        print "Der Fehler trat beim File: "+ self.sourcefile +" / Cell: "+listOfLines[0][listOfLines[0].find("cell ")+4:listOfLines[0].find("(cellType ")-1]+" auf!"
+        exit()
+        return 0
          
-   def createPDF(self, purchaseconfirmation):
-     XMLSerializer = serializers.get_serializer("xml")
-     xml_serializer = XMLSerializer()
-     out = open("/tmp/purchaseorder_"+str(self.id)+".xml", "w")
-     objectsToSerialize = list(PurchaseOrder.objects.filter(id=self.id)) 
-     objectsToSerialize += list(Contact.objects.filter(id=self.distributor.id))
-     objectsToSerialize += list(Currency.objects.filter(id=self.currency.id))
-     objectsToSerialize += list(PurchaseOrderPosition.objects.filter(contract=self.id))
-     for position in list(PurchaseOrderPosition.objects.filter(contract=self.id)):
-         objectsToSerialize += list(Position.objects.filter(id=position.id))
-         objectsToSerialize += list(Product.objects.filter(id=position.product.id))
-         objectsToSerialize += list(Unit.objects.filter(id=position.unit.id))
-     objectsToSerialize += list(auth.models.User.objects.filter(id=self.staff.id))
-     userExtention = djangoUserExtention.models.UserExtention.objects.filter(user=self.staff.id)
-     phoneAddress = djangoUserExtention.models.UserExtentionPhoneAddress.objects.filter(userExtention=userExtention.id)
-     objectsToSerialize += list(userExtention)
-     objectsToSerialize += list(phoneAddress)
-     templateset = djangoUserExtention.models.TemplateSet.objects.filter(id=userExtention[0].defaultTemplateSet.id)
-     objectsToSerialize += list(templateset)
-     objectsToSerialize += list(auth.models.User.objects.filter(id=self.lastmodifiedby.id))
-     objectsToSerialize += list(PostalAddressForContact.objects.filter(person=self.distributor.id))
-     for address in list(PostalAddressForContact.objects.filter(person=self.distributor.id)):
-         objectsToSerialize += list(PostalAddress.objects.filter(id=address.id))
-     xml_serializer.serialize(objectsToSerialize, stream=out, indent=3)
-     out.close()
-     system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile.path+'  -xml /tmp/purchaseorder_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.purchaseorderXSLFile.xslfile.path+' -pdf /tmp/purchaseorder_'+str(self.id)+'.pdf"')
-     return "/tmp/purchaseorder_"+str(self.id)+".pdf"    
+  def createPDF(self):
+    XMLSerializer = serializers.get_serializer("xml")
+    xml_serializer = XMLSerializer()
+    out = open("/tmp/purchaseorder_"+str(self.id)+".xml", "w")
+    objectsToSerialize = list(PurchaseOrder.objects.filter(id=self.id)) 
+    objectsToSerialize += list(Contact.objects.filter(id=self.distributor.id))
+    objectsToSerialize += list(Currency.objects.filter(id=self.currency.id))
+    objectsToSerialize += list(PurchaseOrderPosition.objects.filter(contract=self.id))
+    for position in list(PurchaseOrderPosition.objects.filter(contract=self.id)):
+      objectsToSerialize += list(Position.objects.filter(id=position.id))
+      objectsToSerialize += list(Product.objects.filter(id=position.product.id))
+      objectsToSerialize += list(Unit.objects.filter(id=position.unit.id))
+    objectsToSerialize += list(auth.models.User.objects.filter(id=self.staff.id))
+    userExtention = djangoUserExtention.models.UserExtention.objects.filter(user=self.staff.id)
+    if (len(userExtention) == 0):
+      raise UserExtentionMissing(_("During PurchaseOrder PDF Export"))
+    phoneAddress = djangoUserExtention.models.UserExtentionPhoneAddress.objects.filter(userExtention=userExtention.id)
+    objectsToSerialize += list(userExtention)
+    objectsToSerialize += list(phoneAddress)
+    templateset = djangoUserExtention.models.TemplateSet.objects.filter(id=userExtention[0].defaultTemplateSet.id)
+    if (len(userExtentemplatesettion) == 0):
+      raise TemplateSetMissing(_("During PurchaseOrder PDF Export"))
+    objectsToSerialize += list(templateset)
+    objectsToSerialize += list(auth.models.User.objects.filter(id=self.lastmodifiedby.id))
+    objectsToSerialize += list(PostalAddressForContact.objects.filter(person=self.distributor.id))
+    for address in list(PostalAddressForContact.objects.filter(person=self.distributor.id)):
+        objectsToSerialize += list(PostalAddress.objects.filter(id=address.id))
+    xml_serializer.serialize(objectsToSerialize, stream=out, indent=3)
+    out.close()
+    system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile.path+'  -xml /tmp/purchaseorder_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.purchaseorderXSLFile.xslfile.path+' -pdf /tmp/purchaseorder_'+str(self.id)+'.pdf"')
+    return "/tmp/purchaseorder_"+str(self.id)+".pdf"   
 
-   class Meta:
-      app_label = "crm"
-      #app_label_koalix = _('Customer Relationship Management (CRM)')
-      verbose_name = _('Purchase Order')
-      verbose_name_plural = _('Purchase Order')
+  class Meta:
+    app_label = "crm"
+    #app_label_koalix = _('Customer Relationship Management (CRM)')
+    verbose_name = _('Purchase Order')
+    verbose_name_plural = _('Purchase Order')
 
-   def __unicode__(self):
-      return _("Purchase Order")+ ": " + str(self.id) + " "+ _("from Contract") + ": " + str(self.contract.id) 
+  def __unicode__(self):
+    return _("Purchase Order")+ ": " + str(self.id) + " "+ _("from Contract") + ": " + str(self.contract.id) 
 
 class SalesContract(models.Model):
    contract = models.ForeignKey(Contract, verbose_name=_('Contract'))
@@ -408,10 +417,14 @@ class Quote(SalesContract):
          objectsToSerialize += list(Unit.objects.filter(id=position.unit.id))
      objectsToSerialize += list(auth.models.User.objects.filter(id=self.staff.id))
      userExtention = djangoUserExtention.models.UserExtention.objects.filter(user=self.staff.id)
+     if (len(userExtention) == 0):
+      raise UserExtentionMissing(_("During Quote PDF Export"))
      phoneAddress = djangoUserExtention.models.UserExtentionPhoneAddress.objects.filter(userExtention=userExtention[0].id)
      objectsToSerialize += list(userExtention)
      objectsToSerialize += list(PhoneAddress.objects.filter(id=phoneAddress[0].id))
      templateset = djangoUserExtention.models.TemplateSet.objects.filter(id=userExtention[0].defaultTemplateSet.id)
+     if (len(templateset) == 0):
+      raise TemplateSetMissing(_("During Quote PDF Export"))
      objectsToSerialize += list(templateset)
      objectsToSerialize += list(auth.models.User.objects.filter(id=self.lastmodifiedby.id))
      objectsToSerialize += list(PostalAddressForContact.objects.filter(person=self.customer.id))
@@ -504,10 +517,14 @@ class Invoice(SalesContract):
          objectsToSerialize += list(Unit.objects.filter(id=position.unit.id))
      objectsToSerialize += list(auth.models.User.objects.filter(id=self.staff.id))
      userExtention = djangoUserExtention.models.UserExtention.objects.filter(user=self.staff.id)
+     if (len(userExtention) == 0):
+      raise UserExtentionMissing(_("During Invoice PDF Export"))
      phoneAddress = djangoUserExtention.models.UserExtentionPhoneAddress.objects.filter(userExtention=userExtention[0].id)
      objectsToSerialize += list(userExtention)
      objectsToSerialize += list(PhoneAddress.objects.filter(id=phoneAddress[0].id))
      templateset = djangoUserExtention.models.TemplateSet.objects.filter(id=userExtention[0].defaultTemplateSet.id)
+     if (len(templateset) == 0):
+      raise TemplateSetMissing(_("During Invoice PDF Export"))
      objectsToSerialize += list(templateset)
      objectsToSerialize += list(auth.models.User.objects.filter(id=self.lastmodifiedby.id))
      objectsToSerialize += list(PostalAddressForContact.objects.filter(person=self.customer.id))

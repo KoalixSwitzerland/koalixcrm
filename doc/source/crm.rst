@@ -9,8 +9,24 @@ Introduction
 Objecttypes
 -----------
 
+Contract
+^^^^^^^^
+
+Purchase Order
+^^^^^^^^^^^^^^
+
+Invoice
+^^^^^^^
+
+Quote
+^^^^^
+
 Customer
 ^^^^^^^^
 
-Contract
-^^^^^^^^
+Distributors
+^^^^^^^^^^^^
+
+Deliverycompanies
+^^^^^^^^^^^^^^^^^
+
