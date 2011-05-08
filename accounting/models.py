@@ -9,6 +9,8 @@ from django.utils.translation import ugettext as _
 from django.db.models import signals
 from xml.dom.minidom import Document
 from datetime import *
+import settings
+import djangoUserExtention
 
    
 class AccountingCalculationUnit(models.Model):
@@ -16,7 +18,8 @@ class AccountingCalculationUnit(models.Model):
    begin = models.DateField(verbose_name=_("Begin"))
    end = models.DateField(verbose_name=_("End"))
             
-   def createBalanceSheetPDF(self):
+   def createBalanceSheetPDF(self, raisedbyuser):
+      userExtention = djangoUserExtention.models.UserExtention.objects.filter(user=raisedbyuser.id)
       out = open("/tmp/balancesheet_"+str(self.id)+".xml","w")
       doc = Document()
       main = doc.createElement("koalixaccountingbalacesheet")
@@ -29,8 +32,12 @@ class AccountingCalculationUnit(models.Model):
       calculationUnitFrom = doc.createElement("calculationUnitFrom")
       calculationUnitFrom.appendChild(doc.createTextNode(self.begin.year.__str__()))
       main.appendChild(calculationUnitFrom)
+      calculationUnitName = doc.createElement("headerpicture")
+      calculationUnitName.appendChild(doc.createTextNode(settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.logo.path))
+      main.appendChild(calculationUnitName)
       accountNumber = doc.createElement("AccountNumber")
       accounts = Account.objects.all()
+      overallvalue = 0
       for account in list(accounts) :
          currentValue = account.valueNow(self)
          if (currentValue != 0):
@@ -46,9 +53,18 @@ class AccountingCalculationUnit(models.Model):
             currentAccountElement.appendChild(accountNameElement)
             currentAccountElement.appendChild(currentValueElement)
             main.appendChild(currentAccountElement)
+            if account.accountType == "A":
+              overallvalue = overallvalue + currentValue;
+            if account.accountType == "P":
+              overallvalue = overallvalue - currentValue;
+      profitloss = doc.createElement("ProfitLoss")
+      profitloss.appendChild(doc.createTextNode(overallvalue.__str__()))
+      main.appendChild(profitloss)
       doc.appendChild(main)
-      out.write(doc.toprettyxml(indent="  "))
-      system("fop -c /var/www/koalixcrm/verasans.xml -xml /tmp/balancesheet_"+str(self.id)+".xml -xsl /var/www/koalixcrm/balancesheet.xsl -pdf /tmp/balancesheet_"+str(self.id)+".pdf")
+      out.write(doc.toxml("utf-8"))
+      log = open("/tmp/log.txt", "w")
+      log.write('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/balancesheet_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.balancesheetXSLFile.xslfile.path+' -pdf /tmp/balancesheet_'+str(self.id)+'.pdf"')
+      system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile.path+'  -xml /tmp/balancesheet_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.balancesheetXSLFile.xslfile.path+' -pdf /tmp/balancesheet_'+str(self.id)+'.pdf"')
       return "/tmp/balancesheet_"+str(self.id)+".pdf"
       
    def __unicode__(self):

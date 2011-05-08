@@ -6,7 +6,7 @@ from django.core.servers.basehttp import FileWrapper
 
 def createBalanceSheetPDF(request, calculationunitid):
    calculationUnit = AccountingCalculationUnit.objects.get(id=calculationunitid)
-   pdf = calculationUnit.createBalanceSheetPDF()
+   pdf = calculationUnit.createBalanceSheetPDF(request.user)
    response = HttpResponse(FileWrapper(file(pdf)), mimetype='application/pdf')
    response['Content-Length'] = path.getsize(pdf)
    return response
