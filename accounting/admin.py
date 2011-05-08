@@ -43,7 +43,13 @@ class OptionAccountingCalculationUnit(admin.ModelAdmin):
          return response
    createBalanceSheetPDF.short_description = _("Create PDF of Balance Sheet")
    
-   actions = ['createBalanceSheetPDF',]
+   def createProfitLossStatement(self, request, queryset):
+      for obj in queryset:
+         response = HttpResponseRedirect('/export/profitlossstatement/'+str(obj.id))
+         return response
+   createProfitLossStatement.short_description = _("Create PDF of Profit Loss Statement Sheet")
+   
+   actions = ['createBalanceSheetPDF', 'createProfitLossStatement']
             
 class OptionProductCategorie(admin.ModelAdmin):
    list_display = ('title', 'profitAccount', 'lossAccount')

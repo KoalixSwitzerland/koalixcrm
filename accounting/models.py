@@ -14,71 +14,118 @@ import djangoUserExtention
 
    
 class AccountingCalculationUnit(models.Model):
-   title =  models.CharField(max_length=200, verbose_name=_("Title")) # For example "Year 2009", "1st Quarter 2009"
-   begin = models.DateField(verbose_name=_("Begin"))
-   end = models.DateField(verbose_name=_("End"))
+  title =  models.CharField(max_length=200, verbose_name=_("Title")) # For example "Year 2009", "1st Quarter 2009"
+  begin = models.DateField(verbose_name=_("Begin"))
+  end = models.DateField(verbose_name=_("End"))
             
-   def createBalanceSheetPDF(self, raisedbyuser):
-      userExtention = djangoUserExtention.models.UserExtention.objects.filter(user=raisedbyuser.id)
-      out = open("/tmp/balancesheet_"+str(self.id)+".xml","w")
-      doc = Document()
-      main = doc.createElement("koalixaccountingbalacesheet")
-      calculationUnitName = doc.createElement("calculationUnitName")
-      calculationUnitName.appendChild(doc.createTextNode(self.__unicode__()))
-      main.appendChild(calculationUnitName)
-      calculationUnitTo = doc.createElement("calculationUnitTo")
-      calculationUnitTo.appendChild(doc.createTextNode(self.end.year.__str__()))
-      main.appendChild(calculationUnitTo)
-      calculationUnitFrom = doc.createElement("calculationUnitFrom")
-      calculationUnitFrom.appendChild(doc.createTextNode(self.begin.year.__str__()))
-      main.appendChild(calculationUnitFrom)
-      calculationUnitName = doc.createElement("headerpicture")
-      calculationUnitName.appendChild(doc.createTextNode(settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.logo.path))
-      main.appendChild(calculationUnitName)
-      accountNumber = doc.createElement("AccountNumber")
-      accounts = Account.objects.all()
-      overallvalue = 0
-      for account in list(accounts) :
-         currentValue = account.valueNow(self)
-         if (currentValue != 0):
-            currentAccountElement = doc.createElement("Account")
-            accountNumber = doc.createElement("AccountNumber")
-            accountNumber.appendChild(doc.createTextNode(account.accountNumber.__str__()))
-            currentValueElement = doc.createElement("currentValue")
-            currentValueElement.appendChild(doc.createTextNode(currentValue.__str__()))
-            accountNameElement = doc.createElement("accountName")
-            accountNameElement.appendChild(doc.createTextNode(account.title))
-            currentAccountElement.setAttribute("accountType", account.accountType.__str__())
-            currentAccountElement.appendChild(accountNumber)
-            currentAccountElement.appendChild(accountNameElement)
-            currentAccountElement.appendChild(currentValueElement)
-            main.appendChild(currentAccountElement)
-            if account.accountType == "A":
-              overallvalue = overallvalue + currentValue;
-            if account.accountType == "P":
-              overallvalue = overallvalue - currentValue;
-      profitloss = doc.createElement("ProfitLoss")
-      profitloss.appendChild(doc.createTextNode(overallvalue.__str__()))
-      main.appendChild(profitloss)
-      doc.appendChild(main)
-      out.write(doc.toxml("utf-8"))
-      log = open("/tmp/log.txt", "w")
-      log.write('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/balancesheet_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.balancesheetXSLFile.xslfile.path+' -pdf /tmp/balancesheet_'+str(self.id)+'.pdf"')
-      system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile.path+'  -xml /tmp/balancesheet_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.balancesheetXSLFile.xslfile.path+' -pdf /tmp/balancesheet_'+str(self.id)+'.pdf"')
-      return "/tmp/balancesheet_"+str(self.id)+".pdf"
-      
-   def __unicode__(self):
+  def createBalanceSheetPDF(self, raisedbyuser):
+    userExtention = djangoUserExtention.models.UserExtention.objects.filter(user=raisedbyuser.id)
+    out = open("/tmp/balancesheet_"+str(self.id)+".xml","w")
+    doc = Document()
+    main = doc.createElement("koalixaccountingbalacesheet")
+    calculationUnitName = doc.createElement("calculationUnitName")
+    calculationUnitName.appendChild(doc.createTextNode(self.__unicode__()))
+    main.appendChild(calculationUnitName)
+    calculationUnitTo = doc.createElement("calculationUnitTo")
+    calculationUnitTo.appendChild(doc.createTextNode(self.end.year.__str__()))
+    main.appendChild(calculationUnitTo)
+    calculationUnitFrom = doc.createElement("calculationUnitFrom")
+    calculationUnitFrom.appendChild(doc.createTextNode(self.begin.year.__str__()))
+    main.appendChild(calculationUnitFrom)
+    calculationUnitName = doc.createElement("headerpicture")
+    calculationUnitName.appendChild(doc.createTextNode(settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.logo.path))
+    main.appendChild(calculationUnitName)
+    accountNumber = doc.createElement("AccountNumber")
+    accounts = Account.objects.all()
+    overallvalue = 0
+    for account in list(accounts) :
+        currentValue = account.valueNow(self)
+        if (currentValue != 0):
+          currentAccountElement = doc.createElement("Account")
+          accountNumber = doc.createElement("AccountNumber")
+          accountNumber.appendChild(doc.createTextNode(account.accountNumber.__str__()))
+          currentValueElement = doc.createElement("currentValue")
+          currentValueElement.appendChild(doc.createTextNode(currentValue.__str__()))
+          accountNameElement = doc.createElement("accountName")
+          accountNameElement.appendChild(doc.createTextNode(account.title))
+          currentAccountElement.setAttribute("accountType", account.accountType.__str__())
+          currentAccountElement.appendChild(accountNumber)
+          currentAccountElement.appendChild(accountNameElement)
+          currentAccountElement.appendChild(currentValueElement)
+          main.appendChild(currentAccountElement)
+          if account.accountType == "A":
+            overallvalue = overallvalue + currentValue;
+          if account.accountType == "P":
+            overallvalue = overallvalue - currentValue;
+    profitloss = doc.createElement("ProfitLoss")
+    profitloss.appendChild(doc.createTextNode(overallvalue.__str__()))
+    main.appendChild(profitloss)
+    doc.appendChild(main)
+    out.write(doc.toxml("utf-8"))
+    log = open("/tmp/log.txt", "w")
+    log.write('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/balancesheet_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.balancesheetXSLFile.xslfile.path+' -pdf /tmp/balancesheet_'+str(self.id)+'.pdf"')
+    system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile.path+'  -xml /tmp/balancesheet_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.balancesheetXSLFile.xslfile.path+' -pdf /tmp/balancesheet_'+str(self.id)+'.pdf"')
+    return "/tmp/balancesheet_"+str(self.id)+".pdf"
+    
+  def createProfitLossStatementPDF(self, raisedbyuser):
+    userExtention = djangoUserExtention.models.UserExtention.objects.filter(user=raisedbyuser.id)
+    out = open("/tmp/profitlossstatement_"+str(self.id)+".xml","w")
+    doc = Document()
+    main = doc.createElement("koalixaccountingprofitlossstatement")
+    calculationUnitName = doc.createElement("calculationUnitName")
+    calculationUnitName.appendChild(doc.createTextNode(self.__unicode__()))
+    main.appendChild(calculationUnitName)
+    calculationUnitTo = doc.createElement("calculationUnitTo")
+    calculationUnitTo.appendChild(doc.createTextNode(self.end.year.__str__()))
+    main.appendChild(calculationUnitTo)
+    calculationUnitFrom = doc.createElement("calculationUnitFrom")
+    calculationUnitFrom.appendChild(doc.createTextNode(self.begin.year.__str__()))
+    main.appendChild(calculationUnitFrom)
+    calculationUnitName = doc.createElement("headerpicture")
+    calculationUnitName.appendChild(doc.createTextNode(settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.logo.path))
+    main.appendChild(calculationUnitName)
+    accountNumber = doc.createElement("AccountNumber")
+    accounts = Account.objects.all()
+    overallvalue = 0
+    for account in list(accounts) :
+        currentValue = account.valueNow(self)
+        if (currentValue != 0):
+          currentAccountElement = doc.createElement("Account")
+          accountNumber = doc.createElement("AccountNumber")
+          accountNumber.appendChild(doc.createTextNode(account.accountNumber.__str__()))
+          currentValueElement = doc.createElement("currentValue")
+          currentValueElement.appendChild(doc.createTextNode(currentValue.__str__()))
+          accountNameElement = doc.createElement("accountName")
+          accountNameElement.appendChild(doc.createTextNode(account.title))
+          currentAccountElement.setAttribute("accountType", account.accountType.__str__())
+          currentAccountElement.appendChild(accountNumber)
+          currentAccountElement.appendChild(accountNameElement)
+          currentAccountElement.appendChild(currentValueElement)
+          main.appendChild(currentAccountElement)
+          if account.accountType == "E":
+            overallvalue = overallvalue + currentValue;
+          if account.accountType == "S":
+            overallvalue = overallvalue - currentValue;
+    profitloss = doc.createElement("ProfitLoss")
+    profitloss.appendChild(doc.createTextNode(overallvalue.__str__()))
+    main.appendChild(profitloss)
+    doc.appendChild(main)
+    out.write(doc.toxml("utf-8"))
+    log = open("/tmp/log.txt", "w")
+    log.write('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/profitlossstatement_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.profitLossStatementXSLFile.xslfile.path+' -pdf /tmp/profitlossstatement_'+str(self.id)+'.pdf"')
+    system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/profitlossstatement_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.profitLossStatementXSLFile.xslfile.path+' -pdf /tmp/profitlossstatement_'+str(self.id)+'.pdf"')
+    return "/tmp/profitlossstatement_"+str(self.id)+".pdf"
+    
+  def __unicode__(self):
       return  self.title
-     
-# TODO: def createProfitAndLossStatementPDF() Erfolgsrechnung
 
 # TODO: def createNewCalculationUnit() Neues Geschäftsjahr erstellen
    
-   class Meta:
-      app_label = "accounting"
-      #app_label_koalix = _("Accounting")
-      verbose_name = _('Accounting Calculation Unit')
-      verbose_name_plural = _('Accounting Calculation Units')
+  class Meta:
+     app_label = "accounting"
+     #app_label_koalix = _("Accounting")
+     verbose_name = _('Accounting Calculation Unit')
+     verbose_name_plural = _('Accounting Calculation Units')
             
 class Account(models.Model):
    accountNumber = models.IntegerField(verbose_name=_("Account Number"))
