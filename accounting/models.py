@@ -62,9 +62,11 @@ class AccountingCalculationUnit(models.Model):
     main.appendChild(profitloss)
     doc.appendChild(main)
     out.write(doc.toxml("utf-8"))
+    out.close()
     log = open("/tmp/log.txt", "w")
     log.write('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/balancesheet_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.balancesheetXSLFile.xslfile.path+' -pdf /tmp/balancesheet_'+str(self.id)+'.pdf"')
-    system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile.path+'  -xml /tmp/balancesheet_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.balancesheetXSLFile.xslfile.path+' -pdf /tmp/balancesheet_'+str(self.id)+'.pdf"')
+    log.close()
+    system ('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/balancesheet_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.balancesheetXSLFile.xslfile.path+' -pdf /tmp/balancesheet_'+str(self.id)+'.pdf"')
     return "/tmp/balancesheet_"+str(self.id)+".pdf"
     
   def createProfitLossStatementPDF(self, raisedbyuser):
@@ -111,8 +113,10 @@ class AccountingCalculationUnit(models.Model):
     main.appendChild(profitloss)
     doc.appendChild(main)
     out.write(doc.toxml("utf-8"))
+    out.close()
     log = open("/tmp/log.txt", "w")
     log.write('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/profitlossstatement_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.profitLossStatementXSLFile.xslfile.path+' -pdf /tmp/profitlossstatement_'+str(self.id)+'.pdf"')
+    log.close()
     system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/profitlossstatement_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.profitLossStatementXSLFile.xslfile.path+' -pdf /tmp/profitlossstatement_'+str(self.id)+'.pdf"')
     return "/tmp/profitlossstatement_"+str(self.id)+".pdf"
     
@@ -189,7 +193,7 @@ class Booking(models.Model):
    fromAccount = models.ForeignKey(Account, verbose_name=_("From Account"), related_name="db_booking_fromaccount")
    toAccount = models.ForeignKey(Account, verbose_name=_("To Account"), related_name="db_booking_toaccount")
    amount = models.DecimalField(max_digits=20, decimal_places=2, verbose_name=_("Amount"))
-   description = models.TextField(verbose_name=_("Description"), null=True, blank=True)
+   description = models.CharField(verbose_name=_("Description"), max_length=120, null=True, blank=True)
    bookingReference = models.ForeignKey('crm.Invoice', verbose_name=_("Booking Reference"), null=True, blank=True)
    bookingDate = models.DateTimeField(verbose_name = _("Booking at"))
    accountingCalculationUnit = models.ForeignKey(AccountingCalculationUnit, verbose_name=_("AccountingCalculationUnit"))

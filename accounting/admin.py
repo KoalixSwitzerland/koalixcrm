@@ -8,6 +8,17 @@ from django.contrib import admin
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 
+class CalculationUnitOptionBooking(admin.TabularInline):
+   model = Booking
+   extra = 1
+   classes = ('collapse-open',)
+   fieldsets = (
+      ('Basics', {
+         'fields': ('fromAccount', 'toAccount', 'description', 'amount', 'bookingDate', 'staff', 'bookingReference',)
+      }),
+   )
+   allow_add = True
+
 class OptionBooking(admin.ModelAdmin):
    list_display = ('fromAccount', 'toAccount', 'amount', 'bookingDate', 'staff')
    fieldsets = ((_('Basic'), {'fields' : ('fromAccount', 'toAccount', 'amount', 'bookingDate', 'staff', 'description', 'bookingReference', 'accountingCalculationUnit')}),)
@@ -35,6 +46,7 @@ class OptionAccountingCalculationUnit(admin.ModelAdmin):
          'fields': ('title', 'begin', 'end')
       }),
    )
+   inlines = [CalculationUnitOptionBooking, ]
    save_as = True
    
    def createBalanceSheetPDF(self, request, queryset):
