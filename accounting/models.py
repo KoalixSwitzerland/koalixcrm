@@ -144,7 +144,9 @@ class Account(models.Model):
    isACustomerPaymentAccount = models.BooleanField(verbose_name=_("Is a Customer Payment Account"))
    # TODO: This can only be set when accountType is Activa and can not be product inventry as well
    
-   def value():
+   def value(self):
+      date.today()
+      AccountingCalculationUnit.objects.all()
       sum = self.allBookings(fromAccount = False, accountingCalculationUnit = accountingCalculationUnit) - self.allBookings(fromAccount = True, accountingCalculationUnit = accountingCalculationUnit)
       if (self.accountType == 'P' or self.accountType == 'E'):
         sum = 0 - sum
