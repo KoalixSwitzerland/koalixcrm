@@ -3,13 +3,4 @@
 Installation
 ============
 
-Installation Ubuntu 10.10
--------------------------
-In fact i could also write a installationscript for ubuntu but it makes neraly no difference between ctrl-c/v and a 
-installationscript :-).
-
-
-
-
-Installation Windows
---------------------
+There is an installationscript now... detailed description coming here after alpha release.

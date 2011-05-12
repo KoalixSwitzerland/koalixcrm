@@ -39,10 +39,10 @@ class Command(BaseCommand):
       dejavusansfile = 'dejavusans-bold.xml'
       dejavusansboldfile = 'dejavusans.xml'
       logo = 'logo.jpg'
-      copy('templatefiles/'+configfile, MEDIA_ROOT+DIRECTORY+'templatefiles/'+configfile)
-      copy('templatefiles/'+logo, MEDIA_ROOT+DIRECTORY+'templatefiles/'+logo)
-      copy('templatefiles/'+dejavusansfile, MEDIA_ROOT+DIRECTORY+'templatefiles/'+dejavusansfile)
-      copy('templatefiles/'+dejavusansboldfile, MEDIA_ROOT+DIRECTORY+'templatefiles/'+dejavusansboldfile)
+      copy('templatefiles/generic/'+configfile, MEDIA_ROOT+DIRECTORY+'templatefiles/'+configfile)
+      copy('templatefiles/generic/'+logo, MEDIA_ROOT+DIRECTORY+'templatefiles/'+logo)
+      copy('templatefiles/generic/'+dejavusansfile, MEDIA_ROOT+DIRECTORY+'templatefiles/'+dejavusansfile)
+      copy('templatefiles/generic/'+dejavusansboldfile, MEDIA_ROOT+DIRECTORY+'templatefiles/'+dejavusansboldfile)
       listofadditionalfiles = ('dejavusans-bold.xml', 'dejavusans.xml', )
       if path.exists('templatefiles'):
         templateset = djangoUserExtention.models.TemplateSet()
@@ -50,8 +50,8 @@ class Command(BaseCommand):
         if (path.exists(MEDIA_ROOT+DIRECTORY+'templatefiles') == False):
           mkdir(MEDIA_ROOT+DIRECTORY+'templatefiles')
         for template in listoftemplatefiles:
-          if path.exists(PROJECT_ROOT+'templatefiles/'+listoftemplatefiles[template]):
-            copy('templatefiles/'+listoftemplatefiles[template], MEDIA_ROOT+DIRECTORY+'templatefiles/'+listoftemplatefiles[template])
+          if path.exists(PROJECT_ROOT+'templatefiles/en/'+listoftemplatefiles[template]):
+            copy('templatefiles/en/'+listoftemplatefiles[template], MEDIA_ROOT+DIRECTORY+'templatefiles/'+listoftemplatefiles[template])
             xslfile = djangoUserExtention.models.XSLFile()
             xslfile.title = template
             xslfile.xslfile = DIRECTORY+'templatefiles/'+listoftemplatefiles[template]
