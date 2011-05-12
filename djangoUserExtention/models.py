@@ -33,6 +33,7 @@ class UserExtention(models.Model):
       return str(self.id) + ' ' + self.user.__unicode__()
       
 class TemplateSet(models.Model):
+   organisiationname = models.CharField(verbose_name = _("Name of the Organisation"), max_length=200)
    title = models.CharField(verbose_name = _("Title"), max_length=100)
    invoiceXSLFile = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Invoice"), related_name="db_reltemplateinvoice")
    quoteXSLFile = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Quote"), related_name="db_reltemplatequote")
