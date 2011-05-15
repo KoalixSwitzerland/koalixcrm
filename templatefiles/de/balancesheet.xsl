@@ -101,7 +101,7 @@
                 </fo:table-cell>
              </fo:table-header>
               <xsl:choose>
-                  <xsl:when test="Account[accountType='P']/None">-</xsl:when> 
+                  <xsl:when test="Account[accountType='A']/None">-</xsl:when> 
                   <xsl:otherwise>
           <fo:table-body font-size="9pt"
                          font-family="BitstreamVeraSans">
@@ -155,7 +155,7 @@
                       Wert
                    </fo:block>
                 </fo:table-cell>
-         <xsl:for-each select="Account[@accountType='P']">
+         <xsl:for-each select="Account[@accountType='L']">
           <xsl:sort select="AccountNumber" data-type="number"/>
              <fo:table-row keep-together="always">
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">

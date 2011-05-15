@@ -191,7 +191,7 @@
               text-align="left"
               font-weight="bold"
               margin-top="1cm">
-        Rechnung RE-<xsl:value-of select="object[@model='crm.salescontract']/@pk"/>
+        Invoice IN-<xsl:value-of select="object[@model='crm.salescontract']/@pk"/>
        </fo:block>
         <fo:block font-size="9pt"
               font-family="BitstreamVeraSans"

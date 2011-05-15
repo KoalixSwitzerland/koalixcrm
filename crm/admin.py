@@ -244,8 +244,12 @@ class OptionInvoice(admin.ModelAdmin):
    inlines = [SalesContractInlinePosition, SalesContractPostalAddress, SalesContractPhoneAddress, SalesContractEmailAddress]
 
    def save_model(self, request, obj, form, change):
-      obj.staff = request.user
-      obj.save()
+     if (change == True):
+       obj.lastmodifiedby = request.user
+     else:
+       obj.lastmodifiedby = request.user
+       obj.staff = request.user
+     obj.save()
       
    def recalculatePrices(self, request, queryset):
      try:

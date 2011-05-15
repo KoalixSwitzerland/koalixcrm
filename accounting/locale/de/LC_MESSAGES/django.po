@@ -8,107 +8,148 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-13 20:24+0200\n"
+"POT-Creation-Date: 2011-05-16 01:10+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: admin.py:13 admin.py:24
+#: admin.py:24 admin.py:38
 msgid "Basic"
 msgstr "Grundlagen"
 
-#: admin.py:31
+#: admin.py:45 admin.py:70
 msgid "Basics"
 msgstr "Grundlagen"
 
-#: admin.py:41
+#: admin.py:56
 msgid "Create PDF of Balance Sheet"
 msgstr "Erzeuge ein PDF der Bilanz"
 
-#: models.py:12
+#: admin.py:62
+msgid "Create PDF of Profit Loss Statement Sheet"
+msgstr "Erzeuge ein PDF der Erfolgsrechnung"
+
+#: models.py:17
 msgid "Title"
 msgstr "Titel"
 
-#: models.py:13
+#: models.py:18
 msgid "Begin"
 msgstr "Anfang"
 
-#: models.py:14
+#: models.py:19
 msgid "End"
 msgstr "Ende"
 
-#: models.py:60
+#: models.py:137
 msgid "Accounting Calculation Unit"
 msgstr "Geschäftsjahr/quartal"
 
-#: models.py:61
+#: models.py:138
 msgid "Accounting Calculation Units"
 msgstr "Geschäftsjahre/quartale"
 
-#: models.py:64
+#: models.py:141
 msgid "Account Number"
 msgstr "Kontonummer"
 
-#: models.py:65
+#: models.py:142
 msgid "Account Title"
 msgstr "Kontobezeichnung"
 
-#: models.py:66
+#: models.py:143
 msgid "Account Type"
 msgstr "Kontotyp"
 
-#: models.py:90 models.py:91
+#: models.py:144
+msgid "Is The Open Liabilities Account"
+msgstr "Konto für offene Rechungen"
+
+#: models.py:146
+msgid "Is The Open Interests Account"
+msgstr "Konto für offene Forderungen"
+
+#: models.py:148
+msgid "Is a Product Inventory Account"
+msgstr "Konto für Lager"
+
+#: models.py:150
+msgid "Is a Customer Payment Account"
+msgstr "Konto für Kundeneinzahlungen"
+
+#: models.py:183 models.py:184
 msgid "Account"
 msgstr "Konto"
 
-#: models.py:95
+#: models.py:188
+msgid "Product Categorie Title"
+msgstr "Produktekategorie"
+
+#: models.py:189
+msgid "Profit Account"
+msgstr "Ertrag Konto"
+
+#: models.py:190
+msgid "Loss Account"
+msgstr "Aufwand Konto"
+
+#: models.py:195 models.py:196
+msgid "Product Categorie"
+msgstr "Produktekategorie"
+
+#: models.py:201
 msgid "From Account"
 msgstr "Vom Konto (Soll)"
 
-#: models.py:96
+#: models.py:202
 msgid "To Account"
 msgstr "Zu Konto (Haben)"
 
-#: models.py:97
+#: models.py:203
 msgid "Amount"
 msgstr "Betrag"
 
-#: models.py:98
+#: models.py:204
 msgid "Description"
 msgstr "Beschreibung"
 
-#: models.py:100
+#: models.py:205
+msgid "Booking Reference"
+msgstr "Buchungsreferenz"
+
+#: models.py:206
 msgid "Booking at"
 msgstr "Buchung am"
 
-#: models.py:101
+#: models.py:207
 msgid "AccountingCalculationUnit"
 msgstr "Geschäftsjahr/quartal"
 
-#: models.py:102
+#: models.py:208
 msgid "Reference Staff"
 msgstr "Zuständiger Mitarbeiter"
 
-#: models.py:103
+#: models.py:209
 msgid "Created at"
 msgstr "Erstellt am"
 
-#: models.py:104
+#: models.py:210
 msgid "Last modified"
 msgstr "Zuletzt verändert"
 
-#: models.py:105
+#: models.py:211
 msgid "Last modified by"
 msgstr "Zuletzt verändert von"
 
-#: models.py:112
+#: models.py:219
 msgid "Booking"
 msgstr "Buchung"
 
-#: models.py:113
+#: models.py:220
 msgid "Bookings"
 msgstr "Buchungen"
 
@@ -121,12 +162,10 @@ msgid "Spendings"
 msgstr "Aufwand (Ausgaben)"
 
 #: const/accountTypeChoices.py:8
-msgid "Passiv"
-msgstr "Passiva (Schulden)"
+msgid "Liabilities"
+msgstr "Passiva"
 
 #: const/accountTypeChoices.py:9
-msgid "Activ"
-msgstr "Aktiva (Vermögen)"
+msgid "Assets"
+msgstr "Aktiva"
 
-#~ msgid "Balance Sheet PDF created"
-#~ msgstr "PDF der Bilanz erzeugt"

@@ -27,7 +27,7 @@ class AccountingCalculationUnit(models.Model):
     calculationUnitName.appendChild(doc.createTextNode(self.__unicode__()))
     main.appendChild(calculationUnitName)
     organisiationname = doc.createElement("organisiationname")
-    organisiationname.appendChild(doc.createTextNode(settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.organisiationname))
+    organisiationname.appendChild(doc.createTextNode(settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.organisationname))
     main.appendChild(organisiationname)
     calculationUnitTo = doc.createElement("calculationUnitTo")
     calculationUnitTo.appendChild(doc.createTextNode(self.end.year.__str__()))
@@ -58,7 +58,7 @@ class AccountingCalculationUnit(models.Model):
           main.appendChild(currentAccountElement)
           if account.accountType == "A":
             overallvalue = overallvalue + currentValue;
-          if account.accountType == "P":
+          if account.accountType == "L":
             overallvalue = overallvalue - currentValue;
     profitloss = doc.createElement("ProfitLoss")
     profitloss.appendChild(doc.createTextNode(overallvalue.__str__()))
@@ -141,7 +141,7 @@ class Account(models.Model):
    accountNumber = models.IntegerField(verbose_name=_("Account Number"))
    title = models.CharField(verbose_name=_("Account Title"), max_length=50)
    accountType = models.CharField(verbose_name=_("Account Type"), max_length=1, choices=ACCOUNTTYPECHOICES)
-   isopenreliabilitiesaccount = models.BooleanField(verbose_name=_("Is The Open Reliabilities Account"))
+   isopenreliabilitiesaccount = models.BooleanField(verbose_name=_("Is The Open Liabilities Account"))
    # TODO: There may only be one isopenreliabilitiesaccount and it must be an activa
    isopeninterestaccount = models.BooleanField(verbose_name=_("Is The Open Interests Account"))
    # TODO: There may only be one openinterestaccount and it must be an activa
