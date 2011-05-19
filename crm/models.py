@@ -83,14 +83,14 @@ class Contact(models.Model):
       verbose_name = _('Contact')
       verbose_name_plural = _('Contact')
 
-class ModeOfPayment(models.Model):
+class CustomerBillingCycle(models.Model):
    name = models.CharField(max_length=300, verbose_name = _("Name"))
    timeToPaymentDate = models.IntegerField(verbose_name = _("Days To Payment Date"))
    class Meta:
       app_label = "crm"
       #app_label_koalix = _('Customer Relationship Management (CRM)')
-      verbose_name = _('Mode of Payment')
-      verbose_name_plural = _('Modes of Payment')
+      verbose_name = _('Customer Billing Cycle')
+      verbose_name_plural = _('Customer Billing Cycle')
 
    def __unicode__(self):
       return str(self.id) + ' ' + self.name
@@ -108,7 +108,7 @@ class CustomerGroup(models.Model):
       verbose_name_plural = _('Customer Groups')
 
 class Customer(Contact):
-   defaultModeOfPayment = models.ForeignKey('ModeOfPayment', verbose_name= _('Default Mode of Payment'))
+   defaultCustomerBillingCycle = models.ForeignKey('CustomerBillingCycle', verbose_name= _('Default Billing Cycle'))
    ismemberof = models.ManyToManyField(CustomerGroup, verbose_name = _('Is member of'), blank=True, null=True)
    
    def createContract(self):
@@ -142,22 +142,13 @@ class Customer(Contact):
    def __unicode__(self):
       return str(self.id) + ' ' + self.name
 
-class Distributor(Contact):
+class Supplier(Contact):
+   offersShipmentToCustomers = models.BooleanField(verbose_name=_("Offers Shipment to Customer"))
    class Meta:
       app_label = "crm"
       #app_label_koalix = _('Customer Relationship Management (CRM)')
-      verbose_name = _('Distributor')
-      verbose_name_plural = _('Distributors')
-
-   def __unicode__(self):
-      return str(self.id) + ' ' + self.name
-
-class ShipmentPartner(Contact):
-   class Meta:
-      app_label = "crm"
-      #app_label_koalix = _('Customer Relationship Management (CRM)')
-      verbose_name = _('Shipment Partner')
-      verbose_name_plural = _('Shipment Partner')
+      verbose_name = _('Supplier')
+      verbose_name_plural = _('Supplier')
 
    def __unicode__(self):
       return str(self.id) + ' ' + self.name
@@ -166,7 +157,7 @@ class Contract(models.Model):
    staff = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True, verbose_name = _("Staff"), related_name="db_relcontractstaff", null=True)
    description = models.TextField(verbose_name = _("Description"))
    defaultcustomer = models.ForeignKey(Customer, verbose_name = _("Default Customer"), null=True, blank=True)
-   defaultdistributor = models.ForeignKey(Distributor, verbose_name = _("Default Distributor"), null=True, blank=True)
+   defaultSupplier = models.ForeignKey(Supplier, verbose_name = _("Default Supplier"), null=True, blank=True)
    defaultcurrency = models.ForeignKey(Currency, verbose_name=_("Default Currency"), blank=False, null=False)
    dateofcreation = models.DateTimeField(verbose_name = _("Created at"), auto_now=True)
    lastmodification = models.DateTimeField(verbose_name = _("Last modified"), auto_now_add=True)
@@ -186,7 +177,7 @@ class Contract(models.Model):
       invoice.customer = self.defaultcustomer
       invoice.status = 'C'
       invoice.currency = self.defaultcurrency
-      invoice.payableuntil = date.today()+timedelta(days=self.defaultcustomer.defaultModeOfPayment.timeToPaymentDate)
+      invoice.payableuntil = date.today()+timedelta(days=self.defaultcustomer.defaultCustomerBillingCycle.timeToPaymentDate)
       invoice.dateofcreation = date.today().__str__()
       invoice.save()
       return invoice
@@ -210,7 +201,7 @@ class Contract(models.Model):
       purchaseorder.description = self.description
       purchaseorder.discount = 0
       purchaseorder.currency = self.defaultcurrency
-      purchaseorder.distributor = self.defaultdistributor
+      purchaseorder.supplier = self.defaultSupplier
       purchaseorder.status = 'C'
       purchaseorder.dateofcreation = date.today().__str__()
 # TODO: today is not correct it has to be replaced
@@ -223,7 +214,7 @@ class Contract(models.Model):
 class PurchaseOrder(models.Model):
   contract = models.ForeignKey(Contract, verbose_name = _("Contract"))
   externalReference = models.CharField(verbose_name = _("External Reference"), max_length=100, blank=True, null=True)
-  distributor = models.ForeignKey(Distributor, verbose_name = _("Distributor"))
+  supplier = models.ForeignKey(Supplier, verbose_name = _("Supplier"))
   description = models.CharField(verbose_name=_("Description"), max_length=100, blank=True, null=True)
   lastPricingDate = models.DateField(verbose_name = _("Last Pricing Date"), blank=True, null=True)
   lastCalculatedPrice = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Price With Tax"), blank=True, null=True)
@@ -271,7 +262,7 @@ class PurchaseOrder(models.Model):
     xml_serializer = XMLSerializer()
     out = open("/tmp/purchaseorder_"+str(self.id)+".xml", "w")
     objectsToSerialize = list(PurchaseOrder.objects.filter(id=self.id)) 
-    objectsToSerialize += list(Contact.objects.filter(id=self.distributor.id))
+    objectsToSerialize += list(Contact.objects.filter(id=self.supplier.id))
     objectsToSerialize += list(Currency.objects.filter(id=self.currency.id))
     objectsToSerialize += list(PurchaseOrderPosition.objects.filter(contract=self.id))
     for position in list(PurchaseOrderPosition.objects.filter(contract=self.id)):
@@ -290,8 +281,8 @@ class PurchaseOrder(models.Model):
       raise TemplateSetMissing(_("During PurchaseOrder PDF Export"))
     objectsToSerialize += list(templateset)
     objectsToSerialize += list(auth.models.User.objects.filter(id=self.lastmodifiedby.id))
-    objectsToSerialize += list(PostalAddressForContact.objects.filter(person=self.distributor.id))
-    for address in list(PostalAddressForContact.objects.filter(person=self.distributor.id)):
+    objectsToSerialize += list(PostalAddressForContact.objects.filter(person=self.supplier.id))
+    for address in list(PostalAddressForContact.objects.filter(person=self.supplier.id)):
         objectsToSerialize += list(PostalAddress.objects.filter(id=address.id))
     xml_serializer.serialize(objectsToSerialize, stream=out, indent=3)
     out.close()
@@ -372,9 +363,9 @@ class Quote(SalesContract):
       invoice.status = 'C'
       invoice.derivatedFromQuote = self
       invoice.currency = self.currency
-      invoice.payableuntil = date.today()+timedelta(days=self.customer.defaultModeOfPayment.timeToPaymentDate)
+      invoice.payableuntil = date.today()+timedelta(days=self.customer.defaultCustomerBillingCycle.timeToPaymentDate)
       invoice.dateofcreation = date.today().__str__()
-      invoice.modeOfPayment = self.customer.defaultModeOfPayment
+      invoice.customerBillingCycle = self.customer.defaultCustomerBillingCycle
 # TODO: today is not correct it has to be replaced
       invoice.save()
       try:
@@ -389,7 +380,7 @@ class Quote(SalesContract):
             invoicePosition.product = quotePosition.product 
             invoicePosition.unit = quotePosition.unit 
             invoicePosition.sentOn = quotePosition.sentOn 
-            invoicePosition.shipmentPartner = quotePosition.shipmentPartner 
+            invoicePosition.supplier = quotePosition.supplier 
             invoicePosition.shipmentID = quotePosition.shipmentID 
             invoicePosition.overwriteProductPrice = quotePosition.overwriteProductPrice 
             invoicePosition.positionPricePerUnit = quotePosition.positionPricePerUnit 
@@ -744,7 +735,7 @@ class Position(models.Model):
    product = models.ForeignKey(Product, verbose_name = _("Product"), blank=True, null=True)
    unit = models.ForeignKey(Unit, verbose_name = _("Unit"), blank=True, null=True)
    sentOn = models.DateField(verbose_name = _("Shipment on"), blank=True, null=True)
-   shipmentPartner = models.ForeignKey(ShipmentPartner, verbose_name = _("Shipment Partner"), blank=True, null=True)
+   supplier = models.ForeignKey(Supplier, verbose_name = _("Shipment Supplier"), limit_choices_to = {'offersShipmentToCustomers': True}, blank=True, null=True)
    shipmentID = models.CharField(max_length=100, verbose_name = _("Shipment ID"), blank=True, null=True)
    overwriteProductPrice = models.BooleanField(verbose_name=_('Overwrite Product Price'))
    positionPricePerUnit = models.DecimalField(verbose_name=_("Price Per Unit"), max_digits=17, decimal_places=2, blank=True, null=True)

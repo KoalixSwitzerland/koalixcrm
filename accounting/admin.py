@@ -8,7 +8,7 @@ from django.contrib import admin
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 
-class CalculationUnitOptionBooking(admin.TabularInline):
+class AccountingPeriodBooking(admin.TabularInline):
    model = Booking
    extra = 1
    classes = ('collapse-open',)
@@ -21,7 +21,7 @@ class CalculationUnitOptionBooking(admin.TabularInline):
 
 class OptionBooking(admin.ModelAdmin):
    list_display = ('fromAccount', 'toAccount', 'amount', 'bookingDate', 'staff')
-   fieldsets = ((_('Basic'), {'fields' : ('fromAccount', 'toAccount', 'amount', 'bookingDate', 'staff', 'description', 'bookingReference', 'accountingCalculationUnit')}),)
+   fieldsets = ((_('Basic'), {'fields' : ('fromAccount', 'toAccount', 'amount', 'bookingDate', 'staff', 'description', 'bookingReference', 'accountingPeriod')}),)
    save_as = True
 
    def save_model(self, request, obj, form, change):
@@ -38,7 +38,7 @@ class OptionAccount(admin.ModelAdmin):
    fieldsets = ((_('Basic'), {'fields': ('accountNumber', 'accountType', 'title', 'isopenreliabilitiesaccount', 'isopeninterestaccount', 'isProductInventoryActiva', 'isACustomerPaymentAccount')}),)
    save_as = True
 
-class OptionAccountingCalculationUnit(admin.ModelAdmin):
+class OptionAccountingPeriod(admin.ModelAdmin):
    list_display = ('title', 'begin', 'end')
    list_display_links = ('title', 'begin', 'end')
    fieldsets = (
@@ -46,8 +46,18 @@ class OptionAccountingCalculationUnit(admin.ModelAdmin):
          'fields': ('title', 'begin', 'end')
       }),
    )
-   inlines = [CalculationUnitOptionBooking, ]
+   inlines = [AccountingPeriodBooking, ]
    save_as = True
+   
+   def save_formset(self, request, form, formset, change):
+    instances = formset.save(commit=False)
+    for instance in instances :
+      if (change == True):
+        instance.lastmodifiedby = request.user
+      else:
+        instance.lastmodifiedby = request.user
+        instance.staff = request.user
+      instance.save()
    
    def createBalanceSheetPDF(self, request, queryset):
       for obj in queryset:
@@ -76,4 +86,4 @@ class OptionProductCategorie(admin.ModelAdmin):
 admin.site.register(Account, OptionAccount)
 admin.site.register(Booking, OptionBooking)
 admin.site.register(ProductCategorie, OptionProductCategorie)
-admin.site.register(AccountingCalculationUnit, OptionAccountingCalculationUnit)
+admin.site.register(AccountingPeriod, OptionAccountingPeriod)

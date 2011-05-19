@@ -13,7 +13,7 @@ import settings
 import djangoUserExtention
 
    
-class AccountingCalculationUnit(models.Model):
+class AccountingPeriod(models.Model):
   title =  models.CharField(max_length=200, verbose_name=_("Title")) # For example "Year 2009", "1st Quarter 2009"
   begin = models.DateField(verbose_name=_("Begin"))
   end = models.DateField(verbose_name=_("End"))
@@ -23,21 +23,21 @@ class AccountingCalculationUnit(models.Model):
     out = open("/tmp/balancesheet_"+str(self.id)+".xml","w")
     doc = Document()
     main = doc.createElement("koalixaccountingbalacesheet")
-    calculationUnitName = doc.createElement("calculationUnitName")
-    calculationUnitName.appendChild(doc.createTextNode(self.__unicode__()))
-    main.appendChild(calculationUnitName)
+    accountingPeriodName = doc.createElement("accountingPeriodName")
+    accountingPeriodName.appendChild(doc.createTextNode(self.__unicode__()))
+    main.appendChild(accountingPeriodName)
     organisiationname = doc.createElement("organisiationname")
     organisiationname.appendChild(doc.createTextNode(settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.organisationname))
     main.appendChild(organisiationname)
-    calculationUnitTo = doc.createElement("calculationUnitTo")
-    calculationUnitTo.appendChild(doc.createTextNode(self.end.year.__str__()))
-    main.appendChild(calculationUnitTo)
-    calculationUnitFrom = doc.createElement("calculationUnitFrom")
-    calculationUnitFrom.appendChild(doc.createTextNode(self.begin.year.__str__()))
-    main.appendChild(calculationUnitFrom)
-    calculationUnitName = doc.createElement("headerpicture")
-    calculationUnitName.appendChild(doc.createTextNode(settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.logo.path))
-    main.appendChild(calculationUnitName)
+    accountingPeriodTo = doc.createElement("accountingPeriodTo")
+    accountingPeriodTo.appendChild(doc.createTextNode(self.end.year.__str__()))
+    main.appendChild(accountingPeriodTo)
+    accountingPeriodFrom = doc.createElement("accountingPeriodFrom")
+    accountingPeriodFrom.appendChild(doc.createTextNode(self.begin.year.__str__()))
+    main.appendChild(accountingPeriodFrom)
+    headerPicture = doc.createElement("headerpicture")
+    headerPicture.appendChild(doc.createTextNode(settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.logo.path))
+    main.appendChild(headerPicture)
     accountNumber = doc.createElement("AccountNumber")
     accounts = Account.objects.all()
     overallvalue = 0
@@ -77,21 +77,21 @@ class AccountingCalculationUnit(models.Model):
     out = open("/tmp/profitlossstatement_"+str(self.id)+".xml","w")
     doc = Document()
     main = doc.createElement("koalixaccountingprofitlossstatement")
-    calculationUnitName = doc.createElement("calculationUnitName")
-    calculationUnitName.appendChild(doc.createTextNode(self.__unicode__()))
-    main.appendChild(calculationUnitName)
+    accountingPeriodName = doc.createElement("accountingPeriodName")
+    accountingPeriodName.appendChild(doc.createTextNode(self.__unicode__()))
+    main.appendChild(accountingPeriodName)
     organisiationname = doc.createElement("organisiationname")
     organisiationname.appendChild(doc.createTextNode(settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.organisiationname))
     main.appendChild(organisiationname)
-    calculationUnitTo = doc.createElement("calculationUnitTo")
-    calculationUnitTo.appendChild(doc.createTextNode(self.end.year.__str__()))
-    main.appendChild(calculationUnitTo)
-    calculationUnitFrom = doc.createElement("calculationUnitFrom")
-    calculationUnitFrom.appendChild(doc.createTextNode(self.begin.year.__str__()))
-    main.appendChild(calculationUnitFrom)
-    calculationUnitName = doc.createElement("headerpicture")
-    calculationUnitName.appendChild(doc.createTextNode(settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.logo.path))
-    main.appendChild(calculationUnitName)
+    accountingPeriodTo = doc.createElement("accountingPeriodTo")
+    accountingPeriodTo.appendChild(doc.createTextNode(self.end.year.__str__()))
+    main.appendChild(accountingPeriodTo)
+    accountingPeriodFrom = doc.createElement("accountingPeriodFrom")
+    accountingPeriodFrom.appendChild(doc.createTextNode(self.begin.year.__str__()))
+    main.appendChild(accountingPeriodFrom)
+    accountingPeriodName = doc.createElement("headerpicture")
+    accountingPeriodName.appendChild(doc.createTextNode(settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.logo.path))
+    main.appendChild(accountingPeriodName)
     accountNumber = doc.createElement("AccountNumber")
     accounts = Account.objects.all()
     overallvalue = 0
@@ -129,13 +129,13 @@ class AccountingCalculationUnit(models.Model):
   def __unicode__(self):
       return  self.title
 
-# TODO: def createNewCalculationUnit() Neues Geschäftsjahr erstellen
+# TODO: def createNewAccountingPeriod() Neues Geschäftsjahr erstellen
    
   class Meta:
      app_label = "accounting"
      #app_label_koalix = _("Accounting")
-     verbose_name = _('Accounting Calculation Unit')
-     verbose_name_plural = _('Accounting Calculation Units')
+     verbose_name = _('Accounting Period')
+     verbose_name_plural = _('Accounting Periods')
             
 class Account(models.Model):
    accountNumber = models.IntegerField(verbose_name=_("Account Number"))
@@ -152,22 +152,21 @@ class Account(models.Model):
    
    def value(self):
       date.today()
-      AccountingCalculationUnit.objects.all()
-      sum = self.allBookings(fromAccount = False, accountingCalculationUnit = accountingCalculationUnit) - self.allBookings(fromAccount = True, accountingCalculationUnit = accountingCalculationUnit)
+      sum = self.allBookings(fromAccount = False, accountingPeriod = accountingPeriod) - self.allBookings(fromAccount = True, accountingPeriod = accountingPeriod)
       if (self.accountType == 'P' or self.accountType == 'E'):
         sum = 0 - sum
       return sum
       
-   def valueNow(self, accountingCalculationUnit):
-      sum = self.allBookings(fromAccount = False, accountingCalculationUnit = accountingCalculationUnit) - self.allBookings(fromAccount = True, accountingCalculationUnit = accountingCalculationUnit)
+   def valueNow(self, accountingPeriod):
+      sum = self.allBookings(fromAccount = False, accountingPeriod = accountingPeriod) - self.allBookings(fromAccount = True, accountingPeriod = accountingPeriod)
       return sum
 
-   def allBookings(self, fromAccount, accountingCalculationUnit):
+   def allBookings(self, fromAccount, accountingPeriod):
       sum = 0
       if (fromAccount == True):
-         bookings = Booking.objects.filter(fromAccount=self.id, accountingCalculationUnit=accountingCalculationUnit.id)
+         bookings = Booking.objects.filter(fromAccount=self.id, accountingPeriod=accountingPeriod.id)
       else:
-         bookings = Booking.objects.filter(toAccount=self.id, accountingCalculationUnit=accountingCalculationUnit.id)
+         bookings = Booking.objects.filter(toAccount=self.id, accountingPeriod=accountingPeriod.id)
       
       for booking in list(bookings):
          sum = sum + booking.amount
@@ -193,7 +192,7 @@ class ProductCategorie(models.Model):
       app_label = "accounting"
       #app_label_koalix = _("Accounting")
       verbose_name = _('Product Categorie')
-      verbose_name_plural = _('Product Categorie')
+      verbose_name_plural = _('Product Categories')
    def __unicode__(self):
       return  self.title
 
@@ -204,7 +203,7 @@ class Booking(models.Model):
    description = models.CharField(verbose_name=_("Description"), max_length=120, null=True, blank=True)
    bookingReference = models.ForeignKey('crm.Invoice', verbose_name=_("Booking Reference"), null=True, blank=True)
    bookingDate = models.DateTimeField(verbose_name = _("Booking at"))
-   accountingCalculationUnit = models.ForeignKey(AccountingCalculationUnit, verbose_name=_("AccountingCalculationUnit"))
+   accountingPeriod = models.ForeignKey(AccountingPeriod, verbose_name=_("AccountingPeriod"))
    staff = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True, verbose_name = _("Reference Staff"), related_name="db_booking_refstaff")
    dateofcreation = models.DateTimeField(verbose_name = _("Created at"), auto_now=True)
    lastmodification = models.DateTimeField(verbose_name = _("Last modified"), auto_now_add=True)
@@ -218,6 +217,8 @@ class Booking(models.Model):
       #app_label_koalix = _("Accounting")
       verbose_name = _('Booking')
       verbose_name_plural = _('Bookings')
+      
+      
 
 def preSaveCheckFlags(sender, instance, **kwarg):
    if (instance.isopenreliabilitiesaccount):

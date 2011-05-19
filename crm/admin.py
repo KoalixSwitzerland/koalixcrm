@@ -118,7 +118,7 @@ class SalesContractInlinePosition(admin.TabularInline):
     classes = ('collapse-open',)
     fieldsets = (
         ('', {
-            'fields': ('positionNumber', 'quantity', 'unit', 'product', 'description', 'discount', 'overwriteProductPrice', 'positionPricePerUnit', 'sentOn', 'shipmentPartner')
+            'fields': ('positionNumber', 'quantity', 'unit', 'product', 'description', 'discount', 'overwriteProductPrice', 'positionPricePerUnit', 'sentOn', 'supplier')
         }),
     )
     allow_add = True
@@ -160,7 +160,7 @@ class InlinePurchaseOrder(admin.TabularInline):
    extra = 1
    fieldsets = (
       (_('Basics'), {
-         'fields': ('description', 'contract', 'distributor', 'externalReference', 'status')
+         'fields': ('description', 'contract', 'supplier', 'externalReference', 'status')
       }),
       (_('Advanced (not editable)'), {
          'classes': ('collapse',),
@@ -170,14 +170,14 @@ class InlinePurchaseOrder(admin.TabularInline):
    allow_add = False
 
 class OptionContract(admin.ModelAdmin):
-   list_display = ('id', 'description', 'defaultcustomer', 'defaultdistributor', 'staff', 'defaultcurrency')
-   list_display_links = ('id','description', 'defaultcustomer', 'defaultdistributor', 'defaultcurrency')       
-   list_filter    = ('defaultcustomer', 'defaultdistributor', 'staff', 'defaultcurrency')
+   list_display = ('id', 'description', 'defaultcustomer', 'defaultSupplier', 'staff', 'defaultcurrency')
+   list_display_links = ('id','description', 'defaultcustomer', 'defaultSupplier', 'defaultcurrency')       
+   list_filter    = ('defaultcustomer', 'defaultSupplier', 'staff', 'defaultcurrency')
    ordering       = ('id', 'defaultcustomer', 'defaultcurrency')
    search_fields  = ('id','contract', 'defaultcurrency__description')
    fieldsets = (
       (_('Basics'), {
-         'fields': ('description', 'defaultcustomer', 'defaultdistributor', 'defaultcurrency')
+         'fields': ('description', 'defaultcustomer', 'defaultSupplier', 'defaultcurrency')
       }),
    )
    inlines = [ContractPostalAddress, ContractPhoneAddress, ContractEmailAddress, InlineQuote, InlineInvoice, InlinePurchaseOrder]
@@ -223,7 +223,7 @@ class PurchaseOrderInlinePosition(admin.TabularInline):
     classes = ('collapse-open',)
     fieldsets = (
         ('', {
-            'fields': ('positionNumber', 'quantity', 'unit', 'product', 'description', 'discount', 'overwriteProductPrice', 'positionPricePerUnit', 'sentOn', 'shipmentPartner')
+            'fields': ('positionNumber', 'quantity', 'unit', 'product', 'description', 'discount', 'overwriteProductPrice', 'positionPricePerUnit', 'sentOn', 'supplier')
         }),
     )
     allow_add = True
@@ -350,15 +350,15 @@ class OptionQuote(admin.ModelAdmin):
    actions = ['recalculatePrices', 'createInvoice', 'createQuotePDF', 'createPurchaseConfirmationPDF']
 
 class OptionPurchaseOrder(admin.ModelAdmin):
-   list_display = ('id', 'description', 'contract', 'distributor', 'status', 'currency', 'staff', 'lastmodifiedby', 'lastCalculatedPrice', 'lastPricingDate', 'lastmodification')
-   list_display_links = ('id','contract','distributor', )        
-   list_filter    = ('distributor', 'contract', 'staff', 'status', 'currency', 'lastmodification')
-   ordering       = ('contract', 'distributor', 'currency')
-   search_fields  = ('contract__id', 'distributor__name', 'currency_description')
+   list_display = ('id', 'description', 'contract', 'supplier', 'status', 'currency', 'staff', 'lastmodifiedby', 'lastCalculatedPrice', 'lastPricingDate', 'lastmodification')
+   list_display_links = ('id','contract','supplier', )        
+   list_filter    = ('supplier', 'contract', 'staff', 'status', 'currency', 'lastmodification')
+   ordering       = ('contract', 'supplier', 'currency')
+   search_fields  = ('contract__id', 'supplier__name', 'currency_description')
 
    fieldsets = (
       (_('Basics'), {
-         'fields': ('contract', 'description', 'distributor', 'currency', 'status')
+         'fields': ('contract', 'description', 'supplier', 'currency', 'status')
       }),
    )
    
@@ -442,8 +442,8 @@ class ContactEmailAddress(admin.TabularInline):
    allow_add = True
 
 class OptionCustomer(admin.ModelAdmin):
-   list_display = ('id', 'name', 'defaultModeOfPayment', )
-   fieldsets = (('', {'fields': ('name', 'defaultModeOfPayment', 'ismemberof',)}),)
+   list_display = ('id', 'name', 'defaultCustomerBillingCycle', )
+   fieldsets = (('', {'fields': ('name', 'defaultCustomerBillingCycle', 'ismemberof',)}),)
    allow_add = True   
    ordering       = ('id', 'name')
    search_fields  = ('id', 'name')
@@ -484,7 +484,7 @@ class OptionCustomerGroup(admin.ModelAdmin):
    fieldsets = (('', {'fields': ('name',)}),)
    allow_add = True
 
-class OptionDistributor(admin.ModelAdmin):
+class OptionSupplier(admin.ModelAdmin):
    list_display = ('id', 'name')
    fieldsets = (('', {'fields': ('name',)}),)
    inlines = [ContactPostalAddress, ContactPhoneAddress, ContactEmailAddress]
@@ -497,13 +497,6 @@ class OptionDistributor(admin.ModelAdmin):
        obj.lastmodifiedby = request.user
        obj.staff = request.user
      obj.save()
-
-
-class OptionShipmentPartner(admin.ModelAdmin):
-   list_display = ('id', 'name')
-   fieldsets = (('', {'fields': ('name',)}),)
-   inlines = [ContactPostalAddress, ContactPhoneAddress, ContactEmailAddress]
-   allow_add = True
    
 class OptionUnit(admin.ModelAdmin):
    list_display = ('id', 'description', 'shortName', 'isAFractionOf', 'fractionFactorToNextHigherUnit')
@@ -520,7 +513,7 @@ class OptionTax(admin.ModelAdmin):
    fieldsets = (('', {'fields': ('taxrate', 'name', 'accountActiva', 'accountPassiva')}),)
    allow_add = True
    
-class OptionModeOfPayment(admin.ModelAdmin):
+class OptionCustomerBillingCycle(admin.ModelAdmin):
    list_display = ('id', 'timeToPaymentDate', 'name')
    fieldsets = (('', {'fields': ('timeToPaymentDate', 'name',)}),)
    allow_add = True
@@ -528,14 +521,13 @@ class OptionModeOfPayment(admin.ModelAdmin):
  
 admin.site.register(Customer, OptionCustomer)
 admin.site.register(CustomerGroup, OptionCustomerGroup)
-admin.site.register(Distributor, OptionDistributor)
-admin.site.register(ShipmentPartner, OptionShipmentPartner)
+admin.site.register(Supplier, OptionSupplier)
 admin.site.register(Quote, OptionQuote)
 admin.site.register(Invoice, OptionInvoice)
 admin.site.register(Unit, OptionUnit)
 admin.site.register(Currency, OptionCurrency)
 admin.site.register(Tax, OptionTax)
-admin.site.register(ModeOfPayment, OptionModeOfPayment)
+admin.site.register(CustomerBillingCycle, OptionCustomerBillingCycle)
 admin.site.register(Contract, OptionContract)
 admin.site.register(PurchaseOrder, OptionPurchaseOrder)
 admin.site.register(Product, OptionProduct)
