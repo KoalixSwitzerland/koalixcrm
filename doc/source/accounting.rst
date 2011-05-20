@@ -6,6 +6,10 @@ Accounting
 Accouting Periods
 -------------------------
 
+An Accounting Period is a Timeframe in which you make your ProfitLoss Calculation. Its often called Fiscal Year or Quarter or Busniess Year. What ever you like.
+Accounting Periods have nothing to do with the Accounts but with the Bookings. When you open an existing Accounting Period you find a list of all Bookings during this Accounting below
+as inline table on the formular. Feel free to add here your bookings. Be carefull when you set up a new Accounting Period. koalixcrm does not check if you do bookings that are outside the 
+possible Accounting Period range nor does it check if there were two accounting periods for the same time set. This is up to the user to check that.
 
 
 Account
@@ -48,25 +52,25 @@ explain i make this with a "it support company". A IT Support company usualy pro
 support must be bought from an other company because you were not able to do everything yourself. Then the Hardware, you normaly dont produce hardware on your own, you buy them from a supplier.
 Now lets fix that to the following products you may offer to your customers.
 
-===========  ====================
-Product Nr.   Description
-===========  ====================
-1.            in-house work 
-2.            on-site work
-3.            computer hardware
-4.            voip hardware
-===========  ====================
++------------+---------------------+
+|Product Nr. |  Description        |
++=========== +=====================+
+|1.          |  in-house work      |
+|2.          |  on-site work       |
+|3.          |  computer hardware  |
+|4.          |  voip hardware      |
++------------+---------------------+
 
 To be able to do automatic accounting you will have to set the accounts where you want to book your income and our spendings for each product.
 
-===========  =================  ===================
-Product Nr.   Earnings Acc.      Spendings Acc.
-===========  =================  ====================
-1.            
-2.            Income 
-3.            Income Hardware    Spendings Hardware
-4.            Income Hardware    Spendings Hardware
-===========  =================  ====================
++------------+------------------+------------------------------------+
+|Product Nr. | Earnings Acc.    | Spendings Acc.                     |
++------------+------------------+------------------------------------+
+|1.          | Income Support   | Spending Support from third        |
+|2.          | Income Support   | Spending Support from third        |
+|3.          | Income Hardware  | Spendings Hardware                 |
+|4.          | Income Hardware  | Spendings Hardware                 |
++------------+------------------+------------------------------------+
 
 Now there are of cause more than four products in your inventary i hope and depending on your "love on details" you will have hundreds of them. Insted of setting the these
 Ernings and Spendings Accounts for every Prdoduct individualy koalixcrm has this useful product categories where you have to set it only once. After that you are able to 
