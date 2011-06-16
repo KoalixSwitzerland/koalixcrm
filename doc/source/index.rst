@@ -13,6 +13,7 @@ Contents:
    crm
    djangoUserExtention
    developer
+   faq
 
 Indices and tables
 ==================

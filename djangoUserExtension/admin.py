@@ -2,10 +2,10 @@
 
 from django.utils.translation import ugettext as _
 from django.contrib import admin
-from djangoUserExtention.models import *
+from djangoUserExtension.models import *
 
-class InlineUserExtentionPostalAddress(admin.StackedInline):
-   model = UserExtentionPostalAddress
+class InlineUserExtensionPostalAddress(admin.StackedInline):
+   model = UserExtensionPostalAddress
    extra = 1
    classes = ('collapse-open',)
    fieldsets = (
@@ -15,8 +15,8 @@ class InlineUserExtentionPostalAddress(admin.StackedInline):
    )
    allow_add = True
    
-class InlineUserExtentionPhoneAddress(admin.StackedInline):
-   model = UserExtentionPhoneAddress
+class InlineUserExtensionPhoneAddress(admin.StackedInline):
+   model = UserExtensionPhoneAddress
    extra = 1
    classes = ('collapse-open',)
    fieldsets = (
@@ -26,8 +26,8 @@ class InlineUserExtentionPhoneAddress(admin.StackedInline):
    )
    allow_add = True
    
-class InlineUserExtentionEmailAddress(admin.StackedInline):
-   model = UserExtentionEmailAddress
+class InlineUserExtensionEmailAddress(admin.StackedInline):
+   model = UserExtensionEmailAddress
    extra = 1
    classes = ('collapse-open',)
    fieldsets = (
@@ -37,7 +37,7 @@ class InlineUserExtentionEmailAddress(admin.StackedInline):
    )
    allow_add = True
    
-class OptionUserExtention(admin.ModelAdmin):
+class OptionUserExtension(admin.ModelAdmin):
    list_display = ('id', 'user', 'defaultTemplateSet')
    list_display_links = ('id', 'user')       
    list_filter    = ('user', 'defaultTemplateSet')
@@ -49,7 +49,7 @@ class OptionUserExtention(admin.ModelAdmin):
       }),
    )
    save_as = True
-   inlines = [InlineUserExtentionPostalAddress, InlineUserExtentionPhoneAddress, InlineUserExtentionEmailAddress]
+   inlines = [InlineUserExtensionPostalAddress, InlineUserExtensionPhoneAddress, InlineUserExtensionEmailAddress]
    
 class OptionTemplateSet(admin.ModelAdmin):
    list_display = ('id', 'title')
@@ -82,6 +82,6 @@ class OptionXSLFile(admin.ModelAdmin):
    
    
 
-admin.site.register(UserExtention, OptionUserExtention)
+admin.site.register(UserExtension, OptionUserExtension)
 admin.site.register(TemplateSet, OptionTemplateSet)
 admin.site.register(XSLFile, OptionXSLFile)

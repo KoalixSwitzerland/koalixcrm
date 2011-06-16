@@ -4,7 +4,7 @@ from django.http import Http404
 from crm.models import *
 from django.http import HttpResponse
 from exceptions import TemplateSetMissing
-from exceptions import UserExtentionMissing
+from exceptions import UserExtensionMissing
 from django.core.servers.basehttp import FileWrapper
 
 def createQuotePDF(request, quoteid):
@@ -14,7 +14,7 @@ def createQuotePDF(request, quoteid):
    response = HttpResponse(FileWrapper(file(pdf)), mimetype='application/pdf')
    response['Content-Length'] = path.getsize(pdf)
    return response
-  except (TemplateSetMissing, UserExtentionMissing), e:
+  except (TemplateSetMissing, UserExtensionMissing), e:
     raise Http404
    
 def createPurchaseConfirmationPDF(request, quoteid):
@@ -24,7 +24,7 @@ def createPurchaseConfirmationPDF(request, quoteid):
    response = HttpResponse(FileWrapper(file(pdf)), mimetype='application/pdf')
    response['Content-Length'] = path.getsize(pdf)
    return response
-  except (TemplateSetMissing, UserExtentionMissing), e:
+  except (TemplateSetMissing, UserExtensionMissing), e:
     raise Http404
    
 def createInvoicePDF(request, invoiceid):
@@ -34,7 +34,7 @@ def createInvoicePDF(request, invoiceid):
     response = HttpResponse(FileWrapper(file(pdf)), mimetype='application/pdf')
     response['Content-Length'] = path.getsize(pdf)
     return response
-  except (TemplateSetMissing, UserExtentionMissing), e:
+  except (TemplateSetMissing, UserExtensionMissing), e:
     raise Http404
   
 def createDeliveryOrderPDF(request, invoiceid):
@@ -44,7 +44,7 @@ def createDeliveryOrderPDF(request, invoiceid):
     response = HttpResponse(FileWrapper(file(pdf)), mimetype='application/pdf')
     response['Content-Length'] = path.getsize(pdf)
     return response
-  except (TemplateSetMissing, UserExtentionMissing), e:
+  except (TemplateSetMissing, UserExtensionMissing), e:
     raise Http404
  
 def createPurchaseOrderPDF(request, purchaseorderid):
@@ -53,7 +53,7 @@ def createPurchaseOrderPDF(request, purchaseorderid):
     response = HttpResponse(FileWrapper(file(pdf)), mimetype='application/pdf')
     response['Content-Length'] = path.getsize(pdf)
     return response
-  except (TemplateSetMissing, UserExtentionMissing), e:
+  except (TemplateSetMissing, UserExtensionMissing), e:
     raise Http404
    
 def selectaddress(invoiceid):

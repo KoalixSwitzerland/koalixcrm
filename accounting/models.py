@@ -10,7 +10,7 @@ from django.db.models import signals
 from xml.dom.minidom import Document
 from datetime import *
 import settings
-import djangoUserExtention
+import djangoUserExtension
 
    
 class AccountingPeriod(models.Model):
@@ -19,7 +19,7 @@ class AccountingPeriod(models.Model):
   end = models.DateField(verbose_name=_("End"))
             
   def createBalanceSheetPDF(self, raisedbyuser):
-    userExtention = djangoUserExtention.models.UserExtention.objects.filter(user=raisedbyuser.id)
+    userExtension = djangoUserExtension.models.UserExtension.objects.filter(user=raisedbyuser.id)
     out = open("/tmp/balancesheet_"+str(self.id)+".xml","w")
     doc = Document()
     main = doc.createElement("koalixaccountingbalacesheet")
@@ -27,7 +27,7 @@ class AccountingPeriod(models.Model):
     accountingPeriodName.appendChild(doc.createTextNode(self.__unicode__()))
     main.appendChild(accountingPeriodName)
     organisiationname = doc.createElement("organisiationname")
-    organisiationname.appendChild(doc.createTextNode(settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.organisationname))
+    organisiationname.appendChild(doc.createTextNode(settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.organisationname))
     main.appendChild(organisiationname)
     accountingPeriodTo = doc.createElement("accountingPeriodTo")
     accountingPeriodTo.appendChild(doc.createTextNode(self.end.year.__str__()))
@@ -36,7 +36,7 @@ class AccountingPeriod(models.Model):
     accountingPeriodFrom.appendChild(doc.createTextNode(self.begin.year.__str__()))
     main.appendChild(accountingPeriodFrom)
     headerPicture = doc.createElement("headerpicture")
-    headerPicture.appendChild(doc.createTextNode(settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.logo.path))
+    headerPicture.appendChild(doc.createTextNode(settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.logo.path))
     main.appendChild(headerPicture)
     accountNumber = doc.createElement("AccountNumber")
     accounts = Account.objects.all()
@@ -67,13 +67,13 @@ class AccountingPeriod(models.Model):
     out.write(doc.toxml("utf-8"))
     out.close()
     log = open("/tmp/log.txt", "w")
-    log.write('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/balancesheet_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.balancesheetXSLFile.xslfile.path+' -pdf /tmp/balancesheet_'+str(self.id)+'.pdf"')
+    log.write('bash -c "fop -c '+settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/balancesheet_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.balancesheetXSLFile.xslfile.path+' -pdf /tmp/balancesheet_'+str(self.id)+'.pdf"')
     log.close()
-    system ('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/balancesheet_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.balancesheetXSLFile.xslfile.path+' -pdf /tmp/balancesheet_'+str(self.id)+'.pdf"')
+    system ('bash -c "fop -c '+settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/balancesheet_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.balancesheetXSLFile.xslfile.path+' -pdf /tmp/balancesheet_'+str(self.id)+'.pdf"')
     return "/tmp/balancesheet_"+str(self.id)+".pdf"
     
   def createProfitLossStatementPDF(self, raisedbyuser):
-    userExtention = djangoUserExtention.models.UserExtention.objects.filter(user=raisedbyuser.id)
+    userExtension = djangoUserExtension.models.UserExtension.objects.filter(user=raisedbyuser.id)
     out = open("/tmp/profitlossstatement_"+str(self.id)+".xml","w")
     doc = Document()
     main = doc.createElement("koalixaccountingprofitlossstatement")
@@ -81,7 +81,7 @@ class AccountingPeriod(models.Model):
     accountingPeriodName.appendChild(doc.createTextNode(self.__unicode__()))
     main.appendChild(accountingPeriodName)
     organisiationname = doc.createElement("organisiationname")
-    organisiationname.appendChild(doc.createTextNode(settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.organisiationname))
+    organisiationname.appendChild(doc.createTextNode(settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.organisiationname))
     main.appendChild(organisiationname)
     accountingPeriodTo = doc.createElement("accountingPeriodTo")
     accountingPeriodTo.appendChild(doc.createTextNode(self.end.year.__str__()))
@@ -90,7 +90,7 @@ class AccountingPeriod(models.Model):
     accountingPeriodFrom.appendChild(doc.createTextNode(self.begin.year.__str__()))
     main.appendChild(accountingPeriodFrom)
     accountingPeriodName = doc.createElement("headerpicture")
-    accountingPeriodName.appendChild(doc.createTextNode(settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.logo.path))
+    accountingPeriodName.appendChild(doc.createTextNode(settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.logo.path))
     main.appendChild(accountingPeriodName)
     accountNumber = doc.createElement("AccountNumber")
     accounts = Account.objects.all()
@@ -121,9 +121,9 @@ class AccountingPeriod(models.Model):
     out.write(doc.toxml("utf-8"))
     out.close()
     log = open("/tmp/log.txt", "w")
-    log.write('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/profitlossstatement_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.profitLossStatementXSLFile.xslfile.path+' -pdf /tmp/profitlossstatement_'+str(self.id)+'.pdf"')
+    log.write('bash -c "fop -c '+settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/profitlossstatement_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.profitLossStatementXSLFile.xslfile.path+' -pdf /tmp/profitlossstatement_'+str(self.id)+'.pdf"')
     log.close()
-    system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/profitlossstatement_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.profitLossStatementXSLFile.xslfile.path+' -pdf /tmp/profitlossstatement_'+str(self.id)+'.pdf"')
+    system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/profitlossstatement_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.profitLossStatementXSLFile.xslfile.path+' -pdf /tmp/profitlossstatement_'+str(self.id)+'.pdf"')
     return "/tmp/profitlossstatement_"+str(self.id)+".pdf"
     
   def __unicode__(self):

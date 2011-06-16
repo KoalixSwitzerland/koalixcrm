@@ -12,8 +12,8 @@ from django.utils.translation import ugettext as _
 from decimal import Decimal
 from django.core import serializers
 from exceptions import TemplateSetMissing
-from exceptions import UserExtentionMissing
-import djangoUserExtention
+from exceptions import UserExtensionMissing
+import djangoUserExtension
 from django.contrib import auth
 from lxml import etree
 import accounting 
@@ -270,13 +270,13 @@ class PurchaseOrder(models.Model):
       objectsToSerialize += list(Product.objects.filter(id=position.product.id))
       objectsToSerialize += list(Unit.objects.filter(id=position.unit.id))
     objectsToSerialize += list(auth.models.User.objects.filter(id=self.staff.id))
-    userExtention = djangoUserExtention.models.UserExtention.objects.filter(user=self.staff.id)
-    if (len(userExtention) == 0):
-      raise UserExtentionMissing(_("During PurchaseOrder PDF Export"))
-    phoneAddress = djangoUserExtention.models.UserExtentionPhoneAddress.objects.filter(userExtention=userExtention.id)
-    objectsToSerialize += list(userExtention)
+    userExtension = djangoUserExtension.models.UserExtension.objects.filter(user=self.staff.id)
+    if (len(userExtension) == 0):
+      raise UserExtensionMissing(_("During PurchaseOrder PDF Export"))
+    phoneAddress = djangoUserExtension.models.UserExtensionPhoneAddress.objects.filter(userExtension=userExtension.id)
+    objectsToSerialize += list(userExtension)
     objectsToSerialize += list(phoneAddress)
-    templateset = djangoUserExtention.models.TemplateSet.objects.filter(id=userExtention[0].defaultTemplateSet.id)
+    templateset = djangoUserExtension.models.TemplateSet.objects.filter(id=userExtension[0].defaultTemplateSet.id)
     if (len(userExtentemplatesettion) == 0):
       raise TemplateSetMissing(_("During PurchaseOrder PDF Export"))
     objectsToSerialize += list(templateset)
@@ -286,7 +286,7 @@ class PurchaseOrder(models.Model):
         objectsToSerialize += list(PostalAddress.objects.filter(id=address.id))
     xml_serializer.serialize(objectsToSerialize, stream=out, indent=3)
     out.close()
-    system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile.path+'  -xml /tmp/purchaseorder_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.purchaseorderXSLFile.xslfile.path+' -pdf /tmp/purchaseorder_'+str(self.id)+'.pdf"')
+    system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+'  -xml /tmp/purchaseorder_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.purchaseorderXSLFile.xslfile.path+' -pdf /tmp/purchaseorder_'+str(self.id)+'.pdf"')
     return "/tmp/purchaseorder_"+str(self.id)+".pdf"   
 
   class Meta:
@@ -407,13 +407,13 @@ class Quote(SalesContract):
          objectsToSerialize += list(Product.objects.filter(id=position.product.id))
          objectsToSerialize += list(Unit.objects.filter(id=position.unit.id))
      objectsToSerialize += list(auth.models.User.objects.filter(id=self.staff.id))
-     userExtention = djangoUserExtention.models.UserExtention.objects.filter(user=self.staff.id)
-     if (len(userExtention) == 0):
-      raise UserExtentionMissing(_("During Quote PDF Export"))
-     phoneAddress = djangoUserExtention.models.UserExtentionPhoneAddress.objects.filter(userExtention=userExtention[0].id)
-     objectsToSerialize += list(userExtention)
+     userExtension = djangoUserExtension.models.UserExtension.objects.filter(user=self.staff.id)
+     if (len(userExtension) == 0):
+      raise UserExtensionMissing(_("During Quote PDF Export"))
+     phoneAddress = djangoUserExtension.models.UserExtensionPhoneAddress.objects.filter(userExtension=userExtension[0].id)
+     objectsToSerialize += list(userExtension)
      objectsToSerialize += list(PhoneAddress.objects.filter(id=phoneAddress[0].id))
-     templateset = djangoUserExtention.models.TemplateSet.objects.filter(id=userExtention[0].defaultTemplateSet.id)
+     templateset = djangoUserExtension.models.TemplateSet.objects.filter(id=userExtension[0].defaultTemplateSet.id)
      if (len(templateset) == 0):
       raise TemplateSetMissing(_("During Quote PDF Export"))
      objectsToSerialize += list(templateset)
@@ -429,12 +429,12 @@ class Quote(SalesContract):
      projectroot.text = settings.PROJECT_ROOT
      xml.write("/tmp/quote_"+str(self.id)+".xml")
      log = open("/tmp/log.txt", "w")
-     log.write('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/quote_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.quoteXSLFile.xslfile.path+' -pdf /tmp/quote_'+str(self.id)+'.pdf"')
+     log.write('bash -c "fop -c '+settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/quote_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.quoteXSLFile.xslfile.path+' -pdf /tmp/quote_'+str(self.id)+'.pdf"')
      log.close()
      if (purchaseconfirmation == False) :
-        system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/quote_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.quoteXSLFile.xslfile.path+' -pdf /tmp/quote_'+str(self.id)+'.pdf"')
+        system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/quote_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.quoteXSLFile.xslfile.path+' -pdf /tmp/quote_'+str(self.id)+'.pdf"')
      else:
-        system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile.path+'  -xml /tmp/quote_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.purchaseconfirmationXSLFile.xslfile.path+' -pdf /tmp/purchaseconfirmation_'+str(self.id)+'.pdf"')
+        system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+'  -xml /tmp/quote_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.purchaseconfirmationXSLFile.xslfile.path+' -pdf /tmp/purchaseconfirmation_'+str(self.id)+'.pdf"')
      return "/tmp/quote_"+str(self.id)+".pdf"
      
    def __unicode__(self):
@@ -507,13 +507,13 @@ class Invoice(SalesContract):
          objectsToSerialize += list(Product.objects.filter(id=position.product.id))
          objectsToSerialize += list(Unit.objects.filter(id=position.unit.id))
      objectsToSerialize += list(auth.models.User.objects.filter(id=self.staff.id))
-     userExtention = djangoUserExtention.models.UserExtention.objects.filter(user=self.staff.id)
-     if (len(userExtention) == 0):
-      raise UserExtentionMissing(_("During Invoice PDF Export"))
-     phoneAddress = djangoUserExtention.models.UserExtentionPhoneAddress.objects.filter(userExtention=userExtention[0].id)
-     objectsToSerialize += list(userExtention)
+     userExtension = djangoUserExtension.models.UserExtension.objects.filter(user=self.staff.id)
+     if (len(userExtension) == 0):
+      raise UserExtensionMissing(_("During Invoice PDF Export"))
+     phoneAddress = djangoUserExtension.models.UserExtensionPhoneAddress.objects.filter(userExtension=userExtension[0].id)
+     objectsToSerialize += list(userExtension)
      objectsToSerialize += list(PhoneAddress.objects.filter(id=phoneAddress[0].id))
-     templateset = djangoUserExtention.models.TemplateSet.objects.filter(id=userExtention[0].defaultTemplateSet.id)
+     templateset = djangoUserExtension.models.TemplateSet.objects.filter(id=userExtension[0].defaultTemplateSet.id)
      if (len(templateset) == 0):
       raise TemplateSetMissing(_("During Invoice PDF Export"))
      objectsToSerialize += list(templateset)
@@ -529,12 +529,12 @@ class Invoice(SalesContract):
      projectroot.text = settings.PROJECT_ROOT
      xml.write("/tmp/invoice_"+str(self.id)+".xml")
      log = open("/tmp/log.txt", "w")
-     log.write('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/invoice_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.invoiceXSLFile.xslfile.path+' -pdf /tmp/invoice_'+str(self.id)+'.pdf"')
+     log.write('bash -c "fop -c '+settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/invoice_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.invoiceXSLFile.xslfile.path+' -pdf /tmp/invoice_'+str(self.id)+'.pdf"')
      log.close()
      if (deliveryorder == False):
-        system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/invoice_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.invoiceXSLFile.xslfile.path+' -pdf /tmp/invoice_'+str(self.id)+'.pdf"')
+        system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/invoice_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.invoiceXSLFile.xslfile.path+' -pdf /tmp/invoice_'+str(self.id)+'.pdf"')
      else:
-        system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/invoice_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtention[0].defaultTemplateSet.deilveryorderXSLFile.xslfile.path+' -pdf /tmp/deliveryorder_'+str(self.id)+'.pdf"')
+        system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/invoice_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.deilveryorderXSLFile.xslfile.path+' -pdf /tmp/deliveryorder_'+str(self.id)+'.pdf"')
      return "/tmp/invoice_"+str(self.id)+".pdf"
 
 #  TODO: def registerPayment(self, amount, registerpaymentinaccounting):

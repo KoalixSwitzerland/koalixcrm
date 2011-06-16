@@ -11,7 +11,7 @@ class XSLFile(models.Model):
    xslfile = FileBrowseField(verbose_name=_("XSL File"), max_length=200)
    
    class Meta:
-      app_label = "djangoUserExtention"
+      app_label = "djangoUserExtension"
       #app_label_koalix = _('Djang User Extention')
       verbose_name = _('XSL File')
       verbose_name_plural = _('XSL Files')
@@ -19,12 +19,12 @@ class XSLFile(models.Model):
    def __unicode__(self):
       return str(self.id) + ' ' + self.title
       
-class UserExtention(models.Model):
+class UserExtension(models.Model):
    user = models.ForeignKey('auth.User')
    defaultTemplateSet = models.ForeignKey('TemplateSet')
    
    class Meta:
-      app_label = "djangoUserExtention"
+      app_label = "djangoUserExtension"
       #app_label_koalix = _('Djang User Extention')
       verbose_name = _('User Extention')
       verbose_name_plural = _('User Extentions')
@@ -53,7 +53,7 @@ class TemplateSet(models.Model):
    pagefootermiddle = models.CharField(max_length=40, verbose_name=_("Page Footer Middle"), blank=True, null=True)
       
    class Meta:
-      app_label = "djangoUserExtention"
+      app_label = "djangoUserExtension"
       #app_label_koalix = _('Djang User Extention')
       verbose_name = _('Templateset')
       verbose_name_plural = _('Templatesets')
@@ -62,41 +62,41 @@ class TemplateSet(models.Model):
       return str(self.id) + ' ' + self.title
    
 
-class UserExtentionPostalAddress(crm.models.PostalAddress):
+class UserExtensionPostalAddress(crm.models.PostalAddress):
    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINUSEREXTENTION)
-   userExtention = models.ForeignKey(UserExtention)
+   userExtension = models.ForeignKey(UserExtension)
    
    def __unicode__(self):
       return self.name + ' ' + self.prename
    
    class Meta:
-      app_label = "djangoUserExtention"
+      app_label = "djangoUserExtension"
       #app_label_koalix = _('Djang User Extention')
       verbose_name = _('Postal Address for User Extention')
       verbose_name_plural = _('Postal Address for User Extention')
    
-class UserExtentionPhoneAddress(crm.models.PhoneAddress):
+class UserExtensionPhoneAddress(crm.models.PhoneAddress):
    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINUSEREXTENTION)
-   userExtention = models.ForeignKey(UserExtention)
+   userExtension = models.ForeignKey(UserExtension)
    
    def __unicode__(self):
       return self.phone
    
    class Meta:
-      app_label = "djangoUserExtention"
+      app_label = "djangoUserExtension"
       #app_label_koalix = _('Djang User Extention')
       verbose_name = _('Phonenumber for User Extention')
       verbose_name_plural = _('Phonenumber for User Extention')
 
-class UserExtentionEmailAddress(crm.models.EmailAddress):
+class UserExtensionEmailAddress(crm.models.EmailAddress):
    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINUSEREXTENTION)
-   userExtention = models.ForeignKey(UserExtention)
+   userExtension = models.ForeignKey(UserExtension)
    
    def __unicode__(self):
       return self.email
    
    class Meta:
-      app_label = "djangoUserExtention"
+      app_label = "djangoUserExtension"
       #app_label_koalix = _('Djang User Extention')
       verbose_name = _('Email Address for User Extention')
       verbose_name_plural = _('Email Address for User Extention')

@@ -53,19 +53,19 @@ You will have to fill out two "postal address" and two "phone address". Further 
 This new payment method can be added by pressing the greeen "plus" sign beside the "default payment modality" drop down box.
 A new page will open up and give you the ability to add a new payment method. Fill in the values as described in the image below:
 
-..image:: /images/paymentmethodaddingview.png
+.. image:: /images/paymentmethodaddingview.png
 
 After you filled in all required values you will have to click on the save button. This click will bring you back to the customer
 adding view ... and you will see that the default payment method is now set. For the next ... the customer group we
 have to do exatly the same. click again on the green "plus" signe beside the list and you will soon get a pop up where
 you can add your first default customer group. Fill in the values as described in the image below
 
-..image:: /images/customergroupaddingview.png
+.. image:: /images/customergroupaddingview.png
 
 After that you have to fill out all the addresses defined in the header of this tutorial.
 Finish the customer registration by pressing the save button
 
-..image:: /images/customerdetailedaddingview.png
+.. image:: /images/customerdetailedaddingview.png
 
 
 Look at your first Customer
@@ -80,7 +80,7 @@ Create Your First Contract
 I expect your still looking at your first customer we just created. The next step is that you click the checkbox on the left
 side of the customer and look at the the actions-list that appears on the bottom of the page.
 
-..image:: /images/customeractions.png
+.. image:: /images/customeractions.png
 
 select "Create Contract" from this list. This will bring you to the "add contract" form. The advantage of doing it this way
 - instead of adding a new contract over the dasboard - is that you have some values, like the defaultuser, already set. this will
@@ -102,17 +102,17 @@ Create Your First Product
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 To create your first product visit the dashboard by either following the bredcumps back to the dashboard
 
-..image:: //images/bredcumps.png
+.. image:: //images/bredcumps.png
 
 or visit http://localhost/admin again. Press the Units Add button to get to the Unit adding form. Now fill out all the
 required fileds to register the unit hours
 
-..image:: //image/unitaddingviewhour.png
+.. image:: //image/unitaddingviewhour.png
 
 Press save, add an other unit by again pressing the add button.
 Now we create a unit minute.
 
-..image:: //images/unitaddingviewminute.png
+.. image:: //images/unitaddingviewminute.png
 
 Pess save and go back to the dashboard
 
@@ -120,12 +120,12 @@ As we have registered the new units now we are able to create a product.
 Press the Products add button to get to the products adding field. We start with a common product called Manpower
 Fill all fields with the following values:
 
-..image:: //images/productaddingview.png
+.. image:: //images/productaddingview.png
 
 as you know every product has its price espencialy manpower - time is money. Thats why we have to add at least
 one price for this product by filling the fileds the following values.
 
-..image:: //images/productpriceaddingview.png
+.. image:: //images/productpriceaddingview.png
 
 after adding this product you are ready to create your first Quote by going to your dashboard. Open Contracts, select
 the contract where you want to apply a quote and select "Create Quote" from the Actionslist. A Window will open and 
@@ -133,11 +133,11 @@ give you the possibility to fill out your fist quote. As you can see, there are 
 we created the quote with the action instead of dasboard quote add. There are two major parts of a quote: first the 
 general values like "valid until", "description" and so on. And second you find the positions of the quote.
 
-..image:: //images/quotegeneraladdingview.png
+.. image:: //images/quotegeneraladdingview.png
 
 by pressing the "+"-sign you can add as much positions as you like. Fill in the values as described below
 
-..image:: //image/quotepositionsaddingview.png
+.. image:: //image/quotepositionsaddingview.png
 
 Click on the save button to finish your first quote. Go back to the dashboard, go to quotes and select the newly created
 quote. From the actions slect "Create Quote PDF" to get a pdf of this new quote.

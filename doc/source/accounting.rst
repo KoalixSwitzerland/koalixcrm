@@ -52,14 +52,14 @@ explain i make this with a "it support company". A IT Support company usualy pro
 support must be bought from an other company because you were not able to do everything yourself. Then the Hardware, you normaly dont produce hardware on your own, you buy them from a supplier.
 Now lets fix that to the following products you may offer to your customers.
 
-+------------+---------------------+
-|Product Nr. |  Description        |
-+=========== +=====================+
-|1.          |  in-house work      |
-|2.          |  on-site work       |
-|3.          |  computer hardware  |
-|4.          |  voip hardware      |
-+------------+---------------------+
++-------------+---------------------+
+| Product Nr. |  Description        |
++-------------+---------------------+
+| 1           |  in-house work      |
+| 2           |  on-site work       |
+| 3           |  computer hardware  |
+| 4           |  voip hardware      |
++-------------+---------------------+
 
 To be able to do automatic accounting you will have to set the accounts where you want to book your income and our spendings for each product.
 

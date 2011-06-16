@@ -20,7 +20,7 @@ dashboard
 The dashboard it the place you start after the loggin in. In the dashboard you find a list of all object types
 (called objectlist) in three groups (called application) of such objects: crm, accounting and djangoUserExtentions.
 
-.. image:: /images/applicationlist.png
+.. image:: /images/dashboard.png
 
 Administrator only
 ^^^^^^^^^^^^^^^^^^
