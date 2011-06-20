@@ -111,9 +111,10 @@ class Customer(Contact):
    defaultCustomerBillingCycle = models.ForeignKey('CustomerBillingCycle', verbose_name= _('Default Billing Cycle'))
    ismemberof = models.ManyToManyField(CustomerGroup, verbose_name = _('Is member of'), blank=True, null=True)
    
-   def createContract(self):
+   def createContract(self, request):
       contract = Contract()
       contract.defaultcustomer = self
+      contract.defaultcurrency = djangoUserExtension.models.UserExtension.objects.filter(user=request.user.id)[0].defaultCurrency
       contract.save()
       return contract
    

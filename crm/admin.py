@@ -451,7 +451,7 @@ class OptionCustomer(admin.ModelAdmin):
 
    def createContract(self, request, queryset):
       for obj in queryset:
-         contract = obj.createContract()
+         contract = obj.createContract(request)
          response = HttpResponseRedirect('/admin/crm/contract/'+str(contract.id))
       return response
    createContract.short_description = _("Create Contract")

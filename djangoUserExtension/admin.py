@@ -38,14 +38,14 @@ class InlineUserExtensionEmailAddress(admin.StackedInline):
    allow_add = True
    
 class OptionUserExtension(admin.ModelAdmin):
-   list_display = ('id', 'user', 'defaultTemplateSet')
+   list_display = ('id', 'user', 'defaultTemplateSet', 'defaultCurrency')
    list_display_links = ('id', 'user')       
-   list_filter    = ('user', 'defaultTemplateSet')
+   list_filter    = ('user', 'defaultTemplateSet',)
    ordering       = ('id', )
    search_fields  = ('id','user')
    fieldsets = (
       (_('Basics'), {
-         'fields': ('user', 'defaultTemplateSet')
+         'fields': ('user', 'defaultTemplateSet', 'defaultCurrency')
       }),
    )
    save_as = True

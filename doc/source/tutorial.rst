@@ -39,6 +39,10 @@ You will soon find the login page
 
 fill out the username and password you set in the :doc:`installation` in the syncdb procedure.
 
+Create a Currency
+^^^^^^^^^^^^^^^^^
+..images:: /images/addcurrencyform.png
+
 Select "Add Customer"
 ^^^^^^^^^^^^^^^^^^^^^
 After the login you will find the dashboard you already know from the :doc:`intro`. In the Apllicationlist select the
@@ -53,19 +57,19 @@ You will have to fill out two "postal address" and two "phone address". Further 
 This new payment method can be added by pressing the greeen "plus" sign beside the "default payment modality" drop down box.
 A new page will open up and give you the ability to add a new payment method. Fill in the values as described in the image below:
 
-.. image:: /images/paymentmethodaddingview.png
+.. image:: /images/addcustomerbillingcycleform.png
 
 After you filled in all required values you will have to click on the save button. This click will bring you back to the customer
 adding view ... and you will see that the default payment method is now set. For the next ... the customer group we
 have to do exatly the same. click again on the green "plus" signe beside the list and you will soon get a pop up where
 you can add your first default customer group. Fill in the values as described in the image below
 
-.. image:: /images/customergroupaddingview.png
+.. image:: /images/addcustomergroupform.png
 
 After that you have to fill out all the addresses defined in the header of this tutorial.
 Finish the customer registration by pressing the save button
 
-.. image:: /images/customerdetailedaddingview.png
+..  image:: /images/customerdetailedaddingview.png
 
 
 Look at your first Customer
@@ -78,7 +82,7 @@ customer by selecting customer's in the dashboard as described in the :doc:`intr
 Create Your First Contract
 --------------------------
 I expect your still looking at your first customer we just created. The next step is that you click the checkbox on the left
-side of the customer and look at the the actions-list that appears on the bottom of the page.
+side of your customer and look at the the actions-list that appears on the bottom of the page.
 
 .. image:: /images/customeractions.png
 
