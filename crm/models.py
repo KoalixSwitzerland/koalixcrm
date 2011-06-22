@@ -187,7 +187,7 @@ class Contract(models.Model):
       quote = Quote()
       quote.contract = self
       quote.discount = 0
-      invoice.staff = self.staff
+      quote.staff = self.staff
       quote.customer = self.defaultcustomer
       quote.status = 'C'
       quote.currency = self.defaultcurrency
@@ -730,7 +730,7 @@ class Price(models.Model):
 
 class Position(models.Model):
    positionNumber = models.IntegerField(verbose_name = _("Position Number"))
-   quantity = models.IntegerField(verbose_name = _("Quantity"))
+   quantity = models.DecimalField(verbose_name = _("Quantity"), decimal_places=3, max_digits=10)
    description = models.TextField(verbose_name = _("Description"), blank=True, null=True)
    discount = models.DecimalField(max_digits=5, decimal_places=2, verbose_name = _("Discount"), blank=True, null=True)
    product = models.ForeignKey(Product, verbose_name = _("Product"), blank=True, null=True)
