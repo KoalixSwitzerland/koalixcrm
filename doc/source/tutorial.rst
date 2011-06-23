@@ -11,7 +11,7 @@ at the :doc:`installation` - and installed the koalixcrm according to this descr
 Create Your First Customer
 --------------------------
 Let say you want to Register the following Customer:
-Privat address:
+Privat address::
 
 John Smith
 Ave 1
@@ -20,7 +20,8 @@ Phone:
 Mobile:
 Email:
 
-Business address:
+Business address::
+
 Smith and Sons
 Ave 2
 120987 Largeville
@@ -106,17 +107,17 @@ Create Your First Product
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 To create your first product visit the dashboard by either following the breadcumps back to the dashboard
 
-.. image:: //images/breadcumps.png
+.. image:: /images/breadcumps.png
 
 or visit http://localhost/admin again. Press the Units Add button to get to the Unit adding form. Now fill out all the
 required fileds to register the unit hours
 
-.. image:: //image/addunitformhour.png
+.. image:: /images/addunitformhour.png
 
 Press save, add an other unit by again pressing the add button.
 Now we create a unit minute.
 
-.. image:: //images/addunitformminute.png
+.. image:: /images/addunitformminute.png
 
 Pess save and go back to the dashboard
 
@@ -124,12 +125,12 @@ As we have registered the new units now we are able to create a product.
 Press the Products add button to get to the products adding field. We start with a common product called Manpower
 Fill all fields with the following values:
 
-.. image:: //images/addproductform1.png
+.. image:: /images/addproductform1.png
 
 as you know every product has its price espencialy manpower - time is money. Thats why we have to add at least
 one price for this product by filling the fileds the following values.
 
-.. image:: //images/addproductform2.png
+.. image:: /images/addproductform2.png
 
 You will find an other part of this form called unit transfrom. Unit Transforms are sometimes needed when you for example have
 stacks of certain products but only one price per piece. Leave this blank when you only have one unit for one product.
@@ -140,11 +141,11 @@ give you the possibility to fill out your fist quote. As you can see, there are 
 we created the quote with the action instead of dasboard quote add. There are two major parts of a quote: first the 
 general values like "valid until", "description" and so on. And second you find the positions of the quote.
 
-.. image:: //images/addquoteform1.png
+.. image:: /images/addquoteform1.png
 
 by pressing the "+"-sign you can add as much positions as you like. Fill in the values as described below
 
-.. image:: //image/addquoteform2.png
+.. image:: /images/addquoteform2.png
 
 Click on the save button to finish your first quote. Go back to the dashboard, go to quotes and select the newly created
 quote. From the actions slect "Create Quote PDF" to get a pdf of this new quote.
@@ -167,10 +168,9 @@ To be able to register the invoice in your accounting we first need to set up th
 Create Accounts
 ^^^^^^^^^^^^^^^
 Currently there is only a swiss accounts table i really hope i get some help soon to create some generic account tables for other 
-countries because if you have to fill all them out on your on this is going to take quite some time.
-But lets say you can not use swiss account table and you have to create all of them on your own.
+countries as well because if you have to fill all them out on your own this is going to take quite some time.
 
-Its very urgent that you have you have set up these special accounts at least:
+Its urgent that you have you have set up these special accounts at least:
 
 1. Open Reliabilities
 2. Open Intrests
