@@ -3,6 +3,18 @@
 Tutorial
 ========
 
+This tutorial is going to teach you how to 
+  
+  1. Create a customer 
+  2. Create a currency
+  3. Create a product
+  4. Create a contract
+  5. Create a quote
+  6. Create an invoice
+  7. Set up your accounting
+  8. Book an invoice in your accounting
+  9. Book a customer payment in the accounting
+
 Befor your start I recommend you first have a look into the :doc:`intro`. This gives you a first idea of the basic structure 
 of the koalixcrm. When you understand the structure and functions of koalixcrm or any other large django application 
 you are ready to start with the tutorial. I recommend further that you have firefox installed, and did have a look
@@ -13,46 +25,50 @@ Create Your First Customer
 Let say you want to Register the following Customer:
 Privat address::
 
-John Smith
-Ave 1
-90990 Smallville
-Phone: 
-Mobile:
-Email:
+  John Smith
+  Ave 1
+  90990 Smallville
+  Phone: 
+  Mobile:
+  Email:
 
 Business address::
 
-Smith and Sons
-Ave 2
-120987 Largeville
-Phone: 
-Mobile:
-Email:
+  Smith and Sons
+  Ave 2
+  120987 Largeville
+  Phone: 
+  Mobile:
+  Email:
 
 Logging In Adminpage
 ^^^^^^^^^^^^^^^^^^^^
+
 Depending on where you installed your koalixcrm - in our tutorial i expect you installed it on your localhost (the
 computer your sitting in front of) - Visit the http://localhost/admin page in your browser. Please use Firefox for this 
 first test, it seems as if there exist the less bugs in grappelli with this browser. 
 You will soon find the login page
 
-..image:: /images/adminlogin.png
+.. image:: /images/adminlogin.png
 
 fill out the username and password you set in the :doc:`installation` in the syncdb procedure.
 
 Create a Currency
 ^^^^^^^^^^^^^^^^^
-..images:: /images/addcurrencyform.png
+
+.. image:: /images/addcurrencyform.png
 
 Select "Add Customer"
 ^^^^^^^^^^^^^^^^^^^^^
+
 After the login you will find the dashboard you already know from the :doc:`intro`. In the Apllicationlist select the
 "Customer" - add button
 
-..image:: /images/customeraddbutton.png
+.. image:: /images/customeraddbutton.png
 
 Fill out Fields
 ^^^^^^^^^^^^^^^
+
 After adding the customer you will have to fill out all required values to get a valid registered customer.
 You will have to fill out two "postal address" and two "phone address". Further you will need to add a new "Payment Modality"
 This new payment method can be added by pressing the greeen "plus" sign beside the "default payment modality" drop down box.
@@ -70,7 +86,7 @@ you can add your first default customer group. Fill in the values as described i
 After that you have to fill out all the addresses defined in the header of this tutorial.
 Finish the customer registration by pressing the save button
 
-..  image:: /images/customerdetailedaddingview.png
+..  image:: /images/addcustomerform.png
 
 
 Look at your first Customer
@@ -105,9 +121,9 @@ quote but in this case we are going to register the products, units and prices b
 
 Create Your First Product
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-To create your first product visit the dashboard by either following the breadcumps back to the dashboard
+To create your first product visit the dashboard by either following the breadcrumps back to the dashboard
 
-.. image:: /images/breadcumps.png
+.. image:: /images/breadcrumps.png
 
 or visit http://localhost/admin again. Press the Units Add button to get to the Unit adding form. Now fill out all the
 required fileds to register the unit hours
