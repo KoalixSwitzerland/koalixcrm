@@ -6,7 +6,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': '/var/www/koalixcrm/media'}),
-    (r'^$', 'django.views.generic.simple.redirect_to', {'url': '/'}),
+    (r'^$', 'django.views.generic.simple.redirect_to', {'url': '/admin'}),
     (r'^admin_tools/', include('admin_tools.urls')),
     (r'^grappelli/', include('grappelli.urls')),
     (r'^admin/filebrowser/', include('filebrowser.urls')),
