@@ -24,15 +24,15 @@ class AdminSubscriptionEvent(admin.TabularInline):
 class OptionSubscription(admin.ModelAdmin):
    list_display = ('id', 'customer','subscriptiontype' , 'startdate', 'cancelingdate', 'staff', 'lastmodification', 'lastmodifiedby')
    list_display_links = ('id', )       
-   list_filter    = ('customer', 'startdate', 'staff', 'defaultcurrency')
-   ordering       = ('id', 'defaultcustomer', 'defaultcurrency')
-   search_fields  = ('id','contract', 'defaultcurrency__description')
+   list_filter    = ('customer', 'subscriptiontype')
+   ordering       = ('id', 'customer', 'subscriptiontype')
+   search_fields  = ('id', 'customer')
    fieldsets = (
       (_('Basics'), {
-         'fields': ('description', 'defaultcustomer', 'defaultSupplier', 'defaultcurrency')
+         'fields': ('customer','subscriptiontype' , 'startdate', 'cancelingdate', 'staff', 'lastmodification', 'lastmodifiedby')
       }),
    )
-   inlines = [SubscriptionEvent, ContractPhoneAddress, ContractEmailAddress, InlineQuote, InlineInvoice, InlinePurchaseOrder]
+   inlines = [SubscriptionEvent]
 
    def save_model(self, request, obj, form, change):
      if (change == True):
@@ -41,4 +41,16 @@ class OptionSubscription(admin.ModelAdmin):
        obj.lastmodifiedby = request.user
        obj.staff = request.user
      obj.save()
-   actions = ['createContract', 'createInvoice', 'createQuote']
+   actions = ['createSubscriptionPDF']
+   
+class OptionSubscriptionType(admin.ModelAdmin):
+   list_display = ('id', 'title',)
+   list_display_links = ('id', )       
+   list_filter    = ('title', )
+   ordering       = ('id', 'title',)
+   search_fields  = ('id', 'title')
+   fieldsets = (
+      (_('Basics'), {
+         'fields': ('title', 'description' , 'cancelationPeriod', 'automaticContractExtension', 'automaticContractExtensionReminder', 'minimumDuration', 'paymentIntervall', 'contractDocument')
+      }),
+   )

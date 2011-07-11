@@ -37,6 +37,8 @@ class SubscriptionEvent(models.Model):
 
   
 class SubscriptionType(models.Model):
+  title = models.CharField(verbose_name=_("Title"), max_length=200)
+  description = models.TextField(verbose_name=_("Description"))
   cancelationPeriod = models.IntegerField(verbose_name = _("Cancelation Period (months)"), blank=True, null=True)
   automaticContractExtension = models.IntegerField(verbose_name = _("Automatic Contract Extension (months)"), blank=True, null=True)
   automaticContractExtensionReminder = models.IntegerField(verbose_name = _("Automatic Contract Extensoin Reminder (days)"), blank=True, null=True)
