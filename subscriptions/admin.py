@@ -33,17 +33,17 @@ class OptionSubscription(admin.ModelAdmin):
       }),
    )
    inlines = [SubscriptionEvent]
-
-   def save_model(self, request, obj, form, change):
-     if (change == True):
-       obj.lastmodifiedby = request.user
-     else:
-       obj.lastmodifiedby = request.user
-       obj.staff = request.user
-     obj.save()
-   actions = ['createSubscriptionPDF']
    
-class OptionSubscriptionType(admin.ModelAdmin):
+   def createInvoice(self, request, queryset):
+      for obj in queryset:
+         invoice = obj.createInvoice()
+         response = HttpResponseRedirect('/admin/crm/invoice/'+str(invoice.id))
+      return response
+   createInvoice.short_description = _("Create Invoice")
+
+   actions = ['createSubscriptionPDF', 'createInvoice']
+   
+class OptionSubscriptionType(Product):
    list_display = ('id', 'title',)
    list_display_links = ('id', )       
    list_filter    = ('title', )
@@ -54,3 +54,6 @@ class OptionSubscriptionType(admin.ModelAdmin):
          'fields': ('title', 'description' , 'cancelationPeriod', 'automaticContractExtension', 'automaticContractExtensionReminder', 'minimumDuration', 'paymentIntervall', 'contractDocument')
       }),
    )
+   
+admin.site.register(Subscription, OptionSubscription)
+admin.site.register(SubscriptionType, OptionSubscriptionType)

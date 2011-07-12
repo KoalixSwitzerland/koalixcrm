@@ -3,18 +3,14 @@ from filebrowser.fields import FileBrowseField
 from const.events import *
 import crm import models
 
-class Subscription(models.Model):
-  customer = models.ForeignKey('Customer', verbose_name= _('Customer'))
+class Subscription(crm.Contract):
   subscriptiontype = models.ForeignKey('SubscriptionType', verbose_name=_('Subscription Type'))
   startdate = models.DateField(verbose_name = _("Start Date"), blank=True, null=True)
-  staff = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True, verbose_name = _("Staff"), related_name="db_relpostaff", null=True)
   cancelingdate = models.DateField(verbose_name = _("Canceling Date"), blank=True, null=True)
-  lastmodification = models.DateTimeField(verbose_name = _("Last modified"), auto_now_add=True)
-  lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, verbose_name = _("Last modified by"), related_name="db_polstmodified")
-  
-  def __unicode__(self):
-    return  self.title
    
+  def createInvoice(self)
+    
+  
   class Meta:
      app_label = "subscriptions"
      #app_label_koalix = _("Subscriptions")
