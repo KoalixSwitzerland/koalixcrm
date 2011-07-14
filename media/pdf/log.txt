@@ -1,0 +1,1 @@
+bash -c "fop -c /var/www/koalixcrm/media/uploads/templatefiles/fontconfig.xml -xml /var/www/koalixcrm/media/pdf/invoice_1.xml -xsl /var/www/koalixcrm/media/uploads/templatefiles/invoice.xsl -pdf /var/www/koalixcrm/media/pdf/invoice_1.pdf"

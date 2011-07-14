@@ -37,6 +37,7 @@ USE_L10N = True
 MEDIA_ROOT = '/var/www/koalixcrm/media/'
 PROJECT_ROOT = '/var/www/koalixcrm/'
 MEDIA_URL = '/media/'
+PDF_OUTPUT_ROOT = '/var/www/koalixcrm/media/pdf/'
 
 STATIC_ROOT = ''
 
@@ -98,6 +99,7 @@ INSTALLED_APPS = (
     'accounting',
     'djangoUserExtension',
     'crm',
+    'subscriptions',
     'filebrowser',
     'django.contrib.admin',
 )

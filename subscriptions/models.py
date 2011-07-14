@@ -1,15 +1,17 @@
 from django.db import models
+from django.utils.translation import ugettext as _
 from filebrowser.fields import FileBrowseField
 from const.events import *
-import crm import models
+import crm
 
-class Subscription(crm.Contract):
+class Subscription(crm.models.Contract):
   subscriptiontype = models.ForeignKey('SubscriptionType', verbose_name=_('Subscription Type'))
   startdate = models.DateField(verbose_name = _("Start Date"), blank=True, null=True)
   cancelingdate = models.DateField(verbose_name = _("Canceling Date"), blank=True, null=True)
    
-  def createInvoice(self)
-    
+  def createInvoice(self):
+    Invoice()
+    return invoice
   
   class Meta:
      app_label = "subscriptions"
@@ -32,9 +34,7 @@ class SubscriptionEvent(models.Model):
      verbose_name_plural = _('Subscription Events')
 
   
-class SubscriptionType(models.Model):
-  title = models.CharField(verbose_name=_("Title"), max_length=200)
-  description = models.TextField(verbose_name=_("Description"))
+class SubscriptionType(crm.models.Product):
   cancelationPeriod = models.IntegerField(verbose_name = _("Cancelation Period (months)"), blank=True, null=True)
   automaticContractExtension = models.IntegerField(verbose_name = _("Automatic Contract Extension (months)"), blank=True, null=True)
   automaticContractExtensionReminder = models.IntegerField(verbose_name = _("Automatic Contract Extensoin Reminder (days)"), blank=True, null=True)

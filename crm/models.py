@@ -261,7 +261,7 @@ class PurchaseOrder(models.Model):
   def createPDF(self):
     XMLSerializer = serializers.get_serializer("xml")
     xml_serializer = XMLSerializer()
-    out = open("/tmp/purchaseorder_"+str(self.id)+".xml", "w")
+    out = open(settings.PDF_OUTPUT_ROOT+"purchaseorder_"+str(self.id)+".xml", "w")
     objectsToSerialize = list(PurchaseOrder.objects.filter(id=self.id)) 
     objectsToSerialize += list(Contact.objects.filter(id=self.supplier.id))
     objectsToSerialize += list(Currency.objects.filter(id=self.currency.id))
@@ -287,8 +287,8 @@ class PurchaseOrder(models.Model):
         objectsToSerialize += list(PostalAddress.objects.filter(id=address.id))
     xml_serializer.serialize(objectsToSerialize, stream=out, indent=3)
     out.close()
-    system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+'  -xml /tmp/purchaseorder_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.purchaseorderXSLFile.xslfile.path+' -pdf /tmp/purchaseorder_'+str(self.id)+'.pdf"')
-    return "/tmp/purchaseorder_"+str(self.id)+".pdf"   
+    system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+'  -xml '+settings.PDF_OUTPUT_ROOT+' purchaseorder_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.purchaseorderXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+' purchaseorder_'+str(self.id)+'.pdf"')
+    return settings.PDF_OUTPUT_ROOT+"purchaseorder_"+str(self.id)+".pdf"   
 
   class Meta:
     app_label = "crm"
@@ -397,7 +397,7 @@ class Quote(SalesContract):
    def createPDF(self, purchaseconfirmation):
      XMLSerializer = serializers.get_serializer("xml")
      xml_serializer = XMLSerializer()
-     out = open("/tmp/quote_"+str(self.id)+".xml", "w")
+     out = open(settings.PDF_OUTPUT_ROOT+"quote_"+str(self.id)+".xml", "w")
      objectsToSerialize = list(Quote.objects.filter(id=self.id)) 
      objectsToSerialize += list(SalesContract.objects.filter(id=self.id)) 
      objectsToSerialize += list(Contact.objects.filter(id=self.customer.id))
@@ -424,19 +424,19 @@ class Quote(SalesContract):
          objectsToSerialize += list(PostalAddress.objects.filter(id=address.id))
      xml_serializer.serialize(objectsToSerialize, stream=out, indent=3)
      out.close()
-     xml = etree.parse("/tmp/quote_"+str(self.id)+".xml")
+     xml = etree.parse(settings.PDF_OUTPUT_ROOT+"quote_"+str(self.id)+".xml")
      rootelement = xml.getroot()
      projectroot = etree.SubElement(rootelement, "projectroot")
      projectroot.text = settings.PROJECT_ROOT
-     xml.write("/tmp/quote_"+str(self.id)+".xml")
-     log = open("/tmp/log.txt", "w")
-     log.write('bash -c "fop -c '+settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/quote_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.quoteXSLFile.xslfile.path+' -pdf /tmp/quote_'+str(self.id)+'.pdf"')
+     xml.write(settings.PDF_OUTPUT_ROOT+"quote_"+str(self.id)+".xml")
+     log = open(settings.PDF_OUTPUT_ROOT+"log.txt", "w")
+     log.write('bash -c "fop -c '+settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'quote_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.quoteXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'quote_'+str(self.id)+'.pdf"')
      log.close()
      if (purchaseconfirmation == False) :
-        system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/quote_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.quoteXSLFile.xslfile.path+' -pdf /tmp/quote_'+str(self.id)+'.pdf"')
+        system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'quote_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.quoteXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'quote_'+str(self.id)+'.pdf"')
      else:
-        system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+'  -xml /tmp/quote_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.purchaseconfirmationXSLFile.xslfile.path+' -pdf /tmp/purchaseconfirmation_'+str(self.id)+'.pdf"')
-     return "/tmp/quote_"+str(self.id)+".pdf"
+        system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+'  -xml '+settings.PDF_OUTPUT_ROOT+'quote_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.purchaseconfirmationXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'purchaseconfirmation_'+str(self.id)+'.pdf"')
+     return settings.PDF_OUTPUT_ROOT+"quote_"+str(self.id)+".pdf"
      
    def __unicode__(self):
       return _("Quote")+ ": " + str(self.id) + " "+_("from Contract")+": " + str(self.contract.id) 
@@ -497,7 +497,7 @@ class Invoice(SalesContract):
    def createPDF(self, deliveryorder):
      XMLSerializer = serializers.get_serializer("xml")
      xml_serializer = XMLSerializer()
-     out = open("/tmp/invoice_"+str(self.id)+".xml", "w")
+     out = open(settings.PDF_OUTPUT_ROOT+"invoice_"+str(self.id)+".xml", "w")
      objectsToSerialize = list(Invoice.objects.filter(id=self.id)) 
      objectsToSerialize += list(SalesContract.objects.filter(id=self.id)) 
      objectsToSerialize += list(Contact.objects.filter(id=self.customer.id))
@@ -524,19 +524,19 @@ class Invoice(SalesContract):
          objectsToSerialize += list(PostalAddress.objects.filter(id=address.id))
      xml_serializer.serialize(objectsToSerialize, stream=out, indent=3)
      out.close()
-     xml = etree.parse("/tmp/invoice_"+str(self.id)+".xml")
+     xml = etree.parse(settings.PDF_OUTPUT_ROOT+"invoice_"+str(self.id)+".xml")
      rootelement = xml.getroot()
      projectroot = etree.SubElement(rootelement, "projectroot")
      projectroot.text = settings.PROJECT_ROOT
-     xml.write("/tmp/invoice_"+str(self.id)+".xml")
-     log = open("/tmp/log.txt", "w")
-     log.write('bash -c "fop -c '+settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/invoice_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.invoiceXSLFile.xslfile.path+' -pdf /tmp/invoice_'+str(self.id)+'.pdf"')
+     xml.write(settings.PDF_OUTPUT_ROOT+"invoice_"+str(self.id)+".xml")
+     log = open(settings.PDF_OUTPUT_ROOT+"log.txt", "w")
+     log.write('bash -c "fop -c '+settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.invoiceXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.pdf"')
      log.close()
      if (deliveryorder == False):
-        system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/invoice_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.invoiceXSLFile.xslfile.path+' -pdf /tmp/invoice_'+str(self.id)+'.pdf"')
+        system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.invoiceXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.pdf"')
      else:
-        system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/invoice_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.deilveryorderXSLFile.xslfile.path+' -pdf /tmp/deliveryorder_'+str(self.id)+'.pdf"')
-     return "/tmp/invoice_"+str(self.id)+".pdf"
+        system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.deilveryorderXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'deliveryorder_'+str(self.id)+'.pdf"')
+     return settings.PDF_OUTPUT_ROOT+"invoice_"+str(self.id)+".pdf"
 
 #  TODO: def registerPayment(self, amount, registerpaymentinaccounting):
    def __unicode__(self):
