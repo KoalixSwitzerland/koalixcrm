@@ -5,7 +5,8 @@ from shutil import copy
 from os import path
 from os import mkdir
 from django.core.management.base import BaseCommand, CommandError
-import djangoUserExtention
+import djangoUserExtension
+import crm
 from django.contrib.auth.models import User
 from filebrowser.fields import FileBrowseField
 from filebrowser.settings import DIRECTORY
@@ -45,14 +46,14 @@ class Command(BaseCommand):
       copy('templatefiles/generic/'+dejavusansboldfile, MEDIA_ROOT+DIRECTORY+'templatefiles/'+dejavusansboldfile)
       listofadditionalfiles = ('dejavusans-bold.xml', 'dejavusans.xml', )
       if path.exists('templatefiles'):
-        templateset = djangoUserExtention.models.TemplateSet()
+        templateset = djangoUserExtension.models.TemplateSet()
         templateset.title = 'defaultTemplateSet'
         if (path.exists(MEDIA_ROOT+DIRECTORY+'templatefiles') == False):
           mkdir(MEDIA_ROOT+DIRECTORY+'templatefiles')
         for template in listoftemplatefiles:
           if path.exists(PROJECT_ROOT+'templatefiles/en/'+listoftemplatefiles[template]):
             copy('templatefiles/en/'+listoftemplatefiles[template], MEDIA_ROOT+DIRECTORY+'templatefiles/'+listoftemplatefiles[template])
-            xslfile = djangoUserExtention.models.XSLFile()
+            xslfile = djangoUserExtension.models.XSLFile()
             xslfile.title = template
             xslfile.xslfile = DIRECTORY+'templatefiles/'+listoftemplatefiles[template]
             xslfile.save()
@@ -86,28 +87,34 @@ class Command(BaseCommand):
         templateset.pagefooterleft = _("Sample Company")
         templateset.pagefootermiddle = _("Sample Address")
         templateset.save()
-        userExtention = djangoUserExtention.models.UserExtention()
-        userExtention.defaultTemplateSet = templateset
-        userExtention.user = User.objects.all()[0]
-        userExtention.save()
-        postaladdress = djangoUserExtention.models.UserExtentionPostalAddress()
+        currency = crm.models.Currency()
+        currency.description = "US Dollar"
+        currency.shortName = "USD"
+        currency.rounding = "0.10"
+        currency.save()
+        userExtension = djangoUserExtension.models.UserExtension()
+        userExtension.defaultTemplateSet = templateset
+        userExtension.defaultCurrency = currency
+        userExtension.user = User.objects.all()[0]
+        userExtension.save()
+        postaladdress = djangoUserExtension.models.UserExtensionPostalAddress()
         postaladdress.purpose = 'H'
         postaladdress.name = "John"
         postaladdress.prename = "Smith"
         postaladdress.addressline1 = "Ave 1"
         postaladdress.zipcode = 899887
         postaladdress.town = "Smallville"
-        postaladdress.userExtention = userExtention
+        postaladdress.userExtension = userExtension
         postaladdress.save()
-        phoneaddress = djangoUserExtention.models.UserExtentionPhoneAddress()
+        phoneaddress = djangoUserExtension.models.UserExtensionPhoneAddress()
         phoneaddress.phone = "1293847"
         phoneaddress.purpose = 'H'
-        phoneaddress.userExtention = userExtention
+        phoneaddress.userExtension = userExtension
         phoneaddress.save()
-        emailaddress = djangoUserExtention.models.UserExtentionEmailAddress()
+        emailaddress = djangoUserExtension.models.UserExtensionEmailAddress()
         emailaddress.email = "john.smith@smallville.com"
         emailaddress.purpose = 'H'
-        emailaddress.userExtention = userExtention
+        emailaddress.userExtension = userExtension
         emailaddress.save()
             
         for additionalfile in listofadditionalfiles:
