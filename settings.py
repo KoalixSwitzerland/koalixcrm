@@ -86,10 +86,6 @@ TEMPLATE_DIRS = (
 
 INSTALLED_APPS = (
     'grappelli',
-    'admin_tools',
-    'admin_tools.theming',
-    'admin_tools.menu',
-    'admin_tools.dashboard',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
