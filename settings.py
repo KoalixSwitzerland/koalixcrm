@@ -67,7 +67,10 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.i18n',
     'django.core.context_processors.media',
     'django.core.context_processors.request',
-    "grappelli.context_processors.admin_template_path",
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.request',
+    'django.core.context_processors.i18n',
+    'django.contrib.messages.context_processors.messages',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -98,4 +101,5 @@ INSTALLED_APPS = (
     'subscriptions',
     'filebrowser',
     'django.contrib.admin',
+    'south'
 )

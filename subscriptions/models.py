@@ -2,9 +2,9 @@ from django.db import models
 from django.utils.translation import ugettext as _
 from filebrowser.fields import FileBrowseField
 from const.events import *
-import crm
+from crm import models as crmmodels
 
-class Subscription(crm.models.Contract):
+class Subscription(crmmodels.Contract):
   subscriptiontype = models.ForeignKey('SubscriptionType', verbose_name=_('Subscription Type'))
   startdate = models.DateField(verbose_name = _("Start Date"), blank=True, null=True)
   cancelingdate = models.DateField(verbose_name = _("Canceling Date"), blank=True, null=True)
@@ -34,7 +34,7 @@ class SubscriptionEvent(models.Model):
      verbose_name_plural = _('Subscription Events')
 
   
-class SubscriptionType(crm.models.Product):
+class SubscriptionType(crmmodels.Product):
   cancelationPeriod = models.IntegerField(verbose_name = _("Cancelation Period (months)"), blank=True, null=True)
   automaticContractExtension = models.IntegerField(verbose_name = _("Automatic Contract Extension (months)"), blank=True, null=True)
   automaticContractExtensionReminder = models.IntegerField(verbose_name = _("Automatic Contract Extensoin Reminder (days)"), blank=True, null=True)

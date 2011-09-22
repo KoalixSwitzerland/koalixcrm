@@ -4,7 +4,7 @@ from django.utils.translation import ugettext as _
 from django.db import models
 from filebrowser.fields import FileBrowseField
 from const.purpose import *
-import crm
+from crm import models as crmmodels
    
 class XSLFile(models.Model):
    title = models.CharField(verbose_name = _("Title"), max_length=100, blank=True, null=True)
@@ -63,7 +63,7 @@ class TemplateSet(models.Model):
       return str(self.id) + ' ' + self.title
    
 
-class UserExtensionPostalAddress(crm.models.PostalAddress):
+class UserExtensionPostalAddress(crmmodels.PostalAddress):
    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINUSEREXTENTION)
    userExtension = models.ForeignKey(UserExtension)
    
@@ -76,7 +76,7 @@ class UserExtensionPostalAddress(crm.models.PostalAddress):
       verbose_name = _('Postal Address for User Extention')
       verbose_name_plural = _('Postal Address for User Extention')
    
-class UserExtensionPhoneAddress(crm.models.PhoneAddress):
+class UserExtensionPhoneAddress(crmmodels.PhoneAddress):
    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINUSEREXTENTION)
    userExtension = models.ForeignKey(UserExtension)
    
@@ -89,7 +89,7 @@ class UserExtensionPhoneAddress(crm.models.PhoneAddress):
       verbose_name = _('Phonenumber for User Extention')
       verbose_name_plural = _('Phonenumber for User Extention')
 
-class UserExtensionEmailAddress(crm.models.EmailAddress):
+class UserExtensionEmailAddress(crmmodels.EmailAddress):
    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINUSEREXTENTION)
    userExtension = models.ForeignKey(UserExtension)
    
