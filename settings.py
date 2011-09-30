@@ -39,17 +39,14 @@ PROJECT_ROOT = '/var/www/koalixcrm/'
 MEDIA_URL = '/media/'
 PDF_OUTPUT_ROOT = '/var/www/koalixcrm/media/pdf/'
 
-STATIC_ROOT = ''
+STATIC_ROOT = '/var/www/koalixcrm//static/'
 
-STATIC_URL = '/media/'
+STATIC_URL = '/static/'
 
-ADMIN_MEDIA_PREFIX = '/media/admin/'
+ADMIN_MEDIA_PREFIX = STATIC_URL + "grappelli/"
 LOGIN_REDIRECT_URL = '/admin/'
 
 SECRET_KEY = '+d37i!a)&736a^mxykah*l#68)^$4(6ikgbx%4(+1$l98(ktv*'
-
-ADMIN_TOOLS_INDEX_DASHBOARD = 'dashboard.CustomIndexDashboard'
-ADMIN_TOOLS_APP_INDEX_DASHBOARD = 'dashboard.CustomAppIndexDashboard'
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
@@ -66,6 +63,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.debug',
     'django.core.context_processors.i18n',
     'django.core.context_processors.media',
+    'django.core.context_processors.static',
     'django.core.context_processors.request',
     'django.contrib.auth.context_processors.auth',
     'django.core.context_processors.request',
@@ -83,11 +81,14 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'urls'
 
+GRAPPELLI_INDEX_DASHBOARD = 'dashboard.CustomIndexDashboard'
+
 TEMPLATE_DIRS = (
     '/var/www/koalixcrm/templates'
 )
 
 INSTALLED_APPS = (
+    'grappelli.dashboard',
     'grappelli',
     'django.contrib.auth',
     'django.contrib.contenttypes',
