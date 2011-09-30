@@ -115,6 +115,8 @@ class Customer(Contact):
       contract = Contract()
       contract.defaultcustomer = self
       contract.defaultcurrency = djangoUserExtension.models.UserExtension.objects.filter(user=request.user.id)[0].defaultCurrency
+      contract.lastmodifiedby = request.user
+      contract.staff = request.user
       contract.save()
       return contract
    
@@ -287,7 +289,7 @@ class PurchaseOrder(models.Model):
         objectsToSerialize += list(PostalAddress.objects.filter(id=address.id))
     xml_serializer.serialize(objectsToSerialize, stream=out, indent=3)
     out.close()
-    system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+'  -xml '+settings.PDF_OUTPUT_ROOT+' purchaseorder_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.purchaseorderXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+' purchaseorder_'+str(self.id)+'.pdf"')
+    system('bash -c "fop -c '+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+'  -xml '+settings.PDF_OUTPUT_ROOT+' purchaseorder_'+str(self.id)+'.xml -xsl ' +userExtension[0].defaultTemplateSet.purchaseorderXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+' purchaseorder_'+str(self.id)+'.pdf"')
     return settings.PDF_OUTPUT_ROOT+"purchaseorder_"+str(self.id)+".pdf"   
 
   class Meta:
@@ -430,12 +432,12 @@ class Quote(SalesContract):
      projectroot.text = settings.PROJECT_ROOT
      xml.write(settings.PDF_OUTPUT_ROOT+"quote_"+str(self.id)+".xml")
      log = open(settings.PDF_OUTPUT_ROOT+"log.txt", "w")
-     log.write('bash -c "fop -c '+settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'quote_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.quoteXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'quote_'+str(self.id)+'.pdf"')
+     log.write('bash -c "fop -c '+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'quote_'+str(self.id)+'.xml -xsl ' + userExtension[0].defaultTemplateSet.quoteXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'quote_'+str(self.id)+'.pdf"')
      log.close()
      if (purchaseconfirmation == False) :
-        system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'quote_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.quoteXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'quote_'+str(self.id)+'.pdf"')
+        system('bash -c "fop -c '+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'quote_'+str(self.id)+'.xml -xsl ' + userExtension[0].defaultTemplateSet.quoteXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'quote_'+str(self.id)+'.pdf"')
      else:
-        system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+'  -xml '+settings.PDF_OUTPUT_ROOT+'quote_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.purchaseconfirmationXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'purchaseconfirmation_'+str(self.id)+'.pdf"')
+        system('bash -c "fop -c '+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+'  -xml '+settings.PDF_OUTPUT_ROOT+'quote_'+str(self.id)+'.xml -xsl ' + userExtension[0].defaultTemplateSet.purchaseconfirmationXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'purchaseconfirmation_'+str(self.id)+'.pdf"')
      return settings.PDF_OUTPUT_ROOT+"quote_"+str(self.id)+".pdf"
      
    def __unicode__(self):
@@ -530,12 +532,12 @@ class Invoice(SalesContract):
      projectroot.text = settings.PROJECT_ROOT
      xml.write(settings.PDF_OUTPUT_ROOT+"invoice_"+str(self.id)+".xml")
      log = open(settings.PDF_OUTPUT_ROOT+"log.txt", "w")
-     log.write('bash -c "fop -c '+settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.invoiceXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.pdf"')
+     log.write('bash -c "fop -c '+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.xml -xsl ' + userExtension[0].defaultTemplateSet.invoiceXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.pdf"')
      log.close()
      if (deliveryorder == False):
-        system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.invoiceXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.pdf"')
+        system('bash -c "fop -c '+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.xml -xsl ' + userExtension[0].defaultTemplateSet.invoiceXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.pdf"')
      else:
-        system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.deilveryorderXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'deliveryorder_'+str(self.id)+'.pdf"')
+        system('bash -c "fop -c '+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.xml -xsl ' + userExtension[0].defaultTemplateSet.deilveryorderXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'deliveryorder_'+str(self.id)+'.pdf"')
      return settings.PDF_OUTPUT_ROOT+"invoice_"+str(self.id)+".pdf"
 
 #  TODO: def registerPayment(self, amount, registerpaymentinaccounting):

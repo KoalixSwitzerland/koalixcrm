@@ -177,7 +177,7 @@ class OptionContract(admin.ModelAdmin):
    search_fields  = ('id','contract', 'defaultcurrency__description')
    fieldsets = (
       (_('Basics'), {
-         'fields': ('description', 'defaultcustomer', 'defaultSupplier', 'defaultcurrency')
+         'fields': ('description', 'defaultcustomer', 'staff','defaultSupplier', 'defaultcurrency')
       }),
    )
    inlines = [ContractPostalAddress, ContractPhoneAddress, ContractEmailAddress, InlineQuote, InlineInvoice, InlinePurchaseOrder]
@@ -303,7 +303,7 @@ class OptionQuote(admin.ModelAdmin):
 
    fieldsets = (
       (_('Basics'), {
-         'fields': ('contract', 'description', 'customer', 'currency', 'validuntil', 'status')
+         'fields': ('contract', 'description', 'customer', 'currency', 'validuntil', 'staff','status')
       }),
    )
    save_as = True
