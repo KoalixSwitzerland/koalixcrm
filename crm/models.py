@@ -363,6 +363,7 @@ class Quote(SalesContract):
       invoice.description = self.description
       invoice.discount = self.discount
       invoice.customer = self.customer
+      invoice.staff = self.staff
       invoice.status = 'C'
       invoice.derivatedFromQuote = self
       invoice.currency = self.currency
@@ -531,14 +532,18 @@ class Invoice(SalesContract):
      projectroot = etree.SubElement(rootelement, "projectroot")
      projectroot.text = settings.PROJECT_ROOT
      xml.write(settings.PDF_OUTPUT_ROOT+"invoice_"+str(self.id)+".xml")
-     log = open(settings.PDF_OUTPUT_ROOT+"log.txt", "w")
-     log.write('bash -c "fop -c '+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.xml -xsl ' + userExtension[0].defaultTemplateSet.invoiceXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.pdf"')
-     log.close()
      if (deliveryorder == False):
+        log = open(settings.PDF_OUTPUT_ROOT+"log.txt", "w")
+        log.write('bash -c "fop -c '+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.xml -xsl ' + userExtension[0].defaultTemplateSet.invoiceXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.pdf"')
+        log.close()
         system('bash -c "fop -c '+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.xml -xsl ' + userExtension[0].defaultTemplateSet.invoiceXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.pdf"')
+        return settings.PDF_OUTPUT_ROOT+"invoice_"+str(self.id)+".pdf"
      else:
+        log = open(settings.PDF_OUTPUT_ROOT+"log.txt", "w")
+        log.write('bash -c "fop -c '+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.xml -xsl ' + userExtension[0].defaultTemplateSet.deilveryorderXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'deliveryorder_'+str(self.id)+'.pdf"')
+        log.close()
         system('bash -c "fop -c '+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.xml -xsl ' + userExtension[0].defaultTemplateSet.deilveryorderXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'deliveryorder_'+str(self.id)+'.pdf"')
-     return settings.PDF_OUTPUT_ROOT+"invoice_"+str(self.id)+".pdf"
+        return settings.PDF_OUTPUT_ROOT+"deliveryorder_"+str(self.id)+".pdf"  
 
 #  TODO: def registerPayment(self, amount, registerpaymentinaccounting):
    def __unicode__(self):

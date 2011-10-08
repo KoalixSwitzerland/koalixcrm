@@ -1,6 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet
      xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
      xmlns:fo="http://www.w3.org/1999/XSL/Format">
+<xsl:output method="xml" version="1.0" indent="yes" encoding="UTF-8"/>
 <xsl:decimal-format name="european" decimal-separator="," grouping-separator="."/>
 <xsl:template match ="django-objects">
   <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
@@ -27,7 +29,11 @@
           <fo:table-row height="2cm" border-bottom-color="black" border-bottom-style="solid" border-bottom-width="0.5pt">
             <fo:table-cell padding-bottom="3pt" >
               <fo:block text-align="left" >
-                <fo:external-graphic src="/var/www/koalixcrm/logo.jpg" content-width="6.0cm"/>
+                <fo:external-graphic content-width="6.0cm">
+                  <xsl:attribute name="src">
+                     <xsl:value-of select="projectroot"/><xsl:value-of select="object[@model='djangoUserExtention.templateset']/field[@name='logo']"/>
+                  </xsl:attribute>
+                </fo:external-graphic>
               </fo:block>
             </fo:table-cell>
           </fo:table-row>
@@ -39,7 +45,7 @@
         <fo:table-column column-width="8cm"/>
         <fo:table-body font-size="7pt"
                        font-family="BitstreamVeraSans">
-    <fo:table-row >
+   <fo:table-row >
           <fo:table-cell>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
@@ -47,7 +53,7 @@
               font-weight="bold">Created at:</fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
-              text-align="left">&#8201; </fo:block>
+              text-align="left"><fo:leader leader-pattern="space"/></fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
               text-align="left">Customer Nr:</fo:block>
@@ -56,28 +62,28 @@
               text-align="left">Contract Nr:</fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
-              text-align="left">&#8201; </fo:block>
+              text-align="left"><fo:leader leader-pattern="space"/></fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
-              text-align="left">Tax Reference Nr:</fo:block>
+              text-align="left">Tax Ref Nr:</fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
-              text-align="left">IBAN Nr:</fo:block>
+              text-align="left">IBAN:</fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
-              text-align="left">Valid until:</fo:block>
+              text-align="left">Payable until:</fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
-              text-align="left">&#8201; </fo:block>
+              text-align="left"><fo:leader leader-pattern="space"/></fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
-              text-align="left">Responsible</fo:block>
+              text-align="left">Responsible Person:</fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
-              text-align="left">Phone direct:</fo:block>
+              text-align="left">Phone direkt:</fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
-              text-align="left">E-mail direct:</fo:block>
+              text-align="left">E-mail direkt:</fo:block>
           </fo:table-cell>
           <fo:table-cell>
             <fo:block font-size="7pt"
@@ -87,52 +93,59 @@
                 <xsl:value-of select="substring(object[@model='crm.salescontract']/field[@name='dateofcreation'], 9, 2)"/><xsl:text>.</xsl:text><xsl:value-of select="substring(object[@model='crm.salescontract']/field[@name='dateofcreation'], 6, 2)"/><xsl:text>.</xsl:text><xsl:value-of select="substring(object[@model='crm.salescontract']/field[@name='dateofcreation'], 1, 4)"/></fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
-              text-align="left">&#8201; </fo:block>
+              text-align="left"><fo:leader leader-pattern="space"/></fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
               text-align="left">CU-<xsl:value-of select="object[@model='crm.contact']/@pk"/></fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
-              text-align="left">IN-<xsl:value-of select="object[@model='crm.salescontract']/field[@name='contract']"/></fo:block>
+              text-align="left">CO-<xsl:value-of select="object[@model='crm.salescontract']/field[@name='contract']"/></fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
-              text-align="left">&#8201; </fo:block>
+              text-align="left"><fo:leader leader-pattern="space"/></fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
               text-align="left">none</fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
-              text-align="left">IBANNUMBERHERE </fo:block>
+              text-align="left">
+            <xsl:choose>
+	      <xsl:when  test="object[@model='djangoUserExtention.templateset']/field[@name='bankingaccountref']">
+		<xsl:value-of select="object[@model='djangoUserExtention.templateset']/field[@name='bankingaccountref']"/>
+	      </xsl:when>
+	      <xsl:otherwise>
+		<fo:leader leader-pattern="space"/>
+	      </xsl:otherwise>
+            </xsl:choose>
+            </fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
-              text-align="left"><xsl:value-of select="substring(object[@model='crm.invoice']/field[@name='validuntil'], 9, 2)"/><xsl:text>.</xsl:text><xsl:value-of select="substring(object[@model='crm.invoice']/field[@name='validuntil'], 6, 2)"/><xsl:text>.</xsl:text><xsl:value-of select="substring(object[@model='crm.invoice']/field[@name='validuntil'], 1, 4)"/></fo:block>
+              text-align="left"><xsl:value-of select="substring(object[@model='crm.invoice']/field[@name='payableuntil'], 9, 2)"/><xsl:text>.</xsl:text><xsl:value-of select="substring(object[@model='crm.invoice']/field[@name='payableuntil'], 6, 2)"/><xsl:text>.</xsl:text><xsl:value-of select="substring(object[@model='crm.invoice']/field[@name='payableuntil'], 1, 4)"/></fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
-              text-align="left">&#8201; </fo:block>
+              text-align="left"><fo:leader leader-pattern="space"/></fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
-              text-align="left"><xsl:value-of select="object[@model='auth.user']/field[@name='first_name']"/>&#8201;  <xsl:value-of select="object[@model='auth.user']/field[@name='last_name']"/></fo:block>
+              text-align="left"><xsl:value-of select="object[@model='auth.user']/field[@name='first_name']"/><xsl:text> </xsl:text>  <xsl:value-of select="object[@model='auth.user']/field[@name='last_name']"/></fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
-              text-align="left">+410564548887</fo:block>
+              text-align="left"><xsl:value-of select="object[@model='crm.phoneaddress']/field[@name='phone']"/></fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
               text-align="left"><xsl:value-of select="object[@model='auth.user']/field[@name='email']"/></fo:block>
           </fo:table-cell>
           <fo:table-cell>
-            <fo:block font-size="7pt"
+            <fo:block font-size="6pt"
               font-family="BitstreamVeraSans"
-              text-align="left"
-              text-decoration="underline">Guest Guesterich</fo:block>
-            <fo:block font-size="8pt"
-              font-family="BitstreamVeraSans"
-              text-align="left">&#8201; </fo:block>
+	      text-decoration="underline"
+              text-align="start"
+	      margin-bottom="0.5cm"><xsl:value-of select="object[@model='djangoUserExtention.templateset']/field[@name='addresser']"/></fo:block>
             <xsl:choose>
               <xsl:when  test="object[@model='crm.postaladdressforcontact']/field[@name='purpose']">
               <fo:block font-size="9pt"
               font-family="BitstreamVeraSans"
               text-align="left">
-              <xsl:value-of select="object[@model='crm.postaladdress']/field[@name='prename']"/>&#8201; <xsl:value-of select="object[@model='crm.postaladdress']/field[@name='name']"/>
+              <xsl:value-of select="object[@model='crm.postaladdress']/field[@name='prename']"/><xsl:text> </xsl:text> <xsl:value-of select="object[@model='crm.postaladdress']/field[@name='name']"/>
               </fo:block>
               <xsl:choose>
                 <xsl:when test="object[@model='crm.postaladdress']/field[@name='addressline1']">
@@ -173,31 +186,34 @@
               <fo:block font-size="9pt"
               font-family="BitstreamVeraSans"
               text-align="left">
-              <xsl:value-of select="object[@model='crm.postaladdress']/field[@name='zipcode']"/> &#8201;  <xsl:value-of select="object[@model='crm.postaladdress']/field[@name='town']"/>
+              <xsl:value-of select="object[@model='crm.postaladdress']/field[@name='zipcode']"/> <xsl:text> </xsl:text>  <xsl:value-of select="object[@model='crm.postaladdress']/field[@name='town']"/>
               </fo:block>
             </xsl:when>
          </xsl:choose>
         </fo:table-cell>
        </fo:table-row>
-    </fo:table-body>
+   </fo:table-body>
        </fo:table>
-        <fo:block font-size="8pt"
-              font-family="BitstreamVeraSans"
-              text-align="left"
-              line-height="1.0cm">&#8201; 
-       </fo:block>
         <fo:block font-size="15pt"
               font-family="BitstreamVeraSans"
               color="black"
               text-align="left"
-              font-weight="bold">
+              font-weight="bold"
+              margin-top="1cm">
         Delivery Order IN-<xsl:value-of select="object[@model='crm.salescontract']/@pk"/>
+       </fo:block>
+        <fo:block font-size="9pt"
+              font-family="BitstreamVeraSans"
+              color="black"
+              text-align="left"
+              margin-top="1cm">
+       <xsl:value-of select="object[@model='djangoUserExtention.templateset']/field[@name='headerTextsalesorders']"/>
        </fo:block>
       </fo:static-content>
     <fo:static-content flow-name="xsl-region-after" >
        <fo:block font-size="8pt"
               font-family="BitstreamVeraSans"
-              text-align="left">&#8201; </fo:block>
+              text-align="left"><xsl:text> </xsl:text> </fo:block>
        <fo:table table-layout="fixed" width="100%">
           <fo:table-column column-width="15.0cm"/>
           <fo:table-column column-width="3.0cm"/>
@@ -208,7 +224,7 @@
               font-family="BitstreamVeraSans"
               text-align="left"
               font-weight="bold"
-              >&#8201; </fo:block>
+              ><xsl:text> </xsl:text> </fo:block>
             </fo:table-cell>
           </fo:table-row>
          <fo:table-row>
@@ -216,7 +232,10 @@
             <fo:block font-size="8pt"
               font-family="BitstreamVeraSans"
               font-weight="bold"
-              text-align="start">Guest Guesterich &#8201;  &#8201;  &#8201;  &#8201; Gueststreet &#8201;  &#8201;  &#8201;  &#8201;  Gueststreet &#8201;  &#8201;  &#8201;  &#8201; +0454656787 &#8201;  &#8201;  &#8201;  &#8201; </fo:block>
+              text-align="start">
+               <xsl:value-of select="object[@model='djangoUserExtention.templateset']/field[@name='pagefooterleft']"/>
+              <xsl:text>                  </xsl:text>
+              <xsl:value-of select="object[@model='djangoUserExtention.templateset']/field[@name='pagefootermiddle']"/></fo:block>
            </fo:table-cell>
            <fo:table-cell>
             <fo:block font-size="8pt"
@@ -233,15 +252,13 @@
        <fo:block font-size="9pt"
               font-family="BitstreamVeraSans"
               text-align="left"
-              line-height="13pt" >&#8201;  </fo:block>
+              line-height="13pt" ><xsl:text> </xsl:text>  </fo:block>
        <fo:table table-layout="fixed" width="100%">
           <fo:table-column column-width="1.0cm"/>
-          <fo:table-column column-width="8.4cm"/>
+          <fo:table-column column-width="6.6cm"/>
           <fo:table-column column-width="1.8cm"/>
-          <fo:table-column column-width="2.5cm"/>
           <fo:table-column column-width="1.8cm"/>
-          <fo:table-column column-width="2.5cm"/>
-      <fo:table-header font-size="9pt" line-height="9pt" font-weight="bold" font-family="BitstreamVeraSans">
+     <fo:table-header font-size="9pt" line-height="9pt" font-weight="bold" font-family="BitstreamVeraSans">
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="start" >
                       Pos.
@@ -259,17 +276,7 @@
                 </fo:table-cell>
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="end" >
-                      Price per Unit
-                   </fo:block>
-                </fo:table-cell>
-                <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
-                   <fo:block  text-align="end" >
-                      Discount
-                   </fo:block>
-                </fo:table-cell>
-                <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
-                   <fo:block  text-align="end" >
-                      Value
+                      Unit
                    </fo:block>
                 </fo:table-cell>
              </fo:table-header>
@@ -277,159 +284,80 @@
                          font-family="BitstreamVeraSans">
          <xsl:for-each select="object[@model='crm.position']">
           <xsl:sort select="field[@name=positionNumber]" data-type="number"/>
-             <fo:table-row keep-together="always">
+             <fo:table-row >
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="start" >
                       <xsl:value-of select="field[@name='positionNumber']"/>
                    </fo:block>
                 </fo:table-cell>
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
-                   <fo:block  text-align="start" >
-                      <xsl:value-of select="/object[@model='crm.product' and @pk='1']/field[@name='Title']"/>
+                   <fo:block-container max-width="6.0cm">
+                   <xsl:variable name ="productinthisposition" select="field[@name='product']"/>
+                   <fo:block  text-align="start"
+                              font-weight="bold"
+                              font-size="9pt"
+                              font-family="BitstreamVeraSans"
+                              line-height="12pt">
+                      <xsl:value-of select="../object[@model='crm.product' and @pk=$productinthisposition]/field[@name='title']"/>
+                   </fo:block>
                       <xsl:choose>
-                         <xsl:when test="field[@name='description']">
-                      <xsl:value-of select="field[@name='description']"/></xsl:when>
+                         <xsl:when test="../object[@model='crm.product' and @pk=$productinthisposition]/field[@name='description']/None">
+                           <fo:block  text-align="start"
+                                       font-size="7pt"
+                                       font-family="BitstreamVeraSans"
+                              white-space-collapse="false">
+                           <xsl:value-of select="field[@name='description']"/>
+                           </fo:block>
+                         </xsl:when>
                          <xsl:otherwise>
-                      <xsl:value-of select="field[@name='description']"/>
+                           <fo:block  text-align="start"
+                                       font-size="7pt"
+                                       font-family="BitstreamVeraSans">
+                           <xsl:value-of select="../object[@model='crm.product' and @pk=$productinthisposition]/field[@name='description']"/>
+                           </fo:block>
+                           <fo:block  text-align="start"
+                                       font-size="7pt"
+                                       font-family="BitstreamVeraSans"
+                                       padding-top="0.1cm">
+                           <xsl:value-of select="field[@name='description']"/>
+                           </fo:block>
                          </xsl:otherwise>
                       </xsl:choose>
-                   </fo:block>
+                   </fo:block-container>
                 </fo:table-cell>
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="end" >
                       <xsl:choose>
                          <xsl:when test="field[@name='description'] = '0E-15'">-</xsl:when>
                          <xsl:otherwise>
-                            <xsl:value-of select="format-number(field[@name='quantity'], '#.##0,00', 'european')"/>&#8201;  <xsl:value-of select="uomDescription"/>&#8201; 
+                            <xsl:value-of select="format-number(field[@name='quantity'], '#.##0,00', 'european')"/><xsl:text> </xsl:text>  <xsl:value-of select="uomDescription"/><xsl:text> </xsl:text> 
                          </xsl:otherwise>
                       </xsl:choose>
                    </fo:block>
                 </fo:table-cell>
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="end" >
+                      <xsl:variable name ="unitinthisposition" select="field[@name='unit']"/>
                       <xsl:choose>
-                         <xsl:when test="field[@name='positionPricePerUnit']/None">-</xsl:when>
+                         <xsl:when test="field[../object[@model='crm.unit' and @pk=$unitinthisposition]/field[@name='shortName']/None]">-</xsl:when>
                          <xsl:otherwise>
-                            <xsl:value-of select="format-number(field[@name='positionPricePerUnit'], '#.##0,00', 'european')"/>&#8201;<xsl:value-of select="../object[@model='crm.currency']/field[@name='shortName']"/>
-                         </xsl:otherwise>
-                      </xsl:choose>
-                   </fo:block>
-                </fo:table-cell>
-                <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
-                   <fo:block  text-align="end" >
-                      <xsl:choose>
-                         <xsl:when test="field[@name='discount']/None">-</xsl:when> 
-                         <xsl:otherwise>
-                              <xsl:value-of select="format-number(field[@name='discount'], '#.##0,00', 'european')"/> %
-                         </xsl:otherwise>
-                      </xsl:choose>
-                   </fo:block>
-                </fo:table-cell>
-                <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
-                   <fo:block  text-align="end" >
-                      <xsl:choose>
-                         <xsl:when test="field[@name='lastCalculatedPrice']/None">-</xsl:when>
-                         <xsl:otherwise>
-                           <xsl:value-of select="format-number(field[@name='lastCalculatedPrice'], '#.##0,00', 'european')"/>&#8201;<xsl:value-of select="../object[@model='crm.currency']/field[@name='shortName']"/>
+                            <xsl:value-of select="../object[@model='crm.unit' and @pk=$unitinthisposition]/field[@name='shortName']"/>
                          </xsl:otherwise>
                       </xsl:choose>
                    </fo:block>
                 </fo:table-cell>
              </fo:table-row>
             </xsl:for-each>
-             <fo:table-row keep-together="always" keep-with-previous="always">
-               <fo:table-cell number-columns-spanned="6"><fo:block  text-align="start" >&#8201; 
-                   </fo:block></fo:table-cell>
-             </fo:table-row>
-              <fo:table-row keep-together="always" keep-with-previous="always">
-                <fo:table-cell number-columns-spanned="2">
-                   <fo:block  text-align="start" >&#8201; 
-                   </fo:block>
-                </fo:table-cell>
-                <fo:table-cell number-columns-spanned="2" border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
-                   <fo:block  text-align="start" >
-                      Subtotal
-                   </fo:block>
-                </fo:table-cell>
-                <fo:table-cell number-columns-spanned="2" border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
-                   <fo:block  text-align="end" >
-                      <xsl:choose>
-                        <xsl:when test="object[@model='crm.salescontract']/field[@name='lastCalculatedPrice']/None">-</xsl:when>
-                        <xsl:otherwise>
-                        <xsl:value-of select="format-number(object[@model='crm.salescontract']/field[@name='lastCalculatedPrice'], '#.##0,00', 'european')"/>&#8201;<xsl:value-of select="../object[@model='crm.currency']/field[@name='shortName']"/>
-                        </xsl:otherwise>
-                      </xsl:choose>
-                   </fo:block>
-                </fo:table-cell>
-             </fo:table-row>
-             <fo:table-row keep-together="always" keep-with-previous="always">
-                <fo:table-cell number-columns-spanned="2">
-                   <fo:block  text-align="start" >
-                   </fo:block>
-                </fo:table-cell>
-                <fo:table-cell number-columns-spanned="2" border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
-                   <fo:block  text-align="start" >
-                     Tax.
-                   </fo:block>
-                </fo:table-cell>
-                <fo:table-cell number-columns-spanned="2" border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
-                   <fo:block  text-align="end" >
-             <xsl:choose>
-               <xsl:when test="object[@model='crm.salescontract']/field[@name='lastCalculatedTax']/None">-</xsl:when>
-               <xsl:otherwise>
-               <xsl:value-of select="format-number(object[@model='crm.salescontract']/field[@name='lastCalculatedTax'], '#.##0,00', 'european')"/>&#8201;<xsl:value-of select="../object[@model='crm.currency']/field[@name='shortName']"/>
-               </xsl:otherwise>
-             </xsl:choose>
-                   </fo:block>
-                </fo:table-cell>
-             </fo:table-row>
-             <fo:table-row keep-together="always" keep-with-previous="always">
-                <fo:table-cell number-columns-spanned="2">
-                   <fo:block  text-align="start" >
-                   </fo:block>
-                </fo:table-cell>
-                <fo:table-cell number-columns-spanned="2" border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
-                   <fo:block  text-align="start" font-weight="bold">
-                      Total
-                   </fo:block>
-                </fo:table-cell>
-                <fo:table-cell number-columns-spanned="2" border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
-                   <fo:block  text-align="end" font-weight="bold">
-             <xsl:choose>
-               <xsl:when test="object[@model='crm.salescontract']/field[@name='lastCalculatedPrice']/None">-</xsl:when>
-               <xsl:otherwise>
-               <xsl:value-of select="format-number(object[@model='crm.salescontract']/field[@name='lastCalculatedPrice']+object[@model='crm.salescontract']/field[@name='lastCalculatedTax'], '#.##0,00', 'european')"/>&#8201;<xsl:value-of select="../object[@model='crm.currency']/field[@name='shortName']"/>
-               </xsl:otherwise>
-             </xsl:choose>
-                   </fo:block>
-                </fo:table-cell>
-             </fo:table-row>
           </fo:table-body>
        </fo:table>
-              <fo:block font-size="10pt"
+        <fo:block font-size="9pt"
               font-family="BitstreamVeraSans"
+              color="black"
               text-align="left"
-              line-height="0.5cm" >&#8201; 
-             </fo:block>
-
-              <fo:block font-size="10pt"
-              font-family="BitstreamVeraSans"
-              text-align="left"
-              line-height="13pt" >Best Regards
-             </fo:block>
-
-              <fo:block font-size="10pt"
-              font-family="BitstreamVeraSans"
-              text-align="left"
-              line-height="20pt" >&#8201; 
-             </fo:block>
-
-              <fo:block font-size="10pt"
-              font-family="BitstreamVeraSans"
-              text-align="left"
-              line-height="13pt"
-              id="last-page">Aaron Riedener
-             </fo:block>
+              margin-top="1cm"
+              id="last-page">
+      <xsl:value-of select="object[@model='djangoUserExtention.templateset']/field[@name='footerTextsalesorders']"/>
+      </fo:block>
     </fo:flow>
      <xsl:apply-templates/>
   </fo:page-sequence>
