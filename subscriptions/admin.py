@@ -3,7 +3,7 @@ import os
 from django import forms
 from django.core.urlresolvers import reverse
 from datetime import date
-from crm.models import *
+from crm import models as crmmodels
 from crm.admin import *
 from django.utils.translation import ugettext as _
 from django.contrib import admin
@@ -11,6 +11,7 @@ from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.core.servers.basehttp import FileWrapper
 from subscriptions.models import *
+ 
 
 class AdminSubscriptionEvent(admin.TabularInline):
    model = SubscriptionEvent
@@ -23,20 +24,35 @@ class AdminSubscriptionEvent(admin.TabularInline):
    )
    allow_add = True
 
-class OptionSubscription(admin.ModelAdmin):
-   list_display = ('id', 'defaultcustomer','defaultcurrency','subscriptiontype' , 'startdate', 'cancelingdate', 'staff', 'lastmodification', 'lastmodifiedby')
-   list_display_links = ('id', )       
-   list_filter    = ('defaultcustomer', 'subscriptiontype')
-   ordering       = ('id', 'defaultcustomer', 'subscriptiontype')
-   search_fields  = ('id', 'defaultcustomer')
+class InlineSubscription(admin.TabularInline):
+   model = Subscription
+   extra = 1
+   classes = ('collapse-open',)
    fieldsets = (
       (_('Basics'), {
-         'fields': ('defaultcustomer','defaultcurrency','subscriptiontype' , 'startdate', 'cancelingdate', 'staff',)
+         'fields': ( 'contract', 'subscriptiontype'  )
+      }),
+   )
+   allow_add = False
+   
+class OptionSubscription(admin.ModelAdmin):
+   list_display = ('id', 'contract', 'subscriptiontype' , )  
+   ordering       = ('id', 'contract', 'subscriptiontype')
+   search_fields  = ('id', 'contract', )
+   fieldsets = (
+      (_('Basics'), {
+         'fields': ('contract', 'subscriptiontype' ,  )
       }),
    )
    inlines = [AdminSubscriptionEvent]
    
    def createInvoice(self, request, queryset):
+      for obj in queryset:
+         invoice = obj.createInvoice()
+         response = HttpResponseRedirect('/admin/crm/invoice/'+str(invoice.id))
+      return response
+      
+   def createQuote(self, request, queryset):
       for obj in queryset:
          invoice = obj.createInvoice()
          response = HttpResponseRedirect('/admin/crm/invoice/'+str(invoice.id))
@@ -65,7 +81,26 @@ class OptionSubscriptionType(admin.ModelAdmin):
          'fields': ('productNumber', 'title', 'description', 'defaultunit', 'tax', 'accoutingProductCategorie', 'cancelationPeriod', 'automaticContractExtension', 'automaticContractExtensionReminder', 'minimumDuration', 'paymentIntervall', 'contractDocument')
       }),
    )
-   inlines = [ProductPrice, ProductUnitTransform]
+   
+   
+class PluginActions(object):
+  @classmethod
+  def createSubscription(a, b, request, queryset):
+    for contract in queryset:
+        subscription = Subscription()
+        subscription.createSubscriptionFromContract(crmmodels.Contract.objects.get(id=contract.id))
+        response = HttpResponseRedirect('/admin/crm/subscription/'+str(subscription.id))
+    return response   
+   
+class KoalixcrmPluginInterface(object):
+  contractInlines = [InlineSubscription]
+  contractActions = [PluginActions.createSubscription]
+  invoiceInlines = []
+  invoiceActions = []
+  quoteInlines = []
+  quoteActions = []
+  customerInlines = []
+  customerActions = []
    
 admin.site.register(Subscription, OptionSubscription)
 admin.site.register(SubscriptionType, OptionSubscriptionType)

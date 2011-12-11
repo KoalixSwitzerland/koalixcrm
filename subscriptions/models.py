@@ -2,15 +2,42 @@ from django.db import models
 from django.utils.translation import ugettext as _
 from filebrowser.fields import FileBrowseField
 from const.events import *
+from datetime import *
 from crm import models as crmmodels
 
-class Subscription(crmmodels.Contract):
-  subscriptiontype = models.ForeignKey('SubscriptionType', verbose_name=_('Subscription Type'))
-  startdate = models.DateField(verbose_name = _("Start Date"), blank=True, null=True)
-  cancelingdate = models.DateField(verbose_name = _("Canceling Date"), blank=True, null=True)
-   
+class Subscription(models.Model):
+  contract = models.ForeignKey(crmmodels.Contract, verbose_name=_('Subscription Type'))
+  subscriptiontype = models.ForeignKey('SubscriptionType', verbose_name=_('Subscription Type'), null=True)
+  
+  def createSubscriptionFromContract(self, contract):
+    self.contract = contract
+    self.save()
+    return self
+  
+  def createQuote(self):
+    quote = Quote()
+    quote.contract = self.contract
+    quote.discount = 0
+    quote.staff = self.contract.staff
+    quote.customer = self.contract.defaultcustomer
+    quote.status = 'C'
+    quote.currency = self.contract.defaultcurrency
+    quote.validuntil = date.today().__str__()
+    quote.dateofcreation = date.today().__str__()
+    quote.save()
+    return quote
+    
   def createInvoice(self):
-    Invoice()
+    invoice = crmmodels.Invoice()
+    invoice.contract = self.contract
+    invoice.discount = 0
+    invoice.staff = self.contract.staff
+    invoice.customer = self.contract.defaultcustomer
+    invoice.status = 'C'
+    invoice.currency = self.contract.defaultcurrency
+    invoice.payableuntil = date.today()+timedelta(days=self.contract.defaultcustomer.defaultCustomerBillingCycle.timeToPaymentDate)
+    invoice.dateofcreation = date.today().__str__()
+    invoice.save()
     return invoice
   
   class Meta:

@@ -6,6 +6,7 @@ from django.http import HttpResponse
 from exceptions import TemplateSetMissing
 from exceptions import UserExtensionMissing
 from django.core.servers.basehttp import FileWrapper
+from django.utils.translation import ugettext as _
 
 def createQuotePDF(request, quoteid):
   try:
@@ -59,4 +60,13 @@ def createPurchaseOrderPDF(request, purchaseorderid):
 def selectaddress(invoiceid):
   invoice = Invoice.objects.get(id=invoiceid)
   address = invoice.contract
+  
+def test(self, request, queryset):
+  for obj in queryset:
+      invoice = obj.createInvoice()
+      self.message_user(request, _("Invoice created"))
+      response = HttpResponseRedirect('/admin/crm/invoice/'+str(invoice.id))
+  return response
+test.short_description = _("Test")
+  
    

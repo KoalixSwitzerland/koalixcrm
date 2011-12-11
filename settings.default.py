@@ -87,6 +87,10 @@ TEMPLATE_DIRS = (
     '/var/www/koalixcrm/templates'
 )
 
+KOALIXCRM_PLUGINS = (
+    'subscriptions',
+)
+
 INSTALLED_APPS = (
     'grappelli.dashboard',
     'grappelli',

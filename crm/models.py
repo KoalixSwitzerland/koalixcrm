@@ -21,18 +21,18 @@ import settings
 import copy
 
 class Currency (models.Model):
-   description = models.CharField(verbose_name = _("Description"), max_length=100)
-   shortName = models.CharField(verbose_name = _("Displayed Name After Price In The Position"), max_length=3)
-   rounding = models.DecimalField(max_digits=5, decimal_places=2, verbose_name = _("Rounding"), blank=True, null=True)
+  description = models.CharField(verbose_name = _("Description"), max_length=100)
+  shortName = models.CharField(verbose_name = _("Displayed Name After Price In The Position"), max_length=3)
+  rounding = models.DecimalField(max_digits=5, decimal_places=2, verbose_name = _("Rounding"), blank=True, null=True)
 
-   def __unicode__(self):
-      return  self.shortName
-   
-   class Meta:
-      app_label = "crm"
-      #app_label_koalix = _('Customer Relationship Management (CRM)')
-      verbose_name = _('Currency')
-      verbose_name_plural = _('Currency') 
+  def __unicode__(self):
+    return  self.shortName
+  
+  class Meta:
+    app_label = "crm"
+    #app_label_koalix = _('Customer Relationship Management (CRM)')
+    verbose_name = _('Currency')
+    verbose_name_plural = _('Currency') 
    
 class PostalAddress(models.Model):
    prefix = models.CharField(max_length=1, choices=POSTALADDRESSPREFIX, verbose_name = _("Prefix"), blank=True, null=True)
