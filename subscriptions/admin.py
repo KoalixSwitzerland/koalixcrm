@@ -4,7 +4,6 @@ from django import forms
 from django.core.urlresolvers import reverse
 from datetime import date
 from crm import models as crmmodels
-from crm.admin import *
 from django.utils.translation import ugettext as _
 from django.contrib import admin
 from django.http import HttpResponse
@@ -69,7 +68,6 @@ class OptionSubscription(admin.ModelAdmin):
 
    actions = ['createSubscriptionPDF', 'createInvoice']
 
-
 class OptionSubscriptionType(admin.ModelAdmin):
    list_display = ('id', 'title','defaultunit', 'tax', 'accoutingProductCategorie')
    list_display_links = ('id', )       
@@ -82,19 +80,17 @@ class OptionSubscriptionType(admin.ModelAdmin):
       }),
    )
    
-   
-class PluginActions(object):
-  @classmethod
-  def createSubscription(a, b, request, queryset):
-    for contract in queryset:
-        subscription = Subscription()
-        subscription.createSubscriptionFromContract(crmmodels.Contract.objects.get(id=contract.id))
-        response = HttpResponseRedirect('/admin/crm/subscription/'+str(subscription.id))
-    return response   
+def createSubscription(a, request, queryset):
+  for contract in queryset:
+      subscription = Subscription()
+      subscription.createSubscriptionFromContract(crmmodels.Contract.objects.get(id=contract.id))
+      response = HttpResponseRedirect('/admin/subscriptions/'+str(subscription.id))
+  return response  
+createSubscription.short_description = _("Create Subscription")
    
 class KoalixcrmPluginInterface(object):
   contractInlines = [InlineSubscription]
-  contractActions = [PluginActions.createSubscription]
+  contractActions = [createSubscription]
   invoiceInlines = []
   invoiceActions = []
   quoteInlines = []
