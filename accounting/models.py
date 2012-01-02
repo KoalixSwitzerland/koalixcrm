@@ -151,17 +151,28 @@ class Account(models.Model):
    # TODO: This can only be set when accountType is Activa and can not be product inventry as well
    
    def value(self):
-      date.today()
-      sum = self.allBookings(fromAccount = False, accountingPeriod = accountingPeriod) - self.allBookings(fromAccount = True, accountingPeriod = accountingPeriod)
+      sum = self.allBookings(fromAccount = False) - self.allBookings(fromAccount = True)
       if (self.accountType == 'P' or self.accountType == 'E'):
         sum = 0 - sum
       return sum
       
    def valueNow(self, accountingPeriod):
-      sum = self.allBookings(fromAccount = False, accountingPeriod = accountingPeriod) - self.allBookings(fromAccount = True, accountingPeriod = accountingPeriod)
+      sum = self.allBookingsInAccountingPeriod(fromAccount = False, accountingPeriod = accountingPeriod) - self.allBookingsInAccountingPeriod(fromAccount = True, accountingPeriod = accountingPeriod)
+      return sum
+      
+   def allBookings(self, fromAccount):
+      sum = 0
+      if (fromAccount == True):
+         bookings = Booking.objects.filter(fromAccount=self.id)
+      else:
+         bookings = Booking.objects.filter(toAccount=self.id)
+      
+      for booking in list(bookings):
+         sum = sum + booking.amount
+         
       return sum
 
-   def allBookings(self, fromAccount, accountingPeriod):
+   def allBookingsInAccountingPeriod(self, fromAccount, accountingPeriod):
       sum = 0
       if (fromAccount == True):
          bookings = Booking.objects.filter(fromAccount=self.id, accountingPeriod=accountingPeriod.id)

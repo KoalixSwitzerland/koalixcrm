@@ -33,8 +33,8 @@ class OptionBooking(admin.ModelAdmin):
       obj.save()
    
 class OptionAccount(admin.ModelAdmin):
-   list_display = ('accountNumber', 'accountType', 'title', 'isopenreliabilitiesaccount', 'isopeninterestaccount', 'isProductInventoryActiva', 'isACustomerPaymentAccount')
-   list_display_links = ('accountNumber', 'accountType', 'title')
+   list_display = ('accountNumber', 'accountType', 'title', 'isopenreliabilitiesaccount', 'isopeninterestaccount', 'isProductInventoryActiva', 'isACustomerPaymentAccount', 'value')
+   list_display_links = ('accountNumber', 'accountType', 'title', 'value')
    fieldsets = ((_('Basic'), {'fields': ('accountNumber', 'accountType', 'title', 'isopenreliabilitiesaccount', 'isopeninterestaccount', 'isProductInventoryActiva', 'isACustomerPaymentAccount')}),)
    save_as = True
 

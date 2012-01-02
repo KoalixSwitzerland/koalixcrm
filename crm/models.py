@@ -460,6 +460,13 @@ class Invoice(SalesContract):
       dictprices = dict()
       dicttax = dict()
       exists = False
+      currentValidAccountingPeriod = None
+      for accountingPeriod in accounting.models.AccountingPeriod.objects.all():
+        if accountingPeriod.begin < date.today() and accountingPeriod.end > date.today():
+          currentValidAccountingPeriod = accountingPeriod
+          break
+      if currentValidAccountingPeriod == None:
+        raise NoFeasableAccountingPeriodFound()        
       activaaccount = accounting.models.Account.objects.filter(isopeninterestaccount=True)
       for position in list(SalesContractPosition.objects.filter(contract=self.id)):
         profitaccount = position.product.accoutingProductCategorie.profitAccount
@@ -473,11 +480,15 @@ class Invoice(SalesContract):
           dictprices[profitaccount] = position.lastCalculatedPrice
           dicttax[profitaccount] = position.lastCalculatedTax
          
-      for profitaccount, amount in dictprices.iteritems():
+      for booking in accounting.models.Booking.objects.filter(accountingPeriod=currentValidAccountingPeriod):
+        if booking.bookingReference == self:
+          raise InvoiceAlreadyRegistered()
+        for profitaccount, amount in dictprices.iteritems():
          booking = accounting.models.Booking()
          booking.toAccount = activaaccount[0]
          booking.fromAccount = profitaccount
-         booking.accountingCalculationUnit = accounting.models.AccountingCalculationUnit.objects.all()[0]
+         booking.bookingReference = self
+         booking.accountingPeriod = currentValidAccountingPeriod
          booking.bookingDate = date.today().__str__()
          booking.staff = request.user
          booking.amount = amount
@@ -491,7 +502,7 @@ class Invoice(SalesContract):
       booking.fromAccount = paymentaccount
       booking.bookingDate = date.today().__str__()
       booking.bookingReference = self
-      booking.accountingCalculationUnit = accounting.models.AccountingCalculationUnit.objects.all()[0]
+      booking.accountingPeriod = accounting.models.AccountingPeriod.objects.all()[0]
       booking.amount = self.lastCalculatedPrice
       booking.staff = request.user
       booking.lastmodifiedby = request.user
