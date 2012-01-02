@@ -27,6 +27,7 @@ class InlineSubscription(admin.TabularInline):
    model = Subscription
    extra = 1
    classes = ('collapse-open',)
+   readonly_fields = ('contract', 'subscriptiontype')
    fieldsets = (
       (_('Basics'), {
          'fields': ( 'contract', 'subscriptiontype'  )

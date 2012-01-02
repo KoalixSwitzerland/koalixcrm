@@ -128,6 +128,7 @@ class InlineQuote(admin.TabularInline):
    model = Quote
    classes = ('collapse-open')
    extra = 1
+   readonly_fields = ('description', 'contract', 'customer', 'validuntil', 'status', 'lastPricingDate', 'lastCalculatedPrice', 'lastCalculatedTax', )
    fieldsets = (
       (_('Basics'), {
          'fields': ('description', 'contract', 'customer', 'validuntil', 'status')
@@ -143,21 +144,24 @@ class InlineInvoice(admin.TabularInline):
    model = Invoice
    classes = ('collapse-open')
    extra = 1
+   readonly_fields = ('lastPricingDate', 'lastCalculatedPrice', 'lastCalculatedTax', 'description', 'contract', 'customer', 'payableuntil', 'status' )
    fieldsets = (
       (_('Basics'), {
-         'fields': ('description', 'contract', 'customer', 'payableuntil', 'status')
+         'fields': ('description', 'contract', 'customer', 'payableuntil', 'status'),
       }),
       (_('Advanced (not editable)'), {
          'classes': ('collapse',),
          'fields': ('lastPricingDate', 'lastCalculatedPrice', 'lastCalculatedTax',)
       }),
    )
+   
    allow_add = False
    
 class InlinePurchaseOrder(admin.TabularInline):
    model = PurchaseOrder
    classes = ('collapse-open')
    extra = 1
+   readonly_fields = ('description', 'contract', 'supplier', 'externalReference', 'status', 'lastPricingDate', 'lastCalculatedPrice' )
    fieldsets = (
       (_('Basics'), {
          'fields': ('description', 'contract', 'supplier', 'externalReference', 'status')
