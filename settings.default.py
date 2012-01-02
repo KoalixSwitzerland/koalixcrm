@@ -29,7 +29,7 @@ LANGUAGES = (
   ('de', 'German'),
   ('en', 'English'),
 )
-LOCALE_PATHS = ('crm/locale', 'accounting/locale')
+LOCALE_PATHS = ('crm/locale', 'accounting/locale', 'subscriptions/locale', 'djangoUserExtension/locale')
 
 SITE_ID = 1
 USE_I18N = True

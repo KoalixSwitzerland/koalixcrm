@@ -20,5 +20,3 @@ pip-log.txt
 .coverage
 .tox
 
-#Translations
-*.mo
