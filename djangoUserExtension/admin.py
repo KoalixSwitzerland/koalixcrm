@@ -58,14 +58,14 @@ class OptionTemplateSet(admin.ModelAdmin):
    search_fields  = ('id', 'title', 'organisationname', 'invoiceXSLFile', 'quoteXSLFile', 'purchaseconfirmationXSLFile',
    'deilveryorderXSLFile', 'profitLossStatementXSLFile', 'balancesheetXSLFile', 
    'logo', 'footerTextsalesorders', 'headerTextsalesorders', 
-   'headerTextpurchaseorders', 'footerTextpurchaseorders', 'pagefooterleft', 'pagefootermiddle'
+   'headerTextpurchaseorders', 'footerTextpurchaseorders', 'pagefooterleft', 'pagefootermiddle', 'bankingaccountref'
    )
    fieldsets = (
       (_('Basics'), {
          'fields': ('title', 'organisationname', 'invoiceXSLFile', 'quoteXSLFile', 'purchaseconfirmationXSLFile',
    'deilveryorderXSLFile', 'profitLossStatementXSLFile', 'balancesheetXSLFile', 
    'logo', 'fopConfigurationFile', 'footerTextsalesorders', 'headerTextsalesorders', 
-   'headerTextpurchaseorders', 'footerTextpurchaseorders', 'pagefooterleft', 'pagefootermiddle')
+   'headerTextpurchaseorders', 'footerTextpurchaseorders', 'pagefooterleft', 'pagefootermiddle', 'bankingaccountref')
       }),
    )
    

@@ -31,7 +31,7 @@
               <fo:block text-align="left" >
                 <fo:external-graphic content-width="6.0cm">
                   <xsl:attribute name="src">
-                     <xsl:value-of select="projectroot"/><xsl:value-of select="object[@model='djangoUserExtention.templateset']/field[@name='logo']"/>
+                     <xsl:value-of select="projectroot"/><xsl:value-of select="object[@model='djangoUserExtension.templateset']/field[@name='logo']"/>
                   </xsl:attribute>
                 </fo:external-graphic>
               </fo:block>
@@ -110,8 +110,8 @@
               font-family="BitstreamVeraSans"
               text-align="left">
             <xsl:choose>
-	      <xsl:when  test="object[@model='djangoUserExtention.templateset']/field[@name='bankingaccountref']">
-		<xsl:value-of select="object[@model='djangoUserExtention.templateset']/field[@name='bankingaccountref']"/>
+	      <xsl:when  test="object[@model='djangoUserExtension.templateset']/field[@name='bankingaccountref']">
+		<xsl:value-of select="object[@model='djangoUserExtension.templateset']/field[@name='bankingaccountref']"/>
 	      </xsl:when>
 	      <xsl:otherwise>
 		<fo:leader leader-pattern="space"/>
@@ -139,7 +139,7 @@
               font-family="BitstreamVeraSans"
 	      text-decoration="underline"
               text-align="start"
-	      margin-bottom="0.5cm"><xsl:value-of select="object[@model='djangoUserExtention.templateset']/field[@name='addresser']"/></fo:block>
+	      margin-bottom="0.5cm"><xsl:value-of select="object[@model='djangoUserExtension.templateset']/field[@name='addresser']"/></fo:block>
             <xsl:choose>
               <xsl:when  test="object[@model='crm.postaladdressforcontact']/field[@name='purpose']">
               <fo:block font-size="9pt"
@@ -207,7 +207,7 @@
               color="black"
               text-align="left"
               margin-top="1cm">
-       <xsl:value-of select="object[@model='djangoUserExtention.templateset']/field[@name='headerTextsalesorders']"/>
+       <xsl:value-of select="object[@model='djangoUserExtension.templateset']/field[@name='headerTextsalesorders']"/>
        </fo:block>
       </fo:static-content>
     <fo:static-content flow-name="xsl-region-after" >
@@ -233,9 +233,9 @@
               font-family="BitstreamVeraSans"
               font-weight="bold"
               text-align="start">
-               <xsl:value-of select="object[@model='djangoUserExtention.templateset']/field[@name='pagefooterleft']"/>
+               <xsl:value-of select="object[@model='djangoUserExtension.templateset']/field[@name='pagefooterleft']"/>
               <xsl:text>                  </xsl:text>
-              <xsl:value-of select="object[@model='djangoUserExtention.templateset']/field[@name='pagefootermiddle']"/></fo:block>
+              <xsl:value-of select="object[@model='djangoUserExtension.templateset']/field[@name='pagefootermiddle']"/></fo:block>
            </fo:table-cell>
            <fo:table-cell>
             <fo:block font-size="8pt"
@@ -471,7 +471,7 @@
               text-align="left"
               margin-top="1cm"
               id="last-page">
-      <xsl:value-of select="object[@model='djangoUserExtention.templateset']/field[@name='footerTextsalesorders']"/>
+      <xsl:value-of select="object[@model='djangoUserExtension.templateset']/field[@name='footerTextsalesorders']"/>
       </fo:block>
     </fo:flow>
      <xsl:apply-templates/>
