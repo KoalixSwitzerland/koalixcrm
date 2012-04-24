@@ -432,14 +432,18 @@ class Quote(SalesContract):
      projectroot = etree.SubElement(rootelement, "projectroot")
      projectroot.text = settings.PROJECT_ROOT
      xml.write(settings.PDF_OUTPUT_ROOT+"quote_"+str(self.id)+".xml")
-     log = open(settings.PDF_OUTPUT_ROOT+"log.txt", "w")
-     log.write('bash -c "fop -c '+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'quote_'+str(self.id)+'.xml -xsl ' + userExtension[0].defaultTemplateSet.quoteXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'quote_'+str(self.id)+'.pdf"')
-     log.close()
-     if (purchaseconfirmation == False) :
+     if (purchaseconfirmation == False):
+        log = open(settings.PDF_OUTPUT_ROOT+"log.txt", "w")
+        log.write('bash -c "fop -c '+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'quote_'+str(self.id)+'.xml -xsl ' + userExtension[0].defaultTemplateSet.quoteXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'quote_'+str(self.id)+'.pdf"')
+        log.close()
         system('bash -c "fop -c '+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'quote_'+str(self.id)+'.xml -xsl ' + userExtension[0].defaultTemplateSet.quoteXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'quote_'+str(self.id)+'.pdf"')
+        return settings.PDF_OUTPUT_ROOT+"quote_"+str(self.id)+".pdf"
      else:
-        system('bash -c "fop -c '+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+'  -xml '+settings.PDF_OUTPUT_ROOT+'quote_'+str(self.id)+'.xml -xsl ' + userExtension[0].defaultTemplateSet.purchaseconfirmationXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'purchaseconfirmation_'+str(self.id)+'.pdf"')
-     return settings.PDF_OUTPUT_ROOT+"quote_"+str(self.id)+".pdf"
+        log = open(settings.PDF_OUTPUT_ROOT+"log.txt", "w")
+        log.write('bash -c "fop -c '+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'quote_'+str(self.id)+'.xml -xsl ' + userExtension[0].defaultTemplateSet.purchaseconfirmationXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'purchaseconfirmation_'+str(self.id)+'.pdf"')
+        log.close()
+        system('bash -c "fop -c '+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'quote_'+str(self.id)+'.xml -xsl ' + userExtension[0].defaultTemplateSet.purchaseconfirmationXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'purchaseconfirmation_'+str(self.id)+'.pdf"')
+        return settings.PDF_OUTPUT_ROOT+"purchaseconfirmation_"+str(self.id)+".pdf"  
      
    def __unicode__(self):
       return _("Quote")+ ": " + str(self.id) + " "+_("from Contract")+": " + str(self.contract.id) 
