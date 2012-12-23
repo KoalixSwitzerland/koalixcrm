@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-05-16 01:10+0200\n"
+"POT-Creation-Date: 2012-12-23 10:02+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,15 +21,15 @@ msgstr ""
 msgid "Basic"
 msgstr "Grundlagen"
 
-#: admin.py:45 admin.py:70
+#: admin.py:45 admin.py:80
 msgid "Basics"
 msgstr "Grundlagen"
 
-#: admin.py:56
+#: admin.py:66
 msgid "Create PDF of Balance Sheet"
 msgstr "Erzeuge ein PDF der Bilanz"
 
-#: admin.py:62
+#: admin.py:72
 msgid "Create PDF of Profit Loss Statement Sheet"
 msgstr "Erzeuge ein PDF der Erfolgsrechnung"
 
@@ -46,12 +46,12 @@ msgid "End"
 msgstr "Ende"
 
 #: models.py:137
-msgid "Accounting Calculation Unit"
-msgstr "Geschäftsjahr/quartal"
+msgid "Accounting Period"
+msgstr "Abrechnungszeitraum"
 
 #: models.py:138
-msgid "Accounting Calculation Units"
-msgstr "Geschäftsjahre/quartale"
+msgid "Accounting Periods"
+msgstr "Abrechnungszeiträume"
 
 #: models.py:141
 msgid "Account Number"
@@ -81,75 +81,79 @@ msgstr "Konto für Lager"
 msgid "Is a Customer Payment Account"
 msgstr "Konto für Kundeneinzahlungen"
 
-#: models.py:183 models.py:184
+#: models.py:193 models.py:194
 msgid "Account"
 msgstr "Konto"
 
-#: models.py:188
+#: models.py:198
 msgid "Product Categorie Title"
 msgstr "Produktekategorie"
 
-#: models.py:189
+#: models.py:199
 msgid "Profit Account"
 msgstr "Ertrag Konto"
 
-#: models.py:190
+#: models.py:200
 msgid "Loss Account"
 msgstr "Aufwand Konto"
 
-#: models.py:195 models.py:196
+#: models.py:205
 msgid "Product Categorie"
 msgstr "Produktekategorie"
 
-#: models.py:201
+#: models.py:206
+msgid "Product Categories"
+msgstr "Produktekategorien"
+
+#: models.py:211
 msgid "From Account"
 msgstr "Vom Konto (Soll)"
 
-#: models.py:202
+#: models.py:212
 msgid "To Account"
 msgstr "Zu Konto (Haben)"
 
-#: models.py:203
+#: models.py:213
 msgid "Amount"
 msgstr "Betrag"
 
-#: models.py:204
+#: models.py:214
 msgid "Description"
 msgstr "Beschreibung"
 
-#: models.py:205
+#: models.py:215
 msgid "Booking Reference"
 msgstr "Buchungsreferenz"
 
-#: models.py:206
+#: models.py:216
 msgid "Booking at"
 msgstr "Buchung am"
 
-#: models.py:207
-msgid "AccountingCalculationUnit"
-msgstr "Geschäftsjahr/quartal"
+#: models.py:217
+msgid "AccountingPeriod"
+msgstr "Abrechnungszeitraum"
 
-#: models.py:208
+#: models.py:218
 msgid "Reference Staff"
 msgstr "Zuständiger Mitarbeiter"
 
-#: models.py:209
+#: models.py:219
 msgid "Created at"
 msgstr "Erstellt am"
 
-#: models.py:210
+#: models.py:220
 msgid "Last modified"
 msgstr "Zuletzt verändert"
 
-#: models.py:211
+#: models.py:221
 msgid "Last modified by"
 msgstr "Zuletzt verändert von"
 
-#: models.py:219
+#: models.py:229
 msgid "Booking"
 msgstr "Buchung"
 
-#: models.py:220
+#: models.py:230
 msgid "Bookings"
 msgstr "Buchungen"
 
