@@ -3,6 +3,8 @@
 from os import system
 from const.accountTypeChoices import *
 from crm.models import Contract
+from crm.exceptions import TemplateSetMissing
+from crm.exceptions import UserExtensionMissing
 from django.db import models
 from django.contrib.contenttypes import generic
 from django.utils.translation import ugettext as _
@@ -17,10 +19,60 @@ class AccountingPeriod(models.Model):
   title =  models.CharField(max_length=200, verbose_name=_("Title")) # For example "Year 2009", "1st Quarter 2009"
   begin = models.DateField(verbose_name=_("Begin"))
   end = models.DateField(verbose_name=_("End"))
-            
+  
+  def createPDF(self, deliveryorder):
+     XMLSerializer = serializers.get_serializer("xml")
+     xml_serializer = XMLSerializer()
+     out = open(settings.PDF_OUTPUT_ROOT+"invoice_"+str(self.id)+".xml", "w")
+     objectsToSerialize = list(Invoice.objects.filter(id=self.id)) 
+     objectsToSerialize += list(SalesContract.objects.filter(id=self.id)) 
+     objectsToSerialize += list(Contact.objects.filter(id=self.customer.id))
+     objectsToSerialize += list(Currency.objects.filter(id=self.currency.id))
+     objectsToSerialize += list(SalesContractPosition.objects.filter(contract=self.id))
+     for position in list(SalesContractPosition.objects.filter(contract=self.id)):
+         objectsToSerialize += list(Position.objects.filter(id=position.id))
+         objectsToSerialize += list(Product.objects.filter(id=position.product.id))
+         objectsToSerialize += list(Unit.objects.filter(id=position.unit.id))
+     objectsToSerialize += list(auth.models.User.objects.filter(id=self.staff.id))
+     userExtension = djangoUserExtension.models.UserExtension.objects.filter(user=self.staff.id)
+     if (len(userExtension) == 0):
+      raise UserExtensionMissing(_("During Invoice PDF Export"))
+     phoneAddress = djangoUserExtension.models.UserExtensionPhoneAddress.objects.filter(userExtension=userExtension[0].id)
+     objectsToSerialize += list(userExtension)
+     objectsToSerialize += list(PhoneAddress.objects.filter(id=phoneAddress[0].id))
+     templateset = djangoUserExtension.models.TemplateSet.objects.filter(id=userExtension[0].defaultTemplateSet.id)
+     if (len(templateset) == 0):
+      raise TemplateSetMissing(_("During Invoice PDF Export"))
+     objectsToSerialize += list(templateset)
+     objectsToSerialize += list(auth.models.User.objects.filter(id=self.lastmodifiedby.id))
+     objectsToSerialize += list(PostalAddressForContact.objects.filter(person=self.customer.id))
+     for address in list(PostalAddressForContact.objects.filter(person=self.customer.id)):
+         objectsToSerialize += list(PostalAddress.objects.filter(id=address.id))
+     xml_serializer.serialize(objectsToSerialize, stream=out, indent=3)
+     out.close()
+     xml = etree.parse(settings.PDF_OUTPUT_ROOT+"invoice_"+str(self.id)+".xml")
+     rootelement = xml.getroot()
+     projectroot = etree.SubElement(rootelement, "projectroot")
+     projectroot.text = settings.PROJECT_ROOT
+     xml.write(settings.PDF_OUTPUT_ROOT+"invoice_"+str(self.id)+".xml")
+     if (deliveryorder == False):
+        log = open(settings.PDF_OUTPUT_ROOT+"log.txt", "w")
+        log.write('bash -c "fop -c '+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.xml -xsl ' + userExtension[0].defaultTemplateSet.invoiceXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.pdf"')
+        log.close()
+        system('bash -c "fop -c '+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.xml -xsl ' + userExtension[0].defaultTemplateSet.invoiceXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.pdf"')
+        return settings.PDF_OUTPUT_ROOT+"invoice_"+str(self.id)+".pdf"
+     else:
+        log = open(settings.PDF_OUTPUT_ROOT+"log.txt", "w")
+        log.write('bash -c "fop -c '+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.xml -xsl ' + userExtension[0].defaultTemplateSet.deilveryorderXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'deliveryorder_'+str(self.id)+'.pdf"')
+        log.close()
+        system('bash -c "fop -c '+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.xml -xsl ' + userExtension[0].defaultTemplateSet.deilveryorderXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'deliveryorder_'+str(self.id)+'.pdf"')
+        return settings.PDF_OUTPUT_ROOT+"deliveryorder_"+str(self.id)+".pdf"  
+  
   def createBalanceSheetPDF(self, raisedbyuser):
     userExtension = djangoUserExtension.models.UserExtension.objects.filter(user=raisedbyuser.id)
-    out = open("/tmp/balancesheet_"+str(self.id)+".xml","w")
+    if (len(userExtension) == 0):
+      raise UserExtensionMissing(_("During BalanceSheet PDF Export"))
+    out = open(settings.PDF_OUTPUT_ROOT+"balancesheet_"+str(self.id)+".xml", "w")
     doc = Document()
     main = doc.createElement("koalixaccountingbalacesheet")
     accountingPeriodName = doc.createElement("accountingPeriodName")
@@ -66,11 +118,11 @@ class AccountingPeriod(models.Model):
     doc.appendChild(main)
     out.write(doc.toxml("utf-8"))
     out.close()
-    log = open("/tmp/log.txt", "w")
-    log.write('bash -c "fop -c '+settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/balancesheet_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.balancesheetXSLFile.xslfile.path+' -pdf /tmp/balancesheet_'+str(self.id)+'.pdf"')
+    log = open(settings.PDF_OUTPUT_ROOT+"log.txt", "w")
+    log.write('bash -c "fop -c '+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'balancesheet_'+str(self.id)+'.xml -xsl ' + userExtension[0].defaultTemplateSet.balancesheetXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'balancesheet_'+str(self.id)+'.pdf"')
     log.close()
-    system ('bash -c "fop -c '+settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/balancesheet_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.balancesheetXSLFile.xslfile.path+' -pdf /tmp/balancesheet_'+str(self.id)+'.pdf"')
-    return "/tmp/balancesheet_"+str(self.id)+".pdf"
+    system ('bash -c "fop -c '+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'balancesheet_'+str(self.id)+'.xml -xsl ' + userExtension[0].defaultTemplateSet.balancesheetXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'balancesheet_'+str(self.id)+'.pdf"')
+    return settings.PDF_OUTPUT_ROOT+"balancesheet_"+str(self.id)+".pdf"  
     
   def createProfitLossStatementPDF(self, raisedbyuser):
     userExtension = djangoUserExtension.models.UserExtension.objects.filter(user=raisedbyuser.id)
