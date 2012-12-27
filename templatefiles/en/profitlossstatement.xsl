@@ -42,7 +42,7 @@
               color="black"
               text-align="left"
               font-weight="bold">
-        Erfolgsrechnung der koalix Riedener
+        Profit / Loss Statement of the <xsl:value-of select="organisationname"/>
        </fo:block>
       </fo:static-content>
     <fo:static-content flow-name="xsl-region-after" >
@@ -67,7 +67,7 @@
             <fo:block font-size="8pt"
               font-family="BitstreamVeraSans"
               font-weight="bold"
-              text-align="end">Seite <fo:page-number/>/<fo:page-number-citation ref-id="last-page"/></fo:block>
+              text-align="end">Page <fo:page-number/>/<fo:page-number-citation ref-id="last-page"/></fo:block>
            </fo:table-cell>
          </fo:table-row>
         </fo:table-body>
@@ -78,7 +78,7 @@
        <fo:block font-size="9pt"
               font-family="BitstreamVeraSans"
               text-align="left"
-              line-height="13pt" >Ertrag</fo:block>
+              line-height="13pt" >Earnings</fo:block>
        <fo:table table-layout="fixed" width="100%">
           <fo:table-column column-width="3cm"/>
           <fo:table-column column-width="11cm"/>
@@ -86,17 +86,17 @@
      <fo:table-header font-size="9pt" line-height="9pt" font-weight="bold" font-family="BitstreamVeraSans">
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="start" >
-                      Kontonummer
+                      Account Number
                    </fo:block>
                 </fo:table-cell>
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="start" >
-                      Konto
+                      Account
                    </fo:block>
                 </fo:table-cell>
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="end" >
-                      Wert
+                      Value
                    </fo:block>
                 </fo:table-cell>
              </fo:table-header>
@@ -133,7 +133,7 @@
               font-family="BitstreamVeraSans"
               text-align="left"
               line-height="13pt"
-              padding-top="0.7cm">Aufwand</fo:block>
+              padding-top="0.7cm">Spendings</fo:block>
        <fo:table table-layout="fixed" width="100%">
           <fo:table-column column-width="3cm"/>
           <fo:table-column column-width="11cm"/>

@@ -5,6 +5,7 @@ from django.core.urlresolvers import reverse
 from datetime import date
 from crm.models import *
 from crm.views import *
+from accounting.models import Booking
 from plugin import *
 from django.utils.translation import ugettext as _
 from django.contrib import admin
@@ -235,7 +236,17 @@ class PurchaseOrderInlinePosition(admin.TabularInline):
         }),
     )
     allow_add = True
-
+    
+class InlineBookings(admin.TabularInline):
+   model = Booking
+   extra = 1
+   classes = ('collapse-open',)
+   fieldsets = (
+      ('Basics', {
+         'fields': ('fromAccount', 'toAccount', 'description', 'amount', 'bookingDate', 'staff', 'bookingReference',)
+      }),
+   )
+   allow_add = False
 
 class OptionInvoice(admin.ModelAdmin):
    list_display = ('id', 'description', 'contract', 'customer', 'payableuntil', 'status', 'currency', 'staff',  'lastCalculatedPrice', 'lastPricingDate', 'lastmodification', 'lastmodifiedby')
@@ -249,7 +260,7 @@ class OptionInvoice(admin.ModelAdmin):
       }),
    )
    save_as = True
-   inlines = [SalesContractInlinePosition, SalesContractPostalAddress, SalesContractPhoneAddress, SalesContractEmailAddress]
+   inlines = [SalesContractInlinePosition, SalesContractPostalAddress, SalesContractPhoneAddress, SalesContractEmailAddress, InlineBookings]
    pluginProcessor = PluginProcessor()
    inlines.extend(pluginProcessor.getPluginAdditions("invoiceInlines"))
 
@@ -303,7 +314,7 @@ class OptionInvoice(admin.ModelAdmin):
    
    actions = ['recalculatePrices', 'createDeliveryOrderPDF', 'createInvoicePDF', 'registerInvoiceInAccounting', 'unregisterInvoiceInAccounting', 'registerPaymentInAccounting']
    pluginProcessor = PluginProcessor()
-   inlines.extend(pluginProcessor.getPluginAdditions("invoiceActions"))
+   actions.extend(pluginProcessor.getPluginAdditions("invoiceActions"))
 
 
 class OptionQuote(admin.ModelAdmin):

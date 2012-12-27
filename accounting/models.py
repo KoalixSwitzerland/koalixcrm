@@ -126,15 +126,17 @@ class AccountingPeriod(models.Model):
     
   def createProfitLossStatementPDF(self, raisedbyuser):
     userExtension = djangoUserExtension.models.UserExtension.objects.filter(user=raisedbyuser.id)
-    out = open("/tmp/profitlossstatement_"+str(self.id)+".xml","w")
+    if (len(userExtension) == 0):
+      raise UserExtensionMissing(_("During BalanceSheet PDF Export"))
+    out = open(settings.PDF_OUTPUT_ROOT+"profitlossstatement_"+str(self.id)+".xml", "w")
     doc = Document()
     main = doc.createElement("koalixaccountingprofitlossstatement")
     accountingPeriodName = doc.createElement("accountingPeriodName")
     accountingPeriodName.appendChild(doc.createTextNode(self.__unicode__()))
     main.appendChild(accountingPeriodName)
-    organisiationname = doc.createElement("organisiationname")
-    organisiationname.appendChild(doc.createTextNode(settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.organisiationname))
-    main.appendChild(organisiationname)
+    organisationname = doc.createElement("organisiationname")
+    organisationname.appendChild(doc.createTextNode(settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.organisationname))
+    main.appendChild(organisationname)
     accountingPeriodTo = doc.createElement("accountingPeriodTo")
     accountingPeriodTo.appendChild(doc.createTextNode(self.end.year.__str__()))
     main.appendChild(accountingPeriodTo)
@@ -172,11 +174,11 @@ class AccountingPeriod(models.Model):
     doc.appendChild(main)
     out.write(doc.toxml("utf-8"))
     out.close()
-    log = open("/tmp/log.txt", "w")
-    log.write('bash -c "fop -c '+settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/profitlossstatement_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.profitLossStatementXSLFile.xslfile.path+' -pdf /tmp/profitlossstatement_'+str(self.id)+'.pdf"')
+    log = open(settings.PDF_OUTPUT_ROOT+"log.txt", "w")
+    log.write('bash -c "fop -c '+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'profitlossstatement_'+str(self.id)+'.xml -xsl ' + userExtension[0].defaultTemplateSet.profitLossStatementXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'profitlossstatement_'+str(self.id)+'.pdf"')
     log.close()
-    system('bash -c "fop -c '+settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml /tmp/profitlossstatement_'+str(self.id)+'.xml -xsl ' + settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.profitLossStatementXSLFile.xslfile.path+' -pdf /tmp/profitlossstatement_'+str(self.id)+'.pdf"')
-    return "/tmp/profitlossstatement_"+str(self.id)+".pdf"
+    system ('bash -c "fop -c '+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'profitlossstatement_'+str(self.id)+'.xml -xsl ' + userExtension[0].defaultTemplateSet.profitLossStatementXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'profitlossstatement_'+str(self.id)+'.pdf"')
+    return settings.PDF_OUTPUT_ROOT+"profitlossstatement_"+str(self.id)+".pdf"  
     
   def __unicode__(self):
       return  self.title

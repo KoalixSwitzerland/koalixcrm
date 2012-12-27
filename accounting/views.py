@@ -17,7 +17,7 @@ def createBalanceSheetPDF(request, calculationunitid):
 
 def createProfitLossStatementPDF(request, calculationunitid):
   try:
-   accountingPeriod = AccountingPeriod.objects.get(id=quoteid)
+   accountingPeriod = AccountingPeriod.objects.get(id=calculationunitid)
    pdf = accountingPeriod.createProfitLossStatementPDF(request.user)
    response = HttpResponse(FileWrapper(file(pdf)), mimetype='application/pdf')
    response['Content-Length'] = path.getsize(pdf)
