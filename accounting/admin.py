@@ -31,12 +31,63 @@ class OptionBooking(admin.ModelAdmin):
         obj.lastmodifiedby = request.user
         obj.staff = request.user
       obj.save()
+      
+class AccountForm(forms.ModelForm):
+    """ AccountForm is used to overwrite the clean method of the 
+    original form and to add an additional checks to the model"""
+    class Meta:
+        model = Account
+        
+    def clean(self):
+        super(AccountForm, self).clean()
+        errors = []
+        if (self.cleaned_data['isopenreliabilitiesaccount']):
+          openliabilitiesaccount = Account.objects.filter(isopenreliabilitiesaccount=True)
+          if (self.cleaned_data['accountType'] != "L" ):
+            errors.append(_('The open liabilites account must be a liabities account'))
+          elif openliabilitiesaccount:
+            errors.append(_('There may only be one open liablities account in the system'))
+	if (self.cleaned_data['isopeninterestaccount']):
+	  openinterestaccounts = Account.objects.filter(isopeninterestaccount=True)
+	  if (self.cleaned_data['accountType']  != "A" ):
+            errors.append(_('The open intrests account must be an asset account'))
+	  elif openinterestaccounts:
+            errors.append(_('There may only be one open intrests account in the system'))
+	if (self.cleaned_data['isACustomerPaymentAccount']):
+	  if (self.cleaned_data['accountType']  != "A" ):
+            errors.append(_('A customer payment account must be an asset account'))
+	if (self.cleaned_data['isProductInventoryActiva']):
+	  if (self.cleaned_data['accountType']  != "A" ):
+            errors.append(_('A product inventory account must be an asset account'))
+        if len(errors) > 0:
+	   raise forms.ValidationError(errors)   
+	return self.cleaned_data
    
 class OptionAccount(admin.ModelAdmin):
    list_display = ('accountNumber', 'accountType', 'title', 'isopenreliabilitiesaccount', 'isopeninterestaccount', 'isProductInventoryActiva', 'isACustomerPaymentAccount', 'value')
    list_display_links = ('accountNumber', 'accountType', 'title', 'value')
    fieldsets = ((_('Basic'), {'fields': ('accountNumber', 'accountType', 'title', 'isopenreliabilitiesaccount', 'isopeninterestaccount', 'isProductInventoryActiva', 'isACustomerPaymentAccount')}),)
    save_as = True
+   
+   form = AccountForm
+
+class AccountingPeriodForm(forms.ModelForm):
+    """ AccountingPeriodForm is used to overwrite the clean method of the 
+    original form and to add an additional check to the model"""
+    class Meta:
+        model = AccountingPeriod
+        
+    def clean(self):
+        super(AccountingPeriodForm, self).clean()
+        errors = []
+        try: 
+           if self.cleaned_data['begin'] > self.cleaned_data['end']:
+              errors.append(_('The begin date cannot be later than the end date.'))
+        except KeyError:
+           errors.append(_('The begin and the end date may not be empty'))
+        if errors:
+	   raise forms.ValidationError(errors)
+	return self.cleaned_data
 
 class OptionAccountingPeriod(admin.ModelAdmin):
    list_display = ('title', 'begin', 'end')
@@ -48,6 +99,8 @@ class OptionAccountingPeriod(admin.ModelAdmin):
    )
    inlines = [AccountingPeriodBooking, ]
    save_as = True
+   
+   form = AccountingPeriodForm
    
    def save_formset(self, request, form, formset, change):
     instances = formset.save(commit=False)

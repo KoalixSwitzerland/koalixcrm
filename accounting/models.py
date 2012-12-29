@@ -284,30 +284,3 @@ class Booking(models.Model):
       verbose_name_plural = _('Bookings')
       
       
-
-def preSaveCheckFlags(sender, instance, **kwarg):
-   if (instance.isopenreliabilitiesaccount):
-      openinterestaccounts = Account.objects.filter(isopenreliabilitiesaccount=True)
-      if (instance.accountType != "P" ):
-         instance.isopenreliabilitiesaccount = False
-         #TODO: Correct Action when not Passiva
-      elif openinterestaccounts:
-         instance.isopenreliabilitiesaccount = False
-         #TODO: Correct Action when there is already a isopenreliabilitiesaccount account
-   if (instance.isopeninterestaccount):
-      openinterestaccounts = Account.objects.filter(isopeninterestaccount=True)
-      if (instance.accountType != "A" ):
-         instance.isopeninterestaccount = False
-         #TODO: Correct Action when not Activa
-      elif openinterestaccounts:
-         instance.isopeninterestaccount = False
-         #TODO: Correct Action when there is already a isopenreliabilitiesaccount account
-   if (instance.isACustomerPaymentAccount):
-      if (instance.accountType != "A" ):
-         instance.isACustomerPaymentAccount = False
-         #TODO: Correct Action when not Activa
-   if (instance.isProductInventoryActiva):
-      if (instance.accountType != "A" ):
-         instance.isProductInventoryActiva = False
-         #TODO: Correct Action when not Activa
-signals.pre_save.connect(preSaveCheckFlags, Account)
