@@ -159,7 +159,7 @@ msgstr "Buchungen"
 
 #: const/accountTypeChoices.py:6
 msgid "Earnings"
-msgstr "Erflog (Einnahmen)"
+msgstr "Ertrag (Einnahmen)"
 
 #: const/accountTypeChoices.py:7
 msgid "Spendings"
@@ -167,9 +167,9 @@ msgstr "Aufwand (Ausgaben)"
 
 #: const/accountTypeChoices.py:8
 msgid "Liabilities"
-msgstr "Passiva"
+msgstr "Passiva (Schulden)"
 
 #: const/accountTypeChoices.py:9
 msgid "Assets"
-msgstr "Aktiva"
+msgstr "Aktiva (Vermögen)"
 

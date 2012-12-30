@@ -20,6 +20,15 @@ class AccountingPeriod(models.Model):
   begin = models.DateField(verbose_name=_("Begin"))
   end = models.DateField(verbose_name=_("End"))
   
+  @staticmethod
+  def getCurrentValidAccountingPeriod():
+     currentValidAccountingPeriod = None
+     for accountingPeriod in AccountingPeriod.objects.all():
+       if accountingPeriod.begin < date.today() and accountingPeriod.end > date.today():
+         return accountingPeriod
+     if currentValidAccountingPeriod == None:
+       raise NoFeasableAccountingPeriodFound()
+  
   def createPDF(self, deliveryorder):
      XMLSerializer = serializers.get_serializer("xml")
      xml_serializer = XMLSerializer()

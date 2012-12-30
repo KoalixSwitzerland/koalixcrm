@@ -370,7 +370,6 @@ class Quote(SalesContract):
       invoice.payableuntil = date.today()+timedelta(days=self.customer.defaultCustomerBillingCycle.timeToPaymentDate)
       invoice.dateofcreation = date.today().__str__()
       invoice.customerBillingCycle = self.customer.defaultCustomerBillingCycle
-# TODO: today is not correct it has to be replaced
       invoice.save()
       try:
          quotePositions = SalesContractPosition.objects.filter(contract=self.id)
@@ -464,40 +463,27 @@ class Invoice(SalesContract):
       dictprices = dict()
       dicttax = dict()
       exists = False
-      currentValidAccountingPeriod = None
-      for accountingPeriod in accounting.models.AccountingPeriod.objects.all():
-        if accountingPeriod.begin < date.today() and accountingPeriod.end > date.today():
-          currentValidAccountingPeriod = accountingPeriod
-          break
-      if currentValidAccountingPeriod == None:
-        raise NoFeasableAccountingPeriodFound()        
+      currentValidAccountingPeriod = accounting.models.AccountingPeriod.getCurrentValidAccountingPeriod()
       activaaccount = accounting.models.Account.objects.filter(isopeninterestaccount=True)
       for position in list(SalesContractPosition.objects.filter(contract=self.id)):
         profitaccount = position.product.accoutingProductCategorie.profitAccount
-        for dictprice in dictprices:
-          if (dictprice.id == profitaccount.id):
-            exists = True
-        if exists:
-          dictprices[profitaccount] += position.lastCalculatedPrice
-          dicttax[profitaccount] += position.lastCalculatedTax
-        else:
-          dictprices[profitaccount] = position.lastCalculatedPrice
-          dicttax[profitaccount] = position.lastCalculatedTax
+        dictprices[profitaccount] = position.lastCalculatedPrice
+        dicttax[profitaccount] = position.lastCalculatedTax
          
       for booking in accounting.models.Booking.objects.filter(accountingPeriod=currentValidAccountingPeriod):
         if booking.bookingReference == self:
           raise InvoiceAlreadyRegistered()
         for profitaccount, amount in dictprices.iteritems():
-         booking = accounting.models.Booking()
-         booking.toAccount = activaaccount[0]
-         booking.fromAccount = profitaccount
-         booking.bookingReference = self
-         booking.accountingPeriod = currentValidAccountingPeriod
-         booking.bookingDate = date.today().__str__()
-         booking.staff = request.user
-         booking.amount = amount
-         booking.lastmodifiedby = request.user
-         booking.save()
+          booking = accounting.models.Booking()
+          booking.toAccount = activaaccount[0]
+          booking.fromAccount = profitaccount
+          booking.bookingReference = self
+          booking.accountingPeriod = currentValidAccountingPeriod
+          booking.bookingDate = date.today().__str__()
+          booking.staff = request.user
+          booking.amount = amount
+          booking.lastmodifiedby = request.user
+          booking.save()
       
    def registerpaymentinaccounting(self, request, paymentaccount, amount, date):
       activaaccount = accounting.Account.objects.filter(isopeninterestaccount=True)
