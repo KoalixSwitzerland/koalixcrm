@@ -196,7 +196,6 @@ class AccountingPeriod(models.Model):
    
   class Meta:
      app_label = "accounting"
-     #app_label_koalix = _("Accounting")
      verbose_name = _('Accounting Period')
      verbose_name_plural = _('Accounting Periods')
             
@@ -204,14 +203,12 @@ class Account(models.Model):
    accountNumber = models.IntegerField(verbose_name=_("Account Number"))
    title = models.CharField(verbose_name=_("Account Title"), max_length=50)
    accountType = models.CharField(verbose_name=_("Account Type"), max_length=1, choices=ACCOUNTTYPECHOICES)
+   description = models.TextField(verbose_name = _("Description"),null=True, blank=True) 
+   originalAmount = models.DecimalField(max_digits=20, decimal_places=2, verbose_name=_("Original Amount"), default=0.00) 
    isopenreliabilitiesaccount = models.BooleanField(verbose_name=_("Is The Open Liabilities Account"))
-   # TODO: There may only be one isopenreliabilitiesaccount and it must be an activa
    isopeninterestaccount = models.BooleanField(verbose_name=_("Is The Open Interests Account"))
-   # TODO: There may only be one openinterestaccount and it must be an activa
    isProductInventoryActiva = models.BooleanField(verbose_name=_("Is a Product Inventory Account"))
-   # TODO: This can only be set when accountType is Activa and can not be customerpaymentaccount
    isACustomerPaymentAccount = models.BooleanField(verbose_name=_("Is a Customer Payment Account"))
-   # TODO: This can only be set when accountType is Activa and can not be product inventry as well
    
    def value(self):
       sum = self.allBookings(fromAccount = False) - self.allBookings(fromAccount = True)
@@ -252,7 +249,6 @@ class Account(models.Model):
       
    class Meta:
       app_label = "accounting"
-      #app_label_koalix = _("Accounting")
       verbose_name = _('Account')
       verbose_name_plural = _('Account')
       ordering = ['accountNumber']
@@ -264,7 +260,6 @@ class ProductCategorie(models.Model):
    
    class Meta:
       app_label = "accounting"
-      #app_label_koalix = _("Accounting")
       verbose_name = _('Product Categorie')
       verbose_name_plural = _('Product Categories')
    def __unicode__(self):
@@ -288,7 +283,6 @@ class Booking(models.Model):
       
    class Meta:
       app_label = "accounting"
-      #app_label_koalix = _("Accounting")
       verbose_name = _('Booking')
       verbose_name_plural = _('Bookings')
       

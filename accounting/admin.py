@@ -66,7 +66,7 @@ class AccountForm(forms.ModelForm):
 class OptionAccount(admin.ModelAdmin):
    list_display = ('accountNumber', 'accountType', 'title', 'isopenreliabilitiesaccount', 'isopeninterestaccount', 'isProductInventoryActiva', 'isACustomerPaymentAccount', 'value')
    list_display_links = ('accountNumber', 'accountType', 'title', 'value')
-   fieldsets = ((_('Basic'), {'fields': ('accountNumber', 'accountType', 'title', 'isopenreliabilitiesaccount', 'isopeninterestaccount', 'isProductInventoryActiva', 'isACustomerPaymentAccount')}),)
+   fieldsets = ((_('Basic'), {'fields': ('accountNumber', 'accountType', 'title', 'description', 'originalAmount', 'isopenreliabilitiesaccount', 'isopeninterestaccount', 'isProductInventoryActiva', 'isACustomerPaymentAccount')}),)
    save_as = True
    
    form = AccountForm
