@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from os import system
+from subprocess import *
 from const.accountTypeChoices import *
 from crm.models import Contract
 from crm.exceptions import TemplateSetMissing
@@ -28,54 +28,6 @@ class AccountingPeriod(models.Model):
          return accountingPeriod
      if currentValidAccountingPeriod == None:
        raise NoFeasableAccountingPeriodFound()
-  
-  def createPDF(self, deliveryorder):
-     XMLSerializer = serializers.get_serializer("xml")
-     xml_serializer = XMLSerializer()
-     out = open(settings.PDF_OUTPUT_ROOT+"invoice_"+str(self.id)+".xml", "w")
-     objectsToSerialize = list(Invoice.objects.filter(id=self.id)) 
-     objectsToSerialize += list(SalesContract.objects.filter(id=self.id)) 
-     objectsToSerialize += list(Contact.objects.filter(id=self.customer.id))
-     objectsToSerialize += list(Currency.objects.filter(id=self.currency.id))
-     objectsToSerialize += list(SalesContractPosition.objects.filter(contract=self.id))
-     for position in list(SalesContractPosition.objects.filter(contract=self.id)):
-         objectsToSerialize += list(Position.objects.filter(id=position.id))
-         objectsToSerialize += list(Product.objects.filter(id=position.product.id))
-         objectsToSerialize += list(Unit.objects.filter(id=position.unit.id))
-     objectsToSerialize += list(auth.models.User.objects.filter(id=self.staff.id))
-     userExtension = djangoUserExtension.models.UserExtension.objects.filter(user=self.staff.id)
-     if (len(userExtension) == 0):
-      raise UserExtensionMissing(_("During Invoice PDF Export"))
-     phoneAddress = djangoUserExtension.models.UserExtensionPhoneAddress.objects.filter(userExtension=userExtension[0].id)
-     objectsToSerialize += list(userExtension)
-     objectsToSerialize += list(PhoneAddress.objects.filter(id=phoneAddress[0].id))
-     templateset = djangoUserExtension.models.TemplateSet.objects.filter(id=userExtension[0].defaultTemplateSet.id)
-     if (len(templateset) == 0):
-      raise TemplateSetMissing(_("During Invoice PDF Export"))
-     objectsToSerialize += list(templateset)
-     objectsToSerialize += list(auth.models.User.objects.filter(id=self.lastmodifiedby.id))
-     objectsToSerialize += list(PostalAddressForContact.objects.filter(person=self.customer.id))
-     for address in list(PostalAddressForContact.objects.filter(person=self.customer.id)):
-         objectsToSerialize += list(PostalAddress.objects.filter(id=address.id))
-     xml_serializer.serialize(objectsToSerialize, stream=out, indent=3)
-     out.close()
-     xml = etree.parse(settings.PDF_OUTPUT_ROOT+"invoice_"+str(self.id)+".xml")
-     rootelement = xml.getroot()
-     projectroot = etree.SubElement(rootelement, "projectroot")
-     projectroot.text = settings.PROJECT_ROOT
-     xml.write(settings.PDF_OUTPUT_ROOT+"invoice_"+str(self.id)+".xml")
-     if (deliveryorder == False):
-        log = open(settings.PDF_OUTPUT_ROOT+"log.txt", "w")
-        log.write('bash -c "fop -c '+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.xml -xsl ' + userExtension[0].defaultTemplateSet.invoiceXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.pdf"')
-        log.close()
-        system('bash -c "fop -c '+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.xml -xsl ' + userExtension[0].defaultTemplateSet.invoiceXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.pdf"')
-        return settings.PDF_OUTPUT_ROOT+"invoice_"+str(self.id)+".pdf"
-     else:
-        log = open(settings.PDF_OUTPUT_ROOT+"log.txt", "w")
-        log.write('bash -c "fop -c '+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.xml -xsl ' + userExtension[0].defaultTemplateSet.deilveryorderXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'deliveryorder_'+str(self.id)+'.pdf"')
-        log.close()
-        system('bash -c "fop -c '+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.xml -xsl ' + userExtension[0].defaultTemplateSet.deilveryorderXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'deliveryorder_'+str(self.id)+'.pdf"')
-        return settings.PDF_OUTPUT_ROOT+"deliveryorder_"+str(self.id)+".pdf"  
   
   def createBalanceSheetPDF(self, raisedbyuser):
     userExtension = djangoUserExtension.models.UserExtension.objects.filter(user=raisedbyuser.id)
@@ -128,9 +80,7 @@ class AccountingPeriod(models.Model):
     out.write(doc.toxml("utf-8"))
     out.close()
     log = open(settings.PDF_OUTPUT_ROOT+"log.txt", "w")
-    log.write('bash -c "fop -c '+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'balancesheet_'+str(self.id)+'.xml -xsl ' + userExtension[0].defaultTemplateSet.balancesheetXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'balancesheet_'+str(self.id)+'.pdf"')
-    log.close()
-    system ('bash -c "fop -c '+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'balancesheet_'+str(self.id)+'.xml -xsl ' + userExtension[0].defaultTemplateSet.balancesheetXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'balancesheet_'+str(self.id)+'.pdf"')
+    check_output(['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path, '-xml', settings.PDF_OUTPUT_ROOT+'balancesheet_'+str(self.id)+'.xml', '-xsl', userExtension[0].defaultTemplateSet.balancesheetXSLFile.xslfile.path, '-pdf', settings.PDF_OUTPUT_ROOT+'balancesheet_'+str(self.id)+'.pdf'], stderr=STDOUT)
     return settings.PDF_OUTPUT_ROOT+"balancesheet_"+str(self.id)+".pdf"  
     
   def createProfitLossStatementPDF(self, raisedbyuser):
@@ -183,10 +133,7 @@ class AccountingPeriod(models.Model):
     doc.appendChild(main)
     out.write(doc.toxml("utf-8"))
     out.close()
-    log = open(settings.PDF_OUTPUT_ROOT+"log.txt", "w")
-    log.write('bash -c "fop -c '+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'profitlossstatement_'+str(self.id)+'.xml -xsl ' + userExtension[0].defaultTemplateSet.profitLossStatementXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'profitlossstatement_'+str(self.id)+'.pdf"')
-    log.close()
-    system ('bash -c "fop -c '+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'profitlossstatement_'+str(self.id)+'.xml -xsl ' + userExtension[0].defaultTemplateSet.profitLossStatementXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'profitlossstatement_'+str(self.id)+'.pdf"')
+    check_output(['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path, '-xml', settings.PDF_OUTPUT_ROOT+'profitlossstatement_'+str(self.id)+'.xml', '-xsl', userExtension[0].defaultTemplateSet.profitLossStatementXSLFile.xslfile.path, '-pdf', settings.PDF_OUTPUT_ROOT+'profitlossstatement_'+str(self.id)+'.pdf'], stderr=STDOUT)
     return settings.PDF_OUTPUT_ROOT+"profitlossstatement_"+str(self.id)+".pdf"  
     
   def __unicode__(self):

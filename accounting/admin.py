@@ -3,6 +3,7 @@ from django import forms
 from django.core.urlresolvers import reverse
 from crm.models import *
 from accounting.models import *
+from accounting.views import *
 from django.utils.translation import ugettext as _
 from django.contrib import admin
 from django.http import HttpResponse
@@ -112,19 +113,19 @@ class OptionAccountingPeriod(admin.ModelAdmin):
         instance.staff = request.user
       instance.save()
    
-   def createBalanceSheetPDF(self, request, queryset):
+   def createBalanceSheet(self, request, queryset):
       for obj in queryset:
-         response = HttpResponseRedirect('/export/balancesheet/'+str(obj.id))
+	 response = createBalanceSheetPDF(self, request, obj.id)
          return response
    createBalanceSheetPDF.short_description = _("Create PDF of Balance Sheet")
    
    def createProfitLossStatement(self, request, queryset):
       for obj in queryset:
-         response = HttpResponseRedirect('/export/profitlossstatement/'+str(obj.id))
+	 response = createProfitLossStatementPDF(self, request, obj.id)
          return response
    createProfitLossStatement.short_description = _("Create PDF of Profit Loss Statement Sheet")
    
-   actions = ['createBalanceSheetPDF', 'createProfitLossStatement']
+   actions = ['createBalanceSheet', 'createProfitLossStatement']
             
 class OptionProductCategorie(admin.ModelAdmin):
    list_display = ('title', 'profitAccount', 'lossAccount')
