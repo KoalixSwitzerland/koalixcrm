@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from os import system
 from django.db import models
 from const.country import *
 from const.postaladdressprefix import *
@@ -19,6 +18,7 @@ from lxml import etree
 import accounting 
 import settings
 import copy
+from subprocess import *
 
 class Currency (models.Model):
   description = models.CharField(verbose_name = _("Description"), max_length=100)
@@ -30,7 +30,6 @@ class Currency (models.Model):
   
   class Meta:
     app_label = "crm"
-    #app_label_koalix = _('Customer Relationship Management (CRM)')
     verbose_name = _('Currency')
     verbose_name_plural = _('Currency') 
    
@@ -49,7 +48,6 @@ class PostalAddress(models.Model):
 
    class Meta:
       app_label = "crm"
-      #app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Postal Address')
       verbose_name_plural = _('Postal Address')
 
@@ -58,7 +56,6 @@ class PhoneAddress(models.Model):
 
    class Meta:
       app_label = "crm"
-      #app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Phone Address')
       verbose_name_plural = _('Phone Address')
 
@@ -67,7 +64,6 @@ class EmailAddress(models.Model):
 
    class Meta:
       app_label = "crm"
-      #app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Email Address')
       verbose_name_plural = _('Email Address')
 
@@ -79,7 +75,6 @@ class Contact(models.Model):
 
    class Meta:
       app_label = "crm"
-      #app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Contact')
       verbose_name_plural = _('Contact')
 
@@ -88,7 +83,6 @@ class CustomerBillingCycle(models.Model):
    timeToPaymentDate = models.IntegerField(verbose_name = _("Days To Payment Date"))
    class Meta:
       app_label = "crm"
-      #app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Customer Billing Cycle')
       verbose_name_plural = _('Customer Billing Cycle')
 
@@ -103,7 +97,6 @@ class CustomerGroup(models.Model):
       
    class Meta:
       app_label = "crm"
-      #app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Customer Group')
       verbose_name_plural = _('Customer Groups')
 
@@ -138,7 +131,6 @@ class Customer(Contact):
    
    class Meta:
       app_label = "crm"
-      #app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Customer')
       verbose_name_plural = _('Customers')
 
@@ -149,7 +141,6 @@ class Supplier(Contact):
    offersShipmentToCustomers = models.BooleanField(verbose_name=_("Offers Shipment to Customer"))
    class Meta:
       app_label = "crm"
-      #app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Supplier')
       verbose_name_plural = _('Supplier')
 
@@ -168,7 +159,6 @@ class Contract(models.Model):
 
    class Meta:
       app_label = "crm"
-      #app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Contract')
       verbose_name_plural = _('Contracts')
       
@@ -260,7 +250,7 @@ class PurchaseOrder(models.Model):
         exit()
         return 0
          
-  def createPDF(self):
+  def createPDF(self, whatToExport):
     XMLSerializer = serializers.get_serializer("xml")
     xml_serializer = XMLSerializer()
     out = open(settings.PDF_OUTPUT_ROOT+"purchaseorder_"+str(self.id)+".xml", "w")
@@ -276,11 +266,11 @@ class PurchaseOrder(models.Model):
     userExtension = djangoUserExtension.models.UserExtension.objects.filter(user=self.staff.id)
     if (len(userExtension) == 0):
       raise UserExtensionMissing(_("During PurchaseOrder PDF Export"))
-    phoneAddress = djangoUserExtension.models.UserExtensionPhoneAddress.objects.filter(userExtension=userExtension.id)
+    phoneAddress = djangoUserExtension.models.UserExtensionPhoneAddress.objects.filter(userExtension=userExtension[0].id)
     objectsToSerialize += list(userExtension)
     objectsToSerialize += list(phoneAddress)
     templateset = djangoUserExtension.models.TemplateSet.objects.filter(id=userExtension[0].defaultTemplateSet.id)
-    if (len(userExtentemplatesettion) == 0):
+    if (len(templateset) == 0):
       raise TemplateSetMissing(_("During PurchaseOrder PDF Export"))
     objectsToSerialize += list(templateset)
     objectsToSerialize += list(auth.models.User.objects.filter(id=self.lastmodifiedby.id))
@@ -289,12 +279,11 @@ class PurchaseOrder(models.Model):
         objectsToSerialize += list(PostalAddress.objects.filter(id=address.id))
     xml_serializer.serialize(objectsToSerialize, stream=out, indent=3)
     out.close()
-    system('bash -c "fop -c '+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+'  -xml '+settings.PDF_OUTPUT_ROOT+' purchaseorder_'+str(self.id)+'.xml -xsl ' +userExtension[0].defaultTemplateSet.purchaseorderXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+' purchaseorder_'+str(self.id)+'.pdf"')
+    check_output(['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path, '-xml', settings.PDF_OUTPUT_ROOT+'purchaseorder_'+str(self.id)+'.xml', '-xsl', userExtension[0].defaultTemplateSet.purchaseorderXSLFile.xslfile.path, '-pdf', settings.PDF_OUTPUT_ROOT+'purchaseorder_'+str(self.id)+'.pdf'], stderr=STDOUT)
     return settings.PDF_OUTPUT_ROOT+"purchaseorder_"+str(self.id)+".pdf"   
 
   class Meta:
     app_label = "crm"
-    #app_label_koalix = _('Customer Relationship Management (CRM)')
     verbose_name = _('Purchase Order')
     verbose_name_plural = _('Purchase Order')
 
@@ -346,7 +335,6 @@ class SalesContract(models.Model):
 
    class Meta:
       app_label = "crm"
-      #app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Sales Contract')
       verbose_name_plural = _('Sales Contracts')
 
@@ -396,7 +384,7 @@ class Quote(SalesContract):
       except Quote.DoesNotExist:  
          return
 
-   def createPDF(self, purchaseconfirmation):
+   def createPDF(self, whatToExport):
      XMLSerializer = serializers.get_serializer("xml")
      xml_serializer = XMLSerializer()
      out = open(settings.PDF_OUTPUT_ROOT+"quote_"+str(self.id)+".xml", "w")
@@ -431,17 +419,11 @@ class Quote(SalesContract):
      projectroot = etree.SubElement(rootelement, "projectroot")
      projectroot.text = settings.PROJECT_ROOT
      xml.write(settings.PDF_OUTPUT_ROOT+"quote_"+str(self.id)+".xml")
-     if (purchaseconfirmation == False):
-        log = open(settings.PDF_OUTPUT_ROOT+"log.txt", "w")
-        log.write('bash -c "fop -c '+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'quote_'+str(self.id)+'.xml -xsl ' + userExtension[0].defaultTemplateSet.quoteXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'quote_'+str(self.id)+'.pdf"')
-        log.close()
-        system('bash -c "fop -c '+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'quote_'+str(self.id)+'.xml -xsl ' + userExtension[0].defaultTemplateSet.quoteXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'quote_'+str(self.id)+'.pdf"')
+     if (whatToExport == "quote"):
+        check_output(['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path, '-xml', settings.PDF_OUTPUT_ROOT+'quote_'+str(self.id)+'.xml', '-xsl', userExtension[0].defaultTemplateSet.quoteXSLFile.xslfile.path, '-pdf', settings.PDF_OUTPUT_ROOT+'quote_'+str(self.id)+'.pdf'], stderr=STDOUT)
         return settings.PDF_OUTPUT_ROOT+"quote_"+str(self.id)+".pdf"
      else:
-        log = open(settings.PDF_OUTPUT_ROOT+"log.txt", "w")
-        log.write('bash -c "fop -c '+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'quote_'+str(self.id)+'.xml -xsl ' + userExtension[0].defaultTemplateSet.purchaseconfirmationXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'purchaseconfirmation_'+str(self.id)+'.pdf"')
-        log.close()
-        system('bash -c "fop -c '+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'quote_'+str(self.id)+'.xml -xsl ' + userExtension[0].defaultTemplateSet.purchaseconfirmationXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'purchaseconfirmation_'+str(self.id)+'.pdf"')
+        check_output(['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path, '-xml', settings.PDF_OUTPUT_ROOT+'quote_'+str(self.id)+'.xml', '-xsl', userExtension[0].defaultTemplateSet.purchaseconfirmationXSLFile.xslfile.path, '-pdf', settings.PDF_OUTPUT_ROOT+'purchaseconfirmation_'+str(self.id)+'.pdf'], stderr=STDOUT)
         return settings.PDF_OUTPUT_ROOT+"purchaseconfirmation_"+str(self.id)+".pdf"  
      
    def __unicode__(self):
@@ -449,7 +431,6 @@ class Quote(SalesContract):
       
    class Meta:
       app_label = "crm"
-      #app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Quote')
       verbose_name_plural = _('Quotes')
 
@@ -498,7 +479,7 @@ class Invoice(SalesContract):
       booking.lastmodifiedby = request.user
       booking.save()
 
-   def createPDF(self, deliveryorder):
+   def createPDF(self, whatToExport):
      XMLSerializer = serializers.get_serializer("xml")
      xml_serializer = XMLSerializer()
      out = open(settings.PDF_OUTPUT_ROOT+"invoice_"+str(self.id)+".xml", "w")
@@ -533,17 +514,11 @@ class Invoice(SalesContract):
      projectroot = etree.SubElement(rootelement, "projectroot")
      projectroot.text = settings.PROJECT_ROOT
      xml.write(settings.PDF_OUTPUT_ROOT+"invoice_"+str(self.id)+".xml")
-     if (deliveryorder == False):
-        log = open(settings.PDF_OUTPUT_ROOT+"log.txt", "w")
-        log.write('bash -c "fop -c '+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.xml -xsl ' + userExtension[0].defaultTemplateSet.invoiceXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.pdf"')
-        log.close()
-        system('bash -c "fop -c '+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.xml -xsl ' + userExtension[0].defaultTemplateSet.invoiceXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.pdf"')
+     if (whatToExport == "invoice"):
+        check_output(['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path, '-xml', settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.xml', '-xsl', userExtension[0].defaultTemplateSet.invoiceXSLFile.xslfile.path, '-pdf', settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.pdf'], stderr=STDOUT)
         return settings.PDF_OUTPUT_ROOT+"invoice_"+str(self.id)+".pdf"
      else:
-        log = open(settings.PDF_OUTPUT_ROOT+"log.txt", "w")
-        log.write('bash -c "fop -c '+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.xml -xsl ' + userExtension[0].defaultTemplateSet.deilveryorderXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'deliveryorder_'+str(self.id)+'.pdf"')
-        log.close()
-        system('bash -c "fop -c '+userExtension[0].defaultTemplateSet.fopConfigurationFile.path+' -xml '+settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.xml -xsl ' + userExtension[0].defaultTemplateSet.deilveryorderXSLFile.xslfile.path+' -pdf '+settings.PDF_OUTPUT_ROOT+'deliveryorder_'+str(self.id)+'.pdf"')
+        check_output(['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path, '-xml', settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.xml', '-xsl', userExtension[0].defaultTemplateSet.deilveryorderXSLFile.xslfile.path, '-pdf', settings.PDF_OUTPUT_ROOT+'deliveryorder_'+str(self.id)+'.pdf'], stderr=STDOUT)
         return settings.PDF_OUTPUT_ROOT+"deliveryorder_"+str(self.id)+".pdf"  
 
 #  TODO: def registerPayment(self, amount, registerpaymentinaccounting):
@@ -552,7 +527,6 @@ class Invoice(SalesContract):
       
    class Meta:
       app_label = "crm"
-      #app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Invoice')
       verbose_name_plural = _('Invoices') 
    
@@ -567,7 +541,6 @@ class Unit(models.Model):
 
    class Meta:
       app_label = "crm"
-      #app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Unit')
       verbose_name_plural = _('Units') 
 
@@ -585,7 +558,6 @@ class Tax(models.Model):
 
    class Meta:
       app_label = "crm"
-      #app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Tax')
       verbose_name_plural = _('Taxes') 
       
@@ -635,7 +607,6 @@ class Product(models.Model):
 
    class Meta:
       app_label = "crm"
-      #app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Product')
       verbose_name_plural = _('Products')
       
@@ -667,7 +638,6 @@ class UnitTransform(models.Model):
 
    class Meta:
       app_label = "crm"
-      #app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Unit Transfrom')
       verbose_name_plural = _('Unit Transfroms') 
            
@@ -688,7 +658,6 @@ class CustomerGroupTransform(models.Model):
 
    class Meta:
       app_label = "crm"
-      #app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Customer Group Price Transfrom')
       verbose_name_plural = _('Customer Group Price Transfroms') 
            
@@ -732,7 +701,6 @@ class Price(models.Model):
 
    class Meta:
       app_label = "crm"
-      #app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Price')
       verbose_name_plural = _('Prices')
 
@@ -776,7 +744,6 @@ class Position(models.Model):
 
    class Meta:
       app_label = "crm"
-      #app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Position')
       verbose_name_plural = _('Positions')
 
@@ -785,7 +752,6 @@ class SalesContractPosition(Position):
    
    class Meta:
       app_label = "crm"
-      #app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Salescontract Position')
       verbose_name_plural = _('Salescontract Positions')
       
@@ -798,7 +764,6 @@ class PurchaseOrderPosition(Position):
    
    class Meta:
       app_label = "crm"
-      #app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Purchaseorder Position')
       verbose_name_plural = _('Purchaseorder Positions')
       
@@ -811,7 +776,6 @@ class PhoneAddressForContact(PhoneAddress):
 
    class Meta:
       app_label = "crm"
-      #app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Phone Address For Contact')
       verbose_name_plural = _('Phone Address For Contact')
 
@@ -824,7 +788,6 @@ class EmailAddressForContact(EmailAddress):
 
    class Meta:
       app_label = "crm"
-      #app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Email Address For Contact')
       verbose_name_plural = _('Email Address For Contact')
 
@@ -837,7 +800,6 @@ class PostalAddressForContact(PostalAddress):
 
    class Meta:
       app_label = "crm"
-      #app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Postal Address For Contact')
       verbose_name_plural = _('Postal Address For Contact')
 
@@ -850,7 +812,6 @@ class PostalAddressForContract(PostalAddress):
 
    class Meta:
       app_label = "crm"
-      #app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Postal Address For Contracts')
       verbose_name_plural = _('Postal Address For Contracts')
 
@@ -863,7 +824,6 @@ class PostalAddressForPurchaseOrder(PostalAddress):
 
    class Meta:
       app_label = "crm"
-      #app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Postal Address For Contracts')
       verbose_name_plural = _('Postal Address For Contracts')
 
@@ -876,7 +836,6 @@ class PostalAddressForSalesContract(PostalAddress):
 
    class Meta:
       app_label = "crm"
-      #app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Postal Address For Contracts')
       verbose_name_plural = _('Postal Address For Contracts')
 
@@ -889,7 +848,6 @@ class PhoneAddressForContract(PhoneAddress):
 
    class Meta:
       app_label = "crm"
-      #app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Phone Address For Contracts')
       verbose_name_plural = _('Phone Address For Contracts')
 
@@ -902,7 +860,6 @@ class PhoneAddressForSalesContract(PhoneAddress):
 
    class Meta:
       app_label = "crm"
-      #app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Phone Address For Contracts')
       verbose_name_plural = _('Phone Address For Contracts')
 
@@ -915,7 +872,6 @@ class PhoneAddressForPurchaseOrder(PhoneAddress):
 
    class Meta:
       app_label = "crm"
-      #app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Phone Address For Contracts')
       verbose_name_plural = _('Phone Address For Contracts')
 
@@ -928,7 +884,6 @@ class EmailAddressForContract(EmailAddress):
 
    class Meta:
       app_label = "crm"
-      #app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Email Address For Contracts')
       verbose_name_plural = _('Email Address For Contracts')
 
@@ -941,7 +896,6 @@ class EmailAddressForSalesContract(EmailAddress):
 
    class Meta:
       app_label = "crm"
-      #app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Email Address For Contracts')
       verbose_name_plural = _('Email Address For Contracts')
 
@@ -954,7 +908,6 @@ class EmailAddressForPurchaseOrder(EmailAddress):
 
    class Meta:
       app_label = "crm"
-      #app_label_koalix = _('Customer Relationship Management (CRM)')
       verbose_name = _('Email Address For Contracts')
       verbose_name_plural = _('Email Address For Contracts')
 

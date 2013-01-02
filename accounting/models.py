@@ -22,12 +22,23 @@ class AccountingPeriod(models.Model):
   
   @staticmethod
   def getCurrentValidAccountingPeriod():
-     currentValidAccountingPeriod = None
-     for accountingPeriod in AccountingPeriod.objects.all():
-       if accountingPeriod.begin < date.today() and accountingPeriod.end > date.today():
-         return accountingPeriod
-     if currentValidAccountingPeriod == None:
-       raise NoFeasableAccountingPeriodFound()
+    """Returns the accounting period that is currently valid. Valid is an accountingPeriod when the current date
+       lies between begin and end of the accountingPeriod
+
+    Args:
+      no arguments
+
+    Returns:
+      accoutingPeriod (AccoutingPeriod)
+          
+    Raises:
+      NoFeasableAccountingPeriodFound when there is no valid accounting Period"""
+    currentValidAccountingPeriod = None
+    for accountingPeriod in AccountingPeriod.objects.all():
+      if accountingPeriod.begin < date.today() and accountingPeriod.end > date.today():
+        return accountingPeriod
+    if currentValidAccountingPeriod == None:
+      raise NoFeasableAccountingPeriodFound()
   
   def createPDF(self, raisedbyuser, whatToCreate):
     userExtension = djangoUserExtension.models.UserExtension.objects.filter(user=raisedbyuser.id)

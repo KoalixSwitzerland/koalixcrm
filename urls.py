@@ -11,12 +11,6 @@ urlpatterns = patterns('',
     (r'^$', 'django.views.generic.simple.redirect_to', {'url': '/admin'}),
     (r'^grappelli/', include('grappelli.urls')),
     (r'^admin/filebrowser/', include(site.urls)),
-    (r'^export/quote/(?P<quoteid>\d+)/$', 'crm.views.createQuotePDF'),
-    (r'^export/purchaseconfirmation/(?P<quoteid>\d+)/$', 'crm.views.createPurchaseConfirmationPDF'),
-    (r'^export/invoice/(?P<invoiceid>\d+)/$', 'crm.views.createInvoicePDF'),
-    (r'^export/deilveryorder/(?P<invoiceid>\d+)/$', 'crm.views.createDeliveryOrderPDF'),
-    (r'^export/purchaseorder/(?P<purhcaseorderid>\d+)/$', 'crm.views.createPurchaseOrderPDF'),
-
     (r'^admin/', include(admin.site.urls)),
 )
 urlpatterns += staticfiles_urlpatterns()

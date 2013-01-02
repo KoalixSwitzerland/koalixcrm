@@ -6,67 +6,50 @@ from django.http import HttpResponse
 from exceptions import TemplateSetMissing
 from exceptions import UserExtensionMissing
 from django.core.servers.basehttp import FileWrapper
+from django.http import Http404
+from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext as _
+from subprocess import *
 
-def createQuotePDF(request, quoteid):
+def exportPDF(callingModelAdmin, request, whereToCreateFrom, whatToCreate, redirectTo):
+  """This method exports PDFs provided by different Models in the crm application
+
+      Args:
+        callingModelAdmin (ModelAdmin):  The calling ModelAdmin must be provided for error message response.
+        request: The request User is to know where to save the error message
+        whereToCreateFrom (Model):  The model from which a PDF should be exported
+        whatToCreate (str): What document Type that has to be
+        redirectTo (str): String that describes to where the method sould redirect in case of an error
+
+      Returns:
+            HTTpResponse with a PDF when successful
+            HTTpResponseRedirect when not successful
+            
+      Raises:
+        raises Http404 exception if anything goes wrong"""
   try:
-   quote = Quote.objects.get(id=quoteid)
-   pdf = quote.createPDF(purchaseconfirmation=False)
-   response = HttpResponse(FileWrapper(file(pdf)), mimetype='application/pdf')
-   response['Content-Length'] = path.getsize(pdf)
-   return response
-  except (TemplateSetMissing, UserExtensionMissing), e:
-    raise Http404
-   
-def createPurchaseConfirmationPDF(request, quoteid):
-  try:
-   quote = Quote.objects.get(id=quoteid)
-   pdf = quote.createPDF(purchaseconfirmation=True)
-   response = HttpResponse(FileWrapper(file(pdf)), mimetype='application/pdf')
-   response['Content-Length'] = path.getsize(pdf)
-   return response
-  except (TemplateSetMissing, UserExtensionMissing), e:
-    raise Http404
-   
-def createInvoicePDF(request, invoiceid):
-  try:
-    invoice = Invoice.objects.get(id=invoiceid)
-    pdf = invoice.createPDF(deliveryorder=False)
+    pdf = whereToCreateFrom.createPDF(whatToCreate)
     response = HttpResponse(FileWrapper(file(pdf)), mimetype='application/pdf')
-    response['Content-Length'] = path.getsize(pdf)
-    return response
-  except (TemplateSetMissing, UserExtensionMissing), e:
-    raise Http404
-  
-def createDeliveryOrderPDF(request, invoiceid):
-  try:
-    invoice = Invoice.objects.get(id=invoiceid)
-    pdf = invoice.createPDF(deliveryorder=True)
-    response = HttpResponse(FileWrapper(file(pdf)), mimetype='application/pdf')
-    response['Content-Length'] = path.getsize(pdf)
-    return response
-  except (TemplateSetMissing, UserExtensionMissing), e:
-    raise Http404
- 
-def createPurchaseOrderPDF(request, purchaseorderid):
-  try:
-    purchaseorder = PurchaseOrder.objects.get(id=purchaseorderid)
-    response = HttpResponse(FileWrapper(file(pdf)), mimetype='application/pdf')
-    response['Content-Length'] = path.getsize(pdf)
-    return response
-  except (TemplateSetMissing, UserExtensionMissing), e:
-    raise Http404
+    response['Content-Length'] = path.getsize(pdf) 
+  except (TemplateSetMissing, UserExtensionMissing, CalledProcessError), e:
+    if type(e) == UserExtensionMissing:
+      response = HttpResponseRedirect(redirectTo)
+      callingModelAdmin.message_user(request, _("User Extension Missing"))
+    elif type(e) == TemplateSetMissing:
+      response = HttpResponseRedirect(redirectTo)
+      callingModelAdmin.message_user(request, _("Templateset Missing"))
+    elif type(e) ==CalledProcessError:
+      response = HttpResponseRedirect(redirectTo)
+      callingModelAdmin.message_user(request, e.output)
+    else:
+      raise Http404
+  return response 
    
 def selectaddress(invoiceid):
   invoice = Invoice.objects.get(id=invoiceid)
   address = invoice.contract
   
-def test(self, request, queryset):
-  for obj in queryset:
-      invoice = obj.createInvoice()
-      self.message_user(request, _("Invoice created"))
-      response = HttpResponseRedirect('/admin/crm/invoice/'+str(invoice.id))
-  return response
-test.short_description = _("Test")
+
   
    

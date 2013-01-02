@@ -283,15 +283,15 @@ class OptionInvoice(admin.ModelAdmin):
    recalculatePrices.short_description = _("Recalculate Prices")
          
    def createInvoicePDF(self, request, queryset):
-      for obj in queryset:
-         response = HttpResponseRedirect('/export/invoice/'+str(obj.id))
-         return response
+     for obj in queryset:
+       response = exportPDF(self, request, obj, "invoice", "/admin/crm/invoice/")
+       return response
    createInvoicePDF.short_description = _("Create PDF of Invoice")
    
    def createDeliveryOrderPDF(self, request, queryset):
       for obj in queryset:
-         response = HttpResponseRedirect('/export/deilveryorder/'+str(obj.id))
-         return response
+        response = exportPDF(self, request, obj, "deliveryorder", "/admin/crm/invoice/")
+        return response
    createDeliveryOrderPDF.short_description = _("Create PDF of Delivery Order")
          
    def registerInvoiceInAccounting(self, request, queryset):
@@ -300,11 +300,11 @@ class OptionInvoice(admin.ModelAdmin):
          self.message_user(request, _("Successfully registered Invoice in the Accounting"))
    registerInvoiceInAccounting.short_description = _("Register Invoice in Accounting")
    
-   def unregisterInvoiceInAccounting(self, request, queryset):
-      for obj in queryset:
-         obj.createPDF(deliveryorder=True)
-         self.message_user(request, _("Successfully unregistered Invoice in the Accounting"))
-   unregisterInvoiceInAccounting.short_description = _("Unregister Invoice in Accounting")
+   #def unregisterInvoiceInAccounting(self, request, queryset):
+      #for obj in queryset:
+         #obj.createPDF(deliveryorder=True)
+         #self.message_user(request, _("Successfully unregistered Invoice in the Accounting"))
+   #unregisterInvoiceInAccounting.short_description = _("Unregister Invoice in Accounting")
    
    def registerPaymentInAccounting(self, request, queryset):
       for obj in queryset:
@@ -362,14 +362,14 @@ class OptionQuote(admin.ModelAdmin):
          
    def createQuotePDF(self, request, queryset):
       for obj in queryset:
-         response = HttpResponseRedirect('/export/quote/'+str(obj.id))
-         return response
+        response = exportPDF(self, request, obj, "quote", "/admin/crm/quote/")
+        return response
    createQuotePDF.short_description = _("Create PDF of Quote")
          
    def createPurchaseConfirmationPDF(self, request, queryset):
       for obj in queryset:
-         response = HttpResponseRedirect('/export/purchaseconfirmation/'+str(obj.id))
-         return response
+       response = exportPDF(self, request, obj, "purchaseconfirmation", "/admin/crm/quote/")
+       return response
    createPurchaseConfirmationPDF.short_description = _("Create PDF of Purchase Confirmation")
 
    actions = ['recalculatePrices', 'createInvoice', 'createQuotePDF', 'createPurchaseConfirmationPDF']
@@ -390,13 +390,17 @@ class OptionPurchaseOrder(admin.ModelAdmin):
    )
    
    def save_model(self, request, obj, form, change):
-      obj.staff = request.user
-      obj.save()
+     if (change == True):
+       obj.lastmodifiedby = request.user
+     else:
+       obj.lastmodifiedby = request.user
+       obj.staff = request.user
+     obj.save()
          
    def createPurchseOrderPDF(self, request, queryset):
       for obj in queryset:
-         response = HttpResponseRedirect('/export/purchaseorder/'+str(obj.id))
-         return response
+       response = exportPDF(self, request, obj, "purchaseorder", "/admin/crm/purchaseorder/")
+       return response
    createPurchseOrderPDF.short_description = _("Create PDF of Purchase Order")
    
    actions = ['createPurchseOrderPDF']
