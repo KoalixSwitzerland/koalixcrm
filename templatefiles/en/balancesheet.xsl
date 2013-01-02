@@ -138,8 +138,7 @@
           <fo:table-column column-width="3cm"/>
           <fo:table-column column-width="11cm"/>
           <fo:table-column column-width="3cm"/>
-          <fo:table-body font-size="9pt"
-                         font-family="BitstreamVeraSans">
+            <fo:table-header font-size="9pt" line-height="9pt" font-weight="bold" font-family="BitstreamVeraSans">
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="start" font-size="9pt" line-height="9pt" font-weight="bold" font-family="BitstreamVeraSans" >
                       Account Number
@@ -155,6 +154,9 @@
                       Value
                    </fo:block>
                 </fo:table-cell>
+             </fo:table-header>
+          <fo:table-body font-size="9pt"
+                         font-family="BitstreamVeraSans">
          <xsl:for-each select="Account[@accountType='L']">
           <xsl:sort select="AccountNumber" data-type="number"/>
              <fo:table-row keep-together="always">
@@ -192,7 +194,7 @@
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="start" >
                       <xsl:choose>
-                        <xsl:when test="ProfitLoss &gt; 0">
+                        <xsl:when test="TotalBalance &gt; 0">
                           Profit</xsl:when>
                         <xsl:otherwise>
                           Loss
@@ -206,7 +208,7 @@
                 </fo:table-cell>
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="end" >
-                      <xsl:value-of select="format-number(ProfitLoss,'#.##0,00', 'european')"/> CHF
+                      <xsl:value-of select="format-number(TotalBalance,'#.##0,00', 'european')"/> CHF
                    </fo:block>
                 </fo:table-cell>
              </fo:table-row>

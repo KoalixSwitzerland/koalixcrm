@@ -8,44 +8,36 @@ from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from subprocess import *
 
-def createBalanceSheetPDF(modelAdmin, request, calculationunitid):
-  try:
-   accountingPeriod = AccountingPeriod.objects.get(id=calculationunitid)
-   pdf = accountingPeriod.createBalanceSheetPDF(request.user)
-   response = HttpResponse(FileWrapper(file(pdf)), mimetype='application/pdf')
-   response['Content-Length'] = path.getsize(pdf)
-   return response
-  except (TemplateSetMissing, UserExtensionMissing, CalledProcessError), e:
-   if type(e) == UserExtensionMissing:
-      response = HttpResponseRedirect('/admin/accounting/accountingperiod/')
-      modelAdmin.message_user(request, _("User Extension Missing"))
-   elif type(e) == TemplateSetMissing:
-      response = HttpResponseRedirect('/admin/accounting/accountingperiod/')
-      modelAdmin.message_user(request, _("Templateset Missing"))
-   elif type(e) ==CalledProcessError:
-      response = HttpResponseRedirect('/admin/accounting/accountingperiod/')
-      modelAdmin.message_user(request, e.output)
-   else:
-      raise Http404
-   return response
+def exportPDF(callingModelAdmin, request, whereToCreateFrom, whatToCreate, redirectTo):
+  """This method exports PDFs provided by different Models in the accounting application
 
-def createProfitLossStatementPDF(modelAdmin, request, calculationunitid):
+      Args:
+        callingModelAdmin (ModelAdmin):  The calling ModelAdmin must be provided for error message response.
+        request: The request User is required to get the Calling User TemplateSets and to know where to save the error message
+        whereToCreateFrom (Model):  The model from which a PDF should be exported
+        whatToCreate (str): What document Type that has to be
+        redirectTo (str): String that describes to where the method sould redirect in case of an error
+
+      Returns:
+            HTTpResponse with a PDF when successful
+            HTTpResponseRedirect when not successful
+            
+      Raises:
+        raises Http404 exception if anything goes wrong"""
   try:
-   accountingPeriod = AccountingPeriod.objects.get(id=calculationunitid)
-   pdf = accountingPeriod.createProfitLossStatementPDF(request.user)
-   response = HttpResponse(FileWrapper(file(pdf)), mimetype='application/pdf')
-   response['Content-Length'] = path.getsize(pdf)
-   return response
+    pdf = whereToCreateFrom.createPDF(request.user, whatToCreate)
+    response = HttpResponse(FileWrapper(file(pdf)), mimetype='application/pdf')
+    response['Content-Length'] = path.getsize(pdf) 
   except (TemplateSetMissing, UserExtensionMissing, CalledProcessError), e:
-   if type(e) == UserExtensionMissing:
-      response = HttpResponseRedirect('/admin/accounting/accountingperiod/')
-      modelAdmin.message_user(request, _("User Extension Missing"))
-   elif type(e) == TemplateSetMissing:
-      response = HttpResponseRedirect('/admin/accounting/accountingperiod/')
-      modelAdmin.message_user(request, _("Templateset Missing"))
-   elif type(e) ==CalledProcessError:
-      response = HttpResponseRedirect('/admin/accounting/accountingperiod/')
-      modelAdmin.message_user(request, e.output)
-   else:
+    if type(e) == UserExtensionMissing:
+      response = HttpResponseRedirect(redirectTo)
+      callingModelAdmin.message_user(request, _("User Extension Missing"))
+    elif type(e) == TemplateSetMissing:
+      response = HttpResponseRedirect(redirectTo)
+      callingModelAdmin.message_user(request, _("Templateset Missing"))
+    elif type(e) ==CalledProcessError:
+      response = HttpResponseRedirect(redirectTo)
+      callingModelAdmin.message_user(request, e.output)
+    else:
       raise Http404
-   return response
+  return response 

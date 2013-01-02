@@ -16,8 +16,7 @@ urlpatterns = patterns('',
     (r'^export/invoice/(?P<invoiceid>\d+)/$', 'crm.views.createInvoicePDF'),
     (r'^export/deilveryorder/(?P<invoiceid>\d+)/$', 'crm.views.createDeliveryOrderPDF'),
     (r'^export/purchaseorder/(?P<purhcaseorderid>\d+)/$', 'crm.views.createPurchaseOrderPDF'),
-    (r'^export/balancesheet/(?P<calculationunitid>\d+)/$', 'accounting.views.createBalanceSheetPDF'),
-    (r'^export/profitlossstatement/(?P<calculationunitid>\d+)/$', 'accounting.views.createProfitLossStatementPDF'),
+
     (r'^admin/', include(admin.site.urls)),
 )
 urlpatterns += staticfiles_urlpatterns()

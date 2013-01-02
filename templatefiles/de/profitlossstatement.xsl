@@ -42,7 +42,7 @@
               color="black"
               text-align="left"
               font-weight="bold">
-        Erfolgsrechnung der koalix Riedener
+        Erfolgsrechnung der <xsl:value-of select="organisationname"/>
        </fo:block>
       </fo:static-content>
     <fo:static-content flow-name="xsl-region-after" >
@@ -192,7 +192,7 @@
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="start" >
                       <xsl:choose>
-                        <xsl:when test="ProfitLoss &gt; 0">
+                        <xsl:when test="TotalProfitLoss &gt; 0">
                           Gewinn</xsl:when>
                         <xsl:otherwise>
                           Verlust
@@ -206,7 +206,7 @@
                 </fo:table-cell>
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="end" >
-                      <xsl:value-of select="format-number(ProfitLoss,'#.##0,00', 'european')"/> CHF
+                      <xsl:value-of select="format-number(TotalProfitLoss,'#.##0,00', 'european')"/> CHF
                    </fo:block>
                 </fo:table-cell>
              </fo:table-row>

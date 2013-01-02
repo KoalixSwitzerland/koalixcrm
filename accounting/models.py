@@ -29,13 +29,17 @@ class AccountingPeriod(models.Model):
      if currentValidAccountingPeriod == None:
        raise NoFeasableAccountingPeriodFound()
   
-  def createBalanceSheetPDF(self, raisedbyuser):
+  def createPDF(self, raisedbyuser, whatToCreate):
     userExtension = djangoUserExtension.models.UserExtension.objects.filter(user=raisedbyuser.id)
     if (len(userExtension) == 0):
       raise UserExtensionMissing(_("During BalanceSheet PDF Export"))
-    out = open(settings.PDF_OUTPUT_ROOT+"balancesheet_"+str(self.id)+".xml", "w")
     doc = Document()
-    main = doc.createElement("koalixaccountingbalacesheet")
+    if (whatToCreate == "balanceSheet"):
+      main = doc.createElement("koalixaccountingbalacesheet")
+      out = open(settings.PDF_OUTPUT_ROOT+"balancesheet_"+str(self.id)+".xml", "w")
+    else:
+      main = doc.createElement("koalixaccountingprofitlossstatement")
+      out = open(settings.PDF_OUTPUT_ROOT+"profitlossstatement_"+str(self.id)+".xml", "w")
     accountingPeriodName = doc.createElement("accountingPeriodName")
     accountingPeriodName.appendChild(doc.createTextNode(self.__unicode__()))
     main.appendChild(accountingPeriodName)
@@ -53,7 +57,8 @@ class AccountingPeriod(models.Model):
     main.appendChild(headerPicture)
     accountNumber = doc.createElement("AccountNumber")
     accounts = Account.objects.all()
-    overallvalue = 0
+    overallValueBalance = 0
+    overallValueProfitLoss = 0
     for account in list(accounts) :
         currentValue = account.valueNow(self)
         if (currentValue != 0):
@@ -70,72 +75,30 @@ class AccountingPeriod(models.Model):
           currentAccountElement.appendChild(currentValueElement)
           main.appendChild(currentAccountElement)
           if account.accountType == "A":
-            overallvalue = overallvalue + currentValue;
+            overallValueBalance = overallValueBalance + currentValue;
           if account.accountType == "L":
-            overallvalue = overallvalue - currentValue;
-    profitloss = doc.createElement("ProfitLoss")
-    profitloss.appendChild(doc.createTextNode(overallvalue.__str__()))
-    main.appendChild(profitloss)
-    doc.appendChild(main)
-    out.write(doc.toxml("utf-8"))
-    out.close()
-    log = open(settings.PDF_OUTPUT_ROOT+"log.txt", "w")
-    check_output(['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path, '-xml', settings.PDF_OUTPUT_ROOT+'balancesheet_'+str(self.id)+'.xml', '-xsl', userExtension[0].defaultTemplateSet.balancesheetXSLFile.xslfile.path, '-pdf', settings.PDF_OUTPUT_ROOT+'balancesheet_'+str(self.id)+'.pdf'], stderr=STDOUT)
-    return settings.PDF_OUTPUT_ROOT+"balancesheet_"+str(self.id)+".pdf"  
-    
-  def createProfitLossStatementPDF(self, raisedbyuser):
-    userExtension = djangoUserExtension.models.UserExtension.objects.filter(user=raisedbyuser.id)
-    if (len(userExtension) == 0):
-      raise UserExtensionMissing(_("During BalanceSheet PDF Export"))
-    out = open(settings.PDF_OUTPUT_ROOT+"profitlossstatement_"+str(self.id)+".xml", "w")
-    doc = Document()
-    main = doc.createElement("koalixaccountingprofitlossstatement")
-    accountingPeriodName = doc.createElement("accountingPeriodName")
-    accountingPeriodName.appendChild(doc.createTextNode(self.__unicode__()))
-    main.appendChild(accountingPeriodName)
-    organisationname = doc.createElement("organisiationname")
-    organisationname.appendChild(doc.createTextNode(settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.organisationname))
-    main.appendChild(organisationname)
-    accountingPeriodTo = doc.createElement("accountingPeriodTo")
-    accountingPeriodTo.appendChild(doc.createTextNode(self.end.year.__str__()))
-    main.appendChild(accountingPeriodTo)
-    accountingPeriodFrom = doc.createElement("accountingPeriodFrom")
-    accountingPeriodFrom.appendChild(doc.createTextNode(self.begin.year.__str__()))
-    main.appendChild(accountingPeriodFrom)
-    accountingPeriodName = doc.createElement("headerpicture")
-    accountingPeriodName.appendChild(doc.createTextNode(settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.logo.path))
-    main.appendChild(accountingPeriodName)
-    accountNumber = doc.createElement("AccountNumber")
-    accounts = Account.objects.all()
-    overallvalue = 0
-    for account in list(accounts) :
-        currentValue = account.valueNow(self)
-        if (currentValue != 0):
-          currentAccountElement = doc.createElement("Account")
-          accountNumber = doc.createElement("AccountNumber")
-          accountNumber.appendChild(doc.createTextNode(account.accountNumber.__str__()))
-          currentValueElement = doc.createElement("currentValue")
-          currentValueElement.appendChild(doc.createTextNode(currentValue.__str__()))
-          accountNameElement = doc.createElement("accountName")
-          accountNameElement.appendChild(doc.createTextNode(account.title))
-          currentAccountElement.setAttribute("accountType", account.accountType.__str__())
-          currentAccountElement.appendChild(accountNumber)
-          currentAccountElement.appendChild(accountNameElement)
-          currentAccountElement.appendChild(currentValueElement)
-          main.appendChild(currentAccountElement)
+            overallValueBalance = overallValueBalance - currentValue;
           if account.accountType == "E":
-            overallvalue = overallvalue + currentValue;
+            overallValueProfitLoss = overallValueProfitLoss + currentValue;
           if account.accountType == "S":
-            overallvalue = overallvalue - currentValue;
-    profitloss = doc.createElement("ProfitLoss")
-    profitloss.appendChild(doc.createTextNode(overallvalue.__str__()))
-    main.appendChild(profitloss)
+            overallValueProfitLoss = overallValueProfitLoss - currentValue;
+    totalProfitLoss = doc.createElement("TotalProfitLoss")
+    totalProfitLoss.appendChild(doc.createTextNode(overallValueProfitLoss.__str__()))
+    main.appendChild(totalProfitLoss)
+    totalBalance = doc.createElement("TotalBalance")
+    totalBalance.appendChild(doc.createTextNode(overallValueBalance.__str__()))
+    main.appendChild(totalBalance)
     doc.appendChild(main)
     out.write(doc.toxml("utf-8"))
     out.close()
-    check_output(['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path, '-xml', settings.PDF_OUTPUT_ROOT+'profitlossstatement_'+str(self.id)+'.xml', '-xsl', userExtension[0].defaultTemplateSet.profitLossStatementXSLFile.xslfile.path, '-pdf', settings.PDF_OUTPUT_ROOT+'profitlossstatement_'+str(self.id)+'.pdf'], stderr=STDOUT)
-    return settings.PDF_OUTPUT_ROOT+"profitlossstatement_"+str(self.id)+".pdf"  
+    if (whatToCreate == "balanceSheet"):
+      check_output(['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path, '-xml', settings.PDF_OUTPUT_ROOT+'balancesheet_'+str(self.id)+'.xml', '-xsl', userExtension[0].defaultTemplateSet.balancesheetXSLFile.xslfile.path, '-pdf', settings.PDF_OUTPUT_ROOT+'balancesheet_'+str(self.id)+'.pdf'], stderr=STDOUT)
+      return settings.PDF_OUTPUT_ROOT+"balancesheet_"+str(self.id)+".pdf"  
+    else:
+       check_output(['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path, '-xml', settings.PDF_OUTPUT_ROOT+'profitlossstatement_'+str(self.id)+'.xml', '-xsl', userExtension[0].defaultTemplateSet.profitLossStatementXSLFile.xslfile.path, '-pdf', settings.PDF_OUTPUT_ROOT+'profitlossstatement_'+str(self.id)+'.pdf'], stderr=STDOUT)
+       return settings.PDF_OUTPUT_ROOT+"profitlossstatement_"+str(self.id)+".pdf" 
     
+  
   def __unicode__(self):
       return  self.title
 

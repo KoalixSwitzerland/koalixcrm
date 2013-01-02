@@ -115,13 +115,13 @@ class OptionAccountingPeriod(admin.ModelAdmin):
    
    def createBalanceSheet(self, request, queryset):
       for obj in queryset:
-	 response = createBalanceSheetPDF(self, request, obj.id)
+	 response = exportPDF(self, request, obj, "balanceSheet", "/admin/accounting/accountingperiod/")
          return response
-   createBalanceSheetPDF.short_description = _("Create PDF of Balance Sheet")
+   createBalanceSheet.short_description = _("Create PDF of Balance Sheet")
    
    def createProfitLossStatement(self, request, queryset):
       for obj in queryset:
-	 response = createProfitLossStatementPDF(self, request, obj.id)
+	 response = exportPDF(self, request, obj, "profitLossStatement", "/admin/accounting/accountingperiod/")
          return response
    createProfitLossStatement.short_description = _("Create PDF of Profit Loss Statement Sheet")
    
