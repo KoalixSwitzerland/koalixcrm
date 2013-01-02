@@ -56,14 +56,14 @@ class OptionTemplateSet(admin.ModelAdmin):
    list_display_links = ('id', 'title')
    ordering       = ('id',)
    search_fields  = ('id', 'title', 'organisationname', 'invoiceXSLFile', 'quoteXSLFile', 'purchaseconfirmationXSLFile',
-   'deilveryorderXSLFile', 'profitLossStatementXSLFile', 'balancesheetXSLFile', 
+   'deilveryorderXSLFile', 'profitLossStatementXSLFile', 'balancesheetXSLFile', 'purchaseorderXSLFile',
    'logo', 'footerTextsalesorders', 'headerTextsalesorders', 
    'headerTextpurchaseorders', 'footerTextpurchaseorders', 'pagefooterleft', 'pagefootermiddle', 'bankingaccountref', 'addresser'
    )
    fieldsets = (
       (_('Basics'), {
          'fields': ('title', 'organisationname', 'invoiceXSLFile', 'quoteXSLFile', 'purchaseconfirmationXSLFile',
-   'deilveryorderXSLFile', 'profitLossStatementXSLFile', 'balancesheetXSLFile', 
+   'deilveryorderXSLFile', 'profitLossStatementXSLFile', 'balancesheetXSLFile', 'purchaseorderXSLFile', 
    'logo', 'fopConfigurationFile', 'footerTextsalesorders', 'headerTextsalesorders', 
    'headerTextpurchaseorders', 'footerTextpurchaseorders', 'pagefooterleft', 'pagefootermiddle', 'bankingaccountref', 'addresser')
       }),
