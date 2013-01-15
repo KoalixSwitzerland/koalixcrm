@@ -1,0 +1,19 @@
+{% extends "admin/base.html" %}
+{% block title %}
+Titel
+{% endblock %}
+
+{% block content %}
+
+TEST
+<form action="" method="post">{% csrf_token %}
+{% for obj in queryset %}
+    <input type="hidden" name="{{ action_checkbox_name }}" value="{{ obj.pk }}" />
+    {% endfor %}
+<input type="hidden" name="action" value="registerPaymentInAccounting" />
+<input type="hidden" name="post" value="yes" />
+<input type="submit" name="cancel" value="cancel" />
+<input type="submit" name="register" value="register" />
+</form>
+{% endblock %}
+
