@@ -2,6 +2,8 @@
 import os
 from django import forms
 from django.core.urlresolvers import reverse
+from django.shortcuts import render_to_response
+from django.core.context_processors import csrf
 from datetime import date
 from crm.models import *
 from crm.views import *
@@ -12,6 +14,8 @@ from django.contrib import admin
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.core.servers.basehttp import FileWrapper
+from django.template import RequestContext
+from django.contrib.admin import helpers
 
    
 class ContractPostalAddress(admin.StackedInline):
@@ -307,9 +311,25 @@ class OptionInvoice(admin.ModelAdmin):
    #unregisterInvoiceInAccounting.short_description = _("Unregister Invoice in Accounting")
    
    def registerPaymentInAccounting(self, request, queryset):
-      for obj in queryset:
-         obj.registerpaymentinaccounting(request)
-         self.message_user(request, _("Successfully registered Payment in the Accounting"))
+     form = None
+     if request.POST.get('post'):
+        if 'cancel' in request.POST:
+            self.message_user(request, _("Canceled registeration of payment in the accounting"))
+            return 
+        elif 'register' in request.POST:
+            form = self.SeriesForm(request.POST)
+            if form.is_valid():
+                series = form.cleaned_data['series']
+                for x in queryset:
+                  y = Link(series = series, comic = x)
+                  y.save()
+                self.message_user(request, _("Successfully registered Payment in the Accounting"))
+                return HttpResponseRedirect(request.get_full_path())
+     else:
+        c = {'action_checkbox_name': helpers.ACTION_CHECKBOX_NAME, 'queryset': queryset, 'form': form, 'path':request.get_full_path()}
+        c.update(csrf(request))
+        return render_to_response('admin/crm/registerPayment.html', c, context_instance=RequestContext(request))
+
    registerPaymentInAccounting.short_description = _("Register Payment in Accounting")
    
    actions = ['recalculatePrices', 'createDeliveryOrderPDF', 'createInvoicePDF', 'registerInvoiceInAccounting', 'unregisterInvoiceInAccounting', 'registerPaymentInAccounting']
