@@ -24,7 +24,7 @@ class Command(BaseCommand):
       invoicetemplate = 'invoice.xsl'
       quotetemplate = 'quote.xsl'
       deliveryordertemplate = 'deliveryorder.xsl'
-      purchaseordertemplate = 'purchaseordertemplate.xsl'
+      purchaseordertemplate = 'purchaseorder.xsl'
       purchaseconfirmationtemplate = 'purchaseconfirmation.xsl'
       balancesheettemplate = 'balancesheet.xsl'
       profitlossstatementtemplate = 'profitlossstatement.xsl'
@@ -32,6 +32,7 @@ class Command(BaseCommand):
       'quote' : quotetemplate,
       'deliveryorder' : deliveryordertemplate,
       'purchaseconfirmation' : purchaseconfirmationtemplate,
+      'purchaseorder' : purchaseordertemplate,
       'balancesheet' : balancesheettemplate,
       'profitlossstatement' : profitlossstatementtemplate,
       }
@@ -63,6 +64,8 @@ class Command(BaseCommand):
               templateset.quoteXSLFile = xslfile
             elif template == 'purchaseconfirmation' :
               templateset.purchaseconfirmationXSLFile = xslfile
+            elif template == 'purchaseorder' :
+              templateset.purchaseorderXSLFile = xslfile
             elif template == 'deliveryorder' :
               templateset.deilveryorderXSLFile = xslfile
             elif template == 'profitlossstatement' :
