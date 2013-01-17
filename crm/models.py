@@ -5,7 +5,6 @@ from const.country import *
 from const.postaladdressprefix import *
 from const.purpose import *
 from const.status import *
-from django.db.models import signals
 from datetime import *
 from django.utils.translation import ugettext as _
 from decimal import Decimal
@@ -913,3 +912,4 @@ class EmailAddressForPurchaseOrder(EmailAddress):
 
    def __unicode__(self):
       return str(self.email)
+    

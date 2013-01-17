@@ -267,7 +267,23 @@ class OptionInvoice(admin.ModelAdmin):
    inlines = [SalesContractInlinePosition, SalesContractPostalAddress, SalesContractPhoneAddress, SalesContractEmailAddress, InlineBookings]
    pluginProcessor = PluginProcessor()
    inlines.extend(pluginProcessor.getPluginAdditions("invoiceInlines"))
-
+   
+   def response_add(self, request, new_object):
+        obj = self.after_saving_model_and_related_inlines(request, new_object)
+        return super(OptionInvoice, self).response_add(request, obj)
+   
+   def response_change(self, request, new_object):
+        obj = self.after_saving_model_and_related_inlines(request, new_object)
+        return super(OptionInvoice, self).response_add(request, obj)
+      
+   def after_saving_model_and_related_inlines(self, request, obj):
+     try:
+       obj.recalculatePrices(date.today())
+       self.message_user(request, "Successfully calculated Prices")
+     except Product.NoPriceFound as e : 
+       self.message_user(request, "Unsuccessfull in updating the Prices "+ e.__str__())
+     return obj
+      
    def save_model(self, request, obj, form, change):
      if (change == True):
        obj.lastmodifiedby = request.user
@@ -353,7 +369,23 @@ class OptionQuote(admin.ModelAdmin):
    inlines = [SalesContractInlinePosition, SalesContractPostalAddress, SalesContractPhoneAddress, SalesContractEmailAddress]
    pluginProcessor = PluginProcessor()
    inlines.extend(pluginProcessor.getPluginAdditions("quoteInlines"))
+   
+   def response_add(self, request, new_object):
+        obj = self.after_saving_model_and_related_inlines(request, new_object)
+        return super(OptionQuote, self).response_add(request, obj)
+         
+   def response_change(self, request, new_object):
+        obj = self.after_saving_model_and_related_inlines(request, new_object)
+        return super(OptionQuote, self).response_change(request, obj)
 
+   def after_saving_model_and_related_inlines(self, request, obj):
+     try:
+       obj.recalculatePrices(date.today())
+       self.message_user(request, "Successfully calculated Prices")
+     except Product.NoPriceFound as e : 
+       self.message_user(request, "Unsuccessfull in updating the Prices "+ e.__str__())
+     return obj
+   
    def save_model(self, request, obj, form, change):
      if (change == True):
        obj.lastmodifiedby = request.user
