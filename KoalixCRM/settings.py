@@ -40,10 +40,10 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'accounting',
-    # 'djangoUserExtension',
-    # 'crm',
-    # 'subscriptions',
+    'accounting',
+    'djangoUserExtension',
+    'crm',
+    'subscriptions',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -56,7 +56,6 @@ MIDDLEWARE_CLASSES = (
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
-    'django.core.context_processors.auth',
     'django.core.context_processors.debug',
     'django.core.context_processors.i18n',
     'django.core.context_processors.media',
@@ -109,13 +108,12 @@ USE_TZ = True
 
 # TODO
 STATIC_URL = '/static/'
-PDF_OUTPUT_ROOT = '/var/www/koalixcrm/media/pdf/'
-MEDIA_ROOT = '/var/www/koalixcrm/media/'
-PROJECT_ROOT = '/var/www/koalixcrm/'
+PDF_OUTPUT_ROOT = '/media/pdf/'
+MEDIA_ROOT = '/media/'
 MEDIA_URL = '/media/'
 ADMIN_MEDIA_PREFIX = STATIC_URL + "grappelli/"
 LOGIN_REDIRECT_URL = '/admin/'
-GRAPPELLI_INDEX_DASHBOARD = 'dashboard.CustomIndexDashboard'
+GRAPPELLI_INDEX_DASHBOARD = 'KoalixCRM.dashboard.CustomIndexDashboard'
 
 KOALIXCRM_PLUGINS = (
     'subscriptions',
