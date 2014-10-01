@@ -151,7 +151,7 @@ class Customer(Contact):
 
 
 class Supplier(Contact):
-    offersShipmentToCustomers = models.BooleanField(verbose_name=_("Offers Shipment to Customer"))
+    offersShipmentToCustomers = models.BooleanField(verbose_name=_("Offers Shipment to Customer"), default=False)
 
     class Meta:
         app_label = "crm"
@@ -803,7 +803,7 @@ class Position(models.Model):
     supplier = models.ForeignKey(Supplier, verbose_name=_("Shipment Supplier"),
                                  limit_choices_to={'offersShipmentToCustomers': True}, blank=True, null=True)
     shipmentID = models.CharField(max_length=100, verbose_name=_("Shipment ID"), blank=True, null=True)
-    overwriteProductPrice = models.BooleanField(verbose_name=_('Overwrite Product Price'))
+    overwriteProductPrice = models.BooleanField(verbose_name=_('Overwrite Product Price'), default=False)
     positionPricePerUnit = models.DecimalField(verbose_name=_("Price Per Unit"), max_digits=17, decimal_places=2,
                                                blank=True, null=True)
     lastPricingDate = models.DateField(verbose_name=_("Last Pricing Date"), blank=True, null=True)

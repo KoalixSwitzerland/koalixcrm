@@ -5,14 +5,10 @@ from xml.dom.minidom import Document
 from datetime import *
 
 from django.db import models
-from django.contrib.contenttypes import generic
 from django.utils.translation import ugettext as _
-from django.db.models import signals
 from django.conf import settings
 
 from const.accountTypeChoices import *
-from crm.models import Contract
-from crm.exceptions import TemplateSetMissing
 from crm.exceptions import UserExtensionMissing
 import djangoUserExtension
 
@@ -119,7 +115,6 @@ class AccountingPeriod(models.Model):
                           settings.PDF_OUTPUT_ROOT + 'profitlossstatement_' + str(self.id) + '.pdf'], stderr=STDOUT)
             return settings.PDF_OUTPUT_ROOT + "profitlossstatement_" + str(self.id) + ".pdf"
 
-
     def __unicode__(self):
         return self.title
 
@@ -138,10 +133,10 @@ class Account(models.Model):
     description = models.TextField(verbose_name=_("Description"), null=True, blank=True)
     originalAmount = models.DecimalField(max_digits=20, decimal_places=2, verbose_name=_("Original Amount"),
                                          default=0.00)
-    isopenreliabilitiesaccount = models.BooleanField(verbose_name=_("Is The Open Liabilities Account"))
-    isopeninterestaccount = models.BooleanField(verbose_name=_("Is The Open Interests Account"))
-    isProductInventoryActiva = models.BooleanField(verbose_name=_("Is a Product Inventory Account"))
-    isACustomerPaymentAccount = models.BooleanField(verbose_name=_("Is a Customer Payment Account"))
+    isopenreliabilitiesaccount = models.BooleanField(verbose_name=_("Is The Open Liabilities Account"), default=False)
+    isopeninterestaccount = models.BooleanField(verbose_name=_("Is The Open Interests Account"), default=False)
+    isProductInventoryActiva = models.BooleanField(verbose_name=_("Is a Product Inventory Account"), default=False)
+    isACustomerPaymentAccount = models.BooleanField(verbose_name=_("Is a Customer Payment Account"), default=False)
 
     def value(self):
         sum = self.allBookings(fromAccount=False) - self.allBookings(fromAccount=True)
@@ -227,5 +222,3 @@ class Booking(models.Model):
         app_label = "accounting"
         verbose_name = _('Booking')
         verbose_name_plural = _('Bookings')
-      
-      

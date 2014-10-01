@@ -1,13 +1,8 @@
 # -*- coding: utf-8 -*-
 from django import forms
-from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 from django.contrib import admin
-from django.http import HttpResponse
-from django.http import HttpResponseRedirect
 
-from crm.models import *
-from accounting.models import *
 from accounting.views import *
 
 
@@ -26,8 +21,8 @@ class AccountingPeriodBooking(admin.TabularInline):
 class OptionBooking(admin.ModelAdmin):
     list_display = ('fromAccount', 'toAccount', 'amount', 'bookingDate', 'staff')
     fieldsets = ((_('Basic'), {'fields': (
-    'fromAccount', 'toAccount', 'amount', 'bookingDate', 'staff', 'description', 'bookingReference',
-    'accountingPeriod')}),)
+        'fromAccount', 'toAccount', 'amount', 'bookingDate', 'staff', 'description', 'bookingReference',
+        'accountingPeriod')}),)
     save_as = True
 
     def save_model(self, request, obj, form, change):
@@ -77,8 +72,8 @@ class OptionAccount(admin.ModelAdmin):
                     'isProductInventoryActiva', 'isACustomerPaymentAccount', 'value')
     list_display_links = ('accountNumber', 'accountType', 'title', 'value')
     fieldsets = ((_('Basic'), {'fields': (
-    'accountNumber', 'accountType', 'title', 'description', 'originalAmount', 'isopenreliabilitiesaccount',
-    'isopeninterestaccount', 'isProductInventoryActiva', 'isACustomerPaymentAccount')}),)
+        'accountNumber', 'accountType', 'title', 'description', 'originalAmount', 'isopenreliabilitiesaccount',
+        'isopeninterestaccount', 'isProductInventoryActiva', 'isACustomerPaymentAccount')}),)
     save_as = True
 
     form = AccountForm
