@@ -20,29 +20,6 @@ class CustomIndexDashboard(Dashboard):
     
     def init_with_context(self, context):
         site_name = get_admin_site_name(context)
-        
-        # append a group for "Administration" & "Applications"
-        self.children.append(modules.Group(
-            _('Group: Administration & Applications'),
-            column=1,
-            collapsible=False,
-            children = [
-                modules.AppList(
-                    _('Administration'),
-                    column=1,
-                    collapsible=True,
-                    css_classes=('collapse closed',),
-                    models=('django.contrib.*',),
-                ),
-                modules.AppList(
-                    _('Applications'),
-                    column=1,
-                    collapsible=False,
-                    exclude=('django.contrib.*',),
-                )
-            ]
-        ))
-        
        
         # append an app list module for "Administration"
         self.children.append(modules.ModelList(
@@ -63,32 +40,6 @@ class CustomIndexDashboard(Dashboard):
                     'external': False,
                 },
             ]
-        ))
-        
-        # append another link list module for "support".
-        self.children.append(modules.LinkList(
-            _('Support'),
-            column=2,
-            children=[
-                {
-                    'title': _('koalixcrm documentation'),
-                    'url': 'http://docs.koalix.org/',
-                    'external': True,
-                },
-                {
-                    'title': _('koalixcrm "koalixcrm-user" mailing list'),
-                    'url': 'http://groups.google.com/group/koalixcrm-users',
-                    'external': True,
-                },
-            ]
-        ))
-        
-        # append a feed module
-        self.children.append(modules.Feed(
-            title=_('Latest koalixcrm News'),
-            column=2,
-            feed_url='http://www.koalix.org/projects/koalixcrm/news.atom',
-            limit=5
         ))
         
         # append a recent actions module

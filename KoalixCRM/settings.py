@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 
 # Quick-start development settings - unsuitable for production
@@ -85,7 +86,7 @@ DATABASES = {
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'de-DE'
 
 TIME_ZONE = 'Europe/Zurich'
 
@@ -94,7 +95,12 @@ LANGUAGES = (
     ('en', 'English'),
 )
 
-LOCALE_PATHS = ('crm/locale', 'accounting/locale', 'subscriptions/locale', 'djangoUserExtension/locale')
+LOCALE_PATHS = (
+    'crm/locale',
+    'accounting/locale',
+    'subscriptions/locale',
+    'djangoUserExtension/locale'
+)
 
 USE_I18N = True
 
@@ -106,10 +112,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
-# TODO
+MEDIA_ROOT = os.path.normpath(os.path.join(PROJECT_ROOT + '/media'))
+PDF_OUTPUT_ROOT = os.path.normpath(os.path.join(MEDIA_ROOT + '/pdf'))
 STATIC_URL = '/static/'
-PDF_OUTPUT_ROOT = '/media/pdf/'
-MEDIA_ROOT = '/media/'
 MEDIA_URL = '/media/'
 ADMIN_MEDIA_PREFIX = STATIC_URL + "grappelli/"
 LOGIN_REDIRECT_URL = '/admin/'

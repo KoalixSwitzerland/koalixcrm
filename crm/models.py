@@ -8,7 +8,7 @@ from django.db import models
 from django.utils.translation import ugettext as _
 from django.core import serializers
 from django.contrib import auth
-from lxml import etree
+from xml import etree
 
 from const.country import *
 from const.postaladdressprefix import *
