@@ -40,6 +40,17 @@ class AccountForm(forms.ModelForm):
 
     class Meta:
         model = Account
+        fields = [
+            'accountNumber',
+            'title',
+            'accountType',
+            'description',
+            'originalAmount',
+            'isopenreliabilitiesaccount',
+            'isopeninterestaccount',
+            'isProductInventoryActiva',
+            'isACustomerPaymentAccount'
+        ]
 
     def clean(self):
         super(AccountForm, self).clean()
@@ -85,6 +96,7 @@ class AccountingPeriodForm(forms.ModelForm):
 
     class Meta:
         model = AccountingPeriod
+        fields = ['title', 'begin', 'end']
 
     def clean(self):
         super(AccountingPeriodForm, self).clean()
