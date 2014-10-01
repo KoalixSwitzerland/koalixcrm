@@ -10,6 +10,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
@@ -111,11 +112,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
-
-MEDIA_ROOT = os.path.normpath(os.path.join(PROJECT_ROOT + '/media'))
-PDF_OUTPUT_ROOT = os.path.normpath(os.path.join(MEDIA_ROOT + '/pdf'))
 STATIC_URL = '/static/'
-MEDIA_URL = '/media/'
 ADMIN_MEDIA_PREFIX = STATIC_URL + "grappelli/"
 LOGIN_REDIRECT_URL = '/admin/'
 GRAPPELLI_INDEX_DASHBOARD = 'KoalixCRM.dashboard.CustomIndexDashboard'

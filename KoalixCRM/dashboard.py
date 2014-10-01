@@ -52,7 +52,7 @@ class CustomIndexDashboard(Dashboard):
             children=[
                 {
                     'title': _('FileBrowser'),
-                    'url': '/filebrowser/browse/',
+                    'url': '/admin/filebrowser/browse/',
                     'external': False,
                 },
             ]
