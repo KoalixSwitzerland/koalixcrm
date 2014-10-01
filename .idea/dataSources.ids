@@ -1,0 +1,756 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="dataSourceStorage">
+  <data-source source="LOCAL" name="Django default" uuid="3c91d849-e234-4fc9-9cd7-c89d8dbf76d4">
+    <database-info product="SQLite" version="3.7.6.3" jdbc-version="2.1" driver-name="SQLiteJDBC" driver-version="native"/>
+    <case-sensitivity plain-identifiers="mixed" quoted-identifiers="mixed"/>
+    <schema name="" catalog=""/>
+    <table name="accounting_account" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="accountNumber" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="title" sqlType="VARCHAR(50)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="accountType" sqlType="VARCHAR(1)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="description" sqlType="TEXT" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <column name="originalAmount" sqlType="DECIMAL" precision="2000000000" scale="10" nullable="false" jdbcType="6"/>
+      <column name="isopenreliabilitiesaccount" sqlType="BOOL" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="isopeninterestaccount" sqlType="BOOL" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="isProductInventoryActiva" sqlType="BOOL" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="isACustomerPaymentAccount" sqlType="BOOL" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <primary-key columns="id"/>
+      <exported-key name="#FAKE_accounting_booking_4" table="accounting_booking" schema="" catalog="" columns="toAccount_id"/>
+      <exported-key name="#FAKE_accounting_booking_5" table="accounting_booking" schema="" catalog="" columns="fromAccount_id"/>
+      <exported-key name="#FAKE_accounting_productcategorie_1" table="accounting_productcategorie" schema="" catalog="" columns="lossAccount_id"/>
+      <exported-key name="#FAKE_accounting_productcategorie_2" table="accounting_productcategorie" schema="" catalog="" columns="profitAccount_id"/>
+      <exported-key name="#FAKE_crm_tax_1" table="crm_tax" schema="" catalog="" columns="accountPassiva_id"/>
+      <exported-key name="#FAKE_crm_tax_2" table="crm_tax" schema="" catalog="" columns="accountActiva_id"/>
+    </table>
+    <table name="accounting_accountingperiod" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="title" sqlType="VARCHAR(200)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="begin" sqlType="DATE" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="end" sqlType="DATE" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <primary-key columns="id"/>
+      <exported-key name="#FAKE_accounting_booking_3" table="accounting_booking" schema="" catalog="" columns="accountingPeriod_id"/>
+    </table>
+    <table name="accounting_booking" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="fromAccount_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="toAccount_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="amount" sqlType="DECIMAL" precision="2000000000" scale="10" nullable="false" jdbcType="6"/>
+      <column name="description" sqlType="VARCHAR(120)" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <column name="bookingReference_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="true" jdbcType="4"/>
+      <column name="bookingDate" sqlType="DATETIME" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="accountingPeriod_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="staff_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="dateofcreation" sqlType="DATETIME" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="lastmodification" sqlType="DATETIME" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="lastmodifiedby_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <primary-key columns="id"/>
+      <foreign-key name="#FAKE_accounting_booking_1" columns="lastmodifiedby_id" ref-table="auth_user" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_accounting_booking_2" columns="staff_id" ref-table="auth_user" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_accounting_booking_3" columns="accountingPeriod_id" ref-table="accounting_accountingperiod" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_accounting_booking_4" columns="toAccount_id" ref-table="accounting_account" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_accounting_booking_5" columns="fromAccount_id" ref-table="accounting_account" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="accounting_booking_aa0f8318" unique="true" columns="lastmodifiedby_id"/>
+      <index name="accounting_booking_f0a7d083" unique="true" columns="staff_id"/>
+      <index name="accounting_booking_3488e1bd" unique="true" columns="accountingPeriod_id"/>
+      <index name="accounting_booking_fcbc939b" unique="true" columns="bookingReference_id"/>
+      <index name="accounting_booking_db2daa1e" unique="true" columns="toAccount_id"/>
+      <index name="accounting_booking_c66a27b3" unique="true" columns="fromAccount_id"/>
+    </table>
+    <table name="accounting_productcategorie" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="title" sqlType="VARCHAR(50)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="profitAccount_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="lossAccount_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <primary-key columns="id"/>
+      <foreign-key name="#FAKE_accounting_productcategorie_1" columns="lossAccount_id" ref-table="accounting_account" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_accounting_productcategorie_2" columns="profitAccount_id" ref-table="accounting_account" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <exported-key name="#FAKE_crm_product_1" table="crm_product" schema="" catalog="" columns="accoutingProductCategorie_id"/>
+      <index name="accounting_productcategorie_b6b1c5cc" unique="true" columns="lossAccount_id"/>
+      <index name="accounting_productcategorie_aa59617c" unique="true" columns="profitAccount_id"/>
+    </table>
+    <table name="auth_group" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="name" sqlType="VARCHAR(80)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <primary-key columns="id"/>
+      <exported-key name="#FAKE_auth_user_groups_1" table="auth_user_groups" schema="" catalog="" columns="group_id"/>
+    </table>
+    <table name="auth_group_permissions" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="group_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="permission_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <primary-key columns="id"/>
+      <foreign-key name="#FAKE_auth_group_permissions_1" columns="permission_id" ref-table="auth_permission" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="auth_group_permissions_83d7f98b" unique="true" columns="permission_id"/>
+      <index name="auth_group_permissions_5f412f9a" unique="true" columns="group_id"/>
+    </table>
+    <table name="auth_permission" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="name" sqlType="VARCHAR(50)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="content_type_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="codename" sqlType="VARCHAR(100)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <primary-key columns="id"/>
+      <exported-key name="#FAKE_auth_group_permissions_1" table="auth_group_permissions" schema="" catalog="" columns="permission_id"/>
+      <exported-key name="#FAKE_auth_user_user_permissions_1" table="auth_user_user_permissions" schema="" catalog="" columns="permission_id"/>
+      <index name="auth_permission_37ef4eb4" unique="true" columns="content_type_id"/>
+    </table>
+    <table name="auth_user" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="password" sqlType="VARCHAR(128)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="last_login" sqlType="DATETIME" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="is_superuser" sqlType="BOOL" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="username" sqlType="VARCHAR(30)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="first_name" sqlType="VARCHAR(30)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="last_name" sqlType="VARCHAR(30)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="email" sqlType="VARCHAR(75)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="is_staff" sqlType="BOOL" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="is_active" sqlType="BOOL" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="date_joined" sqlType="DATETIME" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <primary-key columns="id"/>
+      <exported-key name="#FAKE_accounting_booking_1" table="accounting_booking" schema="" catalog="" columns="lastmodifiedby_id"/>
+      <exported-key name="#FAKE_accounting_booking_2" table="accounting_booking" schema="" catalog="" columns="staff_id"/>
+      <exported-key name="#FAKE_crm_contact_1" table="crm_contact" schema="" catalog="" columns="lastmodifiedby_id"/>
+      <exported-key name="#FAKE_crm_contract_1" table="crm_contract" schema="" catalog="" columns="lastmodifiedby_id"/>
+      <exported-key name="#FAKE_crm_contract_5" table="crm_contract" schema="" catalog="" columns="staff_id"/>
+      <exported-key name="#FAKE_crm_product_3" table="crm_product" schema="" catalog="" columns="lastmodifiedby_id"/>
+      <exported-key name="#FAKE_crm_purchaseorder_1" table="crm_purchaseorder" schema="" catalog="" columns="lastmodifiedby_id"/>
+      <exported-key name="#FAKE_crm_purchaseorder_3" table="crm_purchaseorder" schema="" catalog="" columns="staff_id"/>
+      <exported-key name="#FAKE_crm_salescontract_1" table="crm_salescontract" schema="" catalog="" columns="lastmodifiedby_id"/>
+      <exported-key name="#FAKE_crm_salescontract_3" table="crm_salescontract" schema="" catalog="" columns="staff_id"/>
+      <exported-key name="#FAKE_djangoUserExtension_userextension_1" table="djangoUserExtension_userextension" schema="" catalog="" columns="user_id"/>
+    </table>
+    <table name="auth_user_groups" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="user_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="group_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <primary-key columns="id"/>
+      <foreign-key name="#FAKE_auth_user_groups_1" columns="group_id" ref-table="auth_group" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="auth_user_groups_5f412f9a" unique="true" columns="group_id"/>
+      <index name="auth_user_groups_6340c63c" unique="true" columns="user_id"/>
+    </table>
+    <table name="auth_user_user_permissions" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="user_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="permission_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <primary-key columns="id"/>
+      <foreign-key name="#FAKE_auth_user_user_permissions_1" columns="permission_id" ref-table="auth_permission" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="auth_user_user_permissions_83d7f98b" unique="true" columns="permission_id"/>
+      <index name="auth_user_user_permissions_6340c63c" unique="true" columns="user_id"/>
+    </table>
+    <table name="crm_contact" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="name" sqlType="VARCHAR(300)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="dateofcreation" sqlType="DATETIME" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="lastmodification" sqlType="DATETIME" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="lastmodifiedby_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <primary-key columns="id"/>
+      <foreign-key name="#FAKE_crm_contact_1" columns="lastmodifiedby_id" ref-table="auth_user" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <exported-key name="#FAKE_crm_customer_2" table="crm_customer" schema="" catalog="" columns="contact_ptr_id"/>
+      <exported-key name="#FAKE_crm_emailaddressforcontact_1" table="crm_emailaddressforcontact" schema="" catalog="" columns="person_id"/>
+      <exported-key name="#FAKE_crm_phoneaddressforcontact_1" table="crm_phoneaddressforcontact" schema="" catalog="" columns="person_id"/>
+      <exported-key name="#FAKE_crm_postaladdressforcontact_1" table="crm_postaladdressforcontact" schema="" catalog="" columns="person_id"/>
+      <exported-key name="#FAKE_crm_supplier_1" table="crm_supplier" schema="" catalog="" columns="contact_ptr_id"/>
+      <index name="crm_contact_aa0f8318" unique="true" columns="lastmodifiedby_id"/>
+    </table>
+    <table name="crm_contract" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="staff_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="true" jdbcType="4"/>
+      <column name="description" sqlType="TEXT" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="defaultcustomer_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="true" jdbcType="4"/>
+      <column name="defaultSupplier_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="true" jdbcType="4"/>
+      <column name="defaultcurrency_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="dateofcreation" sqlType="DATETIME" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="lastmodification" sqlType="DATETIME" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="lastmodifiedby_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <primary-key columns="id"/>
+      <foreign-key name="#FAKE_crm_contract_1" columns="lastmodifiedby_id" ref-table="auth_user" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_crm_contract_2" columns="defaultcurrency_id" ref-table="crm_currency" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_crm_contract_3" columns="defaultSupplier_id" ref-table="crm_supplier" ref-schema="" ref-catalog="" ref-columns="contact_ptr_id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_crm_contract_4" columns="defaultcustomer_id" ref-table="crm_customer" ref-schema="" ref-catalog="" ref-columns="contact_ptr_id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_crm_contract_5" columns="staff_id" ref-table="auth_user" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <exported-key name="#FAKE_crm_emailaddressforcontract_1" table="crm_emailaddressforcontract" schema="" catalog="" columns="contract_id"/>
+      <exported-key name="#FAKE_crm_phoneaddressforcontract_1" table="crm_phoneaddressforcontract" schema="" catalog="" columns="contract_id"/>
+      <exported-key name="#FAKE_crm_postaladdressforcontract_1" table="crm_postaladdressforcontract" schema="" catalog="" columns="contract_id"/>
+      <exported-key name="#FAKE_crm_purchaseorder_5" table="crm_purchaseorder" schema="" catalog="" columns="contract_id"/>
+      <exported-key name="#FAKE_crm_salescontract_5" table="crm_salescontract" schema="" catalog="" columns="contract_id"/>
+      <exported-key name="#FAKE_subscriptions_subscription_1" table="subscriptions_subscription" schema="" catalog="" columns="contract_id"/>
+      <index name="crm_contract_aa0f8318" unique="true" columns="lastmodifiedby_id"/>
+      <index name="crm_contract_292cd72d" unique="true" columns="defaultcurrency_id"/>
+      <index name="crm_contract_fd3221cc" unique="true" columns="defaultSupplier_id"/>
+      <index name="crm_contract_7c097b4f" unique="true" columns="defaultcustomer_id"/>
+      <index name="crm_contract_f0a7d083" unique="true" columns="staff_id"/>
+    </table>
+    <table name="crm_currency" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="description" sqlType="VARCHAR(100)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="shortName" sqlType="VARCHAR(3)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="rounding" sqlType="DECIMAL" precision="2000000000" scale="10" nullable="true" jdbcType="6"/>
+      <primary-key columns="id"/>
+      <exported-key name="#FAKE_crm_contract_2" table="crm_contract" schema="" catalog="" columns="defaultcurrency_id"/>
+      <exported-key name="#FAKE_crm_price_2" table="crm_price" schema="" catalog="" columns="currency_id"/>
+      <exported-key name="#FAKE_crm_purchaseorder_2" table="crm_purchaseorder" schema="" catalog="" columns="currency_id"/>
+      <exported-key name="#FAKE_crm_salescontract_2" table="crm_salescontract" schema="" catalog="" columns="currency_id"/>
+    </table>
+    <table name="crm_customer" schema="" catalog="" type="TABLE">
+      <column name="contact_ptr_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="defaultCustomerBillingCycle_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <primary-key columns="contact_ptr_id"/>
+      <foreign-key name="#FAKE_crm_customer_1" columns="defaultCustomerBillingCycle_id" ref-table="crm_customerbillingcycle" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_crm_customer_2" columns="contact_ptr_id" ref-table="crm_contact" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <exported-key name="#FAKE_crm_contract_4" table="crm_contract" schema="" catalog="" columns="defaultcustomer_id"/>
+      <exported-key name="#FAKE_crm_salescontract_4" table="crm_salescontract" schema="" catalog="" columns="customer_id"/>
+      <index name="crm_customer_198bbe0f" unique="true" columns="defaultCustomerBillingCycle_id"/>
+    </table>
+    <table name="crm_customer_ismemberof" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="customer_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="customergroup_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <primary-key columns="id"/>
+      <foreign-key name="#FAKE_crm_customer_ismemberof_1" columns="customergroup_id" ref-table="crm_customergroup" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="crm_customer_ismemberof_79f7b41a" unique="true" columns="customergroup_id"/>
+      <index name="crm_customer_ismemberof_09847825" unique="true" columns="customer_id"/>
+    </table>
+    <table name="crm_customerbillingcycle" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="name" sqlType="VARCHAR(300)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="timeToPaymentDate" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <primary-key columns="id"/>
+      <exported-key name="#FAKE_crm_customer_1" table="crm_customer" schema="" catalog="" columns="defaultCustomerBillingCycle_id"/>
+    </table>
+    <table name="crm_customergroup" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="name" sqlType="VARCHAR(300)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <primary-key columns="id"/>
+      <exported-key name="#FAKE_crm_customer_ismemberof_1" table="crm_customer_ismemberof" schema="" catalog="" columns="customergroup_id"/>
+      <exported-key name="#FAKE_crm_customergrouptransform_2" table="crm_customergrouptransform" schema="" catalog="" columns="toCustomerGroup_id"/>
+      <exported-key name="#FAKE_crm_customergrouptransform_3" table="crm_customergrouptransform" schema="" catalog="" columns="fromCustomerGroup_id"/>
+      <exported-key name="#FAKE_crm_price_1" table="crm_price" schema="" catalog="" columns="customerGroup_id"/>
+    </table>
+    <table name="crm_customergrouptransform" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="fromCustomerGroup_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="toCustomerGroup_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="product_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="factor" sqlType="INTEGER" precision="2000000000" scale="10" nullable="true" jdbcType="4"/>
+      <primary-key columns="id"/>
+      <foreign-key name="#FAKE_crm_customergrouptransform_1" columns="product_id" ref-table="crm_product" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_crm_customergrouptransform_2" columns="toCustomerGroup_id" ref-table="crm_customergroup" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_crm_customergrouptransform_3" columns="fromCustomerGroup_id" ref-table="crm_customergroup" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="crm_customergrouptransform_7f1b40ad" unique="true" columns="product_id"/>
+      <index name="crm_customergrouptransform_66575afa" unique="true" columns="toCustomerGroup_id"/>
+      <index name="crm_customergrouptransform_6a5282aa" unique="true" columns="fromCustomerGroup_id"/>
+    </table>
+    <table name="crm_emailaddress" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="email" sqlType="VARCHAR(200)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <primary-key columns="id"/>
+      <exported-key name="#FAKE_crm_emailaddressforcontact_2" table="crm_emailaddressforcontact" schema="" catalog="" columns="emailaddress_ptr_id"/>
+      <exported-key name="#FAKE_crm_emailaddressforcontract_2" table="crm_emailaddressforcontract" schema="" catalog="" columns="emailaddress_ptr_id"/>
+      <exported-key name="#FAKE_crm_emailaddressforpurchaseorder_2" table="crm_emailaddressforpurchaseorder" schema="" catalog="" columns="emailaddress_ptr_id"/>
+      <exported-key name="#FAKE_crm_emailaddressforsalescontract_2" table="crm_emailaddressforsalescontract" schema="" catalog="" columns="emailaddress_ptr_id"/>
+    </table>
+    <table name="crm_emailaddressforcontact" schema="" catalog="" type="TABLE">
+      <column name="emailaddress_ptr_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="purpose" sqlType="VARCHAR(1)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="person_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <primary-key columns="emailaddress_ptr_id"/>
+      <foreign-key name="#FAKE_crm_emailaddressforcontact_1" columns="person_id" ref-table="crm_contact" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_crm_emailaddressforcontact_2" columns="emailaddress_ptr_id" ref-table="crm_emailaddress" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="crm_emailaddressforcontact_16f39487" unique="true" columns="person_id"/>
+    </table>
+    <table name="crm_emailaddressforcontract" schema="" catalog="" type="TABLE">
+      <column name="emailaddress_ptr_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="purpose" sqlType="VARCHAR(1)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="contract_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <primary-key columns="emailaddress_ptr_id"/>
+      <foreign-key name="#FAKE_crm_emailaddressforcontract_1" columns="contract_id" ref-table="crm_contract" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_crm_emailaddressforcontract_2" columns="emailaddress_ptr_id" ref-table="crm_emailaddress" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="crm_emailaddressforcontract_c9837659" unique="true" columns="contract_id"/>
+    </table>
+    <table name="crm_emailaddressforpurchaseorder" schema="" catalog="" type="TABLE">
+      <column name="emailaddress_ptr_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="purpose" sqlType="VARCHAR(1)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="contract_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <primary-key columns="emailaddress_ptr_id"/>
+      <foreign-key name="#FAKE_crm_emailaddressforpurchaseorder_1" columns="contract_id" ref-table="crm_purchaseorder" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_crm_emailaddressforpurchaseorder_2" columns="emailaddress_ptr_id" ref-table="crm_emailaddress" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="crm_emailaddressforpurchaseorder_c9837659" unique="true" columns="contract_id"/>
+    </table>
+    <table name="crm_emailaddressforsalescontract" schema="" catalog="" type="TABLE">
+      <column name="emailaddress_ptr_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="purpose" sqlType="VARCHAR(1)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="contract_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <primary-key columns="emailaddress_ptr_id"/>
+      <foreign-key name="#FAKE_crm_emailaddressforsalescontract_1" columns="contract_id" ref-table="crm_salescontract" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_crm_emailaddressforsalescontract_2" columns="emailaddress_ptr_id" ref-table="crm_emailaddress" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="crm_emailaddressforsalescontract_c9837659" unique="true" columns="contract_id"/>
+    </table>
+    <table name="crm_invoice" schema="" catalog="" type="TABLE">
+      <column name="salescontract_ptr_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="payableuntil" sqlType="DATE" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="derivatedFromQuote_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="true" jdbcType="4"/>
+      <column name="paymentBankReference" sqlType="VARCHAR(100)" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <column name="status" sqlType="VARCHAR(1)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <primary-key columns="salescontract_ptr_id"/>
+      <foreign-key name="#FAKE_crm_invoice_1" columns="derivatedFromQuote_id" ref-table="crm_quote" ref-schema="" ref-catalog="" ref-columns="salescontract_ptr_id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_crm_invoice_2" columns="salescontract_ptr_id" ref-table="crm_salescontract" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="crm_invoice_d5795057" unique="true" columns="derivatedFromQuote_id"/>
+    </table>
+    <table name="crm_phoneaddress" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="phone" sqlType="VARCHAR(20)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <primary-key columns="id"/>
+      <exported-key name="#FAKE_crm_phoneaddressforcontact_2" table="crm_phoneaddressforcontact" schema="" catalog="" columns="phoneaddress_ptr_id"/>
+      <exported-key name="#FAKE_crm_phoneaddressforcontract_2" table="crm_phoneaddressforcontract" schema="" catalog="" columns="phoneaddress_ptr_id"/>
+      <exported-key name="#FAKE_crm_phoneaddressforpurchaseorder_2" table="crm_phoneaddressforpurchaseorder" schema="" catalog="" columns="phoneaddress_ptr_id"/>
+      <exported-key name="#FAKE_crm_phoneaddressforsalescontract_2" table="crm_phoneaddressforsalescontract" schema="" catalog="" columns="phoneaddress_ptr_id"/>
+    </table>
+    <table name="crm_phoneaddressforcontact" schema="" catalog="" type="TABLE">
+      <column name="phoneaddress_ptr_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="purpose" sqlType="VARCHAR(1)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="person_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <primary-key columns="phoneaddress_ptr_id"/>
+      <foreign-key name="#FAKE_crm_phoneaddressforcontact_1" columns="person_id" ref-table="crm_contact" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_crm_phoneaddressforcontact_2" columns="phoneaddress_ptr_id" ref-table="crm_phoneaddress" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="crm_phoneaddressforcontact_16f39487" unique="true" columns="person_id"/>
+    </table>
+    <table name="crm_phoneaddressforcontract" schema="" catalog="" type="TABLE">
+      <column name="phoneaddress_ptr_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="purpose" sqlType="VARCHAR(1)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="contract_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <primary-key columns="phoneaddress_ptr_id"/>
+      <foreign-key name="#FAKE_crm_phoneaddressforcontract_1" columns="contract_id" ref-table="crm_contract" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_crm_phoneaddressforcontract_2" columns="phoneaddress_ptr_id" ref-table="crm_phoneaddress" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="crm_phoneaddressforcontract_c9837659" unique="true" columns="contract_id"/>
+    </table>
+    <table name="crm_phoneaddressforpurchaseorder" schema="" catalog="" type="TABLE">
+      <column name="phoneaddress_ptr_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="purpose" sqlType="VARCHAR(1)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="contract_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <primary-key columns="phoneaddress_ptr_id"/>
+      <foreign-key name="#FAKE_crm_phoneaddressforpurchaseorder_1" columns="contract_id" ref-table="crm_purchaseorder" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_crm_phoneaddressforpurchaseorder_2" columns="phoneaddress_ptr_id" ref-table="crm_phoneaddress" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="crm_phoneaddressforpurchaseorder_c9837659" unique="true" columns="contract_id"/>
+    </table>
+    <table name="crm_phoneaddressforsalescontract" schema="" catalog="" type="TABLE">
+      <column name="phoneaddress_ptr_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="purpose" sqlType="VARCHAR(1)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="contract_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <primary-key columns="phoneaddress_ptr_id"/>
+      <foreign-key name="#FAKE_crm_phoneaddressforsalescontract_1" columns="contract_id" ref-table="crm_salescontract" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_crm_phoneaddressforsalescontract_2" columns="phoneaddress_ptr_id" ref-table="crm_phoneaddress" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="crm_phoneaddressforsalescontract_c9837659" unique="true" columns="contract_id"/>
+    </table>
+    <table name="crm_position" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="positionNumber" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="quantity" sqlType="DECIMAL" precision="2000000000" scale="10" nullable="false" jdbcType="6"/>
+      <column name="description" sqlType="TEXT" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <column name="discount" sqlType="DECIMAL" precision="2000000000" scale="10" nullable="true" jdbcType="6"/>
+      <column name="product_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="true" jdbcType="4"/>
+      <column name="unit_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="true" jdbcType="4"/>
+      <column name="sentOn" sqlType="DATE" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <column name="supplier_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="true" jdbcType="4"/>
+      <column name="shipmentID" sqlType="VARCHAR(100)" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <column name="overwriteProductPrice" sqlType="BOOL" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="positionPricePerUnit" sqlType="DECIMAL" precision="2000000000" scale="10" nullable="true" jdbcType="6"/>
+      <column name="lastPricingDate" sqlType="DATE" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <column name="lastCalculatedPrice" sqlType="DECIMAL" precision="2000000000" scale="10" nullable="true" jdbcType="6"/>
+      <column name="lastCalculatedTax" sqlType="DECIMAL" precision="2000000000" scale="10" nullable="true" jdbcType="6"/>
+      <primary-key columns="id"/>
+      <foreign-key name="#FAKE_crm_position_1" columns="supplier_id" ref-table="crm_supplier" ref-schema="" ref-catalog="" ref-columns="contact_ptr_id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_crm_position_2" columns="unit_id" ref-table="crm_unit" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_crm_position_3" columns="product_id" ref-table="crm_product" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <exported-key name="#FAKE_crm_purchaseorderposition_2" table="crm_purchaseorderposition" schema="" catalog="" columns="position_ptr_id"/>
+      <exported-key name="#FAKE_crm_salescontractposition_2" table="crm_salescontractposition" schema="" catalog="" columns="position_ptr_id"/>
+      <index name="crm_position_272520ac" unique="true" columns="supplier_id"/>
+      <index name="crm_position_b9dcc52b" unique="true" columns="unit_id"/>
+      <index name="crm_position_7f1b40ad" unique="true" columns="product_id"/>
+    </table>
+    <table name="crm_postaladdress" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="prefix" sqlType="VARCHAR(1)" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <column name="name" sqlType="VARCHAR(100)" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <column name="prename" sqlType="VARCHAR(100)" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <column name="addressline1" sqlType="VARCHAR(200)" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <column name="addressline2" sqlType="VARCHAR(200)" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <column name="addressline3" sqlType="VARCHAR(200)" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <column name="addressline4" sqlType="VARCHAR(200)" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <column name="zipcode" sqlType="INTEGER" precision="2000000000" scale="10" nullable="true" jdbcType="4"/>
+      <column name="town" sqlType="VARCHAR(100)" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <column name="state" sqlType="VARCHAR(100)" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <column name="country" sqlType="VARCHAR(2)" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <primary-key columns="id"/>
+      <exported-key name="#FAKE_crm_postaladdressforcontact_2" table="crm_postaladdressforcontact" schema="" catalog="" columns="postaladdress_ptr_id"/>
+      <exported-key name="#FAKE_crm_postaladdressforcontract_2" table="crm_postaladdressforcontract" schema="" catalog="" columns="postaladdress_ptr_id"/>
+      <exported-key name="#FAKE_crm_postaladdressforpurchaseorder_2" table="crm_postaladdressforpurchaseorder" schema="" catalog="" columns="postaladdress_ptr_id"/>
+      <exported-key name="#FAKE_crm_postaladdressforsalescontract_2" table="crm_postaladdressforsalescontract" schema="" catalog="" columns="postaladdress_ptr_id"/>
+    </table>
+    <table name="crm_postaladdressforcontact" schema="" catalog="" type="TABLE">
+      <column name="postaladdress_ptr_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="purpose" sqlType="VARCHAR(1)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="person_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <primary-key columns="postaladdress_ptr_id"/>
+      <foreign-key name="#FAKE_crm_postaladdressforcontact_1" columns="person_id" ref-table="crm_contact" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_crm_postaladdressforcontact_2" columns="postaladdress_ptr_id" ref-table="crm_postaladdress" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="crm_postaladdressforcontact_16f39487" unique="true" columns="person_id"/>
+    </table>
+    <table name="crm_postaladdressforcontract" schema="" catalog="" type="TABLE">
+      <column name="postaladdress_ptr_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="purpose" sqlType="VARCHAR(1)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="contract_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <primary-key columns="postaladdress_ptr_id"/>
+      <foreign-key name="#FAKE_crm_postaladdressforcontract_1" columns="contract_id" ref-table="crm_contract" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_crm_postaladdressforcontract_2" columns="postaladdress_ptr_id" ref-table="crm_postaladdress" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="crm_postaladdressforcontract_c9837659" unique="true" columns="contract_id"/>
+    </table>
+    <table name="crm_postaladdressforpurchaseorder" schema="" catalog="" type="TABLE">
+      <column name="postaladdress_ptr_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="purpose" sqlType="VARCHAR(1)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="contract_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <primary-key columns="postaladdress_ptr_id"/>
+      <foreign-key name="#FAKE_crm_postaladdressforpurchaseorder_1" columns="contract_id" ref-table="crm_purchaseorder" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_crm_postaladdressforpurchaseorder_2" columns="postaladdress_ptr_id" ref-table="crm_postaladdress" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="crm_postaladdressforpurchaseorder_c9837659" unique="true" columns="contract_id"/>
+    </table>
+    <table name="crm_postaladdressforsalescontract" schema="" catalog="" type="TABLE">
+      <column name="postaladdress_ptr_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="purpose" sqlType="VARCHAR(1)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="contract_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <primary-key columns="postaladdress_ptr_id"/>
+      <foreign-key name="#FAKE_crm_postaladdressforsalescontract_1" columns="contract_id" ref-table="crm_salescontract" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_crm_postaladdressforsalescontract_2" columns="postaladdress_ptr_id" ref-table="crm_postaladdress" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="crm_postaladdressforsalescontract_c9837659" unique="true" columns="contract_id"/>
+    </table>
+    <table name="crm_price" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="product_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="unit_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="currency_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="customerGroup_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="true" jdbcType="4"/>
+      <column name="price" sqlType="DECIMAL" precision="2000000000" scale="10" nullable="false" jdbcType="6"/>
+      <column name="validfrom" sqlType="DATE" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <column name="validuntil" sqlType="DATE" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <primary-key columns="id"/>
+      <foreign-key name="#FAKE_crm_price_1" columns="customerGroup_id" ref-table="crm_customergroup" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_crm_price_2" columns="currency_id" ref-table="crm_currency" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_crm_price_3" columns="unit_id" ref-table="crm_unit" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_crm_price_4" columns="product_id" ref-table="crm_product" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="crm_price_39a8751b" unique="true" columns="customerGroup_id"/>
+      <index name="crm_price_b2321453" unique="true" columns="currency_id"/>
+      <index name="crm_price_b9dcc52b" unique="true" columns="unit_id"/>
+      <index name="crm_price_7f1b40ad" unique="true" columns="product_id"/>
+    </table>
+    <table name="crm_product" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="description" sqlType="TEXT" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <column name="title" sqlType="VARCHAR(200)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="productNumber" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="defaultunit_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="dateofcreation" sqlType="DATETIME" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="lastmodification" sqlType="DATETIME" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="lastmodifiedby_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="true" jdbcType="4"/>
+      <column name="tax_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="accoutingProductCategorie_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="true" jdbcType="4"/>
+      <primary-key columns="id"/>
+      <foreign-key name="#FAKE_crm_product_1" columns="accoutingProductCategorie_id" ref-table="accounting_productcategorie" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_crm_product_2" columns="tax_id" ref-table="crm_tax" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_crm_product_3" columns="lastmodifiedby_id" ref-table="auth_user" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_crm_product_4" columns="defaultunit_id" ref-table="crm_unit" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <exported-key name="#FAKE_crm_customergrouptransform_1" table="crm_customergrouptransform" schema="" catalog="" columns="product_id"/>
+      <exported-key name="#FAKE_crm_position_3" table="crm_position" schema="" catalog="" columns="product_id"/>
+      <exported-key name="#FAKE_crm_price_4" table="crm_price" schema="" catalog="" columns="product_id"/>
+      <exported-key name="#FAKE_crm_unittransform_1" table="crm_unittransform" schema="" catalog="" columns="product_id"/>
+      <exported-key name="#FAKE_subscriptions_subscriptiontype_1" table="subscriptions_subscriptiontype" schema="" catalog="" columns="product_ptr_id"/>
+      <index name="crm_product_c3de318d" unique="true" columns="accoutingProductCategorie_id"/>
+      <index name="crm_product_09473cff" unique="true" columns="tax_id"/>
+      <index name="crm_product_aa0f8318" unique="true" columns="lastmodifiedby_id"/>
+      <index name="crm_product_3fd59955" unique="true" columns="defaultunit_id"/>
+    </table>
+    <table name="crm_purchaseorder" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="contract_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="externalReference" sqlType="VARCHAR(100)" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <column name="supplier_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="description" sqlType="VARCHAR(100)" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <column name="lastPricingDate" sqlType="DATE" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <column name="lastCalculatedPrice" sqlType="DECIMAL" precision="2000000000" scale="10" nullable="true" jdbcType="6"/>
+      <column name="lastCalculatedTax" sqlType="DECIMAL" precision="2000000000" scale="10" nullable="true" jdbcType="6"/>
+      <column name="status" sqlType="VARCHAR(1)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="staff_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="true" jdbcType="4"/>
+      <column name="currency_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="dateofcreation" sqlType="DATETIME" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="lastmodification" sqlType="DATETIME" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="lastmodifiedby_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <primary-key columns="id"/>
+      <foreign-key name="#FAKE_crm_purchaseorder_1" columns="lastmodifiedby_id" ref-table="auth_user" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_crm_purchaseorder_2" columns="currency_id" ref-table="crm_currency" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_crm_purchaseorder_3" columns="staff_id" ref-table="auth_user" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_crm_purchaseorder_4" columns="supplier_id" ref-table="crm_supplier" ref-schema="" ref-catalog="" ref-columns="contact_ptr_id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_crm_purchaseorder_5" columns="contract_id" ref-table="crm_contract" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <exported-key name="#FAKE_crm_emailaddressforpurchaseorder_1" table="crm_emailaddressforpurchaseorder" schema="" catalog="" columns="contract_id"/>
+      <exported-key name="#FAKE_crm_phoneaddressforpurchaseorder_1" table="crm_phoneaddressforpurchaseorder" schema="" catalog="" columns="contract_id"/>
+      <exported-key name="#FAKE_crm_postaladdressforpurchaseorder_1" table="crm_postaladdressforpurchaseorder" schema="" catalog="" columns="contract_id"/>
+      <exported-key name="#FAKE_crm_purchaseorderposition_1" table="crm_purchaseorderposition" schema="" catalog="" columns="contract_id"/>
+      <index name="crm_purchaseorder_aa0f8318" unique="true" columns="lastmodifiedby_id"/>
+      <index name="crm_purchaseorder_b2321453" unique="true" columns="currency_id"/>
+      <index name="crm_purchaseorder_f0a7d083" unique="true" columns="staff_id"/>
+      <index name="crm_purchaseorder_272520ac" unique="true" columns="supplier_id"/>
+      <index name="crm_purchaseorder_c9837659" unique="true" columns="contract_id"/>
+    </table>
+    <table name="crm_purchaseorderposition" schema="" catalog="" type="TABLE">
+      <column name="position_ptr_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="contract_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <primary-key columns="position_ptr_id"/>
+      <foreign-key name="#FAKE_crm_purchaseorderposition_1" columns="contract_id" ref-table="crm_purchaseorder" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_crm_purchaseorderposition_2" columns="position_ptr_id" ref-table="crm_position" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="crm_purchaseorderposition_c9837659" unique="true" columns="contract_id"/>
+    </table>
+    <table name="crm_quote" schema="" catalog="" type="TABLE">
+      <column name="salescontract_ptr_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="validuntil" sqlType="DATE" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="status" sqlType="VARCHAR(1)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <primary-key columns="salescontract_ptr_id"/>
+      <foreign-key name="#FAKE_crm_quote_1" columns="salescontract_ptr_id" ref-table="crm_salescontract" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <exported-key name="#FAKE_crm_invoice_1" table="crm_invoice" schema="" catalog="" columns="derivatedFromQuote_id"/>
+    </table>
+    <table name="crm_salescontract" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="contract_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="externalReference" sqlType="VARCHAR(100)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="discount" sqlType="DECIMAL" precision="2000000000" scale="10" nullable="true" jdbcType="6"/>
+      <column name="description" sqlType="VARCHAR(100)" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <column name="lastPricingDate" sqlType="DATE" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <column name="lastCalculatedPrice" sqlType="DECIMAL" precision="2000000000" scale="10" nullable="true" jdbcType="6"/>
+      <column name="lastCalculatedTax" sqlType="DECIMAL" precision="2000000000" scale="10" nullable="true" jdbcType="6"/>
+      <column name="customer_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="staff_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="true" jdbcType="4"/>
+      <column name="currency_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="dateofcreation" sqlType="DATETIME" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="lastmodification" sqlType="DATETIME" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="lastmodifiedby_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="true" jdbcType="4"/>
+      <primary-key columns="id"/>
+      <foreign-key name="#FAKE_crm_salescontract_1" columns="lastmodifiedby_id" ref-table="auth_user" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_crm_salescontract_2" columns="currency_id" ref-table="crm_currency" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_crm_salescontract_3" columns="staff_id" ref-table="auth_user" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_crm_salescontract_4" columns="customer_id" ref-table="crm_customer" ref-schema="" ref-catalog="" ref-columns="contact_ptr_id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_crm_salescontract_5" columns="contract_id" ref-table="crm_contract" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <exported-key name="#FAKE_crm_emailaddressforsalescontract_1" table="crm_emailaddressforsalescontract" schema="" catalog="" columns="contract_id"/>
+      <exported-key name="#FAKE_crm_invoice_2" table="crm_invoice" schema="" catalog="" columns="salescontract_ptr_id"/>
+      <exported-key name="#FAKE_crm_phoneaddressforsalescontract_1" table="crm_phoneaddressforsalescontract" schema="" catalog="" columns="contract_id"/>
+      <exported-key name="#FAKE_crm_postaladdressforsalescontract_1" table="crm_postaladdressforsalescontract" schema="" catalog="" columns="contract_id"/>
+      <exported-key name="#FAKE_crm_quote_1" table="crm_quote" schema="" catalog="" columns="salescontract_ptr_id"/>
+      <exported-key name="#FAKE_crm_salescontractposition_1" table="crm_salescontractposition" schema="" catalog="" columns="contract_id"/>
+      <index name="crm_salescontract_aa0f8318" unique="true" columns="lastmodifiedby_id"/>
+      <index name="crm_salescontract_b2321453" unique="true" columns="currency_id"/>
+      <index name="crm_salescontract_f0a7d083" unique="true" columns="staff_id"/>
+      <index name="crm_salescontract_09847825" unique="true" columns="customer_id"/>
+      <index name="crm_salescontract_c9837659" unique="true" columns="contract_id"/>
+    </table>
+    <table name="crm_salescontractposition" schema="" catalog="" type="TABLE">
+      <column name="position_ptr_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="contract_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <primary-key columns="position_ptr_id"/>
+      <foreign-key name="#FAKE_crm_salescontractposition_1" columns="contract_id" ref-table="crm_salescontract" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_crm_salescontractposition_2" columns="position_ptr_id" ref-table="crm_position" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="crm_salescontractposition_c9837659" unique="true" columns="contract_id"/>
+    </table>
+    <table name="crm_supplier" schema="" catalog="" type="TABLE">
+      <column name="contact_ptr_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="offersShipmentToCustomers" sqlType="BOOL" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <primary-key columns="contact_ptr_id"/>
+      <foreign-key name="#FAKE_crm_supplier_1" columns="contact_ptr_id" ref-table="crm_contact" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <exported-key name="#FAKE_crm_contract_3" table="crm_contract" schema="" catalog="" columns="defaultSupplier_id"/>
+      <exported-key name="#FAKE_crm_position_1" table="crm_position" schema="" catalog="" columns="supplier_id"/>
+      <exported-key name="#FAKE_crm_purchaseorder_4" table="crm_purchaseorder" schema="" catalog="" columns="supplier_id"/>
+    </table>
+    <table name="crm_tax" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="taxrate" sqlType="DECIMAL" precision="2000000000" scale="10" nullable="false" jdbcType="6"/>
+      <column name="name" sqlType="VARCHAR(100)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="accountActiva_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="true" jdbcType="4"/>
+      <column name="accountPassiva_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="true" jdbcType="4"/>
+      <primary-key columns="id"/>
+      <foreign-key name="#FAKE_crm_tax_1" columns="accountPassiva_id" ref-table="accounting_account" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_crm_tax_2" columns="accountActiva_id" ref-table="accounting_account" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <exported-key name="#FAKE_crm_product_2" table="crm_product" schema="" catalog="" columns="tax_id"/>
+      <index name="crm_tax_17d2d71e" unique="true" columns="accountPassiva_id"/>
+      <index name="crm_tax_bffc4e03" unique="true" columns="accountActiva_id"/>
+    </table>
+    <table name="crm_unit" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="description" sqlType="VARCHAR(100)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="shortName" sqlType="VARCHAR(3)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="isAFractionOf_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="true" jdbcType="4"/>
+      <column name="fractionFactorToNextHigherUnit" sqlType="INTEGER" precision="2000000000" scale="10" nullable="true" jdbcType="4"/>
+      <primary-key columns="id"/>
+      <foreign-key name="#FAKE_crm_unit_1" columns="isAFractionOf_id" ref-table="crm_unit" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <exported-key name="#FAKE_crm_position_2" table="crm_position" schema="" catalog="" columns="unit_id"/>
+      <exported-key name="#FAKE_crm_price_3" table="crm_price" schema="" catalog="" columns="unit_id"/>
+      <exported-key name="#FAKE_crm_product_4" table="crm_product" schema="" catalog="" columns="defaultunit_id"/>
+      <exported-key name="#FAKE_crm_unit_1" table="crm_unit" schema="" catalog="" columns="isAFractionOf_id"/>
+      <exported-key name="#FAKE_crm_unittransform_2" table="crm_unittransform" schema="" catalog="" columns="toUnit_id"/>
+      <exported-key name="#FAKE_crm_unittransform_3" table="crm_unittransform" schema="" catalog="" columns="fromUnit_id"/>
+      <index name="crm_unit_c53decb4" unique="true" columns="isAFractionOf_id"/>
+    </table>
+    <table name="crm_unittransform" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="fromUnit_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="toUnit_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="product_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="factor" sqlType="INTEGER" precision="2000000000" scale="10" nullable="true" jdbcType="4"/>
+      <primary-key columns="id"/>
+      <foreign-key name="#FAKE_crm_unittransform_1" columns="product_id" ref-table="crm_product" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_crm_unittransform_2" columns="toUnit_id" ref-table="crm_unit" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_crm_unittransform_3" columns="fromUnit_id" ref-table="crm_unit" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="crm_unittransform_7f1b40ad" unique="true" columns="product_id"/>
+      <index name="crm_unittransform_34361098" unique="true" columns="toUnit_id"/>
+      <index name="crm_unittransform_49f6912b" unique="true" columns="fromUnit_id"/>
+    </table>
+    <table name="djangoUserExtension_templateset" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="organisationname" sqlType="VARCHAR(200)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="title" sqlType="VARCHAR(100)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="invoiceXSLFile_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="quoteXSLFile_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="purchaseorderXSLFile_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="purchaseconfirmationXSLFile_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="deilveryorderXSLFile_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="profitLossStatementXSLFile_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="balancesheetXSLFile_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="logo" sqlType="VARCHAR(200)" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <column name="bankingaccountref" sqlType="VARCHAR(60)" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <column name="addresser" sqlType="VARCHAR(200)" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <column name="fopConfigurationFile" sqlType="VARCHAR(200)" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <column name="footerTextsalesorders" sqlType="TEXT" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <column name="headerTextsalesorders" sqlType="TEXT" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <column name="headerTextpurchaseorders" sqlType="TEXT" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <column name="footerTextpurchaseorders" sqlType="TEXT" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <column name="pagefooterleft" sqlType="VARCHAR(40)" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <column name="pagefootermiddle" sqlType="VARCHAR(40)" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <primary-key columns="id"/>
+      <foreign-key name="#FAKE_djangoUserExtension_templateset_1" columns="balancesheetXSLFile_id" ref-table="djangoUserExtension_xslfile" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_djangoUserExtension_templateset_2" columns="profitLossStatementXSLFile_id" ref-table="djangoUserExtension_xslfile" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_djangoUserExtension_templateset_3" columns="deilveryorderXSLFile_id" ref-table="djangoUserExtension_xslfile" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_djangoUserExtension_templateset_4" columns="purchaseconfirmationXSLFile_id" ref-table="djangoUserExtension_xslfile" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_djangoUserExtension_templateset_5" columns="purchaseorderXSLFile_id" ref-table="djangoUserExtension_xslfile" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_djangoUserExtension_templateset_6" columns="quoteXSLFile_id" ref-table="djangoUserExtension_xslfile" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_djangoUserExtension_templateset_7" columns="invoiceXSLFile_id" ref-table="djangoUserExtension_xslfile" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="djangoUserExtension_templateset_6a2ab93f" unique="true" columns="balancesheetXSLFile_id"/>
+      <index name="djangoUserExtension_templateset_a82938d6" unique="true" columns="profitLossStatementXSLFile_id"/>
+      <index name="djangoUserExtension_templateset_d8ea116e" unique="true" columns="deilveryorderXSLFile_id"/>
+      <index name="djangoUserExtension_templateset_e033ecf5" unique="true" columns="purchaseconfirmationXSLFile_id"/>
+      <index name="djangoUserExtension_templateset_7b143120" unique="true" columns="purchaseorderXSLFile_id"/>
+      <index name="djangoUserExtension_templateset_913be2fb" unique="true" columns="quoteXSLFile_id"/>
+      <index name="djangoUserExtension_templateset_51b02dfa" unique="true" columns="invoiceXSLFile_id"/>
+    </table>
+    <table name="djangoUserExtension_userextension" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="user_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="defaultTemplateSet_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="defaultCurrency_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <primary-key columns="id"/>
+      <foreign-key name="#FAKE_djangoUserExtension_userextension_1" columns="user_id" ref-table="auth_user" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <exported-key name="#FAKE_djangoUserExtension_userextensionemailaddress_1" table="djangoUserExtension_userextensionemailaddress" schema="" catalog="" columns="userExtension_id"/>
+      <exported-key name="#FAKE_djangoUserExtension_userextensionphoneaddress_1" table="djangoUserExtension_userextensionphoneaddress" schema="" catalog="" columns="userExtension_id"/>
+      <exported-key name="#FAKE_djangoUserExtension_userextensionpostaladdress_1" table="djangoUserExtension_userextensionpostaladdress" schema="" catalog="" columns="userExtension_id"/>
+      <index name="djangoUserExtension_userextension_7a7051b5" unique="true" columns="defaultCurrency_id"/>
+      <index name="djangoUserExtension_userextension_0b3dbf68" unique="true" columns="defaultTemplateSet_id"/>
+      <index name="djangoUserExtension_userextension_6340c63c" unique="true" columns="user_id"/>
+    </table>
+    <table name="djangoUserExtension_userextensionemailaddress" schema="" catalog="" type="TABLE">
+      <column name="emailaddress_ptr_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="purpose" sqlType="VARCHAR(1)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="userExtension_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <primary-key columns="emailaddress_ptr_id"/>
+      <foreign-key name="#FAKE_djangoUserExtension_userextensionemailaddress_1" columns="userExtension_id" ref-table="djangoUserExtension_userextension" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="djangoUserExtension_userextensionemailaddress_6c362ba3" unique="true" columns="userExtension_id"/>
+    </table>
+    <table name="djangoUserExtension_userextensionphoneaddress" schema="" catalog="" type="TABLE">
+      <column name="phoneaddress_ptr_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="purpose" sqlType="VARCHAR(1)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="userExtension_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <primary-key columns="phoneaddress_ptr_id"/>
+      <foreign-key name="#FAKE_djangoUserExtension_userextensionphoneaddress_1" columns="userExtension_id" ref-table="djangoUserExtension_userextension" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="djangoUserExtension_userextensionphoneaddress_6c362ba3" unique="true" columns="userExtension_id"/>
+    </table>
+    <table name="djangoUserExtension_userextensionpostaladdress" schema="" catalog="" type="TABLE">
+      <column name="postaladdress_ptr_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="purpose" sqlType="VARCHAR(1)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="userExtension_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <primary-key columns="postaladdress_ptr_id"/>
+      <foreign-key name="#FAKE_djangoUserExtension_userextensionpostaladdress_1" columns="userExtension_id" ref-table="djangoUserExtension_userextension" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="djangoUserExtension_userextensionpostaladdress_6c362ba3" unique="true" columns="userExtension_id"/>
+    </table>
+    <table name="djangoUserExtension_xslfile" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="title" sqlType="VARCHAR(100)" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <column name="xslfile" sqlType="VARCHAR(200)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <primary-key columns="id"/>
+      <exported-key name="#FAKE_djangoUserExtension_templateset_1" table="djangoUserExtension_templateset" schema="" catalog="" columns="balancesheetXSLFile_id"/>
+      <exported-key name="#FAKE_djangoUserExtension_templateset_2" table="djangoUserExtension_templateset" schema="" catalog="" columns="profitLossStatementXSLFile_id"/>
+      <exported-key name="#FAKE_djangoUserExtension_templateset_3" table="djangoUserExtension_templateset" schema="" catalog="" columns="deilveryorderXSLFile_id"/>
+      <exported-key name="#FAKE_djangoUserExtension_templateset_4" table="djangoUserExtension_templateset" schema="" catalog="" columns="purchaseconfirmationXSLFile_id"/>
+      <exported-key name="#FAKE_djangoUserExtension_templateset_5" table="djangoUserExtension_templateset" schema="" catalog="" columns="purchaseorderXSLFile_id"/>
+      <exported-key name="#FAKE_djangoUserExtension_templateset_6" table="djangoUserExtension_templateset" schema="" catalog="" columns="quoteXSLFile_id"/>
+      <exported-key name="#FAKE_djangoUserExtension_templateset_7" table="djangoUserExtension_templateset" schema="" catalog="" columns="invoiceXSLFile_id"/>
+    </table>
+    <table name="django_admin_log" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="action_time" sqlType="DATETIME" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="user_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="content_type_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="true" jdbcType="4"/>
+      <column name="object_id" sqlType="TEXT" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <column name="object_repr" sqlType="VARCHAR(200)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="action_flag" sqlType="SMALLINT UNSIGNED" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="change_message" sqlType="TEXT" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <primary-key columns="id"/>
+      <index name="django_admin_log_37ef4eb4" unique="true" columns="content_type_id"/>
+      <index name="django_admin_log_6340c63c" unique="true" columns="user_id"/>
+    </table>
+    <table name="django_content_type" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="name" sqlType="VARCHAR(100)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="app_label" sqlType="VARCHAR(100)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="model" sqlType="VARCHAR(100)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <primary-key columns="id"/>
+    </table>
+    <table name="django_session" schema="" catalog="" type="TABLE">
+      <column name="session_key" sqlType="VARCHAR(40)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="session_data" sqlType="TEXT" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="expire_date" sqlType="DATETIME" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <primary-key columns="session_key"/>
+      <index name="django_session_b7b81f0c" unique="true" columns="expire_date"/>
+    </table>
+    <table name="subscriptions_subscription" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="contract_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="subscriptiontype_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="true" jdbcType="4"/>
+      <primary-key columns="id"/>
+      <foreign-key name="#FAKE_subscriptions_subscription_1" columns="contract_id" ref-table="crm_contract" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <exported-key name="#FAKE_subscriptions_subscriptionevent_1" table="subscriptions_subscriptionevent" schema="" catalog="" columns="subscriptions_id"/>
+      <index name="subscriptions_subscription_70cdf31b" unique="true" columns="subscriptiontype_id"/>
+      <index name="subscriptions_subscription_c9837659" unique="true" columns="contract_id"/>
+    </table>
+    <table name="subscriptions_subscriptionevent" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="subscriptions_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="eventdate" sqlType="DATE" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <column name="event" sqlType="VARCHAR(1)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <primary-key columns="id"/>
+      <foreign-key name="#FAKE_subscriptions_subscriptionevent_1" columns="subscriptions_id" ref-table="subscriptions_subscription" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="subscriptions_subscriptionevent_fafa2d1e" unique="true" columns="subscriptions_id"/>
+    </table>
+    <table name="subscriptions_subscriptiontype" schema="" catalog="" type="TABLE">
+      <column name="product_ptr_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="cancelationPeriod" sqlType="INTEGER" precision="2000000000" scale="10" nullable="true" jdbcType="4"/>
+      <column name="automaticContractExtension" sqlType="INTEGER" precision="2000000000" scale="10" nullable="true" jdbcType="4"/>
+      <column name="automaticContractExtensionReminder" sqlType="INTEGER" precision="2000000000" scale="10" nullable="true" jdbcType="4"/>
+      <column name="minimumDuration" sqlType="INTEGER" precision="2000000000" scale="10" nullable="true" jdbcType="4"/>
+      <column name="paymentIntervall" sqlType="INTEGER" precision="2000000000" scale="10" nullable="true" jdbcType="4"/>
+      <column name="contractDocument" sqlType="VARCHAR(200)" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <primary-key columns="product_ptr_id"/>
+      <foreign-key name="#FAKE_subscriptions_subscriptiontype_1" columns="product_ptr_id" ref-table="crm_product" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+    </table>
+  </data-source>
+</component>

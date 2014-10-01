@@ -27,8 +27,8 @@ class UserExtension(models.Model):
    class Meta:
       app_label = "djangoUserExtension"
       #app_label_koalix = _('Djang User Extention')
-      verbose_name = _('User Extention')
-      verbose_name_plural = _('User Extentions')
+      verbose_name = _('User Extension')
+      verbose_name_plural = _('User Extensions')
       
    def __unicode__(self):
       return str(self.id) + ' ' + self.user.__unicode__()

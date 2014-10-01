@@ -497,7 +497,7 @@ class Invoice(SalesContract):
         dictprices = dict()
         dicttax = dict()
         exists = False
-        currentValidAccountingPeriod = accounting.models.AccountingPeriod.getCurrentValidAccountingPeriod()
+        currentValidAccountingPeriod = accounting.models.AccountingPeriod.get_current_valid_accounting_period()
         activaaccount = accounting.models.Account.objects.filter(isopeninterestaccount=True)
         for position in list(SalesContractPosition.objects.filter(contract=self.id)):
             profitaccount = position.product.accoutingProductCategorie.profitAccount
@@ -638,7 +638,7 @@ class Product(models.Model):
     lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True},
                                        verbose_name=_("Last modified by"), null=True, blank="True")
     tax = models.ForeignKey(Tax, blank=False)
-    accoutingProductCategorie = models.ForeignKey('accounting.ProductCategorie',
+    accoutingProductCategorie = models.ForeignKey('accounting.ProductCategory',
                                                   verbose_name=_("Accounting Product Categorie"), null=True,
                                                   blank="True")
 

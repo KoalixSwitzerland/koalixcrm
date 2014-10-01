@@ -29,7 +29,7 @@ def exportPDF(callingModelAdmin, request, whereToCreateFrom, whatToCreate, redir
       Raises:
         raises Http404 exception if anything goes wrong"""
   try:
-    pdf = whereToCreateFrom.createPDF(whatToCreate)
+    pdf = whereToCreateFrom.create_pdf(whatToCreate)
     response = HttpResponse(FileWrapper(file(pdf)), mimetype='application/pdf')
     response['Content-Length'] = path.getsize(pdf) 
   except (TemplateSetMissing, UserExtensionMissing, CalledProcessError), e:

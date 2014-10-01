@@ -6,8 +6,7 @@ To activate your index dashboard add the following to your settings.py::
     GRAPPELLI_INDEX_DASHBOARD = 'koalixcrm.dashboard.CustomIndexDashboard'
 """
 
-from django.utils.translation import ugettext_lazy as _
-from django.core.urlresolvers import reverse
+from django.utils.translation import ugettext_lazy as trans
 
 from grappelli.dashboard import modules, Dashboard
 from grappelli.dashboard.utils import get_admin_site_name
@@ -17,18 +16,18 @@ class CustomIndexDashboard(Dashboard):
     """
     Custom index dashboard for koalixcrm
     """
-    
+
     def init_with_context(self, context):
         site_name = get_admin_site_name(context)
-       
+
         # append a group for "Administration" & "Applications"
         self.children.append(modules.Group(
-            _('Applications'),
+            trans('Applications'),
             column=1,
             collapsible=False,
             children=[
                 modules.AppList(
-                    _('Applications'),
+                    trans('Applications'),
                     column=1,
                     collapsible=False,
                     exclude=('django.contrib.*',),
@@ -36,31 +35,30 @@ class CustomIndexDashboard(Dashboard):
             ]
         ))
 
-
         # append an app list module for "Administration"
         self.children.append(modules.ModelList(
-            _('Administration'),
+            trans('Administration'),
             column=1,
             collapsible=False,
             models=('django.contrib.*',),
         ))
-        
+
         # append another link list module for "support".
         self.children.append(modules.LinkList(
-            _('Media Management'),
+            trans('Media Management'),
             column=2,
             children=[
                 {
-                    'title': _('FileBrowser'),
+                    'title': trans('FileBrowser'),
                     'url': '/admin/filebrowser/browse/',
                     'external': False,
                 },
             ]
         ))
-        
+
         # append a recent actions module
         self.children.append(modules.RecentActions(
-            _('Recent Actions'),
+            trans('Recent Actions'),
             limit=5,
             collapsible=False,
             column=3,

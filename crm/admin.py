@@ -185,7 +185,7 @@ class OptionContract(admin.ModelAdmin):
    )
    inlines = [ContractPostalAddress, ContractPhoneAddress, ContractEmailAddress, InlineQuote, InlineInvoice, InlinePurchaseOrder]
    pluginProcessor = PluginProcessor()
-   inlines.extend(pluginProcessor.getPluginAdditions("contractInlines"))
+   inlines.extend(pluginProcessor.get_plugin_additions("contractInlines"))
 
    def createPurchaseOrder(self, request, queryset):
       for obj in queryset:
@@ -221,7 +221,7 @@ class OptionContract(admin.ModelAdmin):
       
    actions = ['createQuote', 'createInvoice', 'createPurchaseOrder']
    pluginProcessor = PluginProcessor()
-   actions.extend(pluginProcessor.getPluginAdditions("contractActions"))
+   actions.extend(pluginProcessor.get_plugin_additions("contractActions"))
 
 
 class PurchaseOrderInlinePosition(admin.TabularInline):
@@ -247,9 +247,9 @@ class InlineBookings(admin.TabularInline):
    allow_add = False
 
 class OptionInvoice(admin.ModelAdmin):
-   list_display = ('id', 'description', 'contract', 'customer', 'payableuntil', 'status', 'currency', 'staff',  'lastCalculatedPrice', 'lastPricingDate', 'lastmodification', 'lastmodifiedby')
+   list_display = ('id', 'description', 'contract', 'customer', 'payableuntil', 'status', 'currency', 'staff',  'lastCalculatedPrice', 'lastPricingDate', 'lastModification', 'lastModifiedBy')
    list_display_links = ('id','contract','customer')       
-   list_filter    = ('customer', 'contract', 'staff', 'status', 'currency', 'lastmodification')
+   list_filter    = ('customer', 'contract', 'staff', 'status', 'currency', 'lastModification')
    ordering       = ('contract', 'customer', 'currency')
    search_fields  = ('contract__id', 'customer__name', 'currency__description')
    fieldsets = (
@@ -260,7 +260,7 @@ class OptionInvoice(admin.ModelAdmin):
    save_as = True
    inlines = [SalesContractInlinePosition, SalesContractPostalAddress, SalesContractPhoneAddress, SalesContractEmailAddress, InlineBookings]
    pluginProcessor = PluginProcessor()
-   inlines.extend(pluginProcessor.getPluginAdditions("invoiceInlines"))
+   inlines.extend(pluginProcessor.get_plugin_additions("invoiceInlines"))
    
    def response_add(self, request, new_object):
         obj = self.after_saving_model_and_related_inlines(request, new_object)
@@ -316,7 +316,7 @@ class OptionInvoice(admin.ModelAdmin):
    
    #def unregisterInvoiceInAccounting(self, request, queryset):
       #for obj in queryset:
-         #obj.createPDF(deliveryorder=True)
+         #obj.create_pdf(deliveryorder=True)
          #self.message_user(request, _("Successfully unregistered Invoice in the Accounting"))
    #unregisterInvoiceInAccounting.short_description = _("Unregister Invoice in Accounting")
    
@@ -344,13 +344,13 @@ class OptionInvoice(admin.ModelAdmin):
    
    actions = ['recalculatePrices', 'createDeliveryOrderPDF', 'createInvoicePDF', 'registerInvoiceInAccounting', 'unregisterInvoiceInAccounting', 'registerPaymentInAccounting']
    pluginProcessor = PluginProcessor()
-   actions.extend(pluginProcessor.getPluginAdditions("invoiceActions"))
+   actions.extend(pluginProcessor.get_plugin_additions("invoiceActions"))
 
 
 class OptionQuote(admin.ModelAdmin):
-   list_display = ('id', 'description', 'contract', 'customer', 'currency', 'validuntil', 'status', 'staff', 'lastmodifiedby', 'lastCalculatedPrice', 'lastPricingDate', 'lastmodification')
+   list_display = ('id', 'description', 'contract', 'customer', 'currency', 'validuntil', 'status', 'staff', 'lastModifiedBy', 'lastCalculatedPrice', 'lastPricingDate', 'lastModification')
    list_display_links = ('id','contract','customer', 'currency')        
-   list_filter    = ('customer', 'contract', 'currency', 'staff', 'status', 'lastmodification')
+   list_filter    = ('customer', 'contract', 'currency', 'staff', 'status', 'lastModification')
    ordering       = ('contract', 'customer', 'currency')
    search_fields  = ('contract__id', 'customer__name', 'currency__description')
 
@@ -362,7 +362,7 @@ class OptionQuote(admin.ModelAdmin):
    save_as = True
    inlines = [SalesContractInlinePosition, SalesContractPostalAddress, SalesContractPhoneAddress, SalesContractEmailAddress]
    pluginProcessor = PluginProcessor()
-   inlines.extend(pluginProcessor.getPluginAdditions("quoteInlines"))
+   inlines.extend(pluginProcessor.get_plugin_additions("quoteInlines"))
    
    def response_add(self, request, new_object):
         obj = self.after_saving_model_and_related_inlines(request, new_object)
@@ -420,12 +420,12 @@ class OptionQuote(admin.ModelAdmin):
 
    actions = ['recalculatePrices', 'createInvoice', 'createQuotePDF', 'createPurchaseConfirmationPDF']
    pluginProcessor = PluginProcessor()
-   inlines.extend(pluginProcessor.getPluginAdditions("quoteActions"))
+   inlines.extend(pluginProcessor.get_plugin_additions("quoteActions"))
 
 class OptionPurchaseOrder(admin.ModelAdmin):
-   list_display = ('id', 'description', 'contract', 'supplier', 'status', 'currency', 'staff', 'lastmodifiedby', 'lastCalculatedPrice', 'lastPricingDate', 'lastmodification')
+   list_display = ('id', 'description', 'contract', 'supplier', 'status', 'currency', 'staff', 'lastModifiedBy', 'lastCalculatedPrice', 'lastPricingDate', 'lastModification')
    list_display_links = ('id','contract','supplier', )        
-   list_filter    = ('supplier', 'contract', 'staff', 'status', 'currency', 'lastmodification')
+   list_filter    = ('supplier', 'contract', 'staff', 'status', 'currency', 'lastModification')
    ordering       = ('contract', 'supplier', 'currency')
    search_fields  = ('contract__id', 'supplier__name', 'currency_description')
 
@@ -451,12 +451,12 @@ class OptionPurchaseOrder(admin.ModelAdmin):
    
    actions = ['createPurchseOrderPDF']
    pluginProcessor = PluginProcessor()
-   actions.extend(pluginProcessor.getPluginAdditions("purchaseOrderActions"))
+   actions.extend(pluginProcessor.get_plugin_additions("purchaseOrderActions"))
    
    save_as = True
    inlines = [PurchaseOrderInlinePosition, PurchaseOrderPostalAddress, PurchaseOrderPhoneAddress, PurchaseOrderEmailAddress]
    pluginProcessor = PluginProcessor()
-   inlines.extend(pluginProcessor.getPluginAdditions("purchaseOrderInlines"))
+   inlines.extend(pluginProcessor.get_plugin_additions("purchaseOrderInlines"))
 
 class ProductPrice(admin.TabularInline):
    model = Price
@@ -530,7 +530,7 @@ class OptionCustomer(admin.ModelAdmin):
    search_fields  = ('id', 'name')
    inlines = [ContactPostalAddress, ContactPhoneAddress, ContactEmailAddress]
    pluginProcessor = PluginProcessor()
-   inlines.extend(pluginProcessor.getPluginAdditions("customerInline"))
+   inlines.extend(pluginProcessor.get_plugin_additions("customerInline"))
 
    def createContract(self, request, queryset):
       for obj in queryset:
@@ -562,7 +562,7 @@ class OptionCustomer(admin.ModelAdmin):
      obj.save()
    actions = ['createContract', 'createInvoice', 'createQuote']
    pluginProcessor = PluginProcessor()
-   inlines.extend(pluginProcessor.getPluginAdditions("customerActions"))
+   inlines.extend(pluginProcessor.get_plugin_additions("customerActions"))
 
 class OptionCustomerGroup(admin.ModelAdmin):
    list_display = ('id', 'name' )

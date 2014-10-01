@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*
 
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext as trans
 
 ACCOUNTTYPECHOICES = (
-    ('E', _('Earnings')),
-    ('S', _('Spendings')),
-    ('L', _('Liabilities')),
-    ('A', _('Assets')),
+    ('E', trans('Earnings')),
+    ('S', trans('Spendings')),
+    ('L', trans('Liabilities')),
+    ('A', trans('Assets')),
 )
