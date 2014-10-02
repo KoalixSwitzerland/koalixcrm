@@ -1,0 +1,11 @@
+#
+# Ignore PyCharm directory
+.idea/
+
+#
+# Ignore directories of static content
+./static/
+
+#
+# Ignore compiled python
+*.pyc
