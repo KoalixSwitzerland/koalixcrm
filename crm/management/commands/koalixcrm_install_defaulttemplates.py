@@ -14,9 +14,6 @@ import djangoUserExtension
 import crm
 
 
-DEFAULT_FILE = 'dashboard.py'
-
-
 class Command(BaseCommand):
     help = ('This Command is going to install the default Templates, '
             'given by the koalixcrm base installation, in your django instance. Be sure you first run syncdb')
