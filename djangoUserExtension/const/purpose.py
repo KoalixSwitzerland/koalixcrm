@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*
 
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext as trans
 
 PURPOSESADDRESSINUSEREXTENTION = (
-    ('H', _('Private')),
-    ('O', _('Business')),
-    ('P', _('Mobile Private')),
-    ('B', _('Mobile Business')),
+    ('H', trans('Private')),
+    ('O', trans('Business')),
+    ('P', trans('Mobile Private')),
+    ('B', trans('Mobile Business')),
 )

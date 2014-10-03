@@ -32,10 +32,10 @@ def export_pdf(calling_model_admin, request, where_to_create_from, what_to_creat
     except Exception, e:  # (TemplateSetMissing, UserExtensionMissing, CalledProcessError), e:
         # if type(e) == UserExtensionMissing:
         # response = HttpResponseRedirect(redirect_to)
-        #     calling_model_admin.message_user(request, _("User Extension Missing"))
+        #     calling_model_admin.message_user(request, trans("User Extension Missing"))
         # elif type(e) == TemplateSetMissing:
         #     response = HttpResponseRedirect(redirect_to)
-        #     calling_model_admin.message_user(request, _("Templateset Missing"))
+        #     calling_model_admin.message_user(request, trans("Templateset Missing"))
         if type(e) == CalledProcessError:
             response = HttpResponseRedirect(redirect_to)
             calling_model_admin.message_user(request, e.output)
