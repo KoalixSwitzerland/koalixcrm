@@ -286,9 +286,9 @@ class OptionInvoice(admin.ModelAdmin):
     list_display = (
         'id', 'description', 'contract', 'customer', 'payableuntil', 'status', 'currency', 'staff',
         'lastCalculatedPrice',
-        'lastPricingDate', 'lastModification', 'lastModifiedBy')
+        'lastPricingDate', 'lastmodification', 'lastmodifiedby')
     list_display_links = ('id', 'contract', 'customer')
-    list_filter = ('customer', 'contract', 'staff', 'status', 'currency', 'lastModification')
+    list_filter = ('customer', 'contract', 'staff', 'status', 'currency', 'lastmodification')
     ordering = ('contract', 'customer', 'currency')
     search_fields = ('contract__id', 'customer__name', 'currency__description')
     fieldsets = (
@@ -396,10 +396,10 @@ class OptionInvoice(admin.ModelAdmin):
 
 class OptionQuote(admin.ModelAdmin):
     list_display = (
-        'id', 'description', 'contract', 'customer', 'currency', 'validuntil', 'status', 'staff', 'lastModifiedBy',
-        'lastCalculatedPrice', 'lastPricingDate', 'lastModification')
+        'id', 'description', 'contract', 'customer', 'currency', 'validuntil', 'status', 'staff', 'lastmodifiedby',
+        'lastCalculatedPrice', 'lastPricingDate', 'lastmodification')
     list_display_links = ('id', 'contract', 'customer', 'currency')
-    list_filter = ('customer', 'contract', 'currency', 'staff', 'status', 'lastModification')
+    list_filter = ('customer', 'contract', 'currency', 'staff', 'status', 'lastmodification')
     ordering = ('contract', 'customer', 'currency')
     search_fields = ('contract__id', 'customer__name', 'currency__description')
 
@@ -479,11 +479,11 @@ class OptionQuote(admin.ModelAdmin):
 
 class OptionPurchaseOrder(admin.ModelAdmin):
     list_display = (
-        'id', 'description', 'contract', 'supplier', 'status', 'currency', 'staff', 'lastModifiedBy',
+        'id', 'description', 'contract', 'supplier', 'status', 'currency', 'staff', 'lastmodifiedby',
         'lastCalculatedPrice',
-        'lastPricingDate', 'lastModification')
+        'lastPricingDate', 'lastmodification')
     list_display_links = ('id', 'contract', 'supplier', )
-    list_filter = ('supplier', 'contract', 'staff', 'status', 'currency', 'lastModification')
+    list_filter = ('supplier', 'contract', 'staff', 'status', 'currency', 'lastmodification')
     ordering = ('contract', 'supplier', 'currency')
     search_fields = ('contract__id', 'supplier__name', 'currency_description')
 
@@ -601,8 +601,7 @@ class OptionCustomer(admin.ModelAdmin):
     pluginProcessor = PluginProcessor()
     inlines.extend(pluginProcessor.get_plugin_additions("customerInline"))
 
-    @staticmethod
-    def create_contract(request, queryset):
+    def create_contract(self, request, queryset):
         for obj in queryset:
             contract = obj.create_contract(request)
             response = HttpResponseRedirect('/admin/crm/contract/' + str(contract.id))
@@ -610,8 +609,7 @@ class OptionCustomer(admin.ModelAdmin):
 
     create_contract.short_description = trans("Create Contract")
 
-    @staticmethod
-    def create_quote(request, queryset):
+    def create_quote(self, request, queryset):
         for obj in queryset:
             quote = obj.create_quote()
             response = HttpResponseRedirect('/admin/crm/quote/' + str(quote.id))
@@ -619,8 +617,7 @@ class OptionCustomer(admin.ModelAdmin):
 
     create_quote.short_description = trans("Create Quote")
 
-    @staticmethod
-    def create_invoice(request, queryset):
+    def create_invoice(self, request, queryset):
         for obj in queryset:
             invoice = obj.create_invoice()
             response = HttpResponseRedirect('/admin/crm/invoice/' + str(invoice.id))

@@ -42,7 +42,6 @@ class OptionSubscription(admin.ModelAdmin):
     )
     inlines = [AdminSubscriptionEvent]
 
-    @staticmethod
     def create_invoice(request, queryset):
         for obj in queryset:
             invoice = obj.create_invoice()
@@ -87,7 +86,7 @@ class OptionSubscriptionType(admin.ModelAdmin):
 def create_subscription(a, request, queryset):
     for contract in queryset:
         subscription = Subscription()
-        subscription.create_subscription_from_contract(crmmodels.Contract.objects.get(id=contract.id))
+        subscription.create_subscription_from_contract(Contract.objects.get(id=contract.id))
         response = HttpResponseRedirect('/admin/subscriptions/' + str(subscription.id))
         return response
 
