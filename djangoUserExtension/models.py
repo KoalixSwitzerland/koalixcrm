@@ -12,7 +12,7 @@ class XSLFile(models.Model):
    
    class Meta:
       app_label = "djangoUserExtension"
-      #app_label_koalix = _('Djang User Extention')
+      #app_label_koalix = trans('Djang User Extention')
       verbose_name = _('XSL File')
       verbose_name_plural = _('XSL Files')
       
@@ -26,7 +26,7 @@ class UserExtension(models.Model):
    
    class Meta:
       app_label = "djangoUserExtension"
-      #app_label_koalix = _('Djang User Extention')
+      #app_label_koalix = trans('Djang User Extention')
       verbose_name = _('User Extension')
       verbose_name_plural = _('User Extensions')
       
@@ -56,7 +56,7 @@ class TemplateSet(models.Model):
       
    class Meta:
       app_label = "djangoUserExtension"
-      #app_label_koalix = _('Djang User Extention')
+      #app_label_koalix = trans('Djang User Extention')
       verbose_name = _('Templateset')
       verbose_name_plural = _('Templatesets')
       
@@ -73,7 +73,7 @@ class UserExtensionPostalAddress(crmmodels.PostalAddress):
    
    class Meta:
       app_label = "djangoUserExtension"
-      #app_label_koalix = _('Djang User Extention')
+      #app_label_koalix = trans('Djang User Extention')
       verbose_name = _('Postal Address for User Extention')
       verbose_name_plural = _('Postal Address for User Extention')
    
@@ -86,7 +86,7 @@ class UserExtensionPhoneAddress(crmmodels.PhoneAddress):
    
    class Meta:
       app_label = "djangoUserExtension"
-      #app_label_koalix = _('Djang User Extention')
+      #app_label_koalix = trans('Djang User Extention')
       verbose_name = _('Phonenumber for User Extention')
       verbose_name_plural = _('Phonenumber for User Extention')
 
@@ -99,6 +99,6 @@ class UserExtensionEmailAddress(crmmodels.EmailAddress):
    
    class Meta:
       app_label = "djangoUserExtension"
-      #app_label_koalix = _('Djang User Extention')
+      #app_label_koalix = trans('Djang User Extention')
       verbose_name = _('Email Address for User Extention')
       verbose_name_plural = _('Email Address for User Extention')

@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*
 
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext as trans
 
 POSTALADDRESSPREFIX = (
-    ('F', _('Company')),
-    ('W', _('Mrs')),
-    ('H', _('Mr')),
-    ('G', _('Ms')),
+    ('F', trans('Company')),
+    ('W', trans('Mrs')),
+    ('H', trans('Mr')),
+    ('G', trans('Ms')),
 )

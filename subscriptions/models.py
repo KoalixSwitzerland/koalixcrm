@@ -42,7 +42,7 @@ class Subscription(models.Model):
   
   class Meta:
      app_label = "subscriptions"
-     #app_label_koalix = _("Subscriptions")
+     #app_label_koalix = trans("Subscriptions")
      verbose_name = _('Subscription')
      verbose_name_plural = _('Subscriptions')
   
@@ -56,7 +56,7 @@ class SubscriptionEvent(models.Model):
    
   class Meta:
      app_label = "subscriptions"
-     #app_label_koalix = _("Subscriptions")
+     #app_label_koalix = trans("Subscriptions")
      verbose_name = _('Subscription Event')
      verbose_name_plural = _('Subscription Events')
 
@@ -71,7 +71,7 @@ class SubscriptionType(crmmodels.Product):
    
   class Meta:
      app_label = "subscriptions"
-     #app_label_koalix = _("Subscriptions")
+     #app_label_koalix = trans("Subscriptions")
      verbose_name = _('Subscription Type')
      verbose_name_plural = _('Subscription Types')
   

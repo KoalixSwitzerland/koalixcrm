@@ -48,13 +48,13 @@ class OptionSubscription(admin.ModelAdmin):
    
    def createInvoice(self, request, queryset):
       for obj in queryset:
-         invoice = obj.createInvoice()
+         invoice = obj.create_invoice()
          response = HttpResponseRedirect('/admin/crm/invoice/'+str(invoice.id))
       return response
       
    def createQuote(self, request, queryset):
       for obj in queryset:
-         invoice = obj.createInvoice()
+         invoice = obj.create_invoice()
          response = HttpResponseRedirect('/admin/crm/invoice/'+str(invoice.id))
       return response
       
@@ -67,7 +67,7 @@ class OptionSubscription(admin.ModelAdmin):
      obj.save()
    createInvoice.short_description = _("Create Invoice")
 
-   actions = ['createSubscriptionPDF', 'createInvoice']
+   actions = ['createSubscriptionPDF', 'create_invoice']
 
 class OptionSubscriptionType(admin.ModelAdmin):
    list_display = ('id', 'title','defaultunit', 'tax', 'accoutingProductCategorie')
