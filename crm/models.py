@@ -539,7 +539,7 @@ class Invoice(SalesContract):
         xml_serializer = serializers.get_serializer("xml")
         xml_serializer = xml_serializer()
         out = open(settings.PDF_OUTPUT_ROOT + "invoice_" + str(self.id) + ".xml", "w")
-        objects_to_serialize= list(Invoice.objects.filter(id=self.id))
+        objects_to_serialize = list(Invoice.objects.filter(id=self.id))
         objects_to_serialize += list(SalesContract.objects.filter(id=self.id))
         objects_to_serialize += list(Contact.objects.filter(id=self.customer.id))
         objects_to_serialize += list(Currency.objects.filter(id=self.currency.id))
@@ -619,7 +619,7 @@ class Tax(models.Model):
     accountPassiva = models.ForeignKey('accounting.Account', verbose_name=trans("Passiva Account"),
                                        related_name="db_relaccountpassiva", null=True, blank=True)
 
-    def getTaxRate(self):
+    def gettaxrate(self):
         return self.taxrate
 
     def __unicode__(self):
@@ -657,16 +657,18 @@ class Product(models.Model):
                 else:
                     for customerGroupTransform in customer_group_transforms:
                         if price.matches_date_unit_customer_group_currency(date, unit,
-                                                                      customerGroupTransform.transform(customerGroup),
-                                                                      currency):
+                                                                           customerGroupTransform.transform(
+                                                                                   customerGroup),
+                                                                           currency):
                             validpriceslist.append(price.price * customerGroup.factor)
                         else:
                             for unitTransfrom in list(unit_transforms):
                                 if price.matches_date_unit_customer_group_currency(date,
-                                                                              unitTransfrom.transfrom(unit).transform(
-                                                                                      unitTransfrom),
-                                                                              customerGroupTransform.transform(
-                                                                                      customerGroup), currency):
+                                                                                   unitTransfrom.transfrom(
+                                                                                           unit).transform(
+                                                                                           unitTransfrom),
+                                                                                   customerGroupTransform.transform(
+                                                                                           customerGroup), currency):
                                     validpriceslist.append(
                                         price.price * customerGroupTransform.factor * unitTransfrom.factor)
         if len(validpriceslist) > 0:
@@ -679,7 +681,7 @@ class Product(models.Model):
             raise Product.NoPriceFound(customer, unit, date, self)
 
     def get_tax_rate(self):
-        return self.tax.getTaxRate()
+        return self.tax.gettaxrate()
 
     def __unicode__(self):
         return str(self.productNumber) + ' ' + self.title
@@ -769,7 +771,8 @@ class Price(models.Model):
                 if ((date - self.validuntil).days < 0) & (unit == self.unit) & (self.currency == currency):
                     return 1
             else:
-                if ((date - self.validuntil).days < 0) & (unit == self.unit) & (self.customerGroup == customer_group) & (
+                if ((date - self.validuntil).days < 0) & (unit == self.unit) & (
+                            self.customerGroup == customer_group) & (
                             self.currency == currency):
                     return 1
         elif self.validuntil == None:
@@ -831,8 +834,9 @@ class Position(models.Model):
 
     def recalculate_tax(self, currency):
         if type(self.discount) == Decimal:
-            self.lastCalculatedTax = int(self.product.get_tax_rate() / 100 * self.positionPricePerUnit * self.quantity * (
-                1 - self.discount / 100) / currency.rounding) * currency.rounding
+            self.lastCalculatedTax = int(
+                self.product.get_tax_rate() / 100 * self.positionPricePerUnit * self.quantity * (
+                    1 - self.discount / 100) / currency.rounding) * currency.rounding
         else:
             self.lastCalculatedTax = self.product.get_tax_rate() / 100 * self.positionPricePerUnit * self.quantity
         self.save()

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*
 
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext as trans
 
 SUBSCRITIONEVENTS = (
-    ('O', _('Offered')),
-    ('C', _('Canceled')),
-    ('S', _('Signed')),
+    ('O', trans('Offered')),
+    ('C', trans('Canceled')),
+    ('S', trans('Signed')),
 )
