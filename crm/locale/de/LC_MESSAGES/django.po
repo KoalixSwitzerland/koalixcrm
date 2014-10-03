@@ -64,7 +64,7 @@ msgstr "Erzeuge ein PDF des Lieferscheins"
 
 #: admin.py:289
 msgid "Successfully registered Invoice in the Accounting"
-msgstr "Die Rechnung ist erflogreich in der Buchhaltung registriert worden"
+msgstr "Die Rechnung ist erfolgreich in der Buchhaltung registriert worden"
 
 #: admin.py:290
 msgid "Register Invoice in Accounting"
@@ -72,7 +72,7 @@ msgstr "Registriere Rechnung in Buchhaltung"
 
 #: admin.py:295
 msgid "Successfully unregistered Invoice in the Accounting"
-msgstr "Die Rechnung wurde erflogreich aus der Buchhaltung entfernt"
+msgstr "Die Rechnung wurde erfolgreich aus der Buchhaltung entfernt"
 
 #: admin.py:296
 msgid "Unregister Invoice in Accounting"
@@ -141,19 +141,19 @@ msgstr "Vorname"
 
 #: models.py:41
 msgid "Addressline 1"
-msgstr "Adresslinie 1"
+msgstr "Adresszeile 1"
 
 #: models.py:42
 msgid "Addressline 2"
-msgstr "Adresslinie 2"
+msgstr "Adresszeile 2"
 
 #: models.py:43
 msgid "Addressline 3"
-msgstr "Adresslinie 3"
+msgstr "Adresszeile 3"
 
 #: models.py:44
 msgid "Addressline 4"
-msgstr "Adresslinie 4"
+msgstr "Adresszeile 4"
 
 #: models.py:45
 msgid "Zipcode"
@@ -249,15 +249,15 @@ msgstr "Mitarbeiter"
 
 #: models.py:162
 msgid "Default Customer"
-msgstr "Standard Kunde"
+msgstr "Kunde"
 
 #: models.py:163
 msgid "Default Supplier"
-msgstr "Standard Lieferant"
+msgstr "Lieferant"
 
 #: models.py:164
 msgid "Default Currency"
-msgstr "Standard Währung"
+msgstr "Währung"
 
 #: models.py:172 models.py:215 models.py:218 models.py:305 models.py:798
 #: models.py:811
@@ -274,7 +274,7 @@ msgstr "Externe Referenz"
 
 #: models.py:222 models.py:309 models.py:765
 msgid "Last Pricing Date"
-msgstr "Datum der letze Preisberechnung"
+msgstr "Datum der letzen Preisberechnung"
 
 #: models.py:223 models.py:310
 msgid "Last Calculted Price With Tax"
@@ -402,7 +402,7 @@ msgstr "Produktnummer"
 
 #: models.py:616
 msgid "Accounting Product Categorie"
-msgstr "Buchhaltung Produktkategorie"
+msgstr "Produktkategorie"
 
 #: models.py:653 models.py:670 models.py:691 models.py:710 models.py:758
 msgid "Product"
@@ -498,7 +498,7 @@ msgstr "Lieferungs ID"
 
 #: models.py:763
 msgid "Overwrite Product Price"
-msgstr "Überschreie Produkt Preis"
+msgstr "Überschreibe Produkt Preis"
 
 #: models.py:766
 msgid "Last Calculted Price"
@@ -514,7 +514,7 @@ msgstr "Positionen"
 
 #: models.py:803 models.py:807
 msgid "Salescontract Position"
-msgstr "Verkaufsaufträg Position"
+msgstr "Verkaufsauftrag Position"
 
 #: models.py:804
 msgid "Salescontract Positions"

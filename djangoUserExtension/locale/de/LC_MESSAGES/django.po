@@ -18,11 +18,11 @@ msgstr ""
 
 #: admin.py:12 admin.py:23 admin.py:34 admin.py:47 admin.py:64 admin.py:77
 msgid "Basics"
-msgstr "Gundlagen"
+msgstr "Grundlagen"
 
 #: models.py:9 models.py:12 models.py:15
 msgid "Purpose"
-msgstr "Verwendungszwek"
+msgstr "Verwendungszweck"
 
 #: models.py:18 models.py:41
 msgid "Title"
@@ -41,11 +41,11 @@ msgid "XSL Files"
 msgstr "XSL Dateien"
 
 #: models.py:37
-msgid "User Extention"
+msgid "User Extension"
 msgstr "Benutzer Erweiterung"
 
 #: models.py:38
-msgid "User Extentions"
+msgid "User Extensions"
 msgstr "Benutzer Erweiterungen"
 
 #: models.py:42

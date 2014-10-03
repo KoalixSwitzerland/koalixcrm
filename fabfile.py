@@ -429,7 +429,7 @@ def create():
             pw = env.admin_pass
             user_py = ("from mezzanine.utils.models import get_user_model;"
                        "User = get_user_model();"
-                       "u, _ = User.objects.get_or_create(username='admin');"
+                       "u, trans = User.objects.get_or_create(username='admin');"
                        "u.is_staff = u.is_superuser = True;"
                        "u.set_password('%s');"
                        "u.save();" % pw)

@@ -23,11 +23,11 @@ ADMIN_MENU_ORDER = (
 # A three item sequence, each containing a sequence of template tags
 # used to render the admin dashboard.
 #
-# DASHBOARD_TAGS = (
-#     ("blog_tags.quick_blog", "mezzanine_tags.app_list"),
-#     ("comment_tags.recent_comments",),
-#     ("mezzanine_tags.recent_actions",),
-# )
+DASHBOARD_TAGS = (
+    ("mezzanine_tags.app_list",),
+    ("mezzanine_tags.recent_actions",),
+    (),
+)
 
 # A sequence of templates used by the ``page_menu`` template tag. Each
 # item in the sequence is a three item sequence, containing a unique ID
@@ -117,6 +117,13 @@ _ = lambda s: s
 LANGUAGES = (
     ('en', _('English')),
     ('de-DE', _('German')),
+)
+
+LOCALE_PATHS = (
+    'crm/locale',
+    'accounting/locale',
+    'subscriptions/locale',
+    'djangoUserExtension/locale'
 )
 
 # A boolean that turns on/off debug mode. When set to ``True``, stack traces
@@ -313,7 +320,6 @@ OPTIONAL_APPS = (
     "debug_toolbar",
     "django_extensions",
     "compressor",
-    # "filebrowser",
     PACKAGE_NAME_FILEBROWSER,
     PACKAGE_NAME_GRAPPELLI,
 )
