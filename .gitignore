@@ -5,4 +5,5 @@
 .coverage
 local_settings.py
 /static
-/.idea
+.idea
+/media

@@ -5,6 +5,8 @@ syntax: glob
 .DS_Store
 .coverage
 local_settings.py
+.idea
 
 syntax: regexp
 ^static/
+^media/

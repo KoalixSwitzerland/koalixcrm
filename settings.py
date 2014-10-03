@@ -13,12 +13,12 @@ from __future__ import absolute_import, unicode_literals
 
 # Controls the ordering and grouping of the admin menu.
 #
-# ADMIN_MENU_ORDER = (
-#     ("Content", ("pages.Page", "blog.BlogPost",
-#        "generic.ThreadedComment", ("Media Library", "fb_browse"),)),
-#     ("Site", ("sites.Site", "redirects.Redirect", "conf.Setting")),
-#     ("Users", ("auth.User", "auth.Group",)),
-# )
+ADMIN_MENU_ORDER = (
+    ("Content", ("pages.Page", ("Media Library", "fb_browse"),)),
+    ("Users", ("auth.User", "auth.Group", )),
+    ("Site", ("sites.Site", "redirects.Redirect", "conf.Setting")),
+    ("Blog", ("blog.BlogPost", "generic.ThreadedComment", )),
+)
 
 # A three item sequence, each containing a sequence of template tags
 # used to render the admin dashboard.
@@ -77,7 +77,7 @@ from __future__ import absolute_import, unicode_literals
 
 # If True, the south application will be automatically added to the
 # INSTALLED_APPS setting.
-USE_SOUTH = True
+USE_SOUTH = False
 
 
 ########################
@@ -116,7 +116,7 @@ LANGUAGE_CODE = "de-DE"
 _ = lambda s: s
 LANGUAGES = (
     ('en', _('English')),
-    ('de', _('German')),
+    ('de-DE', _('German')),
 )
 
 # A boolean that turns on/off debug mode. When set to ``True``, stack traces
@@ -131,7 +131,7 @@ SITE_ID = 1
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
-USE_I18N = False
+USE_I18N = True
 
 # Tuple of IP addresses, as strings, that:
 #   * See debug comments, when DEBUG is true
@@ -256,8 +256,8 @@ INSTALLED_APPS = (
     'djangoUserExtension',
     'crm',
     'subscriptions',
-    #"mezzanine.accounts",
-    #"mezzanine.mobile",
+    "mezzanine.accounts",
+    "mezzanine.mobile",
 )
 
 # List of processors used by RequestContext to populate the context.
@@ -313,6 +313,7 @@ OPTIONAL_APPS = (
     "debug_toolbar",
     "django_extensions",
     "compressor",
+    # "filebrowser",
     PACKAGE_NAME_FILEBROWSER,
     PACKAGE_NAME_GRAPPELLI,
 )
