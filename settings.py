@@ -254,17 +254,18 @@ INSTALLED_APPS = (
     "mezzanine.conf",
     "mezzanine.core",
     "mezzanine.generic",
-    "mezzanine.blog",
     "mezzanine.forms",
     "mezzanine.pages",
     "mezzanine.galleries",
-    "mezzanine.twitter",
     'accounting',
-    'djangoUserExtension',
     'crm',
     'subscriptions',
     "mezzanine.accounts",
     "mezzanine.mobile",
+    # Uncomment the following if you want to use mezzanine's blog plugin
+    # "mezzanine.blog",
+    # Uncomment the following if you want to use mezzanine's twitter plugin
+    # "mezzanine.twitter",
 )
 
 # List of processors used by RequestContext to populate the context.

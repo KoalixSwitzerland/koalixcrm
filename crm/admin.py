@@ -6,20 +6,21 @@ from django.contrib import admin
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.contrib.admin import helpers
-
+from mezzanine.pages.admin import PageAdmin
 from crm.views import *
+from crm.pages import CRMpage
 from accounting.models import Booking
 from KoalixCRM.plugin import *
 
 
 class ContractPostalAddress(admin.StackedInline):
-    model = PostalAddressForContract
+    model = PostalAddress
     extra = 1
     classes = ('collapse-open',)
     fieldsets = (
         ('Basics', {
             'fields': (
-                'prefix', 'prename', 'name', 'addressline1', 'addressline2', 'addressline3', 'addressline4', 'zipcode',
+                'addressline1', 'addressline2', 'addressline3', 'addressline4', 'zipcode',
                 'town', 'state', 'country', 'purpose')
         }),
     )
@@ -51,13 +52,13 @@ class ContractEmailAddress(admin.TabularInline):
 
 
 class PurchaseOrderPostalAddress(admin.StackedInline):
-    model = PostalAddressForPurchaseOrder
+    model = PostalAddress
     extra = 1
     classes = ('collapse-open',)
     fieldsets = (
         ('Basics', {
             'fields': (
-                'prefix', 'prename', 'name', 'addressline1', 'addressline2', 'addressline3', 'addressline4', 'zipcode',
+                'addressline1', 'addressline2', 'addressline3', 'addressline4', 'zipcode',
                 'town', 'state', 'country', 'purpose')
         }),
     )
@@ -89,13 +90,13 @@ class PurchaseOrderEmailAddress(admin.TabularInline):
 
 
 class SalesContractPostalAddress(admin.StackedInline):
-    model = PostalAddressForSalesContract
+    model = PostalAddress
     extra = 1
     classes = ('collapse-open',)
     fieldsets = (
         ('Basics', {
             'fields': (
-                'prefix', 'prename', 'name', 'addressline1', 'addressline2', 'addressline3', 'addressline4', 'zipcode',
+                'addressline1', 'addressline2', 'addressline3', 'addressline4', 'zipcode',
                 'town', 'state', 'country', 'purpose')
         }),
     )
@@ -554,13 +555,13 @@ class OptionProduct(admin.ModelAdmin):
 
 
 class ContactPostalAddress(admin.StackedInline):
-    model = PostalAddressForContact
+    model = PostalAddress
     extra = 1
     classes = ('collapse-open',)
     fieldsets = (
         ('Basics', {
             'fields': (
-                'prefix', 'prename', 'name', 'addressline1', 'addressline2', 'addressline3', 'addressline4', 'zipcode',
+                'addressline1', 'addressline2', 'addressline3', 'addressline4', 'zipcode',
                 'town', 'state', 'country', 'purpose')
         }),
     )
@@ -592,11 +593,11 @@ class ContactEmailAddress(admin.TabularInline):
 
 
 class OptionCustomer(admin.ModelAdmin):
-    list_display = ('id', 'name', 'defaultCustomerBillingCycle', )
-    fieldsets = (('', {'fields': ('name', 'defaultCustomerBillingCycle', 'ismemberof',)}),)
+    list_display = ('id', 'firstname', 'name', 'billingcycle', )
+    fieldsets = (('', {'fields': ('firstname', 'name', 'billingcycle', 'ismemberof',)}),)
     allow_add = True
-    ordering = ('id', 'name')
-    search_fields = ('id', 'name')
+    ordering = ('id', 'name', 'firstname',)
+    search_fields = ('id', 'name', 'firstname',)
     inlines = [ContactPostalAddress, ContactPhoneAddress, ContactEmailAddress]
     pluginProcessor = PluginProcessor()
     inlines.extend(pluginProcessor.get_plugin_additions("customerInline"))
@@ -660,14 +661,14 @@ class OptionSupplier(admin.ModelAdmin):
 
 
 class OptionUnit(admin.ModelAdmin):
-    list_display = ('id', 'description', 'shortName', 'isAFractionOf', 'fractionFactorToNextHigherUnit')
-    fieldsets = (('', {'fields': ('description', 'shortName', 'isAFractionOf', 'fractionFactorToNextHigherUnit')}),)
+    list_display = ('id', 'description', 'shortname', 'isAFractionOf', 'fractionFactorToNextHigherUnit')
+    fieldsets = (('', {'fields': ('description', 'shortname', 'isAFractionOf', 'fractionFactorToNextHigherUnit')}),)
     allow_add = True
 
 
 class OptionCurrency(admin.ModelAdmin):
-    list_display = ('id', 'description', 'shortName', 'rounding')
-    fieldsets = (('', {'fields': ('description', 'shortName', 'rounding')}),)
+    list_display = ('id', 'description', 'shortname', 'rounding')
+    fieldsets = (('', {'fields': ('description', 'shortname', 'rounding')}),)
     allow_add = True
 
 
@@ -695,3 +696,4 @@ admin.site.register(CustomerBillingCycle, OptionCustomerBillingCycle)
 admin.site.register(Contract, OptionContract)
 admin.site.register(PurchaseOrder, OptionPurchaseOrder)
 admin.site.register(Product, OptionProduct)
+admin.site.register(CRMpage, PageAdmin)

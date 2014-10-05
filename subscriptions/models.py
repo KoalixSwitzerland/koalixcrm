@@ -45,7 +45,6 @@ class Subscription(models.Model):
 
     class Meta:
         app_label = "subscriptions"
-        # app_label_koalix = trans("Subscriptions")
         verbose_name = trans('Subscription')
         verbose_name_plural = trans('Subscriptions')
 
@@ -60,7 +59,6 @@ class SubscriptionEvent(models.Model):
 
     class Meta:
         app_label = "subscriptions"
-        # app_label_koalix = trans("Subscriptions")
         verbose_name = trans('Subscription Event')
         verbose_name_plural = trans('Subscription Events')
 
@@ -77,7 +75,6 @@ class SubscriptionType(Product):
 
     class Meta:
         app_label = "subscriptions"
-        # app_label_koalix = trans("Subscriptions")
         verbose_name = trans('Subscription Type')
         verbose_name_plural = trans('Subscription Types')
   

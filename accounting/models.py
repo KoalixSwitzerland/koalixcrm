@@ -8,7 +8,7 @@ from django.db import models
 from django.conf import settings
 
 from const.accountTypeChoices import *
-from djangoUserExtension.models import UserExtension
+from crm.models import UserExtension
 
 
 class AccountingPeriod(models.Model):

@@ -17,11 +17,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: admin.py:133 admin.py:149 admin.py:166 admin.py:183 admin.py:247
-#: admin.py:317 admin.py:376 admin.py:426
-msgid "Basics"
-msgstr "Standard"
-
 #: admin.py:136 admin.py:152 admin.py:169
 msgid "Advanced (not editable)"
 msgstr "Zusatzinformationen (nicht veränderbar)"
@@ -242,6 +237,9 @@ msgstr ""
 #: models.py:153 models.py:154 models.py:220
 msgid "Supplier"
 msgstr "Lieferant"
+
+msgid "Suppliers"
+msgstr "Lieferanten"
 
 #: models.py:160 models.py:226 models.py:313
 msgid "Staff"
@@ -1669,3 +1667,103 @@ msgstr "Beispiel Firma"
 #: management/commands/koalixcrm_install_defaulttemplates.py:88
 msgid "Sample Address"
 msgstr "Beispiel Adresse"
+
+#: admin.py:12 admin.py:23 admin.py:34 admin.py:47 admin.py:64 admin.py:77
+msgid "Basics"
+msgstr "Grundlagen"
+
+#: models.py:9 models.py:12 models.py:15
+msgid "Purpose"
+msgstr "Verwendungszweck"
+
+#: models.py:18 models.py:41
+msgid "Title"
+msgstr "Titel"
+
+#: models.py:19 models.py:24
+msgid "XSL File"
+msgstr "XSL Datei"
+
+#: models.py:23 models.py:36 models.py:56
+msgid "Djang User Extention"
+msgstr "Django Benutzer Erweiterung"
+
+#: models.py:25
+msgid "XSL Files"
+msgstr "XSL Dateien"
+
+#: models.py:37
+msgid "User Extension"
+msgstr "Benutzer Erweiterung"
+
+#: models.py:38
+msgid "User Extensions"
+msgstr "Benutzer Erweiterungen"
+
+#: models.py:42
+msgid "XSL File for Invoice"
+msgstr "XSL Datei für die Rechnung"
+
+#: models.py:43
+msgid "XSL File for Quote"
+msgstr "XSL Datei für die Offerte"
+
+#: models.py:44
+msgid "XSL File for Purchaseorder"
+msgstr "XSL Datei für die Kaufsbestätigung"
+
+#: models.py:45
+msgid "XSL File for Deilvery Order"
+msgstr "XSL Datei für den Lieferschein"
+
+#: models.py:46
+msgid "XSL File for Profit Loss Statement"
+msgstr "XSL Datei für die Erfolgsrechung"
+
+#: models.py:47
+msgid "XSL File for Balancesheet"
+msgstr "XSL Datei für die Billanz"
+
+#: models.py:48
+msgid "Logo for the PDF generation"
+msgstr "Logo für die PDF's"
+
+#: models.py:49
+msgid "Footer Text On Salesorders"
+msgstr "Grussfromel für die Verkaufsaufträge"
+
+#: models.py:50
+msgid "Header Text On Salesorders"
+msgstr "Begrüssungsfromel für die Verkaufsaufträge"
+
+#: models.py:51
+msgid "Header Text On Purchaseorders"
+msgstr "Begrüssungsformel für die Kaufaufträge"
+
+#: models.py:52
+msgid "Footer Text On Purchaseorders"
+msgstr "Grussfromel für die Kaufaufträge"
+
+#: models.py:57
+msgid "Templateset"
+msgstr "Vorlagenset"
+
+#: models.py:58
+msgid "Templatesets"
+msgstr "Vorlagensets"
+
+#: const/purpose.py:6
+msgid "Private"
+msgstr "Privat"
+
+#: const/purpose.py:7
+msgid "Business"
+msgstr "Geschäftlich"
+
+#: const/purpose.py:8
+msgid "Mobile Private"
+msgstr "Privat Mobiltelefon"
+
+#: const/purpose.py:9
+msgid "Mobile Business"
+msgstr "Geschäftliches Mobiltelefon"
