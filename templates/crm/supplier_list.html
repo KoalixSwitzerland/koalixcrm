@@ -4,12 +4,8 @@
 {% block meta_title %}{% trans "Suppliers" %}{% endblock %}
 {% block title %}{% trans "Suppliers" %}{% endblock %}
 
-{% block breadcrumb_menu %}
-<li class="active">{% trans "Suppliers" %}</li>
-{% endblock %}
-
 {% block main %}
-    <div>
+    <div style="margin: 30px">
         {% if supplier_list %}
         <table class="table table-striped">
             <tr><th>Name</th><th></th><th></th></tr>

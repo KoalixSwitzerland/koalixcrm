@@ -4,12 +4,8 @@
 {% block meta_title %}{% trans "Suppliers" %}{% endblock %}
 {% block title %}{% trans "Suppliers" %}{% endblock %}
 
-{% block breadcrumb_menu %}
-<li class="active">{% trans "Suppliers" %}</li>
-{% endblock %}
-
 {% block main %}
-    <h1 style="margin: 30px">{% if note %}Edit supplier{% else %}Create supplier{% endif%}</h1>
+    <h3 style="margin: 30px">{% if supplier %}Edit supplier{% else %}Create supplier{% endif%}</h3>
     <div style="margin: 30px">
     <form method="POST" action=".">
     {% csrf_token %}
