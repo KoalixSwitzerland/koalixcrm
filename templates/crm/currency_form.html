@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block meta_title %}{% trans "Customers" %}{% endblock %}
+{% block title %}{% trans "Customers" %}{% endblock %}
+
+{% block breadcrumb_menu %}
+<li class="active">{% trans "Customers" %}</li>
+{% endblock %}
+
+{% block main %}
+    <h1 style="margin: 30px">{% if note %}Edit customer{% else %}Create customer{% endif%}</h1>
+    <div style="margin: 30px">
+    <form method="POST" action=".">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" class="btn btn-primary" value="Save">
+    </form>
+    </div>
+{% endblock %}

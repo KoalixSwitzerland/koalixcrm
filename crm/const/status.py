@@ -1,30 +1,30 @@
 # -*- coding: utf-8 -*
 
-from django.utils.translation import ugettext as trans
+from django.utils.translation import ugettext as _
 
 INVOICESTATUS = (
-    ('P', trans('Payed')),
-    ('C', trans('Invoice created')),
-    ('I', trans('Invoice sent')),
-    ('F', trans('First reminder sent')),
-    ('R', trans('Second reminder sent')),
-    ('U', trans('Customer cant pay')),
-    ('D', trans('Deleted')),
+    ('P', _('Payed')),
+    ('C', _('Invoice created')),
+    ('I', _('Invoice sent')),
+    ('F', _('First reminder sent')),
+    ('R', _('Second reminder sent')),
+    ('U', _('Customer cant pay')),
+    ('D', _('Deleted')),
 )
 
 QUOTESTATUS = (
-    ('S', trans('Success')),
-    ('I', trans('Quote created')),
-    ('Q', trans('Quote sent')),
-    ('F', trans('First reminder sent')),
-    ('R', trans('Second reminder sent')),
-    ('D', trans('Deleted')),
+    ('S', _('Success')),
+    ('I', _('Quote created')),
+    ('Q', _('Quote sent')),
+    ('F', _('First reminder sent')),
+    ('R', _('Second reminder sent')),
+    ('D', _('Deleted')),
 )
 
 PURCHASEORDERSTATUS = (
-    ('O', trans('Ordered')),
-    ('D', trans('Delayed')),
-    ('Y', trans('Delivered')),
-    ('I', trans('Invoice registered')),
-    ('P', trans('Invoice payed')),
+    ('O', _('Ordered')),
+    ('D', _('Delayed')),
+    ('Y', _('Delivered')),
+    ('I', _('Invoice registered')),
+    ('P', _('Invoice payed')),
 )

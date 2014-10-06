@@ -5,7 +5,7 @@ from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
 
 from mezzanine.core.views import direct_to_template
-
+from crm.views import *
 
 admin.autodiscover()
 
@@ -17,6 +17,18 @@ urlpatterns = i18n_patterns("",
     # Change the admin prefix here to use an alternate URL for the
     # admin interface, which would be marginally more secure.
     ("^admin/", include(admin.site.urls)),
+    url(r"^customers/$", ListCustomers.as_view(), name='list_customers'),
+    url(r'^customers/create/$', CreateCustomer.as_view(), name='create_customer'),
+    url(r'^customers/edit/(?P<pk>\d+)/$', EditCustomer.as_view(), name='edit_customer'),
+    url(r'^customers/delete/(?P<pk>\d+)/$', DeleteCustomer.as_view(), name='delete_customer'),
+    url(r"^suppliers/$", ListSuppliers.as_view(), name='list_suppliers'),
+    url(r'^suppliers/create/$', CreateSupplier.as_view(), name='create_supplier'),
+    url(r'^suppliers/edit/(?P<pk>\d+)/$', EditSupplier.as_view(), name='edit_supplier'),
+    url(r'^suppliers/delete/(?P<pk>\d+)/$', DeleteSupplier.as_view(), name='delete_supplier'),
+    url(r"^currencies/$", ListCurrencies.as_view(), name='list_currencies'),
+    url(r'^currencies/create/$', CreateCurrency.as_view(), name='create_currency'),
+    url(r'^currencies/edit/(?P<pk>\d+)/$', EditCurrency.as_view(), name='edit_currency'),
+    url(r'^currencies/delete/(?P<pk>\d+)/$', DeleteCurrency.as_view(), name='delete_currency'),
 )
 
 urlpatterns += patterns('',
@@ -48,16 +60,6 @@ urlpatterns += patterns('',
 
     # url("^$", "mezzanine.pages.views.page", {"slug": "/"}, name="home"),
 
-    # HOMEPAGE FOR A BLOG-ONLY SITE
-    # -----------------------------
-    # This pattern points the homepage to the blog post listing page,
-    # and is useful for sites that are primarily blogs. If you use this
-    # pattern, you'll also need to set BLOG_SLUG = "" in your
-    # ``settings.py`` module, and delete the blog page object from the
-    # page tree in the admin if it was installed.
-
-    # url("^$", "mezzanine.blog.views.blog_post_list", name="home"),
-
     # MEZZANINE'S URLS
     # ----------------
     # ADD YOUR OWN URLPATTERNS *ABOVE* THE LINE BELOW.
@@ -70,23 +72,6 @@ urlpatterns += patterns('',
     # from it, and use them directly below instead of using
     # ``mezzanine.urls``.
     ("^", include("mezzanine.urls")),
-
-    # MOUNTING MEZZANINE UNDER A PREFIX
-    # ---------------------------------
-    # You can also mount all of Mezzanine's urlpatterns under a
-    # URL prefix if desired. When doing this, you need to define the
-    # ``SITE_PREFIX`` setting, which will contain the prefix. Eg:
-    # SITE_PREFIX = "my/site/prefix"
-    # For convenience, and to avoid repeating the prefix, use the
-    # commented out pattern below (commenting out the one above of course)
-    # which will make use of the ``SITE_PREFIX`` setting. Make sure to
-    # add the import ``from django.conf import settings`` to the top
-    # of this file as well.
-    # Note that for any of the various homepage patterns above, you'll
-    # need to use the ``SITE_PREFIX`` setting as well.
-
-    # ("^%s/" % settings.SITE_PREFIX, include("mezzanine.urls"))
-
 )
 
 # Adds ``STATIC_URL`` to the context of error pages, so that error

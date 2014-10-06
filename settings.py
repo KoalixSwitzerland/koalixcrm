@@ -116,7 +116,7 @@ LANGUAGE_CODE = "de-DE"
 _ = lambda s: s
 LANGUAGES = (
     ('en', _('English')),
-    ('de-DE', _('German')),
+    ('de', _('German')),
 )
 
 LOCALE_PATHS = (
@@ -138,7 +138,7 @@ SITE_ID = 1
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
-USE_I18N = True
+USE_I18N = False
 
 # Tuple of IP addresses, as strings, that:
 #   * See debug comments, when DEBUG is true
@@ -257,9 +257,10 @@ INSTALLED_APPS = (
     "mezzanine.forms",
     "mezzanine.pages",
     "mezzanine.galleries",
-    'accounting',
-    'crm',
-    'subscriptions',
+    "vanilla",
+    "accounting",
+    "crm",
+    "subscriptions",
     "mezzanine.accounts",
     "mezzanine.mobile",
     # Uncomment the following if you want to use mezzanine's blog plugin

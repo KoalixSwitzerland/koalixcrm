@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block meta_title %}{% trans "Suppliers" %}{% endblock %}
+{% block title %}{% trans "Suppliers" %}{% endblock %}
+
+{% block breadcrumb_menu %}
+<li class="active">{% trans "Suppliers" %}</li>
+{% endblock %}
+
+{% block main %}
+    <div>
+        {% if supplier_list %}
+        <table class="table table-striped">
+            <tr><th>Name</th><th></th><th></th></tr>
+            {% for supplier in supplier_list %}
+                <tr>
+                    <td>{{ supplier.name }}</td>
+                    <td><a href="{% url 'edit_supplier' supplier.pk %}">edit</a></td>
+                    <td>
+                        <form method="POST" action="{% url 'delete_supplier' supplier.pk %}">
+                            {% csrf_token %}
+                            <input type="submit" class="btn btn-sm btn-danger" value="delete">
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
+        <p><a href="{% url 'create_supplier' %}">Create a new supplier</a></p>
+    </div>
+{% endblock %}

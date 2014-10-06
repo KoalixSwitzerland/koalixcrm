@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block meta_title %}{% trans "Customers" %}{% endblock %}
+{% block title %}{% trans "Customers" %}{% endblock %}
+
+{% block breadcrumb_menu %}
+<li class="active">{% trans "Customers" %}</li>
+{% endblock %}
+
+{% block main %}
+    <div style="margin: 30px">
+        {% if customer_list %}
+        <table class="table table-striped">
+            <tr><th>Name</th><th></th><th></th></tr>
+            {% for customer in customer_list %}
+                <tr>
+                    <td>{{ customer.name }}</td>
+                    <td><a href="{% url 'edit_customer' customer.pk %}">edit</a></td>
+                    <td>
+                        <form method="POST" action="{% url 'delete_customer' customer.pk %}">
+                            {% csrf_token %}
+                            <input type="submit" class="btn btn-sm btn-danger" value="delete"></input>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
+        <p><a href="{% url 'create_customer' %}">Create a new customer</a></p>
+    </div>
+{% endblock %}

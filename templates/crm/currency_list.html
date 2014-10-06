@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block meta_title %}{% trans "Currencies" %}{% endblock %}
+{% block title %}{% trans "Currencies" %}{% endblock %}
+
+{% block breadcrumb_menu %}
+<li class="active">{% trans "Currencies" %}</li>
+{% endblock %}
+
+{% block main %}
+    <div style="margin: 30px">
+        {% if currency_list %}
+        <table class="table table-striped">
+            <tr><th>Name</th><th>K&uuml;rzel</th><th>Rundung</th><th></th><th></th></tr>
+            {% for currency in currency_list %}
+                <tr>
+                    <td>{{ currency.description }}</td>
+                    <td>{{ currency.shortname }}</td>
+                    <td>{{ currency.rounding }}</td>
+                    <td><a href="{% url 'edit_currency' currency.pk %}">edit</a></td>
+                    <td>
+                        <form method="POST" action="{% url 'delete_currency' currency.pk %}">
+                            {% csrf_token %}
+                            <input type="submit" class="btn btn-sm btn-danger" value="delete"></input>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
+        <p><a href="{% url 'create_currency' %}">Create a new currency</a></p>
+    </div>
+{% endblock %}
