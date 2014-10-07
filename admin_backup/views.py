@@ -14,7 +14,7 @@ from django.utils.timezone import now
 try:
     BACKUP_DIR = '%s/%s' % (settings.PROJECT_ROOT, settings.ADMIN_BACKUP_DIR_NAME)
 except AttributeError:
-    BACKUP_DIR = '%s/admin_backups' % settings.PROJECT_ROOT
+    BACKUP_DIR = '%s/admin_backups' % settings.STATIC_ROOT
 SQL_BACKUP_DIR = '%s/sql' % BACKUP_DIR
 
 
