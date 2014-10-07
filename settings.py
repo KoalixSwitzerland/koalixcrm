@@ -25,7 +25,7 @@ ADMIN_MENU_ORDER = (
 #
 DASHBOARD_TAGS = (
     ("mezzanine_tags.app_list",),
-    ("mezzanine_tags.recent_actions",),
+    ("admin_backup_tags.admin_backup", "mezzanine_tags.recent_actions",),
     (),
 )
 
@@ -103,14 +103,14 @@ ALLOWED_HOSTS = []
 # timezone as the operating system.
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
-TIME_ZONE = 'Europe/Zurich'
+TIME_ZONE = 'GMT'
 
 # If you set this to True, Django will use timezone-aware datetimes.
 USE_TZ = True
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = "de-DE"
+LANGUAGE_CODE = "en"
 
 # Supported languages
 _ = lambda s: s
@@ -138,7 +138,7 @@ SITE_ID = 1
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
-USE_I18N = False
+USE_I18N = True
 
 # Tuple of IP addresses, as strings, that:
 #   * See debug comments, when DEBUG is true
@@ -250,6 +250,8 @@ INSTALLED_APPS = (
     "django.contrib.sites",
     "django.contrib.sitemaps",
     "django.contrib.staticfiles",
+    "po_localization",
+    "admin_backup",
     "mezzanine.boot",
     "mezzanine.conf",
     "mezzanine.core",
@@ -296,6 +298,7 @@ MIDDLEWARE_CLASSES = (
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
+    "po_localization.middleware.PoLocalizationMiddleware",
     "mezzanine.core.request.CurrentRequestMiddleware",
     "mezzanine.core.middleware.RedirectFallbackMiddleware",
     "mezzanine.core.middleware.TemplateForDeviceMiddleware",

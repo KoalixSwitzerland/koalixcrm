@@ -17,6 +17,7 @@ urlpatterns = i18n_patterns("",
     # Change the admin prefix here to use an alternate URL for the
     # admin interface, which would be marginally more secure.
     ("^admin/", include(admin.site.urls)),
+    url("^admin/backup/$", "admin_backup.views.admin_backup", name="admin_backup"),
     url(r"^customers/$", ListCustomers.as_view(), name='list_customers'),
     url(r'^customers/create/$', CreateCustomer.as_view(), name='create_customer'),
     url(r'^customers/edit/(?P<pk>\d+)/$', EditCustomer.as_view(), name='edit_customer'),
@@ -29,6 +30,14 @@ urlpatterns = i18n_patterns("",
     url(r'^currencies/create/$', CreateCurrency.as_view(), name='create_currency'),
     url(r'^currencies/edit/(?P<pk>\d+)/$', EditCurrency.as_view(), name='edit_currency'),
     url(r'^currencies/delete/(?P<pk>\d+)/$', DeleteCurrency.as_view(), name='delete_currency'),
+    url(r"^taxes/$", ListTaxes.as_view(), name='list_taxes'),
+    url(r'^taxes/create/$', CreateTax.as_view(), name='create_tax'),
+    url(r'^taxes/edit/(?P<pk>\d+)/$', EditTax.as_view(), name='edit_tax'),
+    url(r'^taxes/delete/(?P<pk>\d+)/$', DeleteTax.as_view(), name='delete_tax'),
+    url(r"^units/$", ListUnits.as_view(), name='list_units'),
+    url(r'^units/create/$', CreateUnit.as_view(), name='create_unit'),
+    url(r'^units/edit/(?P<pk>\d+)/$', EditUnit.as_view(), name='edit_unit'),
+    url(r'^units/delete/(?P<pk>\d+)/$', DeleteUnit.as_view(), name='delete_unit'),
 )
 
 urlpatterns += patterns('',
