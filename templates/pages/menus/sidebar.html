@@ -1,0 +1,30 @@
+{% load i18n future pages_tags %}
+{% spaceless %}
+{% if page_branch_in_menu %}
+
+    {% for page in page_branch %}
+        {% if page.in_menu %}
+            {% if not page.parent %}
+                <li class="sub-menu" id="{{ page.html_id }}">
+                    <a href="{{ page.get_absolute_url }}">
+                        {% if page.icon %}
+                            <i class="fa {{ page.icon }}"></i>
+                        {% else %}
+                            <i class="fa fa-chevron-right"></i>
+                        {% endif %}
+                        {{ page.title }}</a>
+            {% else %}
+                <li class="sub" id="{{ page.html_id }}">
+                    <a href="{{ page.get_absolute_url }}">{{ page.title }}</a>
+            {% endif %}
+            {% if page.has_children_in_menu %}
+                    <ul class="sub">
+                        {% page_menu page %}
+                    </ul>
+            {% endif %}
+                </li>
+        {% endif %}
+    {% endfor %}
+
+{% endif %}
+{% endspaceless %}

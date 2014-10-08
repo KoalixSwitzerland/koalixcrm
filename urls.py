@@ -18,6 +18,9 @@ urlpatterns = i18n_patterns("",
     # admin interface, which would be marginally more secure.
     ("^admin/", include(admin.site.urls)),
     url("^admin/backup/$", "admin_backup.views.admin_backup", name="admin_backup"),
+    url(r'^calendar/', include('calendarium.urls')),
+    # (r'^todo/', include('todo.urls')),
+
     url(r"^customers/$", ListCustomers.as_view(), name='list_customers'),
     url(r'^customers/create/$', CreateCustomer.as_view(), name='create_customer'),
     url(r'^customers/edit/(?P<pk>\d+)/$', EditCustomer.as_view(), name='edit_customer'),

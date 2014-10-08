@@ -1,5 +1,5 @@
 vanilla
 Mezzanine>=3.1.10
-Django>=1.7
+Django<1.8
 django-vanilla-views>=1.0.3
 po-localization>=0.5.3

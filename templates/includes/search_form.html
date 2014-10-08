@@ -1,5 +1,5 @@
 {% load mezzanine_tags i18n future %}
-<form action="{% url "search" %}" class="navbar-form navbar-right" role="search">
+<form action="{% url "search" %}" class="form-inline" role="search">
 
 <div class="form-group">
     <input class="form-control" placeholder="{% trans "Search" %}" type="text" name="q" value="{{ request.REQUEST.q }}">

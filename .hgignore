@@ -8,5 +8,4 @@ local_settings.py
 .idea
 
 syntax: regexp
-^static/
-^media/
+^static/media/

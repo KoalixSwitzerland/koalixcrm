@@ -16,7 +16,7 @@ from __future__ import absolute_import, unicode_literals
 ADMIN_MENU_ORDER = (
     ("Content", ("pages.Page", ("Media Library", "fb_browse"),)),
     ("Users", ("auth.User", "auth.Group", )),
-    ("Site", ("sites.Site", "redirects.Redirect", "conf.Setting")),
+    ("Site", ("sites.Site", "redirects.Redirect", "conf.Setting", "business_theme.SitewideContent")),
     ("Blog", ("blog.BlogPost", "generic.ThreadedComment", )),
 )
 
@@ -53,21 +53,10 @@ DASHBOARD_TAGS = (
 #
 # EXTRA_MODEL_FIELDS = (
 #     (
-#         # Dotted path to field.
-#         "mezzanine.blog.models.BlogPost.image",
-#         # Dotted path to field class.
-#         "somelib.fields.ImageField",
-#         # Positional args for field class.
+#         "mezzanine.pages.models.Page.image_field",
+#         "ImageField",
 #         ("Image",),
-#         # Keyword args for field class.
-#         {"blank": True, "upload_to": "blog"},
-#     ),
-#     # Example of adding a field to *all* of Mezzanine's content types:
-#     (
-#         "mezzanine.pages.models.Page.another_field",
-#         "IntegerField", # 'django.db.models.' is implied if path is omitted.
-#         ("Another name",),
-#         {"blank": True, "default": 1},
+#         {"blank": True},
 #     ),
 # )
 
@@ -103,14 +92,15 @@ ALLOWED_HOSTS = []
 # timezone as the operating system.
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
-TIME_ZONE = 'GMT'
+TIME_ZONE = 'Europe/Zurich'
 
 # If you set this to True, Django will use timezone-aware datetimes.
 USE_TZ = True
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = "en"
+LANGUAGE_CODE = "en_US"
+CALENDAR_LOCALE = "en_US"
 
 # Supported languages
 _ = lambda s: s
@@ -264,7 +254,9 @@ INSTALLED_APPS = (
     "crm",
     "subscriptions",
     "mezzanine.accounts",
-    "mezzanine.mobile",
+    "mptt",
+    "calendarium",
+    # "todo",
     # Uncomment the following if you want to use mezzanine's blog plugin
     # "mezzanine.blog",
     # Uncomment the following if you want to use mezzanine's twitter plugin
@@ -322,7 +314,7 @@ PACKAGE_NAME_GRAPPELLI = "grappelli_safe"
 
 # These will be added to ``INSTALLED_APPS``, only if available.
 OPTIONAL_APPS = (
-    "debug_toolbar",
+    # "debug_toolbar",
     "django_extensions",
     "compressor",
     PACKAGE_NAME_FILEBROWSER,

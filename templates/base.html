@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="{{ LANGUAGE_CODE }}"{% if LANGUAGE_BIDI %} dir="rtl"{% endif %}>
-{% load pages_tags mezzanine_tags i18n future staticfiles %}
+{% load pages_tags mezzanine_tags i18n future staticfiles accounts_tags %}
 
 <head>
 <meta http-equiv="Content-type" content="text/html; charset=utf-8">
@@ -16,25 +16,19 @@
 {% endifinstalled %}
 
 {% compress css %}
-<link rel="stylesheet" href="{% static "css/bootstrap.css" %}">
-<link rel="stylesheet" href="{% static "css/mezzanine.css" %}">
-<link rel="stylesheet" href="{% static "css/bootstrap-theme.css" %}">
-{% if LANGUAGE_BIDI %}
-<link rel="stylesheet" href="{% static "css/rtl.css" %}">
-{% endif %}
-{% ifinstalled cartridge.shop %}
-<link rel="stylesheet" href="{% static "css/cartridge.css" %}">
-{% if LANGUAGE_BIDI %}
-<link rel="stylesheet" href="{% static "css/cartridge.rtl.css" %}">
-{% endif %}
-{% endifinstalled %}
+<link rel="stylesheet" href="{% static "assets/css/bootstrap.css" %}">
+<link rel="stylesheet" href="{% static "assets/font-awesome/css/font-awesome.css" %}">
+<link rel="stylesheet" href="{% static "assets/lineicons/style.css" %}">
+<link rel="stylesheet" href="{% static "assets/js/gritter/css/jquery.gritter.css" %}">
+<link rel="stylesheet" href="{% static "assets/css/zabuto_calendar.css" %}">
+<link rel="stylesheet" href="{% static "assets/css/style.css" %}">
+<link rel="stylesheet" href="{% static "assets/css/style-responsive.css" %}">
+
 {% block extra_css %}{% endblock %}
 {% endcompress %}
 
 {% compress js %}
-<script src="{% static "mezzanine/js/"|add:settings.JQUERY_FILENAME %}"></script>
-<script src="{% static "js/bootstrap.js" %}"></script>
-<script src="{% static "js/bootstrap-extras.js" %}"></script>
+<script src="{% static "/js/chart-master/Chart.js" %}"></script>
 {% block extra_js %}{% endblock %}
 {% endcompress %}
 
@@ -48,88 +42,223 @@
 
 <body id="{% block body_id %}body{% endblock %}">
 
-<div class="navbar navbar-default navbar-fixed-top" role="navigation">
-<div class="container">
-<div class="navbar-header">
-    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-        <span class="sr-only">{% trans "Toggle Navigation" %}</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-    </button>
-    {% if settings.SITE_TITLE %}<a class="navbar-brand" href="/">{{ settings.SITE_TITLE }}</a>{% endif %}
-    {% if settings.SITE_TAGLINE %}<p class="navbar-text visible-lg">{{ settings.SITE_TAGLINE }}</p>{% endif %}
-</div>
-<div class="navbar-collapse collapse">
-    {% search_form "all" %}
-    {% page_menu "pages/menus/dropdown.html" %}
-</div>
-</div>
-</div>
+<section id="container" >
 
-<div class="container">
+      <!-- **********************************************************************************************************************************************************
+      TOP BAR CONTENT & NOTIFICATIONS
+      *********************************************************************************************************************************************************** -->
+      <!--header start-->
+      <header class="header black-bg">
+              <div class="sidebar-toggle-box">
+                  <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
+              </div>
+            <!--logo start-->
+            <a href="/" class="logo"><b>Koalix CRM</b></a>
+{#            {% if settings.SITE_TAGLINE %}{{ settings.SITE_TAGLINE }}{% endif %}#}
+            <!--logo end-->
 
-{% nevercache %}
-{% if messages %}
-<div class="messages">
-{% for message in messages %}
-<div class="alert alert-dismissable alert-{{ message.tags }}" data-alert="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-    {{ message }}
-</div>
-{% endfor %}
-</div>
-{% endif %}
-{% endnevercache %}
+            <div class="nav notify-row" id="top_menu">
 
-<h1>{% block title %}{% endblock %}</h1>
+                <!--  notification start -->
+                <ul class="nav top-menu">
 
-<ul class="breadcrumb">
-{% spaceless %}
-{% block breadcrumb_menu %}{% page_menu "pages/menus/breadcrumb.html" %}{% endblock %}
-{% endspaceless %}
-</ul>
+                    <!-- settings start -->
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
+                            <i class="fa fa-tasks"></i>
+                            <span class="badge bg-theme">1</span>
+                        </a>
+                        <ul class="dropdown-menu extended tasks-bar">
+                            <div class="notify-arrow notify-arrow-green"></div>
+                            <li>
+                                <p class="green">You have 1 pending task</p>
+                            </li>
+                            <li>
+                                <a href="index.html#">
+                                    <div class="task-info">
+                                        <div class="desc">Koalix Task Panel</div>
+                                        <div class="percent">40%</div>
+                                    </div>
+                                    <div class="progress progress-striped">
+                                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+                                            <span class="sr-only">40% Complete (success)</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="external">
+                                <a href="#">See All Tasks</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- settings end -->
 
-</div>
+                    <!-- inbox dropdown start-->
+                    <li id="header_inbox_bar" class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
+                            <i class="fa fa-envelope-o"></i>
+                            <span class="badge bg-theme">1</span>
+                        </a>
+                        <ul class="dropdown-menu extended inbox">
+                            <div class="notify-arrow notify-arrow-green"></div>
+                            <li>
+                                <p class="green">You have 1 new message</p>
+                            </li>
+                            <li>
+                                <a href="index.html#">
+                                    <span class="photo"><img alt="avatar" src="assets/img/ui-zac.jpg"></span>
+                                    <span class="subject">
+                                    <span class="from">Zac Snider</span>
+                                    <span class="time">Just now</span>
+                                    </span>
+                                    <span class="message">
+                                        Hi mate, how is everything?
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="index.html#">See all messages</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- inbox dropdown end -->
 
-<div class="container">
-<div class="row">
+                </ul>
+                <!--  notification end -->
 
-{#<div class="col-md-2 left">#}
-{#    {% block left_panel %}#}
-{#    <div class="panel panel-default tree">{% page_menu "pages/menus/tree.html" %}</div>#}
-{#    {% endblock %}#}
-{#</div>#}
+            </div>
+            <div class="top-menu nav pull-right" style="margin-top: 12px;">
+                {% search_form "all" %}
+            </div>
+        </header>
+      <!--header end-->
 
-{% block main %}{% endblock %}
+      <!-- **********************************************************************************************************************************************************
+      MAIN SIDEBAR MENU
+      *********************************************************************************************************************************************************** -->
+      <!--sidebar start-->
+      <aside>
+          <div id="sidebar"  class="nav-collapse ">
+              <!-- sidebar menu start-->
+              <ul class="sidebar-menu" id="nav-accordion">
 
-{% block widgetpanel %}
-{% endblock %}
+                  {% if request.user.is_authenticated %}
 
-</div>
-</div>
+              	    <p class="centered">
+                        {% url "profile" request.user.username as profile_url %}
+                        <img src="{% static 'assets/img/avatar.jpg' %}" class="img-thumbnail" width="60">
+                        <h5 class="centered"><a href="{% url "profile_update" %}">{{ request.user|username_or:"email" }}</a></h5>
+                    </p>
+                    <li><a class="logout" href="admin/logout/"><i class="fa fa-sign-out"></i>Logout</a></li>
 
-<footer>
-<div class="container">
-{% page_menu "pages/menus/footer.html" %}
+                  {% endif %}
 
-<div class="row">
-<p class="site-info text-center">
-    {% trans "Powered by" %}
-    <a href="http://mezzanine.jupo.org">Mezzanine</a>{% ifinstalled cartridge.shop %},
-    <a href="http://cartridge.jupo.org">Cartridge</a>{% endifinstalled %}
-    {% trans "and" %}
-    <a href="http://www.djangoproject.com">Django</a>
-    <span class="separator">|</span>
-    {% trans "Theme by" %} <a target="_blank" href="http://getbootstrap.com">Bootstrap</a>
-    {% ifinstalled mezzanine.mobile %}
-    <span class="separator">|</span>
-    <a href="{% url "set_device" "mobile" %}?next={{ request.path }}">{% trans "View Mobile Site" %}</a>
-    {% endifinstalled %}
-</p>
-</div>
-</div>
-</footer>
+                  <li class="mt">
+                      <a class="active" href="/">
+                          <i class="fa fa-dashboard"></i>
+                          <span>Dashboard</span>
+                      </a>
+                  </li>
+
+                  {% page_menu "pages/menus/sidebar.html" %}
+
+              </ul>
+              <!-- sidebar menu end-->
+          </div>
+      </aside>
+      <!--sidebar end-->
+
+
+    <section id="main-content">
+    {% nevercache %}
+    {% if messages %}
+    <div class="messages">
+    {% for message in messages %}
+    <div class="alert alert-dismissable alert-{{ message.tags }}" data-alert="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        {{ message }}
+    </div>
+    {% endfor %}
+    </div>
+    {% endif %}
+    {% endnevercache %}
+        <section class="wrapper">
+            {% block main %}{% endblock %}
+          </section>
+      </section>
+      <!--main content end-->
+
+      <!--footer start-->
+      <footer class="site-footer">
+          <div class="text-center">
+                {% trans "Powered by" %}
+                <a href="http://mezzanine.jupo.org">Mezzanine</a>
+                {% trans "and" %}
+                <a href="http://www.djangoproject.com">Django</a>
+                <span class="separator">|</span>
+                {% trans "Theme based on" %} <a target="_blank" href="http://www.blacktie.co/2014/07/dashgum-free-dashboard/">DashGum</a>
+              <a href="#" class="go-top">
+                  <i class="fa fa-angle-up"></i>
+              </a>
+          </div>
+      </footer>
+      <!--footer end-->
+
+</section>
+    <!-- js placed at the end of the document so the pages load faster -->
+    <script src="{%  static "assets/js/jquery.js" %}"></script>
+    <script src="{%  static "assets/js/jquery-1.8.3.min.js" %}"></script>
+    <script src="{%  static "assets/js/bootstrap.min.js" %}"></script>
+    <script class="include" type="text/javascript" src="{%  static "assets/js/jquery.dcjqaccordion.2.7.js" %}"></script>
+    <script src="{%  static "assets/js/jquery.scrollTo.min.js" %}"></script>
+    <script src="{%  static "assets/js/jquery.nicescroll.js" %}"type="text/javascript"></script>
+    <script src="{%  static "assets/js/jquery.sparkline.js" %}"></script>
+
+
+    <!--common script for all pages-->
+    <script src="{%  static "assets/js/common-scripts.js" %}"></script>
+
+    <script type="text/javascript" src="{%  static "assets/js/gritter/js/jquery.gritter.js" %}"></script>
+    <script type="text/javascript" src="{%  static "assets/js/gritter-conf.js" %}"></script>
+
+    <!--script for this page-->
+    <script src="{%  static "assets/js/sparkline-chart.js" %}"></script>
+	<script src="{%  static "assets/js/zabuto_calendar.js" %}"></script>
+
+	<script type="application/javascript">
+        $(document).ready(function () {
+            $("#date-popover").popover({html: true, trigger: "manual"});
+            $("#date-popover").hide();
+            $("#date-popover").click(function (e) {
+                $(this).hide();
+            });
+
+            $("#my-calendar").zabuto_calendar({
+                action: function () {
+                    return myDateFunction(this.id, false);
+                },
+                action_nav: function () {
+                    return myNavFunction(this.id);
+                },
+                ajax: {
+                    url: "show_data.php?action=1",
+                    modal: true
+                },
+                legend: [
+                    {type: "text", label: "Special event", badge: "00"},
+                    {type: "block", label: "Regular event"}
+                ]
+            });
+        });
+
+
+        function myNavFunction(id) {
+            $("#date-popover").hide();
+            var nav = $("#" + id).data("navigation");
+            var to = $("#" + id).data("to");
+            console.log('nav ' + nav + ' to: ' + to.month + '/' + to.year);
+        }
+    </script>
 
 {% include "includes/footer_scripts.html" %}
 
