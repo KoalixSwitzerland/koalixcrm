@@ -5,12 +5,13 @@
 {% block title %}{% trans "Suppliers" %}{% endblock %}
 
 {% block main %}
-    <h3 style="margin: 30px">{% if supplier %}Edit supplier{% else %}Create supplier{% endif%}</h3>
-    <div style="margin: 30px">
-    <form method="POST" action=".">
+    <div class="form-panel" style="margin: 30px">
+    <h4 class="mb"><i class="fa fa-angle-right"></i>
+        {% if supplier %}Edit supplier{% else %}Create supplier{% endif%}</h4>
+    <form method="POST" action="." class="form-group">
     {% csrf_token %}
     {{ form }}
-    <input type="submit" class="btn btn-primary" value="Save">
+    <button type="submit" class="btn btn-primary"><i class="fa fa-check"></i>Save</button>
     </form>
     </div>
 {% endblock %}

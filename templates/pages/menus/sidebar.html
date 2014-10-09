@@ -5,8 +5,8 @@
     {% for page in page_branch %}
         {% if page.in_menu %}
             {% if not page.parent %}
-                <li class="sub-menu" id="{{ page.html_id }}">
-                    <a href="{{ page.get_absolute_url }}">
+                <li id="{{ page.html_id }}" class="sub-menu">
+                    <a href="{{ page.get_absolute_url }}" class="{% if page.is_current_or_ascendant %}active{% endif %}">
                         {% if page.icon %}
                             <i class="fa {{ page.icon }}"></i>
                         {% else %}
@@ -14,11 +14,11 @@
                         {% endif %}
                         {{ page.title }}</a>
             {% else %}
-                <li class="sub" id="{{ page.html_id }}">
+                <li id="{{ page.html_id }}" class="{% if page.is_current_or_ascendant %}active{% endif %}">
                     <a href="{{ page.get_absolute_url }}">{{ page.title }}</a>
             {% endif %}
             {% if page.has_children_in_menu %}
-                    <ul class="sub">
+                    <ul class="sub" style="display: block;">
                         {% page_menu page %}
                     </ul>
             {% endif %}

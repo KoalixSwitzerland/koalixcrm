@@ -5,12 +5,13 @@
 {% block title %}{% trans "Customers" %}{% endblock %}
 
 {% block main %}
-    <h1 style="margin: 30px">{% if customer %}Edit customer{% else %}Create customer{% endif%}</h1>
-    <div style="margin: 30px">
-    <form method="POST" action=".">
+    <div class="form-panel" style="margin: 30px">
+    <h4 class="mb"><i class="fa fa-angle-right"></i>
+        {% if customer %}Edit customer{% else %}Create customer{% endif%}</h4>
+    <form method="POST" action="." class="form-group">
     {% csrf_token %}
     {{ form }}
-    <input type="submit" class="btn btn-primary" value="Save">
+    <button type="submit" class="btn btn-primary"><i class="fa fa-check"></i>Save</button>
     </form>
     </div>
 {% endblock %}

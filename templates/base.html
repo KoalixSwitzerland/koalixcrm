@@ -149,12 +149,17 @@
                         <img src="{% static 'assets/img/avatar.jpg' %}" class="img-thumbnail" width="60">
                         <h5 class="centered"><a href="{% url "profile_update" %}">{{ request.user|username_or:"email" }}</a></h5>
                     </p>
-                    <li><a class="logout" href="admin/logout/"><i class="fa fa-sign-out"></i>Logout</a></li>
+                    <li><a href="/admin/"><i class="fa fa-gears"></i>Administration</a></li>
+                    <li><a href="/admin/logout/"><i class="fa fa-sign-out"></i>Logout</a></li>
+
+                  {% else %}
+
+                      <li><a href="/login/"><i class="fa fa-sign-in"></i>Login</a></li>
 
                   {% endif %}
 
                   <li class="mt">
-                      <a class="active" href="/">
+                      <a href="/">
                           <i class="fa fa-dashboard"></i>
                           <span>Dashboard</span>
                       </a>
@@ -170,19 +175,26 @@
 
 
     <section id="main-content">
-    {% nevercache %}
-    {% if messages %}
-    <div class="messages">
-    {% for message in messages %}
-    <div class="alert alert-dismissable alert-{{ message.tags }}" data-alert="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-        {{ message }}
-    </div>
-    {% endfor %}
-    </div>
-    {% endif %}
-    {% endnevercache %}
+        {% nevercache %}
+        {% if messages %}
+        <div class="messages">
+        {% for message in messages %}
+        <div class="alert alert-dismissable alert-{{ message.tags }}" data-alert="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            {{ message }}
+        </div>
+        {% endfor %}
+        </div>
+        {% endif %}
+        {% endnevercache %}
         <section class="wrapper">
+            <div style="margin-top: 10px;">
+                <ul class="breadcrumb" style="background-color: white;">
+                {% spaceless %}
+                {% block breadcrumb_menu %}{% page_menu "pages/menus/breadcrumb.html" %}{% endblock %}
+                {% endspaceless %}
+                </ul>
+            </div>
             {% block main %}{% endblock %}
           </section>
       </section>
