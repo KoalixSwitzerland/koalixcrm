@@ -1,20 +1,30 @@
-from mezzanine.pages.models import Page, PageMoveException
-from crm.models import Contact, Currency, Customer, CustomerGroup
+from django.contrib import admin
+from mezzanine.pages.admin import PageAdmin
+from mezzanine.pages.models import Page
+from django.utils.translation import gettext as _
 
 
-class CRMpage(Page):
+class CustomersPage(Page):
 
     class Meta:
-        verbose_name = "CRM Page"
-        verbose_name_plural = "CRM Pages"
-
-    def can_add(self, request):
-        return self.children.count() == 0
+        verbose_name = _("Customers Page")
+        verbose_name_plural = _("Customers Pages")
 
     def can_delete(self, request):
-        return request.user.is_superuser or self.parent is not None
+        return request.user.is_superuser
 
-    def can_move(self, request, new_parent):
-        if new_parent is None:
-            msg = 'An author page cannot be a top-level page'
-            raise PageMoveException(msg)
+
+class CurrenciesPage(Page):
+
+    title = _("Currencies Page")
+    login_required = True
+
+    class Meta:
+        verbose_name = _("Currencies Page")
+        verbose_name_plural = _("Currencies Pages")
+
+    def can_delete(self, request):
+        return request.user.is_superuser
+
+admin.site.register(CustomersPage, PageAdmin)
+admin.site.register(CurrenciesPage, PageAdmin)

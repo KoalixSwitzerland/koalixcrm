@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block meta_title %}{% trans "Units" %}{% endblock %}
+{% block title %}{% trans "Units" %}{% endblock %}
+
+{% block main %}
+    <div style="margin: 30px">
+        {% if unit_list %}
+        <table class="table table-striped">
+            <tr><th>Name</th><th></th><th></th></tr>
+            {% for unit in unit_list %}
+                <tr>
+                    <td>{{ unit.name }}</td>
+                    <td><a href="{% url 'edit_unit' unit.pk %}">edit</a></td>
+                    <td>
+                        <form method="POST" action="{% url 'delete_unit' unit.pk %}">
+                            {% csrf_token %}
+                            <input type="submit" class="btn btn-sm btn-danger" value="delete"></input>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
+        <p><a href="{% url 'create_unit' %}">Create a new unit</a></p>
+    </div>
+{% endblock %}

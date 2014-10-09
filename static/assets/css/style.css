@@ -415,6 +415,7 @@ ul.sidebar-menu li a.active i {
 .black-bg {
     background: #ffd777;
     border-bottom: 1px solid #c9aa5f;
+    max-height: 60px;
 }
 
 .wrapper {

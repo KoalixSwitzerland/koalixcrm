@@ -8,7 +8,7 @@ from django.http import Http404
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from vanilla import CreateView, DeleteView, ListView, UpdateView
-from crm.models import Customer, Invoice, Supplier, Currency
+from crm.models import Customer, Invoice, Supplier, Currency, Unit, Tax
 
 
 class ListCustomers(ListView):
@@ -68,6 +68,44 @@ class DeleteCurrency(DeleteView):
     success_url = reverse_lazy('list_currencies')
 
 
+class ListTaxes(ListView):
+    model = Tax
+
+
+class CreateTax(CreateView):
+    model = Tax
+    success_url = reverse_lazy('list_taxes')
+
+
+class EditTax(UpdateView):
+    model = Tax
+    success_url = reverse_lazy('list_taxes')
+
+
+class DeleteTax(DeleteView):
+    model = Tax
+    success_url = reverse_lazy('list_taxes')
+    
+
+class ListUnits(ListView):
+    model = Unit
+
+
+class CreateUnit(CreateView):
+    model = Unit
+    success_url = reverse_lazy('list_units')
+
+
+class EditUnit(UpdateView):
+    model = Unit
+    success_url = reverse_lazy('list_units')
+
+
+class DeleteUnit(DeleteView):
+    model = Unit
+    success_url = reverse_lazy('list_units')
+    
+    
 def export_pdf(calling_model_admin, request, where_to_create_from, what_to_create, redirect_to):
     """This method exports PDFs provided by different Models in the crm application
 

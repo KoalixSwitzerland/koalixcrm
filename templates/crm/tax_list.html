@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block meta_title %}{% trans "Taxes" %}{% endblock %}
+{% block title %}{% trans "Taxes" %}{% endblock %}
+
+{% block main %}
+    <div style="margin: 30px">
+        {% if tax_list %}
+        <table class="table table-striped">
+            <tr><th>Name</th><th></th><th></th></tr>
+            {% for tax in tax_list %}
+                <tr>
+                    <td>{{ tax.name }}</td>
+                    <td><a href="{% url 'edit_tax' tax.pk %}">edit</a></td>
+                    <td>
+                        <form method="POST" action="{% url 'delete_tax' tax.pk %}">
+                            {% csrf_token %}
+                            <input type="submit" class="btn btn-sm btn-danger" value="delete"></input>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
+        <p><a href="{% url 'create_tax' %}">Create a new tax</a></p>
+    </div>
+{% endblock %}

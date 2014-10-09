@@ -1,19 +1,15 @@
 # -*- coding: utf-8 -*-
 from datetime import date
 from django.shortcuts import render_to_response
-
 from django.core.context_processors import csrf
 from django.utils.translation import ugettext as _
 from django.contrib import admin
-from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.contrib.admin import helpers
-from mezzanine.pages.admin import PageAdmin
 from crm.models import SalesContractPosition, Quote, PurchaseOrder, PurchaseOrderPosition, Product, Price, UnitTransform, \
     PostalAddress, PhoneAddress, EmailAddress, CustomerGroup, Supplier, Unit, Currency, Tax, CustomerBillingCycle, \
     Contract
 from crm.views import *
-from crm.pages import CRMpage
 from accounting.models import Booking
 from KoalixCRM.plugin import *
 
@@ -587,4 +583,3 @@ admin.site.register(CustomerBillingCycle, OptionCustomerBillingCycle)
 admin.site.register(Contract, OptionContract)
 admin.site.register(PurchaseOrder, OptionPurchaseOrder)
 admin.site.register(Product, OptionProduct)
-admin.site.register(CRMpage, PageAdmin)

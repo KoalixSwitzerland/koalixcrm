@@ -4,5 +4,5 @@
 .DS_Store
 .coverage
 local_settings.py
-#/static/media
+/static/media/
 .idea
