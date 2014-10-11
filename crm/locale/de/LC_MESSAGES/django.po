@@ -1768,10 +1768,14 @@ msgstr "Privat Mobiltelefon"
 msgid "Mobile Business"
 msgstr "Geschäftliches Mobiltelefon"
 
-#: pages.py:10
-msgid "Customers Page"
-msgstr "Kundenübersicht"
+msgid "Customers"
+msgstr "Kunden"
 
-#: pages.py:11
-msgid "Customers Pages"
-msgstr "Kundenübersichten"
+msgid "Suppliers"
+msgstr "Lieferanten"
+
+msgid "Currencies"
+msgstr "Währungen"
+
+msgid "Tax Rates"
+msgstr "Steuersätze"

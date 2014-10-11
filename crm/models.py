@@ -4,7 +4,7 @@ from datetime import *
 from decimal import Decimal
 from subprocess import *
 from django.conf import settings
-from django.contrib.admin.options import BaseModelAdmin
+from django.contrib.auth.models import AbstractBaseUser
 from django.db import models
 from django.utils.translation import ugettext as _
 from django.core import serializers
@@ -17,6 +17,11 @@ from const.postaladdressprefix import *
 from const.purpose import *
 from const.status import *
 import accounting
+
+
+class CRMuser(models.Model):
+    image = models.ImageField(_('Avatar'), upload_to='avatars')
+
 
 
 ###########################

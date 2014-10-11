@@ -1,9 +1,9 @@
 {% load mezzanine_tags i18n future %}
 <form action="{% url "search" %}" class="form-inline" role="search">
 
-<div class="form-group">
-    <input class="form-control" placeholder="{% trans "Search" %}" type="text" name="q" value="{{ request.REQUEST.q }}">
-</div>
+    <div class="form-group">
+        <input class="form-control" placeholder="{% trans "Search" %}" type="text" name="q" value="{{ request.REQUEST.q }}">
+    </div>
 
 {% if search_model_choices %}
     {% if search_model_choices|length == 1 %}
@@ -23,6 +23,6 @@
     {% endif %}
 {% endif %}
 
-<input type="submit" class="btn btn-default" value="{% trans "Go" %}">
+<input type="submit" class="btn btn-default form-control" value="{% trans "Go" %}">
 
 </form>

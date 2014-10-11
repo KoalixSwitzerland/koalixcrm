@@ -99,8 +99,8 @@ USE_TZ = True
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = "en_US"
-CALENDAR_LOCALE = "en_US"
+LANGUAGE_CODE = "en"
+CALENDAR_LOCALE = "en"
 
 # Supported languages
 _ = lambda s: s
@@ -249,13 +249,15 @@ INSTALLED_APPS = (
     "mezzanine.forms",
     "mezzanine.pages",
     "mezzanine.galleries",
+    "bootstrap3",
     "vanilla",
+    "CRMpages",
     "accounting",
     "crm",
     "subscriptions",
     "mezzanine.accounts",
     "mptt",
-    "calendarium",
+    # "calendarium",
     # "todo",
     # Uncomment the following if you want to use mezzanine's blog plugin
     # "mezzanine.blog",

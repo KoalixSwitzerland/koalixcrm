@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 {% load i18n bootstrap3 %}
 
-{% block meta_title %}{% trans "Suppliers" %}{% endblock %}
-{% block title %}{% trans "Suppliers" %}{% endblock %}
+{% block meta_title %}{% trans "Units" %}{% endblock %}
+{% block title %}{% trans "Units" %}{% endblock %}
 
 {% block main %}
     <div class="form-panel" style="margin: 30px">
     <h4 class="mb"><i class="fa fa-angle-right"></i>
-    {% if supplier %}{% trans "Edit supplier" %}{% else %}{% trans "Create supplier" %}{% endif%}</h4>
+    {% if unit %}{% trans "Edit unit" %}{% else %}{% trans "Create unit" %}{% endif%}</h4>
     <form method="POST" action="." class="form form-horizontal" style="margin: 30px;">
     {% csrf_token %}
     {% bootstrap_form form %}

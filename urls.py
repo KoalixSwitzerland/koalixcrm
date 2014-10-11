@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from django.conf.urls import patterns, include, url
 from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
+from django.contrib.auth.views import login, logout
 from django.views.generic import TemplateView
 from mezzanine.core.views import direct_to_template
 from crm.views import *
@@ -19,8 +20,8 @@ urlpatterns = i18n_patterns("",
     ("^admin/", include(admin.site.urls)),
     url("^admin/backup/$", "admin_backup.views.admin_backup", name="admin_backup"),
     # url(r'^calendar/', include('calendarium.urls')),
-    url(r'^login/$', TemplateView.as_view(template_name='login.html')),
-    url(r'^logout/$', TemplateView.as_view(template_name='login.html')),
+    url(r'^login/$', login),  # TemplateView.as_view(template_name='login.html')),
+    url(r'^logout/$', TemplateView.as_view(template_name='registration/login.html')),
     # (r'^todo/', include('todo.urls')),
 
     url(r"^customers/$", ListCustomers.as_view(), name='list_customers'),

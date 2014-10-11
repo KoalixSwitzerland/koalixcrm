@@ -9,7 +9,7 @@
                 <span class="icon open">+</span>
                 <span class="icon close">-</span>
             </a>
-            {% set_page_permissions page %}
+{#            {% set_page_permissions page %}#}
             {% if page.perms.delete %}
             <a href="{% url "admin:pages_page_delete" page.id %}?fromtree" class="delete"></a>
             {% else %}
