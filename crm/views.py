@@ -8,7 +8,8 @@ from django.http import Http404
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from vanilla import CreateView, DeleteView, ListView, UpdateView
-from crm.models import Customer, Invoice, Supplier, Currency, Unit, Tax, Contract, Product
+from crm.models import Customer, Invoice, Supplier, Currency, Unit, Tax, Contract, Product, CustomerBillingCycle, \
+    PurchaseOrder
 
 
 class ListCustomers(ListView):
@@ -85,7 +86,7 @@ class EditTax(UpdateView):
 class DeleteTax(DeleteView):
     model = Tax
     success_url = reverse_lazy('list_taxes')
-    
+
 
 class ListUnits(ListView):
     model = Unit
@@ -104,25 +105,70 @@ class EditUnit(UpdateView):
 class DeleteUnit(DeleteView):
     model = Unit
     success_url = reverse_lazy('list_units')
-    
+
 
 class ListProducts(ListView):
     model = Product
+    fields = ['productNumber', 'title', 'description', 'defaultunit', 'tax', 'accoutingProductCategorie']
 
 
 class CreateProduct(CreateView):
     model = Product
+    fields = ['productNumber', 'title', 'description', 'defaultunit', 'tax', 'accoutingProductCategorie']
     success_url = reverse_lazy('list_products')
 
 
 class EditProduct(UpdateView):
     model = Product
+    fields = ['productNumber', 'title', 'description', 'defaultunit', 'tax', 'accoutingProductCategorie']
     success_url = reverse_lazy('list_products')
 
 
 class DeleteProduct(DeleteView):
     model = Product
     success_url = reverse_lazy('list_products')
+
+
+class ListBillingCycles(ListView):
+    model = CustomerBillingCycle
+
+
+class CreateBillingCycle(CreateView):
+    model = CustomerBillingCycle
+    success_url = reverse_lazy('list_billingcycles')
+
+
+class EditBillingCycle(UpdateView):
+    model = CustomerBillingCycle
+    success_url = reverse_lazy('list_billingcycles')
+
+
+class DeleteBillingCycle(DeleteView):
+    model = CustomerBillingCycle
+    success_url = reverse_lazy('list_billingcycles')
+
+
+class ListPurchaseOrders(ListView):
+    model = PurchaseOrder
+    fields = ['description', 'contract', 'supplier', 'status', 'currency', 'staff', 'lastmodifiedby',
+              'lastCalculatedPrice', 'lastPricingDate', ]
+
+
+class CreatePurchaseOrder(CreateView):
+    model = PurchaseOrder
+    fields = ['description', 'contract', 'supplier', 'status', 'currency', 'staff', ]
+    success_url = reverse_lazy('list_purchaseorders')
+
+
+class EditPurchaseOrder(UpdateView):
+    model = PurchaseOrder
+    fields = ['description', 'contract', 'supplier', 'status', 'currency', 'staff', ]
+    success_url = reverse_lazy('list_purchaseorders')
+
+
+class DeletePurchaseOrder(DeleteView):
+    model = PurchaseOrder
+    success_url = reverse_lazy('list_purchaseorders')
 
 
 def export_pdf(calling_model_admin, request, where_to_create_from, what_to_create, redirect_to):
@@ -148,7 +194,7 @@ def export_pdf(calling_model_admin, request, where_to_create_from, what_to_creat
     except Exception, e:  # (TemplateSetMissing, UserExtensionMissing, CalledProcessError), e:
         # if type(e) == UserExtensionMissing:
         # response = HttpResponseRedirect(redirect_to)
-        #     calling_model_admin.message_user(request, _("User Extension Missing"))
+        # calling_model_admin.message_user(request, _("User Extension Missing"))
         # elif type(e) == TemplateSetMissing:
         #     response = HttpResponseRedirect(redirect_to)
         #     calling_model_admin.message_user(request, _("Templateset Missing"))

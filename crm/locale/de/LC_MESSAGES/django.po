@@ -1784,19 +1784,19 @@ msgid "Tax Rate"
 msgstr "Steuersatz"
 
 msgid "Create tax rate"
-msgstr "Steuersatz hinzufügen"
+msgstr "Steuersatz erstellen"
 
 msgid "Create a new tax rate"
 msgstr "Neuen Steuersatz hinzufügen"
 
 msgid "Create unit"
-msgstr "Masseinheit hinzufügen"
+msgstr "Masseinheit erstellen"
 
 msgid "Create a new unit"
 msgstr "Neue Masseinheit hinzufügen"
 
 msgid "Create currency"
-msgstr "Währung hinzufügen"
+msgstr "Währung erstellen"
 
 msgid "Create a new currency"
 msgstr "Neue Währung hinzufügen"
@@ -1805,16 +1805,37 @@ msgid "Create a new product"
 msgstr "Neues Produkt hinzufügen"
 
 msgid "Create product"
-msgstr "Produkt hinzufügen"
+msgstr "Produkt erstellen"
 
 msgid "Create supplier"
-msgstr "Lieferant hinzufügen"
+msgstr "Lieferant erstellen"
 
 msgid "Create a new supplier"
 msgstr "Neuen Lieferanten hinzufügen"
 
 msgid "Create customer"
-msgstr "Kunde hinzufügen"
+msgstr "Kunde erstellen"
 
 msgid "Create a new customer"
 msgstr "Neuen Kunde hinzufügen"
+
+msgid "Create a new purchase order"
+msgstr "Neue Bestellung hinzufügen"
+
+msgid "Shortname"
+msgstr "Kürzel"
+
+msgid "Billing Cycles"
+msgstr "Zahlungsfristen"
+
+msgid "Create a new billing cycle"
+msgstr "Neue Zahlungsfrist hinzufügen"
+
+msgid "Create billing cycle"
+msgstr "Zahlungsfrist erstellen"
+
+msgid "Purchase Orders"
+msgstr "Bestellungen"
+
+msgid "Order Management"
+msgstr "Auftragsverwaltung"

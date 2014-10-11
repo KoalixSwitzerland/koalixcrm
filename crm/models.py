@@ -165,7 +165,7 @@ class Supplier(Contact):
 
 class CustomerBillingCycle(models.Model):
     name = models.CharField(max_length=300, verbose_name=_("Name"))
-    timeToPaymentDate = models.IntegerField(verbose_name=_("Days To Payment Date"))
+    days_to_payment = models.IntegerField(verbose_name=_("Days To Payment Date"))
 
     class Meta:
         verbose_name = _('Customer Billing Cycle')
@@ -215,7 +215,7 @@ class Contract(models.Model):
         invoice.customer = self.defaultcustomer
         invoice.status = 'C'
         invoice.currency = self.defaultcurrency
-        invoice.payableuntil = date.today() + timedelta(days=self.defaultcustomer.billingcycle.timeToPaymentDate)
+        invoice.payableuntil = date.today() + timedelta(days=self.defaultcustomer.billingcycle.days_to_payment)
         invoice.dateofcreation = date.today().__str__()
         invoice.save()
         return invoice
@@ -422,7 +422,7 @@ class Quote(SalesContract):
         invoice.derivatedFromQuote = self
         invoice.currency = self.currency
         invoice.payableuntil = date.today() + timedelta(
-            days=self.customer.billingcycle.timeToPaymentDate)
+            days=self.customer.billingcycle.days_to_payment)
         invoice.dateofcreation = date.today().__str__()
         invoice.customerBillingCycle = self.customer.billingcycle
         invoice.save()
@@ -615,13 +615,13 @@ class Invoice(SalesContract):
 
 class Unit(models.Model):
     description = models.CharField(verbose_name=_("Description"), max_length=100)
-    shortName = models.CharField(verbose_name=_("Displayed Name After Quantity In The Position"), max_length=3)
-    isAFractionOf = models.ForeignKey('self', blank=True, null=True, verbose_name=_("Is A Fraction Of"))
-    fractionFactorToNextHigherUnit = models.IntegerField(verbose_name=_("Factor Between This And Next Higher Unit"),
+    shortname = models.CharField(verbose_name=_("Displayed Name After Quantity In The Position"), max_length=3)
+    fractionof = models.ForeignKey('self', blank=True, null=True, verbose_name=_("Is A Fraction Of"))
+    factor = models.IntegerField(verbose_name=_("Factor Between This And Next Higher Unit"),
                                                          blank=True, null=True)
 
     def __unicode__(self):
-        return self.shortName
+        return self.shortname
 
     class Meta:
         verbose_name = _('Unit')
@@ -733,7 +733,7 @@ class UnitTransform(models.Model):
             return unit
 
     def __unicode__(self):
-        return "From " + self.fromUnit.shortName + " to " + self.toUnit.shortName
+        return "From " + self.fromUnit.shortname + " to " + self.toUnit.shortname
 
     class Meta:
         verbose_name = _('Unit Transfrom')

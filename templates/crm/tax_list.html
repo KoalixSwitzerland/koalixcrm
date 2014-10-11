@@ -13,20 +13,14 @@
     <h4><i class="fa fa-angle-right"></i> {% trans "Tax Rates" %}</h4>
         {% if tax_list %}
         <table class="table table-striped table-advance">
-            <tr><th>Name</th><th></th><th></th></tr>
+            <tr><th>{% trans "Name" %}</th><th>{% trans "Tax Rate" %}</th><th></th></tr>
             {% for tax in tax_list %}
                 <tr>
                     <td>{{ tax.name }}</td>
+                    <td>{{ tax.taxrate }}</td>
                     <td>
-                        <form method="POST" action="{% url 'edit_tax' tax.pk %}">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-sm btn-primary pull-right">{% trans "Edit" %}</button>
-                        </form>
-                    <td>
-                        <form method="POST" action="{% url 'delete_tax' tax.pk %}">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-sm btn-danger pull-right">{% trans "Delete" %}</button>
-                        </form>
+                        <button type="button" class="btn btn-sm btn-primary" onclick="window.location.assign('{% url 'edit_tax' tax.pk %}')">{% trans "Edit" %}</button>
+                        <button type="button" class="btn btn-sm btn-danger" onclick="window.location.assign('{% url 'delete_tax' tax.pk %}')">{% trans "Delete" %}</button>
                     </td>
                 </tr>
             {% endfor %}

@@ -20,15 +20,8 @@
                     <td>{{ currency.shortname }}</td>
                     <td>{{ currency.rounding }}</td>
                     <td>
-                        <form method="POST" action="{% url 'edit_currency' currency.pk %}">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-sm btn-primary pull-right">{% trans "Edit" %}</button>
-                        </form>
-                    <td>
-                        <form method="POST" action="{% url 'delete_currency' currency.pk %}">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-sm btn-danger pull-right">{% trans "Delete" %}</button>
-                        </form>
+                        <button type="button" class="btn btn-sm btn-primary" onclick="window.location.assign('{% url 'edit_currency' currency.pk %}')">{% trans "Edit" %}</button>
+                        <button type="button" class="btn btn-sm btn-danger" onclick="window.location.assign('{% url 'delete_currency' currency.pk %}')">{% trans "Delete" %}</button>
                     </td>
                 </tr>
             {% endfor %}

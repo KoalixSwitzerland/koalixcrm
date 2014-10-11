@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block meta_title %}{% trans "Purchase Order" %}{% endblock %}
+{% block title %}{% trans "Purchase Order" %}{% endblock %}
+
+{% block breadcrumb_menu %}
+    <li class="active">{% trans "Purchase Order" %}</li>
+{% endblock %}
+
+{% block main %}
+    <div class="content-panel" style="margin: 30px; padding: 10px;">
+    <h4><i class="fa fa-angle-right"></i> {% trans "Purchase Order" %}</h4>
+        {% if purchaseorder_list %}
+        <table class="table table-striped table-advance">
+            <tr><th></th><th></th><th></th><th></th><th></th></tr>
+            {% for purchaseorder in purchaseorder_list %}
+                <tr>
+                    <td>{{ purchaseorder.contract }}</td>
+                    <td>{{ purchaseorder.description }}</td>
+                    <td>{{ purchaseorder.status }}</td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-primary" onclick="window.location.assign('{% url 'edit_purchaseorder' purchaseorder.pk %}')">{% trans "Edit" %}</button>
+                        <button type="button" class="btn btn-sm btn-danger" onclick="window.location.assign('{% url 'delete_purchaseorder' purchaseorder.pk %}')">{% trans "Delete" %}</button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
+        <p><a href="{% url 'create_purchaseorder' %}">{% trans "Create a new purchase order" %}</a></p>
+    </div>
+{% endblock %}
