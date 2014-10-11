@@ -1,18 +1,18 @@
 {% extends "base.html" %}
 {% load i18n bootstrap3 %}
 
-{% block meta_title %}{% trans "Units" %}{% endblock %}
-{% block title %}{% trans "Units" %}{% endblock %}
+{% block meta_title %}{% trans "Products" %}{% endblock %}
+{% block title %}{% trans "Products" %}{% endblock %}
 
 {% block breadcrumb_menu %}
-    <li class="active"><a href="{% url 'list_units' %}">{% trans "Units" %}</a></li>
-    <li class="active">{% if product %}{% trans "Edit unit" %}{% else %}{% trans "Create unit" %}{% endif%}</li>
+    <li class="active"><a href="{% url 'list_products' %}">{% trans "Products" %}</a></li>
+    <li class="active">{% if product %}{% trans "Edit product" %}{% else %}{% trans "Create product" %}{% endif%}</li>
 {% endblock %}
 
 {% block main %}
     <div class="form-panel" style="margin: 30px">
     <h4 class="mb"><i class="fa fa-angle-right"></i>
-    {% if unit %}{% trans "Edit unit" %}{% else %}{% trans "Create unit" %}{% endif%}</h4>
+    {% if product %}{% trans "Edit product" %}{% else %}{% trans "Create product" %}{% endif%}</h4>
     <form method="POST" action="." class="form form-horizontal" style="margin: 30px;">
     {% csrf_token %}
     {% bootstrap_form form %}

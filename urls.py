@@ -44,6 +44,10 @@ urlpatterns = i18n_patterns("",
     url(r'^units/create/$', CreateUnit.as_view(), name='create_unit'),
     url(r'^units/edit/(?P<pk>\d+)/$', EditUnit.as_view(), name='edit_unit'),
     url(r'^units/delete/(?P<pk>\d+)/$', DeleteUnit.as_view(), name='delete_unit'),
+    url(r"^products/$", ListProducts.as_view(), name='list_products'),
+    url(r'^products/create/$', CreateProduct.as_view(), name='create_product'),
+    url(r'^products/edit/(?P<pk>\d+)/$', EditProduct.as_view(), name='edit_product'),
+    url(r'^products/delete/(?P<pk>\d+)/$', DeleteProduct.as_view(), name='delete_product'),
 )
 
 urlpatterns += patterns('',

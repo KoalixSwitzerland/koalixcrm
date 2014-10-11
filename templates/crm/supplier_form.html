@@ -4,6 +4,11 @@
 {% block meta_title %}{% trans "Suppliers" %}{% endblock %}
 {% block title %}{% trans "Suppliers" %}{% endblock %}
 
+{% block breadcrumb_menu %}
+    <li class="active"><a href="{% url 'list_suppliers' %}">{% trans "Suppliers" %}</a></li>
+    <li class="active">{% if product %}{% trans "Edit supplier" %}{% else %}{% trans "Create supplier" %}{% endif%}</li>
+{% endblock %}
+
 {% block main %}
     <div class="form-panel" style="margin: 30px">
     <h4 class="mb"><i class="fa fa-angle-right"></i>

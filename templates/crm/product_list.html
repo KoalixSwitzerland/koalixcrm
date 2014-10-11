@@ -1,29 +1,29 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block meta_title %}{% trans "Customers" %}{% endblock %}
-{% block title %}{% trans "Customers" %}{% endblock %}
+{% block meta_title %}{% trans "Products" %}{% endblock %}
+{% block title %}{% trans "Products" %}{% endblock %}
 
 {% block breadcrumb_menu %}
-    <li class="active">{% trans "Customers" %}</li>
+    <li class="active">{% trans "Products" %}</li>
 {% endblock %}
 
 {% block main %}
     <div class="content-panel" style="margin: 30px; padding: 10px;">
-    <h4><i class="fa fa-angle-right"></i> {% trans "Customers" %}</h4>
-        {% if customer_list %}
+    <h4><i class="fa fa-angle-right"></i> {% trans "Products" %}</h4>
+        {% if product_list %}
         <table class="table table-striped table-advance">
             <tr><th>Name</th><th></th><th></th></tr>
-            {% for customer in customer_list %}
+            {% for product in product_list %}
                 <tr>
-                    <td>{{ customer.name }}</td>
+                    <td>{{ product.name }}</td>
                     <td>
-                        <form method="POST" action="{% url 'edit_customer' customer.pk %}">
+                        <form method="POST" action="{% url 'edit_product' product.pk %}">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-sm btn-primary pull-right">{% trans "Edit" %}</button>
                         </form>
                     <td>
-                        <form method="POST" action="{% url 'delete_customer' customer.pk %}">
+                        <form method="POST" action="{% url 'delete_product' product.pk %}">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-sm btn-danger pull-right">{% trans "Delete" %}</button>
                         </form>
@@ -32,6 +32,6 @@
             {% endfor %}
         </table>
         {% endif %}
-        <p><a href="{% url 'create_customer' %}">{% trans "Create a new customer" %}</a></p>
+        <p><a href="{% url 'create_product' %}">{% trans "Create a new product" %}</a></p>
     </div>
 {% endblock %}

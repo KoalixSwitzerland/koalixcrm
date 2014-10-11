@@ -183,6 +183,13 @@
                   </li>
 
                   <li class="sub-menu">
+                      <a href="/products/">
+                          <i class="fa fa-truck"></i>
+                          <span>{% trans "Products" %}</span>
+                      </a>
+                  </li>
+
+                  <li class="sub-menu">
                       <a href="javascript:;" >
                           <i class="fa fa-wrench"></i>
                           <span>{% trans "Settings" %}</span>
@@ -220,7 +227,10 @@
             <div style="margin-top: 10px;">
                 <ul class="breadcrumb" style="background-color: white;">
                 {% spaceless %}
-                {% block breadcrumb_menu %}{% page_menu "pages/menus/breadcrumb.html" %}{% endblock %}
+                    <li id="breadcrumb-menu-home"><a href="/">CRM</a></li>
+                {% block breadcrumb_menu %}
+                    {% page_menu "pages/menus/breadcrumb.html" %}
+                {% endblock %}
                 {% endspaceless %}
                 </ul>
             </div>

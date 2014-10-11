@@ -4,6 +4,10 @@
 {% block meta_title %}{% trans "Tax Rates" %}{% endblock %}
 {% block title %}{% trans "Tax Rates" %}{% endblock %}
 
+{% block breadcrumb_menu %}
+    <li class="active">{% trans "Tax Rates" %}</li>
+{% endblock %}
+
 {% block main %}
     <div class="content-panel" style="margin: 30px; padding: 10px;">
     <h4><i class="fa fa-angle-right"></i> {% trans "Tax Rates" %}</h4>
@@ -28,6 +32,6 @@
             {% endfor %}
         </table>
         {% endif %}
-        <p><a href="{% url 'create_tax' %}">{% trans "Create a new tax" %}</a></p>
+        <p><a href="{% url 'create_tax' %}">{% trans "Create a new tax rate" %}</a></p>
     </div>
 {% endblock %}

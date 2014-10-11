@@ -1779,3 +1779,42 @@ msgstr "Währungen"
 
 msgid "Tax Rates"
 msgstr "Steuersätze"
+
+msgid "Tax Rate"
+msgstr "Steuersatz"
+
+msgid "Create tax rate"
+msgstr "Steuersatz hinzufügen"
+
+msgid "Create a new tax rate"
+msgstr "Neuen Steuersatz hinzufügen"
+
+msgid "Create unit"
+msgstr "Masseinheit hinzufügen"
+
+msgid "Create a new unit"
+msgstr "Neue Masseinheit hinzufügen"
+
+msgid "Create currency"
+msgstr "Währung hinzufügen"
+
+msgid "Create a new currency"
+msgstr "Neue Währung hinzufügen"
+
+msgid "Create a new product"
+msgstr "Neues Produkt hinzufügen"
+
+msgid "Create product"
+msgstr "Produkt hinzufügen"
+
+msgid "Create supplier"
+msgstr "Lieferant hinzufügen"
+
+msgid "Create a new supplier"
+msgstr "Neuen Lieferanten hinzufügen"
+
+msgid "Create customer"
+msgstr "Kunde hinzufügen"
+
+msgid "Create a new customer"
+msgstr "Neuen Kunde hinzufügen"
