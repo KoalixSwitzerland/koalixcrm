@@ -3,6 +3,7 @@ Koalix CRM
 
 Beautiful CRM/ERP for small business
 
+[![Build Status](https://drone.io/github.com/tfroehlich82/koalixcrm/status.png)](https://drone.io/github.com/tfroehlich82/koalixcrm/latest)
 [![Stories in Ready](https://badge.waffle.io/tfroehlich82/koalixcrm.png?label=ready&title=Ready)](https://waffle.io/tfroehlich82/koalixcrm)
 
 **************************************************
