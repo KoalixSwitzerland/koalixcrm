@@ -13,5 +13,3 @@ Note: This project is currently in pre-alpha phase
 
 
 This project is released under BSD license
-
-Koalix CRM was originated by Aaron Riedener https://github.com/scaphilo/koalixcrm
