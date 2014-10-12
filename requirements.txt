@@ -5,4 +5,3 @@ django-bootstrap3
 django-braces
 django-import-export
 django-fsm
-django-extra-views

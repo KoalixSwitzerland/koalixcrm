@@ -8,10 +8,16 @@ from django.http import Http404
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.contrib.auth import get_user
-from vanilla import CreateView, DeleteView, ListView, UpdateView
+from docutils.nodes import inline
+from django.views.generic import CreateView, ListView, UpdateView, DeleteView
+from extra_views import InlineFormSetView, CreateWithInlinesView, UpdateWithInlinesView
 
-from crm.models import Customer, Invoice, Supplier, Currency, Unit, Tax, Contract, Product, CustomerBillingCycle, \
-    PurchaseOrder, CustomerGroup, Quote
+from .models import Customer, Invoice, Supplier, Currency, Unit, Tax, Contract, Product, CustomerBillingCycle, \
+    PurchaseOrder, CustomerGroup, Quote, PostalAddress
+from .forms import PostalAddressFormSet
+
+class PostalAddressInline(InlineFormSetView):
+    model = PostalAddress
 
 
 class ListCustomers(ListView):
@@ -22,17 +28,31 @@ class ListCustomers(ListView):
 class CreateCustomer(CreateView):
     model = Customer
     fields = ['name', 'firstname', 'billingcycle', 'ismemberof']
+    inlines = [PostalAddressInline]
     success_url = reverse_lazy('list_customers')
 
-    def form_valid(self, form):
-        form.lastmodifiedby = get_user(self.request).pk
-        form.save()
-        return HttpResponseRedirect(self.get_success_url())
+    def get(self, request, *args, **kwargs):
+        """
+        Handles GET requests and instantiates blank versions of the form
+        and its inline formsets.
+        """
+        self.object = None
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        postal_address_form = PostalAddressFormSet()
+        return self.render_to_response(
+            self.get_context_data(form=form, postal_address_form=postal_address_form))
+
+    # def form_valid(self, form):
+    #     form.lastmodifiedby = get_user(self.request).pk
+    #     form.save()
+    #     return HttpResponseRedirect(self.get_success_url())
 
 
 class EditCustomer(UpdateView):
     model = Customer
     fields = ['name', 'firstname', 'billingcycle', 'ismemberof']
+    inlines = [PostalAddressInline]
     success_url = reverse_lazy('list_customers')
 
 
