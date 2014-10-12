@@ -7,17 +7,11 @@ from django.core.urlresolvers import reverse_lazy
 from django.http import Http404
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
-from django.contrib.auth import get_user
-from docutils.nodes import inline
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView
-from extra_views import InlineFormSetView, CreateWithInlinesView, UpdateWithInlinesView
 
-from .models import Customer, Invoice, Supplier, Currency, Unit, Tax, Contract, Product, CustomerBillingCycle, \
-    PurchaseOrder, CustomerGroup, Quote, PostalAddress
-from .forms import PostalAddressFormSet
-
-class PostalAddressInline(InlineFormSetView):
-    model = PostalAddress
+from crm.models import Customer, Invoice, Supplier, Currency, Unit, Tax, Contract, Product, CustomerBillingCycle, \
+    PurchaseOrder, CustomerGroup, Quote
+from crm.forms import PostalAddressFormSet, PhoneAddressFormSet, EmailAddressFormSet
 
 
 class ListCustomers(ListView):
@@ -28,7 +22,6 @@ class ListCustomers(ListView):
 class CreateCustomer(CreateView):
     model = Customer
     fields = ['name', 'firstname', 'billingcycle', 'ismemberof']
-    inlines = [PostalAddressInline]
     success_url = reverse_lazy('list_customers')
 
     def get(self, request, *args, **kwargs):
@@ -40,20 +33,36 @@ class CreateCustomer(CreateView):
         form_class = self.get_form_class()
         form = self.get_form(form_class)
         postal_address_form = PostalAddressFormSet()
+        phone_address_form = PhoneAddressFormSet()
+        email_address_form = EmailAddressFormSet()
         return self.render_to_response(
-            self.get_context_data(form=form, postal_address_form=postal_address_form))
-
-    # def form_valid(self, form):
-    #     form.lastmodifiedby = get_user(self.request).pk
-    #     form.save()
-    #     return HttpResponseRedirect(self.get_success_url())
+            self.get_context_data(form=form,
+                                  postal_address_form=postal_address_form,
+                                  phone_address_form=phone_address_form,
+                                  email_address_form=email_address_form))
 
 
 class EditCustomer(UpdateView):
     model = Customer
     fields = ['name', 'firstname', 'billingcycle', 'ismemberof']
-    inlines = [PostalAddressInline]
     success_url = reverse_lazy('list_customers')
+
+    def get(self, request, *args, **kwargs):
+        """
+        Handles GET requests and instantiates blank versions of the form
+        and its inline formsets.
+        """
+        self.object = None
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        postal_address_form = PostalAddressFormSet()
+        phone_address_form = PhoneAddressFormSet()
+        email_address_form = EmailAddressFormSet()
+        return self.render_to_response(
+            self.get_context_data(form=form,
+                                  postal_address_form=postal_address_form,
+                                  phone_address_form=phone_address_form,
+                                  email_address_form=email_address_form))
 
 
 class DeleteCustomer(DeleteView):
@@ -69,10 +78,44 @@ class CreateSupplier(CreateView):
     model = Supplier
     success_url = reverse_lazy('list_suppliers')
 
+    def get(self, request, *args, **kwargs):
+        """
+        Handles GET requests and instantiates blank versions of the form
+        and its inline formsets.
+        """
+        self.object = None
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        postal_address_form = PostalAddressFormSet()
+        phone_address_form = PhoneAddressFormSet()
+        email_address_form = EmailAddressFormSet()
+        return self.render_to_response(
+            self.get_context_data(form=form,
+                                  postal_address_form=postal_address_form,
+                                  phone_address_form=phone_address_form,
+                                  email_address_form=email_address_form))
+
 
 class EditSupplier(UpdateView):
     model = Supplier
     success_url = reverse_lazy('list_suppliers')
+
+    def get(self, request, *args, **kwargs):
+        """
+        Handles GET requests and instantiates blank versions of the form
+        and its inline formsets.
+        """
+        self.object = None
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        postal_address_form = PostalAddressFormSet()
+        phone_address_form = PhoneAddressFormSet()
+        email_address_form = EmailAddressFormSet()
+        return self.render_to_response(
+            self.get_context_data(form=form,
+                                  postal_address_form=postal_address_form,
+                                  phone_address_form=phone_address_form,
+                                  email_address_form=email_address_form))
 
 
 class DeleteSupplier(DeleteView):

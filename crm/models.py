@@ -20,8 +20,8 @@ import accounting
 from django_fsm import FSMIntegerField, transition
 
 
-class CRMuser(models.Model):
-    image = models.ImageField(_('Avatar'), upload_to='avatars')
+# class CRMuser(models.Model):
+#     image = models.ImageField(_('Avatar'), upload_to='avatars')
 
 
 ###########################
@@ -32,8 +32,8 @@ class CRMuser(models.Model):
 class PostalAddress(models.Model):
     addressline1 = models.CharField(max_length=200, verbose_name=_("Addressline 1"), blank=True, null=True)
     addressline2 = models.CharField(max_length=200, verbose_name=_("Addressline 2"), blank=True, null=True)
-    addressline3 = models.CharField(max_length=200, verbose_name=_("Addressline 3"), blank=True, null=True)
-    addressline4 = models.CharField(max_length=200, verbose_name=_("Addressline 4"), blank=True, null=True)
+    # addressline3 = models.CharField(max_length=200, verbose_name=_("Addressline 3"), blank=True, null=True)
+    # addressline4 = models.CharField(max_length=200, verbose_name=_("Addressline 4"), blank=True, null=True)
     zipcode = models.IntegerField(verbose_name=_("Zipcode"), blank=True, null=True)
     town = models.CharField(max_length=100, verbose_name=_("City"), blank=True, null=True)
     state = models.CharField(max_length=100, verbose_name=_("State"), blank=True, null=True)

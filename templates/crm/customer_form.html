@@ -16,6 +16,36 @@
     <form method="POST" action="." class="form form-horizontal" style="margin: 30px;">
     {% csrf_token %}
     {% bootstrap_form form %}
+    {% if postal_address_form %}
+        <fieldset>
+            <legend>{% trans "Postal Address" %}</legend>
+            {% for address_form in postal_address_form %}
+                <div class="inline {{ postal_address_form.prefix }}">
+                {% bootstrap_form address_form %}
+                </div>
+            {% endfor %}
+        </fieldset>
+    {% endif %}
+    {% if phone_address_form %}
+        <fieldset>
+            <legend>{% trans "Phone Address" %}</legend>
+            {% for phone_form in phone_address_form %}
+                <div class="inline {{ phone_address_form.prefix }}">
+                {% bootstrap_form phone_form %}
+                </div>
+            {% endfor %}
+        </fieldset>
+    {% endif %}
+    {% if email_address_form %}
+        <fieldset>
+            <legend>{% trans "Email Address" %}</legend>
+            {% for email_form in email_address_form %}
+                <div class="inline {{ email_address_form.prefix }}">
+                {% bootstrap_form email_form %}
+                </div>
+            {% endfor %}
+        </fieldset>
+    {% endif %}
     <button type="submit" class="btn btn-primary"><i class="fa fa-check"></i> {%  trans "Save" %}</button>
     </form>
     </div>
