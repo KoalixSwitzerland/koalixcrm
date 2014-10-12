@@ -11,6 +11,7 @@ Beautiful CRM/ERP for small business
 Note: This project is currently in pre-alpha phase
 **************************************************
 
-Goal of this fork is an updated and fixed version of koalixcrm for Django 1.7
 
-koalixcrm is an Open Source Python CRM and ERP http://www.koalix.org
+This project is released under BSD license
+
+Koalix CRM was originated by Aaron Riedener https://github.com/scaphilo/koalixcrm
