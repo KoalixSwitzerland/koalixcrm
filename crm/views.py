@@ -15,15 +15,18 @@ from crm.models import Customer, Invoice, Supplier, Currency, Unit, Tax, Contrac
 
 class ListCustomers(ListView):
     model = Customer
+    fields = ['name', 'firstname', 'billingcycle', 'ismemberof']
 
 
 class CreateCustomer(CreateView):
     model = Customer
+    fields = ['name', 'firstname', 'billingcycle', 'ismemberof']
     success_url = reverse_lazy('list_customers')
 
 
 class EditCustomer(UpdateView):
     model = Customer
+    fields = ['name', 'firstname', 'billingcycle', 'ismemberof']
     success_url = reverse_lazy('list_customers')
 
 
@@ -110,18 +113,18 @@ class DeleteUnit(DeleteView):
 
 class ListProducts(ListView):
     model = Product
-    fields = ['productNumber', 'title', 'description', 'defaultunit', 'tax', 'accoutingProductCategorie']
+    fields = ['product_number', 'title', 'description', 'defaultunit', 'tax', 'accoutingProductCategorie']
 
 
 class CreateProduct(CreateView):
     model = Product
-    fields = ['productNumber', 'title', 'description', 'defaultunit', 'tax', 'accoutingProductCategorie']
+    fields = ['product_number', 'title', 'description', 'defaultunit', 'tax', 'accoutingProductCategorie']
     success_url = reverse_lazy('list_products')
 
 
 class EditProduct(UpdateView):
     model = Product
-    fields = ['productNumber', 'title', 'description', 'defaultunit', 'tax', 'accoutingProductCategorie']
+    fields = ['product_number', 'title', 'description', 'defaultunit', 'tax', 'accoutingProductCategorie']
     success_url = reverse_lazy('list_products')
 
 
@@ -151,19 +154,18 @@ class DeleteBillingCycle(DeleteView):
 
 class ListPurchaseOrders(ListView):
     model = PurchaseOrder
-    fields = ['description', 'contract', 'supplier', 'status', 'currency', 'lastmodifiedby',
-              'lastCalculatedPrice', 'lastPricingDate', ]
+    fields = ['description', 'contract', 'supplier', 'state', 'currency', 'lastCalculatedPrice', 'lastPricingDate', ]
 
 
 class CreatePurchaseOrder(CreateView):
     model = PurchaseOrder
-    fields = ['description', 'contract', 'supplier', 'status', 'currency', ]
+    fields = ['description', 'contract', 'supplier', 'state', 'currency', ]
     success_url = reverse_lazy('list_purchaseorders')
 
 
 class EditPurchaseOrder(UpdateView):
     model = PurchaseOrder
-    fields = ['description', 'contract', 'supplier', 'status', 'currency', ]
+    fields = ['description', 'contract', 'supplier', 'state', 'currency', ]
     success_url = reverse_lazy('list_purchaseorders')
 
 
@@ -215,19 +217,19 @@ class DeleteContract(DeleteView):
 
 class ListInvoice(ListView):
     model = Invoice
-    fields = ['description', 'contract', 'customer', 'payableuntil', 'status', 'currency', 'lastCalculatedPrice',
+    fields = ['description', 'contract', 'customer', 'payableuntil', 'state', 'currency', 'lastCalculatedPrice',
               'lastPricingDate']
 
 
 class CreateInvoice(CreateView):
     model = Invoice
-    fields = ['description', 'contract', 'customer', 'payableuntil', 'status', 'currency']
+    fields = ['description', 'contract', 'customer', 'payableuntil', 'state', 'currency']
     success_url = reverse_lazy('list_invoices')
 
 
 class EditInvoice(UpdateView):
     model = Invoice
-    fields = ['description', 'contract', 'customer', 'payableuntil', 'status', 'currency']
+    fields = ['description', 'contract', 'customer', 'payableuntil', 'state', 'currency']
     success_url = reverse_lazy('list_invoices')
 
 
@@ -238,20 +240,20 @@ class DeleteInvoice(DeleteView):
 
 class ListQuotes(ListView):
     model = Quote
-    fields = ['description', 'contract', 'customer', 'currency', 'validuntil', 'status', 'lastmodifiedby',
+    fields = ['description', 'contract', 'customer', 'currency', 'validuntil', 'state', 'lastmodifiedby',
               'lastCalculatedPrice', 'lastPricingDate']
 
 
 class CreateQuote(CreateView):
     model = Quote
-    fields = ['description', 'contract', 'customer', 'currency', 'validuntil', 'status', 'lastmodifiedby',
+    fields = ['description', 'contract', 'customer', 'currency', 'validuntil', 'state', 'lastmodifiedby',
               'lastCalculatedPrice', 'lastPricingDate']
     success_url = reverse_lazy('list_quotes')
 
 
 class EditQuote(UpdateView):
     model = Quote
-    fields = ['description', 'contract', 'customer', 'currency', 'validuntil', 'status', 'lastmodifiedby',
+    fields = ['description', 'contract', 'customer', 'currency', 'validuntil', 'state', 'lastmodifiedby',
               'lastCalculatedPrice', 'lastPricingDate']
     success_url = reverse_lazy('list_quotes')
 

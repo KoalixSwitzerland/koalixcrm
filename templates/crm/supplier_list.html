@@ -13,7 +13,7 @@
     <h4><i class="fa fa-angle-right"></i> {% trans "Suppliers" %}</h4>
         {% if supplier_list %}
         <table class="table table-striped table-advance">
-            <tr><th>Name</th><th></th><th></th></tr>
+            <tr><th>Name</th><th></th></tr>
             {% for supplier in supplier_list %}
                 <tr>
                     <td>{{ supplier.name }}</td>

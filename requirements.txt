@@ -5,3 +5,4 @@ po-localization
 django-bootstrap3
 django-braces
 django-import-export
+django-fsm

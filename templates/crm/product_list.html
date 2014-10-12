@@ -13,10 +13,14 @@
     <h4><i class="fa fa-angle-right"></i> {% trans "Products" %}</h4>
         {% if product_list %}
         <table class="table table-striped table-advance">
-            <tr><th>Name</th><th></th><th></th></tr>
+            <tr><th>{% trans "Number" %}</th><th>{% trans "Title" %}</th><th>{% trans "Unit" %}</th><th>{% trans "Tax" %}</th><th>{% trans "Product Category" %}</th><th></th></tr>
             {% for product in product_list %}
                 <tr>
-                    <td>{{ product.name }}</td>
+                    <td>{{ product.product_number }}</td>
+                    <td>{{ product.title }}</td>
+                    <td>{{ product.defaultunit }}</td>
+                    <td>{{ product.tax }}</td>
+                    <td>{{ product.accoutingProductCategorie }}</td>
                     <td>
                         <button type="button" class="btn btn-sm btn-primary" onclick="window.location.assign('{% url 'edit_product' product.pk %}')">{% trans "Edit" %}</button>
                         <button type="button" class="btn btn-sm btn-danger" onclick="window.location.assign('{% url 'delete_product' product.pk %}')">{% trans "Delete" %}</button>

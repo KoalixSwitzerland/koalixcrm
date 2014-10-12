@@ -440,11 +440,11 @@ class ProductUnitTransform(admin.TabularInline):
 
 
 class OptionProduct(admin.ModelAdmin, ImportExportMixin):
-    list_display = ('productNumber', 'title', 'defaultunit', 'tax', 'accoutingProductCategorie')
-    list_display_links = ('productNumber',)
+    list_display = ('product_number', 'title', 'defaultunit', 'tax', 'accoutingProductCategorie')
+    list_display_links = ('product_number',)
     fieldsets = (
         (_('Basics'), {
-            'fields': ('productNumber', 'title', 'description', 'defaultunit', 'tax', 'accoutingProductCategorie')
+            'fields': ('product_number', 'title', 'description', 'defaultunit', 'tax', 'accoutingProductCategorie')
         }),)
     inlines = [ProductPrice, ProductUnitTransform]
     resource_class = ProductResource

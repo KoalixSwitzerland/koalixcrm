@@ -15,13 +15,13 @@ from filebrowser_safe.fields import FileBrowseField
 from const.country import *
 from const.postaladdressprefix import *
 from const.purpose import *
-from const.status import *
+from const.states import *
 import accounting
+from django_fsm import FSMIntegerField, transition
 
 
 class CRMuser(models.Model):
     image = models.ImageField(_('Avatar'), upload_to='avatars')
-
 
 
 ###########################
@@ -39,7 +39,7 @@ class PostalAddress(models.Model):
     state = models.CharField(max_length=100, verbose_name=_("State"), blank=True, null=True)
     country = models.CharField(max_length=2, choices=[(x[0], x[3]) for x in COUNTRIES], verbose_name=_("Country"), blank=True, null=True)
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT, default='C')
-    # person = models.ForeignKey('Contact')
+    person = models.ForeignKey('Contact')
 
     class Meta:
         verbose_name = _('Postal Address')
@@ -52,7 +52,7 @@ class PostalAddress(models.Model):
 class PhoneAddress(models.Model):
     phone = models.CharField(max_length=20, verbose_name=_("Phone Number"))
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCUSTOMER)
-    # person = models.ForeignKey('Contact')
+    person = models.ForeignKey('Contact')
 
     class Meta:
         verbose_name = _('Phone Address')
@@ -65,7 +65,7 @@ class PhoneAddress(models.Model):
 class EmailAddress(models.Model):
     email = models.EmailField(max_length=200, verbose_name=_("Email Address"))
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT)
-    # person = models.ForeignKey('Contact')
+    person = models.ForeignKey('Contact')
 
     class Meta:
         verbose_name = _('Email Address')
@@ -83,9 +83,6 @@ class EmailAddress(models.Model):
 class Contact(models.Model):
     prefix = models.CharField(max_length=1, choices=POSTALADDRESSPREFIX, verbose_name=_("Prefix"), blank=True, null=True)
     name = models.CharField(max_length=300, verbose_name=_("Name"))
-    # addresses = models.ManyToManyField(PostalAddress)
-    # phonenumbers = models.ManyToManyField(PhoneAddress)
-    # emailaddresses = models.ManyToManyField(EmailAddress)
     dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now=True)
     lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now_add=True)
     lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True, verbose_name=_("Last modified by"), editable=True)
@@ -194,6 +191,7 @@ class Currency(models.Model):
 
 
 class Contract(models.Model):
+    # state = FSMIntegerField(default='new')
     staff = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True, verbose_name=_("Staff"), related_name="db_relcontractstaff", null=True)
     description = models.TextField(verbose_name=_("Description"))
     defaultcustomer = models.ForeignKey(Customer, verbose_name=_("Default Customer"), null=True, blank=True)
@@ -251,6 +249,7 @@ class Contract(models.Model):
 
 
 class PurchaseOrder(models.Model):
+    state = FSMIntegerField(default=PurchaseOrderStatesEnum.New)
     contract = models.ForeignKey(Contract, verbose_name=_("Contract"))
     externalReference = models.CharField(verbose_name=_("External Reference"), max_length=100, blank=True, null=True)
     supplier = models.ForeignKey(Supplier, verbose_name=_("Supplier"))
@@ -258,7 +257,6 @@ class PurchaseOrder(models.Model):
     lastPricingDate = models.DateField(verbose_name=_("Last Pricing Date"), blank=True, null=True)
     lastCalculatedPrice = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Price With Tax"), blank=True, null=True)
     lastCalculatedTax = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Tax"), blank=True, null=True)
-    status = models.CharField(max_length=1, choices=PURCHASEORDERSTATUS)
     staff = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True, verbose_name=_("Staff"), related_name="db_relpostaff", null=True)
     currency = models.ForeignKey(Currency, verbose_name=_("Currency"), blank=False, null=False)
     dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now=True)
@@ -300,6 +298,7 @@ class PurchaseOrder(models.Model):
             exit()
             return 0
 
+    @transition(field=state, source=PurchaseOrderStatesEnum.New, target=PurchaseOrderStatesEnum.Delayed)
     def create_pdf(self, what_to_export):
         xml_serializer = serializers.get_serializer("xml")
         xml_serializer = xml_serializer()
@@ -408,9 +407,10 @@ class SalesContract(models.Model):
 
 
 class Quote(SalesContract):
+    state = FSMIntegerField(default=QuoteStatesEnum.New)
     validuntil = models.DateField(verbose_name=_("Valid until"))
-    status = models.CharField(max_length=1, choices=QUOTESTATUS, verbose_name=_('Status'))
 
+    @transition(field=state, source=QuoteStatesEnum.New, target=QuoteStatesEnum.Quote_sent)
     def create_invoice(self):
         invoice = Invoice()
         invoice.contract = self.contract
@@ -451,6 +451,7 @@ class Quote(SalesContract):
         except Quote.DoesNotExist:
             return
 
+    @transition(field=state, source=QuoteStatesEnum.New, target=QuoteStatesEnum.Quote_created)
     def create_pdf(self, what_to_export):
         xml_serializer = serializers.get_serializer("xml")
         xml_serializer = xml_serializer()
@@ -509,11 +510,11 @@ class Quote(SalesContract):
 
 
 class Invoice(SalesContract):
+    state = FSMIntegerField(default=InvoiseStatesEnum.Open)
     payableuntil = models.DateField(verbose_name=_("To pay until"))
     derivatedFromQuote = models.ForeignKey(Quote, blank=True, null=True)
     paymentBankReference = models.CharField(verbose_name=_("Payment Bank Reference"), max_length=100, blank=True,
                                             null=True)
-    status = models.CharField(max_length=1, choices=INVOICESTATUS)
 
     def register_invoice_in_accounting(self, request):
         dictprices = dict()
@@ -554,6 +555,7 @@ class Invoice(SalesContract):
         booking.lastmodifiedby = request.user
         booking.save()
 
+    @transition(field=state, source=InvoiseStatesEnum.Open, target=InvoiseStatesEnum.Invoice_created)
     def create_pdf(self, what_to_export):
         xml_serializer = serializers.get_serializer("xml")
         xml_serializer = xml_serializer()
@@ -650,7 +652,7 @@ class Tax(models.Model):
 class Product(models.Model):
     description = models.TextField(verbose_name=_("Description"), null=True, blank=True)
     title = models.CharField(verbose_name=_("Title"), max_length=200)
-    productNumber = models.IntegerField(verbose_name=_("Product Number"))
+    product_number = models.IntegerField(verbose_name=_("Product Number"))
     defaultunit = models.ForeignKey(Unit, verbose_name=_("Unit"))
     dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now=True)
     lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now_add=True)
@@ -700,7 +702,7 @@ class Product(models.Model):
         return self.tax.gettaxrate()
 
     def __unicode__(self):
-        return str(self.productNumber) + ' ' + self.title
+        return str(self.product_number) + ' ' + self.title
 
     class Meta:
         verbose_name = _('Product')
