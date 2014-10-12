@@ -510,7 +510,7 @@ class Quote(SalesContract):
 
 
 class Invoice(SalesContract):
-    state = FSMIntegerField(default=InvoiseStatesEnum.Open)
+    state = FSMIntegerField(default=InvoiceStatesEnum.Open)
     payableuntil = models.DateField(verbose_name=_("To pay until"))
     derivatedFromQuote = models.ForeignKey(Quote, blank=True, null=True)
     paymentBankReference = models.CharField(verbose_name=_("Payment Bank Reference"), max_length=100, blank=True,
@@ -555,7 +555,7 @@ class Invoice(SalesContract):
         booking.lastmodifiedby = request.user
         booking.save()
 
-    @transition(field=state, source=InvoiseStatesEnum.Open, target=InvoiseStatesEnum.Invoice_created)
+    @transition(field=state, source=InvoiceStatesEnum.Open, target=InvoiceStatesEnum.Invoice_created)
     def create_pdf(self, what_to_export):
         xml_serializer = serializers.get_serializer("xml")
         xml_serializer = xml_serializer()
