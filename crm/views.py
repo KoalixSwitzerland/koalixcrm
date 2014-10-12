@@ -9,7 +9,7 @@ from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from vanilla import CreateView, DeleteView, ListView, UpdateView
 from crm.models import Customer, Invoice, Supplier, Currency, Unit, Tax, Contract, Product, CustomerBillingCycle, \
-    PurchaseOrder
+    PurchaseOrder, CustomerGroup, Quote
 
 
 class ListCustomers(ListView):
@@ -150,25 +150,110 @@ class DeleteBillingCycle(DeleteView):
 
 class ListPurchaseOrders(ListView):
     model = PurchaseOrder
-    fields = ['description', 'contract', 'supplier', 'status', 'currency', 'staff', 'lastmodifiedby',
+    fields = ['description', 'contract', 'supplier', 'status', 'currency', 'lastmodifiedby',
               'lastCalculatedPrice', 'lastPricingDate', ]
 
 
 class CreatePurchaseOrder(CreateView):
     model = PurchaseOrder
-    fields = ['description', 'contract', 'supplier', 'status', 'currency', 'staff', ]
+    fields = ['description', 'contract', 'supplier', 'status', 'currency', ]
     success_url = reverse_lazy('list_purchaseorders')
 
 
 class EditPurchaseOrder(UpdateView):
     model = PurchaseOrder
-    fields = ['description', 'contract', 'supplier', 'status', 'currency', 'staff', ]
+    fields = ['description', 'contract', 'supplier', 'status', 'currency', ]
     success_url = reverse_lazy('list_purchaseorders')
 
 
 class DeletePurchaseOrder(DeleteView):
     model = PurchaseOrder
     success_url = reverse_lazy('list_purchaseorders')
+
+
+class ListCustomerGroups(ListView):
+    model = CustomerGroup
+
+
+class CreateCustomerGroup(CreateView):
+    model = CustomerGroup
+    success_url = reverse_lazy('list_customergroups')
+
+
+class EditCustomerGroup(UpdateView):
+    model = CustomerGroup
+    success_url = reverse_lazy('list_customergroups')
+
+
+class DeleteCustomerGroup(DeleteView):
+    model = CustomerGroup
+    success_url = reverse_lazy('list_customergroups')
+
+
+class ListContracts(ListView):
+    model = Contract
+    fields = ['description', 'defaultcustomer', 'defaultSupplier', 'defaultcurrency']
+
+
+class CreateContract(CreateView):
+    model = Contract
+    fields = ['description', 'defaultcustomer', 'defaultSupplier', 'defaultcurrency']
+    success_url = reverse_lazy('list_contracts')
+
+
+class EditContract(UpdateView):
+    model = Contract
+    fields = ['description', 'defaultcustomer', 'defaultSupplier', 'defaultcurrency']
+    success_url = reverse_lazy('list_contracts')
+
+
+class DeleteContract(DeleteView):
+    model = Contract
+    success_url = reverse_lazy('list_contracts')
+
+
+class ListInvoice(ListView):
+    model = Invoice
+    fields = ['description', 'contract', 'customer', 'payableuntil', 'status', 'currency', 'lastCalculatedPrice', 'lastPricingDate']
+
+
+class CreateInvoice(CreateView):
+    model = Invoice
+    fields = ['description', 'contract', 'customer', 'payableuntil', 'status', 'currency']
+    success_url = reverse_lazy('list_invoices')
+
+
+class EditInvoice(UpdateView):
+    model = Invoice
+    fields = ['description', 'contract', 'customer', 'payableuntil', 'status', 'currency']
+    success_url = reverse_lazy('list_invoices')
+
+
+class DeleteInvoice(DeleteView):
+    model = Invoice
+    success_url = reverse_lazy('list_invoices')
+
+
+class ListQuotes(ListView):
+    model = Quote
+    fields = ['description', 'contract', 'customer', 'currency', 'validuntil', 'status', 'lastmodifiedby', 'lastCalculatedPrice', 'lastPricingDate']
+
+
+class CreateQuote(CreateView):
+    model = Quote
+    fields = ['description', 'contract', 'customer', 'currency', 'validuntil', 'status', 'lastmodifiedby', 'lastCalculatedPrice', 'lastPricingDate']
+    success_url = reverse_lazy('list_quotes')
+
+
+class EditQuote(UpdateView):
+    model = Quote
+    fields = ['description', 'contract', 'customer', 'currency', 'validuntil', 'status', 'lastmodifiedby', 'lastCalculatedPrice', 'lastPricingDate']
+    success_url = reverse_lazy('list_quotes')
+
+
+class DeleteQuote(DeleteView):
+    model = Quote
+    success_url = reverse_lazy('list_quotes')
 
 
 def export_pdf(calling_model_admin, request, where_to_create_from, what_to_create, redirect_to):

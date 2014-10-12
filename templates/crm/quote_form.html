@@ -1,18 +1,18 @@
 {% extends "base.html" %}
 {% load i18n bootstrap3 %}
 
-{% block meta_title %}{% trans "Billing Cycle" %}{% endblock %}
-{% block title %}{% trans "Billing Cycle" %}{% endblock %}
+{% block meta_title %}{% trans "Quotes" %}{% endblock %}
+{% block title %}{% trans "Quotes" %}{% endblock %}
 
 {% block breadcrumb_menu %}
-    <li class="active"><a href="{% url 'list_billingcycles' %}">{% trans "Billing Cycle" %}</a></li>
-    <li class="active">{% if billingcycle %}{% trans "Edit billing cycle" %}{% else %}{% trans "Create billing cycle" %}{% endif%}</li>
+    <li class="active"><a href="{% url 'list_quotes' %}">{% trans "Quotes" %}</a></li>
+    <li class="active">{% if quote %}{% trans "Edit quote" %}{% else %}{% trans "Create quote" %}{% endif%}</li>
 {% endblock %}
 
 {% block main %}
     <div class="form-panel" style="margin: 30px">
     <h4 class="mb"><i class="fa fa-angle-right"></i>
-    {% if billingcycle %}{% trans "Edit billing cycle" %}{% else %}{% trans "Create billing cycle" %}{% endif%}</h4>
+    {% if quote %}{% trans "Edit quote" %}{% else %}{% trans "Create quote" %}{% endif%}</h4>
     <form method="POST" action="." class="form form-horizontal" style="margin: 30px;">
     {% csrf_token %}
     {% bootstrap_form form %}

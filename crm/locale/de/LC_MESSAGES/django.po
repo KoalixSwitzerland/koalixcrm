@@ -91,7 +91,7 @@ msgstr "Preisberechnung fehlgeschlagen"
 
 #: admin.py:356
 msgid "Create PDF of Quote"
-msgstr "Erzeuge ein PDF der Offerte"
+msgstr "Erzeuge ein PDF des Angebots"
 
 #: admin.py:362
 msgid "Create PDF of Purchase Confirmation"
@@ -320,11 +320,11 @@ msgstr ""
 
 #: models.py:449 models.py:454
 msgid "Quote"
-msgstr "Offerte"
+msgstr "Angebot"
 
 #: models.py:455
 msgid "Quotes"
-msgstr "Offerten"
+msgstr "Angebote"
 
 #: models.py:458
 msgid "To pay until"
@@ -1613,7 +1613,7 @@ msgstr "Erfolg"
 
 #: const/status.py:18
 msgid "Quote sent"
-msgstr "Offerte verschickt"
+msgstr "Angebot verschickt"
 
 #: const/status.py:25
 msgid "Ordered"
@@ -1706,7 +1706,7 @@ msgstr "XSL Datei für die Rechnung"
 
 #: models.py:43
 msgid "XSL File for Quote"
-msgstr "XSL Datei für die Offerte"
+msgstr "XSL Datei für das Angebot"
 
 #: models.py:44
 msgid "XSL File for Purchaseorder"
@@ -1839,3 +1839,27 @@ msgstr "Bestellungen"
 
 msgid "Order Management"
 msgstr "Auftragsverwaltung"
+
+msgid "Create a new customer group"
+msgstr "Neue Kundengruppe hinzufügen"
+
+msgid "Create customer group"
+msgstr "Kundengruppe erstellen"
+
+msgid "Create a new contract"
+msgstr "Neuen Auftrag hinzufügen"
+
+msgid "Create contract"
+msgstr "Auftrag erstellen"
+
+msgid "Create a new invoice"
+msgstr "Neue Rechnung hinzufügen"
+
+msgid "Create invoice"
+msgstr "Rechnung erstellen"
+
+msgid "Create a new quote"
+msgstr "Neues Angebot hinzufügen"
+
+msgid "Create quote"
+msgstr "Angebot erstellen"

@@ -6,7 +6,7 @@
 
 {% block breadcrumb_menu %}
     <li class="active"><a href="{% url 'list_taxes' %}">{% trans "Tax Rates" %}</a></li>
-    <li class="active">{% if product %}{% trans "Edit tax rate" %}{% else %}{% trans "Create tax rate" %}{% endif%}</li>
+    <li class="active">{% if tax %}{% trans "Edit tax rate" %}{% else %}{% trans "Create tax rate" %}{% endif%}</li>
 {% endblock %}
 
 {% block main %}

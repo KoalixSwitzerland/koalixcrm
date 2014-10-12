@@ -6,7 +6,7 @@
 
 {% block breadcrumb_menu %}
     <li class="active"><a href="{% url 'list_suppliers' %}">{% trans "Suppliers" %}</a></li>
-    <li class="active">{% if product %}{% trans "Edit supplier" %}{% else %}{% trans "Create supplier" %}{% endif%}</li>
+    <li class="active">{% if supplier %}{% trans "Edit supplier" %}{% else %}{% trans "Create supplier" %}{% endif%}</li>
 {% endblock %}
 
 {% block main %}

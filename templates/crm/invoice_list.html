@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block meta_title %}{% trans "Invoices" %}{% endblock %}
+{% block title %}{% trans "Invoices" %}{% endblock %}
+
+{% block breadcrumb_menu %}
+    <li class="active">{% trans "Invoices" %}</li>
+{% endblock %}
+
+{% block main %}
+    <div class="content-panel" style="margin: 30px; padding: 10px;">
+    <h4><i class="fa fa-angle-right"></i> {% trans "Invoices" %}</h4>
+        {% if invoice_list %}
+        <table class="table table-striped table-advance">
+            <tr><th>{% trans "Description" %}</th><th></th><th></th></tr>
+            {% for invoice in invoice_list %}
+                <tr>
+                    <td>{{ invoice.description }}</td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-primary" onclick="window.location.assign('{% url 'edit_invoice' invoice.pk %}')">{% trans "Edit" %}</button>
+                        <button type="button" class="btn btn-sm btn-danger" onclick="window.location.assign('{% url 'delete_invoice' invoice.pk %}')">{% trans "Delete" %}</button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
+        <p><a href="{% url 'create_invoice' %}">{% trans "Create a new invoice" %}</a></p>
+    </div>
+{% endblock %}

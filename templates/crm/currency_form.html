@@ -6,7 +6,7 @@
 
 {% block breadcrumb_menu %}
     <li class="active"><a href="{% url 'list_currencies' %}">{% trans "Currencies" %}</a></li>
-    <li class="active">{% if product %}{% trans "Edit currency" %}{% else %}{% trans "Create currency" %}{% endif%}</li>
+    <li class="active">{% if currency %}{% trans "Edit currency" %}{% else %}{% trans "Create currency" %}{% endif%}</li>
 {% endblock %}
 
 {% block main %}
