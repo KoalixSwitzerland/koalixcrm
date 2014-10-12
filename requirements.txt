@@ -3,3 +3,5 @@ Django<1.8
 django-vanilla-views
 po-localization
 django-bootstrap3
+django-braces
+django-import-export

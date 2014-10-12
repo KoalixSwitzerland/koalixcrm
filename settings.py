@@ -81,6 +81,8 @@ ADMINS = (
 )
 MANAGERS = ADMINS
 
+LOGIN_URL = "/login/"
+
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = []
@@ -242,6 +244,8 @@ INSTALLED_APPS = (
     "django.contrib.staticfiles",
     "po_localization",
     "admin_backup",
+    "import_export",
+    "braces",
     "mezzanine.boot",
     "mezzanine.conf",
     "mezzanine.core",

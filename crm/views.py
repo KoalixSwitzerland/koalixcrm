@@ -8,6 +8,7 @@ from django.http import Http404
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from vanilla import CreateView, DeleteView, ListView, UpdateView
+
 from crm.models import Customer, Invoice, Supplier, Currency, Unit, Tax, Contract, Product, CustomerBillingCycle, \
     PurchaseOrder, CustomerGroup, Quote
 
@@ -214,7 +215,8 @@ class DeleteContract(DeleteView):
 
 class ListInvoice(ListView):
     model = Invoice
-    fields = ['description', 'contract', 'customer', 'payableuntil', 'status', 'currency', 'lastCalculatedPrice', 'lastPricingDate']
+    fields = ['description', 'contract', 'customer', 'payableuntil', 'status', 'currency', 'lastCalculatedPrice',
+              'lastPricingDate']
 
 
 class CreateInvoice(CreateView):
@@ -236,18 +238,21 @@ class DeleteInvoice(DeleteView):
 
 class ListQuotes(ListView):
     model = Quote
-    fields = ['description', 'contract', 'customer', 'currency', 'validuntil', 'status', 'lastmodifiedby', 'lastCalculatedPrice', 'lastPricingDate']
+    fields = ['description', 'contract', 'customer', 'currency', 'validuntil', 'status', 'lastmodifiedby',
+              'lastCalculatedPrice', 'lastPricingDate']
 
 
 class CreateQuote(CreateView):
     model = Quote
-    fields = ['description', 'contract', 'customer', 'currency', 'validuntil', 'status', 'lastmodifiedby', 'lastCalculatedPrice', 'lastPricingDate']
+    fields = ['description', 'contract', 'customer', 'currency', 'validuntil', 'status', 'lastmodifiedby',
+              'lastCalculatedPrice', 'lastPricingDate']
     success_url = reverse_lazy('list_quotes')
 
 
 class EditQuote(UpdateView):
     model = Quote
-    fields = ['description', 'contract', 'customer', 'currency', 'validuntil', 'status', 'lastmodifiedby', 'lastCalculatedPrice', 'lastPricingDate']
+    fields = ['description', 'contract', 'customer', 'currency', 'validuntil', 'status', 'lastmodifiedby',
+              'lastCalculatedPrice', 'lastPricingDate']
     success_url = reverse_lazy('list_quotes')
 
 
@@ -281,7 +286,7 @@ def export_pdf(calling_model_admin, request, where_to_create_from, what_to_creat
         # response = HttpResponseRedirect(redirect_to)
         # calling_model_admin.message_user(request, _("User Extension Missing"))
         # elif type(e) == TemplateSetMissing:
-        #     response = HttpResponseRedirect(redirect_to)
+        # response = HttpResponseRedirect(redirect_to)
         #     calling_model_admin.message_user(request, _("Templateset Missing"))
         if type(e) == CalledProcessError:
             response = HttpResponseRedirect(redirect_to)
