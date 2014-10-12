@@ -1,8 +1,8 @@
 Mezzanine>3.1.10
 Django<1.8
-django-vanilla-views
 po-localization
 django-bootstrap3
 django-braces
 django-import-export
 django-fsm
+django-extra-views
