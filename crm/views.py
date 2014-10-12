@@ -7,6 +7,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.http import Http404
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
+from django.contrib.auth import get_user
 from vanilla import CreateView, DeleteView, ListView, UpdateView
 
 from crm.models import Customer, Invoice, Supplier, Currency, Unit, Tax, Contract, Product, CustomerBillingCycle, \
@@ -22,6 +23,11 @@ class CreateCustomer(CreateView):
     model = Customer
     fields = ['name', 'firstname', 'billingcycle', 'ismemberof']
     success_url = reverse_lazy('list_customers')
+
+    def form_valid(self, form):
+        form.lastmodifiedby = get_user(self.request).pk
+        form.save()
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class EditCustomer(UpdateView):
