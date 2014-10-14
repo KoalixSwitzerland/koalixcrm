@@ -19,13 +19,15 @@
                     <td>{{ customer.name }}</td>
                     <td>{{ customer.firstname }}</td>
                     <td>
-                        <button type="button" class="btn btn-sm btn-primary" onclick="window.location.assign('{% url 'edit_customer' customer.pk %}')">{% trans "Edit" %}</button>
-                        <button type="button" class="btn btn-sm btn-danger" onclick="window.location.assign('{% url 'delete_customer' customer.pk %}')">{% trans "Delete" %}</button>
+                        <p class="pull-right">
+                        <button type="button" class="btn btn-sm btn-primary" onclick="window.location.assign('{% url 'customer_edit' customer.pk %}')">{% trans "Edit" %}</button>
+                        <button type="button" class="btn btn-sm btn-danger" onclick="window.location.assign('{% url 'customer_delete' customer.pk %}')">{% trans "Delete" %}</button>
+                        </p>
                     </td>
                 </tr>
             {% endfor %}
         </table>
         {% endif %}
-        <p><a href="{% url 'create_customer' %}">{% trans "Create a new customer" %}</a></p>
+        <p><a href="{% url 'customer_create' %}">{% trans "Create a new customer" %}</a></p>
     </div>
 {% endblock %}

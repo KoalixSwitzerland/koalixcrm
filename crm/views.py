@@ -1,16 +1,19 @@
 # -*- coding: utf-8 -*-
 from os import path
 from subprocess import CalledProcessError
+from django.contrib.auth.models import User
 
 from django.core.servers.basehttp import FileWrapper
 from django.core.urlresolvers import reverse_lazy
+from django.forms import ModelForm
 from django.http import Http404
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView
 
 from crm.models import Customer, Invoice, Supplier, Currency, Unit, Tax, Contract, Product, CustomerBillingCycle, \
-    PurchaseOrder, CustomerGroup, Quote
+    PurchaseOrder, CustomerGroup, Quote, PostalAddress
 from crm.forms import PostalAddressFormSet, PhoneAddressFormSet, EmailAddressFormSet
 
 
@@ -21,8 +24,8 @@ class ListCustomers(ListView):
 
 class CreateCustomer(CreateView):
     model = Customer
-    fields = ['name', 'firstname', 'billingcycle', 'ismemberof']
-    success_url = reverse_lazy('list_customers')
+    fields = ['prefix', 'name', 'firstname', 'billingcycle', 'ismemberof']
+    success_url = reverse_lazy('customer_list')
 
     def get(self, request, *args, **kwargs):
         """
@@ -40,34 +43,61 @@ class CreateCustomer(CreateView):
                                   postal_address_form=postal_address_form,
                                   phone_address_form=phone_address_form,
                                   email_address_form=email_address_form))
+
+    def post(self, request, *args, **kwargs):
+        print request.POST
+        customer = Customer()
+        customer.lastmodifiedby = User.objects.get(username=request.user)
+        customer.name = request.POST['name']
+        customer.billingcycle = CustomerBillingCycle.objects.get(pk=int(request.POST['billingcycle']))
+        customer.firstname = request.POST['prename']
+        customer.save()
+        postal_adress = PostalAddress()
+        postal_adress.addressline1 = request.POST['']
+        postal_adress.person = customer
+        postal_adress.save()
+        return redirect(reverse_lazy('customer_list'))
 
 
 class EditCustomer(UpdateView):
     model = Customer
-    fields = ['name', 'firstname', 'billingcycle', 'ismemberof']
-    success_url = reverse_lazy('list_customers')
-
-    def get(self, request, *args, **kwargs):
-        """
-        Handles GET requests and instantiates blank versions of the form
-        and its inline formsets.
-        """
-        self.object = None
-        form_class = self.get_form_class()
-        form = self.get_form(form_class)
-        postal_address_form = PostalAddressFormSet()
-        phone_address_form = PhoneAddressFormSet()
-        email_address_form = EmailAddressFormSet()
-        return self.render_to_response(
-            self.get_context_data(form=form,
-                                  postal_address_form=postal_address_form,
-                                  phone_address_form=phone_address_form,
-                                  email_address_form=email_address_form))
-
+    fields = ['prefix', 'name', 'firstname', 'billingcycle', 'ismemberof']
+    # success_url = reverse_lazy('list_customers')
+    #
+    # def get(self, request, *args, **kwargs):
+    #     """
+    #     Handles GET requests and instantiates blank versions of the form
+    #     and its inline formsets.
+    #     """
+    #     self.object = Customer.objects.get(pk=int(kwargs['pk']))
+    #     form_class = self.get_form_class()
+    #     form = self.get_form(form_class)
+    #     postal_address_form = PostalAddressFormSet()
+    #     phone_address_form = PhoneAddressFormSet()
+    #     email_address_form = EmailAddressFormSet()
+    #     context = self.get_context_data(pk=int(kwargs['pk']),
+    #                                     form=form,
+    #                                     postal_address_form=postal_address_form,
+    #                                     phone_address_form=phone_address_form,
+    #                                     email_address_form=email_address_form)
+    #     return self.render_to_response(context)
+    #
+    # def post(self, request, *args, **kwargs):
+    #     print request
+    #     object = get_object_or_404(Customer, pk=int(kwargs['pk']))
+    #     form = ModelForm(request.POST or None, instance=object)
+    #     if form.is_valid():
+    #         form.save()
+    #         return redirect('list_customers')
+    #     return self.render_to_response(self.get_context_data(form=form))
+    #     self.object = Customer.objects.get(pk=int(kwargs['pk']))
+    #     form_class = self.get_form_class()
+    #     form = self.get_form(form_class)
+    #     return super(UpdateView, self).post(request, *args, **kwargs)
 
 class DeleteCustomer(DeleteView):
     model = Customer
-    success_url = reverse_lazy('list_customers')
+    # success_url = reverse_lazy('list_customers')
 
 
 class ListSuppliers(ListView):
@@ -105,17 +135,18 @@ class EditSupplier(UpdateView):
         Handles GET requests and instantiates blank versions of the form
         and its inline formsets.
         """
-        self.object = None
+        self.object = self.get_object()
         form_class = self.get_form_class()
         form = self.get_form(form_class)
         postal_address_form = PostalAddressFormSet()
         phone_address_form = PhoneAddressFormSet()
         email_address_form = EmailAddressFormSet()
-        return self.render_to_response(
-            self.get_context_data(form=form,
-                                  postal_address_form=postal_address_form,
-                                  phone_address_form=phone_address_form,
-                                  email_address_form=email_address_form))
+        context = self.get_context_data(pk=int(kwargs['pk']),
+                                        form=form,
+                                        postal_address_form=postal_address_form,
+                                        phone_address_form=phone_address_form,
+                                        email_address_form=email_address_form)
+        return self.render_to_response(context)
 
 
 class DeleteSupplier(DeleteView):
@@ -129,17 +160,17 @@ class ListCurrencies(ListView):
 
 class CreateCurrency(CreateView):
     model = Currency
-    success_url = reverse_lazy('list_currencies')
+    success_url = reverse_lazy('currency_list')
 
 
 class EditCurrency(UpdateView):
     model = Currency
-    success_url = reverse_lazy('list_currencies')
+    success_url = reverse_lazy('currency_list')
 
 
 class DeleteCurrency(DeleteView):
     model = Currency
-    success_url = reverse_lazy('list_currencies')
+    success_url = reverse_lazy('currency_list')
 
 
 class ListTaxes(ListView):
@@ -148,17 +179,17 @@ class ListTaxes(ListView):
 
 class CreateTax(CreateView):
     model = Tax
-    success_url = reverse_lazy('list_taxes')
+    success_url = reverse_lazy('tax_list')
 
 
 class EditTax(UpdateView):
     model = Tax
-    success_url = reverse_lazy('list_taxes')
+    success_url = reverse_lazy('tax_list')
 
 
 class DeleteTax(DeleteView):
     model = Tax
-    success_url = reverse_lazy('list_taxes')
+    success_url = reverse_lazy('tax_list')
 
 
 class ListUnits(ListView):
@@ -167,17 +198,17 @@ class ListUnits(ListView):
 
 class CreateUnit(CreateView):
     model = Unit
-    success_url = reverse_lazy('list_units')
+    success_url = reverse_lazy('unit_list')
 
 
 class EditUnit(UpdateView):
     model = Unit
-    success_url = reverse_lazy('list_units')
+    success_url = reverse_lazy('unit_list')
 
 
 class DeleteUnit(DeleteView):
     model = Unit
-    success_url = reverse_lazy('list_units')
+    success_url = reverse_lazy('unit_list')
 
 
 class ListProducts(ListView):
@@ -188,18 +219,18 @@ class ListProducts(ListView):
 class CreateProduct(CreateView):
     model = Product
     fields = ['product_number', 'title', 'description', 'defaultunit', 'tax', 'accoutingProductCategorie']
-    success_url = reverse_lazy('list_products')
+    success_url = reverse_lazy('product_list')
 
 
 class EditProduct(UpdateView):
     model = Product
     fields = ['product_number', 'title', 'description', 'defaultunit', 'tax', 'accoutingProductCategorie']
-    success_url = reverse_lazy('list_products')
+    success_url = reverse_lazy('product_list')
 
 
 class DeleteProduct(DeleteView):
     model = Product
-    success_url = reverse_lazy('list_products')
+    success_url = reverse_lazy('product_list')
 
 
 class ListBillingCycles(ListView):
@@ -208,17 +239,17 @@ class ListBillingCycles(ListView):
 
 class CreateBillingCycle(CreateView):
     model = CustomerBillingCycle
-    success_url = reverse_lazy('list_billingcycles')
+    success_url = reverse_lazy('billingcycle_list')
 
 
 class EditBillingCycle(UpdateView):
     model = CustomerBillingCycle
-    success_url = reverse_lazy('list_billingcycles')
+    success_url = reverse_lazy('billingcycle_list')
 
 
 class DeleteBillingCycle(DeleteView):
     model = CustomerBillingCycle
-    success_url = reverse_lazy('list_billingcycles')
+    success_url = reverse_lazy('billingcycle_list')
 
 
 class ListPurchaseOrders(ListView):
@@ -229,18 +260,18 @@ class ListPurchaseOrders(ListView):
 class CreatePurchaseOrder(CreateView):
     model = PurchaseOrder
     fields = ['description', 'contract', 'supplier', 'state', 'currency', ]
-    success_url = reverse_lazy('list_purchaseorders')
+    success_url = reverse_lazy('purchaseorder_list')
 
 
 class EditPurchaseOrder(UpdateView):
     model = PurchaseOrder
     fields = ['description', 'contract', 'supplier', 'state', 'currency', ]
-    success_url = reverse_lazy('list_purchaseorders')
+    success_url = reverse_lazy('purchaseorder_list')
 
 
 class DeletePurchaseOrder(DeleteView):
     model = PurchaseOrder
-    success_url = reverse_lazy('list_purchaseorders')
+    success_url = reverse_lazy('purchaseorder_list')
 
 
 class ListCustomerGroups(ListView):
@@ -249,17 +280,17 @@ class ListCustomerGroups(ListView):
 
 class CreateCustomerGroup(CreateView):
     model = CustomerGroup
-    success_url = reverse_lazy('list_customergroups')
+    success_url = reverse_lazy('customergroup_list')
 
 
 class EditCustomerGroup(UpdateView):
     model = CustomerGroup
-    success_url = reverse_lazy('list_customergroups')
+    success_url = reverse_lazy('customergroup_list')
 
 
 class DeleteCustomerGroup(DeleteView):
     model = CustomerGroup
-    success_url = reverse_lazy('list_customergroups')
+    success_url = reverse_lazy('customergroup_list')
 
 
 class ListContracts(ListView):
@@ -270,18 +301,18 @@ class ListContracts(ListView):
 class CreateContract(CreateView):
     model = Contract
     fields = ['description', 'defaultcustomer', 'defaultSupplier', 'defaultcurrency']
-    success_url = reverse_lazy('list_contracts')
+    success_url = reverse_lazy('contract_list')
 
 
 class EditContract(UpdateView):
     model = Contract
     fields = ['description', 'defaultcustomer', 'defaultSupplier', 'defaultcurrency']
-    success_url = reverse_lazy('list_contracts')
+    success_url = reverse_lazy('contract_list')
 
 
 class DeleteContract(DeleteView):
     model = Contract
-    success_url = reverse_lazy('list_contracts')
+    success_url = reverse_lazy('contract_list')
 
 
 class ListInvoice(ListView):
@@ -293,18 +324,18 @@ class ListInvoice(ListView):
 class CreateInvoice(CreateView):
     model = Invoice
     fields = ['description', 'contract', 'customer', 'payableuntil', 'state', 'currency']
-    success_url = reverse_lazy('list_invoices')
+    success_url = reverse_lazy('invoice_list')
 
 
 class EditInvoice(UpdateView):
     model = Invoice
     fields = ['description', 'contract', 'customer', 'payableuntil', 'state', 'currency']
-    success_url = reverse_lazy('list_invoices')
+    success_url = reverse_lazy('invoice_list')
 
 
 class DeleteInvoice(DeleteView):
     model = Invoice
-    success_url = reverse_lazy('list_invoices')
+    success_url = reverse_lazy('invoice_list')
 
 
 class ListQuotes(ListView):
@@ -317,19 +348,19 @@ class CreateQuote(CreateView):
     model = Quote
     fields = ['description', 'contract', 'customer', 'currency', 'validuntil', 'state', 'lastmodifiedby',
               'lastCalculatedPrice', 'lastPricingDate']
-    success_url = reverse_lazy('list_quotes')
+    success_url = reverse_lazy('quote_list')
 
 
 class EditQuote(UpdateView):
     model = Quote
     fields = ['description', 'contract', 'customer', 'currency', 'validuntil', 'state', 'lastmodifiedby',
               'lastCalculatedPrice', 'lastPricingDate']
-    success_url = reverse_lazy('list_quotes')
+    success_url = reverse_lazy('quote_list')
 
 
 class DeleteQuote(DeleteView):
     model = Quote
-    success_url = reverse_lazy('list_quotes')
+    success_url = reverse_lazy('quote_list')
 
 
 def export_pdf(calling_model_admin, request, where_to_create_from, what_to_create, redirect_to):

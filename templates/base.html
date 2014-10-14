@@ -19,11 +19,11 @@
 
 {% compress css %}
 {% bootstrap_css %}
-{#<link rel="stylesheet" href="{% static "assets/css/bootstrap.css" %}">#}
+<link rel="stylesheet" href="{% static "assets/css/bootstrap.css" %}">
 <link rel="stylesheet" href="{% static "assets/font-awesome/css/font-awesome.css" %}">
 <link rel="stylesheet" href="{% static "assets/lineicons/style.css" %}">
 {#<link rel="stylesheet" href="{% static "assets/js/gritter/css/jquery.gritter.css" %}">#}
-{#<link rel="stylesheet" href="{% static "assets/css/zabuto_calendar.css" %}">#}
+<link rel="stylesheet" href="{% static "assets/css/zabuto_calendar.css" %}">
 <link rel="stylesheet" href="{% static "assets/css/style.css" %}">
 <link rel="stylesheet" href="{% static "assets/css/style-responsive.css" %}">
 
@@ -56,8 +56,10 @@
                   <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
               </div>
             <!--logo start-->
-            <a href="/" class="logo"><b>Koalix CRM</b></a>
-{#            {% if settings.SITE_TAGLINE %}{{ settings.SITE_TAGLINE }}{% endif %}#}
+            <p style="float: left;margin-top: -8px;">
+                <a href="/" class="logo" style="float: left"><b>Koalix CRM</b></a>
+                <br><span style="float: left" class="muted small">Beautiful CRM/ERP for small business</span>
+            </p>
             <!--logo end-->
 
             <div class="nav notify-row" id="top_menu">
@@ -223,36 +225,102 @@
       </aside>
       <!--sidebar end-->
 
+      <!-- **********************************************************************************************************************************************************
+      MAIN CONTENT
+      *********************************************************************************************************************************************************** -->
+      <!--main content start-->
+      <section id="main-content">
+          <section class="wrapper">
 
-    <section id="main-content">
-        {% nevercache %}
-        {% if messages %}
-        <div class="messages">
-        {% for message in messages %}
-        <div class="alert alert-dismissable alert-{{ message.tags }}" data-alert="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            {{ message }}
-        </div>
-        {% endfor %}
-        </div>
-        {% endif %}
-        {% endnevercache %}
-        <section class="wrapper">
-            <div style="margin-top: 10px;">
-                <ul class="breadcrumb" style="background-color: white;">
-                {% spaceless %}
-                    <li id="breadcrumb-menu-home"><a href="/">CRM</a></li>
-                {% block breadcrumb_menu %}
-                    {% page_menu "pages/menus/breadcrumb.html" %}
-                {% endblock %}
-                {% endspaceless %}
-                </ul>
+            <div class="row">
+                <div class="col-lg-10 main-chart">
+                    <div class="row mt">
+                        <div style="margin-top: 10px;">
+                            <ul class="breadcrumb" style="background-color: white;">
+                            {% spaceless %}
+                                <li id="breadcrumb-menu-home"><a href="/">CRM</a></li>
+                            {% block breadcrumb_menu %}
+                                {% page_menu "pages/menus/breadcrumb.html" %}
+                            {% endblock %}
+                            {% endspaceless %}
+                            </ul>
+                        </div>
+                    </div>
+                    {% nevercache %}
+                    {% if messages %}
+                    <div class="row mt">
+                        <div class="messages">
+                        {% for message in messages %}
+                            <div class="alert alert-dismissable alert-{{ message.tags }}" data-alert="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endnevercache %}
+                    <div class="row mt">
+                        {% block main %}{% endblock %}
+                    </div>
+                </div>
+
+              <!-- **********************************************************************************************************************************************************
+              RIGHT SIDEBAR CONTENT
+              *********************************************************************************************************************************************************** -->
+                {% block rightbar %}
+                  <div class="col-lg-2 ds">
+                      <div class="row mt">
+						<h3>NOTIFICATIONS</h3>
+
+                      <!-- First Action -->
+                      <div class="desc">
+                      	<div class="thumb">
+                      		<span class="badge bg-theme"><i class="fa fa-clock-o"></i></span>
+                      	</div>
+                      	<div class="details">
+                      		<p><muted>2 Minutes Ago</muted><br/>
+                      		   <a href="#">James Brown</a> subscribed to your newsletter.<br/>
+                      		</p>
+                      	</div>
+                      </div>
+
+                       <!-- USERS ONLINE SECTION -->
+						<h3>TEAM MEMBERS</h3>
+                      <!-- First Member -->
+                      <div class="desc">
+                      	<div class="thumb">
+                      		<img class="img-circle" src="assets/img/ui-divya.jpg" width="35px" height="35px" align="">
+                      	</div>
+                      	<div class="details">
+                      		<p><a href="#">DIVYA MANIAN</a><br/>
+                      		   <muted>Available</muted>
+                      		</p>
+                      	</div>
+                      </div>
+
+                        <!-- CALENDAR-->
+                        <div id="calendar" class="mb">
+                            <div class="panel green-panel no-margin">
+                                <div class="panel-body">
+                                    <div id="date-popover" class="popover top" style="cursor: pointer; disadding: block; margin-left: 33%; margin-top: -50px; width: 175px;">
+                                        <div class="arrow"></div>
+                                        <h3 class="popover-title" style="disadding: none;"></h3>
+                                        <div id="date-popover-content" class="popover-content"></div>
+                                    </div>
+                                    <div id="my-calendar"></div>
+                                </div>
+                            </div>
+                        </div><!-- / calendar -->
+                    </div>
+                  </div>
+            {% endblock %}
             </div>
-            {% block main %}{% endblock %}
           </section>
       </section>
-      <!--main content end-->
 
+
+      <div style="margin-bottom: 0">
       <!--footer start-->
       <footer class="site-footer">
           <div class="text-center">
@@ -268,16 +336,17 @@
           </div>
       </footer>
       <!--footer end-->
+      </div>
 
 </section>
     <!-- js placed at the end of the document so the pages load faster -->
     <script src="{%  static "assets/js/jquery.js" %}"></script>
     <script src="{%  static "assets/js/jquery-1.8.3.min.js" %}"></script>
-{#    <script src="{%  static "assets/js/bootstrap.min.js" %}"></script>#}
+    <script src="{%  static "assets/js/bootstrap.min.js" %}"></script>
     <script class="include" type="text/javascript" src="{%  static "assets/js/jquery.dcjqaccordion.2.7.js" %}"></script>
     <script src="{%  static "assets/js/jquery.scrollTo.min.js" %}"></script>
     <script src="{%  static "assets/js/jquery.nicescroll.js" %}"type="text/javascript"></script>
-{#    <script src="{%  static "assets/js/jquery.sparkline.js" %}"></script>#}
+    <script src="{%  static "assets/js/jquery.sparkline.js" %}"></script>
     {% bootstrap_javascript %}
 
 
@@ -288,8 +357,8 @@
 {#    <script type="text/javascript" src="{%  static "assets/js/gritter-conf.js" %}"></script>#}
 
     <!--script for this page-->
-{#    <script src="{%  static "assets/js/sparkline-chart.js" %}"></script>#}
-{#	<script src="{%  static "assets/js/zabuto_calendar.js" %}"></script>#}
+    <script src="{%  static "assets/js/sparkline-chart.js" %}"></script>
+	<script src="{%  static "assets/js/zabuto_calendar.js" %}"></script>
 
 {% include "includes/footer_scripts.html" %}
 

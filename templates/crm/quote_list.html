@@ -18,13 +18,15 @@
                 <tr>
                     <td>{{ quote.description }}</td>
                     <td>
-                        <button type="button" class="btn btn-sm btn-primary" onclick="window.location.assign('{% url 'edit_quote' quote.pk %}')">{% trans "Edit" %}</button>
-                        <button type="button" class="btn btn-sm btn-danger" onclick="window.location.assign('{% url 'delete_quote' quote.pk %}')">{% trans "Delete" %}</button>
+                        <p class="pull-right">
+                        <button type="button" class="btn btn-sm btn-primary" onclick="window.location.assign('{% url 'quote_edit' quote.pk %}')">{% trans "Edit" %}</button>
+                        <button type="button" class="btn btn-sm btn-danger" onclick="window.location.assign('{% url 'quote_delete' quote.pk %}')">{% trans "Delete" %}</button>
+                        </p>
                     </td>
                 </tr>
             {% endfor %}
         </table>
         {% endif %}
-        <p><a href="{% url 'create_quote' %}">{% trans "Create a new quote" %}</a></p>
+        <p><a href="{% url 'quote_create' %}">{% trans "Create a new quote" %}</a></p>
     </div>
 {% endblock %}

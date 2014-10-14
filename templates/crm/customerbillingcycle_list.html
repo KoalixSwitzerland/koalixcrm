@@ -19,13 +19,15 @@
                     <td>{{ billingcycle.name }}</td>
                     <td>{{ billingcycle.days_to_payment }}</td>
                     <td>
-                        <button type="button" class="btn btn-sm btn-primary" onclick="window.location.assign('{% url 'edit_billingcycle' billingcycle.pk %}')">{% trans "Edit" %}</button>
-                        <button type="button" class="btn btn-sm btn-danger" onclick="window.location.assign('{% url 'delete_billingcycle' billingcycle.pk %}')">{% trans "Delete" %}</button>
+                        <p class="pull-right">
+                        <button type="button" class="btn btn-sm btn-primary" onclick="window.location.assign('{% url 'billingcycle_edit' billingcycle.pk %}')">{% trans "Edit" %}</button>
+                        <button type="button" class="btn btn-sm btn-danger" onclick="window.location.assign('{% url 'billingcycle_delete' billingcycle.pk %}')">{% trans "Delete" %}</button>
+                        </p>
                     </td>
                 </tr>
             {% endfor %}
         </table>
         {% endif %}
-        <p><a href="{% url 'create_billingcycle' %}">{% trans "Create a new billing cycle" %}</a></p>
+        <p><a href="{% url 'billingcycle_create' %}">{% trans "Create a new billing cycle" %}</a></p>
     </div>
 {% endblock %}

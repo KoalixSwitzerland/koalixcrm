@@ -5,8 +5,11 @@
 {% block title %}{% trans "Billing Cycle" %}{% endblock %}
 
 {% block breadcrumb_menu %}
-    <li class="active"><a href="{% url 'list_billingcycles' %}">{% trans "Billing Cycle" %}</a></li>
+    <li class="active"><a href="{% url 'billingcycle_list' %}">{% trans "Billing Cycle" %}</a></li>
     <li class="active">{% if billingcycle %}{% trans "Edit billing cycle" %}{% else %}{% trans "Create billing cycle" %}{% endif%}</li>
+{% endblock %}
+
+{% block rightbar %}
 {% endblock %}
 
 {% block main %}
@@ -15,8 +18,22 @@
     {% if billingcycle %}{% trans "Edit billing cycle" %}{% else %}{% trans "Create billing cycle" %}{% endif%}</h4>
     <form method="POST" action="." class="form form-horizontal" style="margin: 30px;">
     {% csrf_token %}
+
+    <div class="row well">
+        <div style="margin: 0 12px 0 12px;">
     {% bootstrap_form form %}
-    <button type="submit" class="btn btn-primary"><i class="fa fa-check"></i> {%  trans "Save" %}</button>
+        </div>
+    </div>
+
+    <button type='submit' class='btn btn-primary'>
+        {% trans "Save" %}
+    </button>
+
+    <button type="button" class="btn btn-default"
+            onclick="window.location.assign('{% url 'billingcycle_list' %}')">
+        {% trans "Cancel" %}
+    </button>
+
     </form>
     </div>
 {% endblock %}

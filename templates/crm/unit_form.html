@@ -5,8 +5,11 @@
 {% block title %}{% trans "Units" %}{% endblock %}
 
 {% block breadcrumb_menu %}
-    <li class="active"><a href="{% url 'list_units' %}">{% trans "Units" %}</a></li>
+    <li class="active"><a href="{% url 'unit_list' %}">{% trans "Units" %}</a></li>
     <li class="active">{% if unit %}{% trans "Edit unit" %}{% else %}{% trans "Create unit" %}{% endif%}</li>
+{% endblock %}
+
+{% block rightbar %}
 {% endblock %}
 
 {% block main %}
@@ -15,8 +18,22 @@
     {% if unit %}{% trans "Edit unit" %}{% else %}{% trans "Create unit" %}{% endif%}</h4>
     <form method="POST" action="." class="form form-horizontal" style="margin: 30px;">
     {% csrf_token %}
+
+    <div class="row well">
+        <div style="margin: 0 12px 0 12px;">
     {% bootstrap_form form %}
-    <button type="submit" class="btn btn-primary"><i class="fa fa-check"></i> {%  trans "Save" %}</button>
+        </div>
+    </div>
+
+    <button type='submit' class='btn btn-primary'>
+        {% trans "Save" %}
+    </button>
+
+    <button type="button" class="btn btn-default"
+            onclick="window.location.assign('{% url 'unit_list' %}')">
+        {% trans "Cancel" %}
+    </button>
+
     </form>
     </div>
 {% endblock %}

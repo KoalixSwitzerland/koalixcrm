@@ -18,13 +18,15 @@
                 <tr>
                     <td>{{ customergroup.name }}</td>
                     <td>
-                        <button type="button" class="btn btn-sm btn-primary" onclick="window.location.assign('{% url 'edit_customergroup' customergroup.pk %}')">{% trans "Edit" %}</button>
-                        <button type="button" class="btn btn-sm btn-danger" onclick="window.location.assign('{% url 'delete_customergroup' customergroup.pk %}')">{% trans "Delete" %}</button>
+                        <p class="pull-right">
+                        <button type="button" class="btn btn-sm btn-primary" onclick="window.location.assign('{% url 'customergroup_edit' customergroup.pk %}')">{% trans "Edit" %}</button>
+                        <button type="button" class="btn btn-sm btn-danger" onclick="window.location.assign('{% url 'customergroup_delete' customergroup.pk %}')">{% trans "Delete" %}</button>
+                        </p>
                     </td>
                 </tr>
             {% endfor %}
         </table>
         {% endif %}
-        <p><a href="{% url 'create_customergroup' %}">{% trans "Create a new customer group" %}</a></p>
+        <p><a href="{% url 'customergroup_create' %}">{% trans "Create a new customer group" %}</a></p>
     </div>
 {% endblock %}

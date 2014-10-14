@@ -19,13 +19,15 @@
                     <td>{{ unit.description }}</td>
                     <td>{{ unit.shortname }}</td>
                     <td>
-                        <button type="button" class="btn btn-sm btn-primary" onclick="window.location.assign('{% url 'edit_unit' unit.pk %}')">{% trans "Edit" %}</button>
-                        <button type="button" class="btn btn-sm btn-danger" onclick="window.location.assign('{% url 'delete_unit' unit.pk %}')">{% trans "Delete" %}</button>
+                        <p class="pull-right">
+                        <button type="button" class="btn btn-sm btn-primary" onclick="window.location.assign('{% url 'unit_edit' unit.pk %}')">{% trans "Edit" %}</button>
+                        <button type="button" class="btn btn-sm btn-danger" onclick="window.location.assign('{% url 'unit_delete' unit.pk %}')">{% trans "Delete" %}</button>
+                        </p>
                     </td>
                 </tr>
             {% endfor %}
         </table>
         {% endif %}
-        <p><a href="{% url 'create_unit' %}">{% trans "Create a new unit" %}</a></p>
+        <p><a href="{% url 'unit_create' %}">{% trans "Create a new unit" %}</a></p>
     </div>
 {% endblock %}

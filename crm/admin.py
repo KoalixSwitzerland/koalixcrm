@@ -494,7 +494,7 @@ class OptionCustomer(admin.ModelAdmin, ImportExportMixin):
     allow_add = True
     ordering = ('id', 'name', 'firstname',)
     search_fields = ('id', 'name', 'firstname',)
-    # inlines = [PostalAddress, PhoneAddress, EmailAddress]
+    inlines = [PostalAddress, PhoneAddress, EmailAddress]
     pluginProcessor = PluginProcessor()
     # inlines.extend(pluginProcessor.get_plugin_additions("customerInline"))
 

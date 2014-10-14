@@ -5,8 +5,11 @@
 {% block title %}{% trans "Invoices" %}{% endblock %}
 
 {% block breadcrumb_menu %}
-    <li class="active"><a href="{% url 'list_invoices' %}">{% trans "Invoices" %}</a></li>
+    <li class="active"><a href="{% url 'invoice_list' %}">{% trans "Invoices" %}</a></li>
     <li class="active">{% if invoice %}{% trans "Edit invoice" %}{% else %}{% trans "Create invoice" %}{% endif%}</li>
+{% endblock %}
+
+{% block rightbar %}
 {% endblock %}
 
 {% block main %}
@@ -15,8 +18,22 @@
     {% if invoice %}{% trans "Edit invoice" %}{% else %}{% trans "Create invoice" %}{% endif%}</h4>
     <form method="POST" action="." class="form form-horizontal" style="margin: 30px;">
     {% csrf_token %}
+
+    <div class="row well">
+        <div style="margin: 0 12px 0 12px;">
     {% bootstrap_form form %}
-    <button type="submit" class="btn btn-primary"><i class="fa fa-check"></i> {%  trans "Save" %}</button>
+        </div>
+    </div>
+
+    <button type='submit' class='btn btn-primary'>
+        {% trans "Save" %}
+    </button>
+
+    <button type="button" class="btn btn-default"
+            onclick="window.location.assign('{% url 'invoice_list' %}')">
+        {% trans "Cancel" %}
+    </button>
+
     </form>
     </div>
 {% endblock %}

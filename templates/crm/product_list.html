@@ -22,13 +22,15 @@
                     <td>{{ product.tax }}</td>
                     <td>{{ product.accoutingProductCategorie }}</td>
                     <td>
-                        <button type="button" class="btn btn-sm btn-primary" onclick="window.location.assign('{% url 'edit_product' product.pk %}')">{% trans "Edit" %}</button>
-                        <button type="button" class="btn btn-sm btn-danger" onclick="window.location.assign('{% url 'delete_product' product.pk %}')">{% trans "Delete" %}</button>
+                        <p class="pull-right">
+                        <button type="button" class="btn btn-sm btn-primary" onclick="window.location.assign('{% url 'product_edit' product.pk %}')">{% trans "Edit" %}</button>
+                        <button type="button" class="btn btn-sm btn-danger" onclick="window.location.assign('{% url 'product_delete' product.pk %}')">{% trans "Delete" %}</button>
+                        </p>
                     </td>
                 </tr>
             {% endfor %}
         </table>
         {% endif %}
-        <p><a href="{% url 'create_product' %}">{% trans "Create a new product" %}</a></p>
+        <p><a href="{% url 'product_create' %}">{% trans "Create a new product" %}</a></p>
     </div>
 {% endblock %}

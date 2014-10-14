@@ -69,6 +69,9 @@ a, a:hover, a:focus {
 	text-decoration: none;
 }	
 
+.breadcrumb {
+    margin: 20px 5px 5px 5px;
+}
 
 
 /*Theme Backgrounds*/
@@ -418,7 +421,6 @@ ul.sidebar-menu li a.active i {
 
 .wrapper {
     display: inline-block;
-    margin-top: 60px;
     padding-left: 15px;
     padding-right: 15px;
     padding-bottom: 15px;
@@ -766,6 +768,7 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
 .ds {
 	background: #ffffff;
 	padding-top: 20px;
+    margin-top: 20px;
 }
 
 .ds h4 {
@@ -1146,8 +1149,8 @@ PANELS CONFIGURATIONS
 	text-align: center;
 }
 .stock .summary strong {
-	font-weight: 900;
-	font-size: 14px;
+	font-weight: bold;
+	font-size: 16px;
 }
 
 /*Content Panel*/

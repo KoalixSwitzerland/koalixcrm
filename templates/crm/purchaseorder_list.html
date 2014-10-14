@@ -20,13 +20,15 @@
                     <td>{{ purchaseorder.description }}</td>
                     <td>{{ purchaseorder.status }}</td>
                     <td>
-                        <button type="button" class="btn btn-sm btn-primary" onclick="window.location.assign('{% url 'edit_purchaseorder' purchaseorder.pk %}')">{% trans "Edit" %}</button>
-                        <button type="button" class="btn btn-sm btn-danger" onclick="window.location.assign('{% url 'delete_purchaseorder' purchaseorder.pk %}')">{% trans "Delete" %}</button>
+                        <p class="pull-right">
+                        <button type="button" class="btn btn-sm btn-primary" onclick="window.location.assign('{% url 'purchaseorder_edit' purchaseorder.pk %}')">{% trans "Edit" %}</button>
+                        <button type="button" class="btn btn-sm btn-danger" onclick="window.location.assign('{% url 'purchaseorder_delete' purchaseorder.pk %}')">{% trans "Delete" %}</button>
+                        </p>
                     </td>
                 </tr>
             {% endfor %}
         </table>
         {% endif %}
-        <p><a href="{% url 'create_purchaseorder' %}">{% trans "Create a new purchase order" %}</a></p>
+        <p><a href="{% url 'purchaseorder_create' %}">{% trans "Create a new purchase order" %}</a></p>
     </div>
 {% endblock %}

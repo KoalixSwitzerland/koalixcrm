@@ -18,13 +18,15 @@
                 <tr>
                     <td>{{ invoice.description }}</td>
                     <td>
-                        <button type="button" class="btn btn-sm btn-primary" onclick="window.location.assign('{% url 'edit_invoice' invoice.pk %}')">{% trans "Edit" %}</button>
-                        <button type="button" class="btn btn-sm btn-danger" onclick="window.location.assign('{% url 'delete_invoice' invoice.pk %}')">{% trans "Delete" %}</button>
+                        <p class="pull-right">
+                        <button type="button" class="btn btn-sm btn-primary" onclick="window.location.assign('{% url 'invoice_edit' invoice.pk %}')">{% trans "Edit" %}</button>
+                        <button type="button" class="btn btn-sm btn-danger" onclick="window.location.assign('{% url 'invoice_delete' invoice.pk %}')">{% trans "Delete" %}</button>
+                        </p>
                     </td>
                 </tr>
             {% endfor %}
         </table>
         {% endif %}
-        <p><a href="{% url 'create_invoice' %}">{% trans "Create a new invoice" %}</a></p>
+        <p><a href="{% url 'invoice_create' %}">{% trans "Create a new invoice" %}</a></p>
     </div>
 {% endblock %}

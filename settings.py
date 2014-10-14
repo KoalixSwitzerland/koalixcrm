@@ -102,7 +102,6 @@ USE_TZ = True
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = "en"
-CALENDAR_LOCALE = "en"
 
 # Supported languages
 _ = lambda s: s
@@ -320,7 +319,7 @@ PACKAGE_NAME_GRAPPELLI = "grappelli_safe"
 
 # These will be added to ``INSTALLED_APPS``, only if available.
 OPTIONAL_APPS = (
-    # "debug_toolbar",
+    "debug_toolbar",
     "django_extensions",
     "compressor",
     PACKAGE_NAME_FILEBROWSER,

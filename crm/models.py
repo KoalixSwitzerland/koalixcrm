@@ -6,7 +6,7 @@ from subprocess import *
 from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser
 from django.db import models
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 from django.core import serializers
 from django.contrib import auth
 from xml import etree
@@ -32,6 +32,7 @@ from django_fsm import FSMIntegerField, transition
 class PostalAddress(models.Model):
     addressline1 = models.CharField(max_length=200, verbose_name=_("Addressline 1"), blank=True, null=True)
     addressline2 = models.CharField(max_length=200, verbose_name=_("Addressline 2"), blank=True, null=True)
+    # tfr, 10-13-14, v0.2: I'm not sure if these are really needed. Leaving outcommented for a few releases
     # addressline3 = models.CharField(max_length=200, verbose_name=_("Addressline 3"), blank=True, null=True)
     # addressline4 = models.CharField(max_length=200, verbose_name=_("Addressline 4"), blank=True, null=True)
     zipcode = models.IntegerField(verbose_name=_("Zipcode"), blank=True, null=True)

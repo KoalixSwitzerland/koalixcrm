@@ -5,8 +5,11 @@
 {% block title %}{% trans "Customer Groups" %}{% endblock %}
 
 {% block breadcrumb_menu %}
-    <li class="active"><a href="{% url 'list_customergroups' %}">{% trans "Customer Groups" %}</a></li>
+    <li class="active"><a href="{% url 'customergroup_list' %}">{% trans "Customer Groups" %}</a></li>
     <li class="active">{% if customergroup %}{% trans "Edit customer group" %}{% else %}{% trans "Create customer group" %}{% endif%}</li>
+{% endblock %}
+
+{% block rightbar %}
 {% endblock %}
 
 {% block main %}
@@ -15,8 +18,22 @@
     {% if customergroup %}{% trans "Edit customer group" %}{% else %}{% trans "Create customer group" %}{% endif%}</h4>
     <form method="POST" action="." class="form form-horizontal" style="margin: 30px;">
     {% csrf_token %}
-    {% bootstrap_form form %}
-    <button type="submit" class="btn btn-primary"><i class="fa fa-check"></i> {%  trans "Save" %}</button>
+
+    <div class="row well">
+        <div style="margin: 0 12px 0 12px;">
+            {% bootstrap_form form %}
+        </div>
+    </div>
+
+    <button type='submit' class='btn btn-primary'>
+        {% trans "Save" %}
+    </button>
+
+    <button type="button" class="btn btn-default"
+            onclick="window.location.assign('{% url 'customergroup_list' %}')">
+        {% trans "Cancel" %}
+    </button>
+
     </form>
     </div>
 {% endblock %}
