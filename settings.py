@@ -245,6 +245,7 @@ INSTALLED_APPS = (
     "admin_backup",
     "import_export",
     "django_fsm",
+    "extra_views",
     "braces",
     "mezzanine.boot",
     "mezzanine.conf",

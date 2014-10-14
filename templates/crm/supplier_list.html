@@ -16,7 +16,7 @@
             <tr><th>{% trans "Name" %}</th><th></th></tr>
             {% for supplier in supplier_list %}
                 <tr>
-                    <td>{{ supplier.name }}</td>
+                    <td>{{ supplier }}</td>
                     <td>
                         <p class="pull-right">
                         <button type="button" class="btn btn-sm btn-primary" onclick="window.location.assign('{% url 'supplier_edit' supplier.pk %}')">{% trans "Edit" %}</button>

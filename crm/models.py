@@ -40,19 +40,19 @@ class PostalAddress(models.Model):
     state = models.CharField(max_length=100, verbose_name=_("State"), blank=True, null=True)
     country = models.CharField(max_length=2, choices=[(x[0], x[3]) for x in COUNTRIES], verbose_name=_("Country"), blank=True, null=True)
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT, default='C')
-    person = models.ForeignKey('Contact')
+    person = models.ForeignKey('Contact', related_name='address')
 
     class Meta:
         verbose_name = _('Postal Address')
         verbose_name_plural = _('Postal Address')
 
     def __unicode__(self):
-        return ', '.join([self.person.name, self.addressline1])
+        return ', '.join([self.person.name, self.addressline1, self.town, ])
 
 
 class PhoneAddress(models.Model):
     phone = models.CharField(max_length=20, verbose_name=_("Phone Number"))
-    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCUSTOMER)
+    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCUSTOMER, default='H')
     person = models.ForeignKey('Contact')
 
     class Meta:
@@ -60,12 +60,12 @@ class PhoneAddress(models.Model):
         verbose_name_plural = _('Phone Address')
 
     def __unicode__(self):
-        return self.phone
+        return "%s: %s" % (self.purpose, self.phone)
 
 
 class EmailAddress(models.Model):
     email = models.EmailField(max_length=200, verbose_name=_("Email Address"))
-    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT)
+    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT, default='C')
     person = models.ForeignKey('Contact')
 
     class Meta:
@@ -73,7 +73,7 @@ class EmailAddress(models.Model):
         verbose_name_plural = _('Email Address')
 
     def __unicode__(self):
-        return self.email
+        return "%s: %s" % (self.purpose, self.email)
 
 
 ########################
@@ -86,7 +86,7 @@ class Contact(models.Model):
     name = models.CharField(max_length=300, verbose_name=_("Name"))
     dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now=True)
     lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now_add=True)
-    lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True, verbose_name=_("Last modified by"), editable=True)
+    lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True, verbose_name=_("Last modified by"), null=True)
 
     class Meta:
         verbose_name = _('Contact')
@@ -142,11 +142,11 @@ class Customer(Contact):
         verbose_name_plural = _('Customers')
 
     def __unicode__(self):
-        return self.name
+        return "%s %s %s" % (self.prefix, self.firstname, self.name)
 
 
 class Supplier(Contact):
-    offersShipmentToCustomers = models.BooleanField(verbose_name=_("Offers Shipment to Customer"), default=False)
+    direct_shipment_to_customers = models.BooleanField(verbose_name=_("Offers direct Shipment to Customer"), default=False)
 
     class Meta:
         verbose_name = _("Supplier")
@@ -823,7 +823,7 @@ class Position(models.Model):
     unit = models.ForeignKey(Unit, verbose_name=_("Unit"), blank=True, null=True)
     sentOn = models.DateField(verbose_name=_("Shipment on"), blank=True, null=True)
     supplier = models.ForeignKey(Supplier, verbose_name=_("Shipment Supplier"),
-                                 limit_choices_to={'offersShipmentToCustomers': True}, blank=True, null=True)
+                                 limit_choices_to={'direct_shipment_to_customers': True}, blank=True, null=True)
     shipmentID = models.CharField(max_length=100, verbose_name=_("Shipment ID"), blank=True, null=True)
     overwriteProductPrice = models.BooleanField(verbose_name=_('Overwrite Product Price'), default=False)
     positionPricePerUnit = models.DecimalField(verbose_name=_("Price Per Unit"), max_digits=17, decimal_places=2,

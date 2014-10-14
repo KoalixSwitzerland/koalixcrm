@@ -24,33 +24,33 @@
                     <div style="margin: 0 12px 0 12px;">
                         {%  bootstrap_form form %}
                     </div>
-                    {% if postal_address_form %}
+                    {% if postaladdress_formset %}
                         <details class="form-wrapper" id="edit-advanced">
                             <summary><i class="fa fa-envelope"></i> {% trans "Postal Address" %}</summary>
                             <div style="margin: 0 12px 0 12px;">
-                                {% bootstrap_formset postal_address_form %}
-    2                        </div>
+                                {% bootstrap_formset postaladdress_formset %}
+                            </div>
                         </details>
                     {% endif %}
                 </div>
 
                 <div class="col-lg-6">
                     <div class="col-lg-6">
-                    {% if phone_address_form %}
+                    {% if phoneaddress_formset %}
                         <fieldset>
                         <legend><i class="fa fa-phone"></i> {% trans "Phone Address" %}</legend>
                             <div style="margin: 0 12px 0 12px;">
-                                {% bootstrap_formset phone_address_form %}
+                                {% bootstrap_formset phoneaddress_formset %}
                             </div>
                         </fieldset>
                     {% endif %}
                     </div>
                     <div class="col-lg-6">
-                    {% if email_address_form %}
+                    {% if emailaddress_formset %}
                         <fieldset>
                         <legend><i class="fa fa-at"></i> {% trans "Email Address" %}</legend>
                             <div style="margin: 0 12px 0 12px;">
-                                {% bootstrap_formset email_address_form %}
+                                {% bootstrap_formset emailaddress_formset %}
                             </div>
                         </fieldset>
                     {% endif %}

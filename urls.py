@@ -27,13 +27,13 @@ urlpatterns = i18n_patterns("",
 
     url(r"^customers/$", ListCustomers.as_view(), name='customer_list'),
     url(r'^customers/create/$', CreateCustomer.as_view(), name='customer_create'),
-    url(r'^customers/edit/(?P<pk>\d+)/$', EditCustomer.as_view(success_url='/customers/'), name='customer_edit'),
-    url(r'^customers/delete/(?P<pk>\d+)/$', DeleteCustomer.as_view(success_url='/customers/'), name='customer_delete'),
+    url(r'^customers/edit/(?P<pk>\d+)/$', EditCustomer.as_view(), name='customer_edit'),
+    url(r'^customers/delete/(?P<pk>\d+)/$', DeleteCustomer.as_view(), name='customer_delete'),
 
     url(r"^suppliers/$", ListSuppliers.as_view(), name='supplier_list'),
     url(r'^suppliers/create/$', CreateSupplier.as_view(), name='supplier_create'),
-    url(r'^suppliers/edit/(?P<pk>\d+)/$', EditSupplier.as_view(success_url='/suppliers/'), name='supplier_edit'),
-    url(r'^suppliers/delete/(?P<pk>\d+)/$', DeleteSupplier.as_view(success_url='/suppliers/'), name='supplier_delete'),
+    url(r'^suppliers/edit/(?P<pk>\d+)/$', EditSupplier.as_view(), name='supplier_edit'),
+    url(r'^suppliers/delete/(?P<pk>\d+)/$', DeleteSupplier.as_view(), name='supplier_delete'),
 
     url(r"^currencies/$", ListCurrencies.as_view(), name='currency_list'),
     url(r'^currencies/create/$', CreateCurrency.as_view(), name='currency_create'),
