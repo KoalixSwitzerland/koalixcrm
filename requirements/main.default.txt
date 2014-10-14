@@ -1,0 +1,7 @@
+Django==1.3
+South==0.7.6
+psycopg2==2.4.6
+django-grappelli==2.3.9
+django-filebrowser==3.4.3
+lxml==3.2.1
+feedparser==5.1.3
