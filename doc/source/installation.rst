@@ -17,7 +17,7 @@ Following requirements are common for both, development and demo installation of
 
 Please install the following packages:
 
-    - Python 2.7 (maybe it's running with other versions, please tell me if so)
+    - Python 2.7 (other versions currently not working, sorry)
     - Django 1.7
     - Mezzanine>=3.1.10
     - po-localization
