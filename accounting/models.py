@@ -9,6 +9,9 @@ from django.db import models
 from django.contrib.contenttypes import generic
 from django.utils.translation import ugettext as _
 from django.db.models import signals
+from django.core import serializers
+from exceptions import ProgrammingError
+from exceptions import NoObjectsToBeSerialzed
 from xml.dom.minidom import Document
 from datetime import *
 import settings
@@ -40,6 +43,38 @@ class AccountingPeriod(models.Model):
     if currentValidAccountingPeriod == None:
       raise NoFeasableAccountingPeriodFound()
   
+  def createXML(slef, raisedbyuser, whatToCreate):
+    """This method serialize requestd objects into a XML file which is located in the PDF_OUTPUT_ROOT folder.
+
+      Args:
+        whatToCreate (str): Which objects that have to be serialized
+
+      Returns:
+        path to the location of the file 
+            
+      Raises:
+        ProgrammingError will be raised when incorrect objects to be serialized was selected
+        NoObjectToBeSerialized will be raised when no object can be serialized"""
+
+    XMLSerializer = serializers.get_serializer("xml")
+    xml_serializer = XMLSerializer()
+    pathToOutputFile = " "
+    if whatToCreate == "allAccount":
+      pathToOutputFile = settings.PDF_OUTPUT_ROOT+"accounts.xml"
+      objectsToSerialize = Account.objects.all()
+    else:  
+      raise ProgrammingError(_("During XML Export it was not correctly specified which data that has to be exported")) 
+    out = open(settings.PDF_OUTPUT_ROOT+"accounts.xml", "w")
+    if objectsToSerialize == '':
+      raise NoObjectsToBeSerialzed(_("During XML Export it was not correctly specied data has to be exported")) 
+    else:
+      xml_serializer.serialize(objectsToSerialize, stream=out, indent=3)
+    out.close() 
+    return pathToOutputFile
+
+# TODO  def importAllAccountsXML(self):
+
+
   def createPDF(self, raisedbyuser, whatToCreate):
     userExtension = djangoUserExtension.models.UserExtension.objects.filter(user=raisedbyuser.id)
     if (len(userExtension) == 0):
