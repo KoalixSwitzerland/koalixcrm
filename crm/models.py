@@ -11,6 +11,7 @@ from decimal import Decimal
 from django.core import serializers
 from exceptions import TemplateSetMissing
 from exceptions import UserExtensionMissing
+from exceptions import OpenInterestAccountMissing
 import djangoUserExtension
 from django.contrib import auth
 from lxml import etree
@@ -445,6 +446,8 @@ class Invoice(SalesContract):
       exists = False
       currentValidAccountingPeriod = accounting.models.AccountingPeriod.getCurrentValidAccountingPeriod()
       activaaccount = accounting.models.Account.objects.filter(isopeninterestaccount=True)
+      if len(activaaccount) == 0:
+        raise OpenInterestAccountMissing(_("Please specify one open intrest account in the accounting"))
       for position in list(SalesContractPosition.objects.filter(contract=self.id)):
         profitaccount = position.product.accoutingProductCategorie.profitAccount
         dictprices[profitaccount] = position.lastCalculatedPrice
@@ -453,17 +456,17 @@ class Invoice(SalesContract):
       for booking in accounting.models.Booking.objects.filter(accountingPeriod=currentValidAccountingPeriod):
         if booking.bookingReference == self:
           raise InvoiceAlreadyRegistered()
-        for profitaccount, amount in dictprices.iteritems():
-          booking = accounting.models.Booking()
-          booking.toAccount = activaaccount[0]
-          booking.fromAccount = profitaccount
-          booking.bookingReference = self
-          booking.accountingPeriod = currentValidAccountingPeriod
-          booking.bookingDate = date.today().__str__()
-          booking.staff = request.user
-          booking.amount = amount
-          booking.lastmodifiedby = request.user
-          booking.save()
+      for profitaccount, amount in dictprices.iteritems():
+        booking = accounting.models.Booking()
+        booking.toAccount = activaaccount[0]
+        booking.fromAccount = profitaccount
+        booking.bookingReference = self
+        booking.accountingPeriod = currentValidAccountingPeriod
+        booking.bookingDate = date.today().__str__()
+        booking.staff = request.user
+        booking.amount = amount
+        booking.lastmodifiedby = request.user
+        booking.save()
       
    def registerpaymentinaccounting(self, request, paymentaccount, amount, date):
       activaaccount = accounting.Account.objects.filter(isopeninterestaccount=True)
