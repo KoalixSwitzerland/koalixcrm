@@ -10,9 +10,14 @@ Beautiful CRM/ERP for small business
 [![Requirements Status](https://requires.io/github/tfroehlich82/koalixcrm/requirements.svg?branch=master)](https://requires.io/github/tfroehlich82/koalixcrm/requirements/?branch=master)
 [![Coverage Status](https://img.shields.io/coveralls/tfroehlich82/koalixcrm.svg)](https://coveralls.io/r/tfroehlich82/koalixcrm)
 
-**************************************************
-Note: This project is currently in pre-alpha phase
-**************************************************
+**********************************************
+Note: This project is currently in alpha phase
+**********************************************
 
+Read the documentation for installation instructions at http://koalix-crm.readthedocs.org/en/master/
+
+## Screenshots
+![Alt Create Customer](/doc/source/images/customer_create.png "Create Customer")
+![Alt Product Overview](/doc/source/images/product_overview.png "Product Overview")
 
 This project is released under BSD license
