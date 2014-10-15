@@ -112,6 +112,10 @@ class Customer(Contact):
     billingcycle = models.ForeignKey('CustomerBillingCycle', verbose_name=_('Default Billing Cycle'))
     ismemberof = models.ManyToManyField(CustomerGroup, verbose_name=_('Is member of'), blank=True, null=True)
 
+    class Meta:
+        verbose_name = _('Customer')
+        verbose_name_plural = _('Customers')
+
     def create_contract(self, request):
         contract = Contract()
         contract.defaultcustomer = self
@@ -137,10 +141,6 @@ class Customer(Contact):
                 return 1
         return 0
 
-    class Meta:
-        verbose_name = _('Customer')
-        verbose_name_plural = _('Customers')
-
     def __unicode__(self):
         return "%s %s %s" % (self.prefix, self.firstname, self.name)
 
@@ -157,7 +157,7 @@ class Supplier(Contact):
 
 
 ###########################
-##   PAYMENT ADDITIONS   ##
+##    PAYMENT RELATED    ##
 ###########################
 
 
@@ -186,9 +186,9 @@ class Currency(models.Model):
         verbose_name_plural = _('Currency')
 
 
-###########################
-##
-###########################
+##########################
+##   CONTRACT RELATED   ##
+##########################
 
 
 class Contract(models.Model):

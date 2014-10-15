@@ -6,3 +6,4 @@
 local_settings.py
 /static/media/
 .idea
+doc/build
