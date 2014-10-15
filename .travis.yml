@@ -5,4 +5,8 @@ python:
 install: pip install -r requirements.txt
 # command to run tests, e.g. python setup.py test
 # Using manage.py validate since there are no unit tests yet
-script:  python manage.py validate
+script:
+  - python manage.py check
+  - python manage.py migrate
+  - python manage.py validate
+  - python manage.py test
