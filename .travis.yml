@@ -9,4 +9,4 @@ script:
   - python manage.py check
   - python manage.py migrate
   - python manage.py validate
-  - python manage.py test
+  - python manage.py test crm accounting subscriptions admin_backup
