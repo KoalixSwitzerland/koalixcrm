@@ -52,7 +52,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Koalix CRM'
-copyright = u'2014, Aaron Riedener, Thorsten Froehlich'
+copyright = u'2014, Aaron Riedener, Thorsten Fröhlich'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
