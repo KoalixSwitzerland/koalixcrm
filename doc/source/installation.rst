@@ -1,6 +1,50 @@
 .. highlight:: rst
 
+************
 Installation
-============
+************
 
-There is an installationscript now... detailed description coming here after alpha release.
+.. note::
+    This version is not recommended for productive use. Therefore productive installation is not yet mentioned in this documentation.
+
+.. contents::
+
+
+Common Package Requirements
+===========================
+
+Following requirements are common for both, development and demo installation of Koalix CRM.
+
+Please install the following packages:
+
+    - Python 2.7 (maybe it's running with other versions, please tell me if so)
+    - Django 1.7
+    - Mezzanine>=3.1.10
+    - po-localization
+    - django-bootstrap3
+    - django-braces
+    - django-import-export
+    - django-fsm
+    - django-extra-views
+
+.. tip::
+    If you have installed pip you can just use ``pip install -r requirements.txt``
+
+
+Setting up the demo
+===================
+
+    1. Download the source
+    2. Extract to a folder of your choice
+    3. Open console and change to that folder
+    4. Type ``python manage.py runserver``
+    5. Open your browser and go to http://127.0.0.1:8000
+
+
+Setting up for development
+==========================
+
+You first need to install some more packages
+
+    For documentation:
+    - Sphinx
