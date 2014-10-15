@@ -1,11 +1,9 @@
-#
-# Ignore PyCharm directory
-.idea/
-
-#
-# Ignore directories of static content
-./static/
-
-#
-# Ignore compiled python
 *.pyc
+*.pyo
+*.db
+.DS_Store
+.coverage
+local_settings.py
+/static/media/
+.idea
+doc/build

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block meta_title %}{% trans "Billing Cycles" %}{% endblock %}
+{% block title %}{% trans "Billing Cycles" %}{% endblock %}
+
+{% block breadcrumb_menu %}
+    <li class="active">{% trans "Billing Cycles" %}</li>
+{% endblock %}
+
+{% block main %}
+    <div class="content-panel" style="margin: 30px; padding: 10px;">
+    <h4><i class="fa fa-angle-right"></i> {% trans "Billing Cycles" %}</h4>
+        {% if customerbillingcycle_list %}
+        <table class="table table-striped table-advance">
+            <tr><th>{% trans "Name" %}</th><th>{% trans "Days to Payment Date" %}</th><th></th></tr>
+            {% for billingcycle in customerbillingcycle_list %}
+                <tr>
+                    <td>{{ billingcycle.name }}</td>
+                    <td>{{ billingcycle.days_to_payment }}</td>
+                    <td>
+                        <p class="pull-right">
+                        <button type="button" class="btn btn-sm btn-primary" onclick="window.location.assign('{% url 'billingcycle_edit' billingcycle.pk %}')">{% trans "Edit" %}</button>
+                        <button type="button" class="btn btn-sm btn-danger" onclick="window.location.assign('{% url 'billingcycle_delete' billingcycle.pk %}')">{% trans "Delete" %}</button>
+                        </p>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
+        <p><a href="{% url 'billingcycle_create' %}">{% trans "Create a new billing cycle" %}</a></p>
+    </div>
+{% endblock %}

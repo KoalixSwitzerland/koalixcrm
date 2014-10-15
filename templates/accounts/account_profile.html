@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load i18n future mezzanine_tags accounts_tags %}
+
+{% block meta_title %}{{ profile_user|username_or:"get_full_name" }}{% endblock %}
+{% block title %}{{ profile_user|username_or:"get_full_name" }}{% endblock %}
+{% block body_id %}account{% endblock %}
+
+{% block breadcrumb_menu %}
+{{ block.super }}
+<li>{{ profile_user|username_or:"get_full_name" }}</li>
+{% endblock %}
+
+{% block main %}
+<div class="row">
+<div class="profile-image col-md-3">
+    <img class="img-thumbnail" src="{% gravatar_url profile_user.email 128 %}">
+    {% if profile_user == request.user %}
+    <br><a class="btn btn-primary" href="{% url "profile_update" %}">{% trans "Update profile" %}</a>
+    {% endif %}
+</div>
+<div class="profile-content col-md-9">
+    <h2>{{ profile_user.get_full_name }}</h2>
+    {% for field, value in profile_user|profile_fields %}
+    <h3>{{ field }}</h3>
+    <p>{{ value|linebreaksbr }}</p>
+    {% endfor %}
+</div>
+</div>
+{% endblock %}

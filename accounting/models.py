@@ -3,18 +3,18 @@
 from subprocess import *
 from xml.dom.minidom import Document
 from datetime import *
-
+from django.utils.translation import ugettext_lazy as _
 from django.db import models
 from django.conf import settings
 
 from const.accountTypeChoices import *
-from djangoUserExtension.models import UserExtension
+from crm.models import UserExtension
 
 
 class AccountingPeriod(models.Model):
-    title = models.CharField(max_length=200, verbose_name=trans("Title"))  # For example "Year 2009", "1st Quarter 2009"
-    begin = models.DateField(verbose_name=trans("Begin"))
-    end = models.DateField(verbose_name=trans("End"))
+    title = models.CharField(max_length=200, verbose_name=_("Title"))  # For example "Year 2009", "1st Quarter 2009"
+    begin = models.DateField(verbose_name=_("Begin"))
+    end = models.DateField(verbose_name=_("End"))
 
     @staticmethod
     def get_current_valid_accounting_period():
@@ -43,7 +43,7 @@ class AccountingPeriod(models.Model):
         doc = Document()
 
         if len(user_extension) == 0:
-            raise Exception(trans("During BalanceSheet PDF Export"))
+            raise Exception(_("During BalanceSheet PDF Export"))
 
         if what_to_create == "balanceSheet":
             main = doc.createElement("koalixaccountingbalacesheet")
@@ -133,22 +133,22 @@ class AccountingPeriod(models.Model):
 
     class Meta:
         app_label = "accounting"
-        verbose_name = trans('Accounting Period')
-        verbose_name_plural = trans('Accounting Periods')
+        verbose_name = _('Accounting Period')
+        verbose_name_plural = _('Accounting Periods')
 
 
 class Account(models.Model):
-    accountNumber = models.IntegerField(verbose_name=trans("Account Number"))
-    title = models.CharField(verbose_name=trans("Account Title"), max_length=50)
-    accountType = models.CharField(verbose_name=trans("Account Type"), max_length=1, choices=ACCOUNTTYPECHOICES)
-    description = models.TextField(verbose_name=trans("Description"), null=True, blank=True)
-    originalAmount = models.DecimalField(max_digits=20, decimal_places=2, verbose_name=trans("Original Amount"),
+    accountNumber = models.IntegerField(verbose_name=_("Account Number"))
+    title = models.CharField(verbose_name=_("Account Title"), max_length=50)
+    accountType = models.CharField(verbose_name=_("Account Type"), max_length=1, choices=ACCOUNTTYPECHOICES)
+    description = models.TextField(verbose_name=_("Description"), null=True, blank=True)
+    originalAmount = models.DecimalField(max_digits=20, decimal_places=2, verbose_name=_("Original Amount"),
                                          default=0.00)
-    isopenreliabilitiesaccount = models.BooleanField(verbose_name=trans("Is The Open Liabilities Account"),
+    isopenreliabilitiesaccount = models.BooleanField(verbose_name=_("Is The Open Liabilities Account"),
                                                      default=False)
-    isopeninterestaccount = models.BooleanField(verbose_name=trans("Is The Open Interests Account"), default=False)
-    isProductInventoryActiva = models.BooleanField(verbose_name=trans("Is a Product Inventory Account"), default=False)
-    isACustomerPaymentAccount = models.BooleanField(verbose_name=trans("Is a Customer Payment Account"), default=False)
+    isopeninterestaccount = models.BooleanField(verbose_name=_("Is The Open Interests Account"), default=False)
+    isProductInventoryActiva = models.BooleanField(verbose_name=_("Is a Product Inventory Account"), default=False)
+    isACustomerPaymentAccount = models.BooleanField(verbose_name=_("Is a Customer Payment Account"), default=False)
 
     def value(self):
         booking_sum = self.all_bookings(from_account=False) - self.all_bookings(from_account=True)
@@ -192,47 +192,47 @@ class Account(models.Model):
 
     class Meta:
         app_label = "accounting"
-        verbose_name = trans('Account')
-        verbose_name_plural = trans('Account')
+        verbose_name = _('Account')
+        verbose_name_plural = _('Account')
         ordering = ['accountNumber']
 
 
 class ProductCategory(models.Model):
-    title = models.CharField(verbose_name=trans("Product Categorie Title"), max_length=50)
-    profitAccount = models.ForeignKey(Account, verbose_name=trans("Profit Account"),
+    title = models.CharField(verbose_name=_("Product Categorie Title"), max_length=50)
+    profitAccount = models.ForeignKey(Account, verbose_name=_("Profit Account"),
                                       limit_choices_to={"accountType": "E"},
                                       related_name="db_profit_account")
-    lossAccount = models.ForeignKey(Account, verbose_name=trans("Loss Account"), limit_choices_to={"accountType": "S"},
+    lossAccount = models.ForeignKey(Account, verbose_name=_("Loss Account"), limit_choices_to={"accountType": "S"},
                                     related_name="db_loss_account")
 
     class Meta:
         app_label = "accounting"
-        verbose_name = trans('Product Categorie')
-        verbose_name_plural = trans('Product Categories')
+        verbose_name = _('Product Categorie')
+        verbose_name_plural = _('Product Categories')
 
     def __unicode__(self):
         return self.title
 
 
 class Booking(models.Model):
-    fromAccount = models.ForeignKey(Account, verbose_name=trans("From Account"), related_name="db_booking_fromaccount")
-    toAccount = models.ForeignKey(Account, verbose_name=trans("To Account"), related_name="db_booking_toaccount")
-    amount = models.DecimalField(max_digits=20, decimal_places=2, verbose_name=trans("Amount"))
-    description = models.CharField(verbose_name=trans("Description"), max_length=120, null=True, blank=True)
-    bookingReference = models.ForeignKey('crm.Invoice', verbose_name=trans("Booking Reference"), null=True, blank=True)
-    bookingDate = models.DateTimeField(verbose_name=trans("Booking at"))
-    accountingPeriod = models.ForeignKey(AccountingPeriod, verbose_name=trans("AccountingPeriod"))
+    fromAccount = models.ForeignKey(Account, verbose_name=_("From Account"), related_name="db_booking_fromaccount")
+    toAccount = models.ForeignKey(Account, verbose_name=_("To Account"), related_name="db_booking_toaccount")
+    amount = models.DecimalField(max_digits=20, decimal_places=2, verbose_name=_("Amount"))
+    description = models.CharField(verbose_name=_("Description"), max_length=120, null=True, blank=True)
+    bookingReference = models.ForeignKey('crm.Invoice', verbose_name=_("Booking Reference"), null=True, blank=True)
+    bookingDate = models.DateTimeField(verbose_name=_("Booking at"))
+    accountingPeriod = models.ForeignKey(AccountingPeriod, verbose_name=_("AccountingPeriod"))
     staff = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True,
-                              verbose_name=trans("Reference Staff"), related_name="db_booking_refstaff")
-    dateOfCreation = models.DateTimeField(verbose_name=trans("Created at"), auto_now=True)
-    lastModification = models.DateTimeField(verbose_name=trans("Last modified"), auto_now_add=True)
+                              verbose_name=_("Reference Staff"), related_name="db_booking_refstaff")
+    dateOfCreation = models.DateTimeField(verbose_name=_("Created at"), auto_now=True)
+    lastModification = models.DateTimeField(verbose_name=_("Last modified"), auto_now_add=True)
     lastModifiedBy = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True,
-                                       verbose_name=trans("Last modified by"), related_name="db_booking_lstmodified")
+                                       verbose_name=_("Last modified by"), related_name="db_booking_lstmodified")
 
     def __unicode__(self):
         return self.fromAccount.__str__() + " " + self.toAccount.__str__() + " " + self.amount.__str__()
 
     class Meta:
         app_label = "accounting"
-        verbose_name = trans('Booking')
-        verbose_name_plural = trans('Bookings')
+        verbose_name = _('Booking')
+        verbose_name_plural = _('Bookings')

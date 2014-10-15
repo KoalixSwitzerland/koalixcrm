@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block meta_title %}{% trans "Customers" %}{% endblock %}
+{% block title %}{% trans "Customers" %}{% endblock %}
+
+{% block breadcrumb_menu %}
+    <li class="active">{% trans "Customers" %}</li>
+{% endblock %}
+
+{% block main %}
+    <div class="content-panel" style="margin: 30px; padding: 10px;">
+    <h4><i class="fa fa-angle-right"></i> {% trans "Customers" %}</h4>
+        {% if customer_list %}
+        <table class="table table-striped table-advance">
+            <tr><th>{% trans "Name" %}</th><th>{% trans "Prename" %}</th><th></th></tr>
+            {% for customer in customer_list %}
+                <tr>
+                    <td>{{ customer.name }}</td>
+                    <td>{{ customer.firstname }}</td>
+                    <td>
+                        <p class="pull-right">
+                        <button type="button" class="btn btn-sm btn-primary" onclick="window.location.assign('{% url 'customer_edit' customer.pk %}')">{% trans "Edit" %}</button>
+                        <button type="button" class="btn btn-sm btn-danger" onclick="window.location.assign('{% url 'customer_delete' customer.pk %}')">{% trans "Delete" %}</button>
+                        </p>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
+        <p><a href="{% url 'customer_create' %}">{% trans "Create a new customer" %}</a></p>
+    </div>
+{% endblock %}

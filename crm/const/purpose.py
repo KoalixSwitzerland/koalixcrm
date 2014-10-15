@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*
 
-from django.utils.translation import ugettext as trans
+from django.utils.translation import ugettext_lazy as _
 
 PURPOSESADDRESSINCONTRACT = (
-    ('D', trans('Delivery Address')),
-    ('B', trans('Billing Address')),
-    ('C', trans('Contact Address')),
+    ('D', _('Delivery Address')),
+    ('B', _('Billing Address')),
+    ('C', _('Contact Address')),
 )
 
 PURPOSESADDRESSINCUSTOMER = (
-    ('H', trans('Private')),
-    ('O', trans('Business')),
-    ('P', trans('Mobile Private')),
-    ('B', trans('Mobile Business')),
+    ('H', _('Private')),
+    ('O', _('Business')),
+    ('P', _('Mobile Private')),
+    ('B', _('Mobile Business')),
 )

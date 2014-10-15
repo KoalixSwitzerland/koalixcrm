@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block meta_title %}{% trans "Contracts" %}{% endblock %}
+{% block title %}{% trans "Contracts" %}{% endblock %}
+
+{% block breadcrumb_menu %}
+    <li class="active">{% trans "Contracts" %}</li>
+{% endblock %}
+
+{% block main %}
+    <div class="content-panel" style="margin: 30px; padding: 10px;">
+    <h4><i class="fa fa-angle-right"></i> {% trans "Contracts" %}</h4>
+        {% if contract_list %}
+        <table class="table table-striped table-advance">
+            <tr><th>{% trans "Description" %}</th><th></th><th></th></tr>
+            {% for contract in contract_list %}
+                <tr>
+                    <td>{{ contract.description }}</td>
+                    <td>
+                        <p class="pull-right">
+                        <button type="button" class="btn btn-sm btn-primary" onclick="window.location.assign('{% url 'contract_edit' contract.pk %}')">{% trans "Edit" %}</button>
+                        <button type="button" class="btn btn-sm btn-danger" onclick="window.location.assign('{% url 'contract_delete' contract.pk %}')">{% trans "Delete" %}</button>
+                        </p>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
+        <p><a href="{% url 'contract_create' %}">{% trans "Create a new contract" %}</a></p>
+    </div>
+{% endblock %}

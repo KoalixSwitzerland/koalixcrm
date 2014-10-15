@@ -1,0 +1,32 @@
+{% load i18n future pages_tags %}
+
+{% spaceless %}
+{% if page_branch %}
+{% for page in page_branch %}
+
+	{% if not has_home and page.is_primary and forloop.first %}
+	<ul class="mobile-menu">
+		<li><a class="home" href="{% url "home" %}"
+			   id="tree-menu-home">{% trans "Home" %}</a></li>
+    {% endif %}
+
+		{% if page.is_current_or_ascendant and not page.is_current_child %}
+        {% if page.has_children_in_menu %}{% page_menu page %}{% endif %}
+		{% endif %}
+
+		{% if page.is_current_child %}
+		<li class="
+			{% if forloop.first %} first{% endif %}
+			{% if forloop.last %} last{% endif %}"
+			id="mobile-menu-{{ page.html_id }}">
+			<a href="{{ page.get_absolute_url }}">{{ page.title }}</a>
+		</li>
+		{% endif %}
+
+	{% if page.is_primary and forloop.last %}
+	</ul>
+	{% endif %}
+
+{% endfor %}
+{% endif %}
+{% endspaceless %}
