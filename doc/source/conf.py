@@ -33,9 +33,6 @@ extensions = [
     'sphinx.ext.coverage',
     'sphinx.ext.pngmath',
     'sphinxcontrib.blockdiag',
-    'sphinxcontrib.seqdiag',
-    'sphinxcontrib.actdiag',
-    'sphinxcontrib.httpdomain',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
