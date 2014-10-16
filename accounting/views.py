@@ -4,9 +4,6 @@ from os import path
 from django.core.servers.basehttp import FileWrapper
 from django.http import Http404
 from django.http import HttpResponse
-from django.http import HttpResponseRedirect
-
-from accounting.models import *
 
 
 def exportPDF(callingModelAdmin, request, whereToCreateFrom, whatToCreate, redirectTo):
@@ -29,16 +26,18 @@ def exportPDF(callingModelAdmin, request, whereToCreateFrom, whatToCreate, redir
         pdf = whereToCreateFrom.create_pdf(request.user, whatToCreate)
         response = HttpResponse(FileWrapper(file(pdf)), mimetype='application/pdf')
         response['Content-Length'] = path.getsize(pdf)
-    except (TemplateSetMissing, UserExtensionMissing, CalledProcessError), e:
-        if type(e) == UserExtensionMissing:
-            response = HttpResponseRedirect(redirectTo)
-            callingModelAdmin.message_user(request, _("User Extension Missing"))
-        elif type(e) == TemplateSetMissing:
-            response = HttpResponseRedirect(redirectTo)
-            callingModelAdmin.message_user(request, _("Templateset Missing"))
-        elif type(e) == CalledProcessError:
-            response = HttpResponseRedirect(redirectTo)
-            callingModelAdmin.message_user(request, e.output)
-        else:
-            raise Http404
+    # except (TemplateSetMissing, UserExtensionMissing, CalledProcessError), e:
+    # if type(e) == UserExtensionMissing:
+    #         response = HttpResponseRedirect(redirectTo)
+    #         callingModelAdmin.message_user(request, _("User Extension Missing"))
+    #     elif type(e) == TemplateSetMissing:
+    #         response = HttpResponseRedirect(redirectTo)
+    #         callingModelAdmin.message_user(request, _("Templateset Missing"))
+    #     elif type(e) == CalledProcessError:
+    #         response = HttpResponseRedirect(redirectTo)
+    #         callingModelAdmin.message_user(request, e.output)
+    #     else:
+    #         raise Http404
+    except:
+        raise Http404
     return response

@@ -132,7 +132,6 @@ class AccountingPeriod(models.Model):
     # TODO: def createNewAccountingPeriod() Neues Geschäftsjahr erstellen
 
     class Meta:
-        app_label = "accounting"
         verbose_name = _('Accounting Period')
         verbose_name_plural = _('Accounting Periods')
 
@@ -191,7 +190,6 @@ class Account(models.Model):
         return self.accountNumber.__str__() + " " + self.title
 
     class Meta:
-        app_label = "accounting"
         verbose_name = _('Account')
         verbose_name_plural = _('Account')
         ordering = ['accountNumber']
@@ -206,7 +204,6 @@ class ProductCategory(models.Model):
                                     related_name="db_loss_account")
 
     class Meta:
-        app_label = "accounting"
         verbose_name = _('Product Categorie')
         verbose_name_plural = _('Product Categories')
 
@@ -233,6 +230,5 @@ class Booking(models.Model):
         return self.fromAccount.__str__() + " " + self.toAccount.__str__() + " " + self.amount.__str__()
 
     class Meta:
-        app_label = "accounting"
         verbose_name = _('Booking')
         verbose_name_plural = _('Bookings')

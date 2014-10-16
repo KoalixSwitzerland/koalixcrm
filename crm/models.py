@@ -3,28 +3,26 @@
 from datetime import *
 from decimal import Decimal
 from subprocess import *
+from xml import etree
+
 from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.core import serializers
 from django.contrib import auth
-from xml import etree
 from filebrowser_safe.fields import FileBrowseField
+from django_fsm import FSMIntegerField, transition
 
 from const.country import *
 from const.postaladdressprefix import *
 from const.purpose import *
 from const.states import *
-import accounting
-from django_fsm import FSMIntegerField, transition
+from accounting.models import Booking, Account, AccountingPeriod
 
 
-# class CRMuser(models.Model):
-#     image = models.ImageField(_('Avatar'), upload_to='avatars')
 
-
-###########################
+# ##########################
 ##   Contact Additions   ##
 ###########################
 
@@ -38,7 +36,8 @@ class PostalAddress(models.Model):
     zipcode = models.IntegerField(verbose_name=_("Zipcode"), blank=True, null=True)
     town = models.CharField(max_length=100, verbose_name=_("City"), blank=True, null=True)
     state = models.CharField(max_length=100, verbose_name=_("State"), blank=True, null=True)
-    country = models.CharField(max_length=2, choices=[(x[0], x[3]) for x in COUNTRIES], verbose_name=_("Country"), blank=True, null=True)
+    country = models.CharField(max_length=2, choices=[(x[0], x[3]) for x in COUNTRIES], verbose_name=_("Country"),
+                               blank=True, null=True)
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT, default='C')
     person = models.ForeignKey('Contact', related_name='address')
 
@@ -82,11 +81,13 @@ class EmailAddress(models.Model):
 
 
 class Contact(models.Model):
-    prefix = models.CharField(max_length=1, choices=POSTALADDRESSPREFIX, verbose_name=_("Prefix"), blank=True, null=True)
+    prefix = models.CharField(max_length=1, choices=POSTALADDRESSPREFIX, verbose_name=_("Prefix"), blank=True,
+                              null=True)
     name = models.CharField(max_length=300, verbose_name=_("Name"))
     dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now=True)
     lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now_add=True)
-    lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True, verbose_name=_("Last modified by"), null=True)
+    lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True,
+                                       verbose_name=_("Last modified by"), null=True)
 
     class Meta:
         verbose_name = _('Contact')
@@ -146,7 +147,8 @@ class Customer(Contact):
 
 
 class Supplier(Contact):
-    direct_shipment_to_customers = models.BooleanField(verbose_name=_("Offers direct Shipment to Customer"), default=False)
+    direct_shipment_to_customers = models.BooleanField(verbose_name=_("Offers direct Shipment to Customer"),
+                                                       default=False)
 
     class Meta:
         verbose_name = _("Supplier")
@@ -192,15 +194,16 @@ class Currency(models.Model):
 
 
 class Contract(models.Model):
-    # state = FSMIntegerField(default='new')
-    staff = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True, verbose_name=_("Staff"), related_name="db_relcontractstaff", null=True)
+    staff = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True, verbose_name=_("Staff"),
+                              related_name="db_relcontractstaff", null=True)
     description = models.TextField(verbose_name=_("Description"))
     defaultcustomer = models.ForeignKey(Customer, verbose_name=_("Default Customer"), null=True, blank=True)
     defaultSupplier = models.ForeignKey(Supplier, verbose_name=_("Default Supplier"), null=True, blank=True)
     defaultcurrency = models.ForeignKey(Currency, verbose_name=_("Default Currency"), blank=False, null=False)
     dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now=True)
     lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now_add=True)
-    lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, verbose_name=_("Last modified by"), related_name="db_contractlstmodified")
+    lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True},
+                                       verbose_name=_("Last modified by"), related_name="db_contractlstmodified")
 
     class Meta:
         verbose_name = _('Contract')
@@ -256,13 +259,17 @@ class PurchaseOrder(models.Model):
     supplier = models.ForeignKey(Supplier, verbose_name=_("Supplier"))
     description = models.CharField(verbose_name=_("Description"), max_length=100, blank=True, null=True)
     lastPricingDate = models.DateField(verbose_name=_("Last Pricing Date"), blank=True, null=True)
-    lastCalculatedPrice = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Price With Tax"), blank=True, null=True)
-    lastCalculatedTax = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Tax"), blank=True, null=True)
-    staff = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True, verbose_name=_("Staff"), related_name="db_relpostaff", null=True)
+    lastCalculatedPrice = models.DecimalField(max_digits=17, decimal_places=2,
+                                              verbose_name=_("Last Calculted Price With Tax"), blank=True, null=True)
+    lastCalculatedTax = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Tax"),
+                                            blank=True, null=True)
+    staff = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True, verbose_name=_("Staff"),
+                              related_name="db_relpostaff", null=True)
     currency = models.ForeignKey(Currency, verbose_name=_("Currency"), blank=False, null=False)
     dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now=True)
     lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now_add=True)
-    lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, verbose_name=_("Last modified by"), related_name="db_polstmodified")
+    lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True},
+                                       verbose_name=_("Last modified by"), related_name="db_polstmodified")
 
     def recalculate_prices(self, pricing_date):
         price = 0
@@ -521,18 +528,18 @@ class Invoice(SalesContract):
         dictprices = dict()
         dicttax = dict()
         exists = False
-        current_valid_accounting_period = accounting.models.AccountingPeriod.get_current_valid_accounting_period()
-        activaaccount = accounting.models.Account.objects.filter(isopeninterestaccount=True)
+        current_valid_accounting_period = AccountingPeriod.get_current_valid_accounting_period()
+        activaaccount = Account.objects.filter(isopeninterestaccount=True)
         for position in list(SalesContractPosition.objects.filter(contract=self.id)):
             profitaccount = position.product.accoutingProductCategorie.profitAccount
             dictprices[profitaccount] = position.lastCalculatedPrice
             dicttax[profitaccount] = position.lastCalculatedTax
 
-        for booking in accounting.models.Booking.objects.filter(accountingPeriod=current_valid_accounting_period):
+        for booking in Booking.objects.filter(accountingPeriod=current_valid_accounting_period):
             if booking.bookingReference == self:
                 raise Exception("Invoice already registered")
             for profitaccount, amount in dictprices.iteritems():
-                booking = accounting.models.Booking()
+                booking = Booking()
                 booking.toAccount = activaaccount[0]
                 booking.fromAccount = profitaccount
                 booking.bookingReference = self
@@ -544,13 +551,13 @@ class Invoice(SalesContract):
                 booking.save()
 
     def register_payment_in_accounting(self, request, paymentaccount, amount, payment_date):
-        activaaccount = accounting.Account.objects.filter(isopeninterestaccount=True)
-        booking = accounting.Booking()
+        activaaccount = Account.objects.filter(isopeninterestaccount=True)
+        booking = Booking()
         booking.toAccount = activaaccount
         booking.fromAccount = paymentaccount
         booking.bookingDate = payment_date.today().__str__()
         booking.bookingReference = self
-        booking.accountingPeriod = accounting.models.AccountingPeriod.objects.all()[0]
+        booking.accountingPeriod = AccountingPeriod.objects.all()[0]
         booking.amount = self.lastCalculatedPrice
         booking.staff = request.user
         booking.lastmodifiedby = request.user
@@ -621,7 +628,7 @@ class Unit(models.Model):
     shortname = models.CharField(verbose_name=_("Displayed Name After Quantity In The Position"), max_length=3)
     fractionof = models.ForeignKey('self', blank=True, null=True, verbose_name=_("Is A Fraction Of"))
     factor = models.IntegerField(verbose_name=_("Factor Between This And Next Higher Unit"),
-                                                         blank=True, null=True)
+                                 blank=True, null=True)
 
     def __unicode__(self):
         return self.shortname
@@ -915,17 +922,25 @@ class UserExtension(models.Model):
 class TemplateSet(models.Model):
     organisationname = models.CharField(verbose_name=_("Name of the Organisation"), max_length=200)
     title = models.CharField(verbose_name=_("Title"), max_length=100)
-    invoiceXSLFile = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Invoice"), related_name="db_reltemplateinvoice")
+    invoiceXSLFile = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Invoice"),
+                                       related_name="db_reltemplateinvoice")
     quoteXSLFile = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Quote"), related_name="db_reltemplatequote")
-    purchaseorderXSLFile = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Purchaseorder"), related_name="db_reltemplatepurchaseorder")
-    purchaseconfirmationXSLFile = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Purchase Confirmation"), related_name="db_reltemplatepurchaseconfirmation")
-    deilveryorderXSLFile = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Deilvery Order"), related_name="db_reltemplatedeliveryorder")
-    profitLossStatementXSLFile = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Profit Loss Statement"), related_name="db_reltemplateprofitlossstatement")
-    balancesheetXSLFile = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Balancesheet"), related_name="db_reltemplatebalancesheet")
+    purchaseorderXSLFile = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Purchaseorder"),
+                                             related_name="db_reltemplatepurchaseorder")
+    purchaseconfirmationXSLFile = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Purchase Confirmation"),
+                                                    related_name="db_reltemplatepurchaseconfirmation")
+    deilveryorderXSLFile = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Deilvery Order"),
+                                             related_name="db_reltemplatedeliveryorder")
+    profitLossStatementXSLFile = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Profit Loss Statement"),
+                                                   related_name="db_reltemplateprofitlossstatement")
+    balancesheetXSLFile = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Balancesheet"),
+                                            related_name="db_reltemplatebalancesheet")
     logo = FileBrowseField(verbose_name=_("Logo for the PDF generation"), blank=True, null=True, max_length=200)
-    bankingaccountref = models.CharField(max_length=60, verbose_name=_("Reference to Banking Account"), blank=True, null=True)
+    bankingaccountref = models.CharField(max_length=60, verbose_name=_("Reference to Banking Account"), blank=True,
+                                         null=True)
     addresser = models.CharField(max_length=200, verbose_name=_("Addresser"), blank=True, null=True)
-    fopConfigurationFile = FileBrowseField(verbose_name=_("FOP Configuration File"), blank=True, null=True, max_length=200)
+    fopConfigurationFile = FileBrowseField(verbose_name=_("FOP Configuration File"), blank=True, null=True,
+                                           max_length=200)
     footerTextsalesorders = models.TextField(verbose_name=_("Footer Text On Salesorders"), blank=True, null=True)
     headerTextsalesorders = models.TextField(verbose_name=_("Header Text On Salesorders"), blank=True, null=True)
     headerTextpurchaseorders = models.TextField(verbose_name=_("Header Text On Purchaseorders"), blank=True, null=True)
