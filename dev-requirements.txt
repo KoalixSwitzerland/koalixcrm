@@ -10,3 +10,4 @@ django-debug-toolbar
 sphinx-rtd-theme
 django-extensions
 django-compressor
+coverage

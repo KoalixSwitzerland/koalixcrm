@@ -163,60 +163,64 @@
 
                   {% endif %}
 
-                  <li class="mt">
-                      <a href="/">
-                          <i class="fa fa-dashboard"></i>
-                          <span>Dashboard</span>
-                      </a>
-                  </li>
+                  {% if user.is_authenticated %}
 
-                  <li class="sub-menu">
-                      <a href="/customers/">
-                          <i class="fa fa-users"></i>
-                          <span>{% trans "Customers" %}</span>
-                      </a>
-                  </li>
+                      <li class="mt">
+                          <a href="/">
+                              <i class="fa fa-dashboard"></i>
+                              <span>Dashboard</span>
+                          </a>
+                      </li>
 
-                  <li class="sub-menu">
-                      <a href="/suppliers/">
-                          <i class="fa fa-truck"></i>
-                          <span>{% trans "Suppliers" %}</span>
-                      </a>
-                  </li>
+                      <li class="sub-menu">
+                          <a href="/customers/">
+                              <i class="fa fa-users"></i>
+                              <span>{% trans "Customers" %}</span>
+                          </a>
+                      </li>
 
-                  <li class="sub-menu">
-                      <a href="/products/">
-                          <i class="fa fa-book"></i>
-                          <span>{% trans "Products" %}</span>
-                      </a>
-                  </li>
+                      <li class="sub-menu">
+                          <a href="/suppliers/">
+                              <i class="fa fa-truck"></i>
+                              <span>{% trans "Suppliers" %}</span>
+                          </a>
+                      </li>
 
-                  <li class="sub-menu">
-                      <a href="javascript:;" >
-                          <i class="fa fa-trophy"></i>
-                          <span>{% trans "Order Management" %}</span>
-                      </a>
-                      <ul class="sub">
-                          <li><a href="/contracts/">{% trans "Contracts" %}</a></li>
-                          <li><a href="/quotes/">{% trans "Quotes" %}</a></li>
-                          <li><a href="/purchaseorders/">{% trans "Purchase Orders" %}</a></li>
-                          <li><a href="/invoices/">{% trans "Invoices" %}</a></li>
-                      </ul>
-                  </li>
+                      <li class="sub-menu">
+                          <a href="/products/">
+                              <i class="fa fa-book"></i>
+                              <span>{% trans "Products" %}</span>
+                          </a>
+                      </li>
 
-                  <li class="sub-menu">
-                      <a href="javascript:;" >
-                          <i class="fa fa-wrench"></i>
-                          <span>{% trans "Settings" %}</span>
-                      </a>
-                      <ul class="sub">
-                          <li><a href="/customergroups/">{% trans "Customer Groups" %}</a></li>
-                          <li><a href="/billingcycles/">{% trans "Billing Cycles" %}</a></li>
-                          <li><a href="/currencies/">{% trans "Currencies" %}</a></li>
-                          <li><a href="/taxes/">{% trans "Tax Rates" %}</a></li>
-                          <li><a href="/units/">{% trans "Units" %}</a></li>
-                      </ul>
-                  </li>
+                      <li class="sub-menu">
+                          <a href="javascript:;" >
+                              <i class="fa fa-trophy"></i>
+                              <span>{% trans "Order Management" %}</span>
+                          </a>
+                          <ul class="sub">
+                              <li><a href="/contracts/">{% trans "Contracts" %}</a></li>
+                              <li><a href="/quotes/">{% trans "Quotes" %}</a></li>
+                              <li><a href="/purchaseorders/">{% trans "Purchase Orders" %}</a></li>
+                              <li><a href="/invoices/">{% trans "Invoices" %}</a></li>
+                          </ul>
+                      </li>
+
+                      <li class="sub-menu">
+                          <a href="javascript:;" >
+                              <i class="fa fa-wrench"></i>
+                              <span>{% trans "Settings" %}</span>
+                          </a>
+                          <ul class="sub">
+                              <li><a href="/customergroups/">{% trans "Customer Groups" %}</a></li>
+                              <li><a href="/billingcycles/">{% trans "Billing Cycles" %}</a></li>
+                              <li><a href="/currencies/">{% trans "Currencies" %}</a></li>
+                              <li><a href="/taxes/">{% trans "Tax Rates" %}</a></li>
+                              <li><a href="/units/">{% trans "Units" %}</a></li>
+                          </ul>
+                      </li>
+
+                  {% endif %}
 
                   {% page_menu "pages/menus/sidebar.html" %}
 
@@ -272,8 +276,11 @@
                   <div class="col-lg-2 ds">
                   {% block rightbar %}
                       <div class="row mt">
-						<h3>NOTIFICATIONS</h3>
+                        {% block right_notification_bar_title %}
+						    <h3>NOTIFICATIONS</h3>
+                        {% endblock %}
 
+                      {% block right_notification_bar_content %}
                       <!-- First Action -->
                       <div class="desc">
                       	<div class="thumb">
@@ -285,6 +292,7 @@
                       		</p>
                       	</div>
                       </div>
+                      {% endblock %}
 
                        <!-- USERS ONLINE SECTION -->
 						<h3>TEAM MEMBERS</h3>
@@ -300,6 +308,8 @@
                       	</div>
                       </div>
 
+
+                      {% block right_calendar %}
                         <!-- CALENDAR-->
                         <div id="calendar" class="mb">
                             <div class="panel green-panel no-margin">
@@ -313,6 +323,7 @@
                                 </div>
                             </div>
                         </div><!-- / calendar -->
+                      {% endblock %}
                     </div>
                   {% endblock %}
                   </div>
@@ -402,7 +413,7 @@
                 },
                 legend: [
                     {type: "text", label: "Special event", badge: "00"},
-                    {type: "block", label: "Regular event", }
+                    {type: "block", label: "Regular event" }
                 ]
             });
         });

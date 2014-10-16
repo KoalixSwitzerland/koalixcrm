@@ -1,15 +1,8 @@
 # -*- coding: utf-8 -*-
-from os import path
-from subprocess import CalledProcessError
-from django.contrib.auth.models import User
-
-from django.core.servers.basehttp import FileWrapper
 from django.core.urlresolvers import reverse_lazy
-from django.http import Http404
-from django.http import HttpResponse
-from django.http import HttpResponseRedirect
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView
 from extra_views import UpdateWithInlinesView, InlineFormSet, NamedFormsetsMixin, CreateWithInlinesView
+from braces.views import LoginRequiredMixin
 
 from crm.models import Customer, Invoice, Supplier, Currency, Unit, Tax, Contract, Product, CustomerBillingCycle, \
     PurchaseOrder, CustomerGroup, Quote, PostalAddress, PhoneAddress, EmailAddress
@@ -38,8 +31,9 @@ class EmailAddressInline(InlineFormSet):
     fields = ['email', 'purpose']
 
 
-class ListCustomers(ListView):
+class ListCustomers(ListView, LoginRequiredMixin):
     model = Customer
+    login_url = '/login/'
     fields = ['name', 'firstname', 'billingcycle', 'ismemberof']
 
 
@@ -64,8 +58,9 @@ class DeleteCustomer(DeleteView):
     success_url = reverse_lazy('list_customers')
 
 
-class ListSuppliers(ListView):
+class ListSuppliers(ListView, LoginRequiredMixin):
     model = Supplier
+    login_url = '/login/'
 
 
 class CreateSupplier(NamedFormsetsMixin, CreateWithInlinesView):
@@ -89,8 +84,9 @@ class DeleteSupplier(DeleteView):
     success_url = reverse_lazy('supplier_list')
 
 
-class ListCurrencies(ListView):
+class ListCurrencies(ListView, LoginRequiredMixin):
     model = Currency
+    login_url = '/login/'
 
 
 class CreateCurrency(CreateView):
@@ -108,8 +104,9 @@ class DeleteCurrency(DeleteView):
     success_url = reverse_lazy('currency_list')
 
 
-class ListTaxes(ListView):
+class ListTaxes(ListView, LoginRequiredMixin):
     model = Tax
+    login_url = '/login/'
 
 
 class CreateTax(CreateView):
@@ -127,8 +124,9 @@ class DeleteTax(DeleteView):
     success_url = reverse_lazy('tax_list')
 
 
-class ListUnits(ListView):
+class ListUnits(ListView, LoginRequiredMixin):
     model = Unit
+    login_url = '/login/'
 
 
 class CreateUnit(CreateView):
@@ -146,8 +144,9 @@ class DeleteUnit(DeleteView):
     success_url = reverse_lazy('unit_list')
 
 
-class ListProducts(ListView):
+class ListProducts(ListView, LoginRequiredMixin):
     model = Product
+    login_url = '/login/'
     fields = ['product_number', 'title', 'description', 'defaultunit', 'tax', 'accoutingProductCategorie']
 
 
@@ -168,8 +167,9 @@ class DeleteProduct(DeleteView):
     success_url = reverse_lazy('product_list')
 
 
-class ListBillingCycles(ListView):
+class ListBillingCycles(ListView, LoginRequiredMixin):
     model = CustomerBillingCycle
+    login_url = '/login/'
 
 
 class CreateBillingCycle(CreateView):
@@ -187,8 +187,9 @@ class DeleteBillingCycle(DeleteView):
     success_url = reverse_lazy('billingcycle_list')
 
 
-class ListPurchaseOrders(ListView):
+class ListPurchaseOrders(ListView, LoginRequiredMixin):
     model = PurchaseOrder
+    login_url = '/login/'
     fields = ['description', 'contract', 'supplier', 'state', 'currency', 'lastCalculatedPrice', 'lastPricingDate', ]
 
 
@@ -209,8 +210,9 @@ class DeletePurchaseOrder(DeleteView):
     success_url = reverse_lazy('purchaseorder_list')
 
 
-class ListCustomerGroups(ListView):
+class ListCustomerGroups(ListView, LoginRequiredMixin):
     model = CustomerGroup
+    login_url = '/login/'
 
 
 class CreateCustomerGroup(CreateView):
@@ -228,8 +230,9 @@ class DeleteCustomerGroup(DeleteView):
     success_url = reverse_lazy('customergroup_list')
 
 
-class ListContracts(ListView):
+class ListContracts(ListView, LoginRequiredMixin):
     model = Contract
+    login_url = '/login/'
     fields = ['description', 'defaultcustomer', 'defaultSupplier', 'defaultcurrency']
 
 
@@ -250,8 +253,9 @@ class DeleteContract(DeleteView):
     success_url = reverse_lazy('contract_list')
 
 
-class ListInvoice(ListView):
+class ListInvoice(ListView, LoginRequiredMixin):
     model = Invoice
+    login_url = '/login/'
     fields = ['description', 'contract', 'customer', 'payableuntil', 'state', 'currency', 'lastCalculatedPrice',
               'lastPricingDate']
 
@@ -273,8 +277,9 @@ class DeleteInvoice(DeleteView):
     success_url = reverse_lazy('invoice_list')
 
 
-class ListQuotes(ListView):
+class ListQuotes(ListView, LoginRequiredMixin):
     model = Quote
+    login_url = '/login/'
     fields = ['description', 'contract', 'customer', 'currency', 'validuntil', 'state', 'lastmodifiedby',
               'lastCalculatedPrice', 'lastPricingDate']
 
@@ -296,47 +301,3 @@ class EditQuote(UpdateView):
 class DeleteQuote(DeleteView):
     model = Quote
     success_url = reverse_lazy('quote_list')
-
-
-def export_pdf(calling_model_admin, request, where_to_create_from, what_to_create, redirect_to):
-    """This method exports PDFs provided by different Models in the crm application
-
-        Args:
-          calling_model_admin (ModelAdmin):  The calling ModelAdmin must be provided for error message response.
-          request: The request User is to know where to save the error message
-          where_to_create_from (Model):  The model from which a PDF should be exported
-          what_to_create (str): What document Type that has to be
-          redirect_to (str): String that describes to where the method sould redirect in case of an error
-
-        Returns:
-              HTTpResponse with a PDF when successful
-              HTTpResponseRedirect when not successful
-
-        Raises:
-          raises Http404 exception if anything goes wrong"""
-    try:
-        pdf = where_to_create_from.create_pdf(what_to_create)
-        response = HttpResponse(FileWrapper(file(pdf)), mimetype='application/pdf')
-        response['Content-Length'] = path.getsize(pdf)
-    except Exception, e:  # (TemplateSetMissing, UserExtensionMissing, CalledProcessError), e:
-        # if type(e) == UserExtensionMissing:
-        # response = HttpResponseRedirect(redirect_to)
-        # calling_model_admin.message_user(request, _("User Extension Missing"))
-        # elif type(e) == TemplateSetMissing:
-        # response = HttpResponseRedirect(redirect_to)
-        #     calling_model_admin.message_user(request, _("Templateset Missing"))
-        if type(e) == CalledProcessError:
-            response = HttpResponseRedirect(redirect_to)
-            calling_model_admin.message_user(request, e.output)
-        else:
-            raise Http404
-    return response
-
-
-def selectaddress(invoice_id):
-    invoice = Invoice.objects.get(id=invoice_id)
-    address = invoice.contract
-  
-
-  
-   
