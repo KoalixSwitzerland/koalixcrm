@@ -2,7 +2,7 @@ from datetime import *
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from filebrowser.fields import FileBrowseField
+from mezzanine.core.fields import FileBrowseField
 
 from const.events import *
 from crm.models import Quote, Contract, Invoice, Product
