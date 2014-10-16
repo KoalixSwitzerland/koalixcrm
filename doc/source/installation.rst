@@ -44,6 +44,7 @@ Setting up the demo
     5. Create an superuser when the command asks
     6. Type ``python manage.py runserver``
     7. Open your browser and go to http://127.0.0.1:8000
+    8. Login with the username and password you created at step #4
 
 
 Setting up for development
