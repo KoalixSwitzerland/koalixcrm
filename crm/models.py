@@ -18,8 +18,7 @@ from const.country import *
 from const.postaladdressprefix import *
 from const.purpose import *
 from const.states import *
-from accounting.models import Booking, Account, AccountingPeriod
-
+# from accounting.models import Booking, Account, AccountingPeriod
 
 
 # ##########################
@@ -524,44 +523,44 @@ class Invoice(SalesContract):
     paymentBankReference = models.CharField(verbose_name=_("Payment Bank Reference"), max_length=100, blank=True,
                                             null=True)
 
-    def register_invoice_in_accounting(self, request):
-        dictprices = dict()
-        dicttax = dict()
-        exists = False
-        current_valid_accounting_period = AccountingPeriod.get_current_valid_accounting_period()
-        activaaccount = Account.objects.filter(isopeninterestaccount=True)
-        for position in list(SalesContractPosition.objects.filter(contract=self.id)):
-            profitaccount = position.product.accoutingProductCategorie.profitAccount
-            dictprices[profitaccount] = position.lastCalculatedPrice
-            dicttax[profitaccount] = position.lastCalculatedTax
-
-        for booking in Booking.objects.filter(accountingPeriod=current_valid_accounting_period):
-            if booking.bookingReference == self:
-                raise Exception("Invoice already registered")
-            for profitaccount, amount in dictprices.iteritems():
-                booking = Booking()
-                booking.toAccount = activaaccount[0]
-                booking.fromAccount = profitaccount
-                booking.bookingReference = self
-                booking.accountingPeriod = current_valid_accounting_period
-                booking.bookingDate = date.today().__str__()
-                booking.staff = request.user
-                booking.amount = amount
-                booking.lastmodifiedby = request.user
-                booking.save()
-
-    def register_payment_in_accounting(self, request, paymentaccount, amount, payment_date):
-        activaaccount = Account.objects.filter(isopeninterestaccount=True)
-        booking = Booking()
-        booking.toAccount = activaaccount
-        booking.fromAccount = paymentaccount
-        booking.bookingDate = payment_date.today().__str__()
-        booking.bookingReference = self
-        booking.accountingPeriod = AccountingPeriod.objects.all()[0]
-        booking.amount = self.lastCalculatedPrice
-        booking.staff = request.user
-        booking.lastmodifiedby = request.user
-        booking.save()
+    # def register_invoice_in_accounting(self, request):
+    #     dictprices = dict()
+    #     dicttax = dict()
+    #     exists = False
+    #     current_valid_accounting_period = AccountingPeriod.get_current_valid_accounting_period()
+    #     activaaccount = Account.objects.filter(isopeninterestaccount=True)
+    #     for position in list(SalesContractPosition.objects.filter(contract=self.id)):
+    #         profitaccount = position.product.accoutingProductCategorie.profitAccount
+    #         dictprices[profitaccount] = position.lastCalculatedPrice
+    #         dicttax[profitaccount] = position.lastCalculatedTax
+    #
+    #     for booking in Booking.objects.filter(accountingPeriod=current_valid_accounting_period):
+    #         if booking.bookingReference == self:
+    #             raise Exception("Invoice already registered")
+    #         for profitaccount, amount in dictprices.iteritems():
+    #             booking = Booking()
+    #             booking.toAccount = activaaccount[0]
+    #             booking.fromAccount = profitaccount
+    #             booking.bookingReference = self
+    #             booking.accountingPeriod = current_valid_accounting_period
+    #             booking.bookingDate = date.today().__str__()
+    #             booking.staff = request.user
+    #             booking.amount = amount
+    #             booking.lastmodifiedby = request.user
+    #             booking.save()
+    #
+    # def register_payment_in_accounting(self, request, paymentaccount, amount, payment_date):
+    #     activaaccount = Account.objects.filter(isopeninterestaccount=True)
+    #     booking = Booking()
+    #     booking.toAccount = activaaccount
+    #     booking.fromAccount = paymentaccount
+    #     booking.bookingDate = payment_date.today().__str__()
+    #     booking.bookingReference = self
+    #     booking.accountingPeriod = AccountingPeriod.objects.all()[0]
+    #     booking.amount = self.lastCalculatedPrice
+    #     booking.staff = request.user
+    #     booking.lastmodifiedby = request.user
+    #     booking.save()
 
     @transition(field=state, source=InvoiceStatesEnum.Open, target=InvoiceStatesEnum.Invoice_created)
     def create_pdf(self, what_to_export):
