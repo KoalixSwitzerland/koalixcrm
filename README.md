@@ -10,6 +10,10 @@ Beautiful CRM/ERP for small business
 [![Requirements Status](https://requires.io/github/tfroehlich82/koalixcrm/requirements.svg?branch=master)](https://requires.io/github/tfroehlich82/koalixcrm/requirements/?branch=master)
 [![Coverage Status](https://img.shields.io/coveralls/tfroehlich82/koalixcrm.svg)](https://coveralls.io/r/tfroehlich82/koalixcrm)
 
+
+[<img src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif">](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ES8RFB7JN9CXC)
+
+
 **********************************************
 Note: This project is currently in alpha phase
 **********************************************
