@@ -5,7 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 from mezzanine.core.fields import FileBrowseField
 
 from const.events import *
-from crm.models import Quote, Contract, Invoice, Product
+from crm_core.models import Quote, Contract, Invoice, Product
 
 
 class Subscription(models.Model):

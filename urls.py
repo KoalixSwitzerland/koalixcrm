@@ -5,7 +5,7 @@ from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
 from django.views.generic import TemplateView
 from mezzanine.core.views import direct_to_template
-from crm.views import *
+from crm_core.views import *
 
 admin.autodiscover()
 

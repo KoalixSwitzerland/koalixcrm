@@ -908,7 +908,7 @@ class XSLFile(models.Model):
 class UserExtension(models.Model):
     user = models.ForeignKey('auth.User')
     defaultTemplateSet = models.ForeignKey('TemplateSet')
-    defaultCurrency = models.ForeignKey('crm.Currency')
+    defaultCurrency = models.ForeignKey('crm_core.Currency')
 
     class Meta:
         verbose_name = _('User Extension')

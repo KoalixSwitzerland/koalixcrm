@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*
 
 from django.utils.translation import ugettext_lazy as _
+from enum import Enum
 
 
-class InvoiceStatesEnum(object):
+class InvoiceStatesEnum(Enum):
     Open = 1
     Payed = 2
     Invoice_created = 3
@@ -14,7 +15,7 @@ class InvoiceStatesEnum(object):
     Deleted = 8
 
 
-class QuoteStatesEnum(object):
+class QuoteStatesEnum(Enum):
     New = 1
     Success = 2
     Quote_created = 3
@@ -24,7 +25,7 @@ class QuoteStatesEnum(object):
     Deleted = 7
 
 
-class PurchaseOrderStatesEnum(object):
+class PurchaseOrderStatesEnum(Enum):
     New = 1
     Ordered = 2
     Delayed = 3

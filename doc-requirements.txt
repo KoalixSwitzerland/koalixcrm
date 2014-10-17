@@ -1,1 +1,3 @@
-blockdiag
+Sphinx
+sphinx-rtd-theme
+sphinxcontrib-blockdiag

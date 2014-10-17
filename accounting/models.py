@@ -8,7 +8,7 @@ from django.db import models
 from django.conf import settings
 
 from const.accountTypeChoices import *
-from crm.models import UserExtension
+from crm_core.models import UserExtension
 
 
 class AccountingPeriod(models.Model):
@@ -216,7 +216,7 @@ class Booking(models.Model):
     toAccount = models.ForeignKey(Account, verbose_name=_("To Account"), related_name="db_booking_toaccount")
     amount = models.DecimalField(max_digits=20, decimal_places=2, verbose_name=_("Amount"))
     description = models.CharField(verbose_name=_("Description"), max_length=120, null=True, blank=True)
-    bookingReference = models.ForeignKey('crm.Invoice', verbose_name=_("Booking Reference"), null=True, blank=True)
+    bookingReference = models.ForeignKey('crm_core.Invoice', verbose_name=_("Booking Reference"), null=True, blank=True)
     bookingDate = models.DateTimeField(verbose_name=_("Booking at"))
     accountingPeriod = models.ForeignKey(AccountingPeriod, verbose_name=_("AccountingPeriod"))
     staff = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True,

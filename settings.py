@@ -81,6 +81,8 @@ ADMINS = (
 )
 MANAGERS = ADMINS
 
+ROLEPERMISSIONS_MODULE = 'crm_core.roles'
+
 LOGIN_URL = "/login/"
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
@@ -111,7 +113,7 @@ LANGUAGES = (
 )
 
 LOCALE_PATHS = (
-    'crm/locale',
+    'crm_core/locale',
     'accounting/locale',
     'subscriptions/locale',
     'djangoUserExtension/locale'
@@ -247,6 +249,7 @@ INSTALLED_APPS = (
     "django_fsm",
     "extra_views",
     "braces",
+    'rolepermissions',
     "mezzanine.boot",
     "mezzanine.conf",
     "mezzanine.core",
@@ -256,13 +259,9 @@ INSTALLED_APPS = (
     "mezzanine.galleries",
     "mezzanine.accounts",
     "bootstrap3",
-    # "CRMpages",
     "accounting",
-    "crm",
+    "crm_core",
     "subscriptions",
-    # "mptt",
-    # "calendarium",
-    # "todo",
     # Uncomment the following if you want to use mezzanine's blog plugin
     # "mezzanine.blog",
     # Uncomment the following if you want to use mezzanine's twitter plugin
@@ -323,7 +322,6 @@ OPTIONAL_APPS = (
     "debug_toolbar",
     "django_extensions",
     "compressor",
-    "sphinx_rtd_theme",
     PACKAGE_NAME_FILEBROWSER,
     PACKAGE_NAME_GRAPPELLI,
 )

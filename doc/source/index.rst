@@ -8,6 +8,8 @@ Welcome to Koalix CRM's documentation!
 
 Koalix CRM - Beautiful CRM/ERP for small business
 
+
+
 .. warning::
     This project is currently in alpha phase and not recommended for productive use!
 
@@ -23,10 +25,19 @@ Koalix CRM provides following benefits:
         All important features just one click away
     - User management:
         Create and manage user accounts, groups and permissions
-    - Integrated CMS:
+    - Fully integrated CMS:
         You can add wikis, blogs, galleries, ...
     - Ready for webshop:
         You want to start a webshop? Integrate easily in KoalixCRM
+    - Multiple translations:
+        Currently available translations:
+            * English
+            * German
+
+        Upcoming translations:
+            * Spanish
+            * Italian
+            * French
 
 
 Contents:
