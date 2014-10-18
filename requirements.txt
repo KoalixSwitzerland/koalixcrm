@@ -7,5 +7,4 @@ django-braces>=1.4.0
 django-import-export>=0.2.6
 django-fsm>=2.2.0
 django-extra-views>=0.6.5
-django-braces
 django-utils2
