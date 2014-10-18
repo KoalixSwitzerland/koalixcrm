@@ -20,14 +20,20 @@
                     <td>{{ billingcycle.days_to_payment }}</td>
                     <td>
                         <p class="pull-right">
-                        <button type="button" class="btn btn-sm btn-primary" onclick="window.location.assign('{% url 'billingcycle_edit' billingcycle.pk %}')">{% trans "Edit" %}</button>
-                        <button type="button" class="btn btn-sm btn-danger" onclick="window.location.assign('{% url 'billingcycle_delete' billingcycle.pk %}')">{% trans "Delete" %}</button>
+                        {% if perms.crm_core.change_customerbillingcycle %}
+                        <button type="button" class="btn btn-sm btn-primary" onclick="window.location.assign('{% url 'customerbillingcycle_edit' billingcycle.pk %}')">{% trans "Edit" %}</button>
+                        {% endif %}
+                        {% if perms.crm_core.delete_customerbillingcycle %}
+                        <button type="button" class="btn btn-sm btn-danger" onclick="window.location.assign('{% url 'customerbillingcycle_delete' billingcycle.pk %}')">{% trans "Delete" %}</button>
+                        {% endif %}
                         </p>
                     </td>
                 </tr>
             {% endfor %}
         </table>
         {% endif %}
-        <p><a href="{% url 'billingcycle_create' %}">{% trans "Create a new billing cycle" %}</a></p>
+        {% if perms.crm_core.add_customerbillingcycle %}
+        <p><a href="{% url 'customerbillingcycle_create' %}">{% trans "Create a new billing cycle" %}</a></p>
+        {% endif %}
     </div>
 {% endblock %}

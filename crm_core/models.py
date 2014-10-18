@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from datetime import *
+from datetime import date, timedelta
 from decimal import Decimal
-from subprocess import *
+from subprocess import check_output, STDOUT
 from xml import etree
-
 from django.conf import settings
-from django.contrib.auth.models import AbstractBaseUser
+from django.contrib.auth.models import AbstractBaseUser, User, Group, UserManager, BaseUserManager
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.core import serializers
@@ -14,16 +13,16 @@ from django.contrib import auth
 from filebrowser_safe.fields import FileBrowseField
 from django_fsm import FSMIntegerField, transition
 
-from const.country import *
-from const.postaladdressprefix import *
-from const.purpose import *
-from const.states import *
+from const.country import COUNTRIES
+from const.postaladdressprefix import POSTALADDRESSPREFIX
+from const.purpose import PURPOSESADDRESSINCONTRACT, PURPOSESADDRESSINCUSTOMER
+from const.states import InvoiceStatesEnum, PurchaseOrderStatesEnum, QuoteStatesEnum
 # from accounting.models import Booking, Account, AccountingPeriod
 
 
-# ##########################
-##   Contact Additions   ##
-###########################
+# ###########################
+# ##   Contact Additions   ##
+# ###########################
 
 
 class PostalAddress(models.Model):
@@ -43,6 +42,9 @@ class PostalAddress(models.Model):
     class Meta:
         verbose_name = _('Postal Address')
         verbose_name_plural = _('Postal Address')
+        permissions = (
+            ('view_postaladdress', 'Can view postal address'),
+        )
 
     def __unicode__(self):
         return ', '.join([self.person.name, self.addressline1, self.town, ])
@@ -56,6 +58,9 @@ class PhoneAddress(models.Model):
     class Meta:
         verbose_name = _('Phone Address')
         verbose_name_plural = _('Phone Address')
+        permissions = (
+            ('view_phoneaddress', 'Can view phone address'),
+        )
 
     def __unicode__(self):
         return "%s: %s" % (self.purpose, self.phone)
@@ -69,14 +74,17 @@ class EmailAddress(models.Model):
     class Meta:
         verbose_name = _('Email Address')
         verbose_name_plural = _('Email Address')
+        permissions = (
+            ('view_emailaddress', 'Can view email address'),
+        )
 
     def __unicode__(self):
         return "%s: %s" % (self.purpose, self.email)
 
 
-########################
-##    PARTICIPANTS    ##
-########################
+# ########################
+# ##    PARTICIPANTS    ##
+# ########################
 
 
 class Contact(models.Model):
@@ -85,12 +93,15 @@ class Contact(models.Model):
     name = models.CharField(max_length=300, verbose_name=_("Name"))
     dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now=True)
     lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now_add=True)
-    lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True,
+    lastmodifiedby = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, blank=True,
                                        verbose_name=_("Last modified by"), null=True)
 
     class Meta:
         verbose_name = _('Contact')
         verbose_name_plural = _('Contact')
+        permissions = (
+            ('view_contact', 'Can view contact'),
+        )
 
     def __unicode__(self):
         return self.name
@@ -105,6 +116,9 @@ class CustomerGroup(models.Model):
     class Meta:
         verbose_name = _('Customer Group')
         verbose_name_plural = _('Customer Groups')
+        permissions = (
+            ('view_customer_group', 'Can view customer groups'),
+        )
 
 
 class Customer(Contact):
@@ -115,6 +129,9 @@ class Customer(Contact):
     class Meta:
         verbose_name = _('Customer')
         verbose_name_plural = _('Customers')
+        permissions = (
+            ('view_customer', 'Can view customers'),
+        )
 
     def create_contract(self, request):
         contract = Contract()
@@ -152,14 +169,17 @@ class Supplier(Contact):
     class Meta:
         verbose_name = _("Supplier")
         verbose_name_plural = _("Suppliers")
+        permissions = (
+            ('view_supplier', 'Can view suppliers'),
+        )
 
     def __unicode__(self):
         return self.name
 
 
-###########################
-##    PAYMENT RELATED    ##
-###########################
+# ###########################
+# ##    PAYMENT RELATED    ##
+# ###########################
 
 
 class CustomerBillingCycle(models.Model):
@@ -169,6 +189,9 @@ class CustomerBillingCycle(models.Model):
     class Meta:
         verbose_name = _('Customer Billing Cycle')
         verbose_name_plural = _('Customer Billing Cycle')
+        permissions = (
+            ('view_customerbillingcycle', 'Can view billing cycles'),
+        )
 
     def __unicode__(self):
         return self.name
@@ -179,21 +202,23 @@ class Currency(models.Model):
     shortname = models.CharField(verbose_name=_("Displayed Name After Price In The Position"), max_length=3)
     rounding = models.DecimalField(max_digits=5, decimal_places=2, verbose_name=_("Rounding"), blank=True, null=True)
 
-    def __unicode__(self):
-        return self.shortname
-
     class Meta:
         verbose_name = _('Currency')
         verbose_name_plural = _('Currency')
+        permissions = (
+            ('view_currency', 'Can view currencies'),
+        )
 
+    def __unicode__(self):
+        return self.shortname
 
-##########################
-##   CONTRACT RELATED   ##
-##########################
+# ##########################
+# ##   CONTRACT RELATED   ##
+# ##########################
 
 
 class Contract(models.Model):
-    staff = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True, verbose_name=_("Staff"),
+    staff = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, blank=True, verbose_name=_("Staff"),
                               related_name="db_relcontractstaff", null=True)
     description = models.TextField(verbose_name=_("Description"))
     defaultcustomer = models.ForeignKey(Customer, verbose_name=_("Default Customer"), null=True, blank=True)
@@ -201,12 +226,15 @@ class Contract(models.Model):
     defaultcurrency = models.ForeignKey(Currency, verbose_name=_("Default Currency"), blank=False, null=False)
     dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now=True)
     lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now_add=True)
-    lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True},
+    lastmodifiedby = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True},
                                        verbose_name=_("Last modified by"), related_name="db_contractlstmodified")
 
     class Meta:
         verbose_name = _('Contract')
         verbose_name_plural = _('Contracts')
+        permissions = (
+            ('view_contract', 'Can view contracts'),
+        )
 
     def create_invoice(self):
         invoice = Invoice()
@@ -262,12 +290,12 @@ class PurchaseOrder(models.Model):
                                               verbose_name=_("Last Calculted Price With Tax"), blank=True, null=True)
     lastCalculatedTax = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Tax"),
                                             blank=True, null=True)
-    staff = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True, verbose_name=_("Staff"),
+    staff = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, blank=True, verbose_name=_("Staff"),
                               related_name="db_relpostaff", null=True)
     currency = models.ForeignKey(Currency, verbose_name=_("Currency"), blank=False, null=False)
     dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now=True)
     lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now_add=True)
-    lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True},
+    lastmodifiedby = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True},
                                        verbose_name=_("Last modified by"), related_name="db_polstmodified")
 
     def recalculate_prices(self, pricing_date):
@@ -345,6 +373,9 @@ class PurchaseOrder(models.Model):
     class Meta:
         verbose_name = _('Purchase Order')
         verbose_name_plural = _('Purchase Order')
+        permissions = (
+            ('view_purchaseorder', 'Can view purchase orders'),
+        )
 
     def __unicode__(self):
         return _("Purchase Order") + ": " + str(self.id) + " " + _("from Contract") + ": " + str(
@@ -364,12 +395,12 @@ class SalesContract(models.Model):
     lastCalculatedTax = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Tax"),
                                             blank=True, null=True)
     customer = models.ForeignKey(Customer, verbose_name=_("Customer"))
-    staff = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True, verbose_name=_("Staff"),
+    staff = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, blank=True, verbose_name=_("Staff"),
                               related_name="db_relscstaff", null=True)
     currency = models.ForeignKey(Currency, verbose_name=_("Currency"), blank=False, null=False)
     dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now=True)
     lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now_add=True)
-    lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True},
+    lastmodifiedby = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True},
                                        verbose_name=_("Last modified by"), related_name="db_lstscmodified",
                                        null=True,
                                        blank="True")
@@ -407,6 +438,9 @@ class SalesContract(models.Model):
     class Meta:
         verbose_name = _('Sales Contract')
         verbose_name_plural = _('Sales Contracts')
+        permissions = (
+            ('view_salescontract', 'Can view sales contracts'),
+        )
 
     def __unicode__(self):
         return _("Sales Contract") + ": " + str(self.id) + " " + _("from Contract") + ": " + str(
@@ -508,12 +542,15 @@ class Quote(SalesContract):
                           settings.PDF_OUTPUT_ROOT + 'purchaseconfirmation_' + str(self.id) + '.pdf'], stderr=STDOUT)
             return settings.PDF_OUTPUT_ROOT + "purchaseconfirmation_" + str(self.id) + ".pdf"
 
-    def __unicode__(self):
-        return _("Quote") + ": " + str(self.id) + " " + _("from Contract") + ": " + str(self.contract.id)
-
     class Meta:
         verbose_name = _('Quote')
         verbose_name_plural = _('Quotes')
+        permissions = (
+            ('view_quote', 'Can view quotes'),
+        )
+
+    def __unicode__(self):
+        return _("Quote") + ": " + str(self.id) + " " + _("from Contract") + ": " + str(self.contract.id)
 
 
 class Invoice(SalesContract):
@@ -614,12 +651,15 @@ class Invoice(SalesContract):
 
             # TODO: def registerPayment(self, amount, register_payment_in_accounting):
 
-    def __unicode__(self):
-        return _("Invoice") + ": " + str(self.id) + " " + _("from Contract") + ": " + str(self.contract.id)
-
     class Meta:
         verbose_name = _('Invoice')
         verbose_name_plural = _('Invoices')
+        permissions = (
+            ('view_invoice', 'Can view invoices'),
+        )
+
+    def __unicode__(self):
+        return _("Invoice") + ": " + str(self.id) + " " + _("from Contract") + ": " + str(self.contract.id)
 
 
 class Unit(models.Model):
@@ -629,12 +669,15 @@ class Unit(models.Model):
     factor = models.IntegerField(verbose_name=_("Factor Between This And Next Higher Unit"),
                                  blank=True, null=True)
 
-    def __unicode__(self):
-        return self.shortname
-
     class Meta:
         verbose_name = _('Unit')
         verbose_name_plural = _('Units')
+        permissions = (
+            ('view_unit', 'Can view units'),
+        )
+
+    def __unicode__(self):
+        return self.shortname
 
 
 class Tax(models.Model):
@@ -648,12 +691,15 @@ class Tax(models.Model):
     def gettaxrate(self):
         return self.taxrate
 
-    def __unicode__(self):
-        return self.name
-
     class Meta:
         verbose_name = _('Tax')
         verbose_name_plural = _('Taxes')
+        permissions = (
+            ('view_tax', 'Can view tax rates'),
+        )
+
+    def __unicode__(self):
+        return self.name
 
 
 class Product(models.Model):
@@ -663,7 +709,7 @@ class Product(models.Model):
     defaultunit = models.ForeignKey(Unit, verbose_name=_("Unit"))
     dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now=True)
     lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now_add=True)
-    lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True},
+    lastmodifiedby = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True},
                                        verbose_name=_("Last modified by"), null=True, blank="True")
     tax = models.ForeignKey(Tax, blank=False)
     accoutingProductCategorie = models.ForeignKey('accounting.ProductCategory',
@@ -708,12 +754,15 @@ class Product(models.Model):
     def get_tax_rate(self):
         return self.tax.gettaxrate()
 
-    def __unicode__(self):
-        return str(self.product_number) + ' ' + self.title
-
     class Meta:
         verbose_name = _('Product')
         verbose_name_plural = _('Products')
+        permissions = (
+            ('view_product', 'Can view products'),
+        )
+
+    def __unicode__(self):
+        return str(self.product_number) + ' ' + self.title
 
     class NoPriceFound(Exception):
         def __init__(self, customer, unit, date, product):
@@ -741,12 +790,12 @@ class UnitTransform(models.Model):
         else:
             return unit
 
-    def __unicode__(self):
-        return "From " + self.fromUnit.shortname + " to " + self.toUnit.shortname
-
     class Meta:
         verbose_name = _('Unit Transfrom')
         verbose_name_plural = _('Unit Transfroms')
+
+    def __unicode__(self):
+        return "From " + self.fromUnit.shortname + " to " + self.toUnit.shortname
 
 
 class CustomerGroupTransform(models.Model):
@@ -905,19 +954,6 @@ class XSLFile(models.Model):
         return self.title
 
 
-class UserExtension(models.Model):
-    user = models.ForeignKey('auth.User')
-    defaultTemplateSet = models.ForeignKey('TemplateSet')
-    defaultCurrency = models.ForeignKey('crm_core.Currency')
-
-    class Meta:
-        verbose_name = _('User Extension')
-        verbose_name_plural = _('User Extensions')
-
-    def __unicode__(self):
-        return self.user.__unicode__()
-
-
 class TemplateSet(models.Model):
     organisationname = models.CharField(verbose_name=_("Name of the Organisation"), max_length=200)
     title = models.CharField(verbose_name=_("Title"), max_length=100)
@@ -953,3 +989,16 @@ class TemplateSet(models.Model):
 
     def __unicode__(self):
         return self.title
+
+
+class UserExtension(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    defaultTemplateSet = models.ForeignKey(TemplateSet)
+    defaultCurrency = models.ForeignKey(Currency)
+
+    class Meta:
+        verbose_name = _('User Extension')
+        verbose_name_plural = _('User Extensions')
+
+    def __unicode__(self):
+        return self.user.__unicode__()

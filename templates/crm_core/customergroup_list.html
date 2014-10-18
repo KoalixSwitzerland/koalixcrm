@@ -19,14 +19,20 @@
                     <td>{{ customergroup.name }}</td>
                     <td>
                         <p class="pull-right">
+                        {% if perms.crm_core.change_customergroup %}
                         <button type="button" class="btn btn-sm btn-primary" onclick="window.location.assign('{% url 'customergroup_edit' customergroup.pk %}')">{% trans "Edit" %}</button>
+                        {% endif %}
+                        {% if perms.crm_core.delete_customergroup %}
                         <button type="button" class="btn btn-sm btn-danger" onclick="window.location.assign('{% url 'customergroup_delete' customergroup.pk %}')">{% trans "Delete" %}</button>
+                        {% endif %}
                         </p>
                     </td>
                 </tr>
             {% endfor %}
         </table>
         {% endif %}
+        {% if perms.crm_core.add_customergroup %}
         <p><a href="{% url 'customergroup_create' %}">{% trans "Create a new customer group" %}</a></p>
+        {% endif %}
     </div>
 {% endblock %}

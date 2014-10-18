@@ -20,14 +20,20 @@
                     <td>{{ unit.shortname }}</td>
                     <td>
                         <p class="pull-right">
+                        {% if perms.crm_core.change_unit %}
                         <button type="button" class="btn btn-sm btn-primary" onclick="window.location.assign('{% url 'unit_edit' unit.pk %}')">{% trans "Edit" %}</button>
+                        {% endif %}
+                        {% if perms.crm_core.delete_unit %}
                         <button type="button" class="btn btn-sm btn-danger" onclick="window.location.assign('{% url 'unit_delete' unit.pk %}')">{% trans "Delete" %}</button>
+                        {% endif %}
                         </p>
                     </td>
                 </tr>
             {% endfor %}
         </table>
         {% endif %}
+        {% if perms.crm_core.add_unit %}
         <p><a href="{% url 'unit_create' %}">{% trans "Create a new unit" %}</a></p>
+        {% endif %}
     </div>
 {% endblock %}

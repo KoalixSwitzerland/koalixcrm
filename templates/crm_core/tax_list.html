@@ -20,14 +20,20 @@
                     <td>{{ tax.taxrate }}</td>
                     <td>
                         <p class="pull-right">
+                        {% if perms.crm_core.change_tax %}
                         <button type="button" class="btn btn-sm btn-primary" onclick="window.location.assign('{% url 'tax_edit' tax.pk %}')">{% trans "Edit" %}</button>
+                        {% endif %}
+                        {% if perms.crm_core.delete_tax %}
                         <button type="button" class="btn btn-sm btn-danger" onclick="window.location.assign('{% url 'tax_delete' tax.pk %}')">{% trans "Delete" %}</button>
+                        {% endif %}
                         </p>
                     </td>
                 </tr>
             {% endfor %}
         </table>
         {% endif %}
+        {% if perms.crm_core.add_tax %}
         <p><a href="{% url 'tax_create' %}">{% trans "Create a new tax rate" %}</a></p>
+        {% endif %}
     </div>
 {% endblock %}

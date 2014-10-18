@@ -20,14 +20,20 @@
                     <td>{{ customer.firstname }}</td>
                     <td>
                         <p class="pull-right">
+                        {% if perms.crm_core.change_customer %}
                         <button type="button" class="btn btn-sm btn-primary" onclick="window.location.assign('{% url 'customer_edit' customer.pk %}')">{% trans "Edit" %}</button>
+                        {% endif %}
+                        {% if perms.crm_core.delete_customer %}
                         <button type="button" class="btn btn-sm btn-danger" onclick="window.location.assign('{% url 'customer_delete' customer.pk %}')">{% trans "Delete" %}</button>
+                        {% endif %}
                         </p>
                     </td>
                 </tr>
             {% endfor %}
         </table>
         {% endif %}
+        {% if perms.crm_core.add_customer %}
         <p><a href="{% url 'customer_create' %}">{% trans "Create a new customer" %}</a></p>
+        {% endif %}
     </div>
 {% endblock %}

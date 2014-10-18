@@ -81,7 +81,8 @@ ADMINS = (
 )
 MANAGERS = ADMINS
 
-ROLEPERMISSIONS_MODULE = 'crm_core.roles'
+ANONYMOUS_USER_ID = -1
+AUTH_USER_MODEL = "auth.User"
 
 LOGIN_URL = "/login/"
 
@@ -96,7 +97,7 @@ ALLOWED_HOSTS = []
 # timezone as the operating system.
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
-TIME_ZONE = 'Europe/Zurich'
+TIME_ZONE = 'GMT'
 
 # If you set this to True, Django will use timezone-aware datetimes.
 USE_TZ = True
@@ -144,7 +145,10 @@ TEMPLATE_LOADERS = (
     "django.template.loaders.app_directories.Loader",
 )
 
-AUTHENTICATION_BACKENDS = ("mezzanine.core.auth_backends.MezzanineBackend",)
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'permission.backends.PermissionBackend',
+)
 
 # List of finder classes that know how to find static files in
 # various locations.
@@ -243,13 +247,11 @@ INSTALLED_APPS = (
     "django.contrib.sites",
     "django.contrib.sitemaps",
     "django.contrib.staticfiles",
+    "braces",
     "po_localization",
-    "admin_backup",
     "import_export",
     "django_fsm",
     "extra_views",
-    "braces",
-    'rolepermissions',
     "mezzanine.boot",
     "mezzanine.conf",
     "mezzanine.core",
@@ -257,8 +259,8 @@ INSTALLED_APPS = (
     "mezzanine.forms",
     "mezzanine.pages",
     "mezzanine.galleries",
-    "mezzanine.accounts",
     "bootstrap3",
+    "admin_backup",
     "accounting",
     "crm_core",
     "subscriptions",

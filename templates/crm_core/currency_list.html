@@ -21,14 +21,20 @@
                     <td>{{ currency.rounding }}</td>
                     <td>
                         <p class="pull-right">
+                        {% if perms.crm_core.change_currency %}
                         <button type="button" class="btn btn-sm btn-primary" onclick="window.location.assign('{% url 'currency_edit' currency.pk %}')">{% trans "Edit" %}</button>
+                        {% endif %}
+                        {% if perms.crm_core.delete_currency %}
                         <button type="button" class="btn btn-sm btn-danger" onclick="window.location.assign('{% url 'currency_delete' currency.pk %}')">{% trans "Delete" %}</button>
+                        {% endif %}
                         </p>
                     </td>
                 </tr>
             {% endfor %}
         </table>
         {% endif %}
+        {% if perms.crm_core.add_currency %}
         <p><a href="{% url 'currency_create' %}">{% trans "Create a new currency" %}</a></p>
+        {% endif %}
     </div>
 {% endblock %}

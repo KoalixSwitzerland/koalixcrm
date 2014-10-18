@@ -19,14 +19,20 @@
                     <td>{{ supplier }}</td>
                     <td>
                         <p class="pull-right">
+                        {% if perms.crm_core.change_supplier %}
                         <button type="button" class="btn btn-sm btn-primary" onclick="window.location.assign('{% url 'supplier_edit' supplier.pk %}')">{% trans "Edit" %}</button>
+                        {% endif %}
+                        {% if perms.crm_core.delete_supplier %}
                         <button type="button" class="btn btn-sm btn-danger" onclick="window.location.assign('{% url 'supplier_delete' supplier.pk %}')">{% trans "Delete" %}</button>
+                        {% endif %}
                         </p>
                     </td>
                 </tr>
             {% endfor %}
         </table>
         {% endif %}
+        {% if perms.crm_core.add_supplier %}
         <p><a href="{% url 'supplier_create' %}">{% trans "Create a new supplier" %}</a></p>
+        {% endif %}
     </div>
 {% endblock %}

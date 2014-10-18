@@ -23,14 +23,20 @@
                     <td>{{ product.accoutingProductCategorie }}</td>
                     <td>
                         <p class="pull-right">
+                        {% if perms.crm_core.change_product %}
                         <button type="button" class="btn btn-sm btn-primary" onclick="window.location.assign('{% url 'product_edit' product.pk %}')">{% trans "Edit" %}</button>
+                        {% endif %}
+                        {% if perms.crm_core.delete_product %}
                         <button type="button" class="btn btn-sm btn-danger" onclick="window.location.assign('{% url 'product_delete' product.pk %}')">{% trans "Delete" %}</button>
+                        {% endif %}
                         </p>
                     </td>
                 </tr>
             {% endfor %}
         </table>
         {% endif %}
+        {% if perms.crm_core.add_product %}
         <p><a href="{% url 'product_create' %}">{% trans "Create a new product" %}</a></p>
+        {% endif %}
     </div>
 {% endblock %}

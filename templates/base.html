@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="{{ LANGUAGE_CODE }}"{% if LANGUAGE_BIDI %} dir="rtl"{% endif %}>
-{% load pages_tags mezzanine_tags i18n future staticfiles accounts_tags %}
+{% load pages_tags mezzanine_tags i18n future staticfiles %}
 {% load bootstrap3 %}
 
 {% bootstrap_messages %}
@@ -150,9 +150,13 @@
                   {% if request.user.is_authenticated %}
 
               	    <p class="centered">
-                        {% url "profile" request.user.username as profile_url %}
+{#                        {% url "profile" request.user.username as profile_url %}#}
                         <img src="{% static 'assets/img/avatar.jpg' %}" class="img-thumbnail" width="60">
-                        <h5 class="centered"><a href="{% url "profile_update" %}">{{ request.user|username_or:"email" }}</a></h5>
+                        <h5 class="centered">
+{#                            <a href="{% url "profile_update" %}">#}
+                                {{ request.user }}
+{#                            </a>#}
+                        </h5>
                     </p>
                     <li><a href="/admin/"><i class="fa fa-gears"></i>Administration</a></li>
                     <li><a href="/admin/logout/"><i class="fa fa-sign-out"></i>Logout</a></li>
@@ -172,53 +176,81 @@
                           </a>
                       </li>
 
+                      {% if perms.crm_core.view_customer %}
                       <li class="sub-menu">
                           <a href="/customers/">
                               <i class="fa fa-users"></i>
                               <span>{% trans "Customers" %}</span>
                           </a>
                       </li>
+                      {% endif %}
 
+                      {% if perms.crm_core.view_supplier %}
                       <li class="sub-menu">
                           <a href="/suppliers/">
                               <i class="fa fa-truck"></i>
                               <span>{% trans "Suppliers" %}</span>
                           </a>
                       </li>
+                      {% endif %}
 
+                      {% if perms.crm_core.can_view %}
                       <li class="sub-menu">
                           <a href="/products/">
                               <i class="fa fa-book"></i>
                               <span>{% trans "Products" %}</span>
                           </a>
                       </li>
+                      {% endif %}
 
+                      {% if perms.crm_core.can_view or perms.crm_core.can_view or perms.crm_core.can_view or perms.crm_core.can_view %}
                       <li class="sub-menu">
                           <a href="javascript:;" >
                               <i class="fa fa-trophy"></i>
                               <span>{% trans "Order Management" %}</span>
                           </a>
                           <ul class="sub">
-                              <li><a href="/contracts/">{% trans "Contracts" %}</a></li>
-                              <li><a href="/quotes/">{% trans "Quotes" %}</a></li>
-                              <li><a href="/purchaseorders/">{% trans "Purchase Orders" %}</a></li>
-                              <li><a href="/invoices/">{% trans "Invoices" %}</a></li>
+                              {% if perms.crm_core.view_contract %}
+                                <li><a href="/contracts/">{% trans "Contracts" %}</a></li>
+                              {% endif %}
+                              {% if perms.crm_core.view_quote %}
+                                <li><a href="/quotes/">{% trans "Quotes" %}</a></li>
+                              {% endif %}
+                              {% if perms.crm_core.view_purchaseorder %}
+                                <li><a href="/purchaseorders/">{% trans "Purchase Orders" %}</a></li>
+                              {% endif %}
+                              {% if perms.crm_core.view_invoice %}
+                                <li><a href="/invoices/">{% trans "Invoices" %}</a></li>
+                              {% endif %}
                           </ul>
                       </li>
+                      {% endif %}
 
+                    {% if perms.crm_core.view_customergroup or perms.crm_core.view_billingcycle or perms.crm_core.view_currency or perms.crm_core.view_tax or perms.crm_core.view_unit %}
                       <li class="sub-menu">
                           <a href="javascript:;" >
                               <i class="fa fa-wrench"></i>
                               <span>{% trans "Settings" %}</span>
                           </a>
                           <ul class="sub">
-                              <li><a href="/customergroups/">{% trans "Customer Groups" %}</a></li>
-                              <li><a href="/billingcycles/">{% trans "Billing Cycles" %}</a></li>
-                              <li><a href="/currencies/">{% trans "Currencies" %}</a></li>
-                              <li><a href="/taxes/">{% trans "Tax Rates" %}</a></li>
-                              <li><a href="/units/">{% trans "Units" %}</a></li>
+                              {% if perms.crm_core.view_customergroup %}
+                                <li><a href="/customergroups/">{% trans "Customer Groups" %}</a></li>
+                              {% endif %}
+                              {% if perms.crm_core.view_billingcycle %}
+                                <li><a href="/billingcycles/">{% trans "Billing Cycles" %}</a></li>
+                              {% endif %}
+                              {% if perms.crm_core.view_currency %}
+                                <li><a href="/currencies/">{% trans "Currencies" %}</a></li>
+                              {% endif %}
+                              {% if perms.crm_core.view_tax %}
+                                <li><a href="/taxes/">{% trans "Tax Rates" %}</a></li>
+                              {% endif %}
+                              {% if perms.crm_core.view_unit %}
+                                <li><a href="/units/">{% trans "Units" %}</a></li>
+                              {% endif %}
                           </ul>
                       </li>
+                    {% endif %}
 
                   {% endif %}
 
@@ -371,26 +403,6 @@
     <!--script for this page-->
     <script src="{%  static "assets/js/sparkline-chart.js" %}"></script>
 	<script src="{%  static "assets/js/zabuto_calendar.js" %}"></script>
-{#<script type="text/javascript">#}
-{#        $(document).ready(function () {#}
-{#        var unique_id = $.gritter.add({#}
-{#            // (string | mandatory) the heading of the notification#}
-{#            title: 'Welcome to Dashgum!',#}
-{#            // (string | mandatory) the text inside the notification#}
-{#            text: 'Hover me to enable the Close Button. You can hide the left sidebar clicking on the button next to the logo. Free version for <a href="http://blacktie.co" target="_blank" style="color:#ffd777">BlackTie.co</a>.',#}
-{#            // (string | optional) the image to display on the left#}
-{#            image: 'assets/img/ui-sam.jpg',#}
-{#            // (bool | optional) if you want it to fade out on its own or just sit there#}
-{#            sticky: true,#}
-{#            // (int | optional) the time you want it to be alive for before fading out#}
-{#            time: '',#}
-{#            // (string | optional) the class name you want to apply to that specific message#}
-{#            class_name: 'my-sticky-class'#}
-{#        });#}
-{##}
-{#        return false;#}
-{#        });#}
-{#	</script>#}
 
 	<script type="application/javascript">
         $(document).ready(function () {
@@ -408,7 +420,7 @@
                     return myNavFunction(this.id);
                 },
                 ajax: {
-                    url: "show_data.php?action=1",
+                    url: "/show_data.php?action=1",
                     modal: true
                 },
                 legend: [

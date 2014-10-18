@@ -21,14 +21,20 @@
                     <td>{{ purchaseorder.status }}</td>
                     <td>
                         <p class="pull-right">
+                        {% if perms.crm_core.change_purchaseorder %}
                         <button type="button" class="btn btn-sm btn-primary" onclick="window.location.assign('{% url 'purchaseorder_edit' purchaseorder.pk %}')">{% trans "Edit" %}</button>
+                        {% endif %}
+                        {% if perms.crm_core.delete_purchaseorder %}
                         <button type="button" class="btn btn-sm btn-danger" onclick="window.location.assign('{% url 'purchaseorder_delete' purchaseorder.pk %}')">{% trans "Delete" %}</button>
+                        {% endif %}
                         </p>
                     </td>
                 </tr>
             {% endfor %}
         </table>
         {% endif %}
-        <p><a href="{% url 'purchaseorder_create' %}">{% trans "Create a new purchase order" %}</a></p>
+        {% if perms.crm_core.add_purchaseorder %}
+        <p><a href="{% url 'purchaseorder_create' %}">{% trans "Create a new purchaseorder" %}</a></p>
+        {% endif %}
     </div>
 {% endblock %}
