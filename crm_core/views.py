@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 from braces.views import PermissionRequiredMixin, LoginRequiredMixin
 from django.conf import settings
+from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView
 from extra_views import UpdateWithInlinesView, InlineFormSet, NamedFormsetsMixin, CreateWithInlinesView
 
 from crm_core.models import Customer, Invoice, Supplier, Currency, Unit, Tax, Contract, Product, CustomerBillingCycle, \
-    PurchaseOrder, CustomerGroup, Quote, PostalAddress, PhoneAddress, EmailAddress
+    PurchaseOrder, CustomerGroup, Quote, PostalAddress, PhoneAddress, EmailAddress, UserExtension
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 from django.contrib.auth import authenticate, login, logout
@@ -20,7 +21,6 @@ def login_user(request):
         password = request.POST['password']
         user = authenticate(username=username, password=password)
         if user is not None:
-            print user
             if user.is_active:
                 login(request, user)
                 return redirect('/')
@@ -54,6 +54,21 @@ class EmailAddressInline(LoginRequiredMixin, PermissionRequiredMixin, InlineForm
     max_num = 2
     can_delete = False
     fields = ['email', 'purpose']
+
+
+class UserExtensionInline(InlineFormSet):
+    model = UserExtension
+    extra = 1
+    max_num = 1
+    can_delete = False
+
+
+class UpdateUserProfile(LoginRequiredMixin, NamedFormsetsMixin, UpdateWithInlinesView):
+    model = User
+    inlines = [UserExtensionInline, ]
+    inlines_names = ['userprofile_formset']
+    fields = ['first_name', 'last_name', 'email', 'is_superuser', 'is_staff', 'is_active', 'groups']
+    success_url = reverse_lazy('home')
 
 
 class ListCustomers(LoginRequiredMixin, PermissionRequiredMixin, ListView):

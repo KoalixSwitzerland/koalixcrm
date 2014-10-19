@@ -3,9 +3,8 @@ from __future__ import unicode_literals
 from django.conf.urls import patterns, include, url
 from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
-from django.contrib.auth import logout
 from mezzanine.core.views import direct_to_template
-from crm_core.views import login_user, ListCustomers, ListSuppliers, ListCurrencies, ListTaxes, ListUnits, \
+from crm_core.views import login_user, UpdateUserProfile, ListCustomers, ListSuppliers, ListCurrencies, ListTaxes, ListUnits, \
     ListProducts, ListBillingCycles, ListPurchaseOrders, ListCustomerGroups, ListContracts, ListInvoice, ListQuotes, \
     CreateCustomer, CreateSupplier, CreateProduct, CreateBillingCycle, CreateContract, CreateCurrency, CreateInvoice, \
     CreatePurchaseOrder, CreateCustomerGroup, CreateQuote, CreateTax, CreateUnit, EditProduct, EditBillingCycle, \
@@ -26,8 +25,11 @@ urlpatterns = i18n_patterns("",
                             # admin interface, which would be marginally more secure.
                             ("^admin/", include(admin.site.urls)),
                             url(r'^admin/backup/$', "admin_backup.views.admin_backup", name="admin_backup"),
+                            url(r'^dashboard/$', direct_to_template, {"template": "dashboard.html"}),
                             url(r'^login/$', login_user, name="login"),
                             url(r'^logout/$', login_user, name="logout"),
+                            url(r'^profileupdate/(?P<pk>\d+)/$', UpdateUserProfile.as_view(), name="profile_update"),
+
 
                             url(r'^customers/$', ListCustomers.as_view(), name='customer_list'),
                             url(r'^customers/create/$', CreateCustomer.as_view(), name='customer_create'),

@@ -5,7 +5,6 @@ from decimal import Decimal
 from subprocess import check_output, STDOUT
 from xml import etree
 from django.conf import settings
-from django.contrib.auth.models import AbstractBaseUser, User, Group, UserManager, BaseUserManager
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.core import serializers
@@ -992,9 +991,10 @@ class TemplateSet(models.Model):
 
 
 class UserExtension(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL)
-    defaultTemplateSet = models.ForeignKey(TemplateSet)
-    defaultCurrency = models.ForeignKey(Currency)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL)
+    image = models.ImageField(upload_to='avatars', default='avatar.jpg', blank=True, null=True)
+    defaultTemplateSet = models.ForeignKey(TemplateSet, blank=True, null=True)
+    defaultCurrency = models.ForeignKey(Currency, blank=True, null=True)
 
     class Meta:
         verbose_name = _('User Extension')

@@ -150,12 +150,15 @@
                   {% if request.user.is_authenticated %}
 
               	    <p class="centered">
-{#                        {% url "profile" request.user.username as profile_url %}#}
+                        {% if request.user.image %}
+                        <img src="{{ request.user.image }}" class="img-thumbnail" width="60">
+                            {% else %}
                         <img src="{% static 'assets/img/avatar.jpg' %}" class="img-thumbnail" width="60">
+                        {% endif %}
                         <h5 class="centered">
-{#                            <a href="{% url "profile_update" %}">#}
+                            <a href="{% url "profile_update" request.user.pk %}">
                                 {{ request.user }}
-{#                            </a>#}
+                            </a>
                         </h5>
                     </p>
                     <li><a href="/admin/"><i class="fa fa-gears"></i>Administration</a></li>
@@ -170,7 +173,7 @@
                   {% if user.is_authenticated %}
 
                       <li class="mt">
-                          <a href="/">
+                          <a href="/dashboard/">
                               <i class="fa fa-dashboard"></i>
                               <span>Dashboard</span>
                           </a>

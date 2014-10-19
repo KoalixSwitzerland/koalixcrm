@@ -24,7 +24,7 @@
                     <div style="margin: 0 12px 0 12px;">
                     {% bootstrap_form form %}
                 </div>
-                    {% if postaladdress_formset %}
+                    {% if postaladdress_formset and perms.crm_core.view_postaladdress %}
                         <details class="form-wrapper" id="edit-advanced">
                             <summary><i class="fa fa-envelope"></i> {% trans "Postal Address" %}</summary>
                             <div style="margin: 0 12px 0 12px;">
@@ -36,7 +36,7 @@
 
                 <div class="col-lg-6">
                     <div class="col-lg-6">
-                    {% if phoneaddress_formset %}
+                    {% if phoneaddress_formset and perms.crm_core.view_phoneaddress %}
                         <fieldset>
                         <legend><i class="fa fa-phone"></i> {% trans "Phone Address" %}</legend>
                             <div style="margin: 0 12px 0 12px;">
@@ -46,7 +46,7 @@
                     {% endif %}
                     </div>
                     <div class="col-lg-6">
-                    {% if emailaddress_formset %}
+                    {% if emailaddress_formset and perms.crm_core.view_emailaddress %}
                     <fieldset>
                         <legend><i class="fa fa-at"></i> {% trans "Email Address" %}</legend>
                             <div style="margin: 0 12px 0 12px;">

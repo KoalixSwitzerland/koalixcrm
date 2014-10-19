@@ -8,8 +8,11 @@
 <li class="active">{% trans "Home" %}</li>
 {% endblock %}
 
-{% block main %}
+{% block rightbar %}
+{% endblock %}
 
+{% block main %}
+    {% include 'includes/welcome.html' %}
 {% endblock %}
 
 {% block widgetpanel %}
