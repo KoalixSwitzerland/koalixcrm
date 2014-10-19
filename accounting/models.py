@@ -131,7 +131,7 @@ class AccountingPeriod(models.Model):
     #
     # # TODO: def createNewAccountingPeriod() Neues Geschäftsjahr erstellen
     #
-    # class Meta:
+    # class Meta():
     #     verbose_name = _('Accounting Period')
     #     verbose_name_plural = _('Accounting Periods')
 
@@ -189,7 +189,7 @@ class Account(models.Model):
     def __unicode__(self):
         return self.accountNumber.__str__() + " " + self.title
 
-    class Meta:
+    class Meta():
         verbose_name = _('Account')
         verbose_name_plural = _('Account')
         ordering = ['accountNumber']
@@ -203,7 +203,7 @@ class ProductCategory(models.Model):
     lossAccount = models.ForeignKey(Account, verbose_name=_("Loss Account"), limit_choices_to={"accountType": "S"},
                                     related_name="db_loss_account")
 
-    class Meta:
+    class Meta():
         verbose_name = _('Product Categorie')
         verbose_name_plural = _('Product Categories')
 
@@ -229,6 +229,6 @@ class Booking(models.Model):
     def __unicode__(self):
         return self.fromAccount.__str__() + " " + self.toAccount.__str__() + " " + self.amount.__str__()
 
-    class Meta:
+    class Meta():
         verbose_name = _('Booking')
         verbose_name_plural = _('Bookings')

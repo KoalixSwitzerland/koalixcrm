@@ -38,7 +38,7 @@ class PostalAddress(models.Model):
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT, default='C')
     person = models.ForeignKey('Contact', related_name='address')
 
-    class Meta:
+    class Meta():
         verbose_name = _('Postal Address')
         verbose_name_plural = _('Postal Address')
         permissions = (
@@ -54,7 +54,7 @@ class PhoneAddress(models.Model):
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCUSTOMER, default='H')
     person = models.ForeignKey('Contact')
 
-    class Meta:
+    class Meta():
         verbose_name = _('Phone Address')
         verbose_name_plural = _('Phone Address')
         permissions = (
@@ -70,7 +70,7 @@ class EmailAddress(models.Model):
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT, default='C')
     person = models.ForeignKey('Contact')
 
-    class Meta:
+    class Meta():
         verbose_name = _('Email Address')
         verbose_name_plural = _('Email Address')
         permissions = (
@@ -95,7 +95,7 @@ class Contact(models.Model):
     lastmodifiedby = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, blank=True,
                                        verbose_name=_("Last modified by"), null=True)
 
-    class Meta:
+    class Meta():
         verbose_name = _('Contact')
         verbose_name_plural = _('Contact')
         permissions = (
@@ -112,7 +112,7 @@ class CustomerGroup(models.Model):
     def __unicode__(self):
         return self.name
 
-    class Meta:
+    class Meta():
         verbose_name = _('Customer Group')
         verbose_name_plural = _('Customer Groups')
         permissions = (
@@ -125,7 +125,7 @@ class Customer(Contact):
     billingcycle = models.ForeignKey('CustomerBillingCycle', verbose_name=_('Default Billing Cycle'))
     ismemberof = models.ManyToManyField(CustomerGroup, verbose_name=_('Is member of'), blank=True, null=True)
 
-    class Meta:
+    class Meta():
         verbose_name = _('Customer')
         verbose_name_plural = _('Customers')
         permissions = (
@@ -165,7 +165,7 @@ class Supplier(Contact):
     direct_shipment_to_customers = models.BooleanField(verbose_name=_("Offers direct Shipment to Customer"),
                                                        default=False)
 
-    class Meta:
+    class Meta():
         verbose_name = _("Supplier")
         verbose_name_plural = _("Suppliers")
         permissions = (
@@ -185,7 +185,7 @@ class CustomerBillingCycle(models.Model):
     name = models.CharField(max_length=300, verbose_name=_("Name"))
     days_to_payment = models.IntegerField(verbose_name=_("Days To Payment Date"))
 
-    class Meta:
+    class Meta():
         verbose_name = _('Customer Billing Cycle')
         verbose_name_plural = _('Customer Billing Cycle')
         permissions = (
@@ -201,7 +201,7 @@ class Currency(models.Model):
     shortname = models.CharField(verbose_name=_("Displayed Name After Price In The Position"), max_length=3)
     rounding = models.DecimalField(max_digits=5, decimal_places=2, verbose_name=_("Rounding"), blank=True, null=True)
 
-    class Meta:
+    class Meta():
         verbose_name = _('Currency')
         verbose_name_plural = _('Currency')
         permissions = (
@@ -228,7 +228,7 @@ class Contract(models.Model):
     lastmodifiedby = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True},
                                        verbose_name=_("Last modified by"), related_name="db_contractlstmodified")
 
-    class Meta:
+    class Meta():
         verbose_name = _('Contract')
         verbose_name_plural = _('Contracts')
         permissions = (
@@ -369,7 +369,7 @@ class PurchaseOrder(models.Model):
                       settings.PDF_OUTPUT_ROOT + 'purchaseorder_' + str(self.id) + '.pdf'], stderr=STDOUT)
         return settings.PDF_OUTPUT_ROOT + "purchaseorder_" + str(self.id) + ".pdf"
 
-    class Meta:
+    class Meta():
         verbose_name = _('Purchase Order')
         verbose_name_plural = _('Purchase Order')
         permissions = (
@@ -434,7 +434,7 @@ class SalesContract(models.Model):
         except Quote.DoesNotExist:
             return 0
 
-    class Meta:
+    class Meta():
         verbose_name = _('Sales Contract')
         verbose_name_plural = _('Sales Contracts')
         permissions = (
@@ -541,7 +541,7 @@ class Quote(SalesContract):
                           settings.PDF_OUTPUT_ROOT + 'purchaseconfirmation_' + str(self.id) + '.pdf'], stderr=STDOUT)
             return settings.PDF_OUTPUT_ROOT + "purchaseconfirmation_" + str(self.id) + ".pdf"
 
-    class Meta:
+    class Meta():
         verbose_name = _('Quote')
         verbose_name_plural = _('Quotes')
         permissions = (
@@ -650,7 +650,7 @@ class Invoice(SalesContract):
 
             # TODO: def registerPayment(self, amount, register_payment_in_accounting):
 
-    class Meta:
+    class Meta():
         verbose_name = _('Invoice')
         verbose_name_plural = _('Invoices')
         permissions = (
@@ -668,7 +668,7 @@ class Unit(models.Model):
     factor = models.IntegerField(verbose_name=_("Factor Between This And Next Higher Unit"),
                                  blank=True, null=True)
 
-    class Meta:
+    class Meta():
         verbose_name = _('Unit')
         verbose_name_plural = _('Units')
         permissions = (
@@ -690,7 +690,7 @@ class Tax(models.Model):
     def gettaxrate(self):
         return self.taxrate
 
-    class Meta:
+    class Meta():
         verbose_name = _('Tax')
         verbose_name_plural = _('Taxes')
         permissions = (
@@ -753,7 +753,7 @@ class Product(models.Model):
     def get_tax_rate(self):
         return self.tax.gettaxrate()
 
-    class Meta:
+    class Meta():
         verbose_name = _('Product')
         verbose_name_plural = _('Products')
         permissions = (
@@ -789,7 +789,7 @@ class UnitTransform(models.Model):
         else:
             return unit
 
-    class Meta:
+    class Meta():
         verbose_name = _('Unit Transfrom')
         verbose_name_plural = _('Unit Transfroms')
 
@@ -814,7 +814,7 @@ class CustomerGroupTransform(models.Model):
     def __unicode__(self):
         return "From " + self.fromCustomerGroup.name + " to " + self.toCustomerGroup.name
 
-    class Meta:
+    class Meta():
         verbose_name = _('Customer Group Price Transfrom')
         verbose_name_plural = _('Customer Group Price Transfroms')
 
@@ -862,7 +862,7 @@ class Price(models.Model):
                         self.customerGroup == customer_group) & (self.currency == currency):
                 return 1
 
-    class Meta:
+    class Meta():
         verbose_name = _('Price')
         verbose_name_plural = _('Prices')
 
@@ -914,7 +914,7 @@ class Position(models.Model):
     def __unicode__(self):
         return _("Position") + ": " + str(self.id)
 
-    class Meta:
+    class Meta():
         verbose_name = _('Position')
         verbose_name_plural = _('Positions')
 
@@ -922,7 +922,7 @@ class Position(models.Model):
 class SalesContractPosition(Position):
     contract = models.ForeignKey(SalesContract, verbose_name=_("Contract"))
 
-    class Meta:
+    class Meta():
         verbose_name = _('Salescontract Position')
         verbose_name_plural = _('Salescontract Positions')
 
@@ -933,7 +933,7 @@ class SalesContractPosition(Position):
 class PurchaseOrderPosition(Position):
     contract = models.ForeignKey(PurchaseOrder, verbose_name=_("Contract"))
 
-    class Meta:
+    class Meta():
         verbose_name = _('Purchaseorder Position')
         verbose_name_plural = _('Purchaseorder Positions')
 
@@ -943,9 +943,9 @@ class PurchaseOrderPosition(Position):
 
 class XSLFile(models.Model):
     title = models.CharField(verbose_name=_("Title"), max_length=100, blank=True, null=True)
-    xslfile = FileBrowseField(verbose_name=_("XSL File"), max_length=200)
+    xslfile = FileBrowseField(verbose_name=_("XSL File"))
 
-    class Meta:
+    class Meta():
         verbose_name = _('XSL File')
         verbose_name_plural = _('XSL Files')
 
@@ -969,12 +969,11 @@ class TemplateSet(models.Model):
                                                    related_name="db_reltemplateprofitlossstatement")
     balancesheetXSLFile = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Balancesheet"),
                                             related_name="db_reltemplatebalancesheet")
-    logo = FileBrowseField(verbose_name=_("Logo for the PDF generation"), blank=True, null=True, max_length=200)
+    logo = FileBrowseField(verbose_name=_("Logo for the PDF generation"), blank=True, null=True)
     bankingaccountref = models.CharField(max_length=60, verbose_name=_("Reference to Banking Account"), blank=True,
                                          null=True)
     addresser = models.CharField(max_length=200, verbose_name=_("Addresser"), blank=True, null=True)
-    fopConfigurationFile = FileBrowseField(verbose_name=_("FOP Configuration File"), blank=True, null=True,
-                                           max_length=200)
+    fopConfigurationFile = FileBrowseField(verbose_name=_("FOP Configuration File"), blank=True, null=True)
     footerTextsalesorders = models.TextField(verbose_name=_("Footer Text On Salesorders"), blank=True, null=True)
     headerTextsalesorders = models.TextField(verbose_name=_("Header Text On Salesorders"), blank=True, null=True)
     headerTextpurchaseorders = models.TextField(verbose_name=_("Header Text On Purchaseorders"), blank=True, null=True)
@@ -982,7 +981,7 @@ class TemplateSet(models.Model):
     pagefooterleft = models.CharField(max_length=40, verbose_name=_("Page Footer Left"), blank=True, null=True)
     pagefootermiddle = models.CharField(max_length=40, verbose_name=_("Page Footer Middle"), blank=True, null=True)
 
-    class Meta:
+    class Meta():
         verbose_name = _('Templateset')
         verbose_name_plural = _('Templatesets')
 
@@ -996,7 +995,7 @@ class UserExtension(models.Model):
     defaultTemplateSet = models.ForeignKey(TemplateSet, blank=True, null=True)
     defaultCurrency = models.ForeignKey(Currency, blank=True, null=True)
 
-    class Meta:
+    class Meta():
         verbose_name = _('User Extension')
         verbose_name_plural = _('User Extensions')
 

@@ -5,77 +5,77 @@ from .models import Product, Contract, Currency, Customer, CustomerBillingCycle,
 
 class ProductResource(resources.ModelResource):
     
-    class Meta:
+    class Meta():
         model = Product
         
 
 class ContractResource(resources.ModelResource):
     
-    class Meta:
+    class Meta():
         model = Contract
         
 
 class CurrencyResource(resources.ModelResource):
     
-    class Meta:
+    class Meta():
         model = Currency
         
         
 class CustomerResource(resources.ModelResource):
     
-    class Meta:
+    class Meta():
         model = Customer
         
         
 class CustomerBillingCycleResource(resources.ModelResource):
     
-    class Meta:
+    class Meta():
         model = CustomerBillingCycle
         
         
 class CustomerGroupResource(resources.ModelResource):
     
-    class Meta:
+    class Meta():
         model = CustomerGroup
         
         
 class PurchaseOrderResource(resources.ModelResource):
     
-    class Meta:
+    class Meta():
         model = PurchaseOrder
         
         
 class QuoteResource(resources.ModelResource):
     
-    class Meta:
+    class Meta():
         model = Quote
         
         
 class InvoiceResource(resources.ModelResource):
     
-    class Meta:
+    class Meta():
         model = Invoice
         
         
 class SalesContractResource(resources.ModelResource):
     
-    class Meta:
+    class Meta():
         model = SalesContract
         
         
 class SupplierResource(resources.ModelResource):
     
-    class Meta:
+    class Meta():
         model = Supplier
         
         
 class TaxResource(resources.ModelResource):
     
-    class Meta:
+    class Meta():
         model = Tax
         
         
 class UnitResource(resources.ModelResource):
     
-    class Meta:
+    class Meta():
         model = Unit

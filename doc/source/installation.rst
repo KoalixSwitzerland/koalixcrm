@@ -41,10 +41,16 @@ Setting up the demo
     2. Extract to a folder of your choice
     3. Open console and change to that folder
     4. Type ``python manage.py creadeb``
-    5. Create an superuser when the command asks
+    5. Create an superuser when you're asked
     6. Type ``python manage.py runserver``
     7. Open your browser and go to http://127.0.0.1:8000
     8. Login with the username and password you created at step #4
+
+.. hint::
+    You can use the superuser to browse the CMS backend at http://127.0.0.1:8000/admin/
+
+.. note::
+    If you're using an non-admin user you should assign permissions
 
 
 Setting up for development
