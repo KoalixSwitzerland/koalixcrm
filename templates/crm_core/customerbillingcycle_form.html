@@ -5,7 +5,7 @@
 {% block title %}{% trans "Billing Cycle" %}{% endblock %}
 
 {% block breadcrumb_menu %}
-    <li class="active"><a href="{% url 'billingcycle_list' %}">{% trans "Billing Cycle" %}</a></li>
+    <li class="active"><a href="{% url 'customerbillingcycle_list' %}">{% trans "Billing Cycle" %}</a></li>
     <li class="active">{% if billingcycle %}{% trans "Edit billing cycle" %}{% else %}{% trans "Create billing cycle" %}{% endif%}</li>
 {% endblock %}
 
@@ -30,7 +30,7 @@
     </button>
 
     <button type="button" class="btn btn-default"
-            onclick="window.location.assign('{% url 'billingcycle_list' %}')">
+            onclick="window.location.assign('{% url 'customerbillingcycle_list' %}')">
         {% trans "Cancel" %}
     </button>
 

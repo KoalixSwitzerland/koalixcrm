@@ -991,9 +991,9 @@ class TemplateSet(models.Model):
 
 class UserExtension(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL)
-    image = models.ImageField(upload_to='avatars', default='avatar.jpg', blank=True, null=True)
-    defaultTemplateSet = models.ForeignKey(TemplateSet, blank=True, null=True)
-    defaultCurrency = models.ForeignKey(Currency, blank=True, null=True)
+    image = models.ImageField(upload_to='avatars/', default='avatars/avatar.jpg', null=True, blank=True)
+    defaultTemplateSet = models.ForeignKey(TemplateSet, null=True, blank=True)
+    defaultCurrency = models.ForeignKey(Currency, null=True, blank=True)
 
     class Meta():
         verbose_name = _('User Extension')

@@ -4,6 +4,8 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView
+from django.http import HttpResponse
+from django.template import RequestContext, loader
 from extra_views import UpdateWithInlinesView, InlineFormSet, NamedFormsetsMixin, CreateWithInlinesView
 
 from crm_core.models import Customer, Invoice, Supplier, Currency, Unit, Tax, Contract, Product, CustomerBillingCycle, \
@@ -23,8 +25,25 @@ def login_user(request):
         if user is not None:
             if user.is_active:
                 login(request, user)
-                return redirect('/')
+                return redirect(reverse_lazy('dashboard'))
     return render_to_response('registration/login.html', context_instance=RequestContext(request))
+
+
+def show_dashboard(request):
+    contractcount = Contract.objects.all().count()
+    invoicecount = Invoice.objects.all().count()
+    customercount = Customer.objects.all().count()
+    suppliercount = Supplier.objects.all().count()
+    productcount = Product.objects.all().count()
+    template = loader.get_template('dashboard.html')
+    context = RequestContext(request, {
+        'contractcount': contractcount,
+        'invoicecount': invoicecount,
+        'customercount': customercount,
+        'suppliercount': suppliercount,
+        'productcount': productcount,
+    })
+    return HttpResponse(template.render(context))
 
 
 class PostalAddressInline(LoginRequiredMixin, PermissionRequiredMixin, InlineFormSet):
@@ -260,21 +279,21 @@ class CreateBillingCycle(LoginRequiredMixin, PermissionRequiredMixin, CreateView
     model = CustomerBillingCycle
     permission_required = 'crm_core.add_customerbillingcycle'
     login_url = settings.LOGIN_URL
-    success_url = reverse_lazy('billingcycle_list')
+    success_url = reverse_lazy('customerbillingcycle_list')
 
 
 class EditBillingCycle(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = CustomerBillingCycle
     permission_required = 'crm_core.change_customerbillingcycle'
     login_url = settings.LOGIN_URL
-    success_url = reverse_lazy('billingcycle_list')
+    success_url = reverse_lazy('customerbillingcycle_list')
 
 
 class DeleteBillingCycle(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = CustomerBillingCycle
     permission_required = 'crm_core.delete_customerbillingcycle'
     login_url = settings.LOGIN_URL
-    success_url = reverse_lazy('billingcycle_list')
+    success_url = reverse_lazy('customerbillingcycle_list')
 
 
 class ListPurchaseOrders(LoginRequiredMixin, PermissionRequiredMixin, ListView):

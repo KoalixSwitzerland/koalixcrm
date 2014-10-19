@@ -11,7 +11,7 @@ from crm_core.views import login_user, UpdateUserProfile, ListCustomers, ListSup
     EditBillingCycle, EditContract, EditCurrency, EditCustomer, EditCustomerGroup, EditInvoice, EditPurchaseOrder, \
     EditQuote, EditSupplier, EditTax, EditUnit, DeleteQuote, DeleteInvoice, DeleteContract, DeleteCustomerGroup, \
     DeleteBillingCycle, DeleteCurrency, DeleteCustomer, DeleteProduct, DeletePurchaseOrder, DeleteSupplier, \
-    DeleteUnit, DeleteTax
+    DeleteUnit, DeleteTax, show_dashboard
 
 admin.autodiscover()
 
@@ -25,7 +25,7 @@ urlpatterns = i18n_patterns("",
                             # admin interface, which would be marginally more secure.
                             ("^admin/", include(admin.site.urls)),
                             url(r'^admin/backup/$', "admin_backup.views.admin_backup", name="admin_backup"),
-                            url(r'^dashboard/$', direct_to_template, {"template": "dashboard.html"}),
+                            url(r'^dashboard/$', show_dashboard, name='dashboard'),
                             url(r'^login/$', login_user, name="login"),
                             url(r'^logout/$', login_user, name="logout"),
                             url(r'^profileupdate/(?P<pk>\d+)/$', UpdateUserProfile.as_view(), name="profile_update"),
@@ -61,12 +61,12 @@ urlpatterns = i18n_patterns("",
                             url(r'^products/edit/(?P<pk>\d+)/$', EditProduct.as_view(), name='product_edit'),
                             url(r'^products/delete/(?P<pk>\d+)/$', DeleteProduct.as_view(), name='product_delete'),
 
-                            url(r'^billingcycles/$', ListBillingCycles.as_view(), name='billingcycle_list'),
-                            url(r'^billingcycles/create/$', CreateBillingCycle.as_view(), name='billingcycle_create'),
+                            url(r'^billingcycles/$', ListBillingCycles.as_view(), name='customerbillingcycle_list'),
+                            url(r'^billingcycles/create/$', CreateBillingCycle.as_view(), name='customerbillingcycle_create'),
                             url(r'^billingcycles/edit/(?P<pk>\d+)/$', EditBillingCycle.as_view(),
-                                name='billingcycle_edit'),
+                                name='customerbillingcycle_edit'),
                             url(r'^billingcycles/delete/(?P<pk>\d+)/$', DeleteBillingCycle.as_view(),
-                                name='billingcycle_delete'),
+                                name='customerbillingcycle_delete'),
 
                             url(r'^purchaseorders/$', ListPurchaseOrders.as_view(), name='purchaseorder_list'),
                             url(r'^purchaseorders/create/$', CreatePurchaseOrder.as_view(),
