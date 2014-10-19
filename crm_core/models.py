@@ -943,7 +943,7 @@ class PurchaseOrderPosition(Position):
 
 class XSLFile(models.Model):
     title = models.CharField(verbose_name=_("Title"), max_length=100, blank=True, null=True)
-    xslfile = FileBrowseField(verbose_name=_("XSL File"))
+    xslfile = FileBrowseField(verbose_name=_("XSL File"), max_length=200)
 
     class Meta():
         verbose_name = _('XSL File')
@@ -969,11 +969,11 @@ class TemplateSet(models.Model):
                                                    related_name="db_reltemplateprofitlossstatement")
     balancesheetXSLFile = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Balancesheet"),
                                             related_name="db_reltemplatebalancesheet")
-    logo = FileBrowseField(verbose_name=_("Logo for the PDF generation"), blank=True, null=True)
+    logo = FileBrowseField(verbose_name=_("Logo for the PDF generation"), blank=True, null=True, max_length=200)
     bankingaccountref = models.CharField(max_length=60, verbose_name=_("Reference to Banking Account"), blank=True,
                                          null=True)
     addresser = models.CharField(max_length=200, verbose_name=_("Addresser"), blank=True, null=True)
-    fopConfigurationFile = FileBrowseField(verbose_name=_("FOP Configuration File"), blank=True, null=True)
+    fopConfigurationFile = FileBrowseField(verbose_name=_("FOP Configuration File"), blank=True, null=True, max_length=200)
     footerTextsalesorders = models.TextField(verbose_name=_("Footer Text On Salesorders"), blank=True, null=True)
     headerTextsalesorders = models.TextField(verbose_name=_("Header Text On Salesorders"), blank=True, null=True)
     headerTextpurchaseorders = models.TextField(verbose_name=_("Header Text On Purchaseorders"), blank=True, null=True)
