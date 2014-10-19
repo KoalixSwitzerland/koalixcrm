@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block meta_title %}{% trans "Customers" %}{% endblock %}
+{% block title %}{% trans "Customers" %}{% endblock %}
+
+{% block breadcrumb_menu %}
+    <li class="active"><a href="{% url 'customer_list' %}">{% trans "Customers" %}</a></li>
+    <li class="active">{{ customer.firstname }}&nbsp;{{ customer.name }}</li>
+{% endblock %}
+
+{% block main %}
+    <div class="content-panel" style="margin: 30px;">
+        <h4><i class="fa fa-angle-right"></i> {% trans "Customer Details" %}</h4>
+        {% if customer %}
+            <div class="row well" style="margin: 30px;">
+                <div class="col-lg-4">
+                    <div style="margin-top: -20px;">
+                        <h2>{{ customer.prefix }} {{ customer.firstname }} {{ customer.name }}</h2>
+                        <table>
+                            <tr>
+                                <td><small>{% trans 'Created' %}:&nbsp;</small></td>
+                                <td><small>{{ customer.dateofcreation }}</small></td>
+                            </tr>
+                            <tr>
+                                <td><small>{% trans 'Last modified' %}:&nbsp;</small></td>
+                                <td><small>{{ customer.lastmodification }}</small></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <br>
+                    {% for address in customer.addresses.all %}
+                        <h4>{{ address.addressline1 }}</h4>
+                        <h4>{{ address.addressline2 }}</h4>
+                        <h4>{{ address.zipcode }}&nbsp;{{ address.town }}&nbsp;({{ address.state }})</h4>
+                        <h4>{{ address.country }}</h4>
+                    {% endfor %}
+                    <br>
+                </div>
+                <div class="col-lg-4">
+                    <fieldset>
+                    <legend>{% trans 'Contact Data' %}</legend>
+                    {% for email in customer.emailaddresses.all %}
+                        <h5><i class="fa fa-at"></i>&nbsp;&nbsp;<a href="mailto:{{ email.email }}">{{ email.email }}</a></h5>
+                    {% endfor %}
+                    {% for phonenumber in customer.phonenumbers.all %}
+                        <h5><i class="fa fa-phone"></i>&nbsp;&nbsp;{{ phonenumber.phone }}</h5>
+                    {% endfor %}
+                    </fieldset>
+                </div>
+                <div class="col-lg-4">
+                    <fieldset>
+                    <legend>{% trans 'Details' %}</legend>
+                        <h5>{% trans 'Billing Cycle' %}:&nbsp;{{ customer.billingcycle }}</h5>
+                    </fieldset>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

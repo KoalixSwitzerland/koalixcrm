@@ -3,7 +3,7 @@ from braces.views import PermissionRequiredMixin, LoginRequiredMixin
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse_lazy
-from django.views.generic import CreateView, ListView, UpdateView, DeleteView
+from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
 from django.http import HttpResponse
 from django.template import RequestContext, loader
 from extra_views import UpdateWithInlinesView, InlineFormSet, NamedFormsetsMixin, CreateWithInlinesView
@@ -97,6 +97,12 @@ class ListCustomers(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     fields = ['name', 'firstname', 'billingcycle', 'ismemberof']
 
 
+class ViewCustomer(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
+    model = Customer
+    permission_required = 'crm_core.view_customer'
+    login_url = settings.LOGIN_URL
+
+
 class CreateCustomer(LoginRequiredMixin, PermissionRequiredMixin, NamedFormsetsMixin, CreateWithInlinesView):
     model = Customer
     permission_required = 'crm_core.add_customer'
@@ -129,6 +135,12 @@ class ListSuppliers(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     permission_required = 'crm_core.view_supplier'
     login_url = settings.LOGIN_URL
     fields = ['name', 'direct_shipment_to_customers']
+
+
+class ViewSupplier(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
+    model = Supplier
+    permission_required = 'crm_core.view_supplier'
+    login_url = settings.LOGIN_URL
 
 
 class CreateSupplier(LoginRequiredMixin, PermissionRequiredMixin, NamedFormsetsMixin, CreateWithInlinesView):

@@ -13,11 +13,27 @@
     <h4><i class="fa fa-angle-right"></i> {% trans "Customers" %}</h4>
         {% if customer_list %}
         <table class="table table-striped table-advance">
-            <tr><th>{% trans "Name" %}</th><th>{% trans "Prename" %}</th><th></th></tr>
+            <tr><th>{% trans "Name" %}</th><th>{% trans "Prename" %}</th><th>{% trans 'Postal Address' %}</th>
+                <th>{% trans 'Phone Number' %}</th><th>{% trans 'Email Address' %}</th><th></th></tr>
             {% for customer in customer_list %}
                 <tr>
-                    <td>{{ customer.name }}</td>
+                    <td><a href="{% url 'customer_detail' customer.pk %}">{{ customer.name }}</a></td>
                     <td>{{ customer.firstname }}</td>
+                    <td>
+                        {% for address in customer.addresses.all %}
+                            {{ address }}<br>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% for phonenumber in customer.phonenumbers.all %}
+                            {{ phonenumber }}<br>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% for email in customer.emailaddresses.all %}
+                            {{ email }}<br>
+                        {% endfor %}
+                    </td>
                     <td>
                         <p class="pull-right">
                         {% if perms.crm_core.change_customer %}

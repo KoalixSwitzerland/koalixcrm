@@ -36,7 +36,7 @@ class PostalAddress(models.Model):
     country = models.CharField(max_length=2, choices=[(x[0], x[3]) for x in COUNTRIES], verbose_name=_("Country"),
                                blank=True, null=True)
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT, default='C')
-    person = models.ForeignKey('Contact', related_name='address')
+    person = models.ForeignKey('Contact', related_name='addresses')
 
     class Meta():
         verbose_name = _('Postal Address')
@@ -46,13 +46,13 @@ class PostalAddress(models.Model):
         )
 
     def __unicode__(self):
-        return ', '.join([self.person.name, self.addressline1, self.town, ])
+        return '%s, %d %s' % (self.addressline1, self.zipcode, self.town)
 
 
 class PhoneAddress(models.Model):
     phone = models.CharField(max_length=20, verbose_name=_("Phone Number"))
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCUSTOMER, default='H')
-    person = models.ForeignKey('Contact')
+    person = models.ForeignKey('Contact', related_name='phonenumbers')
 
     class Meta():
         verbose_name = _('Phone Address')
@@ -68,7 +68,7 @@ class PhoneAddress(models.Model):
 class EmailAddress(models.Model):
     email = models.EmailField(max_length=200, verbose_name=_("Email Address"))
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT, default='C')
-    person = models.ForeignKey('Contact')
+    person = models.ForeignKey('Contact', related_name='emailaddresses')
 
     class Meta():
         verbose_name = _('Email Address')
@@ -90,8 +90,8 @@ class Contact(models.Model):
     prefix = models.CharField(max_length=1, choices=POSTALADDRESSPREFIX, verbose_name=_("Prefix"), blank=True,
                               null=True)
     name = models.CharField(max_length=300, verbose_name=_("Name"))
-    dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now=True)
-    lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now_add=True)
+    dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now_add=True)
+    lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now=True)
     lastmodifiedby = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, blank=True,
                                        verbose_name=_("Last modified by"), null=True)
 

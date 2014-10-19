@@ -11,7 +11,7 @@ from crm_core.views import login_user, UpdateUserProfile, ListCustomers, ListSup
     EditBillingCycle, EditContract, EditCurrency, EditCustomer, EditCustomerGroup, EditInvoice, EditPurchaseOrder, \
     EditQuote, EditSupplier, EditTax, EditUnit, DeleteQuote, DeleteInvoice, DeleteContract, DeleteCustomerGroup, \
     DeleteBillingCycle, DeleteCurrency, DeleteCustomer, DeleteProduct, DeletePurchaseOrder, DeleteSupplier, \
-    DeleteUnit, DeleteTax, show_dashboard
+    DeleteUnit, DeleteTax, show_dashboard, ViewCustomer, ViewSupplier
 
 admin.autodiscover()
 
@@ -30,13 +30,14 @@ urlpatterns = i18n_patterns("",
                             url(r'^logout/$', login_user, name="logout"),
                             url(r'^profileupdate/(?P<pk>\d+)/$', UpdateUserProfile.as_view(), name="profile_update"),
 
-
                             url(r'^customers/$', ListCustomers.as_view(), name='customer_list'),
+                            url(r'^customers/detail/(?P<pk>\d+)/$', ViewCustomer.as_view(), name='customer_detail'),
                             url(r'^customers/create/$', CreateCustomer.as_view(), name='customer_create'),
                             url(r'^customers/edit/(?P<pk>\d+)/$', EditCustomer.as_view(), name='customer_edit'),
                             url(r'^customers/delete/(?P<pk>\d+)/$', DeleteCustomer.as_view(), name='customer_delete'),
 
                             url(r'^suppliers/$', ListSuppliers.as_view(), name='supplier_list'),
+                            url(r'^suppliers/detail/(?P<pk>\d+)/$', ViewSupplier.as_view(), name='supplier_detail'),
                             url(r'^suppliers/create/$', CreateSupplier.as_view(), name='supplier_create'),
                             url(r'^suppliers/edit/(?P<pk>\d+)/$', EditSupplier.as_view(), name='supplier_edit'),
                             url(r'^suppliers/delete/(?P<pk>\d+)/$', DeleteSupplier.as_view(), name='supplier_delete'),
@@ -62,7 +63,8 @@ urlpatterns = i18n_patterns("",
                             url(r'^products/delete/(?P<pk>\d+)/$', DeleteProduct.as_view(), name='product_delete'),
 
                             url(r'^billingcycles/$', ListBillingCycles.as_view(), name='customerbillingcycle_list'),
-                            url(r'^billingcycles/create/$', CreateBillingCycle.as_view(), name='customerbillingcycle_create'),
+                            url(r'^billingcycles/create/$', CreateBillingCycle.as_view(),
+                                name='customerbillingcycle_create'),
                             url(r'^billingcycles/edit/(?P<pk>\d+)/$', EditBillingCycle.as_view(),
                                 name='customerbillingcycle_edit'),
                             url(r'^billingcycles/delete/(?P<pk>\d+)/$', DeleteBillingCycle.as_view(),
