@@ -7,6 +7,7 @@ from django.views.generic import CreateView, ListView, UpdateView, DeleteView, D
 from django.http import HttpResponse
 from django.template import RequestContext, loader
 from extra_views import UpdateWithInlinesView, InlineFormSet, NamedFormsetsMixin, CreateWithInlinesView
+from crm_core.const.states import InvoiceStatesEnum
 
 from crm_core.models import Customer, Invoice, Supplier, Currency, Unit, Tax, Contract, Product, CustomerBillingCycle, \
     PurchaseOrder, CustomerGroup, Quote, PostalAddress, PhoneAddress, EmailAddress, UserExtension
@@ -35,6 +36,12 @@ def show_dashboard(request):
     customercount = Customer.objects.all().count()
     suppliercount = Supplier.objects.all().count()
     productcount = Product.objects.all().count()
+    opencontracts = []
+    for invoice in Invoice.objects.all():
+        if invoice.state != InvoiceStatesEnum.Payed or invoice.state != InvoiceStatesEnum.Deleted:
+            opencontracts.append(invoice.contract)
+    for contract in Contract.objects.all():
+        opencontracts.append(contract)
     template = loader.get_template('dashboard.html')
     context = RequestContext(request, {
         'contractcount': contractcount,
@@ -42,6 +49,7 @@ def show_dashboard(request):
         'customercount': customercount,
         'suppliercount': suppliercount,
         'productcount': productcount,
+        'opencontracts': opencontracts,
     })
     return HttpResponse(template.render(context))
 

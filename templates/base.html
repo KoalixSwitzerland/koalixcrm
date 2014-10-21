@@ -133,7 +133,9 @@
 
             </div>
             <div class="top-menu nav pull-right" style="margin-top: 12px;">
+                {% if request.user.is_authenticated %}
                 {% search_form "all" %}
+                {% endif %}
             </div>
         </header>
       <!--header end-->
@@ -151,9 +153,9 @@
 
               	    <p class="centered">
                         {% if request.user.image %}
-                        <img src="{{ request.user.image }}" class="img-thumbnail" width="60">
+                        <img src="{{ request.user.image }}" class="img-thumbnail" width="60" height="60">
                             {% else %}
-                        <img src="{% static 'assets/img/avatar.jpg' %}" class="img-thumbnail" width="60">
+                        <img src="{% static 'assets/img/avatar.jpg' %}" class="img-thumbnail" width="60" height="60">
                         {% endif %}
                         <h5 class="centered">
                             <a href="{% url "profile_update" request.user.pk %}">

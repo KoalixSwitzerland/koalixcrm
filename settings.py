@@ -147,7 +147,6 @@ TEMPLATE_LOADERS = (
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
-    'permission.backends.PermissionBackend',
 )
 
 # List of finder classes that know how to find static files in
@@ -155,7 +154,6 @@ AUTHENTICATION_BACKENDS = (
 STATICFILES_FINDERS = (
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 # The numeric mode to set newly-uploaded files to. The value should be
@@ -327,6 +325,11 @@ OPTIONAL_APPS = (
     PACKAGE_NAME_FILEBROWSER,
     PACKAGE_NAME_GRAPPELLI,
 )
+
+SEARCH_MODEL_CHOICES = [
+    'crm_core.Customer',
+    'crm_core.Supplier',
+]
 
 ###################
 # DEPLOY SETTINGS #

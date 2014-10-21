@@ -11,6 +11,7 @@ from django.core import serializers
 from django.contrib import auth
 from filebrowser_safe.fields import FileBrowseField
 from django_fsm import FSMIntegerField, transition
+from mezzanine.core.models import Displayable
 
 from const.country import COUNTRIES
 from const.postaladdressprefix import POSTALADDRESSPREFIX
@@ -120,10 +121,11 @@ class CustomerGroup(models.Model):
         )
 
 
-class Customer(Contact):
+class Customer(Displayable, Contact):
     firstname = models.CharField(max_length=300, verbose_name=_("Prename"), blank=True)
     billingcycle = models.ForeignKey('CustomerBillingCycle', verbose_name=_('Default Billing Cycle'))
     ismemberof = models.ManyToManyField(CustomerGroup, verbose_name=_('Is member of'), blank=True, null=True)
+    search_fields = {"name": 10, "firstname": 8}
 
     class Meta():
         verbose_name = _('Customer')
@@ -131,6 +133,10 @@ class Customer(Contact):
         permissions = (
             ('view_customer', 'Can view customers'),
         )
+
+    def get_absolute_url(self):
+        url = '/customers/detail/' + str(self.pk)  # TODO: Bad solution
+        return url
 
     def create_contract(self, request):
         contract = Contract()
@@ -161,9 +167,10 @@ class Customer(Contact):
         return "%s %s %s" % (self.prefix, self.firstname, self.name)
 
 
-class Supplier(Contact):
+class Supplier(Displayable, Contact):
     direct_shipment_to_customers = models.BooleanField(verbose_name=_("Offers direct Shipment to Customer"),
                                                        default=False)
+    search_fields = {"name": 10}
 
     class Meta():
         verbose_name = _("Supplier")
@@ -171,6 +178,10 @@ class Supplier(Contact):
         permissions = (
             ('view_supplier', 'Can view suppliers'),
         )
+
+    def get_absolute_url(self):
+        url = '/suppliers/detail/' + str(self.pk)  # TODO: Bad solution
+        return url
 
     def __unicode__(self):
         return self.name
@@ -226,7 +237,7 @@ class Contract(models.Model):
     dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now=True)
     lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now_add=True)
     lastmodifiedby = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True},
-                                       verbose_name=_("Last modified by"), related_name="db_contractlstmodified")
+                                       verbose_name=_("Last modified by"), related_name="db_contractlstmodified", null=True)
 
     class Meta():
         verbose_name = _('Contract')
@@ -282,7 +293,7 @@ class PurchaseOrder(models.Model):
     state = FSMIntegerField(default=PurchaseOrderStatesEnum.New)
     contract = models.ForeignKey(Contract, verbose_name=_("Contract"))
     externalReference = models.CharField(verbose_name=_("External Reference"), max_length=100, blank=True, null=True)
-    supplier = models.ForeignKey(Supplier, verbose_name=_("Supplier"))
+    supplier = models.ForeignKey(Supplier, verbose_name=_("Supplier"), blank=True, null=True)
     description = models.CharField(verbose_name=_("Description"), max_length=100, blank=True, null=True)
     lastPricingDate = models.DateField(verbose_name=_("Last Pricing Date"), blank=True, null=True)
     lastCalculatedPrice = models.DecimalField(max_digits=17, decimal_places=2,
@@ -295,7 +306,7 @@ class PurchaseOrder(models.Model):
     dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now=True)
     lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now_add=True)
     lastmodifiedby = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True},
-                                       verbose_name=_("Last modified by"), related_name="db_polstmodified")
+                                       verbose_name=_("Last modified by"), related_name="db_polstmodified", null=True, blank=True)
 
     def recalculate_prices(self, pricing_date):
         price = 0
@@ -382,7 +393,7 @@ class PurchaseOrder(models.Model):
 
 
 class SalesContract(models.Model):
-    contract = models.ForeignKey(Contract, verbose_name=_('Contract'))
+    contract = models.ForeignKey(Contract, verbose_name=_('Contract'), related_name='contract')
     externalReference = models.CharField(verbose_name=_("External Reference"), max_length=100, blank=True)
     discount = models.DecimalField(max_digits=5, decimal_places=2, verbose_name=_("Discount"), blank=True,
                                    null=True)
