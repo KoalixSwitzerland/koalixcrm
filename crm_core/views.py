@@ -135,7 +135,7 @@ class DeleteCustomer(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Customer
     permission_required = 'crm_core.delete_customer'
     login_url = settings.LOGIN_URL
-    success_url = reverse_lazy('list_customers')
+    success_url = reverse_lazy('customer_list')
 
 
 class ListSuppliers(LoginRequiredMixin, PermissionRequiredMixin, ListView):

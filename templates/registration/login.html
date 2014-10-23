@@ -40,10 +40,8 @@
 
 		        <div class="login-wrap">
                     {{ form.username.errors }}
-                    <label for="id_username" class="required">{{ form.username.label }}:</label>
 		            <input id="id_username" type="text" class="form-control" placeholder="User ID" autofocus><br>
                     {{ form.password.errors }}
-                    <label for="id_password" class="required">{{ form.password.label }}</label>
 		            <input id="id_password" type="password" class="form-control" placeholder="Password"><br><br>
                     <input type="hidden" name="next" value="{{ next }}" />
                     <input type="hidden" name="username" id="username" />

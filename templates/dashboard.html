@@ -12,35 +12,35 @@
 
                   	<div class="row mtbox">
                   		<div class="col-md-2 col-sm-2 col-md-offset-1 box0">
-                  			<div class="box1">
+                  			<div class="box1" onclick="window.location.assign('{% url 'contract_list' %}')">
 					  			<span class="li_note"></span>
 					  			<h3>{{ contractcount }} open</h3>
                   			</div>
 					  			<p>{{ contractcount }} open contracts in your database.</p>
                   		</div>
                   		<div class="col-md-2 col-sm-2 box0">
-                  			<div class="box1">
+                  			<div class="box1" onclick="window.location.assign('{% url 'invoice_list' %}')">
 					  			<span class="li_banknote"></span>
 					  			<h3>{{ invoicecount }} open</h3>
                   			</div>
 					  			<p>{{ invoicecount }} open invoices in your database.</p>
                   		</div>
                   		<div class="col-md-2 col-sm-2 box0">
-                  			<div class="box1">
+                  			<div class="box1" onclick="window.location.assign('{% url 'customer_list' %}')">
 					  			<span class="li_user"></span>
 					  			<h3>{{ customercount }}</h3>
                   			</div>
 					  			<p>{{ customercount }} customers in your database.</p>
                   		</div>
                   		<div class="col-md-2 col-sm-2 box0">
-                  			<div class="box1">
+                  			<div class="box1" onclick="window.location.assign('{% url 'supplier_list' %}')">
 					  			<span class="li_truck"></span>
 					  			<h3>{{ suppliercount }}</h3>
                   			</div>
 					  			<p>{{ suppliercount }} suppliers in your database.</p>
                   		</div>
                   		<div class="col-md-2 col-sm-2 box0">
-                  			<div class="box1">
+                  			<div class="box1" onclick="window.location.assign('{% url 'product_list' %}')">
 					  			<span class="li_shop"></span>
 					  			<h3>{{ productcount }}</h3>
                   			</div>
@@ -49,22 +49,26 @@
                   	</div><!-- /row mt -->
 
                     <div class="row mt" style="margin-left: 15px;margin-right: 15px;">
-						<div class="col-lg-4 col-md-4 col-sm-4 mb">
-							<div class="steps pn">
 
-							    <input id="op1" name="op1" type="checkbox" checked="">
-							    <label for="op1">Update Profile</label>
-
-                                <input id="op2" name="op2" type="checkbox">
-							    <label for="op2">Contact Paul</label>
-
-                                <input id="op3" name="op3" type="checkbox">
-							    <label for="op3">Enjoy Life</label>
-
-							    <input type="submit" value="All Done!" id="submit">
-							</div>
-						</div>
-
+                        <div class="col-md-4 col-sm-4 mb">
+							<div class="darkblue-panel pn">
+								<div class="darkblue-header">
+									<h5>{% trans 'Open Contracts' %}</h5>
+	                 	        </div>
+                                <div class="panel-body">
+                                   <ul>
+                                       {% for contract in opencontracts %}
+                                       <li style="margin-left: -20px; margin-top: 2px; margin-right: 15px;">
+                                          <div>
+                                              <span class="task-title-sp pull-left"><a href="{% url 'contract_list' %}">{{ contract }}</a></span>
+                                              <span class="badge bg-danger pull-right">Open</span>
+                                           </div>
+                                       </li><br>
+                                       {% endfor %}
+                                  </ul>
+                                </div>
+                            </div>
+                        </div>
 						<div class="col-md-4 col-sm-4 mb">
 							<!-- REVENUE PANEL -->
 							<div class="darkblue-panel pn">
@@ -82,5 +86,9 @@
 							</div>
 						</div><!-- /col-md-4 -->
 					</div>
+
+    <script>
+
+    </script>
 
 {% endblock %}

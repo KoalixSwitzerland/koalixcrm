@@ -1863,3 +1863,6 @@ msgstr "Neues Angebot hinzufügen"
 
 msgid "Create quote"
 msgstr "Angebot erstellen"
+
+msgid "Everything"
+msgstr "Alles"

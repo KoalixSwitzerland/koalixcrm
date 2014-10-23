@@ -3,7 +3,6 @@
 {% load pages_tags mezzanine_tags i18n future staticfiles %}
 {% load bootstrap3 %}
 
-{% bootstrap_messages %}
 <head>
 <meta http-equiv="Content-type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -64,79 +63,82 @@
 
             <div class="nav notify-row" id="top_menu">
 
-                <!--  notification start -->
-                <ul class="nav top-menu">
 
-                    <!-- settings start -->
-                    <li class="dropdown">
-                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                            <i class="fa fa-tasks"></i>
-                            <span class="badge bg-theme">1</span>
-                        </a>
-                        <ul class="dropdown-menu extended tasks-bar">
-                            <div class="notify-arrow notify-arrow-green"></div>
-                            <li>
-                                <p class="green">You have 1 pending task</p>
-                            </li>
-                            <li>
-                                <a href="index.html#">
-                                    <div class="task-info">
-                                        <div class="desc">Koalix Task Panel</div>
-                                        <div class="percent">40%</div>
-                                    </div>
-                                    <div class="progress progress-striped">
-                                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
-                                            <span class="sr-only">40% Complete (success)</span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="external">
-                                <a href="#">See All Tasks</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <!-- settings end -->
-
-                    <!-- inbox dropdown start-->
-                    <li id="header_inbox_bar" class="dropdown">
-                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                            <i class="fa fa-envelope-o"></i>
-                            <span class="badge bg-theme">1</span>
-                        </a>
-                        <ul class="dropdown-menu extended inbox">
-                            <div class="notify-arrow notify-arrow-green"></div>
-                            <li>
-                                <p class="green">You have 1 new message</p>
-                            </li>
-                            <li>
-                                <a href="index.html#">
-                                    <span class="photo"><img alt="avatar" src="{% static "assets/img/ui-zac.jpg" %}"></span>
-                                    <span class="subject">
-                                    <span class="from">Zac Snider</span>
-                                    <span class="time">Just now</span>
-                                    </span>
-                                    <span class="message">
-                                        Hi mate, how is everything?
-                                    </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="index.html#">See all messages</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <!-- inbox dropdown end -->
-
-                </ul>
-                <!--  notification end -->
-
-            </div>
-            <div class="top-menu nav pull-right" style="margin-top: 12px;">
                 {% if request.user.is_authenticated %}
-                {% search_form "all" %}
+                    <!--  notification start -->
+                    <ul class="nav top-menu">
+
+                        <!-- settings start -->
+                        <li class="dropdown">
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                <i class="fa fa-tasks"></i>
+                                <span class="badge bg-theme">1</span>
+                            </a>
+                            <ul class="dropdown-menu extended tasks-bar">
+                                <div class="notify-arrow notify-arrow-green"></div>
+                                <li>
+                                    <p class="green">You have 1 pending task</p>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <div class="task-info">
+                                            <div class="desc">Koalix Task Panel</div>
+                                            <div class="percent">40%</div>
+                                        </div>
+                                        <div class="progress progress-striped">
+                                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+                                                <span class="sr-only">40% Complete (success)</span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="external">
+                                    <a href="#">See All Tasks</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <!-- settings end -->
+
+                        <!-- inbox dropdown start-->
+                        <li id="header_inbox_bar" class="dropdown">
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                <i class="fa fa-envelope-o"></i>
+                                <span class="badge bg-theme">1</span>
+                            </a>
+                            <ul class="dropdown-menu extended inbox">
+                                <div class="notify-arrow notify-arrow-green"></div>
+                                <li>
+                                    <p class="green">You have 1 new message</p>
+                                </li>
+                                <li>
+                                    <a href="index.html#">
+                                        <span class="photo"><img alt="avatar" src="{% static "assets/img/ui-zac.jpg" %}"></span>
+                                        <span class="subject">
+                                        <span class="from">Zac Snider</span>
+                                        <span class="time">Just now</span>
+                                        </span>
+                                        <span class="message">
+                                            Hi mate, how is everything?
+                                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="index.html#">See all messages</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <!-- inbox dropdown end -->
+
+                    </ul>
+                    <!--  notification end -->
                 {% endif %}
+
             </div>
+            {% if request.user.is_authenticated %}
+            <div class="top-menu nav pull-right" style="margin-top: 12px;">
+                {% search_form "all" %}
+            </div>
+            {% endif %}
         </header>
       <!--header end-->
 
@@ -199,7 +201,7 @@
                       </li>
                       {% endif %}
 
-                      {% if perms.crm_core.can_view %}
+                      {% if perms.crm_core.view_products %}
                       <li class="sub-menu">
                           <a href="/products/">
                               <i class="fa fa-book"></i>
@@ -208,7 +210,7 @@
                       </li>
                       {% endif %}
 
-                      {% if perms.crm_core.can_view or perms.crm_core.can_view or perms.crm_core.can_view or perms.crm_core.can_view %}
+                      {% if perms.crm_core.view_contract or perms.crm_core.view_quote or perms.crm_core.view_purchaseorder or perms.crm_core.view_invoice %}
                       <li class="sub-menu">
                           <a href="javascript:;" >
                               <i class="fa fa-trophy"></i>
@@ -289,6 +291,7 @@
                         </div>
                     </div>
                     {% nevercache %}
+                    {% bootstrap_messages %}
                     {% if messages %}
                     <div class="row mt">
                         <div class="messages">
@@ -307,63 +310,68 @@
                     </div>
                 </div>
 
+
               <!-- **********************************************************************************************************************************************************
               RIGHT SIDEBAR CONTENT
               *********************************************************************************************************************************************************** -->
                   <div class="col-lg-2 ds">
                   {% block rightbar %}
+                      {% if request.user.is_authenticated %}
                       <div class="row mt">
                         {% block right_notification_bar_title %}
 						    <h3>NOTIFICATIONS</h3>
                         {% endblock %}
 
-                      {% block right_notification_bar_content %}
-                      <!-- First Action -->
-                      <div class="desc">
-                      	<div class="thumb">
-                      		<span class="badge bg-theme"><i class="fa fa-clock-o"></i></span>
-                      	</div>
-                      	<div class="details">
-                      		<p><muted>2 Minutes Ago</muted><br/>
-                      		   <a href="#">James Brown</a> subscribed to your newsletter.<br/>
-                      		</p>
-                      	</div>
-                      </div>
-                      {% endblock %}
+                          {% block right_notification_bar_content %}
 
-                       <!-- USERS ONLINE SECTION -->
-						<h3>TEAM MEMBERS</h3>
-                      <!-- First Member -->
-                      <div class="desc">
-                      	<div class="thumb">
-                      		<img class="img-circle" src="{% static "assets/img/ui-divya.jpg" %}" width="35px" height="35px" align="">
-                      	</div>
-                      	<div class="details">
-                      		<p><a href="#">DIVYA MANIAN</a><br/>
-                      		   <muted>Available</muted>
-                      		</p>
-                      	</div>
-                      </div>
-
-
-                      {% block right_calendar %}
-                        <!-- CALENDAR-->
-                        <div id="calendar" class="mb">
-                            <div class="panel green-panel no-margin">
-                                <div class="panel-body">
-                                    <div id="date-popover" class="popover top" style="cursor: pointer; disadding: block; margin-left: 33%; margin-top: -50px; width: 175px;">
-                                        <div class="arrow"></div>
-                                        <h3 class="popover-title" style="disadding: none;"></h3>
-                                        <div id="date-popover-content" class="popover-content"></div>
-                                    </div>
-                                    <div id="my-calendar"></div>
+                              <!-- First Action -->
+                              <div class="desc">
+                                <div class="thumb">
+                                    <span class="badge bg-theme"><i class="fa fa-clock-o"></i></span>
                                 </div>
-                            </div>
-                        </div><!-- / calendar -->
-                      {% endblock %}
-                    </div>
+                                <div class="details">
+                                    <p><muted>2 Minutes Ago</muted><br/>
+                                       <a href="#">James Brown</a> subscribed to your newsletter.<br/>
+                                    </p>
+                                </div>
+                              </div>
+
+                               <!-- USERS ONLINE SECTION -->
+                                <h3>TEAM MEMBERS</h3>
+                              <!-- First Member -->
+                              <div class="desc">
+                                <div class="thumb">
+                                    <img class="img-circle" src="{% static "assets/img/ui-divya.jpg" %}" width="35px" height="35px" align="">
+                                </div>
+                                <div class="details">
+                                    <p><a href="#">DIVYA MANIAN</a><br/>
+                                       <muted>Available</muted>
+                                    </p>
+                                </div>
+                              </div>
+
+
+                              {% block right_calendar %}
+                                <!-- CALENDAR-->
+                                <div id="calendar" class="mb">
+                                    <div class="panel green-panel no-margin">
+                                        <div class="panel-body">
+                                            <div id="date-popover" class="popover top" style="cursor: pointer; disadding: block; margin-left: 33%; margin-top: -50px; width: 175px;">
+                                                <div class="arrow"></div>
+                                                <h3 class="popover-title" style="disadding: none;"></h3>
+                                                <div id="date-popover-content" class="popover-content"></div>
+                                            </div>
+                                            <div id="my-calendar"></div>
+                                        </div>
+                                    </div>
+                                </div><!-- / calendar -->
+                              {% endblock %}
+
+                          {% endblock %}
+                        </div>
+                      {% endif %}
                   {% endblock %}
-                  </div>
+                </div>
             </div>
           </section>
       </section>
@@ -435,7 +443,7 @@
             });
         });
 
-
+{#        TODO #}
         function myNavFunction(id) {
             $("#date-popover").hide();
             var nav = $("#" + id).data("navigation");

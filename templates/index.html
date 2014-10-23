@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "pages/richtextpage.html" %}
 {% load i18n mezzanine_tags %}
 
 {% block meta_title %}{% trans "Home" %}{% endblock %}
@@ -13,6 +13,7 @@
 
 {% block main %}
     {% include 'includes/welcome.html' %}
+{{ block.super }}
 {% endblock %}
 
 {% block widgetpanel %}
