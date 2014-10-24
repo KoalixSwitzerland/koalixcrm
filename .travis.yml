@@ -10,8 +10,6 @@ install:
 # Using manage.py validate since there are no unit tests yet
 script:
   - python manage.py check
-  - python manage.py migrate
-  - python manage.py validate
   - coverage run --source='.' manage.py test crm_core accounting subscriptions admin_backup
   - coverage report
 after_success:
