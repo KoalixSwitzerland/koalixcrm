@@ -328,6 +328,7 @@ OPTIONAL_APPS = (
 SEARCH_MODEL_CHOICES = [
     'crm_core.Customer',
     'crm_core.Supplier',
+    'crm_core.Product',
 ]
 
 ###################

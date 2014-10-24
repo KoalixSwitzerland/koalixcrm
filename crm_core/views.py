@@ -263,14 +263,14 @@ class ListProducts(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = Product
     permission_required = 'crm_core.view_product'
     login_url = settings.LOGIN_URL
-    fields = ['product_number', 'title', 'description', 'defaultunit', 'tax', 'accoutingProductCategorie']
+    fields = ['product_number', 'product_title', 'product_description', 'defaultunit', 'tax', 'accoutingProductCategorie']
 
 
 class CreateProduct(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Product
     permission_required = 'crm_core.add_product'
     login_url = settings.LOGIN_URL
-    fields = ['product_number', 'title', 'description', 'defaultunit', 'tax', 'accoutingProductCategorie']
+    fields = ['product_number', 'product_title', 'product_description', 'defaultunit', 'tax', 'accoutingProductCategorie']
     success_url = reverse_lazy('product_list')
 
 
@@ -278,7 +278,7 @@ class EditProduct(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Product
     permission_required = 'crm_core.change_product'
     login_url = settings.LOGIN_URL
-    fields = ['product_number', 'title', 'description', 'defaultunit', 'tax', 'accoutingProductCategorie']
+    fields = ['product_number', 'product_title', 'product_description', 'defaultunit', 'tax', 'accoutingProductCategorie']
     success_url = reverse_lazy('product_list')
 
 

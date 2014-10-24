@@ -1866,3 +1866,6 @@ msgstr "Angebot erstellen"
 
 msgid "Everything"
 msgstr "Alles"
+
+msgid "open"
+msgstr "offen"

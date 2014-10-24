@@ -134,6 +134,10 @@ class Customer(Displayable, Contact):
             ('view_customer', 'Can view customers'),
         )
 
+    @staticmethod
+    def get_class_name():
+        return _('Customer')
+
     def get_absolute_url(self):
         url = '/customers/detail/' + str(self.pk)  # TODO: Bad solution
         return url
@@ -178,6 +182,10 @@ class Supplier(Displayable, Contact):
         permissions = (
             ('view_supplier', 'Can view suppliers'),
         )
+
+    @staticmethod
+    def get_class_name():
+        return _('Supplier')
 
     def get_absolute_url(self):
         url = '/suppliers/detail/' + str(self.pk)  # TODO: Bad solution
@@ -712,9 +720,9 @@ class Tax(models.Model):
         return self.name
 
 
-class Product(models.Model):
-    description = models.TextField(verbose_name=_("Description"), null=True, blank=True)
-    title = models.CharField(verbose_name=_("Title"), max_length=200)
+class Product(Displayable, models.Model):
+    product_description = models.TextField(verbose_name=_("Description"), null=True, blank=True)
+    product_title = models.CharField(verbose_name=_("Title"), max_length=200)
     product_number = models.IntegerField(verbose_name=_("Product Number"))
     defaultunit = models.ForeignKey(Unit, verbose_name=_("Unit"))
     dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now=True)
@@ -725,6 +733,15 @@ class Product(models.Model):
     accoutingProductCategorie = models.ForeignKey('accounting.ProductCategory',
                                                   verbose_name=_("Accounting Product Categorie"), null=True,
                                                   blank="True")
+    search_fields = {"product_title": 10, "product_description": 8}
+
+    @staticmethod
+    def get_class_name():
+        return _('Product')
+
+    def get_absolute_url(self):
+        url = '/products/detail/' + str(self.pk)  # TODO: Bad solution
+        return url
 
     def get_price(self, date, unit, customer, currency):
         prices = Price.objects.filter(product=self.id)
@@ -772,7 +789,7 @@ class Product(models.Model):
         )
 
     def __unicode__(self):
-        return str(self.product_number) + ' ' + self.title
+        return str(self.product_number) + ' ' + self.product_title
 
     class NoPriceFound(Exception):
         def __init__(self, customer, unit, date, product):
