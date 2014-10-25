@@ -28,7 +28,7 @@
                         <details class="form-wrapper" id="edit-advanced">
                             <summary><i class="fa fa-envelope"></i> {% trans "Postal Address" %}</summary>
                             <div style="margin: 0 12px 0 12px;">
-                                {% bootstrap_formset postaladdress_formset %}
+                                {% bootstrap_formset postaladdress_formset layout='inline' %}
                             </div>
                         </details>
                     {% endif %}
@@ -40,7 +40,7 @@
                         <fieldset>
                         <legend><i class="fa fa-phone"></i> {% trans "Phone Address" %}</legend>
                             <div style="margin: 0 12px 0 12px;">
-                                {% bootstrap_formset phoneaddress_formset %}
+                                {% bootstrap_formset phoneaddress_formset layout='inline' %}
                             </div>
                         </fieldset>
                     {% endif %}
@@ -50,7 +50,7 @@
                     <fieldset>
                         <legend><i class="fa fa-at"></i> {% trans "Email Address" %}</legend>
                             <div style="margin: 0 12px 0 12px;">
-                                {% bootstrap_formset emailaddress_formset %}
+                                {% bootstrap_formset emailaddress_formset layout='inline' %}
                             </div>
                     </fieldset>
                     {% endif %}

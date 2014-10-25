@@ -8,6 +8,7 @@ from django.http import HttpResponse
 from django.template import RequestContext, loader
 from extra_views import UpdateWithInlinesView, InlineFormSet, NamedFormsetsMixin, CreateWithInlinesView
 from crm_core.const.states import InvoiceStatesEnum
+from crm_core.filters import CustomerFilter
 
 from crm_core.models import Customer, Invoice, Supplier, Currency, Unit, Tax, Contract, Product, CustomerBillingCycle, \
     PurchaseOrder, CustomerGroup, Quote, PostalAddress, PhoneAddress, EmailAddress, UserExtension
@@ -103,6 +104,11 @@ class ListCustomers(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     permission_required = 'crm_core.view_customer'
     login_url = settings.LOGIN_URL
     fields = ['name', 'firstname', 'billingcycle', 'ismemberof']
+
+    def get_context_data(self, **kwargs):
+        context = super(ListCustomers, self).get_context_data(**kwargs)
+        context['filter'] = CustomerFilter()
+        return context
 
 
 class ViewCustomer(LoginRequiredMixin, PermissionRequiredMixin, DetailView):

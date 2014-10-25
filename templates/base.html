@@ -318,37 +318,10 @@
                   {% block rightbar %}
                       {% if request.user.is_authenticated %}
                       <div class="row mt">
-                        {% block right_notification_bar_title %}
-						    <h3>NOTIFICATIONS</h3>
-                        {% endblock %}
+						    <h3>{% trans 'Filters' %}</h3>
 
-                          {% block right_notification_bar_content %}
-
-                              <!-- First Action -->
-                              <div class="desc">
-                                <div class="thumb">
-                                    <span class="badge bg-theme"><i class="fa fa-clock-o"></i></span>
-                                </div>
-                                <div class="details">
-                                    <p><muted>2 Minutes Ago</muted><br/>
-                                       <a href="#">James Brown</a> subscribed to your newsletter.<br/>
-                                    </p>
-                                </div>
-                              </div>
-
-                               <!-- USERS ONLINE SECTION -->
-                                <h3>TEAM MEMBERS</h3>
-                              <!-- First Member -->
-                              <div class="desc">
-                                <div class="thumb">
-                                    <img class="img-circle" src="{% static "assets/img/ui-divya.jpg" %}" width="35px" height="35px" align="">
-                                </div>
-                                <div class="details">
-                                    <p><a href="#">DIVYA MANIAN</a><br/>
-                                       <muted>Available</muted>
-                                    </p>
-                                </div>
-                              </div>
+                          {% block rightbar_filters %}
+                          {% endblock %}
 
 
                               {% block right_calendar %}
@@ -367,7 +340,6 @@
                                 </div><!-- / calendar -->
                               {% endblock %}
 
-                          {% endblock %}
                         </div>
                       {% endif %}
                   {% endblock %}
@@ -451,7 +423,7 @@
             console.log('nav ' + nav + ' to: ' + to.month + '/' + to.year);
         }
     </script>
-{% include "includes/footer_scripts.html" %}
+{#{% include "includes/footer_scripts.html" %}#}
 
 </body>
 </html>
