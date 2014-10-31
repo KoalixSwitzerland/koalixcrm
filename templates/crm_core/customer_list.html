@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n bootstrap3 %}
 
 {% block meta_title %}{% trans "Customers" %}{% endblock %}
 {% block title %}{% trans "Customers" %}{% endblock %}
@@ -52,8 +52,4 @@
         <p><a href="{% url 'customer_create' %}">{% trans "Create a new customer" %}</a></p>
         {% endif %}
     </div>
-{% endblock %}
-
-{% block rightbar_filters %}
-    {% include 'crm_core/filters/customer_filter.html' %}
 {% endblock %}

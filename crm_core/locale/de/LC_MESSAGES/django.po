@@ -1869,3 +1869,12 @@ msgstr "Alles"
 
 msgid "open"
 msgstr "offen"
+
+msgid "Filters"
+msgstr "Filter"
+
+msgid "Filter"
+msgstr "Filter"
+
+msgid "sign in now"
+msgstr "Jetzt Einloggen"

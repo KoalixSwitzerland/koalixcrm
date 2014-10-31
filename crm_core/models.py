@@ -47,7 +47,7 @@ class PostalAddress(models.Model):
         )
 
     def __unicode__(self):
-        return '%s, %s %s' % (self.addressline1, self.zipcode, self.town)
+        return '%s, %s %s' % (self.addressline1, self.zipcode, self.town)  # TODO
 
 
 class PhoneAddress(models.Model):
