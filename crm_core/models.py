@@ -194,7 +194,7 @@ class Customer(Displayable, Contact):
 
     def __unicode__(self):
         if self.prefix and self.firstname:
-            return "%s %s %s" % (self.prefix, self.firstname, self.name)
+            return "%s %s %s" % (self.get_prefix, self.firstname, self.name)
         elif self.firstname:
             return "%s %s" % (self.firstname, self.name)
         return self.name
@@ -222,7 +222,7 @@ class Supplier(Displayable, Contact):
 
     def __unicode__(self):
         if self.prefix:
-            return '%s: %s' % (self.prefix, self.name)
+            return '%s %s' % (self.get_prefix, self.name)
         return self.name
 
 
@@ -821,7 +821,7 @@ class Product(Displayable, models.Model):
         )
 
     def __unicode__(self):
-        return str(self.product_number) + ' ' + self.product_title
+        return '%s (#%s)' % (self.product_title, str(self.product_number))
 
     class NoPriceFound(Exception):
         def __init__(self, customer, unit, date, product):
