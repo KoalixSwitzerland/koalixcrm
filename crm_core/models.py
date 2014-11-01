@@ -175,8 +175,10 @@ class Customer(Displayable, Contact):
         return 0
 
     def __unicode__(self):
-        if self.prefix and self.firstname != "":
+        if self.prefix and self.firstname:
             return "%s %s %s" % (self.prefix, self.firstname, self.name)
+        elif self.firstname:
+            return "%s %s" % (self.firstname, self.name)
         return self.name
 
 
