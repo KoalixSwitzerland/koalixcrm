@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block meta_title %}{% trans "Contracts" %}{% endblock %}
+{% block title %}{% trans "Contract" %}{% endblock %}
+
+{% block breadcrumb_menu %}
+    <li class="active"><a href="{% url 'contract_list' %}">{% trans "Contracts" %}</a></li>
+    <li class="active">{{ contract.get_name }}</li>
+{% endblock %}
+
+{% block main %}
+    <div class="content-panel" style="margin: 30px;">
+        <h4><i class="fa fa-angle-right"></i> {% trans "Contract Details" %}</h4>
+        {% if contract %}
+            <div class="row well" style="margin: 30px;">
+                <div class="col-lg-4">
+                    <div style="margin-top: -20px;">
+                        <h2>{{ contract.get_name }}</h2>
+                        <table>
+                            <tr>
+                                <td><small>{% trans 'Created' %}:&nbsp;</small></td>
+                                <td><small>{{ contract.dateofcreation }}</small></td>
+                            </tr>
+                            <tr>
+                                <td><small>{% trans 'Last modified' %}:&nbsp;</small></td>
+                                <td><small>{{ contract.lastmodification }}</small></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <br>
+                    <h4>{{ contract.description }}</h4>
+                    <h4>{{ contract.defaultcustomer }}</h4>
+                    <h4>{{ contract.defaultSupplier }}</h4>
+                    <h4>{{ contract.defaultcurrency }}</h4>
+                    <br>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

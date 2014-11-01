@@ -14,7 +14,7 @@
         {% if customer_list %}
         <table class="table table-striped table-advance">
             <tr><th>{% trans "Name" %}</th><th>{% trans "Prename" %}</th><th>{% trans 'Postal Address' %}</th>
-                <th>{% trans 'Phone Number' %}</th><th>{% trans 'Email Address' %}</th><th></th></tr>
+                <th>{% trans 'Phone Number' %}</th><th>{% trans 'Email Address' %}</th><th></th><th></th></tr>
             {% for customer in customer_list %}
                 <tr>
                     <td><a href="{% url 'customer_detail' customer.pk %}">{{ customer.name }}</a></td>
@@ -35,12 +35,25 @@
                         {% endfor %}
                     </td>
                     <td>
+                        <p class="pull-left">
+                        {% if perms.crm_core.add_contract %}
+                            <button type="button" class="btn btn-sm btn-success"
+                                    onclick="window.location.assign('{% url 'customer_create_contract' customer.pk %}')"
+                                    title="{% trans "Create Contract" %}"><i class="fa fa-star"></i></button>
+                        {% endif %}
+                        </p>
+                    </td>
+                    <td>
                         <p class="pull-right">
                         {% if perms.crm_core.change_customer %}
-                        <button type="button" class="btn btn-sm btn-primary" onclick="window.location.assign('{% url 'customer_edit' customer.pk %}')">{% trans "Edit" %}</button>
+                            <button type="button" class="btn btn-sm btn-primary"
+                                    onclick="window.location.assign('{% url 'customer_edit' customer.pk %}')"
+                                    title="{% trans "Edit" %}"><i class="fa fa-pencil"></i></button>
                         {% endif %}
                         {% if perms.crm_core.delete_customer %}
-                        <button type="button" class="btn btn-sm btn-danger" onclick="window.location.assign('{% url 'customer_delete' customer.pk %}')">{% trans "Delete" %}</button>
+                            <button type="button" class="btn btn-sm btn-danger"
+                                    onclick="window.location.assign('{% url 'customer_delete' customer.pk %}')"
+                                    title="{% trans "Delete" %}"><i class="fa fa-trash"></i></button>
                         {% endif %}
                         </p>
                     </td>

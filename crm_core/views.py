@@ -54,6 +54,17 @@ def show_dashboard(request):
     return HttpResponse(template.render(context))
 
 
+def create_contract_from_customer(request, customer_pk):
+    customer = Customer.objects.get(pk=customer_pk)
+    contract = Contract()
+    contract.defaultcurrency = customer.default_currency
+    contract.defaultcustomer = customer
+    contract.save()
+    if not customer.default_currency:
+        return redirect('contract_edit', pk=contract.pk)
+    return redirect('contract_detail', pk=contract.pk)
+
+
 class PostalAddressInline(LoginRequiredMixin, PermissionRequiredMixin, InlineFormSet):
     model = PostalAddress
     permission_required = 'crm_core.view_postaladdress'
@@ -384,6 +395,12 @@ class ListContracts(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     permission_required = 'crm_core.view_contract'
     login_url = settings.LOGIN_URL
     fields = ['description', 'defaultcustomer', 'defaultSupplier', 'defaultcurrency']
+
+
+class ViewContract(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
+    model = Contract
+    permission_required = 'crm_core.view_contract'
+    login_url = settings.LOGIN_URL
 
 
 class CreateContract(LoginRequiredMixin, PermissionRequiredMixin, CreateView):

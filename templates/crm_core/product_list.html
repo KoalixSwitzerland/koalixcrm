@@ -16,7 +16,7 @@
             <tr><th>{% trans "Number" %}</th><th>{% trans "Title" %}</th><th>{% trans "Unit" %}</th><th>{% trans "Tax" %}</th><th>{% trans "Product Category" %}</th><th></th></tr>
             {% for product in product_list %}
                 <tr>
-                    <td>{{ product.product_number }}</td>
+                    <td><a href="{% url 'product_detail' product.pk %}">#{{ product.product_number }}</a></td>
                     <td>{{ product.product_title }}</td>
                     <td>{{ product.defaultunit }}</td>
                     <td>{{ product.tax }}</td>

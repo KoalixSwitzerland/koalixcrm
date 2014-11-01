@@ -11,7 +11,8 @@ from crm_core.views import login_user, UpdateUserProfile, ListCustomers, ListSup
     EditBillingCycle, EditContract, EditCurrency, EditCustomer, EditCustomerGroup, EditInvoice, EditPurchaseOrder, \
     EditQuote, EditSupplier, EditTax, EditUnit, DeleteQuote, DeleteInvoice, DeleteContract, DeleteCustomerGroup, \
     DeleteBillingCycle, DeleteCurrency, DeleteCustomer, DeleteProduct, DeletePurchaseOrder, DeleteSupplier, \
-    DeleteUnit, DeleteTax, show_dashboard, ViewCustomer, ViewSupplier, ViewProduct
+    DeleteUnit, DeleteTax, show_dashboard, ViewCustomer, ViewSupplier, ViewProduct, create_contract_from_customer, \
+    ViewContract
 
 admin.autodiscover()
 
@@ -24,15 +25,18 @@ urlpatterns = i18n_patterns("",
                             # Change the admin prefix here to use an alternate URL for the
                             # admin interface, which would be marginally more secure.
                             ("^admin/", include(admin.site.urls)),
-                            url(r'^admin/backup/$', "admin_backup.views.admin_backup", name="admin_backup"),
+                            url(r'^admin/backup/$', 'admin_backup.views.admin_backup', name='admin_backup'),
                             url(r'^dashboard/$', show_dashboard, name='dashboard'),
-                            url(r'^login/$', login_user, name="login"),
-                            url(r'^logout/$', login_user, name="logout"),
-                            url(r'^profileupdate/(?P<pk>\d+)/$', UpdateUserProfile.as_view(), name="profile_update"),
+                            url(r'^login/$', login_user, name='login'),
+                            url(r'^logout/$', login_user, name='logout'),
+                            url(r'^profileupdate/(?P<pk>\d+)/$', UpdateUserProfile.as_view(), name='profile_update'),
 
                             url(r'^customers/$', ListCustomers.as_view(), name='customer_list'),
-                            url(r'^customers/detail/(?P<pk>\d+)/$', ViewCustomer.as_view(), name='customer_detail'),
+                            url(r'^customers/detail/(?P<pk>\d+)/$', ViewCustomer.as_view(),
+                                name='customer_detail'),
                             url(r'^customers/create/$', CreateCustomer.as_view(), name='customer_create'),
+                            url(r'^customers/createcontract/(?P<customer_pk>\d+)/$', create_contract_from_customer,
+                                name='customer_create_contract'),
                             url(r'^customers/edit/(?P<pk>\d+)/$', EditCustomer.as_view(), name='customer_edit'),
                             url(r'^customers/delete/(?P<pk>\d+)/$', DeleteCustomer.as_view(), name='customer_delete'),
 
@@ -88,6 +92,7 @@ urlpatterns = i18n_patterns("",
                                 name='customergroup_delete'),
 
                             url(r'^contracts/$', ListContracts.as_view(), name='contract_list'),
+                            url(r'^contracts/detail/(?P<pk>\d+)/$', ViewContract.as_view(), name='contract_detail'),
                             url(r'^contracts/create/$', CreateContract.as_view(), name='contract_create'),
                             url(r'^contracts/edit/(?P<pk>\d+)/$', EditContract.as_view(), name='contract_edit'),
                             url(r'^contracts/delete/(?P<pk>\d+)/$', DeleteContract.as_view(), name='contract_delete'),

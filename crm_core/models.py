@@ -268,16 +268,19 @@ class Currency(models.Model):
 
 
 class Contract(models.Model):
-    staff = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, blank=True, verbose_name=_("Staff"),
+    staff = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, blank=True,
+                              verbose_name=_("Staff"),
                               related_name="db_relcontractstaff", null=True)
-    description = models.TextField(verbose_name=_("Description"))
+    description = models.TextField(verbose_name=_("Description"), blank=True, null=True)
     defaultcustomer = models.ForeignKey(Customer, verbose_name=_("Default Customer"), null=True, blank=True)
     defaultSupplier = models.ForeignKey(Supplier, verbose_name=_("Default Supplier"), null=True, blank=True)
-    defaultcurrency = models.ForeignKey(Currency, verbose_name=_("Default Currency"), blank=False, null=False)
+    defaultcurrency = models.CharField(max_length=3, choices=currencies, verbose_name=_("Default Currency"),
+                                       blank=True, null=True)
     dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now=True)
     lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now_add=True)
     lastmodifiedby = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True},
-                                       verbose_name=_("Last modified by"), related_name="db_contractlstmodified", null=True)
+                                       verbose_name=_("Last modified by"), related_name="db_contractlstmodified",
+                                       null=True)
 
     class Meta():
         verbose_name = _('Contract')
@@ -325,8 +328,16 @@ class Contract(models.Model):
         purchaseorder.save()
         return purchaseorder
 
+    @property
+    def get_name(self):
+        return self.defaultcustomer.name + '#%s' % str(self.id)
+
+    def get_absolute_url(self):
+        url = '/contracts/detail/' + str(self.pk)  # TODO: Bad solution
+        return url
+
     def __unicode__(self):
-        return _("Contract") + " " + str(self.id)
+        return self.get_name
 
 
 class PurchaseOrder(models.Model):
