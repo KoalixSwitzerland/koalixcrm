@@ -67,68 +67,6 @@
                 {% if request.user.is_authenticated %}
                     <!--  notification start -->
                     <ul class="nav top-menu">
-
-                        <!-- settings start -->
-                        <li class="dropdown">
-                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                                <i class="fa fa-tasks"></i>
-                                <span class="badge bg-theme">1</span>
-                            </a>
-                            <ul class="dropdown-menu extended tasks-bar">
-                                <div class="notify-arrow notify-arrow-green"></div>
-                                <li>
-                                    <p class="green">You have 1 pending task</p>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <div class="task-info">
-                                            <div class="desc">Koalix Task Panel</div>
-                                            <div class="percent">40%</div>
-                                        </div>
-                                        <div class="progress progress-striped">
-                                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
-                                                <span class="sr-only">40% Complete (success)</span>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li class="external">
-                                    <a href="#">See All Tasks</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <!-- settings end -->
-
-                        <!-- inbox dropdown start-->
-                        <li id="header_inbox_bar" class="dropdown">
-                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                                <i class="fa fa-envelope-o"></i>
-                                <span class="badge bg-theme">1</span>
-                            </a>
-                            <ul class="dropdown-menu extended inbox">
-                                <div class="notify-arrow notify-arrow-green"></div>
-                                <li>
-                                    <p class="green">You have 1 new message</p>
-                                </li>
-                                <li>
-                                    <a href="index.html#">
-                                        <span class="photo"><img alt="avatar" src="{% static "assets/img/ui-zac.jpg" %}"></span>
-                                        <span class="subject">
-                                        <span class="from">Zac Snider</span>
-                                        <span class="time">Just now</span>
-                                        </span>
-                                        <span class="message">
-                                            Hi mate, how is everything?
-                                        </span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="index.html#">See all messages</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <!-- inbox dropdown end -->
-
                     </ul>
                     <!--  notification end -->
                 {% endif %}
@@ -318,27 +256,29 @@
                   {% block rightbar %}
                       {% if request.user.is_authenticated %}
                       <div class="row mt">
-						    <h3>{% trans 'Filters' %}</h3>
 
                           {% block rightbar_filters %}
+{#						    <h3>{% trans 'Filters' %}</h3>#}
                           {% endblock %}
 
+                          {% block rightbar_actions %}
+                          {% endblock %}
 
-                              {% block right_calendar %}
-                                <!-- CALENDAR-->
-                                <div id="calendar" class="mb">
-                                    <div class="panel green-panel no-margin">
-                                        <div class="panel-body">
-                                            <div id="date-popover" class="popover top" style="cursor: pointer; disadding: block; margin-left: 33%; margin-top: -50px; width: 175px;">
-                                                <div class="arrow"></div>
-                                                <h3 class="popover-title" style="disadding: none;"></h3>
-                                                <div id="date-popover-content" class="popover-content"></div>
-                                            </div>
-                                            <div id="my-calendar"></div>
+                          {% block right_calendar %}
+                            <!-- CALENDAR-->
+                            <div id="calendar" class="mb">
+                                <div class="panel green-panel no-margin">
+                                    <div class="panel-body">
+                                        <div id="date-popover" class="popover top" style="cursor: pointer; disadding: block; margin-left: 33%; margin-top: -50px; width: 175px;">
+                                            <div class="arrow"></div>
+                                            <h3 class="popover-title" style="disadding: none;"></h3>
+                                            <div id="date-popover-content" class="popover-content"></div>
                                         </div>
+                                        <div id="my-calendar"></div>
                                     </div>
-                                </div><!-- / calendar -->
-                              {% endblock %}
+                                </div>
+                            </div><!-- / calendar -->
+                          {% endblock %}
 
                         </div>
                       {% endif %}

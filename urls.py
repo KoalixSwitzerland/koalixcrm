@@ -11,7 +11,7 @@ from crm_core.views import login_user, UpdateUserProfile, ListCustomers, ListSup
     EditBillingCycle, EditContract, EditCurrency, EditCustomer, EditCustomerGroup, EditInvoice, EditPurchaseOrder, \
     EditQuote, EditSupplier, EditTax, EditUnit, DeleteQuote, DeleteInvoice, DeleteContract, DeleteCustomerGroup, \
     DeleteBillingCycle, DeleteCurrency, DeleteCustomer, DeleteProduct, DeletePurchaseOrder, DeleteSupplier, \
-    DeleteUnit, DeleteTax, show_dashboard, ViewCustomer, ViewSupplier
+    DeleteUnit, DeleteTax, show_dashboard, ViewCustomer, ViewSupplier, ViewProduct
 
 admin.autodiscover()
 
@@ -59,6 +59,7 @@ urlpatterns = i18n_patterns("",
 
                             url(r'^products/$', ListProducts.as_view(), name='product_list'),
                             url(r'^products/create/$', CreateProduct.as_view(), name='product_create'),
+                            url(r'^products/detail/(?P<pk>\d+)/$', ViewProduct.as_view(), name='product_detail'),
                             url(r'^products/edit/(?P<pk>\d+)/$', EditProduct.as_view(), name='product_edit'),
                             url(r'^products/delete/(?P<pk>\d+)/$', DeleteProduct.as_view(), name='product_delete'),
 

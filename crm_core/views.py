@@ -282,6 +282,12 @@ class EditProduct(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     success_url = reverse_lazy('product_list')
 
 
+class ViewProduct(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
+    model = Product
+    permission_required = 'crm_core.view_product'
+    login_url = settings.LOGIN_URL
+
+
 class DeleteProduct(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Product
     permission_required = 'crm_core.delete_product'

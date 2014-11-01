@@ -28,7 +28,6 @@ from const.states import InvoiceStatesEnum, PurchaseOrderStatesEnum, QuoteStates
 class PostalAddress(models.Model):
     addressline1 = models.CharField(max_length=200, verbose_name=_("Addressline 1"), blank=True, null=True)
     addressline2 = models.CharField(max_length=200, verbose_name=_("Addressline 2"), blank=True, null=True)
-    # tfr, 10-13-14, v0.2: I'm not sure if these are really needed. Leaving outcommented for a few releases
     # addressline3 = models.CharField(max_length=200, verbose_name=_("Addressline 3"), blank=True, null=True)
     # addressline4 = models.CharField(max_length=200, verbose_name=_("Addressline 4"), blank=True, null=True)
     zipcode = models.IntegerField(verbose_name=_("Zipcode"), blank=True, null=True)
@@ -47,7 +46,15 @@ class PostalAddress(models.Model):
         )
 
     def __unicode__(self):
-        return '%s, %s %s' % (self.addressline1, self.zipcode, self.town)  # TODO
+        if self.addressline1 and self.zipcode and self.town:
+            return '%s, %s %s' % (self.addressline1, self.zipcode, self.town)
+        elif self.addressline1 and self.town:
+            return '%s, %s' % (self.addressline1, self.town)
+        elif self.zipcode and self.town:
+            return '%s %s' % (self.zipcode, self.town)
+        elif self.town:
+            return unicode(self.town)
+        return self.addressline1
 
 
 class PhoneAddress(models.Model):
@@ -168,7 +175,9 @@ class Customer(Displayable, Contact):
         return 0
 
     def __unicode__(self):
-        return "%s %s %s" % (self.prefix, self.firstname, self.name)
+        if self.prefix and self.firstname != "":
+            return "%s %s %s" % (self.prefix, self.firstname, self.name)
+        return self.name
 
 
 class Supplier(Displayable, Contact):
@@ -192,6 +201,8 @@ class Supplier(Displayable, Contact):
         return url
 
     def __unicode__(self):
+        if self.prefix:
+            return '%s: %s' % (self.prefix, self.name)
         return self.name
 
 
@@ -229,6 +240,7 @@ class Currency(models.Model):
 
     def __unicode__(self):
         return self.shortname
+
 
 # ##########################
 # ##   CONTRACT RELATED   ##
