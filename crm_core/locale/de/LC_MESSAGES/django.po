@@ -17,1634 +17,490 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: admin.py:46 admin.py:65 admin.py:84
 msgid "Advanced (not editable)"
 msgstr "Zusatzinformationen (nicht veränderbar)"
 
-#: admin.py:194
 msgid "PurchaseOrder created"
 msgstr "Bestellung erstellt"
 
-#: admin.py:197
 msgid "Create Purchaseorder"
 msgstr "Bestellung erstellen"
 
-#: admin.py:202 const/status.py:17
 msgid "Quote created"
 msgstr "Offerte erstellt"
 
-#: admin.py:205 admin.py:486
 msgid "Create Quote"
 msgstr "Offerte erstellen"
 
-#: admin.py:210 admin.py:347 views.py:67 const/status.py:7
 msgid "Invoice created"
 msgstr "Rechnung erstellt"
 
-#: admin.py:213 admin.py:350 admin.py:493
 msgid "Create Invoice"
 msgstr "Rechnung erstellen"
 
-#: admin.py:272 admin.py:342
 msgid "Recalculate Prices"
 msgstr "Berechne Preis neu"
 
-#: admin.py:278
 msgid "Create PDF of Invoice"
 msgstr "Erzeuge ein PDF der Rechnung"
 
-#: admin.py:284
 msgid "Create PDF of Delivery Order"
 msgstr "Erzeuge ein PDF des Lieferscheins"
 
-#: admin.py:289
 msgid "Successfully registered Invoice in the Accounting"
 msgstr "Die Rechnung ist erfolgreich in der Buchhaltung registriert worden"
 
-#: admin.py:290
 msgid "Register Invoice in Accounting"
 msgstr "Registriere Rechnung in Buchhaltung"
 
-#: admin.py:295
 msgid "Successfully unregistered Invoice in the Accounting"
 msgstr "Die Rechnung wurde erfolgreich aus der Buchhaltung entfernt"
 
-#: admin.py:296
 msgid "Unregister Invoice in Accounting"
 msgstr "Entferne Rechnung aus der Buchhaltung"
 
-#: admin.py:301
 msgid "Successfully registered Payment in the Accounting"
 msgstr "Die Zahlung wurde erfolgreich eingebucht"
 
-#: admin.py:302
 msgid "Register Payment in Accounting"
 msgstr "Buche Zahlung des Kunden in der Buchhaltung"
 
-#: admin.py:338
 msgid "Successfully recalculated Prices"
 msgstr "Preisberechnung erfolgreich"
 
-#: admin.py:340
 msgid "Unsuccessfull in updating the Prices "
 msgstr "Preisberechnung fehlgeschlagen"
 
-#: admin.py:356
 msgid "Create PDF of Quote"
 msgstr "Erzeuge ein PDF des Angebots"
 
-#: admin.py:362
 msgid "Create PDF of Purchase Confirmation"
 msgstr "Erzeuge ein PDF der Verkaufsbestätigung"
 
-#: admin.py:389
 msgid "Create PDF of Purchase Order"
 msgstr "Erzeuge ein PDF der Bestellung"
 
-#: admin.py:479
 msgid "Create Contract"
 msgstr "Erzeuge Auftrag"
 
-#: models.py:24 models.py:161 models.py:221 models.py:308 models.py:574
-#: models.py:608 models.py:756
 msgid "Description"
 msgstr "Beschreibung"
 
-#: models.py:25
 msgid "Displayed Name After Price In The Position"
 msgstr "Angezeigt nach dem Preis in der Position"
 
-#: models.py:26
 msgid "Rounding"
 msgstr "Rundung"
 
-#: models.py:34 models.py:35 models.py:227 models.py:314
 msgid "Currency"
 msgstr "Währung"
 
-#: models.py:38
 msgid "Prefix"
 msgstr "Anrede"
 
-#: models.py:39 models.py:75 models.py:87
 msgid "Name"
 msgstr "Name"
 
-#: models.py:40
 msgid "Prename"
 msgstr "Vorname"
 
-#: models.py:41
 msgid "Addressline 1"
 msgstr "Adresszeile 1"
 
-#: models.py:42
 msgid "Addressline 2"
 msgstr "Adresszeile 2"
 
-#: models.py:43
 msgid "Addressline 3"
 msgstr "Adresszeile 3"
 
-#: models.py:44
 msgid "Addressline 4"
 msgstr "Adresszeile 4"
 
-#: models.py:45
 msgid "Zipcode"
 msgstr "PLZ"
 
-#: models.py:46
 msgid "City"
 msgstr "Ortschaft"
 
-#: models.py:47
 msgid "State"
 msgstr "Bundestaat/Kanton"
 
-#: models.py:48
 msgid "Country"
 msgstr "Land"
 
-#: models.py:53 models.py:54
 msgid "Postal Address"
 msgstr "Postadresse"
 
-#: models.py:57
 msgid "Phone Number"
 msgstr "Telefonnummer"
 
-#: models.py:62 models.py:63
 msgid "Phone Address"
 msgstr "Telefonnummer"
 
-#: models.py:66 models.py:71 models.py:72
 msgid "Email Address"
 msgstr "Email Adresse"
 
-#: models.py:76 models.py:165 models.py:228 models.py:315 models.py:612
 msgid "Created at"
 msgstr "Erstelldatum"
 
-#: models.py:77 models.py:166 models.py:229 models.py:316 models.py:613
 msgid "Last modified"
 msgstr "Zuletzt geändert"
 
-#: models.py:78 models.py:167 models.py:230 models.py:317 models.py:614
 msgid "Last modified by"
 msgstr "Zuletzt geändert durch"
 
-#: models.py:83 models.py:84
 msgid "Contact"
 msgstr "Kontakt"
 
-#: models.py:88
 msgid "Days To Payment Date"
 msgstr "Tage bis zur Fälligkeit"
 
-#: models.py:92 models.py:93
 msgid "Customer Billing Cycle"
 msgstr "Zahlungsbedingungen"
 
-#: models.py:107 models.py:713
 msgid "Customer Group"
 msgstr "Kundengruppe"
 
-#: models.py:108
 msgid "Customer Groups"
 msgstr "Kundengruppen"
 
-#: models.py:111
 msgid "Default Billing Cycle"
 msgstr "Standard Zahlungsbedingung"
 
-#: models.py:112
 msgid "Is member of"
 msgstr "Ist Mitglied von"
 
-#: models.py:142 models.py:312
 msgid "Customer"
 msgstr "Kunde"
 
-#: models.py:143
 msgid "Customers"
 msgstr "Kunden"
 
-#: models.py:149
 msgid "Offers Shipment to Customer"
 msgstr ""
 
-#: models.py:153 models.py:154 models.py:220
 msgid "Supplier"
 msgstr "Lieferant"
 
 msgid "Suppliers"
 msgstr "Lieferanten"
 
-#: models.py:160 models.py:226 models.py:313
 msgid "Staff"
 msgstr "Mitarbeiter"
 
-#: models.py:162
 msgid "Default Customer"
 msgstr "Kunde"
 
-#: models.py:163
 msgid "Default Supplier"
 msgstr "Lieferant"
 
-#: models.py:164
 msgid "Default Currency"
 msgstr "Währung"
 
-#: models.py:172 models.py:215 models.py:218 models.py:305 models.py:798
-#: models.py:811
 msgid "Contract"
 msgstr "Auftrag"
 
-#: models.py:173
 msgid "Contracts"
 msgstr "Aufträge"
 
-#: models.py:219 models.py:306
 msgid "External Reference"
 msgstr "Externe Referenz"
 
-#: models.py:222 models.py:309 models.py:765
 msgid "Last Pricing Date"
 msgstr "Datum der letzen Preisberechnung"
 
-#: models.py:223 models.py:310
 msgid "Last Calculted Price With Tax"
 msgstr "Zuletzt berechneter Preis mit Steuer"
 
-#: models.py:224 models.py:311 models.py:767
 msgid "Last Calculted Tax"
 msgstr "Zuletzt berechnete Steuer"
 
-#: models.py:278 models.py:284
 msgid "During PurchaseOrder PDF Export"
 msgstr "Bestellung erstellt"
 
-#: models.py:298 models.py:299 models.py:302
 msgid "Purchase Order"
 msgstr "Bestellung"
 
-#: models.py:302 models.py:354 models.py:449 models.py:565
 msgid "from Contract"
 msgstr "vom Auftrag"
 
-#: models.py:307 models.py:757
 msgid "Discount"
 msgstr "Rabatt"
 
-#: models.py:350 models.py:354
 msgid "Sales Contract"
 msgstr "Verkaufsauftrag"
 
-#: models.py:351
 msgid "Sales Contracts"
 msgstr "Verkaufsaufträge"
 
-#: models.py:357 models.py:716
 msgid "Valid until"
 msgstr "Gültig bis"
 
-#: models.py:358
 msgid "Status"
 msgstr "Status"
 
-#: models.py:416 models.py:422
 msgid "During Quote PDF Export"
 msgstr ""
 
-#: models.py:449 models.py:454
 msgid "Quote"
 msgstr "Angebot"
 
-#: models.py:455
 msgid "Quotes"
 msgstr "Angebote"
 
-#: models.py:458
 msgid "To pay until"
 msgstr "Zahlbar bis"
 
-#: models.py:460
 msgid "Payment Bank Reference"
 msgstr "Zahlungsreferenz der Bank"
 
-#: models.py:531 models.py:537
 msgid "During Invoice PDF Export"
 msgstr ""
 
-#: models.py:565 models.py:570
 msgid "Invoice"
 msgstr "Rechnung"
 
-#: models.py:571
 msgid "Invoices"
 msgstr "Rechnungen"
 
-#: models.py:575
 msgid "Displayed Name After Quantity In The Position"
 msgstr "Angezeigt nach der Anzahl in der Position"
 
-#: models.py:576
 msgid "Is A Fraction Of"
 msgstr "Ist eine Untereinheit von"
 
-#: models.py:577
 msgid "Factor Between This And Next Higher Unit"
 msgstr "Multiplikator zwischen dieser und der nächst höheren Einheit"
 
-#: models.py:585 models.py:611 models.py:711 models.py:759
 msgid "Unit"
 msgstr "Masseinheit"
 
-#: models.py:586
 msgid "Units"
 msgstr "Masseinheiten"
 
-#: models.py:589
 msgid "Taxrate in Percentage"
 msgstr "Steuersatz in Prozent"
 
-#: models.py:590
 msgid "Taxname"
 msgstr "Name der Steuer"
 
-#: models.py:591
 msgid "Activa Account"
 msgstr "Aktiv Konto"
 
-#: models.py:592
 msgid "Passiva Account"
 msgstr "Passiv Konto"
 
-#: models.py:603
 msgid "Tax"
 msgstr "Steuer"
 
-#: models.py:604
 msgid "Taxes"
 msgstr "Steuern"
 
-#: models.py:609
 msgid "Title"
 msgstr "Titel"
 
-#: models.py:610
 msgid "Product Number"
 msgstr "Produktnummer"
 
-#: models.py:616
 msgid "Accounting Product Categorie"
 msgstr "Produktkategorie"
 
-#: models.py:653 models.py:670 models.py:691 models.py:710 models.py:758
 msgid "Product"
 msgstr "Produkt"
 
-#: models.py:654
 msgid "Products"
 msgstr "Produkte"
 
-#: models.py:664
 msgid "There is no Price for this product"
 msgstr "Es existiert kein Preis für dieses Produkt"
 
-#: models.py:664
 msgid "that matches the date"
 msgstr "welches übereinstimmt mit Datum"
 
-#: models.py:664
 msgid "customer"
 msgstr "Kunde"
 
-#: models.py:664
 msgid " and unit"
 msgstr "und Einheit"
 
-#: models.py:668 models.py:689
 msgid "From Unit"
 msgstr "Von Masseinheit"
 
-#: models.py:669 models.py:690
 msgid "To Unit"
 msgstr "Zu Masseinheit"
 
-#: models.py:671
 msgid "Factor between From and To Unit"
 msgstr "Multiplikator zwischen der einen und der anderen Einheit"
 
-#: models.py:685
 msgid "Unit Transfrom"
 msgstr "Einheiten Umrechnung"
 
-#: models.py:686
 msgid "Unit Transfroms"
 msgstr "Einheiten Umrechnungen"
 
-#: models.py:692
 msgid "Factor between From and To Customer Group"
 msgstr "Prismultiplikator zwischen der einen und der anderen Kundengruppe"
 
-#: models.py:706
 msgid "Customer Group Price Transfrom"
 msgstr "Kundengruppe Preisumrechnung"
 
-#: models.py:707
 msgid "Customer Group Price Transfroms"
 msgstr "Kundengruppen Preisumrechnungen"
 
-#: models.py:714 models.py:764
 msgid "Price Per Unit"
 msgstr "Preis pro Einheit"
 
-#: models.py:715
 msgid "Valid from"
 msgstr "Gültig vom"
 
-#: models.py:750
 msgid "Price"
 msgstr "Preis"
 
-#: models.py:751
 msgid "Prices"
 msgstr "Preise"
 
-#: models.py:754
 msgid "Position Number"
 msgstr "Positionsnummer"
 
-#: models.py:755
 msgid "Quantity"
 msgstr "Anzahl"
 
-#: models.py:760
 msgid "Shipment on"
 msgstr "Verschickt am"
 
-#: models.py:761
 msgid "Shipment Supplier"
 msgstr "Versandunternehmen"
 
-#: models.py:762
 msgid "Shipment ID"
 msgstr "Lieferungs ID"
 
-#: models.py:763
 msgid "Overwrite Product Price"
 msgstr "Überschreibe Produkt Preis"
 
-#: models.py:766
 msgid "Last Calculted Price"
 msgstr "Zuletzt berechneter Preis"
 
-#: models.py:789 models.py:794
 msgid "Position"
 msgstr "Position"
 
-#: models.py:795
 msgid "Positions"
 msgstr "Positionen"
 
-#: models.py:803 models.py:807
 msgid "Salescontract Position"
 msgstr "Verkaufsauftrag Position"
 
-#: models.py:804
 msgid "Salescontract Positions"
 msgstr "Verkaufsaufträge Positionen"
 
-#: models.py:816 models.py:820
 msgid "Purchaseorder Position"
 msgstr "Bestellung Position"
 
-#: models.py:817
 msgid "Purchaseorder Positions"
 msgstr "Bestellung Positionen"
 
-#: models.py:823 models.py:836 models.py:849 models.py:862 models.py:875
-#: models.py:888 models.py:901 models.py:914 models.py:927 models.py:940
-#: models.py:953 models.py:966
 msgid "Purpose"
 msgstr "Verwendungszweck"
 
-#: models.py:829 models.py:830
 msgid "Phone Address For Contact"
 msgstr "Telefonnummer für Kontakte"
 
-#: models.py:842 models.py:843
 msgid "Email Address For Contact"
 msgstr "Email Adresse für Kontakte"
 
-#: models.py:855 models.py:856
 msgid "Postal Address For Contact"
 msgstr "Postadresse für Kontakte"
 
-#: models.py:868 models.py:869 models.py:881 models.py:882 models.py:894
-#: models.py:895
 msgid "Postal Address For Contracts"
 msgstr "Postadresse für Aufträge"
 
-#: models.py:907 models.py:908 models.py:920 models.py:921 models.py:933
-#: models.py:934
 msgid "Phone Address For Contracts"
 msgstr "Telefonnummer für Aufträge"
 
-#: models.py:946 models.py:947 models.py:959 models.py:960 models.py:972
-#: models.py:973
 msgid "Email Address For Contracts"
 msgstr "Email Adresse für Aufträge"
 
-#: views.py:70
 msgid "Test"
 msgstr "Test"
 
-#: const/country.py:4
-msgid "Afghanistan"
-msgstr "Afghanistan"
-
-#: const/country.py:5
-msgid "Aland Islands"
-msgstr ""
-
-#: const/country.py:6
-msgid "Albania"
-msgstr "Albanien"
-
-#: const/country.py:7
-msgid "Algeria"
-msgstr "Algerien"
-
-#: const/country.py:8
-msgid "American Samoa"
-msgstr "Amerikanisch-Samoa"
-
-#: const/country.py:9
-msgid "Andorra"
-msgstr "Andorra"
-
-#: const/country.py:10
-msgid "Angola"
-msgstr "Angola"
-
-#: const/country.py:11
-msgid "Anguilla"
-msgstr "Anguilla"
-
-#: const/country.py:12
-msgid "Antarctica"
-msgstr "Antarktis"
-
-#: const/country.py:13
-msgid "Antigua and Barbuda"
-msgstr "Antigua und Barbuda"
-
-#: const/country.py:14
-msgid "Argentina"
-msgstr "Argentinien"
-
-#: const/country.py:15
-msgid "Armenia"
-msgstr "Armenien"
-
-#: const/country.py:16
-msgid "Aruba"
-msgstr "Aruba"
-
-#: const/country.py:17
-msgid "Australia"
-msgstr "Australien"
-
-#: const/country.py:18
-msgid "Austria"
-msgstr "Österreich"
-
-#: const/country.py:19
-msgid "Azerbaijan"
-msgstr "Aserbaidschan"
-
-#: const/country.py:20
-msgid "the Bahamas"
-msgstr "Bahamas"
-
-#: const/country.py:21
-msgid "Bahrain"
-msgstr "Bahrain\t"
-
-#: const/country.py:22
-msgid "Bangladesh"
-msgstr "Bangladesch"
-
-#: const/country.py:23
-msgid "Barbados"
-msgstr "Barbados"
-
-#: const/country.py:24
-msgid "Belarus"
-msgstr "Belarus, (Weißrußland)"
-
-#: const/country.py:25
-msgid "Belgium"
-msgstr "Belgien"
-
-#: const/country.py:26
-msgid "Belize"
-msgstr "Belize"
-
-#: const/country.py:27
-msgid "Benin"
-msgstr "Benin"
-
-#: const/country.py:28
-msgid "Bermuda"
-msgstr "Bermuda"
-
-#: const/country.py:29
-msgid "Bhutan"
-msgstr "Bhutan"
-
-#: const/country.py:30
-msgid "Bolivia"
-msgstr "Bolivien"
-
-#: const/country.py:31
-msgid "Bosnia and Herzegovina"
-msgstr "Bosnien und Herzegovina"
-
-#: const/country.py:32
-msgid "Botswana"
-msgstr "Botsuana"
-
-#: const/country.py:33
-msgid "Bouvet Island"
-msgstr "Bouvetinsel"
-
-#: const/country.py:34
-msgid "Brazil"
-msgstr "Brasilien"
-
-#: const/country.py:35
-msgid "British Indian Ocean Territory"
-msgstr "Britisches Territorium im Indischen Ozean"
-
-#: const/country.py:36
-msgid "Brunei Darussalam"
-msgstr "Brunei Darussalam"
-
-#: const/country.py:37
-msgid "Bulgaria"
-msgstr "Bulgarien"
-
-#: const/country.py:38
-msgid "Burkina Faso"
-msgstr "Burkina Faso (Obervolta - 1984)"
-
-#: const/country.py:39
-msgid "Burundi"
-msgstr "Burundi"
-
-#: const/country.py:40
-msgid "Cambodia"
-msgstr "Kambodscha"
-
-#: const/country.py:41
-msgid "Cameroon"
-msgstr "Kamerun"
-
-#: const/country.py:42
-msgid "Canada"
-msgstr "Kanada"
-
-#: const/country.py:43
-msgid "Cape Verde"
-msgstr "Kap Verde"
-
-#: const/country.py:44
-msgid "Cayman Islands"
-msgstr "Kaimaninseln"
-
-#: const/country.py:45
-msgid "Central African Republic"
-msgstr "Zentralafrikanische Republik"
-
-#: const/country.py:46
-msgid "Chad"
-msgstr "Tschad"
-
-#: const/country.py:47
-msgid "Chile"
-msgstr "Chile"
-
-#: const/country.py:48
-msgid "China"
-msgstr "China"
-
-#: const/country.py:49
-msgid "Christmas Island"
-msgstr "Weihnachtsinsel"
-
-#: const/country.py:50
-msgid "Cocos (Keeling) Islands"
-msgstr "Kokosinseln (Keeling)"
-
-#: const/country.py:51
-msgid "Colombia"
-msgstr "Kolumbien"
-
-#: const/country.py:52
-msgid "Comoros"
-msgstr "Komoren"
-
-#: const/country.py:53
-msgid "Congo"
-msgstr "Kongo"
-
-#: const/country.py:54
-msgid "Democratic Republic of the Congo"
-msgstr "Kongo, Demokratische Republik"
-
-#: const/country.py:55
-msgid "Cook Islands"
-msgstr "Cookinseln"
-
-#: const/country.py:56
-msgid "Costa Rica"
-msgstr "Costa Rica"
-
-#: const/country.py:57
-msgid "Cote d'Ivoire"
-msgstr "Elfenbeinküste"
-
-#: const/country.py:58
-msgid "Croatia"
-msgstr "Kroatien"
-
-#: const/country.py:59
-msgid "Cuba"
-msgstr "Kuba"
-
-#: const/country.py:60
-msgid "Cyprus"
-msgstr "Zypern"
-
-#: const/country.py:61
-msgid "Czech Republic"
-msgstr "Tschechische Republik"
-
-#: const/country.py:62
-msgid "Denmark"
-msgstr "Dänemark"
-
-#: const/country.py:63
-msgid "Djibouti"
-msgstr "Dschibuti"
-
-#: const/country.py:64
-msgid "Dominica"
-msgstr "Dominica"
-
-#: const/country.py:65
-msgid "Dominican Republic"
-msgstr "Dominikanische Republik (Dom Rep)"
-
-#: const/country.py:66
-msgid "Ecuador"
-msgstr "Ecuador"
-
-#: const/country.py:67
-msgid "Egypt"
-msgstr "Ägypten"
-
-#: const/country.py:68
-msgid "El Salvador"
-msgstr "El Salvador"
-
-#: const/country.py:69
-msgid "Equatorial Guinea"
-msgstr "Äquatorialguinea"
-
-#: const/country.py:70
-msgid "Eritrea"
-msgstr "Eritrea"
-
-#: const/country.py:71
-msgid "Estonia"
-msgstr "Estland"
-
-#: const/country.py:72
-msgid "Ethiopia"
-msgstr "Äthiopien"
-
-#: const/country.py:73
-msgid "Falkland Islands (Malvinas)"
-msgstr "Falklandinseln (Malvinen)"
-
-#: const/country.py:74
-msgid "Faroe Islands"
-msgstr "Färöer"
-
-#: const/country.py:75
-msgid "Fiji"
-msgstr "Fidschi"
-
-#: const/country.py:76
-msgid "Finland"
-msgstr "Finnland"
-
-#: const/country.py:77
-msgid "France"
-msgstr "Frankreich"
-
-#: const/country.py:78
-msgid "French Guiana"
-msgstr "Französisch-Guayana"
-
-#: const/country.py:79
-msgid "French Polynesia"
-msgstr "Französisch-Polynesien"
-
-#: const/country.py:80
-msgid "French Southern and Antarctic Lands"
-msgstr "Französische Süd- und Antarktisgebiete"
-
-#: const/country.py:81
-msgid "Gabon"
-msgstr "Gabun"
-
-#: const/country.py:82
-msgid "Gambia"
-msgstr "Gambia"
-
-#: const/country.py:83
-msgid "Georgia"
-msgstr "Georgien"
-
-#: const/country.py:84
-msgid "Germany"
-msgstr "Deutschland"
-
-#: const/country.py:85
-msgid "Ghana"
-msgstr "Ghana"
-
-#: const/country.py:86
-msgid "Gibraltar"
-msgstr "Gibraltar"
-
-#: const/country.py:87
-msgid "Greece"
-msgstr "Griechenland"
-
-#: const/country.py:88
-msgid "Greenland"
-msgstr "Grönland"
-
-#: const/country.py:89
-msgid "Grenada"
-msgstr "Grenada"
-
-#: const/country.py:90
-msgid "Guadeloupe"
-msgstr "Guadeloupe"
-
-#: const/country.py:91
-msgid "Guam"
-msgstr "Guam"
-
-#: const/country.py:92
-msgid "Guatemala"
-msgstr "Guatemala"
-
-#: const/country.py:93
-msgid "Guernsey"
-msgstr "Guernsey"
-
-#: const/country.py:94
-msgid "Guinea"
-msgstr "Guinea"
-
-#: const/country.py:95
-msgid "Guinea-Bissau"
-msgstr "Guinea-Bissau"
-
-#: const/country.py:96
-msgid "Guyana"
-msgstr "Guyana"
-
-#: const/country.py:97
-msgid "Haiti"
-msgstr "Haiti"
-
-#: const/country.py:98
-msgid "Heard Island and McDonald Islands"
-msgstr "Heard und die Mcdonaldinseln"
-
-#: const/country.py:99
-msgid "Vatican City Holy See"
-msgstr "Heiliger Stuhl (Vatikanstadt)"
-
-#: const/country.py:100
-msgid "Honduras"
-msgstr "Honduras"
-
-#: const/country.py:101
-msgid "Hong Kong"
-msgstr "Hongkong"
-
-#: const/country.py:102
-msgid "Hungary"
-msgstr "Ungarn"
-
-#: const/country.py:103
-msgid "Iceland"
-msgstr "Island"
-
-#: const/country.py:104
-msgid "India"
-msgstr "Indien"
-
-#: const/country.py:105
-msgid "Indonesia"
-msgstr "Indonesien"
-
-#: const/country.py:106
-msgid "Iran"
-msgstr "Iran, Islamische Republik"
-
-#: const/country.py:107
-msgid "Iraq"
-msgstr "Irak"
-
-#: const/country.py:108
-msgid "Ireland"
-msgstr "Irland"
-
-#: const/country.py:109
-msgid "Isle of Man"
-msgstr "Insel Man"
-
-#: const/country.py:110
-msgid "Israel"
-msgstr "Israel"
-
-#: const/country.py:111
-msgid "Italy"
-msgstr "Italien"
-
-#: const/country.py:112
-msgid "Jamaica"
-msgstr "Jamaika"
-
-#: const/country.py:113
-msgid "Japan"
-msgstr "Japan"
-
-#: const/country.py:114
-msgid "Jersey"
-msgstr "Jersey"
-
-#: const/country.py:115
-msgid "Jordan"
-msgstr "Jordanien"
-
-#: const/country.py:116
-msgid "Kazakhstan"
-msgstr "Kasachstan"
-
-#: const/country.py:117
-msgid "Kenya"
-msgstr "Kenya"
-
-#: const/country.py:118
-msgid "Kiribati"
-msgstr "Kiribati"
-
-#: const/country.py:119
-msgid "North Korea"
-msgstr "Korea, Demokratische Volksrepublik (Nord Korea)"
-
-#: const/country.py:120
-msgid "South Korea"
-msgstr "Korea, Republik (Süd Korea)"
-
-#: const/country.py:121
-msgid "Kuwait"
-msgstr "Kuwait"
-
-#: const/country.py:122
-msgid "Kyrgyzstan"
-msgstr "Kirgisistan"
-
-#: const/country.py:123
-msgid "Laos Lao"
-msgstr "Laos, Demokratische Volksrepublik"
-
-#: const/country.py:124
-msgid "Latvia"
-msgstr "Lettland"
-
-#: const/country.py:125
-msgid "Lebanon"
-msgstr "Libanon"
-
-#: const/country.py:126
-msgid "Lesotho"
-msgstr "Lesotho"
-
-#: const/country.py:127
-msgid "Liberia"
-msgstr "Liberia"
-
-#: const/country.py:128
-msgid "Libya Libyan Arab Jamahiriya"
-msgstr "Libyen, Libysch-Arabische Dschamahirija"
-
-#: const/country.py:129
-msgid "Liechtenstein"
-msgstr "Liechtenstein"
-
-#: const/country.py:130
-msgid "Lithuania"
-msgstr "Litauen"
-
-#: const/country.py:131
-msgid "Luxembourg"
-msgstr "Luxemburg"
-
-#: const/country.py:132
-msgid "Macau Macao"
-msgstr "Macau"
-
-#: const/country.py:133
-msgid "Macedonia"
-msgstr "Mazedonien"
-
-#: const/country.py:134
-msgid "Madagascar"
-msgstr "Madagaskar"
-
-#: const/country.py:135
-msgid "Malawi"
-msgstr "Malawi"
-
-#: const/country.py:136
-msgid "Malaysia"
-msgstr "Malaysia"
-
-#: const/country.py:137
-msgid "Maldives"
-msgstr "Malediven"
-
-#: const/country.py:138
-msgid "Mali"
-msgstr "Mali"
-
-#: const/country.py:139
-msgid "Malta"
-msgstr "Malta"
-
-#: const/country.py:140
-msgid "Marshall Islands"
-msgstr "Marshallinseln"
-
-#: const/country.py:141
-msgid "Martinique"
-msgstr "Martinique"
-
-#: const/country.py:142
-msgid "Mauritania"
-msgstr "Mauretanien"
-
-#: const/country.py:143
-msgid "Mauritius"
-msgstr "Mauritius"
-
-#: const/country.py:144
-msgid "Mayotte"
-msgstr "Mayotte"
-
-#: const/country.py:145
-msgid "Mexico"
-msgstr "Mexiko"
-
-#: const/country.py:146
-msgid "Micronesia"
-msgstr "Mikronesien, Föderierte Staaten von"
-
-#: const/country.py:147
-msgid "Moldova"
-msgstr "Moldau, Republik"
-
-#: const/country.py:148
-msgid "Monaco"
-msgstr "Monaco"
-
-#: const/country.py:149
-msgid "Mongolia"
-msgstr "Mongolei"
-
-#: const/country.py:150
-msgid "Montenegro"
-msgstr "Montenegro"
-
-#: const/country.py:151
-msgid "Montserrat"
-msgstr "Montenegro"
-
-#: const/country.py:152
-msgid "Morocco"
-msgstr "Marokko"
-
-#: const/country.py:153
-msgid "Mozambique"
-msgstr "Mosambik"
-
-#: const/country.py:154
-msgid "Myanmar"
-msgstr "Myanmar, Birma"
-
-#: const/country.py:155
-msgid "Namibia"
-msgstr "Namibia"
-
-#: const/country.py:156
-msgid "Nauru"
-msgstr "Nauru"
-
-#: const/country.py:157
-msgid "Nepal"
-msgstr "Nepal"
-
-#: const/country.py:158
-msgid "Netherlands"
-msgstr "Niederlande"
-
-#: const/country.py:159
-msgid "Netherlands Antilles"
-msgstr "Niederländische Antillen"
-
-#: const/country.py:160
-msgid "New Caledonia"
-msgstr "Neukaledonien"
-
-#: const/country.py:161
-msgid "New Zealand"
-msgstr "Neuseeland"
-
-#: const/country.py:162
-msgid "Nicaragua"
-msgstr "Nicaragua"
-
-#: const/country.py:163
-msgid "Niger"
-msgstr "Niger"
-
-#: const/country.py:164
-msgid "Nigeria"
-msgstr "Nigeria"
-
-#: const/country.py:165
-msgid "Niue"
-msgstr "Niue"
-
-#: const/country.py:166
-msgid "Norfolk Island Norfolk Island"
-msgstr "Norfolkinsel"
-
-#: const/country.py:167
-msgid "Northern Mariana Islands"
-msgstr "Marianen, Nördliche"
-
-#: const/country.py:168
-msgid "Norway"
-msgstr "Norwegen"
-
-#: const/country.py:169
-msgid "Oman"
-msgstr "Oman"
-
-#: const/country.py:170
-msgid "Pakistan"
-msgstr "Pakistan"
-
-#: const/country.py:171
-msgid "Palau"
-msgstr "Palau"
-
-#: const/country.py:172
-msgid "Palestinian Territory"
-msgstr "Palästinensische Autonomiegebiete"
-
-#: const/country.py:173
-msgid "Panama"
-msgstr "Panama"
-
-#: const/country.py:174
-msgid "Papua New Guinea"
-msgstr "Papua-Neuguinea"
-
-#: const/country.py:175
-msgid "Paraguay"
-msgstr "Paraguay"
-
-#: const/country.py:176
-msgid "Peru"
-msgstr "Peru"
-
-#: const/country.py:177
-msgid "Philippines"
-msgstr "Philippinen"
-
-#: const/country.py:178
-msgid "Pitcairn Islands"
-msgstr "Pitcairninseln"
-
-#: const/country.py:179
-msgid "Poland"
-msgstr "Polen"
-
-#: const/country.py:180
-msgid "Portugal"
-msgstr "Portugal"
-
-#: const/country.py:181
-msgid "Puerto Rico"
-msgstr "Puerto Rico"
-
-#: const/country.py:182
-msgid "Qatar"
-msgstr "Katar"
-
-#: const/country.py:183
-msgid "Reunion"
-msgstr "Reunion"
-
-#: const/country.py:184
-msgid "Romania"
-msgstr "Rumänien"
-
-#: const/country.py:185
-msgid "Russia"
-msgstr "Russische Föderation (Russland)"
-
-#: const/country.py:186
-msgid "Rwanda"
-msgstr "Ruanda"
-
-#: const/country.py:187
-msgid "Saint Helena"
-msgstr "St. Helena"
-
-#: const/country.py:188
-msgid "Saint Kitts and Nevis"
-msgstr "St. Kitts und Nevis"
-
-#: const/country.py:189
-msgid "Saint Lucia"
-msgstr "St. Lucia"
-
-#: const/country.py:190
-msgid "Saint Pierre and Miquelon"
-msgstr "St. Pierre und Miquelon"
-
-#: const/country.py:191
-msgid "Saint Vincent and the Grenadines"
-msgstr "St. Vincent und die Grenadinen"
-
-#: const/country.py:192
-msgid "Samoa"
-msgstr "Samoa"
-
-#: const/country.py:193
-msgid "San Marino"
-msgstr "San Marino"
-
-#: const/country.py:194
-msgid "Sao Tome and Principe"
-msgstr "São Tomé und Príncipe"
-
-#: const/country.py:195
-msgid "Saudi Arabia"
-msgstr "Saudi-Arabien"
-
-#: const/country.py:196
-msgid "Senegal"
-msgstr "Senegal"
-
-#: const/country.py:197
-msgid "Serbia"
-msgstr "Serbien"
-
-#: const/country.py:198
-msgid "Seychelles"
-msgstr "Seychellen"
-
-#: const/country.py:199
-msgid "Sierra Leone"
-msgstr "Sierra Leone"
-
-#: const/country.py:200
-msgid "Singapore"
-msgstr "Singapur"
-
-#: const/country.py:201
-msgid "Slovakia"
-msgstr "Slowakei"
-
-#: const/country.py:202
-msgid "Slovenia"
-msgstr "Slowenien"
-
-#: const/country.py:203
-msgid "Solomon Islands"
-msgstr "Salomonen"
-
-#: const/country.py:204
-msgid "Somalia"
-msgstr "Somalia"
-
-#: const/country.py:205
-msgid "South Africa"
-msgstr "Südafrika"
-
-#: const/country.py:206
-msgid "South Georgia and the South Sandwich Islands"
-msgstr "Südgeorgien und die südlichen Sandwichinseln"
-
-#: const/country.py:207
-msgid "Spain"
-msgstr "Spanien"
-
-#: const/country.py:208
-msgid "Sri Lanka"
-msgstr "Sri Lanka"
-
-#: const/country.py:209
-msgid "Sudan"
-msgstr "Sudan"
-
-#: const/country.py:210
-msgid "Suriname"
-msgstr "Suriname"
-
-#: const/country.py:211
-msgid "Svalbard and Jan Mayen"
-msgstr "Svalbard und Jan Mayen"
-
-#: const/country.py:212
-msgid "Swaziland"
-msgstr "Swasiland"
-
-#: const/country.py:213
-msgid "Sweden"
-msgstr "Schweden"
-
-#: const/country.py:214
-msgid "Switzerland"
-msgstr "Schweiz"
-
-#: const/country.py:215
-msgid "Syria"
-msgstr "Syrien, Arabische Republik"
-
-#: const/country.py:216
-msgid "Taiwan"
-msgstr "Taiwan"
-
-#: const/country.py:217
-msgid "Tajikistan"
-msgstr "Tadschikistan"
-
-#: const/country.py:218
-msgid "Tanzania"
-msgstr "Tansania, Vereinigte Republik"
-
-#: const/country.py:219
-msgid "Thailand"
-msgstr "Thailand"
-
-#: const/country.py:220
-msgid "East Timor"
-msgstr "Timor-Leste (Osttimor)"
-
-#: const/country.py:221
-msgid "Togo"
-msgstr "Togo"
-
-#: const/country.py:222
-msgid "Tokelau"
-msgstr "Tokelau"
-
-#: const/country.py:223
-msgid "Tonga"
-msgstr "Tonga"
-
-#: const/country.py:224
-msgid "Trinidad and Tobago"
-msgstr "Trinidad und Tobago"
-
-#: const/country.py:225
-msgid "Tunisia"
-msgstr "Tunesien"
-
-#: const/country.py:226
-msgid "Turkey"
-msgstr "Türkei"
-
-#: const/country.py:227
-msgid "Turkmenistan"
-msgstr "Turkmenistan"
-
-#: const/country.py:228
-msgid "Turks and Caicos Islands"
-msgstr "Turks- und Caicosinseln"
-
-#: const/country.py:229
-msgid "Tuvalu"
-msgstr "Tuvalu"
-
-#: const/country.py:230
-msgid "Uganda"
-msgstr "Uganda"
-
-#: const/country.py:231
-msgid "Ukraine"
-msgstr "Ukraine"
-
-#: const/country.py:232
-msgid "United Arab Emirates"
-msgstr "Vereinigte Arabische Emirate"
-
-#: const/country.py:233
-msgid "United Kingdom"
-msgstr "Vereinigtes Königreich"
-
-#: const/country.py:234
-msgid "United States"
-msgstr "Vereinigte Staaten"
-
-#: const/country.py:235
-msgid "United States Minor Outlying Islands"
-msgstr "Amerikanische Überseeinseln, Kleinere"
-
-#: const/country.py:236
-msgid "Uruguay"
-msgstr "Uruguay"
-
-#: const/country.py:237
-msgid "Uzbekistan"
-msgstr "Usbekistan"
-
-#: const/country.py:238
-msgid "Vanuatu"
-msgstr "Vanuatu"
-
-#: const/country.py:239
-msgid "Venezuela"
-msgstr "Venezuela"
-
-#: const/country.py:240
-msgid "Vietnam Viet Nam"
-msgstr "Vietnam"
-
-#: const/country.py:241
-msgid "British Virgin Islands"
-msgstr "Britische Jungferninseln"
-
-#: const/country.py:242
-msgid "United States Virgin Islands"
-msgstr "Amerikanische Jungferninseln"
-
-#: const/country.py:243
-msgid "Wallis and Futuna"
-msgstr "Wallis und Futuna"
-
-#: const/country.py:244
-msgid "Western Sahara"
-msgstr "Westsahara"
-
-#: const/country.py:245
-msgid "Yemen"
-msgstr "Jemen"
-
-#: const/country.py:246
-msgid "Zambia"
-msgstr "Sambia"
-
-#: const/country.py:247
-msgid "Zimbabwe"
-msgstr "Simbabwe"
-
-#: const/postaladdressprefix.py:6
 msgid "Company"
 msgstr "Firma"
 
-#: const/postaladdressprefix.py:7
 msgid "Mrs"
 msgstr "Frau"
 
-#: const/postaladdressprefix.py:8
 msgid "Mr"
 msgstr "Herr"
 
-#: const/postaladdressprefix.py:9
 msgid "Ms"
 msgstr "Frau"
 
-#: const/purpose.py:6
 msgid "Delivery Address"
 msgstr "Versand Addresse"
 
-#: const/purpose.py:7
 msgid "Billing Address"
 msgstr "Rechnungs Adresse"
 
-#: const/purpose.py:8
 msgid "Contact Address"
 msgstr "Kontakt Adresse"
 
-#: const/purpose.py:12
 msgid "Private"
 msgstr "Privat"
 
-#: const/purpose.py:13
 msgid "Business"
 msgstr "Geschäftlich"
 
-#: const/purpose.py:14
 msgid "Mobile Private"
 msgstr "Mobil Privat"
 
-#: const/purpose.py:15
 msgid "Mobile Business"
 msgstr "Mobil Geschäftlich"
 
-#: const/status.py:6
 msgid "Payed"
 msgstr "Bezahlt"
 
-#: const/status.py:8
 msgid "Invoice sent"
 msgstr "Rechung geschickt"
 
-#: const/status.py:9 const/status.py:19
 msgid "First reminder sent"
 msgstr "Erste Erinnerung geschickt"
 
-#: const/status.py:10 const/status.py:20
 msgid "Second reminder sent"
 msgstr "Zweite Erinnerung geschickt"
 
-#: const/status.py:11
 msgid "Customer cant pay"
 msgstr "Kunde kann nicht zahlen"
 
-#: const/status.py:12 const/status.py:21
 msgid "Deleted"
 msgstr "Gelöscht"
 
-#: const/status.py:16
 msgid "Success"
 msgstr "Erfolg"
 
-#: const/status.py:18
 msgid "Quote sent"
 msgstr "Angebot verschickt"
 
-#: const/status.py:25
 msgid "Ordered"
 msgstr "Bestellt"
 
-#: const/status.py:26
 msgid "Delayed"
 msgstr "Verspätet"
 
-#: const/status.py:27
 msgid "Delivered"
 msgstr "Ausgeliefert"
 
-#: const/status.py:28
 msgid "Invoice registered"
 msgstr "Rechnung registriert"
 
-#: const/status.py:29
 msgid "Invoice payed"
 msgstr "Rechnung bezahlt"
 
-#: management/commands/koalixcrm_install_defaulttemplates.py:81
 msgid "John Smit, Sample Company, 8976 Smallville"
 msgstr ""
 
-#: management/commands/koalixcrm_install_defaulttemplates.py:83
 msgid ""
 "According to your wishes the contract consists of the following positions:"
 msgstr "Gemäss ihren Wünschen besteht der Auftrag aus folgenden Positionen"
 
-#: management/commands/koalixcrm_install_defaulttemplates.py:84
 msgid ""
 "Thank you for your interest in our company \n"
 " Best regards"
@@ -1652,119 +508,90 @@ msgstr ""
 "Vielen Dank für das Interesse an unserem Unternehmen \n"
 "Freundliche Grüsse"
 
-#: management/commands/koalixcrm_install_defaulttemplates.py:85
 msgid "We would like to order the following positions:"
 msgstr "Wir möchten gerne folgende Positionen bestellen"
 
-#: management/commands/koalixcrm_install_defaulttemplates.py:86
 msgid "Best regards"
 msgstr "Freundliche Grüsse"
 
-#: management/commands/koalixcrm_install_defaulttemplates.py:87
 msgid "Sample Company"
 msgstr "Beispiel Firma"
 
-#: management/commands/koalixcrm_install_defaulttemplates.py:88
 msgid "Sample Address"
 msgstr "Beispiel Adresse"
 
-#: admin.py:12 admin.py:23 admin.py:34 admin.py:47 admin.py:64 admin.py:77
 msgid "Basics"
 msgstr "Grundlagen"
 
-#: models.py:9 models.py:12 models.py:15
 msgid "Purpose"
 msgstr "Verwendungszweck"
 
-#: models.py:18 models.py:41
 msgid "Title"
 msgstr "Titel"
 
-#: models.py:19 models.py:24
 msgid "XSL File"
 msgstr "XSL Datei"
 
-#: models.py:23 models.py:36 models.py:56
 msgid "Djang User Extention"
 msgstr "Django Benutzer Erweiterung"
 
-#: models.py:25
 msgid "XSL Files"
 msgstr "XSL Dateien"
 
-#: models.py:37
 msgid "User Extension"
 msgstr "Benutzer Erweiterung"
 
-#: models.py:38
 msgid "User Extensions"
 msgstr "Benutzer Erweiterungen"
 
-#: models.py:42
 msgid "XSL File for Invoice"
 msgstr "XSL Datei für die Rechnung"
 
-#: models.py:43
 msgid "XSL File for Quote"
 msgstr "XSL Datei für das Angebot"
 
-#: models.py:44
 msgid "XSL File for Purchaseorder"
 msgstr "XSL Datei für die Kaufsbestätigung"
 
-#: models.py:45
 msgid "XSL File for Deilvery Order"
 msgstr "XSL Datei für den Lieferschein"
 
-#: models.py:46
 msgid "XSL File for Profit Loss Statement"
 msgstr "XSL Datei für die Erfolgsrechung"
 
-#: models.py:47
 msgid "XSL File for Balancesheet"
 msgstr "XSL Datei für die Billanz"
 
-#: models.py:48
 msgid "Logo for the PDF generation"
 msgstr "Logo für die PDF's"
 
-#: models.py:49
 msgid "Footer Text On Salesorders"
 msgstr "Grussfromel für die Verkaufsaufträge"
 
-#: models.py:50
 msgid "Header Text On Salesorders"
 msgstr "Begrüssungsfromel für die Verkaufsaufträge"
 
-#: models.py:51
 msgid "Header Text On Purchaseorders"
 msgstr "Begrüssungsformel für die Kaufaufträge"
 
-#: models.py:52
 msgid "Footer Text On Purchaseorders"
 msgstr "Grussfromel für die Kaufaufträge"
 
-#: models.py:57
 msgid "Templateset"
 msgstr "Vorlagenset"
 
-#: models.py:58
 msgid "Templatesets"
 msgstr "Vorlagensets"
 
-#: const/purpose.py:6
 msgid "Private"
 msgstr "Privat"
 
-#: const/purpose.py:7
 msgid "Business"
 msgstr "Geschäftlich"
 
-#: const/purpose.py:8
 msgid "Mobile Private"
 msgstr "Privat Mobiltelefon"
 
-#: const/purpose.py:9
 msgid "Mobile Business"
 msgstr "Geschäftliches Mobiltelefon"
 

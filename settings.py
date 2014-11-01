@@ -66,7 +66,7 @@ DASHBOARD_TAGS = (
 
 # If True, the south application will be automatically added to the
 # INSTALLED_APPS setting.
-USE_SOUTH = False
+USE_SOUTH = True
 
 
 ########################
@@ -117,7 +117,7 @@ LOCALE_PATHS = (
     'crm_core/locale',
     'accounting/locale',
     'subscriptions/locale',
-    'djangoUserExtension/locale'
+    'international/locale'
 )
 
 # A boolean that turns on/off debug mode. When set to ``True``, stack traces
@@ -246,6 +246,7 @@ INSTALLED_APPS = (
     "django.contrib.sitemaps",
     "django.contrib.staticfiles",
     "django_utils",
+    "international",
     "braces",
     "po_localization",
     "import_export",

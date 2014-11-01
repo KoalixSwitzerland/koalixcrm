@@ -13,7 +13,7 @@ from filebrowser_safe.fields import FileBrowseField
 from django_fsm import FSMIntegerField, transition
 from mezzanine.core.models import Displayable
 
-from const.country import COUNTRIES
+from international.models import countries, currencies
 from const.postaladdressprefix import PostalAddressPrefix
 from const.purpose import PhoneOrEmailAddressPurpose, PostalAddressPurpose
 from const.states import InvoiceStatesEnum, PurchaseOrderStatesEnum, QuoteStatesEnum
@@ -28,12 +28,10 @@ from const.states import InvoiceStatesEnum, PurchaseOrderStatesEnum, QuoteStates
 class PostalAddress(models.Model):
     addressline1 = models.CharField(max_length=200, verbose_name=_("Addressline 1"), blank=True, null=True)
     addressline2 = models.CharField(max_length=200, verbose_name=_("Addressline 2"), blank=True, null=True)
-    # addressline3 = models.CharField(max_length=200, verbose_name=_("Addressline 3"), blank=True, null=True)
-    # addressline4 = models.CharField(max_length=200, verbose_name=_("Addressline 4"), blank=True, null=True)
     zipcode = models.IntegerField(verbose_name=_("Zipcode"), blank=True, null=True)
     town = models.CharField(max_length=100, verbose_name=_("City"), blank=True, null=True)
     state = models.CharField(max_length=100, verbose_name=_("State"), blank=True, null=True)
-    country = models.CharField(max_length=2, choices=[(x[0], x[3]) for x in COUNTRIES], verbose_name=_("Country"),
+    country = models.CharField(max_length=2, choices=countries, verbose_name=_("Country"),
                                blank=True, null=True)
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PostalAddressPurpose.choices,
                                default=PostalAddressPurpose.ContactAddress)
@@ -117,6 +115,7 @@ class Contact(models.Model):
     lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now=True)
     lastmodifiedby = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, blank=True,
                                        verbose_name=_("Last modified by"), null=True)
+    default_currency = models.CharField(max_length=3, choices=currencies, blank=True, null=True)
 
     class Meta():
         verbose_name = _('Contact')
@@ -148,7 +147,7 @@ class CustomerGroup(models.Model):
 
 
 class Customer(Displayable, Contact):
-    firstname = models.CharField(max_length=300, verbose_name=_("Prename"), blank=True)
+    firstname = models.CharField(max_length=300, verbose_name=_("Prename"), blank=True, null=True)
     billingcycle = models.ForeignKey('CustomerBillingCycle', verbose_name=_('Default Billing Cycle'))
     ismemberof = models.ManyToManyField(CustomerGroup, verbose_name=_('Is member of'), blank=True, null=True)
     search_fields = {"name": 10, "firstname": 8}

@@ -115,7 +115,7 @@ class CreateCustomer(LoginRequiredMixin, PermissionRequiredMixin, NamedFormsetsM
     model = Customer
     permission_required = 'crm_core.add_customer'
     login_url = settings.LOGIN_URL
-    fields = ['prefix', 'name', 'firstname', 'billingcycle', 'ismemberof']
+    fields = ['prefix', 'name', 'firstname', 'default_currency', 'billingcycle', 'ismemberof']
     inlines = [PostalAddressInline, PhoneAddressInline, EmailAddressInline]
     inlines_names = ['postaladdress_formset', 'phoneaddress_formset', 'emailaddress_formset']
     success_url = reverse_lazy('customer_list')
@@ -125,7 +125,7 @@ class EditCustomer(LoginRequiredMixin, PermissionRequiredMixin, NamedFormsetsMix
     model = Customer
     permission_required = 'crm_core.change_customer'
     login_url = settings.LOGIN_URL
-    fields = ['prefix', 'name', 'firstname', 'billingcycle', 'ismemberof']
+    fields = ['prefix', 'name', 'firstname', 'default_currency', 'billingcycle', 'ismemberof']
     inlines = [PostalAddressInline, PhoneAddressInline, EmailAddressInline]
     inlines_names = ['postaladdress_formset', 'phoneaddress_formset', 'emailaddress_formset']
     success_url = reverse_lazy('customer_list')
@@ -155,7 +155,7 @@ class CreateSupplier(LoginRequiredMixin, PermissionRequiredMixin, NamedFormsetsM
     model = Supplier
     permission_required = 'crm_core.add_supplier'
     login_url = settings.LOGIN_URL
-    fields = ['prefix', 'name', 'direct_shipment_to_customers']
+    fields = ['prefix', 'name', 'default_currency', 'direct_shipment_to_customers']
     inlines = [PostalAddressInline, PhoneAddressInline, EmailAddressInline]
     inlines_names = ['postaladdress_formset', 'phoneaddress_formset', 'emailaddress_formset']
     success_url = reverse_lazy('supplier_list')
@@ -165,7 +165,7 @@ class EditSupplier(LoginRequiredMixin, PermissionRequiredMixin, NamedFormsetsMix
     model = Supplier
     permission_required = 'crm_core.change_supplier'
     login_url = settings.LOGIN_URL
-    fields = ['prefix', 'name', 'direct_shipment_to_customers']
+    fields = ['prefix', 'name', 'default_currency', 'direct_shipment_to_customers']
     inlines = [PostalAddressInline, PhoneAddressInline, EmailAddressInline]
     inlines_names = ['postaladdress_formset', 'phoneaddress_formset', 'emailaddress_formset']
     success_url = reverse_lazy('supplier_list')
