@@ -1,34 +1,33 @@
 # -*- coding: utf-8 -*
-
+from django_utils import choices
 from django.utils.translation import ugettext_lazy as _
-from enum import Enum
 
 
-class InvoiceStatesEnum(Enum):
-    Open = 1
-    Payed = 2
-    Invoice_created = 3
-    Invoice_sent = 4
-    First_reminder_sent = 5
-    Second_reminder_sent = 6
-    Customer_cant_pay = 7
-    Deleted = 8
+class InvoiceStatesEnum(choices.Choices):
+    Open = choices.Choice(1, _('Open'))
+    Payed = choices.Choice(2, _('Payed'))
+    Invoice_created = choices.Choice(3, _('Invoice created'))
+    Invoice_sent = choices.Choice(4, _('Invoice sent'))
+    First_reminder_sent = choices.Choice(5, _('First reminder sent'))
+    Second_reminder_sent = choices.Choice(6, _('Second reminder sent'))
+    Customer_cant_pay = choices.Choice(7, _('Unpayed'))
+    Deleted = choices.Choice(8, _('Deleted'))
 
 
-class QuoteStatesEnum(Enum):
-    New = 1
-    Success = 2
-    Quote_created = 3
-    Quote_sent = 4
-    First_reminder_sent = 5
-    Second_reminder_sent = 6
-    Deleted = 7
+class QuoteStatesEnum(choices.Choices):
+    New = choices.Choice(1, _('New'))
+    Success = choices.Choice(2, _('Success'))
+    Quote_created = choices.Choice(3, _('Quote created'))
+    Quote_sent = choices.Choice(4, _('Quote sent'))
+    First_reminder_sent = choices.Choice(5, _('First reminder sent'))
+    Second_reminder_sent = choices.Choice(6, _('Second reminder sent'))
+    Deleted = choices.Choice(7, _('Deleted'))
 
 
-class PurchaseOrderStatesEnum(Enum):
-    New = 1
-    Ordered = 2
-    Delayed = 3
-    Delivered = 4
-    Invoice_registered = 5
-    Invoice_payed = 6
+class PurchaseOrderStatesEnum(choices.Choices):
+    New = choices.Choice(1, _('New'))
+    Ordered = choices.Choice(2, _('Ordered'))
+    Delayed = choices.Choice(3, _('Delayed'))
+    Delivered = choices.Choice(4, _('Delivered'))
+    Invoice_registered = choices.Choice(5, _('Invoice registered'))
+    Invoice_payed = choices.Choice(6, _('Invoice payed'))

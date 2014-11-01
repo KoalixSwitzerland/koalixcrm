@@ -16,7 +16,7 @@
             <div class="row well" style="margin: 30px;">
                 <div class="col-lg-4">
                     <div style="margin-top: -20px;">
-                        <h2>{{ customer.prefix }} {{ customer.firstname }} {{ customer.name }}</h2>
+                        <h2>{{ customer.get_prefix }} {{ customer.firstname }} {{ customer.name }}</h2>
                         <table>
                             <tr>
                                 <td><small>{% trans 'Created' %}:&nbsp;</small></td>

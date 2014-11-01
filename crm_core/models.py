@@ -14,8 +14,8 @@ from django_fsm import FSMIntegerField, transition
 from mezzanine.core.models import Displayable
 
 from const.country import COUNTRIES
-from const.postaladdressprefix import POSTALADDRESSPREFIX
-from const.purpose import PURPOSESADDRESSINCONTRACT, PURPOSESADDRESSINCUSTOMER
+from const.postaladdressprefix import PostalAddressPrefix
+from const.purpose import PhoneOrEmailAddressPurpose, PostalAddressPurpose
 from const.states import InvoiceStatesEnum, PurchaseOrderStatesEnum, QuoteStatesEnum
 # from accounting.models import Booking, Account, AccountingPeriod
 
@@ -35,7 +35,8 @@ class PostalAddress(models.Model):
     state = models.CharField(max_length=100, verbose_name=_("State"), blank=True, null=True)
     country = models.CharField(max_length=2, choices=[(x[0], x[3]) for x in COUNTRIES], verbose_name=_("Country"),
                                blank=True, null=True)
-    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT, default='C')
+    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PostalAddressPurpose.choices,
+                               default=PostalAddressPurpose.ContactAddress)
     person = models.ForeignKey('Contact', related_name='addresses')
 
     class Meta():
@@ -44,6 +45,10 @@ class PostalAddress(models.Model):
         permissions = (
             ('view_postaladdress', 'Can view postal address'),
         )
+
+    @property
+    def get_purpose(self):
+        return PostalAddressPurpose.choices[self.purpose]
 
     def __unicode__(self):
         if self.addressline1 and self.zipcode and self.town:
@@ -59,7 +64,8 @@ class PostalAddress(models.Model):
 
 class PhoneAddress(models.Model):
     phone = models.CharField(max_length=20, verbose_name=_("Phone Number"))
-    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCUSTOMER, default='H')
+    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PhoneOrEmailAddressPurpose.choices,
+                               default=PhoneOrEmailAddressPurpose.Private)
     person = models.ForeignKey('Contact', related_name='phonenumbers')
 
     class Meta():
@@ -69,13 +75,18 @@ class PhoneAddress(models.Model):
             ('view_phoneaddress', 'Can view phone address'),
         )
 
+    @property
+    def get_purpose(self):
+        return PhoneOrEmailAddressPurpose.choices[self.purpose]
+
     def __unicode__(self):
-        return "%s: %s" % (self.purpose, self.phone)
+        return "%s: %s" % (self.get_purpose, self.phone)
 
 
 class EmailAddress(models.Model):
     email = models.EmailField(max_length=200, verbose_name=_("Email Address"))
-    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT, default='C')
+    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PhoneOrEmailAddressPurpose.choices,
+                               default=PhoneOrEmailAddressPurpose.Private)
     person = models.ForeignKey('Contact', related_name='emailaddresses')
 
     class Meta():
@@ -85,8 +96,12 @@ class EmailAddress(models.Model):
             ('view_emailaddress', 'Can view email address'),
         )
 
+    @property
+    def get_purpose(self):
+        return PhoneOrEmailAddressPurpose.choices[self.purpose]
+
     def __unicode__(self):
-        return "%s: %s" % (self.purpose, self.email)
+        return "%s: %s" % (self.get_purpose, self.email)
 
 
 # ########################
@@ -95,7 +110,7 @@ class EmailAddress(models.Model):
 
 
 class Contact(models.Model):
-    prefix = models.CharField(max_length=1, choices=POSTALADDRESSPREFIX, verbose_name=_("Prefix"), blank=True,
+    prefix = models.CharField(max_length=1, choices=PostalAddressPrefix.choices, verbose_name=_("Prefix"), blank=True,
                               null=True)
     name = models.CharField(max_length=300, verbose_name=_("Name"))
     dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now_add=True)
@@ -109,6 +124,10 @@ class Contact(models.Model):
         permissions = (
             ('view_contact', 'Can view contact'),
         )
+
+    @property
+    def get_prefix(self):
+        return PostalAddressPrefix.choices[self.prefix]
 
     def __unicode__(self):
         return self.name

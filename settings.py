@@ -245,6 +245,7 @@ INSTALLED_APPS = (
     "django.contrib.sites",
     "django.contrib.sitemaps",
     "django.contrib.staticfiles",
+    "django_utils",
     "braces",
     "po_localization",
     "import_export",
