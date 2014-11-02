@@ -326,7 +326,7 @@ class Contract(models.Model):
 
     @property
     def get_name(self):
-        return _('Contract') + '#%s' % str(self.id)
+        return _('Contract') + ' #' + str(self.id)
 
     def get_absolute_url(self):
         url = '/contracts/detail/' + str(self.pk)  # TODO: Bad solution
@@ -490,17 +490,6 @@ class SalesContract(models.Model):
         except Quote.DoesNotExist:
             return 0
 
-    class Meta():
-        verbose_name = _('Sales Contract')
-        verbose_name_plural = _('Sales Contracts')
-        permissions = (
-            ('view_salescontract', 'Can view sales contracts'),
-        )
-
-    def __unicode__(self):
-        return _("Sales Contract") + ": " + str(self.id) + " " + _("from Contract") + ": " + str(
-            self.contract.id)
-
 
 class Quote(SalesContract):
     state = FSMIntegerField(default=QuoteStatesEnum.New)
@@ -605,7 +594,7 @@ class Quote(SalesContract):
         )
 
     def __unicode__(self):
-        return _("Quote") + ": " + str(self.id) + " " + _("from Contract") + ": " + str(self.contract.id)
+        return _('Quote') + ' #' + str(self.id)
 
 
 class Invoice(SalesContract):

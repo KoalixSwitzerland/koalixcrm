@@ -13,21 +13,47 @@
     <h4><i class="fa fa-angle-right"></i> {% trans "Quotes" %}</h4>
         {% if quote_list %}
         <table class="table table-striped table-advance">
-            <tr><th>{% trans "Description" %}</th><th></th><th></th></tr>
+            <tr><th>{% trans 'Name' %}</th><th>{% trans "Description" %}</th><th>{% trans 'Contract' %}</th><th>{% trans 'Customer' %}</th><th>{% trans 'Valid Until' %}</th><th>{% trans 'Last Calculated Price' %}</th><th></th><th></th></tr>
             {% for quote in quote_list %}
                 <tr>
-                    <td>{{ quote.description }}</td>
-                    <td>
+                    <td>{{ quote }}</td>
+                    <td>{{ quote.description|default_if_none:"" }}</td>
+                    <td>{{ quote.contract|default_if_none:"" }}</td>
+                    <td>{{ quote.customer|default_if_none:"" }}</td>
+                    <td>{{ quote.validuntil|default_if_none:"" }}</td>
+                    <td>{{ quote.last_calculated_price|default_if_none:"" }}</td>
+                    <td width="150px">
+{#                    TODO view buttons depending on contract state#}
+                        <p class="pull-right">
+                        {% if perms.crm_core.add_invoice %}
+                            <button type="button" class="btn btn-sm btn-success"
+                                    onclick="window.location.assign('{% url 'quote_create_invoice' quote.pk %}')"
+                                    title="{% trans "Create Invoice" %}"><i class="fa fa-money"></i></button>
+                        {% endif %}
+{#                        {% if perms.crm_core.add_quote %}#}
+                            <button type="button" class="btn btn-sm btn-default"
+                                    onclick="window.location.assign('{% url 'quote_create_pdf' quote.pk %}')"
+                                    title="{% trans "Create PDF" %}"><i class="fa fa-file-pdf-o"></i></button>
+{#                        {% endif %}#}
+                        </p>
+                    </td>
+                    <td width="100px">
                         <p class="pull-right">
                         {% if perms.crm_core.change_quote %}
-                        <button type="button" class="btn btn-sm btn-primary" onclick="window.location.assign('{% url 'quote_edit' quote.pk %}')">{% trans "Edit" %}</button>
+                            <button type="button" class="btn btn-sm btn-primary"
+                                    onclick="window.location.assign('{% url 'quote_edit' quote.pk %}')"
+                                    title="{% trans "Edit" %}"><i class="fa fa-pencil"></i></button>
                         {% endif %}
                         {% if perms.crm_core.delete_quote %}
-                        <button type="button" class="btn btn-sm btn-danger" onclick="window.location.assign('{% url 'quote_delete' quote.pk %}')">{% trans "Delete" %}</button>
+                            <button type="button" class="btn btn-sm btn-danger"
+                                    onclick="window.location.assign('{% url 'quote_delete' quote.pk %}')"
+                                    title="{% trans "Delete" %}"><i class="fa fa-trash"></i></button>
                         {% endif %}
                         </p>
                     </td>
                 </tr>
+            {% empty %}
+                {% trans 'No quotes' %}
             {% endfor %}
         </table>
         {% endif %}

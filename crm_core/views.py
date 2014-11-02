@@ -95,6 +95,18 @@ def create_purchaseorder_from_contract(request, contract_pk):
     return redirect('purchaseorder_edit', pk=purchase_order.pk)
 
 
+def create_invoice_from_quote(request, quote_pk):
+    quote = Quote.objects.get(pk=quote_pk)
+    invoice = quote.create_invoice()
+    return redirect('invoice_edit', pk=invoice.pk)
+
+
+def create_pdf_from_quote(request, quote_pk):
+    quote = Quote.objects.get(pk=quote_pk)
+    invoice = quote.create_pdf('quote')
+    return redirect('invoice_edit', pk=invoice.pk)
+
+
 class PostalAddressInline(LoginRequiredMixin, PermissionRequiredMixin, InlineFormSet):
     model = PostalAddress
     permission_required = 'crm_core.view_postaladdress'
@@ -464,7 +476,7 @@ class ListQuotes(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = Quote
     permission_required = 'crm_core.view_quote'
     login_url = settings.LOGIN_URL
-    fields = ['description', 'contract', 'customer', 'currency', 'validuntil', 'state', 'lastmodifiedby',
+    fields = ['description', 'contract', 'customer', 'validuntil', 'lastmodifiedby',
               'last_calculated_price', 'last_pricing_date']
 
 
@@ -472,7 +484,7 @@ class CreateQuote(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Quote
     permission_required = 'crm_core.add_quote'
     login_url = settings.LOGIN_URL
-    fields = ['description', 'contract', 'customer', 'currency', 'validuntil', 'state', 'lastmodifiedby',
+    fields = ['description', 'contract', 'customer', 'currency', 'lastmodifiedby',
               'last_calculated_price', 'last_pricing_date']
     success_url = reverse_lazy('quote_list')
 
@@ -481,7 +493,7 @@ class EditQuote(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Quote
     permission_required = 'crm_core.change_quote'
     login_url = settings.LOGIN_URL
-    fields = ['description', 'contract', 'customer', 'currency', 'validuntil', 'state', 'lastmodifiedby',
+    fields = ['description', 'contract', 'customer', 'currency', 'lastmodifiedby',
               'last_calculated_price', 'last_pricing_date']
     success_url = reverse_lazy('quote_list')
 

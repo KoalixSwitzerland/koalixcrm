@@ -13,7 +13,7 @@ from crm_core.views import login_user, UpdateUserProfile, ListCustomers, ListSup
     DeleteBillingCycle, DeleteCustomer, DeleteProduct, DeletePurchaseOrder, DeleteSupplier, \
     DeleteUnit, DeleteTax, show_dashboard, ViewCustomer, ViewSupplier, ViewProduct, create_contract_from_customer, \
     ViewContract, create_quote_from_customer, create_purchaseorder_from_customer, create_invoice_from_contract, \
-    create_purchaseorder_from_contract, create_quote_from_contract
+    create_purchaseorder_from_contract, create_quote_from_contract, create_invoice_from_quote, create_pdf_from_quote
 
 admin.autodiscover()
 
@@ -110,6 +110,10 @@ urlpatterns = i18n_patterns("",
 
                             url(r'^quotes/$', ListQuotes.as_view(), name='quote_list'),
                             url(r'^quotes/create/$', CreateQuote.as_view(), name='quote_create'),
+                            url(r'^quotes/createinvoice/(?P<quote_pk>\d+)/$', create_invoice_from_quote,
+                                name='quote_create_invoice'),
+                            url(r'^quotes/createpdf/(?P<quote_pk>\d+)/$', create_pdf_from_quote,
+                                name='quote_create_pdf'),
                             url(r'^quotes/edit/(?P<pk>\d+)/$', EditQuote.as_view(), name='quote_edit'),
                             url(r'^quotes/delete/(?P<pk>\d+)/$', DeleteQuote.as_view(), name='quote_delete'),
 )
