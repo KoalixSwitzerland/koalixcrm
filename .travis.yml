@@ -12,7 +12,5 @@ script:
   - python manage.py check
   - coverage run --source='.' manage.py test crm_core accounting subscriptions admin_backup
   - coverage report
-  - python manage.py migrate
-  - python manage.py loaddata auth_groups
 after_success:
   - coveralls
