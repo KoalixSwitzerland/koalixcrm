@@ -13,13 +13,16 @@
     <h4><i class="fa fa-angle-right"></i> {% trans "Invoices" %}</h4>
         {% if invoice_list %}
         <table class="table table-striped table-advance">
-            <tr><th>{% trans 'Name' %}</th><th>{% trans "Description" %}</th><th>{% trans 'Contract' %}</th><th>{% trans 'Customer' %}</th><th>{% trans 'Payable Until' %}</th><th>{% trans 'Last Calculated Price' %}</th><th></th><th></th></tr>
+            <tr><th>{% trans 'Status' %}</th><th>{% trans 'Name' %}</th><th>{% trans "Description" %}</th><th>{% trans 'Contract' %}</th><th>{% trans 'Customer' %}</th><th>{% trans 'Payable Until' %}</th><th>{% trans 'Last Calculated Price' %}</th><th></th><th></th></tr>
             {% for invoice in invoice_list %}
                 <tr>
+                    <td><span class="label {{ invoice.get_state_class }}">{{ invoice.get_state }}</span></td>
                     <td>{{ invoice }}</td>
                     <td>{{ invoice.description|default_if_none:"" }}</td>
-                    <td>{{ invoice.contract|default_if_none:"" }}</td>
-                    <td>{{ invoice.customer|default_if_none:"" }}</td>
+                    <td><a href="{% url 'contract_detail' invoice.contract.pk %}">
+                        {{ invoice.contract|default_if_none:"" }}</a></td>
+                    <td><a href="{% url 'customer_detail' invoice.customer.pk %}">
+                        {{ invoice.customer|default_if_none:"" }}</a></td>
                     <td>{{ invoice.payableuntil|default_if_none:"" }}</td>
                     <td>{{ invoice.last_calculated_price|default_if_none:"" }}</td>
                     <td width="150px">

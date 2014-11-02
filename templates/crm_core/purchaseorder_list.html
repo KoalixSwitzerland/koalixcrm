@@ -13,13 +13,16 @@
     <h4><i class="fa fa-angle-right"></i> {% trans "Purchase Orders" %}</h4>
         {% if purchaseorder_list %}
         <table class="table table-striped table-advance">
-            <tr><th>{% trans 'Name' %}</th><th>{% trans "Description" %}</th><th>{% trans 'Contract' %}</th><th>{% trans 'Customer' %}</th><th>{% trans 'Valid Until' %}</th><th>{% trans 'Last Calculated Price' %}</th><th></th><th></th></tr>
+            <tr><th>{% trans 'Status' %}</th><th>{% trans 'Name' %}</th><th>{% trans "Description" %}</th><th>{% trans 'Contract' %}</th><th>{% trans 'Customer' %}</th><th>{% trans 'Valid Until' %}</th><th>{% trans 'Last Calculated Price' %}</th><th></th><th></th></tr>
             {% for purchaseorder in purchaseorder_list %}
                 <tr>
+                    <td><span class="label {{ purchaseorder.get_state_class }}">{{ purchaseorder.get_state }}</span></td>
                     <td>{{ purchaseorder }}</td>
                     <td>{{ purchaseorder.description|default_if_none:"" }}</td>
-                    <td>{{ purchaseorder.contract|default_if_none:"" }}</td>
-                    <td>{{ purchaseorder.customer|default_if_none:"" }}</td>
+                    <td><a href="{% url 'contract_detail' purchaseorder.contract.pk %}">
+                        {{ purchaseorder.contract|default_if_none:"" }}</a></td>
+                    <td><a href="{% url 'customer_detail' purchaseorder.contract.default_customer.pk %}">
+                        {{ purchaseorder.contract.default_customer|default_if_none:"" }}</a></td>
                     <td>{{ purchaseorder.validuntil|default_if_none:"" }}</td>
                     <td>{{ purchaseorder.last_calculated_price|default_if_none:"" }}</td>
                     <td width="150px">

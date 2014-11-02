@@ -101,6 +101,12 @@ def create_invoice_from_quote(request, quote_pk):
     return redirect('invoice_edit', pk=invoice.pk)
 
 
+def create_purchaseorder_from_quote(request, quote_pk):
+    quote = Quote.objects.get(pk=quote_pk)
+    purchase_order = quote.create_purchase_order()
+    return redirect('purchaseorder_edit', pk=purchase_order.pk)
+
+
 def create_pdf_from_quote(request, quote_pk):
     quote = Quote.objects.get(pk=quote_pk)
     quote.create_pdf('quote')  # TODO

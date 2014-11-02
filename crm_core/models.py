@@ -16,7 +16,8 @@ from mezzanine.core.models import Displayable
 from international.models import countries, currencies
 from const.postaladdressprefix import PostalAddressPrefix
 from const.purpose import PhoneOrEmailAddressPurpose, PostalAddressPurpose
-from const.states import InvoiceStatesEnum, PurchaseOrderStatesEnum, QuoteStatesEnum
+from const.states import InvoiceStatesEnum, PurchaseOrderStatesEnum, QuoteStatesEnum, InvoiceStatesLabelEnum, \
+    QuoteStatesLabelEnum, PurchaseOrderStatesLabelEnum, ContractStatesEnum, ContractStatesLabelEnum
 # from accounting.models import Booking, Account, AccountingPeriod
 
 
@@ -246,6 +247,7 @@ class Supplier(Displayable, Contact):
 
 
 class Contract(models.Model):
+    state = FSMIntegerField(default=ContractStatesEnum.Open, choices=ContractStatesEnum.choices)
     staff = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, blank=True,
                               verbose_name=_("Staff"), related_name="db_relcontractstaff", null=True)
     description = models.TextField(verbose_name=_("Description"), blank=True, null=True)
@@ -266,6 +268,7 @@ class Contract(models.Model):
             ('view_contract', 'Can view contracts'),
         )
 
+    @transition(field=state, source='*', target=ContractStatesEnum.Invoice_created)
     def create_invoice(self):
         invoice = Invoice()
         invoice.contract = self
@@ -279,6 +282,7 @@ class Contract(models.Model):
         invoice.save()
         return invoice
 
+    @transition(field=state, source='*', target=ContractStatesEnum.Quote_created)
     def create_quote(self):
         quote = Quote()
         quote.contract = self
@@ -292,6 +296,7 @@ class Contract(models.Model):
         quote.save()
         return quote
 
+    @transition(field=state, source='*', target=ContractStatesEnum.PurchaseOrder_created)
     def create_purchase_order(self):
         purchaseorder = PurchaseOrder()
         purchaseorder.contract = self
@@ -309,6 +314,14 @@ class Contract(models.Model):
     def get_name(self):
         return _('Contract') + ' #' + str(self.id)
 
+    @property
+    def get_state(self):
+        return ContractStatesEnum.choices[self.state]
+
+    @property
+    def get_state_class(self):
+        return ContractStatesLabelEnum.choices[self.state]
+
     def get_absolute_url(self):
         url = '/contracts/detail/' + str(self.pk)  # TODO: Bad solution
         return url
@@ -318,8 +331,8 @@ class Contract(models.Model):
 
 
 class PurchaseOrder(models.Model):
-    state = FSMIntegerField(default=PurchaseOrderStatesEnum.New)
-    contract = models.ForeignKey(Contract, verbose_name=_("Contract"))
+    state = FSMIntegerField(default=PurchaseOrderStatesEnum.New, choices=PurchaseOrderStatesEnum.choices)
+    contract = models.ForeignKey(Contract, verbose_name=_("Contract"), related_name='purchaseorder')
     external_reference = models.CharField(verbose_name=_("External Reference"), max_length=100, blank=True, null=True)
     supplier = models.ForeignKey(Supplier, verbose_name=_("Supplier"), blank=True, null=True)
     description = models.CharField(verbose_name=_("Description"), max_length=100, blank=True, null=True)
@@ -372,7 +385,7 @@ class PurchaseOrder(models.Model):
             exit()
             return 0
 
-    @transition(field=state, source=PurchaseOrderStatesEnum.New, target=PurchaseOrderStatesEnum.Delayed)
+    @transition(field=state, source='*', target=PurchaseOrderStatesEnum.Invoice_registered)
     def create_pdf(self):
         xml_serializer = serializers.get_serializer("xml")
         xml_serializer = xml_serializer()
@@ -415,6 +428,22 @@ class PurchaseOrder(models.Model):
         permissions = (
             ('view_purchaseorder', 'Can view purchase orders'),
         )
+
+    @transition(field=state, source=PurchaseOrderStatesEnum.Ordered, target=PurchaseOrderStatesEnum.Delayed)
+    def delivery_delayed(self):
+        pass
+
+    @transition(field=state, source=PurchaseOrderStatesEnum.Invoice_registered, target=PurchaseOrderStatesEnum.Invoice_payed)
+    def invoice_payed(self):
+        pass
+
+    @property
+    def get_state(self):
+        return PurchaseOrderStatesEnum.choices[self.state]
+
+    @property
+    def get_state_class(self):
+        return PurchaseOrderStatesLabelEnum.choices[self.state]
 
     def __unicode__(self):
         return _("Purchase Order") + " #" + str(self.id)
@@ -472,10 +501,10 @@ class SalesContract(models.Model):
 
 
 class Quote(SalesContract):
-    state = FSMIntegerField(default=QuoteStatesEnum.New)
+    state = FSMIntegerField(default=QuoteStatesEnum.New, choices=QuoteStatesEnum.choices)
     validuntil = models.DateField(verbose_name=_("Valid until"))
 
-    @transition(field=state, source=QuoteStatesEnum.New, target=QuoteStatesEnum.Quote_sent)
+    @transition(field=state, source='*', target=QuoteStatesEnum.Quote_sent)
     def create_invoice(self):
         invoice = Invoice()
         invoice.contract = self.contract
@@ -516,7 +545,14 @@ class Quote(SalesContract):
         except Quote.DoesNotExist:
             return
 
-    @transition(field=state, source=QuoteStatesEnum.New, target=QuoteStatesEnum.Quote_created)
+    @transition(field=state, source='*', target=QuoteStatesEnum.Purchaseorder_created)
+    def create_purchase_order(self):
+        self.state = QuoteStatesEnum.Purchaseorder_created
+        self.save()
+        purchase_order = self.contract.create_purchase_order()
+        return purchase_order
+
+    @transition(field=state, source='*', target=QuoteStatesEnum.Quote_created)
     def create_pdf(self, what_to_export):
         xml_serializer = serializers.get_serializer("xml")
         xml_serializer = xml_serializer()
@@ -573,12 +609,20 @@ class Quote(SalesContract):
             ('view_quote', 'Can view quotes'),
         )
 
+    @property
+    def get_state(self):
+        return QuoteStatesEnum.choices[self.state]
+
+    @property
+    def get_state_class(self):
+        return QuoteStatesLabelEnum.choices[self.state]
+
     def __unicode__(self):
         return _('Quote') + ' #' + str(self.id)
 
 
 class Invoice(SalesContract):
-    state = FSMIntegerField(default=InvoiceStatesEnum.Open)
+    state = FSMIntegerField(default=InvoiceStatesEnum.Open, choices=InvoiceStatesEnum.choices)
     payableuntil = models.DateField(verbose_name=_("To pay until"))
     derived_from_quote = models.ForeignKey(Quote, blank=True, null=True)
     payment_bank_reference = models.CharField(verbose_name=_("Payment Bank Reference"), max_length=100, blank=True,
@@ -623,7 +667,7 @@ class Invoice(SalesContract):
     #     booking.lastmodifiedby = request.user
     #     booking.save()
 
-    @transition(field=state, source=InvoiceStatesEnum.Open, target=InvoiceStatesEnum.Invoice_created)
+    @transition(field=state, source='*', target=InvoiceStatesEnum.Invoice_created)
     def create_pdf(self, what_to_export):
         xml_serializer = serializers.get_serializer("xml")
         xml_serializer = xml_serializer()
@@ -681,6 +725,14 @@ class Invoice(SalesContract):
         permissions = (
             ('view_invoice', 'Can view invoices'),
         )
+
+    @property
+    def get_state(self):
+        return InvoiceStatesEnum.choices[self.state]
+
+    @property
+    def get_state_class(self):
+        return InvoiceStatesLabelEnum.choices[self.state]
 
     def __unicode__(self):
         return _("Invoice") + " #" + str(self.id)
