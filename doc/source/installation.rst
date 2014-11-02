@@ -40,9 +40,9 @@ Setting up the demo
     1. Download the source
     2. Extract to a folder of your choice
     3. Open console and change to that folder
-    4. Type ``python manage.py creadeb``
-    5. Create an superuser when you're asked
-    6. Type ``python manage.py runserver``
+    4. Execute ``python manage.py creadeb``
+    5. Create an superuser when you're asked for
+    6. Execute ``python manage.py runserver``
     7. Open your browser and go to http://127.0.0.1:8000
     8. Login with the username and password you created at step #4
 
@@ -59,7 +59,7 @@ Install the initial data
 To install the initial user groups do the following:
 
     1. Open console and change to project folder
-    2. Type ``python manage.py loaddata auth_groups``
+    2. Execute ``python manage.py loaddata auth_groups``
 
 
 Setting up for development
@@ -80,5 +80,5 @@ You first need to install some more packages
     If you have installed pip you can just use ``pip install -r dev-requirements.txt``
 
 
-    GIT clone from::
+    GIT clone from:
         https://github.com/tfroehlich82/koalixcrm.git
