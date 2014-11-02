@@ -32,8 +32,9 @@
                     {% for address in customer.addresses.all %}
                         <h4>{{ address.addressline1 }}</h4>
                         <h4>{{ address.addressline2 }}</h4>
-                        <h4>{{ address.zipcode }}&nbsp;{{ address.town }}&nbsp;({{ address.state }})</h4>
-                        <h4>{{ address.country }}</h4>
+                        <h4>{% if address.zipcode %}{{ address.zipcode }}&nbsp;{% endif %}
+                            {{ address.town }}&nbsp;({{ address.state }})</h4>
+                        <h5>{{ address.country }}</h5>
                     {% endfor %}
                     <br>
                 </div>

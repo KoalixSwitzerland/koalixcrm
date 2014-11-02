@@ -60,7 +60,9 @@
                                        {% for contract in opencontracts %}
                                        <li style="margin-left: -20px; margin-top: 2px; margin-right: 15px;">
                                           <div>
-                                              <span class="task-title-sp pull-left"><a href="{% url 'contract_list' %}">{{ contract }}</a></span>
+                                              <span class="task-title-sp pull-left">
+                                                  <a href="{% url 'contract_detail' contract.pk %}">{{ contract }}</a>
+                                              </span>
                                               <span class="badge bg-danger pull-right">{% trans 'open' %}</span>
                                            </div>
                                        </li><br>

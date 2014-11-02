@@ -11,4 +11,3 @@ sphinx-rtd-theme
 django-extensions
 django-compressor
 coverage
-babel

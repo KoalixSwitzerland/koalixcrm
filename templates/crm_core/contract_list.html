@@ -17,14 +17,21 @@
             {% for contract in contract_list %}
                 <tr>
                     <td><a href="{% url 'contract_detail' contract.pk %}">{{ contract }}</a></td>
-                    <td>{{ contract.description }}</td>
-                    <td>
+                    <td>{% if contract.description %}
+                        {{ contract.description }}
+                        {% endif %}
+                    </td>
+                    <td width="100px">
                         <p class="pull-right">
                         {% if perms.crm_core.change_contract %}
-                        <button type="button" class="btn btn-sm btn-primary" onclick="window.location.assign('{% url 'contract_edit' contract.pk %}')">{% trans "Edit" %}</button>
+                            <button type="button" class="btn btn-sm btn-primary"
+                                    onclick="window.location.assign('{% url 'contract_edit' contract.pk %}')"
+                                    title="{% trans "Edit" %}"><i class="fa fa-pencil"></i></button>
                         {% endif %}
                         {% if perms.crm_core.delete_contract %}
-                        <button type="button" class="btn btn-sm btn-danger" onclick="window.location.assign('{% url 'contract_delete' contract.pk %}')">{% trans "Delete" %}</button>
+                            <button type="button" class="btn btn-sm btn-danger"
+                                    onclick="window.location.assign('{% url 'contract_delete' contract.pk %}')"
+                                    title="{% trans "Delete" %}"><i class="fa fa-trash"></i></button>
                         {% endif %}
                         </p>
                     </td>

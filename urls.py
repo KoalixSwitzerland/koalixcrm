@@ -12,7 +12,7 @@ from crm_core.views import login_user, UpdateUserProfile, ListCustomers, ListSup
     EditQuote, EditSupplier, EditTax, EditUnit, DeleteQuote, DeleteInvoice, DeleteContract, DeleteCustomerGroup, \
     DeleteBillingCycle, DeleteCurrency, DeleteCustomer, DeleteProduct, DeletePurchaseOrder, DeleteSupplier, \
     DeleteUnit, DeleteTax, show_dashboard, ViewCustomer, ViewSupplier, ViewProduct, create_contract_from_customer, \
-    ViewContract
+    ViewContract, create_quote_from_customer, create_purchaseorder_from_customer
 
 admin.autodiscover()
 
@@ -37,6 +37,10 @@ urlpatterns = i18n_patterns("",
                             url(r'^customers/create/$', CreateCustomer.as_view(), name='customer_create'),
                             url(r'^customers/createcontract/(?P<customer_pk>\d+)/$', create_contract_from_customer,
                                 name='customer_create_contract'),
+                            url(r'^customers/createquote/(?P<customer_pk>\d+)/$', create_quote_from_customer,
+                                name='customer_create_quote'),
+                            url(r'^customers/createpurchaseorder/(?P<customer_pk>\d+)/$',
+                                create_purchaseorder_from_customer, name='customer_create_purchaseorder'),
                             url(r'^customers/edit/(?P<pk>\d+)/$', EditCustomer.as_view(), name='customer_edit'),
                             url(r'^customers/delete/(?P<pk>\d+)/$', DeleteCustomer.as_view(), name='customer_delete'),
 

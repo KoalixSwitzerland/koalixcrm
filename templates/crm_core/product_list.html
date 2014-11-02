@@ -17,21 +17,27 @@
             {% for product in product_list %}
                 <tr>
                     <td><a href="{% url 'product_detail' product.pk %}">#{{ product.product_number }}</a></td>
-                    <td>{{ product.product_title }}</td>
-                    <td>{{ product.defaultunit }}</td>
-                    <td>{{ product.tax }}</td>
-                    <td>{{ product.accoutingProductCategorie }}</td>
-                    <td>
+                    <td>{{ product.item_title }}</td>
+                    <td>{{ product.item_unit }}</td>
+                    <td>{{ product.item_tax }}</td>
+                    <td>{{ product.item_category }}</td>
+                    <td width="100px">
                         <p class="pull-right">
                         {% if perms.crm_core.change_product %}
-                        <button type="button" class="btn btn-sm btn-primary" onclick="window.location.assign('{% url 'product_edit' product.pk %}')">{% trans "Edit" %}</button>
+                            <button type="button" class="btn btn-sm btn-primary"
+                                    onclick="window.location.assign('{% url 'product_edit' product.pk %}')"
+                                    title="{% trans "Edit" %}"><i class="fa fa-pencil"></i></button>
                         {% endif %}
                         {% if perms.crm_core.delete_product %}
-                        <button type="button" class="btn btn-sm btn-danger" onclick="window.location.assign('{% url 'product_delete' product.pk %}')">{% trans "Delete" %}</button>
+                            <button type="button" class="btn btn-sm btn-danger"
+                                    onclick="window.location.assign('{% url 'product_delete' product.pk %}')"
+                                    title="{% trans "Delete" %}"><i class="fa fa-trash"></i></button>
                         {% endif %}
                         </p>
                     </td>
                 </tr>
+            {% empty %}
+                {% trans 'No products' %}
             {% endfor %}
         </table>
         {% endif %}

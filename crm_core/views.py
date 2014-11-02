@@ -56,13 +56,26 @@ def show_dashboard(request):
 
 def create_contract_from_customer(request, customer_pk):
     customer = Customer.objects.get(pk=customer_pk)
-    contract = Contract()
-    contract.defaultcurrency = customer.default_currency
-    contract.defaultcustomer = customer
-    contract.save()
+    contract = customer.create_contract()
     if not customer.default_currency:
         return redirect('contract_edit', pk=contract.pk)
     return redirect('contract_detail', pk=contract.pk)
+
+
+def create_quote_from_customer(request, customer_pk):
+    customer = Customer.objects.get(pk=customer_pk)
+    quote = customer.create_quote(request)
+    if not customer.default_currency:
+        return redirect('contract_edit', pk=quote.contract.pk)
+    return redirect('quote_edit', pk=quote.pk)
+
+
+def create_purchaseorder_from_customer(request, customer_pk):
+    customer = Customer.objects.get(pk=customer_pk)
+    purchase_order = customer.create_purchase_order(request)
+    if not customer.default_currency:
+        return redirect('contract_edit', pk=purchase_order.contract.pk)
+    return redirect('purchaseorder_edit', pk=purchase_order.pk)
 
 
 class PostalAddressInline(LoginRequiredMixin, PermissionRequiredMixin, InlineFormSet):
@@ -274,14 +287,14 @@ class ListProducts(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = Product
     permission_required = 'crm_core.view_product'
     login_url = settings.LOGIN_URL
-    fields = ['product_number', 'product_title', 'product_description', 'defaultunit', 'tax', 'accoutingProductCategorie']
+    fields = ['item_number', 'item_title', 'item_description', 'item_unit', 'item_tax', 'item_category']
 
 
 class CreateProduct(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Product
     permission_required = 'crm_core.add_product'
     login_url = settings.LOGIN_URL
-    fields = ['product_number', 'product_title', 'product_description', 'defaultunit', 'tax', 'accoutingProductCategorie']
+    fields = ['item_number', 'item_title', 'item_description', 'item_unit', 'item_tax', 'item_category']
     success_url = reverse_lazy('product_list')
 
 
@@ -289,7 +302,7 @@ class EditProduct(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Product
     permission_required = 'crm_core.change_product'
     login_url = settings.LOGIN_URL
-    fields = ['product_number', 'product_title', 'product_description', 'defaultunit', 'tax', 'accoutingProductCategorie']
+    fields = ['item_number', 'item_title', 'item_description', 'item_unit', 'item_tax', 'item_category']
     success_url = reverse_lazy('product_list')
 
 

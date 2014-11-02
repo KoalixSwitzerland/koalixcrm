@@ -107,31 +107,6 @@ class EmailAddress(models.Model):
 # ########################
 
 
-class Contact(models.Model):
-    prefix = models.CharField(max_length=1, choices=PostalAddressPrefix.choices, verbose_name=_("Prefix"), blank=True,
-                              null=True)
-    name = models.CharField(max_length=300, verbose_name=_("Name"))
-    dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now_add=True)
-    lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now=True)
-    lastmodifiedby = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, blank=True,
-                                       verbose_name=_("Last modified by"), null=True)
-    default_currency = models.CharField(max_length=3, choices=currencies, blank=True, null=True)
-
-    class Meta():
-        verbose_name = _('Contact')
-        verbose_name_plural = _('Contact')
-        permissions = (
-            ('view_contact', 'Can view contact'),
-        )
-
-    @property
-    def get_prefix(self):
-        return PostalAddressPrefix.choices[self.prefix]
-
-    def __unicode__(self):
-        return self.name
-
-
 class CustomerGroup(models.Model):
     name = models.CharField(max_length=300)
 
@@ -144,6 +119,24 @@ class CustomerGroup(models.Model):
         permissions = (
             ('view_customer_group', 'Can view customer groups'),
         )
+
+
+class Contact(models.Model):
+    prefix = models.CharField(max_length=1, choices=PostalAddressPrefix.choices, verbose_name=_("Prefix"), blank=True,
+                              null=True)
+    name = models.CharField(max_length=300, verbose_name=_("Name"))
+    dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now_add=True)
+    lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now=True)
+    lastmodifiedby = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, blank=True,
+                                       verbose_name=_("Last modified by"), null=True)
+    default_currency = models.CharField(max_length=3, choices=currencies, blank=True, null=True)
+
+    @property
+    def get_prefix(self):
+        return PostalAddressPrefix.choices[self.prefix]
+
+    def __unicode__(self):
+        return self.name
 
 
 class Customer(Displayable, Contact):
@@ -170,7 +163,7 @@ class Customer(Displayable, Contact):
     def create_contract(self, request):
         contract = Contract()
         contract.defaultcustomer = self
-        contract.defaultcurrency = UserExtension.objects.filter(user=request.user.id)[0].defaultCurrency
+        contract.defaultcurrency = self.default_currency
         contract.lastmodifiedby = request.user
         contract.staff = request.user
         contract.save()
@@ -180,6 +173,11 @@ class Customer(Displayable, Contact):
         contract = self.create_contract(request)
         invoice = contract.create_invoice()
         return invoice
+
+    def create_purchase_order(self, request):
+        contract = self.create_contract(request)
+        purchase_order = contract.create_purchase_order()
+        return purchase_order
 
     def create_quote(self, request):
         contract = self.create_contract(request)
@@ -353,7 +351,7 @@ class PurchaseOrder(models.Model):
                                             blank=True, null=True)
     staff = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, blank=True, verbose_name=_("Staff"),
                               related_name="db_relpostaff", null=True)
-    currency = models.ForeignKey(Currency, verbose_name=_("Currency"), blank=False, null=False)
+    currency = models.CharField(max_length=3, choices=currencies, verbose_name=_("Currency"), blank=False, null=False)
     dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now=True)
     lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now_add=True)
     lastmodifiedby = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True},
@@ -456,9 +454,10 @@ class SalesContract(models.Model):
     lastCalculatedTax = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Tax"),
                                             blank=True, null=True)
     customer = models.ForeignKey(Customer, verbose_name=_("Customer"))
-    staff = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, blank=True, verbose_name=_("Staff"),
+    staff = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, blank=True,
+                              verbose_name=_("Staff"),
                               related_name="db_relscstaff", null=True)
-    currency = models.ForeignKey(Currency, verbose_name=_("Currency"), blank=False, null=False)
+    currency = models.CharField(max_length=3, choices=currencies, verbose_name=_("Currency"), blank=False, null=False)
     dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now=True)
     lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now_add=True)
     lastmodifiedby = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True},
@@ -763,20 +762,22 @@ class Tax(models.Model):
         return self.name
 
 
-class Product(Displayable, models.Model):
-    product_description = models.TextField(verbose_name=_("Description"), null=True, blank=True)
-    product_title = models.CharField(verbose_name=_("Title"), max_length=200)
-    product_number = models.IntegerField(verbose_name=_("Product Number"))
-    defaultunit = models.ForeignKey(Unit, verbose_name=_("Unit"))
+class ProductItem(models.Model):
+    item_number = models.IntegerField(verbose_name=_("Product Number"))
+    item_description = models.TextField(verbose_name=_("Description"), null=True, blank=True)
+    item_title = models.CharField(verbose_name=_("Title"), max_length=200)
+    item_unit = models.ForeignKey(Unit, verbose_name=_("Unit"))
+    item_tax = models.ForeignKey(Tax, blank=False)
     dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now=True)
     lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now_add=True)
     lastmodifiedby = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True},
                                        verbose_name=_("Last modified by"), null=True, blank="True")
-    tax = models.ForeignKey(Tax, blank=False)
-    accoutingProductCategorie = models.ForeignKey('accounting.ProductCategory',
-                                                  verbose_name=_("Accounting Product Categorie"), null=True,
-                                                  blank="True")
-    search_fields = {"product_title": 10, "product_description": 8}
+    item_category = models.ForeignKey('accounting.ProductCategory',
+                                      verbose_name=_("Accounting Product Categorie"), null=True, blank=True)
+
+
+class Product(Displayable, ProductItem):
+    search_fields = {"item_title": 10, "item_description": 8}
 
     @staticmethod
     def get_class_name():
@@ -832,7 +833,7 @@ class Product(Displayable, models.Model):
         )
 
     def __unicode__(self):
-        return '%s (#%s)' % (self.product_title, str(self.product_number))
+        return '%s (#%s)' % (self.item_title, str(self.item_number))
 
     class NoPriceFound(Exception):
         def __init__(self, customer, unit, date, product):

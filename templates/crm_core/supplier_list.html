@@ -19,31 +19,31 @@
                 <tr>
                     <td><a href="{% url 'supplier_detail' supplier.pk %}">{{ supplier.name }}</a></td>
                     <td>
-                        {% for address in supplier.addresses.all %}
-                            {{ address }}<br>
-                        {% endfor %}
+                        {{ supplier.addresses.all|join:"<br>" }}
                     </td>
                     <td>
-                        {% for phonenumber in supplier.phonenumbers.all %}
-                            {{ phonenumber }}<br>
-                        {% endfor %}
+                        {{ supplier.phonenumbers.all|join:"<br>" }}
                     </td>
                     <td>
-                        {% for email in supplier.emailaddresses.all %}
-                            {{ email }}<br>
-                        {% endfor %}
+                        {{ supplier.emailaddresses.all|join:"<br>" }}
                     </td>
-                    <td>
+                    <td width="100px">
                         <p class="pull-right">
                         {% if perms.crm_core.change_supplier %}
-                        <button type="button" class="btn btn-sm btn-primary" onclick="window.location.assign('{% url 'supplier_edit' supplier.pk %}')">{% trans "Edit" %}</button>
+                            <button type="button" class="btn btn-sm btn-primary"
+                                    onclick="window.location.assign('{% url 'supplier_edit' supplier.pk %}')"
+                                    title="{% trans "Edit" %}"><i class="fa fa-pencil"></i></button>
                         {% endif %}
                         {% if perms.crm_core.delete_supplier %}
-                        <button type="button" class="btn btn-sm btn-danger" onclick="window.location.assign('{% url 'supplier_delete' supplier.pk %}')">{% trans "Delete" %}</button>
+                            <button type="button" class="btn btn-sm btn-danger"
+                                    onclick="window.location.assign('{% url 'supplier_delete' supplier.pk %}')"
+                                    title="{% trans "Delete" %}"><i class="fa fa-trash"></i></button>
                         {% endif %}
                         </p>
                     </td>
                 </tr>
+            {% empty %}
+                {% trans 'No suppliers' %}
             {% endfor %}
         </table>
         {% endif %}

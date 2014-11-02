@@ -1,4 +1,3 @@
-babel
 Mezzanine>=3.1.10
 Django<1.8
 po-localization>=0.5.3
