@@ -763,7 +763,7 @@ class Tax(models.Model):
 
 
 class ProductItem(models.Model):
-    item_number = models.IntegerField(verbose_name=_("Product Number"))
+    item_prefix = models.CharField(max_length=10, verbose_name=_('Prefix'), default='#')
     item_description = models.TextField(verbose_name=_("Description"), null=True, blank=True)
     item_title = models.CharField(verbose_name=_("Title"), max_length=200)
     item_unit = models.ForeignKey(Unit, verbose_name=_("Unit"))
@@ -776,8 +776,14 @@ class ProductItem(models.Model):
                                       verbose_name=_("Accounting Product Categorie"), null=True, blank=True)
 
 
+# TODO
 class Product(Displayable, ProductItem):
+    product_number = models.IntegerField(verbose_name=_("Product Number"))
     search_fields = {"item_title": 10, "item_description": 8}
+
+    @property
+    def get_product_number(self):
+        return "%s%s" % (self.item_prefix, self.item_number)
 
     @staticmethod
     def get_class_name():
@@ -823,7 +829,7 @@ class Product(Displayable, ProductItem):
             raise Product.NoPriceFound(customer, unit, date, self)
 
     def get_tax_rate(self):
-        return self.tax.gettaxrate()
+        return self.item_tax.gettaxrate()
 
     class Meta():
         verbose_name = _('Product')

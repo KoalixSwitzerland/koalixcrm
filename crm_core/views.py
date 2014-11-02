@@ -12,7 +12,6 @@ from crm_core.const.states import InvoiceStatesEnum
 from crm_core.models import Customer, Invoice, Supplier, Currency, Unit, Tax, Contract, Product, CustomerBillingCycle, \
     PurchaseOrder, CustomerGroup, Quote, PostalAddress, PhoneAddress, EmailAddress, UserExtension
 from django.shortcuts import render_to_response, redirect
-from django.template import RequestContext
 from django.contrib.auth import authenticate, login, logout
 
 

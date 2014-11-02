@@ -21,11 +21,6 @@ Issue status:
     [![Stories in Ready](https://badge.waffle.io/tfroehlich82/koalixcrm.png?label=ready&title=Ready)](https://waffle.io/tfroehlich82/koalixcrm)
     [![Stories in progress](https://badge.waffle.io/tfroehlich82/koalixcrm.svg?label=in progress&title=in Progress)](http://waffle.io/tfroehlich82/koalixcrm)
 
-Please make a donation if you like this project and want help to even make it better:
-    
-[<img src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif">](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ES8RFB7JN9CXC)
-
-
 **********************************************
 Note: This project is currently in alpha phase
 **********************************************
@@ -69,8 +64,20 @@ Koalix CRM provides following benefits:
     *   Italian
     *   French
 
+## About his project
+
+KoalixCRM is a fork of [scaphilo's koalixcrm](https://github.com/scaphilo/koalixcrm) with the goal of a contemporary CRM/ERP 
+as a small business solution with a beautiful user interface and a bunch of a lot of useful features.
+This project uses agile development methods such as Scrum and continuous integration. 
+Releases are organized in sprints from 3 to 8 weeks. You can have a look at our taskboard at [waffle.io](http://waffle.io/tfroehlich82/koalixcrm). Sprints are managed by github milestones [here](https://github.com/tfroehlich82/koalixcrm/milestones).
+
+Please make a donation if you like this project and want help to even make it better:
+    
+[<img src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif">](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ES8RFB7JN9CXC)
+
+
 ## Screenshots
 ![Alt Create Customer](/doc/source/images/customer_create.png "Create Customer")
 ![Alt Product Overview](/doc/source/images/product_overview.png "Product Overview")
 
-This project is released under BSD license
+This project is released under the [new BSD license](https://github.com/tfroehlich82/koalixcrm/blob/master/LICENSE).
