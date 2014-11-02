@@ -32,7 +32,7 @@
                         {{ customer.ismemberof.all|join:"<br>" }}
                     </td>
                     <td width="150px">
-                        <p class="pull-left">
+                        <p class="pull-right">
                         {% if perms.crm_core.add_contract %}
                             <button type="button" class="btn btn-sm btn-success"
                                     onclick="window.location.assign('{% url 'customer_create_contract' customer.pk %}')"

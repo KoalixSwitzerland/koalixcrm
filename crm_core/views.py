@@ -55,7 +55,7 @@ def show_dashboard(request):
 
 def create_contract_from_customer(request, customer_pk):
     customer = Customer.objects.get(pk=customer_pk)
-    contract = customer.create_contract()
+    contract = customer.create_contract(request)
     if not customer.default_currency:
         return redirect('contract_edit', pk=contract.pk)
     return redirect('contract_detail', pk=contract.pk)
@@ -74,6 +74,24 @@ def create_purchaseorder_from_customer(request, customer_pk):
     purchase_order = customer.create_purchase_order(request)
     if not customer.default_currency:
         return redirect('contract_edit', pk=purchase_order.contract.pk)
+    return redirect('purchaseorder_edit', pk=purchase_order.pk)
+
+
+def create_quote_from_contract(request, contract_pk):
+    contract = Contract.objects.get(pk=contract_pk)
+    quote = contract.create_quote()
+    return redirect('quote_edit', pk=quote.pk)
+
+
+def create_invoice_from_contract(request, contract_pk):
+    contract = Contract.objects.get(pk=contract_pk)
+    invoice = contract.create_invoice()
+    return redirect('invoice_edit', pk=invoice.pk)
+
+
+def create_purchaseorder_from_contract(request, contract_pk):
+    contract = Contract.objects.get(pk=contract_pk)
+    purchase_order = contract.create_purchase_order()
     return redirect('purchaseorder_edit', pk=purchase_order.pk)
 
 

@@ -12,7 +12,8 @@ from crm_core.views import login_user, UpdateUserProfile, ListCustomers, ListSup
     EditQuote, EditSupplier, EditTax, EditUnit, DeleteQuote, DeleteInvoice, DeleteContract, DeleteCustomerGroup, \
     DeleteBillingCycle, DeleteCustomer, DeleteProduct, DeletePurchaseOrder, DeleteSupplier, \
     DeleteUnit, DeleteTax, show_dashboard, ViewCustomer, ViewSupplier, ViewProduct, create_contract_from_customer, \
-    ViewContract, create_quote_from_customer, create_purchaseorder_from_customer
+    ViewContract, create_quote_from_customer, create_purchaseorder_from_customer, create_invoice_from_contract, \
+    create_purchaseorder_from_contract, create_quote_from_contract
 
 admin.autodiscover()
 
@@ -93,6 +94,12 @@ urlpatterns = i18n_patterns("",
                             url(r'^contracts/$', ListContracts.as_view(), name='contract_list'),
                             url(r'^contracts/detail/(?P<pk>\d+)/$', ViewContract.as_view(), name='contract_detail'),
                             url(r'^contracts/create/$', CreateContract.as_view(), name='contract_create'),
+                            url(r'^contracts/createinvoice/(?P<contract_pk>\d+)/$', create_invoice_from_contract,
+                                name='contract_create_invoice'),
+                            url(r'^contracts/createquote/(?P<contract_pk>\d+)/$', create_quote_from_contract,
+                                name='contract_create_quote'),
+                            url(r'^contracts/createpurchaseorder/(?P<contract_pk>\d+)/$',
+                                create_purchaseorder_from_contract, name='contract_create_purchaseorder'),
                             url(r'^contracts/edit/(?P<pk>\d+)/$', EditContract.as_view(), name='contract_edit'),
                             url(r'^contracts/delete/(?P<pk>\d+)/$', DeleteContract.as_view(), name='contract_delete'),
 
