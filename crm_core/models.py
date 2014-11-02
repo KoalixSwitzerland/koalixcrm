@@ -10,7 +10,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.core import serializers
 from django.contrib import auth
 from filebrowser_safe.fields import FileBrowseField
-from django_fsm import FSMIntegerField, transition
+from django_fsm import FSMIntegerField
 from mezzanine.core.models import Displayable
 
 from international.models import countries, currencies
@@ -268,7 +268,6 @@ class Contract(models.Model):
             ('view_contract', 'Can view contracts'),
         )
 
-    @transition(field=state, source='*', target=ContractStatesEnum.Invoice_created)
     def create_invoice(self):
         invoice = Invoice()
         invoice.contract = self
@@ -280,9 +279,10 @@ class Contract(models.Model):
         invoice.payableuntil = date.today() + timedelta(days=self.default_customer.billingcycle.days_to_payment)
         invoice.dateofcreation = date.today().__str__()
         invoice.save()
+        self.state = ContractStatesEnum.Invoice_created
+        self.save()
         return invoice
 
-    @transition(field=state, source='*', target=ContractStatesEnum.Quote_created)
     def create_quote(self):
         quote = Quote()
         quote.contract = self
@@ -294,9 +294,10 @@ class Contract(models.Model):
         quote.validuntil = date.today().__str__()
         quote.dateofcreation = date.today().__str__()
         quote.save()
+        self.state = ContractStatesEnum.Quote_created
+        self.save()
         return quote
 
-    @transition(field=state, source='*', target=ContractStatesEnum.PurchaseOrder_created)
     def create_purchase_order(self):
         purchaseorder = PurchaseOrder()
         purchaseorder.contract = self
@@ -308,6 +309,8 @@ class Contract(models.Model):
         purchaseorder.dateofcreation = date.today().__str__()
         # TODO: today is not correct it has to be replaced
         purchaseorder.save()
+        self.state = ContractStatesEnum.PurchaseOrder_created
+        self.save()
         return purchaseorder
 
     @property
@@ -385,7 +388,6 @@ class PurchaseOrder(models.Model):
             exit()
             return 0
 
-    @transition(field=state, source='*', target=PurchaseOrderStatesEnum.Invoice_registered)
     def create_pdf(self):
         xml_serializer = serializers.get_serializer("xml")
         xml_serializer = xml_serializer()
@@ -428,14 +430,6 @@ class PurchaseOrder(models.Model):
         permissions = (
             ('view_purchaseorder', 'Can view purchase orders'),
         )
-
-    @transition(field=state, source=PurchaseOrderStatesEnum.Ordered, target=PurchaseOrderStatesEnum.Delayed)
-    def delivery_delayed(self):
-        pass
-
-    @transition(field=state, source=PurchaseOrderStatesEnum.Invoice_registered, target=PurchaseOrderStatesEnum.Invoice_payed)
-    def invoice_payed(self):
-        pass
 
     @property
     def get_state(self):
@@ -504,7 +498,6 @@ class Quote(SalesContract):
     state = FSMIntegerField(default=QuoteStatesEnum.New, choices=QuoteStatesEnum.choices)
     validuntil = models.DateField(verbose_name=_("Valid until"))
 
-    @transition(field=state, source='*', target=QuoteStatesEnum.Quote_sent)
     def create_invoice(self):
         invoice = Invoice()
         invoice.contract = self.contract
@@ -520,6 +513,8 @@ class Quote(SalesContract):
         invoice.dateofcreation = date.today().__str__()
         invoice.customerBillingCycle = self.customer.billingcycle
         invoice.save()
+        self.state = QuoteStatesEnum.Quote_sent
+        self.save()
         try:
             quote_positions = SalesContractPosition.objects.filter(contract=self.id)
             for quotePosition in list(quote_positions):
@@ -545,14 +540,12 @@ class Quote(SalesContract):
         except Quote.DoesNotExist:
             return
 
-    @transition(field=state, source='*', target=QuoteStatesEnum.Purchaseorder_created)
     def create_purchase_order(self):
+        purchase_order = self.contract.create_purchase_order()
         self.state = QuoteStatesEnum.Purchaseorder_created
         self.save()
-        purchase_order = self.contract.create_purchase_order()
         return purchase_order
 
-    @transition(field=state, source='*', target=QuoteStatesEnum.Quote_created)
     def create_pdf(self, what_to_export):
         xml_serializer = serializers.get_serializer("xml")
         xml_serializer = xml_serializer()
@@ -667,7 +660,6 @@ class Invoice(SalesContract):
     #     booking.lastmodifiedby = request.user
     #     booking.save()
 
-    @transition(field=state, source='*', target=InvoiceStatesEnum.Invoice_created)
     def create_pdf(self, what_to_export):
         xml_serializer = serializers.get_serializer("xml")
         xml_serializer = xml_serializer()

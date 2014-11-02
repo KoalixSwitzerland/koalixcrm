@@ -4,8 +4,8 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class InvoiceStatesEnum(choices.Choices):
-    Open = choices.Choice(10, _('Open'))
-    Payed = choices.Choice(20, _('Payed'))
+    Open = choices.Choice(10, _('open'))
+    Payed = choices.Choice(20, _('payed'))
     Invoice_created = choices.Choice(30, _('Invoice created'))
     Invoice_sent = choices.Choice(40, _('Invoice sent'))
     First_reminder_sent = choices.Choice(50, _('First reminder sent'))

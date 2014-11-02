@@ -11,7 +11,6 @@
 {% block main %}
     <div class="content-panel" style="margin: 30px; padding: 10px;">
     <h4><i class="fa fa-angle-right"></i> {% trans "Quotes" %}</h4>
-        {% if quote_list %}
         <table class="table table-striped table-advance">
             <tr><th>{% trans 'Status' %}</th><th>{% trans 'Name' %}</th><th>{% trans "Description" %}</th><th>{% trans 'Contract' %}</th><th>{% trans 'Customer' %}</th><th>{% trans 'Valid Until' %}</th><th>{% trans 'Last Calculated Price' %}</th><th></th><th></th></tr>
             {% for quote in quote_list %}
@@ -64,7 +63,6 @@
                 {% trans 'No quotes' %}
             {% endfor %}
         </table>
-        {% endif %}
         {% if perms.crm_core.add_quote %}
         <p><a href="{% url 'quote_create' %}">{% trans "Create a new quote" %}</a></p>
         {% endif %}
