@@ -53,6 +53,15 @@ Setting up the demo
     If you're using an non-admin user you should assign permissions
 
 
+Install the initial data
+========================
+
+To install the initial user groups do the following:
+
+    1. Open console and change to project folder
+    2. Type ``python manage.py loaddata auth_groups``
+
+
 Setting up for development
 ==========================
 
