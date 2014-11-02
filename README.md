@@ -68,8 +68,8 @@ Koalix CRM provides following benefits:
 KoalixCRM is a fork of [scaphilo's koalixcrm](https://github.com/scaphilo/koalixcrm) with the goal of a contemporary CRM/ERP 
 as a small business solution with a beautiful user interface and a bunch of a lot of useful features.
 
-This project uses agile development methods such as [Scrum](http://wikipedia.org/wiki/Scrum) and [Continuous Integration](http://wikipedia.org/wiki/Continuous_integration). 
-Releases are organized in [Sprints](http://wikipedia.org/wiki/Scrum#Sprint) from 3 to 8 weeks. You can have a look at our [Taskboard](http://wikipedia.org/wiki/Scrum#Taskboard) at [waffle.io](http://waffle.io/tfroehlich82/koalixcrm). Sprints are managed by github milestones [here](https://github.com/tfroehlich82/koalixcrm/milestones).
+This project uses agile development methods such as [Scrum](http://en.wikipedia.org/wiki/Scrum_(software_development)) and [Continuous Integration](http://en.wikipedia.org/wiki/Continuous_integration). 
+Releases are organized in [Sprints](http://en.wikipedia.org/wiki/Scrum_(software_development)#Sprint) from 3 to 8 weeks. You can have a look at our [Taskboard](http://en.wikipedia.org/wiki/Scrum_(software_development)#Taskboard) at [waffle.io](http://waffle.io/tfroehlich82/koalixcrm). Sprints are managed by github milestones [here](https://github.com/tfroehlich82/koalixcrm/milestones).
 
 Please make a donation if you like this project and want help to even make it better:
     
