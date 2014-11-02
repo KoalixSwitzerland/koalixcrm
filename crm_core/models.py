@@ -20,9 +20,58 @@ from const.states import InvoiceStatesEnum, PurchaseOrderStatesEnum, QuoteStates
 # from accounting.models import Booking, Account, AccountingPeriod
 
 
-# ###########################
-# ##   Contact Additions   ##
-# ###########################
+# ######################
+# ##   Base Classes   ##
+# ######################
+
+
+class Contact(models.Model):
+    prefix = models.CharField(max_length=1, choices=PostalAddressPrefix.choices, verbose_name=_("Prefix"), blank=True,
+                              null=True)
+    name = models.CharField(max_length=300, verbose_name=_("Name"))
+    dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now_add=True)
+    lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now=True)
+    lastmodifiedby = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, blank=True,
+                                       verbose_name=_("Last modified by"), null=True)
+    default_currency = models.CharField(max_length=3, choices=currencies, blank=True, null=True)
+
+    @property
+    def get_prefix(self):
+        return PostalAddressPrefix.choices[self.prefix]
+
+
+# #########################
+# ##   Contact Related   ##
+# #########################
+
+
+class CustomerBillingCycle(models.Model):
+    name = models.CharField(max_length=300, verbose_name=_("Name"))
+    days_to_payment = models.IntegerField(verbose_name=_("Days To Payment Date"))
+
+    class Meta():
+        verbose_name = _('Customer Billing Cycle')
+        verbose_name_plural = _('Customer Billing Cycle')
+        permissions = (
+            ('view_customerbillingcycle', 'Can view billing cycles'),
+        )
+
+    def __unicode__(self):
+        return self.name
+
+
+class CustomerGroup(models.Model):
+    name = models.CharField(max_length=300)
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta():
+        verbose_name = _('Customer Group')
+        verbose_name_plural = _('Customer Groups')
+        permissions = (
+            ('view_customer_group', 'Can view customer groups'),
+        )
 
 
 class PostalAddress(models.Model):
@@ -34,7 +83,7 @@ class PostalAddress(models.Model):
     country = models.CharField(max_length=2, choices=countries, verbose_name=_("Country"), blank=True, null=True)
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PostalAddressPurpose.choices,
                                default=PostalAddressPurpose.ContactAddress)
-    person = models.ForeignKey('Contact', related_name='addresses')
+    person = models.ForeignKey(Contact, related_name='addresses')
 
     class Meta():
         verbose_name = _('Postal Address')
@@ -63,7 +112,7 @@ class PhoneAddress(models.Model):
     phone = models.CharField(max_length=20, verbose_name=_("Phone Number"))
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PhoneOrEmailAddressPurpose.choices,
                                default=PhoneOrEmailAddressPurpose.Private)
-    person = models.ForeignKey('Contact', related_name='phonenumbers')
+    person = models.ForeignKey(Contact, related_name='phonenumbers')
 
     class Meta():
         verbose_name = _('Phone Address')
@@ -84,7 +133,7 @@ class EmailAddress(models.Model):
     email = models.EmailField(max_length=200, verbose_name=_("Email Address"))
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PhoneOrEmailAddressPurpose.choices,
                                default=PhoneOrEmailAddressPurpose.Private)
-    person = models.ForeignKey('Contact', related_name='emailaddresses')
+    person = models.ForeignKey(Contact, related_name='emailaddresses')
 
     class Meta():
         verbose_name = _('Email Address')
@@ -106,41 +155,9 @@ class EmailAddress(models.Model):
 # ########################
 
 
-class CustomerGroup(models.Model):
-    name = models.CharField(max_length=300)
-
-    def __unicode__(self):
-        return self.name
-
-    class Meta():
-        verbose_name = _('Customer Group')
-        verbose_name_plural = _('Customer Groups')
-        permissions = (
-            ('view_customer_group', 'Can view customer groups'),
-        )
-
-
-class Contact(models.Model):
-    prefix = models.CharField(max_length=1, choices=PostalAddressPrefix.choices, verbose_name=_("Prefix"), blank=True,
-                              null=True)
-    name = models.CharField(max_length=300, verbose_name=_("Name"))
-    dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now_add=True)
-    lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now=True)
-    lastmodifiedby = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, blank=True,
-                                       verbose_name=_("Last modified by"), null=True)
-    default_currency = models.CharField(max_length=3, choices=currencies, blank=True, null=True)
-
-    @property
-    def get_prefix(self):
-        return PostalAddressPrefix.choices[self.prefix]
-
-    def __unicode__(self):
-        return self.name
-
-
 class Customer(Displayable, Contact):
     firstname = models.CharField(max_length=300, verbose_name=_("Prename"), blank=True, null=True)
-    billingcycle = models.ForeignKey('CustomerBillingCycle', verbose_name=_('Default Billing Cycle'))
+    billingcycle = models.ForeignKey(CustomerBillingCycle, verbose_name=_('Default Billing Cycle'))
     ismemberof = models.ManyToManyField(CustomerGroup, verbose_name=_('Is member of'), blank=True, null=True)
     search_fields = {"name": 10, "firstname": 8}
 
@@ -221,42 +238,6 @@ class Supplier(Displayable, Contact):
         if self.prefix:
             return '%s %s' % (self.get_prefix, self.name)
         return self.name
-
-
-# ###########################
-# ##    PAYMENT RELATED    ##
-# ###########################
-
-
-class CustomerBillingCycle(models.Model):
-    name = models.CharField(max_length=300, verbose_name=_("Name"))
-    days_to_payment = models.IntegerField(verbose_name=_("Days To Payment Date"))
-
-    class Meta():
-        verbose_name = _('Customer Billing Cycle')
-        verbose_name_plural = _('Customer Billing Cycle')
-        permissions = (
-            ('view_customerbillingcycle', 'Can view billing cycles'),
-        )
-
-    def __unicode__(self):
-        return self.name
-
-
-class Currency(models.Model):
-    description = models.CharField(verbose_name=_("Description"), max_length=100)
-    shortname = models.CharField(verbose_name=_("Displayed Name After Price In The Position"), max_length=3)
-    rounding = models.DecimalField(max_digits=5, decimal_places=2, verbose_name=_("Rounding"), blank=True, null=True)
-
-    class Meta():
-        verbose_name = _('Currency')
-        verbose_name_plural = _('Currency')
-        permissions = (
-            ('view_currency', 'Can view currencies'),
-        )
-
-    def __unicode__(self):
-        return self.shortname
 
 
 # ##########################
@@ -392,7 +373,7 @@ class PurchaseOrder(models.Model):
             return 0
 
     @transition(field=state, source=PurchaseOrderStatesEnum.New, target=PurchaseOrderStatesEnum.Delayed)
-    def create_pdf(self, what_to_export):
+    def create_pdf(self):
         xml_serializer = serializers.get_serializer("xml")
         xml_serializer = xml_serializer()
         out = open(settings.PDF_OUTPUT_ROOT + "purchaseorder_" + str(self.id) + ".xml", "w")
@@ -436,8 +417,7 @@ class PurchaseOrder(models.Model):
         )
 
     def __unicode__(self):
-        return _("Purchase Order") + ": " + str(self.id) + " " + _("from Contract") + ": " + str(
-            self.contract.id)
+        return _("Purchase Order") + " #" + str(self.id)
 
 
 class SalesContract(models.Model):
@@ -504,7 +484,7 @@ class Quote(SalesContract):
         invoice.customer = self.customer
         invoice.staff = self.staff
         invoice.status = 'C'
-        invoice.derivated_from_quote = self
+        invoice.derived_from_quote = self
         invoice.currency = self.currency
         invoice.payableuntil = date.today() + timedelta(
             days=self.customer.billingcycle.days_to_payment)
@@ -600,7 +580,7 @@ class Quote(SalesContract):
 class Invoice(SalesContract):
     state = FSMIntegerField(default=InvoiceStatesEnum.Open)
     payableuntil = models.DateField(verbose_name=_("To pay until"))
-    derivated_from_quote = models.ForeignKey(Quote, blank=True, null=True)
+    derived_from_quote = models.ForeignKey(Quote, blank=True, null=True)
     payment_bank_reference = models.CharField(verbose_name=_("Payment Bank Reference"), max_length=100, blank=True,
                                               null=True)
 
@@ -703,7 +683,7 @@ class Invoice(SalesContract):
         )
 
     def __unicode__(self):
-        return _("Invoice") + ": " + str(self.id) + " " + _("from Contract") + ": " + str(self.contract.id)
+        return _("Invoice") + " #" + str(self.id)
 
 
 class Unit(models.Model):
@@ -724,8 +704,8 @@ class Unit(models.Model):
         return self.shortname
 
 
-class Tax(models.Model):
-    taxrate = models.DecimalField(max_digits=5, decimal_places=2, verbose_name=_("Taxrate in Percentage"))
+class TaxRate(models.Model):
+    taxrate_in_percent = models.DecimalField(max_digits=5, decimal_places=2, verbose_name=_("Taxrate in Percentage"))
     name = models.CharField(verbose_name=_("Taxname"), max_length=100)
     account_activa = models.ForeignKey('accounting.Account', verbose_name=_("Activa Account"),
                                        related_name="db_relaccountactiva", null=True, blank=True)
@@ -733,7 +713,7 @@ class Tax(models.Model):
                                         related_name="db_relaccountpassiva", null=True, blank=True)
 
     def gettaxrate(self):
-        return self.taxrate
+        return self.taxrate_in_percent
 
     class Meta():
         verbose_name = _('Tax')
@@ -751,7 +731,7 @@ class ProductItem(models.Model):
     item_description = models.TextField(verbose_name=_("Description"), null=True, blank=True)
     item_title = models.CharField(verbose_name=_("Title"), max_length=200)
     item_unit = models.ForeignKey(Unit, verbose_name=_("Unit"))
-    item_tax = models.ForeignKey(Tax, blank=False)
+    item_tax = models.ForeignKey(TaxRate, blank=False)
     dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now=True)
     lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now_add=True)
     lastmodifiedby = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True},
@@ -840,9 +820,9 @@ class Product(Displayable, ProductItem):
 
 
 class UnitTransform(models.Model):
-    from_unit = models.ForeignKey('Unit', verbose_name=_("From Unit"), related_name="db_reltransfromfromunit")
-    to_unit = models.ForeignKey('Unit', verbose_name=_("To Unit"), related_name="db_reltransfromtounit")
-    product = models.ForeignKey('Product', verbose_name=_("Product"))
+    from_unit = models.ForeignKey(Unit, verbose_name=_("From Unit"), related_name="db_reltransfromfromunit")
+    to_unit = models.ForeignKey(Unit, verbose_name=_("To Unit"), related_name="db_reltransfromtounit")
+    product = models.ForeignKey(Product, verbose_name=_("Product"))
     factor = models.IntegerField(verbose_name=_("Factor between From and To Unit"), blank=True, null=True)
 
     def transform(self, unit):
@@ -860,11 +840,11 @@ class UnitTransform(models.Model):
 
 
 class CustomerGroupTransform(models.Model):
-    from_customer_group = models.ForeignKey('CustomerGroup', verbose_name=_("From Unit"),
+    from_customer_group = models.ForeignKey(CustomerGroup, verbose_name=_("From Unit"),
                                             related_name="db_reltransfromfromcustomergroup")
-    to_customer_group = models.ForeignKey('CustomerGroup', verbose_name=_("To Unit"),
+    to_customer_group = models.ForeignKey(CustomerGroup, verbose_name=_("To Unit"),
                                           related_name="db_reltransfromtocustomergroup")
-    product = models.ForeignKey('Product', verbose_name=_("Product"))
+    product = models.ForeignKey(Product, verbose_name=_("Product"))
     factor = models.IntegerField(verbose_name=_("Factor between From and To Customer Group"), blank=True, null=True)
 
     def transform(self, customer_group):

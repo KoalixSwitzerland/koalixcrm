@@ -13,7 +13,8 @@ from crm_core.views import login_user, UpdateUserProfile, ListCustomers, ListSup
     DeleteBillingCycle, DeleteCustomer, DeleteProduct, DeletePurchaseOrder, DeleteSupplier, \
     DeleteUnit, DeleteTax, show_dashboard, ViewCustomer, ViewSupplier, ViewProduct, create_contract_from_customer, \
     ViewContract, create_quote_from_customer, create_purchaseorder_from_customer, create_invoice_from_contract, \
-    create_purchaseorder_from_contract, create_quote_from_contract, create_invoice_from_quote, create_pdf_from_quote
+    create_purchaseorder_from_contract, create_quote_from_contract, create_invoice_from_quote, create_pdf_from_quote, \
+    create_pdf_from_purchaseorder, create_pdf_from_invoice
 
 admin.autodiscover()
 
@@ -78,6 +79,8 @@ urlpatterns = i18n_patterns("",
                             url(r'^purchaseorders/$', ListPurchaseOrders.as_view(), name='purchaseorder_list'),
                             url(r'^purchaseorders/create/$', CreatePurchaseOrder.as_view(),
                                 name='purchaseorder_create'),
+                            url(r'^purchaseorders/createpdf/(?P<purchaseorder_pk>\d+)/$', create_pdf_from_purchaseorder,
+                                name='purchaseorder_create_pdf'),
                             url(r'^purchaseorders/edit/(?P<pk>\d+)/$', EditPurchaseOrder.as_view(),
                                 name='purchaseorder_edit'),
                             url(r'^purchaseorders/delete/(?P<pk>\d+)/$', DeletePurchaseOrder.as_view(),
@@ -105,6 +108,8 @@ urlpatterns = i18n_patterns("",
 
                             url(r'^invoices/$', ListInvoice.as_view(), name='invoice_list'),
                             url(r'^invoices/create/$', CreateInvoice.as_view(), name='invoice_create'),
+                            url(r'^invoices/createpdf/(?P<invoice_pk>\d+)/$', create_pdf_from_invoice,
+                                name='invoice_create_pdf'),
                             url(r'^invoices/edit/(?P<pk>\d+)/$', EditInvoice.as_view(), name='invoice_edit'),
                             url(r'^invoices/delete/(?P<pk>\d+)/$', DeleteInvoice.as_view(), name='invoice_delete'),
 

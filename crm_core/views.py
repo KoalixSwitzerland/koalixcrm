@@ -9,7 +9,7 @@ from django.template import RequestContext, loader
 from extra_views import UpdateWithInlinesView, InlineFormSet, NamedFormsetsMixin, CreateWithInlinesView
 from crm_core.const.states import InvoiceStatesEnum
 
-from crm_core.models import Customer, Invoice, Supplier, Unit, Tax, Contract, Product, CustomerBillingCycle, \
+from crm_core.models import Customer, Invoice, Supplier, Unit, TaxRate, Contract, Product, CustomerBillingCycle, \
     PurchaseOrder, CustomerGroup, Quote, PostalAddress, PhoneAddress, EmailAddress, UserExtension
 from django.shortcuts import render_to_response, redirect
 from django.contrib.auth import authenticate, login, logout
@@ -103,8 +103,20 @@ def create_invoice_from_quote(request, quote_pk):
 
 def create_pdf_from_quote(request, quote_pk):
     quote = Quote.objects.get(pk=quote_pk)
-    invoice = quote.create_pdf('quote')
-    return redirect('invoice_edit', pk=invoice.pk)
+    quote.create_pdf('quote')  # TODO
+    return redirect('quote_list')
+
+
+def create_pdf_from_purchaseorder(request, purchaseorder_pk):
+    purchase_order = PurchaseOrder.objects.get(pk=purchaseorder_pk)
+    purchase_order.create_pdf()  # TODO
+    return redirect('purchaseorder_list')
+
+
+def create_pdf_from_invoice(request, invoice_pk):
+    invoice = Invoice.objects.get(pk=invoice_pk)
+    invoice.create_pdf('invoice')  # TODO
+    return redirect('invoice_list')
 
 
 class PostalAddressInline(LoginRequiredMixin, PermissionRequiredMixin, InlineFormSet):
@@ -232,27 +244,27 @@ class DeleteSupplier(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
 
 
 class ListTaxes(LoginRequiredMixin, PermissionRequiredMixin, ListView):
-    model = Tax
+    model = TaxRate
     permission_required = 'crm_core.view_tax'
     login_url = settings.LOGIN_URL
 
 
 class CreateTax(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
-    model = Tax
+    model = TaxRate
     permission_required = 'crm_core.add_tax'
     login_url = settings.LOGIN_URL
     success_url = reverse_lazy('tax_list')
 
 
 class EditTax(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
-    model = Tax
+    model = TaxRate
     permission_required = 'crm_core.change_tax'
     login_url = settings.LOGIN_URL
     success_url = reverse_lazy('tax_list')
 
 
 class DeleteTax(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
-    model = Tax
+    model = TaxRate
     permission_required = 'crm_core.delete_tax'
     login_url = settings.LOGIN_URL
     success_url = reverse_lazy('tax_list')
