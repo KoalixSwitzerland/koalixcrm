@@ -9,7 +9,7 @@ from django.template import RequestContext, loader
 from extra_views import UpdateWithInlinesView, InlineFormSet, NamedFormsetsMixin, CreateWithInlinesView
 from crm_core.const.states import InvoiceStatesEnum
 
-from crm_core.models import Customer, Invoice, Supplier, Currency, Unit, Tax, Contract, Product, CustomerBillingCycle, \
+from crm_core.models import Customer, Invoice, Supplier, Unit, Tax, Contract, Product, CustomerBillingCycle, \
     PurchaseOrder, CustomerGroup, Quote, PostalAddress, PhoneAddress, EmailAddress, UserExtension
 from django.shortcuts import render_to_response, redirect
 from django.contrib.auth import authenticate, login, logout
@@ -83,7 +83,7 @@ class PostalAddressInline(LoginRequiredMixin, PermissionRequiredMixin, InlineFor
     raise_exception = False
     extra = 1
     can_delete = False
-    fields = ['addressline1', 'addressline2', 'zipcode', 'town', 'state', 'country', 'purpose']
+    fields = ['addressline1', 'addressline2', 'zipcode', 'city', 'state', 'country', 'purpose']
 
 
 class PhoneAddressInline(LoginRequiredMixin, PermissionRequiredMixin, InlineFormSet):
@@ -199,33 +199,6 @@ class DeleteSupplier(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     permission_required = 'crm_core.delete_supplier'
     login_url = settings.LOGIN_URL
     success_url = reverse_lazy('supplier_list')
-
-
-class ListCurrencies(LoginRequiredMixin, PermissionRequiredMixin, ListView):
-    model = Currency
-    permission_required = 'crm_core.view_currency'
-    login_url = settings.LOGIN_URL
-
-
-class CreateCurrency(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
-    model = Currency
-    permission_required = 'crm_core.add_currency'
-    login_url = settings.LOGIN_URL
-    success_url = reverse_lazy('currency_list')
-
-
-class EditCurrency(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
-    model = Currency
-    permission_required = 'crm_core.change_currency'
-    login_url = settings.LOGIN_URL
-    success_url = reverse_lazy('currency_list')
-
-
-class DeleteCurrency(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
-    model = Currency
-    permission_required = 'crm_core.delete_currency'
-    login_url = settings.LOGIN_URL
-    success_url = reverse_lazy('currency_list')
 
 
 class ListTaxes(LoginRequiredMixin, PermissionRequiredMixin, ListView):
@@ -349,7 +322,7 @@ class ListPurchaseOrders(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = PurchaseOrder
     permission_required = 'crm_core.view_purchaseorder'
     login_url = settings.LOGIN_URL
-    fields = ['description', 'contract', 'supplier', 'state', 'currency', 'lastCalculatedPrice', 'lastPricingDate', ]
+    fields = ['description', 'contract', 'supplier', 'state', 'currency', 'last_calculated_price', 'last_pricing_date', ]
 
 
 class CreatePurchaseOrder(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
@@ -406,7 +379,7 @@ class ListContracts(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = Contract
     permission_required = 'crm_core.view_contract'
     login_url = settings.LOGIN_URL
-    fields = ['description', 'defaultcustomer', 'defaultSupplier', 'defaultcurrency']
+    fields = ['description', 'default_customer', 'default_supplier', 'default_currency']
 
 
 class ViewContract(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
@@ -419,7 +392,7 @@ class CreateContract(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Contract
     permission_required = 'crm_core.add_contract'
     login_url = settings.LOGIN_URL
-    fields = ['description', 'defaultcustomer', 'defaultSupplier', 'defaultcurrency']
+    fields = ['description', 'default_customer', 'default_supplier', 'default_currency']
     success_url = reverse_lazy('contract_list')
 
 
@@ -427,7 +400,7 @@ class EditContract(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Contract
     permission_required = 'crm_core.change_contract'
     login_url = settings.LOGIN_URL
-    fields = ['description', 'defaultcustomer', 'defaultSupplier', 'defaultcurrency']
+    fields = ['description', 'default_customer', 'default_supplier', 'defaultcurrency']
     success_url = reverse_lazy('contract_list')
 
 
@@ -442,8 +415,8 @@ class ListInvoice(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = Invoice
     permission_required = 'crm_core.view_invoice'
     login_url = settings.LOGIN_URL
-    fields = ['description', 'contract', 'customer', 'payableuntil', 'state', 'currency', 'lastCalculatedPrice',
-              'lastPricingDate']
+    fields = ['description', 'contract', 'customer', 'payableuntil', 'state', 'currency', 'last_calculated_price',
+              'last_pricing_date']
 
 
 class CreateInvoice(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
@@ -474,7 +447,7 @@ class ListQuotes(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     permission_required = 'crm_core.view_quote'
     login_url = settings.LOGIN_URL
     fields = ['description', 'contract', 'customer', 'currency', 'validuntil', 'state', 'lastmodifiedby',
-              'lastCalculatedPrice', 'lastPricingDate']
+              'last_calculated_price', 'last_pricing_date']
 
 
 class CreateQuote(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
@@ -482,7 +455,7 @@ class CreateQuote(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     permission_required = 'crm_core.add_quote'
     login_url = settings.LOGIN_URL
     fields = ['description', 'contract', 'customer', 'currency', 'validuntil', 'state', 'lastmodifiedby',
-              'lastCalculatedPrice', 'lastPricingDate']
+              'last_calculated_price', 'last_pricing_date']
     success_url = reverse_lazy('quote_list')
 
 
@@ -491,7 +464,7 @@ class EditQuote(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     permission_required = 'crm_core.change_quote'
     login_url = settings.LOGIN_URL
     fields = ['description', 'contract', 'customer', 'currency', 'validuntil', 'state', 'lastmodifiedby',
-              'lastCalculatedPrice', 'lastPricingDate']
+              'last_calculated_price', 'last_pricing_date']
     success_url = reverse_lazy('quote_list')
 
 

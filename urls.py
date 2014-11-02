@@ -4,13 +4,13 @@ from django.conf.urls import patterns, include, url
 from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
 from mezzanine.core.views import direct_to_template
-from crm_core.views import login_user, UpdateUserProfile, ListCustomers, ListSuppliers, ListCurrencies, ListTaxes, \
+from crm_core.views import login_user, UpdateUserProfile, ListCustomers, ListSuppliers, ListTaxes, \
     ListUnits, ListProducts, ListBillingCycles, ListPurchaseOrders, ListCustomerGroups, ListContracts, ListInvoice, \
-    ListQuotes, CreateCustomer, CreateSupplier, CreateProduct, CreateBillingCycle, CreateContract, CreateCurrency, \
+    ListQuotes, CreateCustomer, CreateSupplier, CreateProduct, CreateBillingCycle, CreateContract, \
     CreateInvoice, CreatePurchaseOrder, CreateCustomerGroup, CreateQuote, CreateTax, CreateUnit, EditProduct, \
-    EditBillingCycle, EditContract, EditCurrency, EditCustomer, EditCustomerGroup, EditInvoice, EditPurchaseOrder, \
+    EditBillingCycle, EditContract, EditCustomer, EditCustomerGroup, EditInvoice, EditPurchaseOrder, \
     EditQuote, EditSupplier, EditTax, EditUnit, DeleteQuote, DeleteInvoice, DeleteContract, DeleteCustomerGroup, \
-    DeleteBillingCycle, DeleteCurrency, DeleteCustomer, DeleteProduct, DeletePurchaseOrder, DeleteSupplier, \
+    DeleteBillingCycle, DeleteCustomer, DeleteProduct, DeletePurchaseOrder, DeleteSupplier, \
     DeleteUnit, DeleteTax, show_dashboard, ViewCustomer, ViewSupplier, ViewProduct, create_contract_from_customer, \
     ViewContract, create_quote_from_customer, create_purchaseorder_from_customer
 
@@ -49,11 +49,6 @@ urlpatterns = i18n_patterns("",
                             url(r'^suppliers/create/$', CreateSupplier.as_view(), name='supplier_create'),
                             url(r'^suppliers/edit/(?P<pk>\d+)/$', EditSupplier.as_view(), name='supplier_edit'),
                             url(r'^suppliers/delete/(?P<pk>\d+)/$', DeleteSupplier.as_view(), name='supplier_delete'),
-
-                            url(r'^currencies/$', ListCurrencies.as_view(), name='currency_list'),
-                            url(r'^currencies/create/$', CreateCurrency.as_view(), name='currency_create'),
-                            url(r'^currencies/edit/(?P<pk>\d+)/$', EditCurrency.as_view(), name='currency_edit'),
-                            url(r'^currencies/delete/(?P<pk>\d+)/$', DeleteCurrency.as_view(), name='currency_delete'),
 
                             url(r'^taxes/$', ListTaxes.as_view(), name='tax_list'),
                             url(r'^taxes/create/$', CreateTax.as_view(), name='tax_create'),

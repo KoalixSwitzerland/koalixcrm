@@ -57,7 +57,7 @@ class AccountingPeriod(models.Model):
     #     main.appendChild(accounting_period_name)
     #     organisation_name = doc.createElement("organisiationname")
     #     organisation_name.appendChild(
-    #         doc.createTextNode(settings.MEDIA_ROOT + user_extension[0].defaultTemplateSet.organisationname))
+    #         doc.createTextNode(settings.MEDIA_ROOT + user_extension[0].default_templateset.organisationname))
     #     main.appendChild(organisation_name)
     #     accounting_period_to = doc.createElement("accountingPeriodTo")
     #     accounting_period_to.appendChild(doc.createTextNode(self.end.year.__str__()))
@@ -67,7 +67,7 @@ class AccountingPeriod(models.Model):
     #     main.appendChild(accounting_period_from)
     #     header_picture = doc.createElement("headerpicture")
     #     header_picture.appendChild(
-    #         doc.createTextNode(settings.MEDIA_ROOT + user_extension[0].defaultTemplateSet.logo.path))
+    #         doc.createTextNode(settings.MEDIA_ROOT + user_extension[0].default_templateset.logo.path))
     #     main.appendChild(header_picture)
     #     account_number = doc.createElement("AccountNumber")
     #     accounts = Account.objects.all()
@@ -114,15 +114,15 @@ class AccountingPeriod(models.Model):
     #     out.close()
     #
     #     if what_to_create == "balanceSheet":
-    #         check_output(['/usr/bin/fop', '-c', user_extension[0].defaultTemplateSet.fopConfigurationFile.path, '-xml',
+    #         check_output(['/usr/bin/fop', '-c', user_extension[0].default_templateset.fop_configuration_file.path, '-xml',
     #                       settings.PDF_OUTPUT_ROOT + 'balancesheet_' + str(self.id) + '.xml', '-xsl',
-    #                       user_extension[0].defaultTemplateSet.balancesheetXSLFile.xslfile.path, '-pdf',
+    #                       user_extension[0].default_templateset.balancesheet_xsl_file.xslfile.path, '-pdf',
     #                       settings.PDF_OUTPUT_ROOT + 'balancesheet_' + str(self.id) + '.pdf'], stderr=STDOUT)
     #         return settings.PDF_OUTPUT_ROOT + "balancesheet_" + str(self.id) + ".pdf"
     #     else:
-    #         check_output(['/usr/bin/fop', '-c', user_extension[0].defaultTemplateSet.fopConfigurationFile.path, '-xml',
+    #         check_output(['/usr/bin/fop', '-c', user_extension[0].default_templateset.fop_configuration_file.path, '-xml',
     #                       settings.PDF_OUTPUT_ROOT + 'profitlossstatement_' + str(self.id) + '.xml', '-xsl',
-    #                       user_extension[0].defaultTemplateSet.profitLossStatementXSLFile.xslfile.path, '-pdf',
+    #                       user_extension[0].default_templateset.profit_loss_statement_xsl_file.xslfile.path, '-pdf',
     #                       settings.PDF_OUTPUT_ROOT + 'profitlossstatement_' + str(self.id) + '.pdf'], stderr=STDOUT)
     #         return settings.PDF_OUTPUT_ROOT + "profitlossstatement_" + str(self.id) + ".pdf"
     #

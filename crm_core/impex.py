@@ -1,5 +1,5 @@
 from import_export import resources
-from .models import Product, Contract, Currency, Customer, CustomerBillingCycle, \
+from .models import Product, Contract, Customer, CustomerBillingCycle, \
     CustomerGroup, PurchaseOrder, Quote, Invoice, SalesContract, Supplier, Tax, Unit
 
 
@@ -13,13 +13,7 @@ class ContractResource(resources.ModelResource):
     
     class Meta():
         model = Contract
-        
 
-class CurrencyResource(resources.ModelResource):
-    
-    class Meta():
-        model = Currency
-        
         
 class CustomerResource(resources.ModelResource):
     

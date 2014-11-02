@@ -29,10 +29,9 @@ class PostalAddress(models.Model):
     addressline1 = models.CharField(max_length=200, verbose_name=_("Addressline 1"), blank=True, null=True)
     addressline2 = models.CharField(max_length=200, verbose_name=_("Addressline 2"), blank=True, null=True)
     zipcode = models.IntegerField(verbose_name=_("Zipcode"), blank=True, null=True)
-    town = models.CharField(max_length=100, verbose_name=_("City"), blank=True, null=True)
+    city = models.CharField(max_length=100, verbose_name=_("City"), blank=True, null=True)
     state = models.CharField(max_length=100, verbose_name=_("State"), blank=True, null=True)
-    country = models.CharField(max_length=2, choices=countries, verbose_name=_("Country"),
-                               blank=True, null=True)
+    country = models.CharField(max_length=2, choices=countries, verbose_name=_("Country"), blank=True, null=True)
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PostalAddressPurpose.choices,
                                default=PostalAddressPurpose.ContactAddress)
     person = models.ForeignKey('Contact', related_name='addresses')
@@ -49,14 +48,14 @@ class PostalAddress(models.Model):
         return PostalAddressPurpose.choices[self.purpose]
 
     def __unicode__(self):
-        if self.addressline1 and self.zipcode and self.town:
-            return '%s, %s %s' % (self.addressline1, self.zipcode, self.town)
-        elif self.addressline1 and self.town:
-            return '%s, %s' % (self.addressline1, self.town)
-        elif self.zipcode and self.town:
-            return '%s %s' % (self.zipcode, self.town)
-        elif self.town:
-            return unicode(self.town)
+        if self.addressline1 and self.zipcode and self.city:
+            return '%s, %s %s' % (self.addressline1, self.zipcode, self.city)
+        elif self.addressline1 and self.city:
+            return '%s, %s' % (self.addressline1, self.city)
+        elif self.zipcode and self.city:
+            return '%s %s' % (self.zipcode, self.city)
+        elif self.city:
+            return unicode(self.city)
         return self.addressline1
 
 
@@ -162,8 +161,8 @@ class Customer(Displayable, Contact):
 
     def create_contract(self, request):
         contract = Contract()
-        contract.defaultcustomer = self
-        contract.defaultcurrency = self.default_currency
+        contract.default_customer = self
+        contract.default_currency = self.default_currency
         contract.lastmodifiedby = request.user
         contract.staff = request.user
         contract.save()
@@ -267,13 +266,12 @@ class Currency(models.Model):
 
 class Contract(models.Model):
     staff = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, blank=True,
-                              verbose_name=_("Staff"),
-                              related_name="db_relcontractstaff", null=True)
+                              verbose_name=_("Staff"), related_name="db_relcontractstaff", null=True)
     description = models.TextField(verbose_name=_("Description"), blank=True, null=True)
-    defaultcustomer = models.ForeignKey(Customer, verbose_name=_("Default Customer"), null=True, blank=True)
-    defaultSupplier = models.ForeignKey(Supplier, verbose_name=_("Default Supplier"), null=True, blank=True)
-    defaultcurrency = models.CharField(max_length=3, choices=currencies, verbose_name=_("Default Currency"),
-                                       blank=True, null=True)
+    default_customer = models.ForeignKey(Customer, verbose_name=_("Default Customer"), null=True, blank=True)
+    default_supplier = models.ForeignKey(Supplier, verbose_name=_("Default Supplier"), null=True, blank=True)
+    default_currency = models.CharField(max_length=3, choices=currencies, verbose_name=_("Default Currency"),
+                                        blank=True, null=True)
     dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now=True)
     lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now_add=True)
     lastmodifiedby = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True},
@@ -292,10 +290,10 @@ class Contract(models.Model):
         invoice.contract = self
         invoice.discount = 0
         invoice.staff = self.staff
-        invoice.customer = self.defaultcustomer
-        invoice.status = 'C'
-        invoice.currency = self.defaultcurrency
-        invoice.payableuntil = date.today() + timedelta(days=self.defaultcustomer.billingcycle.days_to_payment)
+        invoice.customer = self.default_customer
+        invoice.status = 1
+        invoice.currency = self.default_currency
+        invoice.payableuntil = date.today() + timedelta(days=self.default_customer.billingcycle.days_to_payment)
         invoice.dateofcreation = date.today().__str__()
         invoice.save()
         return invoice
@@ -305,9 +303,9 @@ class Contract(models.Model):
         quote.contract = self
         quote.discount = 0
         quote.staff = self.staff
-        quote.customer = self.defaultcustomer
-        quote.status = 'C'
-        quote.currency = self.defaultcurrency
+        quote.customer = self.default_customer
+        quote.status = 1
+        quote.currency = self.default_currency
         quote.validuntil = date.today().__str__()
         quote.dateofcreation = date.today().__str__()
         quote.save()
@@ -318,9 +316,9 @@ class Contract(models.Model):
         purchaseorder.contract = self
         purchaseorder.description = self.description
         purchaseorder.discount = 0
-        purchaseorder.currency = self.defaultcurrency
-        purchaseorder.supplier = self.defaultSupplier
-        purchaseorder.status = 'C'
+        purchaseorder.currency = self.default_currency
+        purchaseorder.supplier = self.default_supplier
+        purchaseorder.status = 1
         purchaseorder.dateofcreation = date.today().__str__()
         # TODO: today is not correct it has to be replaced
         purchaseorder.save()
@@ -328,7 +326,7 @@ class Contract(models.Model):
 
     @property
     def get_name(self):
-        return self.defaultcustomer.name + '#%s' % str(self.id)
+        return _('Contract') + '#%s' % str(self.id)
 
     def get_absolute_url(self):
         url = '/contracts/detail/' + str(self.pk)  # TODO: Bad solution
@@ -341,21 +339,22 @@ class Contract(models.Model):
 class PurchaseOrder(models.Model):
     state = FSMIntegerField(default=PurchaseOrderStatesEnum.New)
     contract = models.ForeignKey(Contract, verbose_name=_("Contract"))
-    externalReference = models.CharField(verbose_name=_("External Reference"), max_length=100, blank=True, null=True)
+    external_reference = models.CharField(verbose_name=_("External Reference"), max_length=100, blank=True, null=True)
     supplier = models.ForeignKey(Supplier, verbose_name=_("Supplier"), blank=True, null=True)
     description = models.CharField(verbose_name=_("Description"), max_length=100, blank=True, null=True)
-    lastPricingDate = models.DateField(verbose_name=_("Last Pricing Date"), blank=True, null=True)
-    lastCalculatedPrice = models.DecimalField(max_digits=17, decimal_places=2,
-                                              verbose_name=_("Last Calculted Price With Tax"), blank=True, null=True)
-    lastCalculatedTax = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Tax"),
-                                            blank=True, null=True)
-    staff = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, blank=True, verbose_name=_("Staff"),
-                              related_name="db_relpostaff", null=True)
+    last_pricing_date = models.DateField(verbose_name=_("Last Pricing Date"), blank=True, null=True)
+    last_calculated_price = models.DecimalField(max_digits=17, decimal_places=2,
+                                                verbose_name=_("Last Calculted Price With Tax"), blank=True, null=True)
+    last_calculated_tax = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Tax"),
+                                              blank=True, null=True)
+    staff = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, blank=True,
+                              verbose_name=_("Staff"), related_name="db_relpostaff", null=True)
     currency = models.CharField(max_length=3, choices=currencies, verbose_name=_("Currency"), blank=False, null=False)
     dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now=True)
     lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now_add=True)
     lastmodifiedby = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True},
-                                       verbose_name=_("Last modified by"), related_name="db_polstmodified", null=True, blank=True)
+                                       verbose_name=_("Last modified by"), related_name="db_polstmodified", null=True,
+                                       blank=True)
 
     def recalculate_prices(self, pricing_date):
         price = 0
@@ -381,9 +380,9 @@ class PurchaseOrder(models.Model):
                     else:
                         price += position.recalculate_prices(pricing_date, self.customer, self.currency)
                         tax += position.recalculate_tax(self.currency)
-            self.lastCalculatedPrice = price
-            self.lastCalculatedTax = tax
-            self.lastPricingDate = pricing_date
+            self.last_calculated_price = price
+            self.last_calculated_tax = tax
+            self.last_pricing_date = pricing_date
             self.save()
             return 1
         except Quote.DoesNotExist, e:
@@ -399,7 +398,7 @@ class PurchaseOrder(models.Model):
         out = open(settings.PDF_OUTPUT_ROOT + "purchaseorder_" + str(self.id) + ".xml", "w")
         objects_to_serialize = list(PurchaseOrder.objects.filter(id=self.id))
         objects_to_serialize += list(Contact.objects.filter(id=self.supplier.id))
-        objects_to_serialize += list(Currency.objects.filter(id=self.currency.id))
+        # objects_to_serialize += list(Currency.objects.filter(id=self.currency.id))
         objects_to_serialize += list(PurchaseOrderPosition.objects.filter(contract=self.id))
         for position in list(PurchaseOrderPosition.objects.filter(contract=self.id)):
             objects_to_serialize += list(Position.objects.filter(id=position.id))
@@ -443,26 +442,22 @@ class PurchaseOrder(models.Model):
 
 class SalesContract(models.Model):
     contract = models.ForeignKey(Contract, verbose_name=_('Contract'), related_name='contract')
-    externalReference = models.CharField(verbose_name=_("External Reference"), max_length=100, blank=True)
-    discount = models.DecimalField(max_digits=5, decimal_places=2, verbose_name=_("Discount"), blank=True,
-                                   null=True)
+    external_reference = models.CharField(verbose_name=_("External Reference"), max_length=100, blank=True)
+    discount = models.DecimalField(max_digits=5, decimal_places=2, verbose_name=_("Discount"), blank=True, null=True)
     description = models.CharField(verbose_name=_("Description"), max_length=100, blank=True, null=True)
-    lastPricingDate = models.DateField(verbose_name=_("Last Pricing Date"), blank=True, null=True)
-    lastCalculatedPrice = models.DecimalField(max_digits=17, decimal_places=2,
-                                              verbose_name=_("Last Calculted Price With Tax"), blank=True,
-                                              null=True)
-    lastCalculatedTax = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Tax"),
-                                            blank=True, null=True)
+    last_pricing_date = models.DateField(verbose_name=_("Last Pricing Date"), blank=True, null=True)
+    last_calculated_price = models.DecimalField(max_digits=17, decimal_places=2,
+                                                verbose_name=_("Last Calculted Price With Tax"), blank=True, null=True)
+    last_calculated_tax = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Tax"),
+                                              blank=True, null=True)
     customer = models.ForeignKey(Customer, verbose_name=_("Customer"))
     staff = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, blank=True,
-                              verbose_name=_("Staff"),
-                              related_name="db_relscstaff", null=True)
+                              verbose_name=_("Staff"), related_name="db_relscstaff", null=True)
     currency = models.CharField(max_length=3, choices=currencies, verbose_name=_("Currency"), blank=False, null=False)
     dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now=True)
     lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now_add=True)
     lastmodifiedby = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True},
-                                       verbose_name=_("Last modified by"), related_name="db_lstscmodified",
-                                       null=True,
+                                       verbose_name=_("Last modified by"), related_name="db_lstscmodified", null=True,
                                        blank="True")
 
     def recalculate_prices(self, pricing_date):
@@ -487,9 +482,9 @@ class SalesContract(models.Model):
                     price = int(price * (1 - self.discount / 100) / self.currency.rounding) * self.currency.rounding
                     tax = int(tax * (1 - self.discount / 100) / self.currency.rounding) * self.currency.rounding
 
-            self.lastCalculatedPrice = price
-            self.lastCalculatedTax = tax
-            self.lastPricingDate = pricing_date
+            self.last_calculated_price = price
+            self.last_calculated_tax = tax
+            self.last_pricing_date = pricing_date
             self.save()
             return 1
         except Quote.DoesNotExist:
@@ -520,7 +515,7 @@ class Quote(SalesContract):
         invoice.customer = self.customer
         invoice.staff = self.staff
         invoice.status = 'C'
-        invoice.derivatedFromQuote = self
+        invoice.derivated_from_quote = self
         invoice.currency = self.currency
         invoice.payableuntil = date.today() + timedelta(
             days=self.customer.billingcycle.days_to_payment)
@@ -532,20 +527,20 @@ class Quote(SalesContract):
             for quotePosition in list(quote_positions):
                 invoice_position = SalesContractPosition()
                 invoice_position.product = quotePosition.product
-                invoice_position.positionNumber = quotePosition.positionNumber
+                invoice_position.position_number = quotePosition.positionNumber
                 invoice_position.quantity = quotePosition.quantity
                 invoice_position.description = quotePosition.description
                 invoice_position.discount = quotePosition.discount
                 invoice_position.product = quotePosition.product
                 invoice_position.unit = quotePosition.unit
-                invoice_position.sentOn = quotePosition.sentOn
+                invoice_position.sent_on = quotePosition.sentOn
                 invoice_position.supplier = quotePosition.supplier
-                invoice_position.shipmentID = quotePosition.shipmentID
-                invoice_position.overwriteProductPrice = quotePosition.overwriteProductPrice
-                invoice_position.positionPricePerUnit = quotePosition.positionPricePerUnit
-                invoice_position.lastPricingDate = quotePosition.lastPricingDate
-                invoice_position.lastCalculatedPrice = quotePosition.lastCalculatedPrice
-                invoice_position.lastCalculatedTax = quotePosition.lastCalculatedTax
+                invoice_position.shipment_id = quotePosition.shipmentID
+                invoice_position.overwrite_product_price = quotePosition.overwriteProductPrice
+                invoice_position.position_price_per_unit = quotePosition.positionPricePerUnit
+                invoice_position.last_pricing_date = quotePosition.lastPricingDate
+                invoice_position.last_calculated_price = quotePosition.lastCalculatedPrice
+                invoice_position.last_calculated_tax = quotePosition.lastCalculatedTax
                 invoice_position.contract = invoice
                 invoice_position.save()
             return invoice
@@ -560,7 +555,7 @@ class Quote(SalesContract):
         objects_to_serialize = list(Quote.objects.filter(id=self.id))
         objects_to_serialize += list(SalesContract.objects.filter(id=self.id))
         objects_to_serialize += list(Contact.objects.filter(id=self.customer.id))
-        objects_to_serialize += list(Currency.objects.filter(id=self.currency.id))
+        # objects_to_serialize += list(Currency.objects.filter(id=self.currency.id))
         objects_to_serialize += list(SalesContractPosition.objects.filter(contract=self.id))
         for position in list(SalesContractPosition.objects.filter(contract=self.id)):
             objects_to_serialize += list(Position.objects.filter(id=position.id))
@@ -616,20 +611,20 @@ class Quote(SalesContract):
 class Invoice(SalesContract):
     state = FSMIntegerField(default=InvoiceStatesEnum.Open)
     payableuntil = models.DateField(verbose_name=_("To pay until"))
-    derivatedFromQuote = models.ForeignKey(Quote, blank=True, null=True)
-    paymentBankReference = models.CharField(verbose_name=_("Payment Bank Reference"), max_length=100, blank=True,
-                                            null=True)
+    derivated_from_quote = models.ForeignKey(Quote, blank=True, null=True)
+    payment_bank_reference = models.CharField(verbose_name=_("Payment Bank Reference"), max_length=100, blank=True,
+                                              null=True)
 
     # def register_invoice_in_accounting(self, request):
-    #     dictprices = dict()
+    # dictprices = dict()
     #     dicttax = dict()
     #     exists = False
     #     current_valid_accounting_period = AccountingPeriod.get_current_valid_accounting_period()
     #     activaaccount = Account.objects.filter(isopeninterestaccount=True)
     #     for position in list(SalesContractPosition.objects.filter(contract=self.id)):
     #         profitaccount = position.product.accoutingProductCategorie.profitAccount
-    #         dictprices[profitaccount] = position.lastCalculatedPrice
-    #         dicttax[profitaccount] = position.lastCalculatedTax
+    #         dictprices[profitaccount] = position.last_calculated_price
+    #         dicttax[profitaccount] = position.last_calculated_tax
     #
     #     for booking in Booking.objects.filter(accountingPeriod=current_valid_accounting_period):
     #         if booking.bookingReference == self:
@@ -654,7 +649,7 @@ class Invoice(SalesContract):
     #     booking.bookingDate = payment_date.today().__str__()
     #     booking.bookingReference = self
     #     booking.accountingPeriod = AccountingPeriod.objects.all()[0]
-    #     booking.amount = self.lastCalculatedPrice
+    #     booking.amount = self.last_calculated_price
     #     booking.staff = request.user
     #     booking.lastmodifiedby = request.user
     #     booking.save()
@@ -667,7 +662,7 @@ class Invoice(SalesContract):
         objects_to_serialize = list(Invoice.objects.filter(id=self.id))
         objects_to_serialize += list(SalesContract.objects.filter(id=self.id))
         objects_to_serialize += list(Contact.objects.filter(id=self.customer.id))
-        objects_to_serialize += list(Currency.objects.filter(id=self.currency.id))
+        # objects_to_serialize += list(Currency.objects.filter(id=self.currency.id))
         objects_to_serialize += list(SalesContractPosition.objects.filter(contract=self.id))
         for position in list(SalesContractPosition.objects.filter(contract=self.id)):
             objects_to_serialize += list(Position.objects.filter(id=position.id))
@@ -743,10 +738,10 @@ class Unit(models.Model):
 class Tax(models.Model):
     taxrate = models.DecimalField(max_digits=5, decimal_places=2, verbose_name=_("Taxrate in Percentage"))
     name = models.CharField(verbose_name=_("Taxname"), max_length=100)
-    accountActiva = models.ForeignKey('accounting.Account', verbose_name=_("Activa Account"),
-                                      related_name="db_relaccountactiva", null=True, blank=True)
-    accountPassiva = models.ForeignKey('accounting.Account', verbose_name=_("Passiva Account"),
-                                       related_name="db_relaccountpassiva", null=True, blank=True)
+    account_activa = models.ForeignKey('accounting.Account', verbose_name=_("Activa Account"),
+                                       related_name="db_relaccountactiva", null=True, blank=True)
+    account_passiva = models.ForeignKey('accounting.Account', verbose_name=_("Passiva Account"),
+                                        related_name="db_relaccountpassiva", null=True, blank=True)
 
     def gettaxrate(self):
         return self.taxrate
@@ -856,14 +851,14 @@ class Product(Displayable, ProductItem):
 
 
 class UnitTransform(models.Model):
-    fromUnit = models.ForeignKey('Unit', verbose_name=_("From Unit"), related_name="db_reltransfromfromunit")
-    toUnit = models.ForeignKey('Unit', verbose_name=_("To Unit"), related_name="db_reltransfromtounit")
+    from_unit = models.ForeignKey('Unit', verbose_name=_("From Unit"), related_name="db_reltransfromfromunit")
+    to_unit = models.ForeignKey('Unit', verbose_name=_("To Unit"), related_name="db_reltransfromtounit")
     product = models.ForeignKey('Product', verbose_name=_("Product"))
     factor = models.IntegerField(verbose_name=_("Factor between From and To Unit"), blank=True, null=True)
 
     def transform(self, unit):
-        if self.fromUnit == unit:
-            return self.toUnit
+        if self.from_unit == unit:
+            return self.to_unit
         else:
             return unit
 
@@ -872,25 +867,25 @@ class UnitTransform(models.Model):
         verbose_name_plural = _('Unit Transfroms')
 
     def __unicode__(self):
-        return "From " + self.fromUnit.shortname + " to " + self.toUnit.shortname
+        return "From " + self.from_unit.shortname + " to " + self.to_unit.shortname
 
 
 class CustomerGroupTransform(models.Model):
-    fromCustomerGroup = models.ForeignKey('CustomerGroup', verbose_name=_("From Unit"),
-                                          related_name="db_reltransfromfromcustomergroup")
-    toCustomerGroup = models.ForeignKey('CustomerGroup', verbose_name=_("To Unit"),
-                                        related_name="db_reltransfromtocustomergroup")
+    from_customer_group = models.ForeignKey('CustomerGroup', verbose_name=_("From Unit"),
+                                            related_name="db_reltransfromfromcustomergroup")
+    to_customer_group = models.ForeignKey('CustomerGroup', verbose_name=_("To Unit"),
+                                          related_name="db_reltransfromtocustomergroup")
     product = models.ForeignKey('Product', verbose_name=_("Product"))
     factor = models.IntegerField(verbose_name=_("Factor between From and To Customer Group"), blank=True, null=True)
 
     def transform(self, customer_group):
-        if self.fromCustomerGroup == customer_group:
-            return self.toCustomerGroup
+        if self.from_customer_group == customer_group:
+            return self.to_customer_group
         else:
             return customer_group
 
     def __unicode__(self):
-        return "From " + self.fromCustomerGroup.name + " to " + self.toCustomerGroup.name
+        return "From " + self.from_customer_group.name + " to " + self.to_customer_group.name
 
     class Meta():
         verbose_name = _('Customer Group Price Transfrom')
@@ -900,8 +895,8 @@ class CustomerGroupTransform(models.Model):
 class Price(models.Model):
     product = models.ForeignKey(Product, verbose_name=_("Product"))
     unit = models.ForeignKey(Unit, blank=False, verbose_name=_("Unit"))
-    currency = models.ForeignKey(Currency, blank=False, null=False, verbose_name='Currency')
-    customerGroup = models.ForeignKey(CustomerGroup, blank=True, null=True, verbose_name=_("Customer Group"))
+    currency = models.CharField(max_length=3, choices=currencies, blank=False, null=False, verbose_name='Currency')
+    customer_group = models.ForeignKey(CustomerGroup, blank=True, null=True, verbose_name=_("Customer Group"))
     price = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Price Per Unit"))
     validfrom = models.DateField(verbose_name=_("Valid from"), blank=True, null=True)
     validuntil = models.DateField(verbose_name=_("Valid until"), blank=True, null=True)
@@ -909,35 +904,36 @@ class Price(models.Model):
     def matches_date_unit_customer_group_currency(self, date, unit, customer_group, currency):
         if self.validfrom == None:
             if self.validuntil == None:
-                if self.customerGroup == None:
+                if self.customer_group == None:
                     if (unit == self.unit) & (self.currency == currency):
                         return 1
                 else:
-                    if (unit == self.unit) & (self.customerGroup == customer_group) & (self.currency == currency):
+                    if (unit == self.unit) & (self.customer_group == customer_group) & (self.currency == currency):
                         return 1
-            elif self.customerGroup == None:
+            elif self.customer_group == None:
                 if ((date - self.validuntil).days < 0) & (unit == self.unit) & (self.currency == currency):
                     return 1
             else:
                 if ((date - self.validuntil).days < 0) & (unit == self.unit) & (
-                            self.customerGroup == customer_group) & (
+                            self.customer_group == customer_group) & (
                             self.currency == currency):
                     return 1
         elif self.validuntil == None:
-            if self.customerGroup == None:
+            if self.customer_group == None:
                 if ((self.validfrom - date).days < 0) & (unit == self.unit) & (self.currency == currency):
                     return 1
             else:
-                if ((self.validfrom - date).days < 0) & (unit == self.unit) & (self.customerGroup == customer_group) & (
+                if ((self.validfrom - date).days < 0) & (unit == self.unit) & (
+                    self.customer_group == customer_group) & (
                             self.currency == currency):
                     return 1
-        elif self.customerGroup == None:
+        elif self.customer_group == None:
             if ((self.validfrom - date).days < 0) & (self.validuntil == None) & (unit == self.unit) & (
-                        self.customerGroup == None) & (self.currency == currency):
+                        self.customer_group == None) & (self.currency == currency):
                 return 1
         else:
             if ((self.validfrom - date).days < 0) & ((date - self.validuntil).days < 0) & (unit == self.unit) & (
-                        self.customerGroup == customer_group) & (self.currency == currency):
+                        self.customer_group == customer_group) & (self.currency == currency):
                 return 1
 
     class Meta():
@@ -946,48 +942,46 @@ class Price(models.Model):
 
 
 class Position(models.Model):
-    positionNumber = models.IntegerField(verbose_name=_("Position Number"))
+    position_number = models.IntegerField(verbose_name=_("Position Number"))
     quantity = models.DecimalField(verbose_name=_("Quantity"), decimal_places=3, max_digits=10)
     description = models.TextField(verbose_name=_("Description"), blank=True, null=True)
-    discount = models.DecimalField(max_digits=5, decimal_places=2, verbose_name=_("Discount"), blank=True,
-                                   null=True)
+    discount = models.DecimalField(max_digits=5, decimal_places=2, verbose_name=_("Discount"), blank=True, null=True)
     product = models.ForeignKey(Product, verbose_name=_("Product"), blank=True, null=True)
     unit = models.ForeignKey(Unit, verbose_name=_("Unit"), blank=True, null=True)
-    sentOn = models.DateField(verbose_name=_("Shipment on"), blank=True, null=True)
+    sent_on = models.DateField(verbose_name=_("Shipment on"), blank=True, null=True)
     supplier = models.ForeignKey(Supplier, verbose_name=_("Shipment Supplier"),
                                  limit_choices_to={'direct_shipment_to_customers': True}, blank=True, null=True)
-    shipmentID = models.CharField(max_length=100, verbose_name=_("Shipment ID"), blank=True, null=True)
-    overwriteProductPrice = models.BooleanField(verbose_name=_('Overwrite Product Price'), default=False)
-    positionPricePerUnit = models.DecimalField(verbose_name=_("Price Per Unit"), max_digits=17, decimal_places=2,
-                                               blank=True, null=True)
-    lastPricingDate = models.DateField(verbose_name=_("Last Pricing Date"), blank=True, null=True)
-    lastCalculatedPrice = models.DecimalField(max_digits=17, decimal_places=2,
-                                              verbose_name=_("Last Calculted Price"),
+    shipment_id = models.CharField(max_length=100, verbose_name=_("Shipment ID"), blank=True, null=True)
+    overwrite_product_price = models.BooleanField(verbose_name=_('Overwrite Product Price'), default=False)
+    position_price_per_unit = models.DecimalField(verbose_name=_("Price Per Unit"), max_digits=17, decimal_places=2,
+                                                  blank=True, null=True)
+    last_pricing_date = models.DateField(verbose_name=_("Last Pricing Date"), blank=True, null=True)
+    last_calculated_price = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Price"),
+                                                blank=True, null=True)
+    last_calculated_tax = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Tax"),
                                               blank=True, null=True)
-    lastCalculatedTax = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Tax"),
-                                            blank=True, null=True)
 
     def recalculate_prices(self, pricing_date, customer, currency):
-        if not self.overwriteProductPrice:
-            self.positionPricePerUnit = self.product.get_price(pricing_date, self.unit, customer, currency)
+        if not self.overwrite_product_price:
+            self.position_price_per_unit = self.product.get_price(pricing_date, self.unit, customer, currency)
         if type(self.discount) == Decimal:
-            self.lastCalculatedPrice = int(self.positionPricePerUnit * self.quantity * (
+            self.last_calculated_price = int(self.position_price_per_unit * self.quantity * (
                 1 - self.discount / 100) / currency.rounding) * currency.rounding
         else:
-            self.lastCalculatedPrice = self.positionPricePerUnit * self.quantity
-        self.lastPricingDate = pricing_date
+            self.last_calculated_price = self.position_price_per_unit * self.quantity
+        self.last_pricing_date = pricing_date
         self.save()
-        return self.lastCalculatedPrice
+        return self.last_calculated_price
 
     def recalculate_tax(self, currency):
         if type(self.discount) == Decimal:
-            self.lastCalculatedTax = int(
-                self.product.get_tax_rate() / 100 * self.positionPricePerUnit * self.quantity * (
+            self.last_calculated_tax = int(
+                self.product.get_tax_rate() / 100 * self.position_price_per_unit * self.quantity * (
                     1 - self.discount / 100) / currency.rounding) * currency.rounding
         else:
-            self.lastCalculatedTax = self.product.get_tax_rate() / 100 * self.positionPricePerUnit * self.quantity
+            self.last_calculated_tax = self.product.get_tax_rate() / 100 * self.position_price_per_unit * self.quantity
         self.save()
-        return self.lastCalculatedTax
+        return self.last_calculated_tax
 
     def __unicode__(self):
         return _("Position") + ": " + str(self.id)
@@ -1034,30 +1028,34 @@ class XSLFile(models.Model):
 class TemplateSet(models.Model):
     organisationname = models.CharField(verbose_name=_("Name of the Organisation"), max_length=200)
     title = models.CharField(verbose_name=_("Title"), max_length=100)
-    invoiceXSLFile = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Invoice"),
-                                       related_name="db_reltemplateinvoice")
-    quoteXSLFile = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Quote"), related_name="db_reltemplatequote")
-    purchaseorderXSLFile = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Purchaseorder"),
-                                             related_name="db_reltemplatepurchaseorder")
-    purchaseconfirmationXSLFile = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Purchase Confirmation"),
-                                                    related_name="db_reltemplatepurchaseconfirmation")
-    deilveryorderXSLFile = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Deilvery Order"),
-                                             related_name="db_reltemplatedeliveryorder")
-    profitLossStatementXSLFile = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Profit Loss Statement"),
-                                                   related_name="db_reltemplateprofitlossstatement")
-    balancesheetXSLFile = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Balancesheet"),
-                                            related_name="db_reltemplatebalancesheet")
+    invoice_xsl_file = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Invoice"),
+                                         related_name="db_reltemplateinvoice")
+    quote_xsl_file = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Quote"),
+                                       related_name="db_reltemplatequote")
+    purchaseorder_xsl_file = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Purchaseorder"),
+                                               related_name="db_reltemplatepurchaseorder")
+    purchaseconfirmation_xsl_file = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Purchase Confirmation"),
+                                                      related_name="db_reltemplatepurchaseconfirmation")
+    deilveryorder_xsl_file = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Deilvery Order"),
+                                               related_name="db_reltemplatedeliveryorder")
+    profit_loss_statement_xsl_file = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Profit Loss Statement"),
+                                                       related_name="db_reltemplateprofitlossstatement")
+    balancesheet_xsl_file = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Balancesheet"),
+                                              related_name="db_reltemplatebalancesheet")
     logo = FileBrowseField(verbose_name=_("Logo for the PDF generation"), blank=True, null=True, max_length=200)
     bankingaccountref = models.CharField(max_length=60, verbose_name=_("Reference to Banking Account"), blank=True,
                                          null=True)
     addresser = models.CharField(max_length=200, verbose_name=_("Addresser"), blank=True, null=True)
-    fopConfigurationFile = FileBrowseField(verbose_name=_("FOP Configuration File"), blank=True, null=True, max_length=200)
-    footerTextsalesorders = models.TextField(verbose_name=_("Footer Text On Salesorders"), blank=True, null=True)
-    headerTextsalesorders = models.TextField(verbose_name=_("Header Text On Salesorders"), blank=True, null=True)
-    headerTextpurchaseorders = models.TextField(verbose_name=_("Header Text On Purchaseorders"), blank=True, null=True)
-    footerTextpurchaseorders = models.TextField(verbose_name=_("Footer Text On Purchaseorders"), blank=True, null=True)
-    pagefooterleft = models.CharField(max_length=40, verbose_name=_("Page Footer Left"), blank=True, null=True)
-    pagefootermiddle = models.CharField(max_length=40, verbose_name=_("Page Footer Middle"), blank=True, null=True)
+    fop_configuration_file = FileBrowseField(verbose_name=_("FOP Configuration File"), blank=True, null=True,
+                                             max_length=200)
+    footer_text_salesorders = models.TextField(verbose_name=_("Footer Text On Salesorders"), blank=True, null=True)
+    header_text_salesorders = models.TextField(verbose_name=_("Header Text On Salesorders"), blank=True, null=True)
+    header_text_purchaseorders = models.TextField(verbose_name=_("Header Text On Purchaseorders"), blank=True,
+                                                  null=True)
+    footer_text_purchaseorders = models.TextField(verbose_name=_("Footer Text On Purchaseorders"), blank=True,
+                                                  null=True)
+    page_footer_left = models.CharField(max_length=40, verbose_name=_("Page Footer Left"), blank=True, null=True)
+    page_footer_middle = models.CharField(max_length=40, verbose_name=_("Page Footer Middle"), blank=True, null=True)
 
     class Meta():
         verbose_name = _('Templateset')
@@ -1070,8 +1068,8 @@ class TemplateSet(models.Model):
 class UserExtension(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL)
     image = models.ImageField(upload_to='avatars/', default='avatars/avatar.jpg', null=True, blank=True)
-    defaultTemplateSet = models.ForeignKey(TemplateSet, null=True, blank=True)
-    defaultCurrency = models.ForeignKey(Currency, null=True, blank=True)
+    default_templateset = models.ForeignKey(TemplateSet, null=True, blank=True)
+    default_currency = models.CharField(max_length=3, choices=currencies, null=True, blank=True)
 
     class Meta():
         verbose_name = _('User Extension')

@@ -171,7 +171,7 @@
                       </li>
                       {% endif %}
 
-                    {% if perms.crm_core.view_customergroup or perms.crm_core.view_billingcycle or perms.crm_core.view_currency or perms.crm_core.view_tax or perms.crm_core.view_unit %}
+                    {% if perms.crm_core.view_customergroup or perms.crm_core.view_billingcycle or perms.crm_core.view_tax or perms.crm_core.view_unit %}
                       <li class="sub-menu">
                           <a href="javascript:;" >
                               <i class="fa fa-wrench"></i>
@@ -183,9 +183,6 @@
                               {% endif %}
                               {% if perms.crm_core.view_billingcycle %}
                                 <li><a href="/billingcycles/">{% trans "Billing Cycles" %}</a></li>
-                              {% endif %}
-                              {% if perms.crm_core.view_currency %}
-                                <li><a href="/currencies/">{% trans "Currencies" %}</a></li>
                               {% endif %}
                               {% if perms.crm_core.view_tax %}
                                 <li><a href="/taxes/">{% trans "Tax Rates" %}</a></li>
