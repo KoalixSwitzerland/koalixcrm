@@ -1,6 +1,6 @@
 from import_export import resources
 from .models import Product, Contract, Customer, CustomerBillingCycle, \
-    CustomerGroup, PurchaseOrder, Quote, Invoice, SalesContract, Supplier, TaxRate, Unit
+    CustomerGroup, PurchaseOrder, Quote, Invoice, Supplier, TaxRate, Unit
 
 
 class ProductResource(resources.ModelResource):
@@ -16,7 +16,7 @@ class ContractResource(resources.ModelResource):
 
         
 class CustomerResource(resources.ModelResource):
-    
+
     class Meta():
         model = Customer
         
@@ -49,13 +49,7 @@ class InvoiceResource(resources.ModelResource):
     
     class Meta():
         model = Invoice
-        
-        
-class SalesContractResource(resources.ModelResource):
-    
-    class Meta():
-        model = SalesContract
-        
+
         
 class SupplierResource(resources.ModelResource):
     
@@ -63,7 +57,7 @@ class SupplierResource(resources.ModelResource):
         model = Supplier
         
         
-class TaxResource(resources.ModelResource):
+class TaxRateResource(resources.ModelResource):
     
     class Meta():
         model = TaxRate

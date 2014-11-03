@@ -254,6 +254,9 @@
                       {% if request.user.is_authenticated %}
                       <div class="row mt">
 
+                          {% block rightbar_impex %}
+                          {% endblock %}
+
                           {% block rightbar_filters %}
 {#						    <h3>{% trans 'Filters' %}</h3>#}
                           {% endblock %}
