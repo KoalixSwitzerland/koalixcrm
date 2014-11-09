@@ -1,13 +1,13 @@
 language: python
 python:
   - "2.7"
-# command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install python-dev python-pip python-lxml libcairo2 libpango1.0-0 libgdk-pixbuf2.0-0 libffi-dev shared-mime-info
 install:
   - pip install -r requirements.txt
   - pip install python-coveralls
   - pip install coverage
-# command to run tests, e.g. python setup.py test
-# Using manage.py validate since there are no unit tests yet
 script:
   - python manage.py check
   - coverage run --source='.' manage.py test crm_core accounting subscriptions admin_backup

@@ -1,0 +1,17 @@
+<html>
+<head>
+    <style>
+        @page {
+            margin: 3cm 2cm;
+            padding-left: 1.5cm;
+            @bottom-right {
+                content: "Page " counter(page) " of " counter(pages)
+            }
+        }
+        h1 { -weasy-bookmark-level: none }
+    </style>
+</head>
+<body>
+{{ purchaseorder }}
+</body>
+</html>

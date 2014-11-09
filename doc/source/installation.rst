@@ -10,6 +10,85 @@ Installation
 .. contents::
 
 
+By platform
+-----------
+
+Pango, GdkPixbuf, and cairo can not be installed
+with pip and need to be installed from your platform’s packages.
+lxml and CFFI can, but you’d still need their own dependencies.
+This section lists system packages for lxml or CFFI when available,
+the dependencies otherwise.
+lxml needs *libxml2* and *libxslt*, CFFI needs *libffi*.
+On Debian, the package names with development files are
+``libxml2-dev``, ``libxslt1-dev`` and ``libffi-dev``.
+
+Debian / Ubuntu
+~~~~~~~~~~~~~~~
+
+Debian 7.0 Wheezy or newer, Ubuntu 11.10 Oneiric or newer:
+
+.. code-block:: sh
+
+    sudo apt-get install python-dev python-pip python-lxml libcairo2 libpango1.0-0 libgdk-pixbuf2.0-0 libffi-dev shared-mime-info
+
+
+Debian 6.0 Squeeze, Ubuntu 10.04 Lucid:
+GDK-PixBuf is part of GTK+, which also depends on cairo and Pango.
+
+.. code-block:: sh
+
+    sudo apt-get install python-dev python-pip python-lxml libgtk2.0-0 libffi-dev
+
+Fedora
+~~~~~~
+
+.. code-block:: sh
+
+    sudo yum install python-devel python-pip python-lxml cairo pango gdk-pixbuf2 libffi-devel
+
+Archlinux
+~~~~~~~~~
+
+.. code-block:: sh
+
+    sudo pacman -S python-pip python-lxml cairo pango gdk-pixbuf2
+
+
+Gentoo
+~~~~~~
+
+.. code-block:: sh
+
+    emerge weasyprint
+
+
+Mac OS X
+~~~~~~~~
+
+With Macports
+
+.. code-block:: sh
+
+    sudo port install py27-pip py27-lxml cairo pango gdk-pixbuf2 libffi
+
+With Homebrew:
+
+.. code-block:: sh
+
+    brew install python cairo pango gdk-pixbuf libxml2 libxslt libffi
+
+
+Windows
+~~~~~~~
+
+* Get CPython 2.7 `from python.org <http://www.python.org/download/>`_,
+* `Christoph Gohlke’s unofficial binaries
+  <http://www.lfd.uci.edu/~gohlke/pythonlibs/#lxml>`_ for CFFI and lxml,
+* and `Alexander Shaduri’s GTK+ installer
+  <http://gtk-win.sourceforge.net/home/index.php/Main/Downloads>`_.
+  Make sure that *Set up PATH environment variable* checked.
+
+
 Common Package Requirements
 ===========================
 

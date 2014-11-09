@@ -66,7 +66,11 @@ DASHBOARD_TAGS = (
 
 # If True, the south application will be automatically added to the
 # INSTALLED_APPS setting.
-USE_SOUTH = True
+USE_SOUTH = False
+
+SITE_TITLE = 'Koalix CRM'
+
+GRAPPELLI_ADMIN_TITLE = SITE_TITLE
 
 
 ########################

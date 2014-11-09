@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
+import StringIO
 from braces.views import PermissionRequiredMixin, LoginRequiredMixin
+
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse_lazy
@@ -13,8 +15,9 @@ from crm_core.impex import CustomerResource, SupplierResource, CustomerGroupReso
     TaxRateResource, UnitResource
 from crm_core.models import Customer, Invoice, Supplier, Unit, TaxRate, Contract, Product, CustomerBillingCycle, \
     PurchaseOrder, CustomerGroup, Quote, PostalAddress, PhoneAddress, EmailAddress, UserExtension
-from django.shortcuts import render_to_response, redirect
+from django.shortcuts import render_to_response, redirect, render
 from django.contrib.auth import authenticate, login, logout
+from xml.etree import ElementTree
 
 
 # ######################
@@ -119,21 +122,33 @@ def create_purchaseorder_from_quote(request, quote_pk):
     return redirect('purchaseorder_edit', pk=purchase_order.pk)
 
 
+# ############################
+# ##   PDF Creation Views   ##
+# ############################
+
+
 def create_pdf_from_quote(request, quote_pk):
     quote = Quote.objects.get(pk=quote_pk)
-    quote.create_pdf('quote')  # TODO
+    html_string = StringIO.StringIO()
+    print render(request, 'pdf_templates/quote.html', {'quote': quote}).content
+    html_string.write(render(request, 'pdf_templates/quote.html', {'quote': quote}).content)
+    quote.create_pdf(html_string)
     return redirect('quote_list')
 
 
 def create_pdf_from_purchaseorder(request, purchaseorder_pk):
     purchase_order = PurchaseOrder.objects.get(pk=purchaseorder_pk)
-    purchase_order.create_pdf()  # TODO
+    html_string = StringIO.StringIO()
+    html_string.write(render(request, 'pdf_templates/purchaseorder.html', {'purchaseorder': purchase_order}).content)
+    purchase_order.create_pdf(html_string)
     return redirect('purchaseorder_list')
 
 
 def create_pdf_from_invoice(request, invoice_pk):
     invoice = Invoice.objects.get(pk=invoice_pk)
-    invoice.create_pdf('invoice')  # TODO
+    html_string = StringIO.StringIO()
+    html_string.write(render(request, 'pdf_templates/invoice.html', {'invoice': invoice}).content)
+    invoice.create_pdf(html_string)
     return redirect('invoice_list')
 
 

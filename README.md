@@ -4,7 +4,7 @@ Koalix CRM
 Beautiful CRM/ERP for small business
 
 
-## Status Bar
+## Project Status
 
 Code status:
     [![Build Status](https://travis-ci.org/tfroehlich82/koalixcrm.svg)](https://travis-ci.org/tfroehlich82/koalixcrm)
@@ -35,6 +35,10 @@ Koalix CRM provides following benefits:
 -   **Clear and beautiful user interface:**
 
     Koalix CRM provides an beautiful and easy to use graphical user interface with a lot of nice features
+    
+-   **Easily create your own templates for PDF export:**
+
+    You can easily create your own templates since it's just HTML 
         
 -   **Excellent workflow:**
 

@@ -13,10 +13,10 @@ from crm_core.views import login_user, UpdateUserProfile, ListCustomers, ListSup
     DeleteBillingCycle, DeleteCustomer, DeleteProduct, DeletePurchaseOrder, DeleteSupplier, \
     DeleteUnit, DeleteTax, show_dashboard, ViewCustomer, ViewSupplier, ViewProduct, create_contract_from_customer, \
     ViewContract, create_quote_from_customer, create_purchaseorder_from_customer, create_invoice_from_contract, \
-    create_purchaseorder_from_contract, create_quote_from_contract, create_invoice_from_quote, create_pdf_from_quote, \
+    create_purchaseorder_from_contract, create_quote_from_contract, create_invoice_from_quote, \
     create_pdf_from_purchaseorder, create_pdf_from_invoice, create_purchaseorder_from_quote, export_customers, \
     export_suppliers, export_products, export_contracts, export_quotes, export_invoices, export_purchaseorders, \
-    export_taxrates, export_units, export_billingcycles, export_customergroups
+    export_taxrates, export_units, export_billingcycles, export_customergroups, create_pdf_from_quote
 
 admin.autodiscover()
 

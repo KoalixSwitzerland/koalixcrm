@@ -19,25 +19,42 @@ Features
 
 Koalix CRM provides following benefits:
 
-    - Clear and beautiful user interface:
+    -   **Clear and beautiful user interface:**
+
         Koalix CRM provides an beautiful and easy to use graphical user interface with a lot of nice features
-    - Excellent workflow:
+
+    -   **Easily create your own templates for PDF export:**
+
+        You can easily create your own templates since it's just HTML
+
+    -   **Excellent workflow:**
+
         All important features just one click away
-    - User management:
+
+    -   **User management:**
+
         Create and manage user accounts, groups and permissions
-    - Fully integrated CMS:
+
+    -   **Fully integrated CMS:**
+
         You can add wikis, blogs, galleries, ...
-    - Ready for webshop:
+
+    -   **Ready for webshop:**
+
         You want to start a webshop? Integrate easily in KoalixCRM
-    - Multiple translations:
+
+    -   **Multiple translations:**
+
         Currently available translations:
-            * English
-            * German
+
+        *   English
+        *   German
 
         Upcoming translations:
-            * Spanish
-            * Italian
-            * French
+
+        *   Spanish
+        *   Italian
+        *   French
 
 
 Contents:

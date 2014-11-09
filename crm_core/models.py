@@ -1,18 +1,15 @@
 # -*- coding: utf-8 -*-
 
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 from decimal import Decimal
-from subprocess import check_output, STDOUT
-from xml import etree
 from django.conf import settings
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from django.core import serializers
-from django.contrib import auth
 from filebrowser_safe.fields import FileBrowseField
 from django_fsm import FSMIntegerField
 from mezzanine.core.models import Displayable
-
+from os import path
+from weasyprint import HTML, CSS
 from international.models import countries, currencies
 from const.postaladdressprefix import PostalAddressPrefix
 from const.purpose import PhoneOrEmailAddressPurpose, PostalAddressPurpose
@@ -388,41 +385,10 @@ class PurchaseOrder(models.Model):
             exit()
             return 0
 
-    def create_pdf(self):
-        xml_serializer = serializers.get_serializer("xml")
-        xml_serializer = xml_serializer()
-        out = open(settings.PDF_OUTPUT_ROOT + "purchaseorder_" + str(self.id) + ".xml", "w")
-        objects_to_serialize = list(PurchaseOrder.objects.filter(id=self.id))
-        objects_to_serialize += list(Contact.objects.filter(id=self.supplier.id))
-        # objects_to_serialize += list(Currency.objects.filter(id=self.currency.id))
-        objects_to_serialize += list(PurchaseOrderPosition.objects.filter(contract=self.id))
-        for position in list(PurchaseOrderPosition.objects.filter(contract=self.id)):
-            objects_to_serialize += list(Position.objects.filter(id=position.id))
-            objects_to_serialize += list(Product.objects.filter(id=position.product.id))
-            objects_to_serialize += list(Unit.objects.filter(id=position.unit.id))
-        objects_to_serialize += list(auth.models.User.objects.filter(id=self.staff.id))
-        user_extension = UserExtension.objects.filter(user=self.staff.id)
-        if len(user_extension) == 0:
-            raise Exception(_("During PurchaseOrder PDF Export"))
-        phone_address = PhoneAddress.objects.filter(
-            userExtension=user_extension[0].id)
-        objects_to_serialize += list(user_extension)
-        objects_to_serialize += list(phone_address)
-        templateset = TemplateSet.objects.filter(id=user_extension[0].defaultTemplateSet.id)
-        if len(templateset) == 0:
-            raise Exception(_("During PurchaseOrder PDF Export"))
-        objects_to_serialize += list(templateset)
-        objects_to_serialize += list(auth.models.User.objects.filter(id=self.lastmodifiedby.id))
-        objects_to_serialize += list(PostalAddress.objects.filter(person=self.supplier.id))
-        for address in list(PostalAddress.objects.filter(person=self.supplier.id)):
-            objects_to_serialize += list(PostalAddress.objects.filter(id=address.id))
-        xml_serializer.serialize(objects_to_serialize, stream=out, indent=3)
-        out.close()
-        check_output(['/usr/bin/fop', '-c', user_extension[0].defaultTemplateSet.fopConfigurationFile.path, '-xml',
-                      settings.PDF_OUTPUT_ROOT + 'purchaseorder_' + str(self.id) + '.xml', '-xsl',
-                      user_extension[0].defaultTemplateSet.purchaseorderXSLFile.xslfile.path, '-pdf',
-                      settings.PDF_OUTPUT_ROOT + 'purchaseorder_' + str(self.id) + '.pdf'], stderr=STDOUT)
-        return settings.PDF_OUTPUT_ROOT + "purchaseorder_" + str(self.id) + ".pdf"
+    def create_pdf(self, html):
+        HTML(html).write_pdf(target=path.normpath('%s/%s/uploads/pdf/purchaseorders/purchaseorder-%s_%s.pdf'
+                                                  % (settings.PROJECT_ROOT, settings.MEDIA_URL, self.pk,
+                                                     datetime.now().strftime('%d%m%Y_%H%M%S'))))
 
     class Meta():
         verbose_name = _('Purchase Order')
@@ -505,7 +471,7 @@ class Quote(SalesContract):
         invoice.discount = self.discount
         invoice.customer = self.customer
         invoice.staff = self.staff
-        invoice.status = 'C'
+        invoice.status = 10
         invoice.derived_from_quote = self
         invoice.currency = self.currency
         invoice.payableuntil = date.today() + timedelta(
@@ -546,54 +512,10 @@ class Quote(SalesContract):
         self.save()
         return purchase_order
 
-    def create_pdf(self, what_to_export):
-        xml_serializer = serializers.get_serializer("xml")
-        xml_serializer = xml_serializer()
-        out = open(settings.PDF_OUTPUT_ROOT + "quote_" + str(self.id) + ".xml", "w")
-        objects_to_serialize = list(Quote.objects.filter(id=self.id))
-        objects_to_serialize += list(SalesContract.objects.filter(id=self.id))
-        objects_to_serialize += list(Contact.objects.filter(id=self.customer.id))
-        # objects_to_serialize += list(Currency.objects.filter(id=self.currency.id))
-        objects_to_serialize += list(SalesContractPosition.objects.filter(contract=self.id))
-        for position in list(SalesContractPosition.objects.filter(contract=self.id)):
-            objects_to_serialize += list(Position.objects.filter(id=position.id))
-            objects_to_serialize += list(Product.objects.filter(id=position.product.id))
-            objects_to_serialize += list(Unit.objects.filter(id=position.unit.id))
-        objects_to_serialize += list(auth.models.User.objects.filter(id=self.staff.id))
-        user_extension = UserExtension.objects.filter(user=self.staff.id)
-        if len(user_extension) == 0:
-            raise Exception(_("During Quote PDF Export"))
-        phone_address = PhoneAddress.objects.filter(
-            userExtension=user_extension[0].id)
-        objects_to_serialize += list(user_extension)
-        objects_to_serialize += list(PhoneAddress.objects.filter(id=phone_address[0].id))
-        templateset = TemplateSet.objects.filter(id=user_extension[0].defaultTemplateSet.id)
-        if len(templateset) == 0:
-            raise Exception(_("During Quote PDF Export"))
-        objects_to_serialize += list(templateset)
-        objects_to_serialize += list(auth.models.User.objects.filter(id=self.lastmodifiedby.id))
-        objects_to_serialize += list(PostalAddress.objects.filter(person=self.customer.id))
-        for address in list(PostalAddress.objects.filter(person=self.customer.id)):
-            objects_to_serialize += list(PostalAddress.objects.filter(id=address.id))
-        xml_serializer.serialize(objects_to_serialize, stream=out, indent=3)
-        out.close()
-        xml = etree.parse(settings.PDF_OUTPUT_ROOT + "quote_" + str(self.id) + ".xml")
-        rootelement = xml.getroot()
-        projectroot = etree.SubElement(rootelement, "projectroot")
-        projectroot.text = settings.PROJECT_ROOT
-        xml.write(settings.PDF_OUTPUT_ROOT + "quote_" + str(self.id) + ".xml")
-        if what_to_export == "quote":
-            check_output(['/usr/bin/fop', '-c', user_extension[0].defaultTemplateSet.fopConfigurationFile.path, '-xml',
-                          settings.PDF_OUTPUT_ROOT + 'quote_' + str(self.id) + '.xml', '-xsl',
-                          user_extension[0].defaultTemplateSet.quoteXSLFile.xslfile.path, '-pdf',
-                          settings.PDF_OUTPUT_ROOT + 'quote_' + str(self.id) + '.pdf'], stderr=STDOUT)
-            return settings.PDF_OUTPUT_ROOT + "quote_" + str(self.id) + ".pdf"
-        else:
-            check_output(['/usr/bin/fop', '-c', user_extension[0].defaultTemplateSet.fopConfigurationFile.path, '-xml',
-                          settings.PDF_OUTPUT_ROOT + 'quote_' + str(self.id) + '.xml', '-xsl',
-                          user_extension[0].defaultTemplateSet.purchaseconfirmationXSLFile.xslfile.path, '-pdf',
-                          settings.PDF_OUTPUT_ROOT + 'purchaseconfirmation_' + str(self.id) + '.pdf'], stderr=STDOUT)
-            return settings.PDF_OUTPUT_ROOT + "purchaseconfirmation_" + str(self.id) + ".pdf"
+    def create_pdf(self, html):
+        HTML(string=html).write_pdf(target=path.normpath('%s/%s/uploads/pdf/quotes/quote-%s_%s.pdf'
+                                                  % (settings.PROJECT_ROOT, settings.MEDIA_URL, self.pk,
+                                                     datetime.now().strftime('%d%m%Y_%H%M%S'))))
 
     class Meta():
         verbose_name = _('Quote')
@@ -660,56 +582,10 @@ class Invoice(SalesContract):
     #     booking.lastmodifiedby = request.user
     #     booking.save()
 
-    def create_pdf(self, what_to_export):
-        xml_serializer = serializers.get_serializer("xml")
-        xml_serializer = xml_serializer()
-        out = open(settings.PDF_OUTPUT_ROOT + "invoice_" + str(self.id) + ".xml", "w")
-        objects_to_serialize = list(Invoice.objects.filter(id=self.id))
-        objects_to_serialize += list(SalesContract.objects.filter(id=self.id))
-        objects_to_serialize += list(Contact.objects.filter(id=self.customer.id))
-        # objects_to_serialize += list(Currency.objects.filter(id=self.currency.id))
-        objects_to_serialize += list(SalesContractPosition.objects.filter(contract=self.id))
-        for position in list(SalesContractPosition.objects.filter(contract=self.id)):
-            objects_to_serialize += list(Position.objects.filter(id=position.id))
-            objects_to_serialize += list(Product.objects.filter(id=position.product.id))
-            objects_to_serialize += list(Unit.objects.filter(id=position.unit.id))
-        objects_to_serialize += list(auth.models.User.objects.filter(id=self.staff.id))
-        user_extension = UserExtension.objects.filter(user=self.staff.id)
-        if len(user_extension) == 0:
-            raise Exception(_("During Invoice PDF Export"))
-        phone_address = PhoneAddress.objects.filter(
-            userExtension=user_extension[0].id)
-        objects_to_serialize += list(user_extension)
-        objects_to_serialize += list(PhoneAddress.objects.filter(id=phone_address[0].id))
-        templateset = TemplateSet.objects.filter(id=user_extension[0].defaultTemplateSet.id)
-        if len(templateset) == 0:
-            raise Exception(_("During Invoice PDF Export"))
-        objects_to_serialize += list(templateset)
-        objects_to_serialize += list(auth.models.User.objects.filter(id=self.lastmodifiedby.id))
-        objects_to_serialize += list(PostalAddress.objects.filter(person=self.customer.id))
-        for address in list(PostalAddress.objects.filter(person=self.customer.id)):
-            objects_to_serialize += list(PostalAddress.objects.filter(id=address.id))
-        xml_serializer.serialize(objects_to_serialize, stream=out, indent=3)
-        out.close()
-        xml = etree.parse(settings.PDF_OUTPUT_ROOT + "invoice_" + str(self.id) + ".xml")
-        rootelement = xml.getroot()
-        projectroot = etree.SubElement(rootelement, "projectroot")
-        projectroot.text = settings.PROJECT_ROOT
-        xml.write(settings.PDF_OUTPUT_ROOT + "invoice_" + str(self.id) + ".xml")
-        if what_to_export == "invoice":
-            check_output(['/usr/bin/fop', '-c', user_extension[0].defaultTemplateSet.fopConfigurationFile.path, '-xml',
-                          settings.PDF_OUTPUT_ROOT + 'invoice_' + str(self.id) + '.xml', '-xsl',
-                          user_extension[0].defaultTemplateSet.invoiceXSLFile.xslfile.path, '-pdf',
-                          settings.PDF_OUTPUT_ROOT + 'invoice_' + str(self.id) + '.pdf'], stderr=STDOUT)
-            return settings.PDF_OUTPUT_ROOT + "invoice_" + str(self.id) + ".pdf"
-        else:
-            check_output(['/usr/bin/fop', '-c', user_extension[0].defaultTemplateSet.fopConfigurationFile.path, '-xml',
-                          settings.PDF_OUTPUT_ROOT + 'invoice_' + str(self.id) + '.xml', '-xsl',
-                          user_extension[0].defaultTemplateSet.deilveryorderXSLFile.xslfile.path, '-pdf',
-                          settings.PDF_OUTPUT_ROOT + 'deliveryorder_' + str(self.id) + '.pdf'], stderr=STDOUT)
-            return settings.PDF_OUTPUT_ROOT + "deliveryorder_" + str(self.id) + ".pdf"
-
-            # TODO: def registerPayment(self, amount, register_payment_in_accounting):
+    def create_pdf(self, html):
+        HTML(html).write_pdf(target=path.normpath('%s/%s/uploads/pdf/invoices/invoice-%s_%s.pdf'
+                                                  % (settings.PROJECT_ROOT, settings.MEDIA_URL, self.pk,
+                                                     datetime.now().strftime('%d%m%Y_%H%M%S'))))
 
     class Meta():
         verbose_name = _('Invoice')

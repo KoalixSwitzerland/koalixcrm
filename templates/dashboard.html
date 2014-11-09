@@ -63,7 +63,7 @@
                                               <span class="task-title-sp pull-left">
                                                   <a href="{% url 'contract_detail' contract.pk %}">{{ contract }}</a>
                                               </span>
-                                              <span class="badge bg-danger pull-right">{{ contract.get_state }}</span>
+                                              <span class="pull-right label {{ contract.get_state_class }}">{{ contract.get_state }}</span>
                                            </div>
                                        </li><br>
                                        {% endfor %}
