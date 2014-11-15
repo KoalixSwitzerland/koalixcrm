@@ -40,9 +40,9 @@ Koalix CRM provides following benefits:
 
     Koalix CRM provides an beautiful and easy to use graphical user interface with a lot of nice features
     
--   **Easily create your own templates for PDF export:**
+-   **Create your own templates for PDF export:**
 
-    You can easily create your own templates since it's just HTML 
+    You can easily create your own templates since it's just HTML/CSS
         
 -   **Excellent workflow:**
 

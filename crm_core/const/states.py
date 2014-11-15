@@ -30,7 +30,7 @@ class QuoteStatesEnum(choices.Choices):
     Success = choices.Choice(20, _('Success'))
     Quote_created = choices.Choice(30, _('Quote created'))
     Quote_sent = choices.Choice(40, _('Quote sent'))
-    Purchaseorder_created = choices.Choice(50, _('Purchase order created'))
+    Purchaseorder_created = choices.Choice(50, _('Purchaseorder created'))
     First_reminder_sent = choices.Choice(60, _('First reminder sent'))
     Second_reminder_sent = choices.Choice(70, _('Second reminder sent'))
     Deleted = choices.Choice(80, _('Deleted'))

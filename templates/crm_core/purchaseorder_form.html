@@ -6,7 +6,7 @@
 
 {% block breadcrumb_menu %}
     <li class="active"><a href="{% url 'purchaseorder_list' %}">{% trans "Purchase Orders" %}</a></li>
-    <li class="active">{% if purchaseorder %}{% trans "Edit purchase order" %}{% else %}{% trans "Create purchase order" %}{% endif%}</li>
+    <li class="active">{% if purchaseorder %}{% trans "Edit purchase order" %}{% else %}{% trans "Create Purchase Order" %}{% endif%}</li>
 {% endblock %}
 
 {% block rightbar %}
@@ -15,7 +15,7 @@
 {% block main %}
     <div class="form-panel" style="margin: 30px">
     <h4 class="mb"><i class="fa fa-angle-right"></i>
-    {% if purchaseorder %}{% trans "Edit purchase order" %}{% else %}{% trans "Create purchase order" %}{% endif%}</h4>
+    {% if purchaseorder %}{% trans "Edit purchase order" %}{% else %}{% trans "Create Purchase Order" %}{% endif%}</h4>
     <form method="POST" action="." class="form form-horizontal" style="margin: 30px;">
     {% csrf_token %}
 

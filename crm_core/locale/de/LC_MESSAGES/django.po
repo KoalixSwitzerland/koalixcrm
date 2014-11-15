@@ -1,9 +1,3 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
@@ -17,20 +11,129 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "Advanced (not editable)"
-msgstr "Zusatzinformationen (nicht veränderbar)"
+# #################
+# ##   GENERIC   ##
+# #################
 
-msgid "PurchaseOrder created"
+msgid "Create PDF"
+msgstr "Erzeuge PDF"
+
+msgid "Description"
+msgstr "Beschreibung"
+
+msgid "Created at"
+msgstr "Erstelldatum"
+
+msgid "Last modified"
+msgstr "Zuletzt geändert"
+
+msgid "Last modified by"
+msgstr "Zuletzt geändert durch"
+
+msgid "Everything"
+msgstr "Alles"
+
+msgid "open"
+msgstr "offen"
+
+msgid "Ordered"
+msgstr "Bestellt"
+
+msgid "Delayed"
+msgstr "Verspätet"
+
+msgid "Delivered"
+msgstr "Ausgeliefert"
+
+msgid "Filters"
+msgstr "Filter"
+
+msgid "Filter"
+msgstr "Filter"
+
+msgid "sign in now"
+msgstr "Jetzt Einloggen"
+
+msgid "Purpose"
+msgstr "Verwendungszweck"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Deleted"
+msgstr "Gelöscht"
+
+msgid "Success"
+msgstr "Erfolg"
+
+msgid "Basics"
+msgstr "Grundlagen"
+
+msgid "Title"
+msgstr "Titel"
+
+msgid "Is member of"
+msgstr "Ist Mitglied von"
+
+msgid "Staff"
+msgstr "Mitarbeiter"
+
+msgid "External Reference"
+msgstr "Externe Referenz"
+
+msgid "Valid Until"
+msgstr "Gültig bis"
+
+msgid "Payed"
+msgstr "Bezahlt"
+
+msgid "Valid from"
+msgstr "Gültig vom"
+
+msgid "Valid to"
+msgstr "Gültig bis"
+
+msgid "Quantity"
+msgstr "Anzahl"
+
+
+# ###############################
+# ##   PURCHASEORDER RELATED   ##
+# ###############################
+
+msgid "Purchaseorder created"
 msgstr "Bestellung erstellt"
 
 msgid "Create Purchaseorder"
 msgstr "Bestellung erstellen"
 
+
+# #######################
+# ##   QUOTE REALTED   ##
+# #######################
+
 msgid "Quote created"
-msgstr "Offerte erstellt"
+msgstr "Angebot erstellt"
 
 msgid "Create Quote"
-msgstr "Offerte erstellen"
+msgstr "Angebot erstellen"
+
+msgid "Create a new quote"
+msgstr "Neues Angebot hinzufügen"
+
+msgid "Quote"
+msgstr "Angebot"
+
+msgid "Quotes"
+msgstr "Angebote"
+
+msgid "Quote sent"
+msgstr "Angebot verschickt"
+
+
+# #########################
+# ##   INVOICE RELATED   ##
+# #########################
 
 msgid "Invoice created"
 msgstr "Rechnung erstellt"
@@ -38,62 +141,90 @@ msgstr "Rechnung erstellt"
 msgid "Create Invoice"
 msgstr "Rechnung erstellen"
 
-msgid "Recalculate Prices"
-msgstr "Berechne Preis neu"
+msgid "Invoice"
+msgstr "Rechnung"
 
-msgid "Create PDF of Invoice"
-msgstr "Erzeuge ein PDF der Rechnung"
+msgid "Invoices"
+msgstr "Rechnungen"
 
-msgid "Create PDF of Delivery Order"
-msgstr "Erzeuge ein PDF des Lieferscheins"
+msgid "Create a new invoice"
+msgstr "Neue Rechnung hinzufügen"
 
-msgid "Successfully registered Invoice in the Accounting"
-msgstr "Die Rechnung ist erfolgreich in der Buchhaltung registriert worden"
+msgid "Create invoice"
+msgstr "Rechnung erstellen"
 
-msgid "Register Invoice in Accounting"
-msgstr "Registriere Rechnung in Buchhaltung"
+msgid "First reminder sent"
+msgstr "Erste Erinnerung geschickt"
 
-msgid "Successfully unregistered Invoice in the Accounting"
-msgstr "Die Rechnung wurde erfolgreich aus der Buchhaltung entfernt"
+msgid "Second reminder sent"
+msgstr "Zweite Erinnerung geschickt"
 
-msgid "Unregister Invoice in Accounting"
-msgstr "Entferne Rechnung aus der Buchhaltung"
+msgid "Invoice registered"
+msgstr "Rechnung registriert"
 
-msgid "Successfully registered Payment in the Accounting"
-msgstr "Die Zahlung wurde erfolgreich eingebucht"
+msgid "Invoice payed"
+msgstr "Rechnung bezahlt"
 
-msgid "Register Payment in Accounting"
-msgstr "Buche Zahlung des Kunden in der Buchhaltung"
+msgid "Days to Payment Date"
+msgstr "Tage bis zur Fälligkeit"
 
-msgid "Successfully recalculated Prices"
-msgstr "Preisberechnung erfolgreich"
+msgid "Customer Billing Cycle"
+msgstr "Zahlungsbedingungen"
 
-msgid "Unsuccessfull in updating the Prices "
-msgstr "Preisberechnung fehlgeschlagen"
+msgid "To pay until"
+msgstr "Zahlbar bis"
 
-msgid "Create PDF of Quote"
-msgstr "Erzeuge ein PDF des Angebots"
+msgid "Invoice sent"
+msgstr "Rechung geschickt"
 
-msgid "Create PDF of Purchase Confirmation"
-msgstr "Erzeuge ein PDF der Verkaufsbestätigung"
+msgid "Customer cant pay"
+msgstr "Kunde kann nicht zahlen"
 
-msgid "Create PDF of Purchase Order"
-msgstr "Erzeuge ein PDF der Bestellung"
+
+# ##########################
+# ##   CONTRACT RELATED   ##
+# ##########################
 
 msgid "Create Contract"
-msgstr "Erzeuge Auftrag"
+msgstr "Auftrag erstellen"
 
-msgid "Description"
-msgstr "Beschreibung"
+msgid "Contract"
+msgstr "Auftrag"
 
-msgid "Displayed Name After Price In The Position"
-msgstr "Angezeigt nach dem Preis in der Position"
+msgid "Contracts"
+msgstr "Aufträge"
 
-msgid "Rounding"
-msgstr "Rundung"
+msgid "Create a new contract"
+msgstr "Neuen Auftrag hinzufügen"
 
-msgid "Currency"
-msgstr "Währung"
+msgid "Position"
+msgstr "Position"
+
+msgid "Positions"
+msgstr "Positionen"
+
+msgid "from Contract"
+msgstr "vom Auftrag"
+
+msgid "Position Number"
+msgstr "Positionsnummer"
+
+msgid "Salescontract Position"
+msgstr "Verkaufsauftrag Position"
+
+msgid "Salescontract Positions"
+msgstr "Verkaufsaufträge Positionen"
+
+msgid "Order Management"
+msgstr "Auftragsverwaltung"
+
+msgid "Open Contracts"
+msgstr "Offene Aufträge"
+
+
+# #########################
+# ##   CONTACT RELATED   ##
+# #########################
 
 msgid "Prefix"
 msgstr "Anrede"
@@ -104,17 +235,67 @@ msgstr "Name"
 msgid "Prename"
 msgstr "Vorname"
 
+msgid "Customer"
+msgstr "Kunde"
+
+msgid "Customers"
+msgstr "Kunden"
+
+msgid "Create customer"
+msgstr "Kunde erstellen"
+
+msgid "Create a new customer"
+msgstr "Neuen Kunde hinzufügen"
+
+msgid "Supplier"
+msgstr "Lieferant"
+
+msgid "Suppliers"
+msgstr "Lieferanten"
+
+msgid "Default Supplier"
+msgstr "Standard Lieferant"
+
+msgid "Create supplier"
+msgstr "Lieferant erstellen"
+
+msgid "Create a new supplier"
+msgstr "Neuen Lieferanten hinzufügen"
+
+msgid "Customer Group"
+msgstr "Kundengruppe"
+
+msgid "Customer Groups"
+msgstr "Kundengruppen"
+
+msgid "Create a new customer group"
+msgstr "Neue Kundengruppe hinzufügen"
+
+msgid "Create customer group"
+msgstr "Kundengruppe erstellen"
+
+msgid "Factor between From and To Customer Group"
+msgstr "Prismultiplikator zwischen der einen und der anderen Kundengruppe"
+
+msgid "Customer Group Price Transform"
+msgstr "Kundengruppe Preisumrechnung"
+
+msgid "Customer Group Price Transforms"
+msgstr "Kundengruppen Preisumrechnungen"
+
+msgid "Offers direct Shipment to Customer"
+msgstr "Direkte Lieferung zum Kunden möglich"
+
+
+# #########################
+# ##   ADDRESS RELATED   ##
+# #########################
+
 msgid "Addressline 1"
 msgstr "Adresszeile 1"
 
 msgid "Addressline 2"
 msgstr "Adresszeile 2"
-
-msgid "Addressline 3"
-msgstr "Adresszeile 3"
-
-msgid "Addressline 4"
-msgstr "Adresszeile 4"
 
 msgid "Zipcode"
 msgstr "PLZ"
@@ -140,300 +321,6 @@ msgstr "Telefonnummer"
 msgid "Email Address"
 msgstr "Email Adresse"
 
-msgid "Created at"
-msgstr "Erstelldatum"
-
-msgid "Last modified"
-msgstr "Zuletzt geändert"
-
-msgid "Last modified by"
-msgstr "Zuletzt geändert durch"
-
-msgid "Contact"
-msgstr "Kontakt"
-
-msgid "Days To Payment Date"
-msgstr "Tage bis zur Fälligkeit"
-
-msgid "Customer Billing Cycle"
-msgstr "Zahlungsbedingungen"
-
-msgid "Customer Group"
-msgstr "Kundengruppe"
-
-msgid "Customer Groups"
-msgstr "Kundengruppen"
-
-msgid "Default Billing Cycle"
-msgstr "Standard Zahlungsbedingung"
-
-msgid "Is member of"
-msgstr "Ist Mitglied von"
-
-msgid "Customer"
-msgstr "Kunde"
-
-msgid "Customers"
-msgstr "Kunden"
-
-msgid "Offers Shipment to Customer"
-msgstr ""
-
-msgid "Supplier"
-msgstr "Lieferant"
-
-msgid "Suppliers"
-msgstr "Lieferanten"
-
-msgid "Staff"
-msgstr "Mitarbeiter"
-
-msgid "Default Customer"
-msgstr "Kunde"
-
-msgid "Default Supplier"
-msgstr "Lieferant"
-
-msgid "Default Currency"
-msgstr "Währung"
-
-msgid "Contract"
-msgstr "Auftrag"
-
-msgid "Contracts"
-msgstr "Aufträge"
-
-msgid "External Reference"
-msgstr "Externe Referenz"
-
-msgid "Last Pricing Date"
-msgstr "Datum der letzen Preisberechnung"
-
-msgid "Last Calculted Price With Tax"
-msgstr "Zuletzt berechneter Preis mit Steuer"
-
-msgid "Last Calculted Tax"
-msgstr "Zuletzt berechnete Steuer"
-
-msgid "During PurchaseOrder PDF Export"
-msgstr "Bestellung erstellt"
-
-msgid "Purchase Order"
-msgstr "Bestellung"
-
-msgid "from Contract"
-msgstr "vom Auftrag"
-
-msgid "Discount"
-msgstr "Rabatt"
-
-msgid "Sales Contract"
-msgstr "Verkaufsauftrag"
-
-msgid "Sales Contracts"
-msgstr "Verkaufsaufträge"
-
-msgid "Valid until"
-msgstr "Gültig bis"
-
-msgid "Status"
-msgstr "Status"
-
-msgid "During Quote PDF Export"
-msgstr ""
-
-msgid "Quote"
-msgstr "Angebot"
-
-msgid "Quotes"
-msgstr "Angebote"
-
-msgid "To pay until"
-msgstr "Zahlbar bis"
-
-msgid "Payment Bank Reference"
-msgstr "Zahlungsreferenz der Bank"
-
-msgid "During Invoice PDF Export"
-msgstr ""
-
-msgid "Invoice"
-msgstr "Rechnung"
-
-msgid "Invoices"
-msgstr "Rechnungen"
-
-msgid "Displayed Name After Quantity In The Position"
-msgstr "Angezeigt nach der Anzahl in der Position"
-
-msgid "Is A Fraction Of"
-msgstr "Ist eine Untereinheit von"
-
-msgid "Factor Between This And Next Higher Unit"
-msgstr "Multiplikator zwischen dieser und der nächst höheren Einheit"
-
-msgid "Unit"
-msgstr "Masseinheit"
-
-msgid "Units"
-msgstr "Masseinheiten"
-
-msgid "Taxrate in Percentage"
-msgstr "Steuersatz in Prozent"
-
-msgid "Taxname"
-msgstr "Name der Steuer"
-
-msgid "Activa Account"
-msgstr "Aktiv Konto"
-
-msgid "Passiva Account"
-msgstr "Passiv Konto"
-
-msgid "Tax"
-msgstr "Steuer"
-
-msgid "Taxes"
-msgstr "Steuern"
-
-msgid "Title"
-msgstr "Titel"
-
-msgid "Product Number"
-msgstr "Produktnummer"
-
-msgid "Accounting Product Categorie"
-msgstr "Produktkategorie"
-
-msgid "Product"
-msgstr "Produkt"
-
-msgid "Products"
-msgstr "Produkte"
-
-msgid "There is no Price for this product"
-msgstr "Es existiert kein Preis für dieses Produkt"
-
-msgid "that matches the date"
-msgstr "welches übereinstimmt mit Datum"
-
-msgid "customer"
-msgstr "Kunde"
-
-msgid " and unit"
-msgstr "und Einheit"
-
-msgid "From Unit"
-msgstr "Von Masseinheit"
-
-msgid "To Unit"
-msgstr "Zu Masseinheit"
-
-msgid "Factor between From and To Unit"
-msgstr "Multiplikator zwischen der einen und der anderen Einheit"
-
-msgid "Unit Transfrom"
-msgstr "Einheiten Umrechnung"
-
-msgid "Unit Transfroms"
-msgstr "Einheiten Umrechnungen"
-
-msgid "Factor between From and To Customer Group"
-msgstr "Prismultiplikator zwischen der einen und der anderen Kundengruppe"
-
-msgid "Customer Group Price Transfrom"
-msgstr "Kundengruppe Preisumrechnung"
-
-msgid "Customer Group Price Transfroms"
-msgstr "Kundengruppen Preisumrechnungen"
-
-msgid "Price Per Unit"
-msgstr "Preis pro Einheit"
-
-msgid "Valid from"
-msgstr "Gültig vom"
-
-msgid "Price"
-msgstr "Preis"
-
-msgid "Prices"
-msgstr "Preise"
-
-msgid "Position Number"
-msgstr "Positionsnummer"
-
-msgid "Quantity"
-msgstr "Anzahl"
-
-msgid "Shipment on"
-msgstr "Verschickt am"
-
-msgid "Shipment Supplier"
-msgstr "Versandunternehmen"
-
-msgid "Shipment ID"
-msgstr "Lieferungs ID"
-
-msgid "Overwrite Product Price"
-msgstr "Überschreibe Produkt Preis"
-
-msgid "Last Calculted Price"
-msgstr "Zuletzt berechneter Preis"
-
-msgid "Position"
-msgstr "Position"
-
-msgid "Positions"
-msgstr "Positionen"
-
-msgid "Salescontract Position"
-msgstr "Verkaufsauftrag Position"
-
-msgid "Salescontract Positions"
-msgstr "Verkaufsaufträge Positionen"
-
-msgid "Purchaseorder Position"
-msgstr "Bestellung Position"
-
-msgid "Purchaseorder Positions"
-msgstr "Bestellung Positionen"
-
-msgid "Purpose"
-msgstr "Verwendungszweck"
-
-msgid "Phone Address For Contact"
-msgstr "Telefonnummer für Kontakte"
-
-msgid "Email Address For Contact"
-msgstr "Email Adresse für Kontakte"
-
-msgid "Postal Address For Contact"
-msgstr "Postadresse für Kontakte"
-
-msgid "Postal Address For Contracts"
-msgstr "Postadresse für Aufträge"
-
-msgid "Phone Address For Contracts"
-msgstr "Telefonnummer für Aufträge"
-
-msgid "Email Address For Contracts"
-msgstr "Email Adresse für Aufträge"
-
-msgid "Test"
-msgstr "Test"
-
-msgid "Company"
-msgstr "Firma"
-
-msgid "Mrs"
-msgstr "Frau"
-
-msgid "Mr"
-msgstr "Herr"
-
-msgid "Ms"
-msgstr "Frau"
-
 msgid "Delivery Address"
 msgstr "Versand Addresse"
 
@@ -455,115 +342,51 @@ msgstr "Mobil Privat"
 msgid "Mobile Business"
 msgstr "Mobil Geschäftlich"
 
-msgid "Payed"
-msgstr "Bezahlt"
+msgid "Company"
+msgstr "Firma"
 
-msgid "Invoice sent"
-msgstr "Rechung geschickt"
+msgid "Mrs"
+msgstr "Frau"
 
-msgid "First reminder sent"
-msgstr "Erste Erinnerung geschickt"
+msgid "Mr"
+msgstr "Herr"
 
-msgid "Second reminder sent"
-msgstr "Zweite Erinnerung geschickt"
+msgid "Ms"
+msgstr " "
 
-msgid "Customer cant pay"
-msgstr "Kunde kann nicht zahlen"
 
-msgid "Deleted"
-msgstr "Gelöscht"
+# #########################
+# ##   PRODUCT RELATED   ##
+# #########################
 
-msgid "Success"
-msgstr "Erfolg"
+msgid "Product Number"
+msgstr "Produktnummer"
 
-msgid "Quote sent"
-msgstr "Angebot verschickt"
+msgid "Product Category"
+msgstr "Produktkategorie"
 
-msgid "Ordered"
-msgstr "Bestellt"
+msgid "Product"
+msgstr "Produkt"
 
-msgid "Delayed"
-msgstr "Verspätet"
+msgid "Products"
+msgstr "Produkte"
 
-msgid "Delivered"
-msgstr "Ausgeliefert"
+msgid "Create a new product"
+msgstr "Neues Produkt hinzufügen"
 
-msgid "Invoice registered"
-msgstr "Rechnung registriert"
+msgid "Create product"
+msgstr "Produkt erstellen"
 
-msgid "Invoice payed"
-msgstr "Rechnung bezahlt"
+msgid "Overwrite Product Price"
+msgstr "Überschreibe Produkt Preis"
 
-msgid "John Smit, Sample Company, 8976 Smallville"
-msgstr ""
 
-msgid ""
-"According to your wishes the contract consists of the following positions:"
-msgstr "Gemäss ihren Wünschen besteht der Auftrag aus folgenden Positionen"
+# #############################
+# ##   TEMPLATESET RELATED   ##
+# #############################
 
-msgid ""
-"Thank you for your interest in our company \n"
-" Best regards"
-msgstr ""
-"Vielen Dank für das Interesse an unserem Unternehmen \n"
-"Freundliche Grüsse"
-
-msgid "We would like to order the following positions:"
-msgstr "Wir möchten gerne folgende Positionen bestellen"
-
-msgid "Best regards"
-msgstr "Freundliche Grüsse"
-
-msgid "Sample Company"
-msgstr "Beispiel Firma"
-
-msgid "Sample Address"
-msgstr "Beispiel Adresse"
-
-msgid "Basics"
-msgstr "Grundlagen"
-
-msgid "Purpose"
-msgstr "Verwendungszweck"
-
-msgid "Title"
-msgstr "Titel"
-
-msgid "XSL File"
-msgstr "XSL Datei"
-
-msgid "Djang User Extention"
-msgstr "Django Benutzer Erweiterung"
-
-msgid "XSL Files"
-msgstr "XSL Dateien"
-
-msgid "User Extension"
-msgstr "Benutzer Erweiterung"
-
-msgid "User Extensions"
-msgstr "Benutzer Erweiterungen"
-
-msgid "XSL File for Invoice"
-msgstr "XSL Datei für die Rechnung"
-
-msgid "XSL File for Quote"
-msgstr "XSL Datei für das Angebot"
-
-msgid "XSL File for Purchaseorder"
-msgstr "XSL Datei für die Kaufsbestätigung"
-
-msgid "XSL File for Deilvery Order"
-msgstr "XSL Datei für den Lieferschein"
-
-msgid "XSL File for Profit Loss Statement"
-msgstr "XSL Datei für die Erfolgsrechung"
-
-msgid "XSL File for Balancesheet"
-msgstr "XSL Datei für die Billanz"
-
-msgid "Logo for the PDF generation"
-msgstr "Logo für die PDF's"
+msgid "Logo"
+msgstr "Logo"
 
 msgid "Footer Text On Salesorders"
 msgstr "Grussfromel für die Verkaufsaufträge"
@@ -583,26 +406,85 @@ msgstr "Vorlagenset"
 msgid "Templatesets"
 msgstr "Vorlagensets"
 
-msgid "Private"
-msgstr "Privat"
+msgid "XSL File"
+msgstr "XSL Datei"
 
-msgid "Business"
-msgstr "Geschäftlich"
+msgid "XSL Files"
+msgstr "XSL Dateien"
 
-msgid "Mobile Private"
-msgstr "Privat Mobiltelefon"
+msgid "User Extension"
+msgstr "Benutzer Erweiterung"
 
-msgid "Mobile Business"
-msgstr "Geschäftliches Mobiltelefon"
+msgid "User Extensions"
+msgstr "Benutzer Erweiterungen"
 
-msgid "Customers"
-msgstr "Kunden"
 
-msgid "Suppliers"
-msgstr "Lieferanten"
+# #######################
+# ##   MONEY RELATED   ##
+# #######################
 
-msgid "Currencies"
-msgstr "Währungen"
+msgid "Price"
+msgstr "Preis"
+
+msgid "Prices"
+msgstr "Preise"
+
+msgid "Default Currency"
+msgstr "Standard Währung"
+
+msgid "Currency"
+msgstr "Währung"
+
+msgid "Payable until"
+msgstr "Zahlbar bis"
+
+msgid "Tax"
+msgstr "Steuer"
+
+msgid "Taxes"
+msgstr "Steuern"
+
+msgid "Price Per Unit"
+msgstr "Preis pro Einheit"
+
+msgid "Last Pricing Date"
+msgstr "Datum der letzen Preisberechnung"
+
+msgid "Last Calculated Price"
+msgstr "Zuletzt berechneter Preis"
+
+msgid "Last Calculated Price With Tax"
+msgstr "Zuletzt berechneter Preis mit Steuer"
+
+msgid "Last Calculated Tax"
+msgstr "Zuletzt berechnete Steuer"
+
+msgid "Taxrate in Percentage"
+msgstr "Steuersatz in Prozent"
+
+msgid "Taxname"
+msgstr "Name der Steuer"
+
+msgid "Discount"
+msgstr "Rabatt"
+
+msgid "Billing Cycle"
+msgstr "Zahlungsfrist"
+
+msgid "Billing Cycles"
+msgstr "Zahlungsfristen"
+
+msgid "Create a new billing cycle"
+msgstr "Neue Zahlungsfrist hinzufügen"
+
+msgid "Create billing cycle"
+msgstr "Zahlungsfrist erstellen"
+
+msgid "Default Billing Cycle"
+msgstr "Standard Zahlungsbedingung"
+
+msgid "Payment Bank Reference"
+msgstr "Zahlungsreferenz der Bank"
 
 msgid "Tax Rates"
 msgstr "Steuersätze"
@@ -616,92 +498,112 @@ msgstr "Steuersatz erstellen"
 msgid "Create a new tax rate"
 msgstr "Neuen Steuersatz hinzufügen"
 
+msgid "Activa Account"
+msgstr "Aktiv Konto"
+
+msgid "Passiva Account"
+msgstr "Passiv Konto"
+
+
+# ######################
+# ##   UNIT RELATED   ##
+# ######################
+
+msgid "Unit"
+msgstr "Masseinheit"
+
+msgid "Units"
+msgstr "Masseinheiten"
+
+msgid "Is A Fraction Of"
+msgstr "Ist eine Untereinheit von"
+
+msgid "Factor Between This And Next Higher Unit"
+msgstr "Multiplikator zwischen dieser und der nächst höheren Einheit"
+
+msgid "Displayed Name After Quantity In The Position"
+msgstr "Angezeigt nach der Anzahl in der Position"
+
+msgid " and unit"
+msgstr "und Einheit"
+
+msgid "From Unit"
+msgstr "Von Masseinheit"
+
+msgid "To Unit"
+msgstr "Zu Masseinheit"
+
+msgid "Factor between From and To Unit"
+msgstr "Multiplikator zwischen der einen und der anderen Einheit"
+
+msgid "Unit Transform"
+msgstr "Einheiten Umrechnung"
+
+msgid "Unit Transforms"
+msgstr "Einheiten Umrechnungen"
+
 msgid "Create unit"
 msgstr "Masseinheit erstellen"
 
 msgid "Create a new unit"
 msgstr "Neue Masseinheit hinzufügen"
 
-msgid "Create currency"
-msgstr "Währung erstellen"
-
-msgid "Create a new currency"
-msgstr "Neue Währung hinzufügen"
-
-msgid "Create a new product"
-msgstr "Neues Produkt hinzufügen"
-
-msgid "Create product"
-msgstr "Produkt erstellen"
-
-msgid "Create supplier"
-msgstr "Lieferant erstellen"
-
-msgid "Create a new supplier"
-msgstr "Neuen Lieferanten hinzufügen"
-
-msgid "Create customer"
-msgstr "Kunde erstellen"
-
-msgid "Create a new customer"
-msgstr "Neuen Kunde hinzufügen"
-
-msgid "Create a new purchase order"
-msgstr "Neue Bestellung hinzufügen"
-
 msgid "Shortname"
 msgstr "Kürzel"
 
-msgid "Billing Cycles"
-msgstr "Zahlungsfristen"
 
-msgid "Create a new billing cycle"
-msgstr "Neue Zahlungsfrist hinzufügen"
+# ##########################
+# ##   SHIPMENT RELATED   ##
+# ##########################
 
-msgid "Create billing cycle"
-msgstr "Zahlungsfrist erstellen"
+msgid "Shipment on"
+msgstr "Verschickt am"
+
+msgid "Shipment Supplier"
+msgstr "Versandunternehmen"
+
+msgid "Shipment ID"
+msgstr "Lieferungs ID"
+
+
+# ################################
+# ##   PURCHASE ORDER RELATED   ##
+# ################################
+
+msgid "Purchase Order"
+msgstr "Bestellung"
+
+msgid "Purchaseorder Position"
+msgstr "Bestellung Position"
+
+msgid "Purchaseorder Positions"
+msgstr "Bestellung Positionen"
 
 msgid "Purchase Orders"
 msgstr "Bestellungen"
 
-msgid "Order Management"
-msgstr "Auftragsverwaltung"
+msgid "Create a new purchaseorder"
+msgstr "Neue Bestellung hinzufügen"
 
-msgid "Create a new customer group"
-msgstr "Neue Kundengruppe hinzufügen"
+msgid "Create Purchase Order"
+msgstr "Bestellung erstellen"
 
-msgid "Create customer group"
-msgstr "Kundengruppe erstellen"
 
-msgid "Create a new contract"
-msgstr "Neuen Auftrag hinzufügen"
+# ###############################
+# ##   IMPORT/EXPORT RELATED   ##
+# ###############################
 
-msgid "Create contract"
-msgstr "Auftrag erstellen"
+msgid "Import / Export"
+msgstr ""
 
-msgid "Create a new invoice"
-msgstr "Neue Rechnung hinzufügen"
+msgid "Export as JSON"
+msgstr "Exportiere als JSON"
 
-msgid "Create invoice"
-msgstr "Rechnung erstellen"
+msgid "Export as XLS"
+msgstr "Exportiere als XLS"
 
-msgid "Create a new quote"
-msgstr "Neues Angebot hinzufügen"
+msgid "Export as XLSX"
+msgstr "Exportiere als XLSX"
 
-msgid "Create quote"
-msgstr "Angebot erstellen"
-
-msgid "Everything"
-msgstr "Alles"
-
-msgid "open"
-msgstr "offen"
-
-msgid "Filters"
-msgstr "Filter"
-
-msgid "Filter"
-msgstr "Filter"
-
-msgid "sign in now"
-msgstr "Jetzt Einloggen"
+msgid "Export as CSV"
+msgstr "Exportiere als CSV"

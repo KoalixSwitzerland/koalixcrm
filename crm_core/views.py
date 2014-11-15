@@ -425,14 +425,14 @@ class ListProducts(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = Product
     permission_required = 'crm_core.view_product'
     login_url = settings.LOGIN_URL
-    fields = ['item_number', 'item_title', 'item_description', 'item_unit', 'item_tax', 'item_category']
+    fields = ['product_number', 'item_title', 'item_description', 'item_unit', 'item_tax', 'item_category']
 
 
 class CreateProduct(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Product
     permission_required = 'crm_core.add_product'
     login_url = settings.LOGIN_URL
-    fields = ['item_number', 'item_title', 'item_description', 'item_unit', 'item_tax', 'item_category']
+    fields = ['product_number', 'item_title', 'item_description', 'item_unit', 'item_tax', 'item_category']
     success_url = reverse_lazy('product_list')
 
 
@@ -440,7 +440,7 @@ class EditProduct(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Product
     permission_required = 'crm_core.change_product'
     login_url = settings.LOGIN_URL
-    fields = ['item_number', 'item_title', 'item_description', 'item_unit', 'item_tax', 'item_category']
+    fields = ['product_number', 'item_title', 'item_description', 'item_unit', 'item_tax', 'item_category']
     success_url = reverse_lazy('product_list')
 
 

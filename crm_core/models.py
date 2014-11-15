@@ -46,7 +46,7 @@ class Contact(models.Model):
 
 class CustomerBillingCycle(models.Model):
     name = models.CharField(max_length=300, verbose_name=_("Name"))
-    days_to_payment = models.IntegerField(verbose_name=_("Days To Payment Date"))
+    days_to_payment = models.IntegerField(verbose_name=_("Days to Payment Date"))
 
     class Meta():
         verbose_name = _('Customer Billing Cycle')
@@ -387,8 +387,8 @@ class PurchaseOrder(models.Model):
     description = models.CharField(verbose_name=_("Description"), max_length=100, blank=True, null=True)
     last_pricing_date = models.DateField(verbose_name=_("Last Pricing Date"), blank=True, null=True)
     last_calculated_price = models.DecimalField(max_digits=17, decimal_places=2,
-                                                verbose_name=_("Last Calculted Price With Tax"), blank=True, null=True)
-    last_calculated_tax = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Tax"),
+                                                verbose_name=_("Last Calculated Price With Tax"), blank=True, null=True)
+    last_calculated_tax = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculated Tax"),
                                               blank=True, null=True)
     staff = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, blank=True,
                               verbose_name=_("Staff"), related_name="db_relpostaff", null=True)
@@ -463,8 +463,8 @@ class SalesContract(models.Model):
     description = models.CharField(verbose_name=_("Description"), max_length=100, blank=True, null=True)
     last_pricing_date = models.DateField(verbose_name=_("Last Pricing Date"), blank=True, null=True)
     last_calculated_price = models.DecimalField(max_digits=17, decimal_places=2,
-                                                verbose_name=_("Last Calculted Price With Tax"), blank=True, null=True)
-    last_calculated_tax = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Tax"),
+                                                verbose_name=_("Last Calculated Price With Tax"), blank=True, null=True)
+    last_calculated_tax = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculated Tax"),
                                               blank=True, null=True)
     customer = models.ForeignKey(Customer, verbose_name=_("Customer"))
     staff = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, blank=True,
@@ -782,8 +782,8 @@ class Product(Displayable, ProductItem):
 
 
 class UnitTransform(models.Model):
-    from_unit = models.ForeignKey(Unit, verbose_name=_("From Unit"), related_name="db_reltransfromfromunit")
-    to_unit = models.ForeignKey(Unit, verbose_name=_("To Unit"), related_name="db_reltransfromtounit")
+    from_unit = models.ForeignKey(Unit, verbose_name=_("From Unit"), related_name="db_reltransformfromunit")
+    to_unit = models.ForeignKey(Unit, verbose_name=_("To Unit"), related_name="db_reltransformtounit")
     product = models.ForeignKey(Product, verbose_name=_("Product"))
     factor = models.IntegerField(verbose_name=_("Factor between From and To Unit"), blank=True, null=True)
 
@@ -794,8 +794,8 @@ class UnitTransform(models.Model):
             return unit
 
     class Meta():
-        verbose_name = _('Unit Transfrom')
-        verbose_name_plural = _('Unit Transfroms')
+        verbose_name = _('Unit Transform')
+        verbose_name_plural = _('Unit Transforms')
 
     def __unicode__(self):
         return "From " + self.from_unit.shortname + " to " + self.to_unit.shortname
@@ -803,9 +803,9 @@ class UnitTransform(models.Model):
 
 class CustomerGroupTransform(models.Model):
     from_customer_group = models.ForeignKey(CustomerGroup, verbose_name=_("From Unit"),
-                                            related_name="db_reltransfromfromcustomergroup")
+                                            related_name="db_reltransformfromcustomergroup")
     to_customer_group = models.ForeignKey(CustomerGroup, verbose_name=_("To Unit"),
-                                          related_name="db_reltransfromtocustomergroup")
+                                          related_name="db_reltransformtocustomergroup")
     product = models.ForeignKey(Product, verbose_name=_("Product"))
     factor = models.IntegerField(verbose_name=_("Factor between From and To Customer Group"), blank=True, null=True)
 
@@ -819,8 +819,8 @@ class CustomerGroupTransform(models.Model):
         return "From " + self.from_customer_group.name + " to " + self.to_customer_group.name
 
     class Meta():
-        verbose_name = _('Customer Group Price Transfrom')
-        verbose_name_plural = _('Customer Group Price Transfroms')
+        verbose_name = _('Customer Group Price Transform')
+        verbose_name_plural = _('Customer Group Price Transforms')
 
 
 class Price(models.Model):
@@ -887,9 +887,9 @@ class Position(models.Model):
     position_price_per_unit = models.DecimalField(verbose_name=_("Price Per Unit"), max_digits=17, decimal_places=2,
                                                   blank=True, null=True)
     last_pricing_date = models.DateField(verbose_name=_("Last Pricing Date"), blank=True, null=True)
-    last_calculated_price = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Price"),
+    last_calculated_price = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculated Price"),
                                                 blank=True, null=True)
-    last_calculated_tax = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Tax"),
+    last_calculated_tax = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculated Tax"),
                                               blank=True, null=True)
 
     def recalculate_prices(self, pricing_date, customer, currency):
@@ -973,7 +973,7 @@ class TemplateSet(models.Model):
                                                        related_name="db_reltemplateprofitlossstatement")
     balancesheet_xsl_file = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Balancesheet"),
                                               related_name="db_reltemplatebalancesheet")
-    logo = FileBrowseField(verbose_name=_("Logo for the PDF generation"), blank=True, null=True, max_length=200)
+    logo = FileBrowseField(verbose_name=_("Logo"), blank=True, null=True, max_length=200)
     bankingaccountref = models.CharField(max_length=60, verbose_name=_("Reference to Banking Account"), blank=True,
                                          null=True)
     addresser = models.CharField(max_length=200, verbose_name=_("Addresser"), blank=True, null=True)
