@@ -24,6 +24,9 @@ Documentation status:
 Issue status:
     [![Stories in Ready](https://badge.waffle.io/tfroehlich82/koalixcrm.png?label=ready&title=Ready)](https://waffle.io/tfroehlich82/koalixcrm)
     [![Stories in progress](https://badge.waffle.io/tfroehlich82/koalixcrm.svg?label=in progress&title=in Progress)](http://waffle.io/tfroehlich82/koalixcrm)
+    
+Project trend:
+    [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/tfroehlich82/koalixcrm/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
 *****************************************************
 Note: This project is not yet open for production use
