@@ -47,10 +47,12 @@ def show_dashboard(request):
     productcount = Product.objects.all().count()
     opencontracts = []
     for invoice in Invoice.objects.all():
-        if invoice.state != InvoiceStatesEnum.Payed or invoice.state != InvoiceStatesEnum.Deleted:
+        if invoice.state != InvoiceStatesEnum.Payed or invoice.state != InvoiceStatesEnum.Deleted \
+                and not invoice in opencontracts:
             opencontracts.append(invoice.contract)
     for contract in Contract.objects.all():
-        opencontracts.append(contract)
+        if not contract in opencontracts:
+            opencontracts.append(contract)
     template = loader.get_template('dashboard.html')
     context = RequestContext(request, {
         'contractcount': contractcount,

@@ -9,8 +9,13 @@ class PostalAddressPurpose(choices.Choices):
     ContactAddress = choices.Choice('C', _('Contact Address'))
 
 
-class PhoneOrEmailAddressPurpose(choices.Choices):
+class PhoneAddressPurpose(choices.Choices):
     Private = choices.Choice('H', _('Private'))
     Business = choices.Choice('O', _('Business'))
     MobilePrivate = choices.Choice('P', _('Mobile Private'))
     MobileBusiness = choices.Choice('B', _('Mobile Business'))
+
+
+class EmailAddressPurpose(choices.Choices):
+    Private = choices.Choice('H', _('Private'))
+    Business = choices.Choice('O', _('Business'))

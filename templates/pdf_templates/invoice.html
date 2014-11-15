@@ -1,17 +1,30 @@
-<html>
-<head>
-    <style>
-        @page {
-            margin: 3cm 2cm;
-            padding-left: 1.5cm;
-            @bottom-right {
-                content: "Page " counter(page) " of " counter(pages)
-            }
-        }
-        h1 { -weasy-bookmark-level: none }
-    </style>
-</head>
-<body>
-{{ invoice }}
-</body>
-</html>
+{% extends 'pdf_templates/pdf_base.html' %}
+{% load i18n %}
+
+{% block title %}
+    {{ invoice }}
+{% endblock %}
+
+{% block customername %}
+    {{ invoice.customer|linebreaks }}
+{% endblock %}
+
+{% block customeraddress %}
+    {% with address=invoice.customer.get_quote_address %}
+    {{ address.addressline1|linebreaks }}
+    {{ address.addressline2|linebreaks }}
+    {{ address.zipcode }}&nbsp;{{ address.city }}
+    {% endwith %}
+{% endblock %}
+
+{% block customerphone %}
+    {% with address=invoice.customer.get_phone_address %}
+        <b>{% trans 'Phone' %}&nbsp;({{ address.get_purpose }}):</b>&nbsp;{{ address.phone }}
+    {% endwith %}
+{% endblock %}
+
+{% block customeremail %}
+    {% with address=invoice.customer.get_email_address %}
+        <b>{% trans 'Email' %}&nbsp;({{ address.get_purpose }}):</b>&nbsp;{{ address.email }}
+    {% endwith %}
+{% endblock %}

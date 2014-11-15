@@ -11,8 +11,9 @@ from mezzanine.core.models import Displayable
 from os import path
 from weasyprint import HTML, CSS
 from international.models import countries, currencies
+
 from const.postaladdressprefix import PostalAddressPrefix
-from const.purpose import PhoneOrEmailAddressPurpose, PostalAddressPurpose
+from const.purpose import PhoneAddressPurpose, PostalAddressPurpose, EmailAddressPurpose
 from const.states import InvoiceStatesEnum, PurchaseOrderStatesEnum, QuoteStatesEnum, InvoiceStatesLabelEnum, \
     QuoteStatesLabelEnum, PurchaseOrderStatesLabelEnum, ContractStatesEnum, ContractStatesLabelEnum
 # from accounting.models import Booking, Account, AccountingPeriod
@@ -90,12 +91,13 @@ class PostalAddress(models.Model):
             ('view_postaladdress', 'Can view postal address'),
         )
 
-    @property
     def get_purpose(self):
         return PostalAddressPurpose.choices[self.purpose]
 
     def __unicode__(self):
-        if self.addressline1 and self.zipcode and self.city:
+        if self.purpose and self.addressline1 and self.zipcode and self.city:
+            return '%s: %s, %s %s' % (self.get_purpose(), self.addressline1, self.zipcode, self.city)
+        elif self.addressline1 and self.zipcode and self.city:
             return '%s, %s %s' % (self.addressline1, self.zipcode, self.city)
         elif self.addressline1 and self.city:
             return '%s, %s' % (self.addressline1, self.city)
@@ -108,8 +110,8 @@ class PostalAddress(models.Model):
 
 class PhoneAddress(models.Model):
     phone = models.CharField(max_length=20, verbose_name=_("Phone Number"))
-    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PhoneOrEmailAddressPurpose.choices,
-                               default=PhoneOrEmailAddressPurpose.Private)
+    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PhoneAddressPurpose.choices,
+                               default=PhoneAddressPurpose.Private)
     person = models.ForeignKey(Contact, related_name='phonenumbers')
 
     class Meta():
@@ -119,18 +121,17 @@ class PhoneAddress(models.Model):
             ('view_phoneaddress', 'Can view phone address'),
         )
 
-    @property
     def get_purpose(self):
-        return PhoneOrEmailAddressPurpose.choices[self.purpose]
+        return PhoneAddressPurpose.choices[self.purpose]
 
     def __unicode__(self):
-        return "%s: %s" % (self.get_purpose, self.phone)
+        return "%s: %s" % (self.get_purpose(), self.phone)
 
 
 class EmailAddress(models.Model):
     email = models.EmailField(max_length=200, verbose_name=_("Email Address"))
-    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PhoneOrEmailAddressPurpose.choices,
-                               default=PhoneOrEmailAddressPurpose.Private)
+    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=EmailAddressPurpose.choices,
+                               default=EmailAddressPurpose.Private)
     person = models.ForeignKey(Contact, related_name='emailaddresses')
 
     class Meta():
@@ -140,12 +141,11 @@ class EmailAddress(models.Model):
             ('view_emailaddress', 'Can view email address'),
         )
 
-    @property
     def get_purpose(self):
-        return PhoneOrEmailAddressPurpose.choices[self.purpose]
+        return EmailAddressPurpose.choices[self.purpose]
 
     def __unicode__(self):
-        return "%s: %s" % (self.get_purpose, self.email)
+        return "%s: %s" % (self.get_purpose(), self.email)
 
 
 # ########################
@@ -182,6 +182,56 @@ class Customer(Displayable, Contact):
         contract.staff = request.user
         contract.save()
         return contract
+
+    def get_invoice_address(self):
+        for address in self.addresses.all():
+            if address.purpose == PostalAddressPurpose.BillingAddress:
+                return address
+            elif address.purpose == PostalAddressPurpose.DeliveryAddress:
+                return address
+            elif address.purpose == PostalAddressPurpose.ContactAddress:
+                return address
+        return "No Address"
+
+    def get_quote_address(self):
+        for address in self.addresses.all():
+            if address.purpose == PostalAddressPurpose.BillingAddress:
+                return address
+            elif address.purpose == PostalAddressPurpose.DeliveryAddress:
+                return address
+            elif address.purpose == PostalAddressPurpose.ContactAddress:
+                return address
+        return "No Address"
+
+    def get_contact_address(self):
+        for address in self.addresses.all():
+            if address.purpose == PostalAddressPurpose.ContactAddress:
+                return address
+            elif address.purpose == PostalAddressPurpose.BillingAddress:
+                return address
+            elif address.purpose == PostalAddressPurpose.DeliveryAddress:
+                return address
+        return "No Address"
+
+    def get_phone_address(self):
+        for pn in self.phonenumbers.all():
+            if pn.purpose == PhoneAddressPurpose.Business:
+                return pn
+            elif pn.purpose == PhoneAddressPurpose.MobileBusiness:
+                return pn
+            elif pn.purpose == PhoneAddressPurpose.Private:
+                return pn
+            elif pn.purpose == PhoneAddressPurpose.MobilePrivate:
+                return pn
+        return "No Phone"
+
+    def get_email_address(self):
+        for pn in self.phonenumbers.all():
+            if pn.purpose == PhoneAddressPurpose.Business:
+                return pn
+            elif pn.purpose == PhoneAddressPurpose.Private:
+                return pn
+        return "No Phone"
 
     def create_invoice(self, request):
         contract = self.create_contract(request)
@@ -298,6 +348,7 @@ class Contract(models.Model):
     def create_purchase_order(self):
         purchaseorder = PurchaseOrder()
         purchaseorder.contract = self
+        purchaseorder.customer = self.default_customer
         purchaseorder.description = self.description
         purchaseorder.discount = 0
         purchaseorder.currency = self.default_currency
@@ -310,15 +361,12 @@ class Contract(models.Model):
         self.save()
         return purchaseorder
 
-    @property
     def get_name(self):
         return _('Contract') + ' #' + str(self.id)
 
-    @property
     def get_state(self):
         return ContractStatesEnum.choices[self.state]
 
-    @property
     def get_state_class(self):
         return ContractStatesLabelEnum.choices[self.state]
 
@@ -327,12 +375,13 @@ class Contract(models.Model):
         return url
 
     def __unicode__(self):
-        return self.get_name
+        return self.get_name()
 
 
 class PurchaseOrder(models.Model):
     state = FSMIntegerField(default=PurchaseOrderStatesEnum.New, choices=PurchaseOrderStatesEnum.choices)
     contract = models.ForeignKey(Contract, verbose_name=_("Contract"), related_name='purchaseorder')
+    customer = models.ForeignKey(Customer, verbose_name=_("Customer"))
     external_reference = models.CharField(verbose_name=_("External Reference"), max_length=100, blank=True, null=True)
     supplier = models.ForeignKey(Supplier, verbose_name=_("Supplier"), blank=True, null=True)
     description = models.CharField(verbose_name=_("Description"), max_length=100, blank=True, null=True)
@@ -397,11 +446,9 @@ class PurchaseOrder(models.Model):
             ('view_purchaseorder', 'Can view purchase orders'),
         )
 
-    @property
     def get_state(self):
         return PurchaseOrderStatesEnum.choices[self.state]
 
-    @property
     def get_state_class(self):
         return PurchaseOrderStatesLabelEnum.choices[self.state]
 
@@ -524,11 +571,9 @@ class Quote(SalesContract):
             ('view_quote', 'Can view quotes'),
         )
 
-    @property
     def get_state(self):
         return QuoteStatesEnum.choices[self.state]
 
-    @property
     def get_state_class(self):
         return QuoteStatesLabelEnum.choices[self.state]
 
@@ -594,11 +639,9 @@ class Invoice(SalesContract):
             ('view_invoice', 'Can view invoices'),
         )
 
-    @property
     def get_state(self):
         return InvoiceStatesEnum.choices[self.state]
 
-    @property
     def get_state_class(self):
         return InvoiceStatesLabelEnum.choices[self.state]
 
@@ -665,7 +708,6 @@ class Product(Displayable, ProductItem):
     product_number = models.IntegerField(verbose_name=_("Product Number"))
     search_fields = {"item_title": 10, "item_description": 8}
 
-    @property
     def get_product_number(self):
         return "%s%s" % (self.item_prefix, self.item_number)
 

@@ -3,6 +3,10 @@ Koalix CRM
 
 Beautiful CRM/ERP for small business
 
+Koalix CRM firstly targets small companies and young start-ups since it is easy to configure, highly customizable and integratable with webshops and social media.
+ 
+Koalix CRM is open source and free to use, but please make a donation then.
+
 
 ## Project Status
 
@@ -21,9 +25,9 @@ Issue status:
     [![Stories in Ready](https://badge.waffle.io/tfroehlich82/koalixcrm.png?label=ready&title=Ready)](https://waffle.io/tfroehlich82/koalixcrm)
     [![Stories in progress](https://badge.waffle.io/tfroehlich82/koalixcrm.svg?label=in progress&title=in Progress)](http://waffle.io/tfroehlich82/koalixcrm)
 
-**********************************************
-Note: This project is currently in alpha phase
-**********************************************
+*****************************************************
+Note: This project is not yet open for production use
+*****************************************************
 
 Read the documentation for installation instructions at http://koalix-crm.readthedocs.org/en/master/
 
@@ -88,4 +92,5 @@ This project is released under the [new BSD license](LICENSE).
 
 ## Screenshots
 ![Alt Create customer view](/doc/source/images/customer_create.png "Create customer view")
-![Alt Product overview](/doc/source/images/customer_overview.png "Customer overview")
+![Alt Customer overview](/doc/source/images/customer_overview.png "Customer overview")
+![Alt Quote overview](/doc/source/images/quote_overview.png "Quote overview")

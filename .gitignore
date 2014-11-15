@@ -4,8 +4,12 @@
 .DS_Store
 .coverage
 local_settings.py
-/static/media/
+/static/media/avatars/
+/static/media/galleries/
+/static/media/uploads/galleries/
+/static/media/uploads/icons/
+/static/media/uploads/slider/
+/static/media/uploads/xfgs/
 .idea
 doc/build/
 /Theme/
-/calendarium/
