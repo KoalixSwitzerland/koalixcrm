@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import StringIO
 from braces.views import PermissionRequiredMixin, LoginRequiredMixin
-
+from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse_lazy
@@ -14,10 +14,9 @@ from crm_core.impex import CustomerResource, SupplierResource, CustomerGroupReso
     ProductResource, ContractResource, CustomerBillingCycleResource, PurchaseOrderResource, QuoteResource, \
     TaxRateResource, UnitResource
 from crm_core.models import Customer, Invoice, Supplier, Unit, TaxRate, Contract, Product, CustomerBillingCycle, \
-    PurchaseOrder, CustomerGroup, Quote, PostalAddress, PhoneAddress, EmailAddress, UserExtension
+    PurchaseOrder, CustomerGroup, Quote, PostalAddress, PhoneAddress, EmailAddress, UserExtension, PurchaseOrderPosition
 from django.shortcuts import render_to_response, redirect, render
 from django.contrib.auth import authenticate, login, logout
-from xml.etree import ElementTree
 
 
 # ######################
@@ -241,6 +240,14 @@ def export_customergroups(request, format='xls'):
 # ###########################
 # ##   Class Based Views   ##
 # ###########################
+
+
+class PurchaseOrderPositionInline(InlineFormSet):
+        model = PurchaseOrderPosition
+        extra = 1
+        can_delete = True
+        exclude = ['sent_on', 'shipment_id', 'last_pricing_date', 'last_calculated_price',
+                   'last_calculated_tax']
 
 
 class PostalAddressInline(LoginRequiredMixin, PermissionRequiredMixin, InlineFormSet):
@@ -491,19 +498,23 @@ class ListPurchaseOrders(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     fields = ['description', 'contract', 'supplier', 'state', 'currency', 'last_calculated_price', 'last_pricing_date', ]
 
 
-class CreatePurchaseOrder(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+class CreatePurchaseOrder(LoginRequiredMixin, PermissionRequiredMixin, NamedFormsetsMixin, CreateWithInlinesView):
     model = PurchaseOrder
+    fields = ['description', 'contract', 'supplier', 'state', 'currency', 'customer', ]
+    inlines = [PurchaseOrderPositionInline, ]
+    inlines_names = ['purchaseorder_formset', ]
     permission_required = 'crm_core.add_purchaseorder'
     login_url = settings.LOGIN_URL
-    fields = ['description', 'contract', 'supplier', 'state', 'currency', ]
     success_url = reverse_lazy('purchaseorder_list')
 
 
-class EditPurchaseOrder(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+class EditPurchaseOrder(LoginRequiredMixin, PermissionRequiredMixin, NamedFormsetsMixin, UpdateWithInlinesView):
     model = PurchaseOrder
+    fields = ['description', 'contract', 'supplier', 'state', 'currency', ]
+    inlines = [PurchaseOrderPositionInline, ]
+    inlines_names = ['purchaseorder_formset', ]
     permission_required = 'crm_core.change_purchaseorder'
     login_url = settings.LOGIN_URL
-    fields = ['description', 'contract', 'supplier', 'state', 'currency', ]
     success_url = reverse_lazy('purchaseorder_list')
 
 

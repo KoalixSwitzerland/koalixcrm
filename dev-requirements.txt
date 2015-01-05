@@ -12,3 +12,5 @@ django-extensions
 django-compressor
 coverage
 WeasyPrint
+django-utils2
+django-crispy-forms

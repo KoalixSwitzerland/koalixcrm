@@ -5,7 +5,7 @@ Installation
 ************
 
 .. note::
-    This version is not recommended for productive use. Therefore productive installation is not yet mentioned in this documentation.
+    This version is not recommended for production use. Therefore production installation is not yet mentioned in this documentation.
 
 .. contents::
 
@@ -119,17 +119,18 @@ Setting up the demo
     1. Download the source
     2. Extract to a folder of your choice
     3. Open console and change to that folder
-    4. Execute ``python manage.py creadeb``
+    4. Execute ``python manage.py createdb``
     5. Create an superuser when you're asked for
-    6. Execute ``python manage.py runserver``
-    7. Open your browser and go to http://127.0.0.1:8000
-    8. Login with the username and password you created at step #4
+    6. Execute ``python manage.py collectstatic``
+    7. Execute ``python manage.py runserver``
+    8. Open your browser and go to http://127.0.0.1:8000
+    9. Login with the username and password you created at step #4
 
 .. hint::
     You can use the superuser to browse the CMS backend at http://127.0.0.1:8000/admin/
 
 .. note::
-    If you're using an non-admin user you should assign permissions
+    If you're using an non-admin user you should assign permissions and groups
 
 
 Install the initial data

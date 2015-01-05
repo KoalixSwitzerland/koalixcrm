@@ -24,14 +24,12 @@
                         {{ purchaseorder.contract.default_customer|default_if_none:"" }}</a></td>
                     <td>{{ purchaseorder.validuntil|default_if_none:"" }}</td>
                     <td>{{ purchaseorder.last_calculated_price|default_if_none:"" }}</td>
-                    <td width="150px">
+                    <td width="50px">
 {#                    TODO view buttons depending on contract state#}
                         <p class="pull-right">
-{#                        {% if perms.crm_core.add_quote %}#}
                             <button type="button" class="btn btn-sm btn-default"
                                     onclick="window.location.assign('{% url 'purchaseorder_create_pdf' purchaseorder.pk %}')"
                                     title="{% trans "Create PDF" %}"><i class="fa fa-file-pdf-o"></i></button>
-{#                        {% endif %}#}
                         </p>
                     </td>
                     <td width="100px">
@@ -53,9 +51,6 @@
                 {% trans 'No puchase orders' %}
             {% endfor %}
         </table>
-        {% if perms.crm_core.add_purchaseorder %}
-        <p><a href="{% url 'purchaseorder_create' %}">{% trans "Create a new purchaseorder" %}</a></p>
-        {% endif %}
     </div>
 {% endblock %}
 

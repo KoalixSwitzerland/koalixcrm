@@ -31,7 +31,8 @@
 
 {% compress js %}
 <script src="{% static "assets/js/chart-master/Chart.js" %}"></script>
-{% block extra_js %}{% endblock %}
+{% block extra_js %}
+{% endblock %}
 {% endcompress %}
 
 <!--[if lt IE 9]>
@@ -124,7 +125,7 @@
                       {% if perms.crm_core.view_customer %}
                       <li class="sub-menu">
                           <a href="/customers/">
-                              <i class="fa fa-users"></i>
+                              <i class="fa fa-user"></i>
                               <span>{% trans "Customers" %}</span>
                           </a>
                       </li>
@@ -309,25 +310,26 @@
 
 </section>
     <!-- js placed at the end of the document so the pages load faster -->
-    <script src="{%  static "assets/js/jquery.js" %}"></script>
-    <script src="{%  static "assets/js/jquery-1.8.3.min.js" %}"></script>
-    <script src="{%  static "assets/js/bootstrap.min.js" %}"></script>
-    <script class="include" type="text/javascript" src="{%  static "assets/js/jquery.dcjqaccordion.2.7.js" %}"></script>
-    <script src="{%  static "assets/js/jquery.scrollTo.min.js" %}"></script>
-    <script src="{%  static "assets/js/jquery.nicescroll.js" %}"type="text/javascript"></script>
-    <script src="{%  static "assets/js/jquery.sparkline.js" %}"></script>
+    <script src="{% static "assets/js/jquery.js" %}"></script>
+{#    <script src="{% static "assets/js/jquery-1.8.3.min.js" %}"></script>#}
+    <script src="{% static "assets/js/bootstrap.min.js" %}"></script>
+    <script class="include" src="{%  static "assets/js/jquery.dcjqaccordion.2.7.js" %}"></script>
+    <script src="{% static "assets/js/jquery.scrollTo.min.js" %}"></script>
+    <script src="{% static "assets/js/jquery.nicescroll.js" %}"></script>
+    <script src="{% static "assets/js/jquery.sparkline.js" %}"></script>
+    <script src="{% static "assets/js/jquery.formset.js" %}"></script>
     {% bootstrap_javascript %}
 
 
     <!--common script for all pages-->
-    <script src="{%  static "assets/js/common-scripts.js" %}"></script>
+    <script src="{% static "assets/js/common-scripts.js" %}"></script>
 
-    <script type="text/javascript" src="{%  static "assets/js/gritter/js/jquery.gritter.js" %}"></script>
-    <script type="text/javascript" src="{%  static "assets/js/gritter-conf.js" %}"></script>
+    <script type="text/javascript" src="{% static "assets/js/gritter/js/jquery.gritter.js" %}"></script>
+    <script type="text/javascript" src="{% static "assets/js/gritter-conf.js" %}"></script>
 
     <!--script for this page-->
-    <script src="{%  static "assets/js/sparkline-chart.js" %}"></script>
-	<script src="{%  static "assets/js/zabuto_calendar.js" %}"></script>
+    <script src="{% static "assets/js/sparkline-chart.js" %}"></script>
+	<script src="{% static "assets/js/zabuto_calendar.js" %}"></script>
 
 	<script type="application/javascript">
         $(document).ready(function () {
@@ -362,8 +364,10 @@
             var to = $("#" + id).data("to");
             console.log('nav ' + nav + ' to: ' + to.month + '/' + to.year);
         }
-    </script>
+</script>
 {#{% include "includes/footer_scripts.html" %}#}
+{% block extrascript %}
+{% endblock %}
 
 </body>
 </html>

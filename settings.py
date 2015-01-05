@@ -252,6 +252,7 @@ INSTALLED_APPS = (
     "django_utils",
     "international",
     "braces",
+    "crispy_forms",
     "po_localization",
     "import_export",
     "django_fsm",
@@ -317,6 +318,8 @@ MIDDLEWARE_CLASSES = (
 # at the moment we are using custom forks of them.
 PACKAGE_NAME_FILEBROWSER = "filebrowser_safe"
 PACKAGE_NAME_GRAPPELLI = "grappelli_safe"
+
+CRISPY_TEMPLATE_PACK = "bootstrap3"
 
 #########################
 # OPTIONAL APPLICATIONS #

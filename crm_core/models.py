@@ -709,7 +709,7 @@ class Product(Displayable, ProductItem):
     search_fields = {"item_title": 10, "item_description": 8}
 
     def get_product_number(self):
-        return "%s%s" % (self.item_prefix, self.item_number)
+        return "%s%s" % (self.item_prefix, self.product_number)
 
     @staticmethod
     def get_class_name():
@@ -765,7 +765,7 @@ class Product(Displayable, ProductItem):
         )
 
     def __unicode__(self):
-        return '%s (#%s)' % (self.item_title, str(self.item_number))
+        return '%s (#%s)' % (self.item_title, str(self.product_number))
 
     class NoPriceFound(Exception):
         def __init__(self, customer, unit, date, product):

@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load i18n bootstrap3 %}
+{% load crispy_forms_tags %}
 
 {% block meta_title %}{% trans "Purchase Orders" %}{% endblock %}
 {% block title %}{% trans "Purchase Orders" %}{% endblock %}
@@ -21,7 +22,8 @@
 
     <div class="row well">
             <div style="margin: 0 12px 0 12px;">
-                {% bootstrap_form form layout='inline' %}
+                {% crispy form %}
+                {% crispy purchaseorder_formset %}
         </div>
     </div>
 
