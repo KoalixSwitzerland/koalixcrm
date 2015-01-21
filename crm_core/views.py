@@ -6,10 +6,11 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, loader
 from extra_views import UpdateWithInlinesView, InlineFormSet, NamedFormsetsMixin, CreateWithInlinesView
 from crm_core.const.states import InvoiceStatesEnum
+from crm_core.forms import PurchaseOrderPositionInlineForm, PurchaseOrderForm
 from crm_core.impex import CustomerResource, SupplierResource, CustomerGroupResource, InvoiceResource, \
     ProductResource, ContractResource, CustomerBillingCycleResource, PurchaseOrderResource, QuoteResource, \
     TaxRateResource, UnitResource
@@ -47,10 +48,10 @@ def show_dashboard(request):
     opencontracts = []
     for invoice in Invoice.objects.all():
         if invoice.state != InvoiceStatesEnum.Payed or invoice.state != InvoiceStatesEnum.Deleted \
-                and not invoice in opencontracts:
+                and invoice not in opencontracts:
             opencontracts.append(invoice.contract)
     for contract in Contract.objects.all():
-        if not contract in opencontracts:
+        if contract not in opencontracts:
             opencontracts.append(contract)
     template = loader.get_template('dashboard.html')
     context = RequestContext(request, {
@@ -246,8 +247,7 @@ class PurchaseOrderPositionInline(InlineFormSet):
         model = PurchaseOrderPosition
         extra = 1
         can_delete = True
-        exclude = ['sent_on', 'shipment_id', 'last_pricing_date', 'last_calculated_price',
-                   'last_calculated_tax']
+        form_class = PurchaseOrderPositionInlineForm
 
 
 class PostalAddressInline(LoginRequiredMixin, PermissionRequiredMixin, InlineFormSet):
@@ -495,24 +495,14 @@ class ListPurchaseOrders(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = PurchaseOrder
     permission_required = 'crm_core.view_purchaseorder'
     login_url = settings.LOGIN_URL
-    fields = ['description', 'contract', 'supplier', 'state', 'currency', 'last_calculated_price', 'last_pricing_date', ]
+    fields = ['description', 'contract', 'supplier', 'state', 'currency', 'last_calculated_price',
+              'last_pricing_date', ]
 
 
-class CreatePurchaseOrder(LoginRequiredMixin, PermissionRequiredMixin, NamedFormsetsMixin, CreateWithInlinesView):
+class EditPurchaseOrder(LoginRequiredMixin, PermissionRequiredMixin, UpdateWithInlinesView):
     model = PurchaseOrder
-    fields = ['description', 'contract', 'supplier', 'state', 'currency', 'customer', ]
-    inlines = [PurchaseOrderPositionInline, ]
-    inlines_names = ['purchaseorder_formset', ]
-    permission_required = 'crm_core.add_purchaseorder'
-    login_url = settings.LOGIN_URL
-    success_url = reverse_lazy('purchaseorder_list')
-
-
-class EditPurchaseOrder(LoginRequiredMixin, PermissionRequiredMixin, NamedFormsetsMixin, UpdateWithInlinesView):
-    model = PurchaseOrder
-    fields = ['description', 'contract', 'supplier', 'state', 'currency', ]
-    inlines = [PurchaseOrderPositionInline, ]
-    inlines_names = ['purchaseorder_formset', ]
+    form_class = PurchaseOrderForm
+    inlines = [PurchaseOrderPositionInline]
     permission_required = 'crm_core.change_purchaseorder'
     login_url = settings.LOGIN_URL
     success_url = reverse_lazy('purchaseorder_list')

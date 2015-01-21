@@ -7,7 +7,7 @@ from mezzanine.core.views import direct_to_template
 from crm_core.views import login_user, UpdateUserProfile, ListCustomers, ListSuppliers, ListTaxes, \
     ListUnits, ListProducts, ListBillingCycles, ListPurchaseOrders, ListCustomerGroups, ListContracts, ListInvoice, \
     ListQuotes, CreateCustomer, CreateSupplier, CreateProduct, CreateBillingCycle, CreateContract, \
-    CreateInvoice, CreatePurchaseOrder, CreateCustomerGroup, CreateQuote, CreateTax, CreateUnit, EditProduct, \
+    CreateInvoice, CreateCustomerGroup, CreateQuote, CreateTax, CreateUnit, EditProduct, \
     EditBillingCycle, EditContract, EditCustomer, EditCustomerGroup, EditInvoice, EditPurchaseOrder, \
     EditQuote, EditSupplier, EditTax, EditUnit, DeleteQuote, DeleteInvoice, DeleteContract, DeleteCustomerGroup, \
     DeleteBillingCycle, DeleteCustomer, DeleteProduct, DeletePurchaseOrder, DeleteSupplier, \
@@ -113,7 +113,6 @@ urlpatterns = \
 
         url(r'^purchaseorders/$', ListPurchaseOrders.as_view(), name='purchaseorder_list'),
         url(r'^purchaseorders/export/(?P<format>\w+)?/?$', export_purchaseorders, name='purchaseorder_export'),
-        url(r'^purchaseorders/create/$', CreatePurchaseOrder.as_view(), name='purchaseorder_create'),
         url(r'^purchaseorders/createpdf/(?P<purchaseorder_pk>\d+)/$', create_pdf_from_purchaseorder,
             name='purchaseorder_create_pdf'),
         url(r'^purchaseorders/edit/(?P<pk>\d+)/$', EditPurchaseOrder.as_view(), name='purchaseorder_edit'),
