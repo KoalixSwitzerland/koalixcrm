@@ -873,7 +873,7 @@ class Price(models.Model):
 
 
 class Position(models.Model):
-    position_number = models.IntegerField(verbose_name=_("Position Number"))
+    position_number = models.IntegerField(verbose_name=_("Position Number"), default=0)
     quantity = models.DecimalField(verbose_name=_("Quantity"), decimal_places=3, max_digits=10)
     description = models.TextField(verbose_name=_("Description"), blank=True, null=True)
     discount = models.DecimalField(max_digits=5, decimal_places=2, verbose_name=_("Discount"), blank=True, null=True)

@@ -35,9 +35,7 @@
     <div class="form-panel" style="margin: 30px">
     <h4 class="mb"><i class="fa fa-angle-right"></i>
     {% if purchaseorder %}{% trans "Edit purchase order" %}{% else %}{% trans "Create Purchase Order" %}{% endif%}</h4>
-    <form method="POST" action="." class="form form-horizontal" style="margin: 30px;">
-        {% csrf_token %}
-
+    <form {{ flat_attrs|safe }} method="post" action="" class="form form-horizontal" style="margin: 30px;" {% if formset.is_multipart %} enctype="multipart/form-data"{% endif %}>
         <div style="margin: 0 12px 0 12px;">
             <div class="row well">
                 {% crispy form %}
@@ -48,37 +46,43 @@
                         {{ formset.management_form|crispy }}
                     </div>
 
-                    <table{% if form_id %} id="{{ form_id }}_table"{% endif%} class="table table-condensed">
+
+                    <table id="purchaseorder_position" class="table table-condensed">
                         <thead>
-                              <tr>
-                                  <th width="80px">#</th>
-                                  <th width="100px">{{ formset.forms.0.quantity.label }}*</th>
-                                  <th width="100px">{{ formset.forms.0.unit.label }}</th>
-                                  <th>{{ formset.forms.0.product.label }}</th>
-                                  <th>{{ formset.forms.0.description.label }}</th>
-                                  <th width="100px">{{ formset.forms.0.discount.label }}</th>
-                                  <th></th>
-                              </tr>
+                        <tr>
+                            <th width="100px">{{ formset.forms.0.quantity.label }}*</th>
+                            <th width="100px">{{ formset.forms.0.unit.label }}</th>
+                            <th>{{ formset.forms.0.product.label }}</th>
+                            <th>{{ formset.forms.0.description.label }}</th>
+                            <th width="100px">{{ formset.forms.0.discount.label }}</th>
+                            <th></th>
+                        </tr>
                         </thead>
 
                         <tbody>
-                            {% for form in formset %}
-                                {% if form_show_errors and not form.is_extra %}
-                                    {% include "bootstrap3/errors.html" %}
-                                {% endif %}
+                        {% if form_show_errors and not form.is_extra %}
+                            {% include "bootstrap3/errors.html" %}
+                        {% endif %}
 
-                                <tr>
-                                    <td>{% crispy_field form.position_number %}</td>
-                                    <td>{% crispy_field form.quantity %}</td>
-                                    <td>{% crispy_field form.unit %}</td>
-                                    <td>{% crispy_field form.product %}</td>
-                                    <td>{% crispy_field form.description %}</td>
-                                    <td>{% crispy_field form.discount %}</td>
-                                    <td></td>
-                                </tr>
-                            {% endfor %}
+                        {% for form in formset %}
+                            <tr id="{{ form.prefix }}-row">
+                                <td>
+                                    {% for fld in form.hidden_fields %}{{ fld }}{% endfor %}
+                                    {% crispy_field form.quantity %}
+                                </td>
+                                <td>{% crispy_field form.unit %}</td>
+                                <td>{% crispy_field form.product %}</td>
+                                <td>{% crispy_field form.description %}</td>
+                                <td>{% crispy_field form.discount %}</td>
+                                <td>{% if form.instance.pk %}{{ form.DELETE }}{% endif %}</td>
+                            </tr>
+                        {% endfor %}
                         </tbody>
                     </table>
+
+                    <p>
+                        {{ formset.management_form }}
+                    </p>
 
                 {% endfor %}
 
@@ -96,13 +100,14 @@
 
     </form>
     </div>
+
 {% endblock %}
 
 {% block extrascript %}
     <script type="text/javascript">
         $(function() {
             $('#purchaseorder_position tbody tr').formset({
-                prefix: "{{ contact_formset.prefix }}",
+                prefix: "{{ inlines.0.prefix }}",
                 deleteText: "&nbsp;",
                 addText: " Position hinzufügen"
             });

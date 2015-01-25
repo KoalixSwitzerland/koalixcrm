@@ -248,6 +248,7 @@ class PurchaseOrderPositionInline(InlineFormSet):
         extra = 1
         can_delete = True
         form_class = PurchaseOrderPositionInlineForm
+        prefix = 'purchaseorderposition'
 
 
 class PostalAddressInline(LoginRequiredMixin, PermissionRequiredMixin, InlineFormSet):

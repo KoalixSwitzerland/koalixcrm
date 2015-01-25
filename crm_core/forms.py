@@ -12,19 +12,19 @@ class PurchaseOrderForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(PurchaseOrderForm, self).__init__(*args, **kwargs)
+        self.fields['description'].widget = forms.TextInput()
         self.helper = FormHelper()
         self.helper.form_tag = False
-        self.fields['description'].widget = forms.TextInput()
 
 
 class PurchaseOrderPositionInlineForm(forms.ModelForm):
 
     class Meta:
         model = PurchaseOrderPosition
-        fields = ['position_number', 'quantity', 'description', 'discount', 'product', 'unit']
+        fields = ['quantity', 'description', 'discount', 'product', 'unit']
 
     def __init__(self, *args, **kwargs):
         super(PurchaseOrderPositionInlineForm, self).__init__(*args, **kwargs)
+        self.fields['description'].widget = forms.TextInput()
         self.helper = FormHelper()
         self.helper.form_tag = False
-        self.fields['description'].widget = forms.TextInput()
