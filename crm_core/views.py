@@ -10,12 +10,13 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, loader
 from extra_views import UpdateWithInlinesView, InlineFormSet, NamedFormsetsMixin, CreateWithInlinesView
 from crm_core.const.states import InvoiceStatesEnum
-from crm_core.forms import PurchaseOrderPositionInlineForm, PurchaseOrderForm
+from crm_core.forms import PurchaseOrderPositionInlineForm, PurchaseOrderForm, SalesContractPositionInlineForm
 from crm_core.impex import CustomerResource, SupplierResource, CustomerGroupResource, InvoiceResource, \
     ProductResource, ContractResource, CustomerBillingCycleResource, PurchaseOrderResource, QuoteResource, \
     TaxRateResource, UnitResource
 from crm_core.models import Customer, Invoice, Supplier, Unit, TaxRate, Contract, Product, CustomerBillingCycle, \
-    PurchaseOrder, CustomerGroup, Quote, PostalAddress, PhoneAddress, EmailAddress, UserExtension, PurchaseOrderPosition
+    PurchaseOrder, CustomerGroup, Quote, PostalAddress, PhoneAddress, EmailAddress, UserExtension, \
+    PurchaseOrderPosition, SalesContractPosition
 from django.shortcuts import render_to_response, redirect, render
 from django.contrib.auth import authenticate, login, logout
 
@@ -245,10 +246,18 @@ def export_customergroups(request, format='xls'):
 
 class PurchaseOrderPositionInline(InlineFormSet):
         model = PurchaseOrderPosition
-        extra = 1
+        extra = 5
         can_delete = True
         form_class = PurchaseOrderPositionInlineForm
         prefix = 'purchaseorderposition'
+
+
+class SalesContractPositionInline(InlineFormSet):
+        model = SalesContractPosition
+        extra = 5
+        can_delete = True
+        form_class = SalesContractPositionInlineForm
+        prefix = 'salescontractposition'
 
 
 class PostalAddressInline(LoginRequiredMixin, PermissionRequiredMixin, InlineFormSet):
@@ -587,16 +596,9 @@ class ListInvoice(LoginRequiredMixin, PermissionRequiredMixin, ListView):
               'last_pricing_date']
 
 
-class CreateInvoice(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+class EditInvoice(LoginRequiredMixin, PermissionRequiredMixin, UpdateWithInlinesView):
     model = Invoice
-    permission_required = 'crm_core.add_invoice'
-    login_url = settings.LOGIN_URL
-    fields = ['description', 'contract', 'customer', 'payableuntil', 'state', 'currency']
-    success_url = reverse_lazy('invoice_list')
-
-
-class EditInvoice(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
-    model = Invoice
+    inlines = [SalesContractPositionInline]
     permission_required = 'crm_core.change_invoice'
     login_url = settings.LOGIN_URL
     fields = ['description', 'contract', 'customer', 'payableuntil', 'state', 'currency']
@@ -618,8 +620,9 @@ class ListQuotes(LoginRequiredMixin, PermissionRequiredMixin, ListView):
               'last_calculated_price', 'last_pricing_date']
 
 
-class CreateQuote(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+class CreateQuote(LoginRequiredMixin, PermissionRequiredMixin, CreateWithInlinesView):
     model = Quote
+    inlines = [SalesContractPositionInline]
     permission_required = 'crm_core.add_quote'
     login_url = settings.LOGIN_URL
     fields = ['description', 'contract', 'customer', 'currency', 'lastmodifiedby',
@@ -627,8 +630,9 @@ class CreateQuote(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     success_url = reverse_lazy('quote_list')
 
 
-class EditQuote(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+class EditQuote(LoginRequiredMixin, PermissionRequiredMixin, UpdateWithInlinesView):
     model = Quote
+    inlines = [SalesContractPositionInline]
     permission_required = 'crm_core.change_quote'
     login_url = settings.LOGIN_URL
     fields = ['description', 'contract', 'customer', 'currency', 'lastmodifiedby',

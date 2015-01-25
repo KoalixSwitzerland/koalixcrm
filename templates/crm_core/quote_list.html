@@ -63,9 +63,6 @@
                 {% trans 'No quotes' %}
             {% endfor %}
         </table>
-        {% if perms.crm_core.add_quote %}
-        <p><a href="{% url 'quote_create' %}">{% trans "Create a new quote" %}</a></p>
-        {% endif %}
     </div>
 {% endblock %}
 

@@ -53,9 +53,6 @@
                 {% trans 'No invoices' %}
             {% endfor %}
         </table>
-        {% if perms.crm_core.add_invoice %}
-        <p><a href="{% url 'invoice_create' %}">{% trans "Create a new invoice" %}</a></p>
-        {% endif %}
     </div>
 {% endblock %}
 

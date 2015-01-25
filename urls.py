@@ -7,7 +7,7 @@ from mezzanine.core.views import direct_to_template
 from crm_core.views import login_user, UpdateUserProfile, ListCustomers, ListSuppliers, ListTaxes, \
     ListUnits, ListProducts, ListBillingCycles, ListPurchaseOrders, ListCustomerGroups, ListContracts, ListInvoice, \
     ListQuotes, CreateCustomer, CreateSupplier, CreateProduct, CreateBillingCycle, CreateContract, \
-    CreateInvoice, CreateCustomerGroup, CreateQuote, CreateTax, CreateUnit, EditProduct, \
+    CreateCustomerGroup, CreateQuote, CreateTax, CreateUnit, EditProduct, \
     EditBillingCycle, EditContract, EditCustomer, EditCustomerGroup, EditInvoice, EditPurchaseOrder, \
     EditQuote, EditSupplier, EditTax, EditUnit, DeleteQuote, DeleteInvoice, DeleteContract, DeleteCustomerGroup, \
     DeleteBillingCycle, DeleteCustomer, DeleteProduct, DeletePurchaseOrder, DeleteSupplier, \
@@ -150,7 +150,6 @@ urlpatterns = \
 
         url(r'^invoices/$', ListInvoice.as_view(), name='invoice_list'),
         url(r'^invoices/export/(?P<format>\w+)?/?$', export_invoices, name='invoice_export'),
-        url(r'^invoices/create/$', CreateInvoice.as_view(), name='invoice_create'),
         url(r'^invoices/createpdf/(?P<invoice_pk>\d+)/$', create_pdf_from_invoice, name='invoice_create_pdf'),
         url(r'^invoices/edit/(?P<pk>\d+)/$', EditInvoice.as_view(), name='invoice_edit'),
         url(r'^invoices/delete/(?P<pk>\d+)/$', DeleteInvoice.as_view(), name='invoice_delete'),
