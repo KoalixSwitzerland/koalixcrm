@@ -16,7 +16,7 @@
             {% for invoice in invoice_list %}
                 <tr>
                     <td><span class="label {{ invoice.get_state_class }}">{{ invoice.get_state }}</span></td>
-                    <td>{{ invoice }}</td>
+                    <td><a href="{% url 'invoice_edit' invoice.pk %}">{{ invoice }}</a></td>
                     <td>{{ invoice.description|default_if_none:"" }}</td>
                     <td><a href="{% url 'contract_detail' invoice.contract.pk %}">
                         {{ invoice.contract|default_if_none:"" }}</a></td>

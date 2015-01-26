@@ -16,7 +16,7 @@
             {% for quote in quote_list %}
                 <tr>
                     <td><span class="label {{ quote.get_state_class }}">{{ quote.get_state }}</span></td>
-                    <td>{{ quote }}</td>
+                    <td><a href="{% url 'quote_edit' quote.pk %}">{{ quote }}</a></td>
                     <td>{{ quote.description|default_if_none:"" }}</td>
                     <td><a href="{% url 'contract_detail' quote.contract.pk %}">
                         {{ quote.contract|default_if_none:"" }}</a></td>

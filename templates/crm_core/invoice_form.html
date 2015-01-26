@@ -38,14 +38,61 @@
     <form {{ flat_attrs|safe }} method="post" action="" class="form form-horizontal" style="margin: 30px;" {% if formset.is_multipart %} enctype="multipart/form-data"{% endif %}>
         <div style="margin: 0 12px 0 12px;">
             <div class="row well">
-                {% crispy form %}
+
+                <table>
+                    <tr>
+                        <td colspan="3"><h1>{{ invoice }}</h1></td>
+                    </tr>
+                    <tr>
+                        <td>{% trans 'Contract' %}:</td>
+                        <td width="10px"></td>
+                        <td><a href="{% url 'contract_detail' invoice.contract.pk %}">
+                            {{ invoice.contract }}</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>{% trans 'Customer' %}:</td>
+                        <td width="10px"></td>
+                        <td><a href="{% url 'customer_detail' invoice.customer.pk %}">
+                            {{ invoice.customer }}</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>{% trans 'Last Calculated Price' %}:</td>
+                        <td width="10px"></td>
+                        <td>{{ invoice.last_calculated_price|default_if_none:"" }}
+                            {% if invoice.last_pricing_date %}&nbsp;{% trans 'on' %}&nbsp;
+                                {{ invoice.last_pricing_date }}{% endif %}
+                            {% if invoice.last_calculated_tax %}&nbsp;({% trans 'Tax' %}:&nbsp;
+                                {{ invoice.last_calculated_tax|default_if_none:"" }}){% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><small>{% trans 'Date of Creation' %}:</small></td>
+                        <td width="10px"></td>
+                        <td><small>{{ invoice.dateofcreation|default_if_none:"" }}</small></td>
+                    </tr>
+                    <tr>
+                        <td><small>{% trans 'Last Modified' %}:</small></td>
+                        <td width="10px"></td>
+                        <td><small>{{ invoice.lastmodification|default_if_none:"" }}
+                            {% if invoice.lastmodifiedby %}&nbsp;{% trans 'by' %}&nbsp;
+                                {{ invoice.lastmodifiedby }}{% endif %}</small>
+                        </td>
+                    </tr>
+                </table>
+
+                </p>
+
+                <div style="margin: 0 12px 0 12px;">
+                    {% crispy form %}
+                </div>
 
                 {% for formset in inlines %}
 
                     <div>
                         {{ formset.management_form|crispy }}
                     </div>
-
 
                     <table id="salescontract_position" class="table table-condensed">
                         <thead>
@@ -55,7 +102,7 @@
                             <th>{{ formset.forms.0.product.label }}</th>
                             <th>{{ formset.forms.0.description.label }}</th>
                             <th width="100px">{{ formset.forms.0.discount.label }}</th>
-                            <th></th>
+                            <th width="20px"></th>
                         </tr>
                         </thead>
 

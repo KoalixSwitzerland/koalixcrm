@@ -10,7 +10,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, loader
 from extra_views import UpdateWithInlinesView, InlineFormSet, NamedFormsetsMixin, CreateWithInlinesView
 from crm_core.const.states import InvoiceStatesEnum
-from crm_core.forms import PurchaseOrderPositionInlineForm, PurchaseOrderForm, SalesContractPositionInlineForm
+from crm_core.forms import PurchaseOrderPositionInlineForm, PurchaseOrderForm, SalesContractPositionInlineForm, \
+    QuoteForm
 from crm_core.impex import CustomerResource, SupplierResource, CustomerGroupResource, InvoiceResource, \
     ProductResource, ContractResource, CustomerBillingCycleResource, PurchaseOrderResource, QuoteResource, \
     TaxRateResource, UnitResource
@@ -623,6 +624,7 @@ class ListQuotes(LoginRequiredMixin, PermissionRequiredMixin, ListView):
 class CreateQuote(LoginRequiredMixin, PermissionRequiredMixin, CreateWithInlinesView):
     model = Quote
     inlines = [SalesContractPositionInline]
+    form_class = QuoteForm
     permission_required = 'crm_core.add_quote'
     login_url = settings.LOGIN_URL
     fields = ['description', 'contract', 'customer', 'currency', 'lastmodifiedby',
@@ -633,6 +635,7 @@ class CreateQuote(LoginRequiredMixin, PermissionRequiredMixin, CreateWithInlines
 class EditQuote(LoginRequiredMixin, PermissionRequiredMixin, UpdateWithInlinesView):
     model = Quote
     inlines = [SalesContractPositionInline]
+    form_class = QuoteForm
     permission_required = 'crm_core.change_quote'
     login_url = settings.LOGIN_URL
     fields = ['description', 'contract', 'customer', 'currency', 'lastmodifiedby',

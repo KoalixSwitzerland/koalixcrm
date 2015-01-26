@@ -16,7 +16,7 @@
             {% for purchaseorder in purchaseorder_list %}
                 <tr>
                     <td><span class="label {{ purchaseorder.get_state_class }}">{{ purchaseorder.get_state }}</span></td>
-                    <td>{{ purchaseorder }}</td>
+                    <td><a href="{% url 'purchaseorder_edit' purchaseorder.pk %}">{{ purchaseorder }}</a></td>
                     <td>{{ purchaseorder.description|default_if_none:"" }}</td>
                     <td><a href="{% url 'contract_detail' purchaseorder.contract.pk %}">
                         {{ purchaseorder.contract|default_if_none:"" }}</a></td>
