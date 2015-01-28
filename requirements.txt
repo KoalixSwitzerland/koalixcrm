@@ -9,3 +9,4 @@ django-extra-views>=0.6.5
 django-utils2>=1.8.0
 WeasyPrint
 django-crispy-forms
+django-datetime-widget

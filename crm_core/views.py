@@ -11,7 +11,7 @@ from django.template import RequestContext, loader
 from extra_views import UpdateWithInlinesView, InlineFormSet, NamedFormsetsMixin, CreateWithInlinesView
 from crm_core.const.states import InvoiceStatesEnum
 from crm_core.forms import PurchaseOrderPositionInlineForm, PurchaseOrderForm, SalesContractPositionInlineForm, \
-    QuoteForm
+    QuoteForm, InvoiceForm
 from crm_core.impex import CustomerResource, SupplierResource, CustomerGroupResource, InvoiceResource, \
     ProductResource, ContractResource, CustomerBillingCycleResource, PurchaseOrderResource, QuoteResource, \
     TaxRateResource, UnitResource
@@ -599,6 +599,7 @@ class ListInvoice(LoginRequiredMixin, PermissionRequiredMixin, ListView):
 
 class EditInvoice(LoginRequiredMixin, PermissionRequiredMixin, UpdateWithInlinesView):
     model = Invoice
+    form_class = InvoiceForm
     inlines = [SalesContractPositionInline]
     permission_required = 'crm_core.change_invoice'
     login_url = settings.LOGIN_URL

@@ -5,9 +5,7 @@
 {% block title %}{% trans "Purchase Orders" %}{% endblock %}
 
 {% block extra_head %}
-<script type="text/javascript">
-    function gettext(msgid) { return msgid; }
-</script>
+<link rel="stylesheet" href="{% static "assets/css/datepicker3.css" %}">
 <style type="text/css">
     .add-row {
         padding-left:18px;
@@ -42,6 +40,7 @@
                 <table>
                     <tr>
                         <td colspan="3"><h1>{{ purchaseorder }}</h1></td>
+                        <td><span class="label {{ purchaseorder.get_state_class }}">{{ purchaseorder.get_state }}</span></td>
                     </tr>
                     <tr>
                         <td>{% trans 'Contract' %}:</td>
@@ -60,11 +59,11 @@
                     <tr>
                         <td>{% trans 'Last Calculated Price' %}:</td>
                         <td width="10px"></td>
-                        <td>{{ purchaseorder.last_calculated_price|default_if_none:"" }}
+                        <td>{{ purchaseorder.last_calculated_price|default_if_none:"-" }}
                             {% if purchaseorder.last_pricing_date %}&nbsp;{% trans 'on' %}&nbsp;
                                 {{ purchaseorder.last_pricing_date }}{% endif %}
                             {% if purchaseorder.last_calculated_tax %}&nbsp;({% trans 'Tax' %}:&nbsp;
-                                {{ purchaseorder.last_calculated_tax|default_if_none:"" }}){% endif %}
+                                {{ purchaseorder.last_calculated_tax }}){% endif %}
                         </td>
                     </tr>
                     <tr>
@@ -151,6 +150,18 @@
 {% endblock %}
 
 {% block extrascript %}
+{#    <script src="{% static "assets/js/bootstrap-datepicker/bootstrap-datepicker.js" %}"></script>#}
+{#    <script>#}
+{#        $(function() {#}
+{#            $( ".datepicker" ).datepicker({#}
+{#                weekStart: 1,#}
+{#                todayBtn: "linked",#}
+{#                calendarWeeks: true,#}
+{#                todayHighlight: true,#}
+{#                startDate: '-3d'#}
+{#            });#}
+{#        });#}
+{#    </script>#}
     <script type="text/javascript">
         $(function() {
             $('#purchaseorder_position tbody tr').formset({

@@ -5,9 +5,7 @@
 {% block title %}{% trans "Invoices" %}{% endblock %}
 
 {% block extra_head %}
-<script type="text/javascript">
-    function gettext(msgid) { return msgid; }
-</script>
+<link rel="stylesheet" href="{% static "assets/css/datepicker3.css" %}">
 <style type="text/css">
     .add-row {
         padding-left:18px;
@@ -42,6 +40,7 @@
                 <table>
                     <tr>
                         <td colspan="3"><h1>{{ invoice }}</h1></td>
+                        <td><span class="label {{ invoice.get_state_class }}">{{ invoice.get_state }}</span></td>
                     </tr>
                     <tr>
                         <td>{% trans 'Contract' %}:</td>
@@ -49,6 +48,7 @@
                         <td><a href="{% url 'contract_detail' invoice.contract.pk %}">
                             {{ invoice.contract }}</a>
                         </td>
+                        <td></td>
                     </tr>
                     <tr>
                         <td>{% trans 'Customer' %}:</td>
@@ -60,11 +60,11 @@
                     <tr>
                         <td>{% trans 'Last Calculated Price' %}:</td>
                         <td width="10px"></td>
-                        <td>{{ invoice.last_calculated_price|default_if_none:"" }}
+                        <td>{{ invoice.last_calculated_price|default_if_none:"-" }}
                             {% if invoice.last_pricing_date %}&nbsp;{% trans 'on' %}&nbsp;
                                 {{ invoice.last_pricing_date }}{% endif %}
                             {% if invoice.last_calculated_tax %}&nbsp;({% trans 'Tax' %}:&nbsp;
-                                {{ invoice.last_calculated_tax|default_if_none:"" }}){% endif %}
+                                {{ invoice.last_calculated_tax }}){% endif %}
                         </td>
                     </tr>
                     <tr>
@@ -136,14 +136,14 @@
             </div>
         </div>
 
-    <button type='submit' class='btn btn-primary'>
-        {% trans "Save" %}
-    </button>
+        <button type='submit' class='btn btn-primary'>
+            {% trans "Save" %}
+        </button>
 
-    <button type="button" class="btn btn-default"
-            onclick="window.location.assign('{% url 'invoice_list' %}')">
-        {% trans "Cancel" %}
-    </button>
+        <button type="button" class="btn btn-default"
+                onclick="window.location.assign('{% url 'invoice_list' %}')">
+            {% trans "Cancel" %}
+        </button>
 
     </form>
     </div>
@@ -151,6 +151,18 @@
 {% endblock %}
 
 {% block extrascript %}
+{#    <script src="{% static "assets/js/bootstrap-datepicker/bootstrap-datepicker.js" %}"></script>#}
+{#    <script>#}
+{#        $(function() {#}
+{#            $( ".datepicker" ).datepicker({#}
+{#                weekStart: 1,#}
+{#                todayBtn: "linked",#}
+{#                calendarWeeks: true,#}
+{#                todayHighlight: true,#}
+{#                startDate: '-3d'#}
+{#            });#}
+{#        });#}
+{#    </script>#}
     <script type="text/javascript">
         $(function() {
             $('#salescontract_position tbody tr').formset({
