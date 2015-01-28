@@ -1,4 +1,5 @@
 # coding=utf-8
+from datetimewidget.widgets import DateWidget
 from django import forms
 from crispy_forms.helper import FormHelper
 from models import PurchaseOrder, PurchaseOrderPosition, SalesContractPosition, Quote, Invoice
@@ -39,8 +40,7 @@ class InvoiceForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(InvoiceForm, self).__init__(*args, **kwargs)
         self.fields['description'].widget = forms.TextInput()
-        # self.fields['payableuntil'].widget = forms.DateInput(attrs={'class': 'datepicker'})
-        self.fields['payableuntil'].attrs = {'localize': True}
+        self.fields['payableuntil'] = forms.DateField(widget=DateWidget(bootstrap_version=3, usel10n=True))
         self.helper = FormHelper()
         self.helper.form_tag = False
 

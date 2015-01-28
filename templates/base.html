@@ -17,22 +17,28 @@
 {% endifinstalled %}
 
 {% compress css %}
-{% bootstrap_css %}
-<link rel="stylesheet" href="{% static "assets/css/bootstrap.css" %}">
-<link rel="stylesheet" href="{% static "assets/font-awesome/css/font-awesome.css" %}">
-<link rel="stylesheet" href="{% static "assets/lineicons/style.css" %}">
-<link rel="stylesheet" href="{% static "assets/js/gritter/css/jquery.gritter.css" %}">
-<link rel="stylesheet" href="{% static "assets/css/zabuto_calendar.css" %}">
-<link rel="stylesheet" href="{% static "assets/css/style.css" %}">
-<link rel="stylesheet" href="{% static "assets/css/style-responsive.css" %}">
+    {% bootstrap_css %}
+    <link rel="stylesheet" href="{% static "assets/css/bootstrap.css" %}">
+    <link rel="stylesheet" href="{% static "assets/font-awesome/css/font-awesome.css" %}">
+    <link rel="stylesheet" href="{% static "assets/lineicons/style.css" %}">
+    <link rel="stylesheet" href="{% static "assets/js/gritter/css/jquery.gritter.css" %}">
+    <link rel="stylesheet" href="{% static "assets/css/zabuto_calendar.css" %}">
+    <link rel="stylesheet" href="{% static "assets/css/style.css" %}">
+    <link rel="stylesheet" href="{% static "assets/css/style-responsive.css" %}">
 
-{% block extra_css %}{% endblock %}
+    {% block extra_css %}
+    {% endblock %}
 {% endcompress %}
 
 {% compress js %}
-<script src="{% static "assets/js/chart-master/Chart.js" %}"></script>
-{% block extra_js %}
-{% endblock %}
+    <script src="{% static "assets/js/chart-master/Chart.js" %}"></script>
+    <script src="{% static "assets/js/jquery.js" %}"></script>
+    <script src="{% static "assets/js/bootstrap.min.js" %}"></script>
+    <script src="{% static "assets/js/jquery.formset.js" %}"></script>
+
+    {% block extra_js %}
+    {% endblock %}
+
 {% endcompress %}
 
 <!--[if lt IE 9]>
@@ -308,14 +314,14 @@
       </div>
 
 </section>
+
+{% compress js %}
+
     <!-- js placed at the end of the document so the pages load faster -->
-    <script src="{% static "assets/js/jquery.js" %}"></script>
-    <script src="{% static "assets/js/bootstrap.min.js" %}"></script>
     <script class="include" src="{%  static "assets/js/jquery.dcjqaccordion.2.7.js" %}"></script>
     <script src="{% static "assets/js/jquery.scrollTo.min.js" %}"></script>
     <script src="{% static "assets/js/jquery.nicescroll.js" %}"></script>
     <script src="{% static "assets/js/jquery.sparkline.js" %}"></script>
-    <script src="{% static "assets/js/jquery.formset.js" %}"></script>
     {% bootstrap_javascript %}
 
 
@@ -329,8 +335,10 @@
     <script src="{% static "assets/js/sparkline-chart.js" %}"></script>
 	<script src="{% static "assets/js/zabuto_calendar.js" %}"></script>
 
-{% block extrascript %}
-{% endblock %}
+    {% block extrascript %}
+    {% endblock %}
+
+{% endcompress %}
 
 </body>
 </html>

@@ -5,7 +5,6 @@
 {% block title %}{% trans "Purchase Orders" %}{% endblock %}
 
 {% block extra_head %}
-<link rel="stylesheet" href="{% static "assets/css/datepicker3.css" %}">
 <style type="text/css">
     .add-row {
         padding-left:18px;
@@ -150,18 +149,6 @@
 {% endblock %}
 
 {% block extrascript %}
-{#    <script src="{% static "assets/js/bootstrap-datepicker/bootstrap-datepicker.js" %}"></script>#}
-{#    <script>#}
-{#        $(function() {#}
-{#            $( ".datepicker" ).datepicker({#}
-{#                weekStart: 1,#}
-{#                todayBtn: "linked",#}
-{#                calendarWeeks: true,#}
-{#                todayHighlight: true,#}
-{#                startDate: '-3d'#}
-{#            });#}
-{#        });#}
-{#    </script>#}
     <script type="text/javascript">
         $(function() {
             $('#purchaseorder_position tbody tr').formset({

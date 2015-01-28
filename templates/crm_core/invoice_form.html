@@ -5,7 +5,6 @@
 {% block title %}{% trans "Invoices" %}{% endblock %}
 
 {% block extra_head %}
-<link rel="stylesheet" href="{% static "assets/css/datepicker3.css" %}">
 <style type="text/css">
     .add-row {
         padding-left:18px;
@@ -19,6 +18,10 @@
         background:url({% static  'assets/img/delete.png' %}) no-repeat left center;
     }
 </style>
+{% endblock %}
+
+{% block extra_js %}
+    {{ form.media }}
 {% endblock %}
 
 {% block breadcrumb_menu %}
@@ -151,18 +154,6 @@
 {% endblock %}
 
 {% block extrascript %}
-{#    <script src="{% static "assets/js/bootstrap-datepicker/bootstrap-datepicker.js" %}"></script>#}
-{#    <script>#}
-{#        $(function() {#}
-{#            $( ".datepicker" ).datepicker({#}
-{#                weekStart: 1,#}
-{#                todayBtn: "linked",#}
-{#                calendarWeeks: true,#}
-{#                todayHighlight: true,#}
-{#                startDate: '-3d'#}
-{#            });#}
-{#        });#}
-{#    </script>#}
     <script type="text/javascript">
         $(function() {
             $('#salescontract_position tbody tr').formset({
