@@ -10,8 +10,14 @@
                 content: "{% trans 'Page' %} " counter(page) " {% trans 'of' %} " counter(pages)
             }
         }
-        h1, h2 {
+        h1, h2, h3 {
             -weasy-bookmark-level: none;
+        }
+        td {
+            padding: 5px;
+        }
+        thead {
+            font-weight: bold;
         }
         body {
 			font-family: Arial, Helvetica, sans-serif;
