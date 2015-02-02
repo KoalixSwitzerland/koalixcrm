@@ -9,14 +9,12 @@ from filebrowser_safe.fields import FileBrowseField
 from django_fsm import FSMIntegerField
 from mezzanine.core.models import Displayable
 from os import path
-from weasyprint import HTML, CSS
+from weasyprint import HTML
 from international.models import countries, currencies
-
 from const.postaladdressprefix import PostalAddressPrefix
 from const.purpose import PhoneAddressPurpose, PostalAddressPurpose, EmailAddressPurpose
 from const.states import InvoiceStatesEnum, PurchaseOrderStatesEnum, QuoteStatesEnum, InvoiceStatesLabelEnum, \
     QuoteStatesLabelEnum, PurchaseOrderStatesLabelEnum, ContractStatesEnum, ContractStatesLabelEnum
-# from accounting.models import Booking, Account, AccountingPeriod
 
 
 # ######################
@@ -670,10 +668,6 @@ class Unit(models.Model):
 class TaxRate(models.Model):
     taxrate_in_percent = models.DecimalField(max_digits=5, decimal_places=2, verbose_name=_("Taxrate in Percentage"))
     name = models.CharField(verbose_name=_("Taxname"), max_length=100)
-    account_activa = models.ForeignKey('accounting.Account', verbose_name=_("Activa Account"),
-                                       related_name="db_relaccountactiva", null=True, blank=True)
-    account_passiva = models.ForeignKey('accounting.Account', verbose_name=_("Passiva Account"),
-                                        related_name="db_relaccountpassiva", null=True, blank=True)
 
     def gettaxrate(self):
         return self.taxrate_in_percent
@@ -689,6 +683,17 @@ class TaxRate(models.Model):
         return self.name
 
 
+class ProductCategory(models.Model):
+    title = models.CharField(verbose_name=_("Product Category Title"), max_length=50)
+
+    class Meta():
+        verbose_name = _('Product Category')
+        verbose_name_plural = _('Product Categories')
+
+    def __unicode__(self):
+        return self.title
+
+
 class ProductItem(models.Model):
     item_prefix = models.CharField(max_length=10, verbose_name=_('Prefix'), default='#')
     item_description = models.TextField(verbose_name=_("Description"), null=True, blank=True)
@@ -699,8 +704,7 @@ class ProductItem(models.Model):
     lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now_add=True)
     lastmodifiedby = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True},
                                        verbose_name=_("Last modified by"), null=True, blank="True")
-    item_category = models.ForeignKey('accounting.ProductCategory',
-                                      verbose_name=_("Accounting Product Categorie"), null=True, blank=True)
+    item_category = models.ForeignKey(ProductCategory, verbose_name=_("Product Categorie"), null=True, blank=True)
 
 
 # TODO
