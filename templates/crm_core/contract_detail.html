@@ -24,16 +24,28 @@
                             </tr>
                             <tr>
                                 <td><small>{% trans 'Last modified' %}:&nbsp;</small></td>
-                                <td><small>{{ contract.lastmodification }}</small></td>
+                                <td><small>{{ contract.lastmodification|default_if_none:"-" }}</small></td>
+                            </tr>
+                        </table><br>
+                        <table>
+                            <tr>
+                                <td><h4>{% trans 'Description' %}:&nbsp;</h4></td>
+                                <td><h4>{{ contract.description|default_if_none:"-" }}</h4></td>
+                            </tr>
+                            <tr>
+                                <td><h4>{% trans 'Customer' %}:&nbsp;</h4></td>
+                                <td><h4>{{ contract.default_customer }}</h4></td>
+                            </tr>
+                            <tr>
+                                <td><h4>{% trans 'Supplier' %}:&nbsp;</h4></td>
+                                <td><h4>{{ contract.default_supplier|default_if_none:"-" }}</h4></td>
+                            </tr>
+                            <tr>
+                                <td><h4>{% trans 'Currency' %}:&nbsp;</h4></td>
+                                <td><h4>{{ contract.default_currency }}</h4></td>
                             </tr>
                         </table>
                     </div>
-                    <br>
-                    <h4>{{ contract.description }}</h4>
-                    <h4>{{ contract.default_customer }}</h4>
-                    <h4>{{ contract.default_supplier }}</h4>
-                    <h4>{{ contract.default_currency }}</h4>
-                    <br>
                 </div>
             </div>
         {% endif %}

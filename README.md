@@ -22,8 +22,8 @@ Documentation status:
     [![Documentation Status](https://readthedocs.org/projects/koalix-crm/badge/?version=latest)](https://readthedocs.org/projects/koalix-crm/?badge=latest)
 
 Issue status:
-    [![Stories in Ready](https://badge.waffle.io/tfroehlich82/koalixcrm.png?label=ready&title=Ready)](https://waffle.io/tfroehlich82/koalixcrm)
-    [![Stories in progress](https://badge.waffle.io/tfroehlich82/koalixcrm.svg?label=in progress&title=in Progress)](http://waffle.io/tfroehlich82/koalixcrm)
+    [![Stories in Ready](https://badge.waffle.io/tfroehlich82/koalixcrm.svg?label=ready&title=Stories in Ready)](http://waffle.io/tfroehlich82/koalixcrm)
+    [![Stories in Progress](https://badge.waffle.io/tfroehlich82/koalixcrm.svg?label=in progress&title=Stories in Progress)](http://waffle.io/tfroehlich82/koalixcrm)
     
 
 *****************************************************

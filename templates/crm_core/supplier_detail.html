@@ -16,7 +16,7 @@
             <div class="row well" style="margin: 30px;">
                 <div class="col-lg-4">
                     <div style="margin-top: -20px;">
-                        <h2>{{ supplier.prefix }} {{ supplier.name }}</h2>
+                        <h2>{{ supplier.get_prefix }} {{ supplier.name }}</h2>
                         <table>
                             <tr>
                                 <td><small>{% trans 'Created' %}:&nbsp;</small></td>
@@ -32,7 +32,8 @@
                     {% for address in supplier.addresses.all %}
                         <h4>{{ address.addressline1 }}</h4>
                         <h4>{{ address.addressline2 }}</h4>
-                        <h4>{{ address.zipcode }}&nbsp;{{ address.town }}&nbsp;({{ address.state }})</h4>
+                        <h4>{% if address.zipcode %}{{ address.zipcode }}&nbsp;{% endif %}
+                            {{ address.town }}{% if address.state %}&nbsp;({{ address.state }}){% endif %}</h4>
                         <h4>{{ address.country }}</h4>
                     {% endfor %}
                     <br>

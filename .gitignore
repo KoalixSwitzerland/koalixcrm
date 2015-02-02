@@ -4,7 +4,6 @@
 .DS_Store
 .coverage
 local_settings.py
-/static/media/avatars/
 /static/media/galleries/
 /static/media/uploads/galleries/
 /static/media/uploads/icons/
