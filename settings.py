@@ -269,9 +269,7 @@ INSTALLED_APPS = (
     "mezzanine.blog",
     "bootstrap3",
     "admin_backup",
-    "accounting",
     "crm_core",
-    "subscriptions",
     # Uncomment the following if you want to use mezzanine's twitter plugin
     # "mezzanine.twitter",
 )
