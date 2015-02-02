@@ -378,7 +378,7 @@ class Contract(models.Model):
 
 class PurchaseOrder(models.Model):
     state = FSMIntegerField(default=PurchaseOrderStatesEnum.New, choices=PurchaseOrderStatesEnum.choices)
-    contract = models.ForeignKey(Contract, verbose_name=_("Contract"), related_name='purchaseorder')
+    contract = models.ForeignKey(Contract, verbose_name=_("Contract"), related_name='purchaseorders')
     customer = models.ForeignKey(Customer, verbose_name=_("Customer"))
     external_reference = models.CharField(verbose_name=_("External Reference"), max_length=100, blank=True, null=True)
     supplier = models.ForeignKey(Supplier, verbose_name=_("Supplier"), blank=True, null=True)
@@ -396,6 +396,7 @@ class PurchaseOrder(models.Model):
     lastmodifiedby = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True},
                                        verbose_name=_("Last modified by"), related_name="db_polstmodified", null=True,
                                        blank=True)
+    derived_from_quote = models.ForeignKey('Quote', related_name='purchaseorders', null=True, blank=True)
 
     def recalculate_prices(self, pricing_date):
         price = 0
@@ -450,12 +451,15 @@ class PurchaseOrder(models.Model):
     def get_state_class(self):
         return PurchaseOrderStatesLabelEnum.choices[self.state]
 
+    def get_absolute_url(self):
+        url = '/purchaseorders/edit/' + str(self.pk)  # TODO: Bad solution
+        return url
+
     def __unicode__(self):
         return _("Purchase Order") + " #" + str(self.id)
 
 
 class SalesContract(models.Model):
-    contract = models.ForeignKey(Contract, verbose_name=_('Contract'), related_name='contract')
     external_reference = models.CharField(verbose_name=_("External Reference"), max_length=100, blank=True)
     discount = models.DecimalField(max_digits=5, decimal_places=2, verbose_name=_("Discount"), blank=True, null=True)
     description = models.CharField(verbose_name=_("Description"), max_length=100, blank=True, null=True)
@@ -506,6 +510,7 @@ class SalesContract(models.Model):
 
 
 class Quote(SalesContract):
+    contract = models.ForeignKey(Contract, verbose_name=_('Contract'), related_name='quotes')
     state = FSMIntegerField(default=QuoteStatesEnum.New, choices=QuoteStatesEnum.choices)
     validuntil = models.DateField(verbose_name=_("Valid until"))
 
@@ -575,11 +580,16 @@ class Quote(SalesContract):
     def get_state_class(self):
         return QuoteStatesLabelEnum.choices[self.state]
 
+    def get_absolute_url(self):
+        url = '/quotes/edit/' + str(self.pk)  # TODO: Bad solution
+        return url
+
     def __unicode__(self):
         return _('Quote') + ' #' + str(self.id)
 
 
 class Invoice(SalesContract):
+    contract = models.ForeignKey(Contract, verbose_name=_('Contract'), related_name='invoices')
     state = FSMIntegerField(default=InvoiceStatesEnum.Open, choices=InvoiceStatesEnum.choices)
     payableuntil = models.DateField(verbose_name=_("To pay until"))
     derived_from_quote = models.ForeignKey(Quote, blank=True, null=True)
@@ -642,6 +652,10 @@ class Invoice(SalesContract):
 
     def get_state_class(self):
         return InvoiceStatesLabelEnum.choices[self.state]
+
+    def get_absolute_url(self):
+        url = '/invoices/edit/' + str(self.pk)  # TODO: Bad solution
+        return url
 
     def __unicode__(self):
         return _("Invoice") + " #" + str(self.id)
