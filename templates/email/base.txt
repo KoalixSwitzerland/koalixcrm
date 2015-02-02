@@ -1,3 +1,0 @@
-{% block main %}{% endblock %}
-
-http://{{ request.get_host }}

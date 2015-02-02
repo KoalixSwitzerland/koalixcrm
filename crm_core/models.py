@@ -997,7 +997,7 @@ class TemplateSet(models.Model):
 
 
 class UserExtension(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='extension')
     image = models.ImageField(upload_to='avatars/', default='avatars/avatar.jpg', null=True, blank=True)
     default_templateset = models.ForeignKey(TemplateSet, null=True, blank=True)
     default_currency = models.CharField(max_length=3, choices=currencies, null=True, blank=True)

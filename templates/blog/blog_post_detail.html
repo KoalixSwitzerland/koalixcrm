@@ -22,7 +22,8 @@
 {% endblock %}
 
 {% block main %}
-
+<div class="form-panel" style="margin: 30px">
+<h4><i class="fa fa-angle-right"></i> {{ blog_post.title }}</h4>
 {% block blog_post_detail_postedby %}
 {% editable blog_post.publish_date %}
 <h6 class="post-meta">
@@ -130,4 +131,5 @@
 {% if blog_post.allow_comments %}{% comments_for blog_post %}{% endif %}
 {% endblock %}
 
+</div>
 {% endblock %}

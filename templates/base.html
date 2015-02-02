@@ -16,8 +16,6 @@
 <link rel="alternate" type="application/atom+xml" title="Atom" href="{% url "blog_post_feed" "atom" %}">
 {% endifinstalled %}
 
-{% compress css %}
-    {% bootstrap_css %}
     <link rel="stylesheet" href="{% static "assets/css/bootstrap.css" %}">
     <link rel="stylesheet" href="{% static "assets/font-awesome/css/font-awesome.css" %}">
     <link rel="stylesheet" href="{% static "assets/lineicons/style.css" %}">
@@ -28,9 +26,7 @@
 
     {% block extra_css %}
     {% endblock %}
-{% endcompress %}
 
-{% compress js %}
     <script src="{% static "assets/js/chart-master/Chart.js" %}"></script>
     <script src="{% static "assets/js/jquery.js" %}"></script>
     <script src="{% static "assets/js/bootstrap.min.js" %}"></script>
@@ -39,7 +35,6 @@
     {% block extra_js %}
     {% endblock %}
 
-{% endcompress %}
 
 <!--[if lt IE 9]>
 <script src="{% static "js/html5shiv.js" %}"></script>
@@ -71,7 +66,7 @@
             <div class="nav notify-row" id="top_menu">
 
 
-                {% if request.user.is_authenticated %}
+                {% if user.is_authenticated %}
                     <!--  notification start -->
                     <ul class="nav top-menu">
                     </ul>
@@ -79,7 +74,7 @@
                 {% endif %}
 
             </div>
-            {% if request.user.is_authenticated %}
+            {% if user.is_authenticated %}
             <div class="top-menu nav pull-right" style="margin-top: 12px;">
                 {% search_form "all" %}
             </div>
@@ -96,17 +91,15 @@
               <!-- sidebar menu start-->
               <ul class="sidebar-menu" id="nav-accordion">
 
-                  {% if request.user.is_authenticated %}
+                  {% if user.is_authenticated %}
 
               	    <p class="centered">
-                        {% if request.user.image %}
-                        <img src="{{ request.user.image }}" class="img-thumbnail" width="60" height="60">
-                            {% else %}
-                        <img src="{% static 'assets/img/avatar.jpg' %}" class="img-thumbnail" width="60" height="60">
-                        {% endif %}
+                    {% if user.extension.image %}
+                        <img src="{{ user.extension.image.url }}" class="img-thumbnail" width="60" height="60">
+                    {% endif %}
                         <h5 class="centered">
-                            <a href="{% url "profile_update" request.user.pk %}">
-                                {{ request.user }}
+                            <a href="{% url "profile_update" user.pk %}">
+                                {{ user }}
                             </a>
                         </h5>
                     </p>
@@ -258,7 +251,7 @@
               *********************************************************************************************************************************************************** -->
                   <div class="col-lg-2 ds">
                   {% block rightbar %}
-                      {% if request.user.is_authenticated %}
+                      {% if user.is_authenticated %}
                       <div class="row mt">
 
                           {% block rightbar_impex %}

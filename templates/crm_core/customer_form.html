@@ -1,8 +1,24 @@
 {% extends "base.html" %}
-{% load i18n bootstrap3 %}
+{% load i18n staticfiles crispy_forms_tags crispy_forms_field crispy_forms_filters %}
 
 {% block meta_title %}{% trans "Customers" %}{% endblock %}
 {% block title %}{% trans "Customers" %}{% endblock %}
+
+{% block extra_head %}
+<style type="text/css">
+    .add-row {
+        padding-left:18px;
+        background:url({% static  'assets/img/add.png' %}) no-repeat left center;
+    }
+    .delete-row {
+        float:right;
+        display:block;
+        margin-left:4px;
+        padding-left:18px;
+        background:url({% static  'assets/img/delete.png' %}) no-repeat left center;
+    }
+</style>
+{% endblock %}
 
 {% block breadcrumb_menu %}
     <li class="active"><a href="{% url 'customer_list' %}">{% trans "Customers" %}</a></li>
@@ -16,58 +32,68 @@
     <div class="form-panel" style="margin: 30px">
     <h4 class="mb"><i class="fa fa-angle-right"></i>
     {% if customer %}{% trans "Edit customer" %}{% else %}{% trans "Create customer" %}{% endif%}</h4>
-    <form method="POST" action="." class="form form-horizontal" style="margin: 30px;">
-        {% csrf_token %}
-
+    <form {{ flat_attrs|safe }} method="post" action="" class="form form-horizontal" style="margin: 30px;" {% if formset.is_multipart %} enctype="multipart/form-data"{% endif %}>
+        <div style="margin: 0 12px 0 12px;">
             <div class="row well">
-                <div class="col-lg-6">
-                    <div style="margin: 0 12px 0 12px;">
-                        {%  bootstrap_form form layout='inline' %}
-                    </div>
-                    {% if postaladdress_formset and perms.crm_core.view_postaladdress %}
-                        <details class="form-wrapper" id="edit-advanced">
-                            <summary><i class="fa fa-envelope"></i> {% trans "Postal Address" %}</summary>
-                            <div style="margin: 0 12px 0 12px;">
-                                {% bootstrap_formset postaladdress_formset layout='inline' %}
-                            </div>
-                        </details>
-                    {% endif %}
+
+                <div class="col-sm-4">
+                    {% crispy form %}
                 </div>
 
-                <div class="col-lg-6">
-                    <div class="col-lg-6">
-                    {% if phoneaddress_formset and perms.crm_core.view_phoneaddress %}
-                        <fieldset>
-                        <legend><i class="fa fa-phone"></i> {% trans "Phone Address" %}</legend>
-                            <div style="margin: 0 12px 0 12px;">
-                                {% bootstrap_formset phoneaddress_formset layout='inline' %}
-                            </div>
-                        </fieldset>
-                    {% endif %}
-                    </div>
-                    <div class="col-lg-6">
-                    {% if emailaddress_formset and perms.crm_core.view_emailaddress %}
-                        <fieldset>
-                        <legend><i class="fa fa-at"></i> {% trans "Email Address" %}</legend>
-                            <div style="margin: 0 12px 0 12px;">
-                                {% bootstrap_formset emailaddress_formset layout='inline' %}
-                            </div>
-                        </fieldset>
-                    {% endif %}
-                    </div>
+                <div id="postaladdress_div" class="col-sm-4">
+                    {% crispy postaladdress_formset %}<br />
+                    {{ postaladdress_formset.management_form|crispy }}
+                </div>
+
+                <div id="phonaddress_div" class="col-sm-4">
+                    {% crispy phoneaddress_formset %}<br />
+                    {{ phoneaddress_formset.management_form|crispy }}
+                </div>
+
+                <div id="emailaddress_div" class="col-sm-4">
+                    {% crispy emailaddress_formset %}<br />
+                    {{ emailaddress_formset.management_form|crispy }}
                 </div>
 
             </div>
+        </div>
 
-            <button type='submit' class='btn btn-primary'>
-                {% trans "Save" %}
-            </button>
+        <button type='submit' class='btn btn-primary'>
+            {% trans "Save" %}
+        </button>
 
-            <button type="button" class="btn btn-default"
-                    onclick="window.location.assign('{% url 'customer_list' %}')">
-                {% trans "Cancel" %}
-            </button>
+        <button type="button" class="btn btn-default"
+                onclick="window.location.assign('{% url 'customer_list' %}')">
+            {% trans "Cancel" %}
+        </button>
 
-        </form>
+    </form>
     </div>
+
+{% endblock %}
+
+{% block extrascript %}
+    <script type="text/javascript">
+        $(function() {
+            $('#phonaddress_div').formset({
+                prefix: "{{ phoneaddress_formset.prefix }}",
+                deleteText: "&nbsp;",
+                addText: " Position hinzufügen"
+            });
+        });
+        $(function() {
+            $('#emailaddress_div').formset({
+                prefix: "{{ emailaddress_formset.prefix }}",
+                deleteText: "&nbsp;",
+                addText: " Position hinzufügen"
+            });
+        });
+        $(function() {
+            $('#postaladdress_div').formset({
+                prefix: "{{ postaladdress_formset.prefix }}",
+                deleteText: "&nbsp;",
+                addText: " Position hinzufügen"
+            });
+        });
+    </script>
 {% endblock %}

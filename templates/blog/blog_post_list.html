@@ -42,7 +42,7 @@
 {% endblock %}
 
 {% block main %}
-
+<div class="form-panel" style="margin: 30px">
 {% if tag or category or year or month or author %}
     {% block blog_post_list_filterinfo %}
     <p>
@@ -64,7 +64,7 @@
     {% block blog_post_list_pagecontent %}
     {% if page.get_content_model.content %}
         {% editable page.get_content_model.content %}
-        {{ page.get_content_model.content|richtext_filters|safe }}
+        <h4><i class="fa fa-angle-right"></i> {{ page.get_content_model.content|removetags:"p"|richtext_filters|safe }}</h4>
         {% endeditable %}
     {% endif %}
     {% endblock %}
@@ -151,7 +151,7 @@
 {% if settings.COMMENTS_DISQUS_SHORTNAME %}
 {% include "generic/includes/disqus_counts.html" %}
 {% endif %}
-
+</div>
 {% endblock %}
 
 {% block right_panel %}

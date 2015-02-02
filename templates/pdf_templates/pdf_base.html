@@ -10,7 +10,7 @@
                 content: "{% trans 'Page' %} " counter(page) " {% trans 'of' %} " counter(pages)
             }
         }
-        h1 {
+        h1, h2 {
             -weasy-bookmark-level: none;
         }
         body {
@@ -21,7 +21,9 @@
             max-width: 20cm;
         }
         .title {
-            text-align: center;
+            left: 0;
+            top: 250px;
+            position: absolute;
         }
         .customer-name {
             left: 0;
@@ -54,11 +56,6 @@
 
 <div id="header">
 
-    <span class="title">
-        {% block title %}
-        {% endblock %}
-    </span>
-
     <span class="customer-name">
         {% block customername %}
         {% endblock %}
@@ -81,6 +78,13 @@
     <span class="customer-email">
 
         {% block customeremail %}
+        {% endblock %}
+
+    </span>
+
+    <span class="title">
+
+        {% block title %}
         {% endblock %}
 
     </span>

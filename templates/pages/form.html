@@ -1,6 +1,6 @@
 {% extends "pages/page.html" %}
 
-{% load mezzanine_tags bootstrap3 %}
+{% load mezzanine_tags crispy_forms_tags %}
 
 {% block main %}
 {{ block.super }}
@@ -13,14 +13,15 @@
     {% errors_for form %}
 
     <div class="form-panel" style="margin: 30px">
+
         {% with page.form as page_form %}
         {% editable page_form.content %}
-        {{ page_form.content|richtext_filters|safe }}
+        <h4><i class="fa fa-angle-right"></i> {{ page_form.content|removetags:"p"|richtext_filters|safe }}</h4>
         {% endeditable %}
         {% endwith %}
 
         <form class="mezzanine-form" method="post"{% if form.is_multipart %} enctype="multipart/form-data"{% endif %}>
-            {% bootstrap_form form %}
+            {% crispy form  %}
             <div class="form-actions">
                 <button class="btn btn-primary btn-sm" type="submit">{{ page.form.button_text }}</button>
             </div>

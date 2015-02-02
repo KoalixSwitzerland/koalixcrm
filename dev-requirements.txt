@@ -9,7 +9,6 @@ django-extra-views>=0.6.5
 django-debug-toolbar
 sphinx-rtd-theme
 django-extensions
-django-compressor
 coverage
 WeasyPrint
 django-utils2

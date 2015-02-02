@@ -1,5 +1,0 @@
-{% extends "email/form_response.txt" %}
-
-{% block main %}
-{{ block.super }}
-{% endblock %}
