@@ -10,7 +10,7 @@ from django_fsm import FSMIntegerField
 from mezzanine.core.models import Displayable
 from os import path
 from weasyprint import HTML
-from international.models import countries, currencies
+from international.models import countries, currencies, countries_raw
 from const.postaladdressprefix import PostalAddressPrefix
 from const.purpose import PhoneAddressPurpose, PostalAddressPurpose, EmailAddressPurpose
 from const.states import InvoiceStatesEnum, PurchaseOrderStatesEnum, QuoteStatesEnum, InvoiceStatesLabelEnum, \
@@ -91,6 +91,9 @@ class PostalAddress(models.Model):
 
     def get_purpose(self):
         return PostalAddressPurpose.choices[self.purpose]
+
+    def get_country(self):
+        return list(c[4].partition(',')[0].partition('(')[0].strip() for c in countries_raw if c[1] == self.country)[0]
 
     def __unicode__(self):
         if self.purpose and self.addressline1 and self.zipcode and self.city:
@@ -563,7 +566,7 @@ class Quote(SalesContract):
         return purchase_order
 
     def create_pdf(self, html):
-        HTML(string=html).write_pdf(target=path.normpath('%s/%s/uploads/pdf/quotes/quote-%s_%s.pdf'
+        HTML(string=html, encoding="utf8").write_pdf(target=path.normpath('%s/%s/uploads/pdf/quotes/quote-%s_%s.pdf'
                                                   % (settings.PROJECT_ROOT, settings.MEDIA_URL, self.pk,
                                                      datetime.now().strftime('%d%m%Y_%H%M%S'))))
 

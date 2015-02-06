@@ -32,12 +32,12 @@
 
 {% block contentpositions %}
     <h2>{% trans 'Positions' %}</h2>
-    <table>
+    <table class="table table-bordered">
     <thead>
     <tr>
         <td width="80px">#</td>
         <td>{% trans 'Product' %}</td>
-        <td width="120px">{% trans 'Quantity' %}</td>
+        <td width="160px">{% trans 'Quantity' %}</td>
         <td style="text-align: right">{% trans 'Price' %}</td>
     </tr>
     </thead>
@@ -46,7 +46,7 @@
         <tr>
         <td>{{ position.position_number }}</td>
         <td>{{ position.product }}</td>
-        <td style="text-align: center">{{ position.quantity }}{{ position.unit }}</td>
+        <td style="text-align: center">{{ position.quantity }} {{ position.unit }}</td>
         <td style="text-align: right">{{ position.product.get_price }}</td>
         </tr>
     {% endfor %}

@@ -33,8 +33,8 @@
                         <h4>{{ address.addressline1 }}</h4>
                         <h4>{{ address.addressline2 }}</h4>
                         <h4>{% if address.zipcode %}{{ address.zipcode }}&nbsp;{% endif %}
-                            {{ address.town }}{% if address.state %}&nbsp;({{ address.state }}){% endif %}</h4>
-                        <h4>{{ address.country }}</h4>
+                            {{ address.city }}&nbsp;{{ address.state|default_if_none:"" }}</h4>
+                        <h4>{{ address.get_country|default_if_none:"" }}</h4>
                     {% endfor %}
                     <br>
                 </div>
