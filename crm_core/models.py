@@ -15,6 +15,7 @@ from const.postaladdressprefix import PostalAddressPrefix
 from const.purpose import PhoneAddressPurpose, PostalAddressPurpose, EmailAddressPurpose
 from const.states import InvoiceStatesEnum, PurchaseOrderStatesEnum, QuoteStatesEnum, InvoiceStatesLabelEnum, \
     QuoteStatesLabelEnum, PurchaseOrderStatesLabelEnum, ContractStatesEnum, ContractStatesLabelEnum
+from django_extensions.db.fields import CreationDateTimeField, ModificationDateTimeField
 
 
 # ######################
@@ -26,8 +27,8 @@ class Contact(models.Model):
     prefix = models.CharField(max_length=1, choices=PostalAddressPrefix.choices, verbose_name=_("Prefix"), blank=True,
                               null=True)
     name = models.CharField(max_length=300, verbose_name=_("Name"))
-    dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now_add=True)
-    lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now=True)
+    dateofcreation = CreationDateTimeField(verbose_name=_("Created at"))
+    lastmodification = ModificationDateTimeField(verbose_name=_("Last modified"))
     lastmodifiedby = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, blank=True,
                                        verbose_name=_("Last modified by"), null=True)
     default_currency = models.CharField(max_length=3, choices=currencies, blank=True, null=True)
@@ -303,8 +304,8 @@ class Contract(models.Model):
     default_supplier = models.ForeignKey(Supplier, verbose_name=_("Default Supplier"), null=True, blank=True)
     default_currency = models.CharField(max_length=3, choices=currencies, verbose_name=_("Default Currency"),
                                         blank=True, null=True)
-    dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now=True)
-    lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now_add=True)
+    dateofcreation = CreationDateTimeField(verbose_name=_("Created at"))
+    lastmodification = ModificationDateTimeField(verbose_name=_("Last modified"))
     lastmodifiedby = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True},
                                        verbose_name=_("Last modified by"), related_name="db_contractlstmodified",
                                        null=True)
@@ -394,12 +395,19 @@ class PurchaseOrder(models.Model):
     staff = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, blank=True,
                               verbose_name=_("Staff"), related_name="db_relpostaff", null=True)
     currency = models.CharField(max_length=3, choices=currencies, verbose_name=_("Currency"), blank=False, null=False)
-    dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now=True)
-    lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now_add=True)
+    dateofcreation = CreationDateTimeField(verbose_name=_("Created at"))
+    lastmodification = ModificationDateTimeField(verbose_name=_("Last modified"))
     lastmodifiedby = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True},
                                        verbose_name=_("Last modified by"), related_name="db_polstmodified", null=True,
                                        blank=True)
     derived_from_quote = models.ForeignKey('Quote', related_name='purchaseorders', null=True, blank=True)
+
+    class Meta():
+        verbose_name = _('Purchase Order')
+        verbose_name_plural = _('Purchase Order')
+        permissions = (
+            ('view_purchaseorder', 'Can view purchase orders'),
+        )
 
     def recalculate_prices(self, pricing_date):
         price = 0
@@ -428,7 +436,6 @@ class PurchaseOrder(models.Model):
             self.last_calculated_price = price
             self.last_calculated_tax = tax
             self.last_pricing_date = pricing_date
-            self.save()
             return 1
         except Quote.DoesNotExist, e:
             print "ERROR " + e.__str__()
@@ -441,13 +448,6 @@ class PurchaseOrder(models.Model):
                                                   % (settings.PROJECT_ROOT, settings.MEDIA_URL, self.pk,
                                                      datetime.now().strftime('%d%m%Y_%H%M%S'))))
 
-    class Meta():
-        verbose_name = _('Purchase Order')
-        verbose_name_plural = _('Purchase Order')
-        permissions = (
-            ('view_purchaseorder', 'Can view purchase orders'),
-        )
-
     def get_state(self):
         return PurchaseOrderStatesEnum.choices[self.state]
 
@@ -457,6 +457,10 @@ class PurchaseOrder(models.Model):
     def get_absolute_url(self):
         url = '/purchaseorders/edit/' + str(self.pk)  # TODO: Bad solution
         return url
+
+    def save(self, *args, **kwargs):
+        self.recalculate_prices(date.today())
+        super(PurchaseOrder, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return _("Purchase Order") + " #" + str(self.id)
@@ -475,8 +479,8 @@ class SalesContract(models.Model):
     staff = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, blank=True,
                               verbose_name=_("Staff"), related_name="db_relscstaff", null=True)
     currency = models.CharField(max_length=3, choices=currencies, verbose_name=_("Currency"), blank=False, null=False)
-    dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now=True)
-    lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now_add=True)
+    dateofcreation = CreationDateTimeField(verbose_name=_("Created at"))
+    lastmodification = ModificationDateTimeField(verbose_name=_("Last modified"))
     lastmodifiedby = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True},
                                        verbose_name=_("Last modified by"), related_name="db_lstscmodified", null=True,
                                        blank="True")
@@ -511,11 +515,22 @@ class SalesContract(models.Model):
         except Quote.DoesNotExist:
             return 0
 
+    def save(self, *args, **kwargs):
+        self.recalculate_prices(date.today())
+        super(SalesContract, self).save(*args, **kwargs)
+
 
 class Quote(SalesContract):
     contract = models.ForeignKey(Contract, verbose_name=_('Contract'), related_name='quotes')
     state = FSMIntegerField(default=QuoteStatesEnum.New, choices=QuoteStatesEnum.choices)
     validuntil = models.DateField(verbose_name=_("Valid until"))
+
+    class Meta():
+        verbose_name = _('Quote')
+        verbose_name_plural = _('Quotes')
+        permissions = (
+            ('view_quote', 'Can view quotes'),
+        )
 
     def create_invoice(self):
         invoice = Invoice()
@@ -569,13 +584,6 @@ class Quote(SalesContract):
         HTML(string=html, encoding="utf8").write_pdf(target=path.normpath('%s/%s/uploads/pdf/quotes/quote-%s_%s.pdf'
                                                   % (settings.PROJECT_ROOT, settings.MEDIA_URL, self.pk,
                                                      datetime.now().strftime('%d%m%Y_%H%M%S'))))
-
-    class Meta():
-        verbose_name = _('Quote')
-        verbose_name_plural = _('Quotes')
-        permissions = (
-            ('view_quote', 'Can view quotes'),
-        )
 
     def get_state(self):
         return QuoteStatesEnum.choices[self.state]
@@ -647,6 +655,7 @@ class TaxRate(models.Model):
     taxrate_in_percent = models.DecimalField(max_digits=5, decimal_places=2, verbose_name=_("Taxrate in Percentage"))
     name = models.CharField(verbose_name=_("Taxname"), max_length=100)
 
+    # TODO
     def gettaxrate(self):
         return self.taxrate_in_percent
 
@@ -678,8 +687,8 @@ class ProductItem(models.Model):
     item_title = models.CharField(verbose_name=_("Title"), max_length=200)
     item_unit = models.ForeignKey(Unit, verbose_name=_("Unit"))
     item_tax = models.ForeignKey(TaxRate, blank=False)
-    dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now=True)
-    lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now_add=True)
+    dateofcreation = CreationDateTimeField(verbose_name=_("Created at"))
+    lastmodification = ModificationDateTimeField(verbose_name=_("Last modified"))
     lastmodifiedby = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True},
                                        verbose_name=_("Last modified by"), null=True, blank="True")
     item_category = models.ForeignKey(ProductCategory, verbose_name=_("Product Categorie"), null=True, blank=True)
@@ -689,6 +698,13 @@ class ProductItem(models.Model):
 class Product(Displayable, ProductItem):
     product_number = models.IntegerField(verbose_name=_("Product Number"))
     search_fields = {"item_title": 10, "item_description": 8}
+
+    class Meta():
+        verbose_name = _('Product')
+        verbose_name_plural = _('Products')
+        permissions = (
+            ('view_product', 'Can view products'),
+        )
 
     def get_product_number(self):
         return "%s%s" % (self.item_prefix, self.product_number)
@@ -738,13 +754,6 @@ class Product(Displayable, ProductItem):
 
     def get_tax_rate(self):
         return self.item_tax.gettaxrate()
-
-    class Meta():
-        verbose_name = _('Product')
-        verbose_name_plural = _('Products')
-        permissions = (
-            ('view_product', 'Can view products'),
-        )
 
     def __unicode__(self):
         return '%s (#%s)' % (self.item_title, str(self.product_number))
