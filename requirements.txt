@@ -10,3 +10,4 @@ django-utils2>=1.8.0
 WeasyPrint
 django-crispy-forms
 django-datetime-widget
+django-extensions
