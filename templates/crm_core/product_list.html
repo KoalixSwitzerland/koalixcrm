@@ -12,14 +12,14 @@
     <div class="content-panel" style="margin: 30px; padding: 10px;">
     <h4><i class="fa fa-angle-right"></i> {% trans "Products" %}</h4>
         <table class="table table-striped table-advance">
-            <tr><th>{% trans "Number" %}</th><th>{% trans "Title" %}</th><th>{% trans "Unit" %}</th><th>{% trans "Tax" %}</th><th>{% trans "Product Category" %}</th><th></th></tr>
+            <tr><th>{% trans "ID" %}</th><th>{% trans "Title" %}</th><th>{% trans "Unit" %}</th><th>{% trans "Tax" %}</th><th>{% trans "Product Category" %}</th><th></th></tr>
             {% for product in product_list %}
                 <tr>
-                    <td><a href="{% url 'product_detail' product.pk %}">#{{ product.product_number }}</a></td>
+                    <td><a href="{% url 'product_detail' product.pk %}">{{ product.item_prefix }}{{ product.product_number }}</a></td>
                     <td>{{ product.item_title }}</td>
                     <td>{{ product.item_unit }}</td>
                     <td>{{ product.item_tax }}</td>
-                    <td>{{ product.item_category }}</td>
+                    <td>{{ product.item_category|default_if_none:"-" }}</td>
                     <td width="100px">
                         <p class="pull-right">
                         {% if perms.crm_core.change_product %}

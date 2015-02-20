@@ -1,5 +1,5 @@
-Mezzanine>=3.1.10
 Django<1.8
+Mezzanine>=3.1.10
 po-localization
 django-bootstrap3
 django-braces>=1.4.0
@@ -14,3 +14,4 @@ WeasyPrint
 django-utils2
 django-crispy-forms
 django-datetime-widget
+django-datatable-view

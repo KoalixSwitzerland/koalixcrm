@@ -149,24 +149,10 @@
 
                       {% if perms.crm_core.view_contract or perms.crm_core.view_quote or perms.crm_core.view_purchaseorder or perms.crm_core.view_invoice %}
                       <li class="sub-menu">
-                          <a href="javascript:;" >
+                          <a href="/contracts/">
                               <i class="fa fa-star"></i>
-                              <span>{% trans "Order Management" %}</span>
+                              <span>{% trans "Contract Overview" %}</span>
                           </a>
-                          <ul class="sub">
-                              {% if perms.crm_core.view_contract %}
-                                <li><a href="/contracts/">{% trans "Contracts" %}</a></li>
-                              {% endif %}
-                              {% if perms.crm_core.view_quote %}
-                                <li><a href="/quotes/">{% trans "Quotes" %}</a></li>
-                              {% endif %}
-                              {% if perms.crm_core.view_purchaseorder %}
-                                <li><a href="/purchaseorders/">{% trans "Purchase Orders" %}</a></li>
-                              {% endif %}
-                              {% if perms.crm_core.view_invoice %}
-                                <li><a href="/invoices/">{% trans "Invoices" %}</a></li>
-                              {% endif %}
-                          </ul>
                       </li>
                       {% endif %}
 

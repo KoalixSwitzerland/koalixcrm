@@ -12,23 +12,22 @@
     <div class="content-panel" style="margin: 30px; padding: 10px;">
     <h4><i class="fa fa-angle-right"></i> {% trans "Customers" %}</h4>
         <table class="table table-striped table-advance">
-            <tr><th>{% trans "Name" %}</th><th>{% trans "Prename" %}</th><th>{% trans 'Postal Address' %}</th>
+            <tr><th>{% trans "Name" %}</th><th>{% trans 'Postal Address' %}</th>
                 <th>{% trans 'Phone Number' %}</th><th>{% trans 'Email Address' %}</th><th>{% trans 'Customer Group' %}</th><th></th><th></th></tr>
             {% for customer in customer_list %}
                 <tr>
-                    <td><a href="{% url 'customer_detail' customer.pk %}">{{ customer.name }}</a></td>
-                    <td>{{ customer.firstname }}</td>
+                    <td><a href="{% url 'customer_detail' customer.pk %}">{{ customer }}</a></td>
                     <td>
-                        {{ customer.addresses.all|join:"<br>" }}
+                        {{ customer.addresses.all|join:"<br>"|default:"-" }}
                     </td>
                     <td>
-                        {{ customer.phonenumbers.all|join:"<br>" }}
+                        {{ customer.phonenumbers.all|join:"<br>"|default:"-" }}
                     </td>
                     <td>
-                        {{ customer.emailaddresses.all|join:"<br>" }}
+                        {{ customer.emailaddresses.all|join:"<br>"|default:"-" }}
                     </td>
                     <td>
-                        {{ customer.ismemberof.all|join:"<br>" }}
+                        {{ customer.ismemberof.all|join:"<br>"|default:"-" }}
                     </td>
                     <td width="150px">
                         <p class="pull-right">

@@ -16,15 +16,15 @@
                 <th>{% trans 'Phone Number' %}</th><th>{% trans 'Email Address' %}</th><th></th></tr>
             {% for supplier in supplier_list %}
                 <tr>
-                    <td><a href="{% url 'supplier_detail' supplier.pk %}">{{ supplier.name }}</a></td>
+                    <td><a href="{% url 'supplier_detail' supplier.pk %}">{{ supplier }}</a></td>
                     <td>
-                        {{ supplier.addresses.all|join:"<br>" }}
+                        {{ supplier.addresses.all|join:"<br>"|default:"-" }}
                     </td>
                     <td>
-                        {{ supplier.phonenumbers.all|join:"<br>" }}
+                        {{ supplier.phonenumbers.all|join:"<br>"|default:"-" }}
                     </td>
                     <td>
-                        {{ supplier.emailaddresses.all|join:"<br>" }}
+                        {{ supplier.emailaddresses.all|join:"<br>"|default:"-" }}
                     </td>
                     <td width="100px">
                         <p class="pull-right">

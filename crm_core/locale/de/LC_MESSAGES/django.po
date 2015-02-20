@@ -227,7 +227,7 @@ msgstr "Offene Aufträge"
 # #########################
 
 msgid "Prefix"
-msgstr "Anrede"
+msgstr "Prefix"
 
 msgid "Name"
 msgstr "Name"

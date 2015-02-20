@@ -16,7 +16,7 @@
             <div class="row well" style="margin: 30px;">
                 <div class="col-lg-4">
                     <div style="margin-top: -20px;">
-                        <h2>#{{ product.product_number }}&nbsp;{{ product.product_title }}</h2>
+                        <h2>{{ product.item_prefix }}{{ product.product_number }}&nbsp;{{ product.item_title }}</h2>
                         <table>
                             <tr>
                                 <td><small>{% trans 'Created' %}:&nbsp;</small></td>
@@ -35,23 +35,6 @@
                     <h4>{{ product.accoutingProductCategorie }}</h4>
                     <br>
                 </div>
-{#                <div class="col-lg-4">#}
-{#                    <fieldset>#}
-{#                    <legend>{% trans 'Contact Data' %}</legend>#}
-{#                    {% for email in customer.emailaddresses.all %}#}
-{#                        <h5><i class="fa fa-at"></i>&nbsp;&nbsp;<a href="mailto:{{ email.email }}">{{ email.email }}</a></h5>#}
-{#                    {% endfor %}#}
-{#                    {% for phonenumber in customer.phonenumbers.all %}#}
-{#                        <h5><i class="fa fa-phone"></i>&nbsp;&nbsp;{{ phonenumber.phone }}</h5>#}
-{#                    {% endfor %}#}
-{#                    </fieldset>#}
-{#                </div>#}
-{#                <div class="col-lg-4">#}
-{#                    <fieldset>#}
-{#                    <legend>{% trans 'Details' %}</legend>#}
-{#                        <h5>{% trans 'Billing Cycle' %}:&nbsp;{{ customer.billingcycle }}</h5>#}
-{#                    </fieldset>#}
-{#                </div>#}
             </div>
         {% endif %}
     </div>

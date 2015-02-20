@@ -445,14 +445,14 @@ class ListProducts(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = Product
     permission_required = 'crm_core.view_product'
     login_url = settings.LOGIN_URL
-    fields = ['product_number', 'item_title', 'item_description', 'item_unit', 'item_tax', 'item_category']
+    fields = ['item_prefix', 'product_number', 'item_title', 'item_description', 'item_unit', 'item_tax', 'item_category']
 
 
 class CreateProduct(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Product
     permission_required = 'crm_core.add_product'
     login_url = settings.LOGIN_URL
-    fields = ['product_number', 'item_title', 'item_description', 'item_unit', 'item_tax', 'item_category']
+    fields = ['item_prefix', 'product_number', 'item_title', 'item_description', 'item_unit', 'item_tax', 'item_category']
     success_url = reverse_lazy('product_list')
 
 
@@ -460,7 +460,7 @@ class EditProduct(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Product
     permission_required = 'crm_core.change_product'
     login_url = settings.LOGIN_URL
-    fields = ['product_number', 'item_title', 'item_description', 'item_unit', 'item_tax', 'item_category']
+    fields = ['item_prefix', 'product_number', 'item_title', 'item_description', 'item_unit', 'item_tax', 'item_category']
     success_url = reverse_lazy('product_list')
 
 
@@ -559,7 +559,8 @@ class ListContracts(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = Contract
     permission_required = 'crm_core.view_contract'
     login_url = settings.LOGIN_URL
-    fields = ['description', 'default_customer', 'default_supplier', 'default_currency']
+    fields = ['description', 'default_customer', 'default_supplier']
+    queryset = Contract.objects.all().order_by('lastmodification').reverse()
 
 
 class ViewContract(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
@@ -580,7 +581,7 @@ class EditContract(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Contract
     permission_required = 'crm_core.change_contract'
     login_url = settings.LOGIN_URL
-    fields = ['description', 'default_customer', 'default_supplier', 'defaultcurrency']
+    fields = ['description', 'default_customer', 'default_supplier', 'default_currency']
     success_url = reverse_lazy('contract_list')
 
 

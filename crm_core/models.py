@@ -24,7 +24,7 @@ from django_extensions.db.fields import CreationDateTimeField, ModificationDateT
 
 
 class Contact(models.Model):
-    prefix = models.CharField(max_length=1, choices=PostalAddressPrefix.choices, verbose_name=_("Prefix"), blank=True,
+    prefix = models.CharField(max_length=1, choices=PostalAddressPrefix.choices, verbose_name=_("Title"), blank=True,
                               null=True)
     name = models.CharField(max_length=300, verbose_name=_("Name"))
     dateofcreation = CreationDateTimeField(verbose_name=_("Created at"))
@@ -470,20 +470,21 @@ class SalesContract(models.Model):
     external_reference = models.CharField(verbose_name=_("External Reference"), max_length=100, blank=True)
     discount = models.DecimalField(max_digits=5, decimal_places=2, verbose_name=_("Discount"), blank=True, null=True)
     description = models.CharField(verbose_name=_("Description"), max_length=100, blank=True, null=True)
-    last_pricing_date = models.DateField(verbose_name=_("Last Pricing Date"), blank=True, null=True)
+    last_pricing_date = models.DateField(verbose_name=_("Last Pricing Date"), blank=True, null=True, editable=False)
     last_calculated_price = models.DecimalField(max_digits=17, decimal_places=2,
-                                                verbose_name=_("Last Calculated Price With Tax"), blank=True, null=True)
+                                                verbose_name=_("Last Calculated Price With Tax"),
+                                                blank=True, null=True, editable=False)
     last_calculated_tax = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculated Tax"),
-                                              blank=True, null=True)
+                                              blank=True, null=True, editable=False)
     customer = models.ForeignKey(Customer, verbose_name=_("Customer"))
     staff = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, blank=True,
                               verbose_name=_("Staff"), related_name="db_relscstaff", null=True)
     currency = models.CharField(max_length=3, choices=currencies, verbose_name=_("Currency"), blank=False, null=False)
-    dateofcreation = CreationDateTimeField(verbose_name=_("Created at"))
-    lastmodification = ModificationDateTimeField(verbose_name=_("Last modified"))
+    dateofcreation = CreationDateTimeField(verbose_name=_("Created at"), editable=False)
+    lastmodification = ModificationDateTimeField(verbose_name=_("Last modified"), editable=False)
     lastmodifiedby = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True},
                                        verbose_name=_("Last modified by"), related_name="db_lstscmodified", null=True,
-                                       blank="True")
+                                       blank="True", editable=False)
 
     def recalculate_prices(self, pricing_date):
         price = 0
@@ -522,7 +523,7 @@ class SalesContract(models.Model):
 
 class Quote(SalesContract):
     contract = models.ForeignKey(Contract, verbose_name=_('Contract'), related_name='quotes')
-    state = FSMIntegerField(default=QuoteStatesEnum.New, choices=QuoteStatesEnum.choices)
+    state = FSMIntegerField(default=QuoteStatesEnum.New, choices=QuoteStatesEnum.choices, editable=False)
     validuntil = models.DateField(verbose_name=_("Valid until"))
 
     class Meta():
@@ -601,9 +602,9 @@ class Quote(SalesContract):
 
 class Invoice(SalesContract):
     contract = models.ForeignKey(Contract, verbose_name=_('Contract'), related_name='invoices')
-    state = FSMIntegerField(default=InvoiceStatesEnum.Open, choices=InvoiceStatesEnum.choices)
+    state = FSMIntegerField(default=InvoiceStatesEnum.Open, choices=InvoiceStatesEnum.choices, editable=False)
     payableuntil = models.DateField(verbose_name=_("To pay until"))
-    derived_from_quote = models.ForeignKey(Quote, blank=True, null=True)
+    derived_from_quote = models.ForeignKey(Quote, blank=True, null=True, editable=False)
     payment_bank_reference = models.CharField(verbose_name=_("Payment Bank Reference"), max_length=100, blank=True,
                                               null=True)
 

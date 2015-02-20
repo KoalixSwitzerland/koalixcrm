@@ -1,29 +1,42 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block meta_title %}{% trans "Contracts" %}{% endblock %}
-{% block title %}{% trans "Contracts" %}{% endblock %}
+{% block meta_title %}{% trans "Contract Overview" %}{% endblock %}
+{% block title %}{% trans "Contract Overview" %}{% endblock %}
 
 {% block breadcrumb_menu %}
-    <li class="active">{% trans "Contracts" %}</li>
+    <li class="active">{% trans "Contract Overview" %}</li>
 {% endblock %}
 
 {% block main %}
     <div class="content-panel" style="margin: 30px; padding: 10px;">
-    <h4><i class="fa fa-angle-right"></i> {% trans "Contracts" %}</h4>
-        <table class="table table-striped table-advance">
-            <tr><th>{% trans 'Status' %}</th><th>{% trans "Name" %}</th><th>{% trans "Description" %}</th><th>{% trans 'Customer' %}</th><th>{% trans 'Supplier' %}</th><th>{% trans 'Currency' %}</th><th></th><th></th></tr>
+    <h4><i class="fa fa-angle-right"></i> {% trans "Contract Overview" %}</h4>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>{% trans 'Status' %}<br>&nbsp;</th>
+                <th>{% trans "Name" %}<br>{% trans "Description" %}</th>
+                <th>{% trans 'Customer' %}<br>&nbsp;</th>
+                <th>{% trans 'Last Quote' %}<br>&nbsp;</th>
+                <th>{% trans 'Last Purchase Order' %}<br>&nbsp;</th>
+                <th>{% trans 'Last Invoice' %}<br>&nbsp;</th>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
             {% for contract in contract_list %}
                 <tr>
-                    <td><span class="label {{ contract.get_state_class }}">{{ contract.get_state }}</span></td>
-                    <td><a href="{% url 'contract_detail' contract.pk %}">{{ contract }}</a></td>
-                    <td>{{ contract.description|default_if_none:"" }}</td>
+                    <td width="150px" rowspan="2"><span class="label {{ contract.get_state_class }}">{{ contract.get_state }}</span></td>
+                    <td width="200px"><a href="{% url 'contract_detail' contract.pk %}">{{ contract }}</a></td>
                     <td><a href="{% url 'customer_detail' contract.default_customer.pk %}">
                         {{ contract.default_customer|default_if_none:"" }}</a></td>
-                    <td>{{ contract.default_supplier|default_if_none:"" }}</td>
-                    <td>{{ contract.default_currency|default_if_none:"" }}</td>
-                    <td width="150px">
-{#                    TODO view buttons depending on contract state#}
+{#                TODO: detail views #}
+                    <td><a href="">{{ contract.quotes.last|default:"-" }}</a></td>
+                    <td><a href="">{{ contract.purchaseorders.last|default:"-" }}</a></td>
+                    <td><a href="">{{ contract.invoices.last|default:"-" }}</a></td>
+                    <td width="150px" rowspan="2">
+{#                    TODO view buttons depending on contract state #}
                         <p class="pull-right">
                         {% if perms.crm_core.add_quote %}
                             <button type="button" class="btn btn-sm btn-warning"
@@ -42,7 +55,7 @@
                         {% endif %}
                         </p>
                     </td>
-                    <td width="100px">
+                    <td width="100px" rowspan="2">
                         <p class="pull-right">
                         {% if perms.crm_core.change_contract %}
                             <button type="button" class="btn btn-sm btn-primary"
@@ -57,6 +70,12 @@
                         </p>
                     </td>
                 </tr>
+                <tr>
+                {% if contract.description %}
+                    <td colspan="5">{{ contract.description|default_if_none:"" }}</td>
+                {% endif %}
+                </tr>
+            </tbody>
             {% empty %}
                 {% trans 'No contracts' %}
             {% endfor %}
