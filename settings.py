@@ -250,7 +250,6 @@ INSTALLED_APPS = (
     "django.contrib.staticfiles",
     "django_utils",
     "datetimewidget",
-    'datatableview',
     "international",
     "braces",
     "crispy_forms",
