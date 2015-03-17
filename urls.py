@@ -4,20 +4,7 @@ from django.conf.urls import patterns, include, url
 from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
 from mezzanine.core.views import direct_to_template
-from crm_core.views import login_user, UpdateUserProfile, ListCustomers, ListSuppliers, ListTaxes, \
-    ListUnits, ListProducts, ListBillingCycles, ListPurchaseOrders, ListCustomerGroups, ListContracts, ListInvoice, \
-    ListQuotes, CreateCustomer, CreateSupplier, CreateProduct, CreateBillingCycle, CreateContract, \
-    CreateCustomerGroup, CreateQuote, CreateTax, CreateUnit, EditProduct, \
-    EditBillingCycle, EditContract, EditCustomer, EditCustomerGroup, EditInvoice, EditPurchaseOrder, \
-    EditQuote, EditSupplier, EditTax, EditUnit, DeleteQuote, DeleteInvoice, DeleteContract, DeleteCustomerGroup, \
-    DeleteBillingCycle, DeleteCustomer, DeleteProduct, DeletePurchaseOrder, DeleteSupplier, \
-    DeleteUnit, DeleteTax, show_dashboard, ViewCustomer, ViewSupplier, ViewProduct, create_contract_from_customer, \
-    ViewContract, create_quote_from_customer, create_purchaseorder_from_customer, create_invoice_from_contract, \
-    create_purchaseorder_from_contract, create_quote_from_contract, create_invoice_from_quote, \
-    create_pdf_from_purchaseorder, create_pdf_from_invoice, create_purchaseorder_from_quote, export_customers, \
-    export_suppliers, export_products, export_contracts, export_quotes, export_invoices, export_purchaseorders, \
-    export_taxrates, export_units, export_billingcycles, export_customergroups, create_pdf_from_quote
-
+from crm_core.views import *
 admin.autodiscover()
 
 

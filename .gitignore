@@ -13,3 +13,5 @@ local_settings.py
 doc/build/
 /Theme/
 .vagrant
+pip-log.txt
+build

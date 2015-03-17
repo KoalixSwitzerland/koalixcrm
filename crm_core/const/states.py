@@ -15,14 +15,14 @@ class InvoiceStatesEnum(choices.Choices):
 
 
 class InvoiceStatesLabelEnum(choices.Choices):
-    Open = choices.Choice(10, 'label-primary')
-    Payed = choices.Choice(20, 'label-success')
-    Invoice_created = choices.Choice(30, 'label-info')
-    Invoice_sent = choices.Choice(40, 'label-warning')
-    First_reminder_sent = choices.Choice(50, 'label-warning')
-    Second_reminder_sent = choices.Choice(60, 'label-danger')
-    Customer_cant_pay = choices.Choice(70, 'label-default')
-    Deleted = choices.Choice(80, 'label-default')
+    Open = choices.Choice(10, 'primary')
+    Payed = choices.Choice(20, 'success')
+    Invoice_created = choices.Choice(30, 'info')
+    Invoice_sent = choices.Choice(40, 'warning')
+    First_reminder_sent = choices.Choice(50, 'warning')
+    Second_reminder_sent = choices.Choice(60, 'danger')
+    Customer_cant_pay = choices.Choice(70, 'default')
+    Deleted = choices.Choice(80, 'default')
 
 
 class QuoteStatesEnum(choices.Choices):
@@ -37,14 +37,14 @@ class QuoteStatesEnum(choices.Choices):
 
 
 class QuoteStatesLabelEnum(choices.Choices):
-    New = choices.Choice(10, 'label-default')
-    Success = choices.Choice(20, 'label-success')
-    Quote_created = choices.Choice(30, 'label-info')
-    Quote_sent = choices.Choice(40, 'label-warning')
-    Purchaseorder_created = choices.Choice(50, 'label-info')
-    First_reminder_sent = choices.Choice(60, 'label-warning')
-    Second_reminder_sent = choices.Choice(70, 'label-danger')
-    Deleted = choices.Choice(80, 'label-default')
+    New = choices.Choice(10, 'default')
+    Success = choices.Choice(20, 'success')
+    Quote_created = choices.Choice(30, 'info')
+    Quote_sent = choices.Choice(40, 'warning')
+    Purchaseorder_created = choices.Choice(50, 'info')
+    First_reminder_sent = choices.Choice(60, 'warning')
+    Second_reminder_sent = choices.Choice(70, 'danger')
+    Deleted = choices.Choice(80, 'default')
 
 
 class PurchaseOrderStatesEnum(choices.Choices):
@@ -57,12 +57,12 @@ class PurchaseOrderStatesEnum(choices.Choices):
 
 
 class PurchaseOrderStatesLabelEnum(choices.Choices):
-    New = choices.Choice(10, 'label-default')
-    Ordered = choices.Choice(20, 'label-warning')
-    Delayed = choices.Choice(30, 'label-danger')
-    Delivered = choices.Choice(40, 'label-info')
-    Invoice_registered = choices.Choice(50, 'label-info')
-    Invoice_payed = choices.Choice(60, 'label-success')
+    New = choices.Choice(10, 'default')
+    Ordered = choices.Choice(20, 'warning')
+    Delayed = choices.Choice(30, 'danger')
+    Delivered = choices.Choice(40, 'info')
+    Invoice_registered = choices.Choice(50, 'info')
+    Invoice_payed = choices.Choice(60, 'success')
 
 
 class ContractStatesEnum(choices.Choices):
@@ -78,12 +78,12 @@ class ContractStatesEnum(choices.Choices):
 
 
 class ContractStatesLabelEnum(choices.Choices):
-    Open = choices.Choice(10, 'label-primary')
-    Payed = choices.Choice(20, 'label-success')
-    Invoice_created = choices.Choice(30, 'label-info')
-    Invoice_sent = choices.Choice(40, 'label-warning')
-    Quote_created = choices.Choice(50, 'label-info')
-    Quote_sent = choices.Choice(60, 'label-warning')
-    PurchaseOrder_created = choices.Choice(70, 'label-info')
-    Customer_cant_pay = choices.Choice(90, 'label-default')
-    Deleted = choices.Choice(100, 'label-default')
+    Open = choices.Choice(10, 'primary')
+    Payed = choices.Choice(20, 'success')
+    Invoice_created = choices.Choice(30, 'info')
+    Invoice_sent = choices.Choice(40, 'warning')
+    Quote_created = choices.Choice(50, 'info')
+    Quote_sent = choices.Choice(60, 'warning')
+    PurchaseOrder_created = choices.Choice(70, 'info')
+    Customer_cant_pay = choices.Choice(90, 'default')
+    Deleted = choices.Choice(100, 'default')

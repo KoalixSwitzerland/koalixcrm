@@ -6,8 +6,9 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.template import RequestContext, loader
+from django_tables2 import RequestConfig
 from extra_views import UpdateWithInlinesView, InlineFormSet, NamedFormsetsMixin, CreateWithInlinesView
 from crm_core.const.states import InvoiceStatesEnum
 from crm_core.forms import PurchaseOrderPositionInlineForm, PurchaseOrderForm, SalesContractPositionInlineForm, \
@@ -20,6 +21,7 @@ from crm_core.models import Customer, Invoice, Supplier, Unit, TaxRate, Contract
     PurchaseOrderPosition, SalesContractPosition
 from django.shortcuts import render_to_response, redirect, render
 from django.contrib.auth import authenticate, login, logout
+from tables import ContractTable
 
 
 # ######################
@@ -248,19 +250,19 @@ def export_customergroups(request, format='xls'):
 
 
 class PurchaseOrderPositionInline(InlineFormSet):
-        model = PurchaseOrderPosition
-        extra = 5
-        can_delete = True
-        form_class = PurchaseOrderPositionInlineForm
-        prefix = 'purchaseorderposition'
+    model = PurchaseOrderPosition
+    extra = 5
+    can_delete = True
+    form_class = PurchaseOrderPositionInlineForm
+    prefix = 'purchaseorderposition'
 
 
 class SalesContractPositionInline(InlineFormSet):
-        model = SalesContractPosition
-        extra = 5
-        can_delete = True
-        form_class = SalesContractPositionInlineForm
-        prefix = 'salescontractposition'
+    model = SalesContractPosition
+    extra = 5
+    can_delete = True
+    form_class = SalesContractPositionInlineForm
+    prefix = 'salescontractposition'
 
 
 class PostalAddressInline(LoginRequiredMixin, PermissionRequiredMixin, InlineFormSet):
@@ -445,14 +447,16 @@ class ListProducts(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = Product
     permission_required = 'crm_core.view_product'
     login_url = settings.LOGIN_URL
-    fields = ['item_prefix', 'product_number', 'item_title', 'item_description', 'item_unit', 'item_tax', 'item_category']
+    fields = ['item_prefix', 'product_number', 'item_title', 'item_description', 'item_unit', 'item_tax',
+              'item_category']
 
 
 class CreateProduct(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Product
     permission_required = 'crm_core.add_product'
     login_url = settings.LOGIN_URL
-    fields = ['item_prefix', 'product_number', 'item_title', 'item_description', 'item_unit', 'item_tax', 'item_category']
+    fields = ['item_prefix', 'product_number', 'item_title', 'item_description', 'item_unit', 'item_tax',
+              'item_category']
     success_url = reverse_lazy('product_list')
 
 
@@ -460,7 +464,8 @@ class EditProduct(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Product
     permission_required = 'crm_core.change_product'
     login_url = settings.LOGIN_URL
-    fields = ['item_prefix', 'product_number', 'item_title', 'item_description', 'item_unit', 'item_tax', 'item_category']
+    fields = ['item_prefix', 'product_number', 'item_title', 'item_description', 'item_unit', 'item_tax',
+              'item_category']
     success_url = reverse_lazy('product_list')
 
 
@@ -560,7 +565,16 @@ class ListContracts(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     permission_required = 'crm_core.view_contract'
     login_url = settings.LOGIN_URL
     fields = ['description', 'default_customer', 'default_supplier']
-    queryset = Contract.objects.all().order_by('lastmodification').reverse()
+    object_list = Contract.objects.all().reverse().order_by('lastmodification')
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        config = RequestConfig(request)
+        contracttable = ContractTable(self.object_list)
+        config.configure(contracttable)
+        contracttable.paginate(page=request.GET.get('page', 1), per_page=20)
+        context['contracttable'] = contracttable
+        return self.render_to_response(context)
 
 
 class ViewContract(LoginRequiredMixin, PermissionRequiredMixin, DetailView):

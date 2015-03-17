@@ -1,8 +1,13 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n staticfiles %}
+{% load render_table from django_tables2 %}
 
 {% block meta_title %}{% trans "Contract Overview" %}{% endblock %}
 {% block title %}{% trans "Contract Overview" %}{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'assets/css/bootstrap-tables2.css' %}" />
+{% endblock %}
 
 {% block breadcrumb_menu %}
     <li class="active">{% trans "Contract Overview" %}</li>
@@ -11,75 +16,9 @@
 {% block main %}
     <div class="content-panel" style="margin: 30px; padding: 10px;">
     <h4><i class="fa fa-angle-right"></i> {% trans "Contract Overview" %}</h4>
-        <table class="table">
-            <thead>
-            <tr>
-                <th>{% trans 'Status' %}<br>&nbsp;</th>
-                <th>{% trans "Name" %}<br>{% trans "Description" %}</th>
-                <th>{% trans 'Customer' %}<br>&nbsp;</th>
-                <th>{% trans 'Last Quote' %}<br>&nbsp;</th>
-                <th>{% trans 'Last Purchase Order' %}<br>&nbsp;</th>
-                <th>{% trans 'Last Invoice' %}<br>&nbsp;</th>
-                <th></th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for contract in contract_list %}
-                <tr>
-                    <td width="150px" rowspan="2"><span class="label {{ contract.get_state_class }}">{{ contract.get_state }}</span></td>
-                    <td width="200px"><a href="{% url 'contract_detail' contract.pk %}">{{ contract }}</a></td>
-                    <td><a href="{% url 'customer_detail' contract.default_customer.pk %}">
-                        {{ contract.default_customer|default_if_none:"" }}</a></td>
-{#                TODO: detail views #}
-                    <td><a href="">{{ contract.quotes.last|default:"-" }}</a></td>
-                    <td><a href="">{{ contract.purchaseorders.last|default:"-" }}</a></td>
-                    <td><a href="">{{ contract.invoices.last|default:"-" }}</a></td>
-                    <td width="150px" rowspan="2">
-{#                    TODO view buttons depending on contract state #}
-                        <p class="pull-right">
-                        {% if perms.crm_core.add_quote %}
-                            <button type="button" class="btn btn-sm btn-warning"
-                                    onclick="window.location.assign('{% url 'contract_create_quote' contract.pk %}')"
-                                    title="{% trans "Create Quote" %}"><i class="fa fa-calculator"></i></button>
-                        {% endif %}
-                        {% if perms.crm_core.add_purchaseorder %}
-                            <button type="button" class="btn btn-sm btn-info"
-                                    onclick="window.location.assign('{% url 'contract_create_purchaseorder' contract.pk %}')"
-                                    title="{% trans "Create Purchase Order" %}"><i class="fa fa-shopping-cart"></i></button>
-                        {% endif %}
-                        {% if perms.crm_core.add_invoice %}
-                            <button type="button" class="btn btn-sm btn-success"
-                                    onclick="window.location.assign('{% url 'contract_create_invoice' contract.pk %}')"
-                                    title="{% trans "Create Invoice" %}"><i class="fa fa-money"></i></button>
-                        {% endif %}
-                        </p>
-                    </td>
-                    <td width="100px" rowspan="2">
-                        <p class="pull-right">
-                        {% if perms.crm_core.change_contract %}
-                            <button type="button" class="btn btn-sm btn-primary"
-                                    onclick="window.location.assign('{% url 'contract_edit' contract.pk %}')"
-                                    title="{% trans "Edit" %}"><i class="fa fa-pencil"></i></button>
-                        {% endif %}
-                        {% if perms.crm_core.delete_contract %}
-                            <button type="button" class="btn btn-sm btn-danger"
-                                    onclick="window.location.assign('{% url 'contract_delete' contract.pk %}')"
-                                    title="{% trans "Delete" %}"><i class="fa fa-trash"></i></button>
-                        {% endif %}
-                        </p>
-                    </td>
-                </tr>
-                <tr>
-                {% if contract.description %}
-                    <td colspan="5">{{ contract.description|default_if_none:"" }}</td>
-                {% endif %}
-                </tr>
-            </tbody>
-            {% empty %}
-                {% trans 'No contracts' %}
-            {% endfor %}
-        </table>
+        <div>
+            {% render_table contracttable "tables2/bootstrapped-tables2.html" %}
+        </div>
         {% if perms.crm_core.add_contract %}
         <p><a href="{% url 'contract_create' %}">{% trans "Create a new contract" %}</a></p>
         {% endif %}
@@ -94,4 +33,12 @@
         <a href="{% url 'contract_export' 'csv' %}">{% trans "Export as CSV" %}</a><br>
         <a href="{% url 'contract_export' 'json' %}">{% trans "Export as JSON" %}</a>
     </p>
+{% endblock %}
+
+{% block extrascript %}
+    <script>
+    $(function(){
+        datatableview.initialize($('#contract-datatable'));
+    });
+    </script>
 {% endblock %}

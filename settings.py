@@ -115,6 +115,7 @@ _ = lambda s: s
 LANGUAGES = (
     ('en', _('English')),
     ('de', _('German')),
+    ('ru', _('Russian')),
 )
 
 LOCALE_PATHS = (
@@ -233,9 +234,6 @@ ROOT_URLCONF = "%s.urls" % PROJECT_DIRNAME
 # Don't forget to use absolute paths, not relative paths.
 TEMPLATE_DIRS = (os.path.join(PROJECT_ROOT, "templates"),)
 
-KOALIXCRM_PLUGINS = (
-    'subscriptions',
-)
 
 ################
 # APPLICATIONS #
@@ -252,6 +250,7 @@ INSTALLED_APPS = (
     "django.contrib.staticfiles",
     "django_utils",
     "datetimewidget",
+    'datatableview',
     "international",
     "braces",
     "crispy_forms",
@@ -259,6 +258,7 @@ INSTALLED_APPS = (
     "import_export",
     "django_fsm",
     "extra_views",
+    "django_tables2",
     "mezzanine.boot",
     "mezzanine.conf",
     "mezzanine.core",

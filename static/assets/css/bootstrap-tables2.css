@@ -1,0 +1,13 @@
+.table-container th.asc:after {
+  content: '\0000a0\0025b2';
+}
+.table-container th.desc:after {
+  content: '\0000a0\0025bc';
+}
+.pagination {
+  text-align: center;
+  position: relative;
+  margin: auto;
+  left: 50%;
+  transform: translate(-50%, 0);
+}

@@ -316,6 +316,7 @@ class Contract(models.Model):
         permissions = (
             ('view_contract', 'Can view contracts'),
         )
+        get_latest_by = 'lastmodification'
 
     def create_invoice(self):
         invoice = Invoice()
@@ -376,6 +377,33 @@ class Contract(models.Model):
         url = '/contracts/detail/' + str(self.pk)  # TODO: Bad solution
         return url
 
+    def get_quote_detail_url(self):
+        return self.quotes.latest().get_document_url()
+
+    def get_quote_edit_url(self):
+        return self.quotes.latest().get_absolute_url()
+
+    def get_purchaseorder_detail_url(self):
+        return self.purchaseorders.latest().get_document_url()
+
+    def get_purchaseorder_edit_url(self):
+        return self.purchaseorders.latest().get_absolute_url()
+
+    def get_invoice_detail_url(self):
+        return self.invoices.latest().get_document_url()
+
+    def get_invoice_edit_url(self):
+        return self.invoices.latest().get_absolute_url()
+
+    def has_quotes(self):
+        return self.quotes.count() > 0
+
+    def has_purchaseorders(self):
+        return self.purchaseorders.count() > 0
+
+    def has_invoices(self):
+        return self.invoices.count() > 0
+
     def __unicode__(self):
         return self.get_name()
 
@@ -408,6 +436,7 @@ class PurchaseOrder(models.Model):
         permissions = (
             ('view_purchaseorder', 'Can view purchase orders'),
         )
+        get_latest_by = 'lastmodification'
 
     def recalculate_prices(self, pricing_date):
         price = 0
@@ -456,6 +485,10 @@ class PurchaseOrder(models.Model):
 
     def get_absolute_url(self):
         url = '/purchaseorders/edit/' + str(self.pk)  # TODO: Bad solution
+        return url
+
+    def get_document_url(self):
+        url = '/purchaseorders/view/' + str(self.pk)  # TODO: Bad solution
         return url
 
     def save(self, *args, **kwargs):
@@ -532,6 +565,7 @@ class Quote(SalesContract):
         permissions = (
             ('view_quote', 'Can view quotes'),
         )
+        get_latest_by = "lastmodification"
 
     def create_invoice(self):
         invoice = Invoice()
@@ -596,6 +630,10 @@ class Quote(SalesContract):
         url = '/quotes/edit/' + str(self.pk)  # TODO: Bad solution
         return url
 
+    def get_document_url(self):
+        url = '/quotes/view/' + str(self.pk)  # TODO: Bad solution
+        return url
+
     def __unicode__(self):
         return _('Quote') + ' #' + str(self.id)
 
@@ -619,6 +657,7 @@ class Invoice(SalesContract):
         permissions = (
             ('view_invoice', 'Can view invoices'),
         )
+        get_latest_by = 'lastmodification'
 
     def get_state(self):
         return InvoiceStatesEnum.choices[self.state]
@@ -628,6 +667,10 @@ class Invoice(SalesContract):
 
     def get_absolute_url(self):
         url = '/invoices/edit/' + str(self.pk)  # TODO: Bad solution
+        return url
+
+    def get_document_url(self):
+        url = '/invoices/view/' + str(self.pk)  # TODO: Bad solution
         return url
 
     def __unicode__(self):
