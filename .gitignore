@@ -12,3 +12,4 @@ local_settings.py
 .idea
 doc/build/
 /Theme/
+.vagrant
