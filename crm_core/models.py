@@ -544,9 +544,8 @@ class SalesContract(models.Model):
             self.last_calculated_price = price
             self.last_calculated_tax = tax
             self.last_pricing_date = pricing_date
-            self.save()
             return 1
-        except Quote.DoesNotExist:
+        except SalesContract.DoesNotExist:
             return 0
 
     def save(self, *args, **kwargs):
