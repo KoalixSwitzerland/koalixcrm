@@ -1,5 +1,5 @@
 import django_tables2 as tables
-from crm_core.custom.custom_columns import LabelColumn, ButtonsColumn, RelatedModelDetailLinkColumn
+from crm_core.custom.custom_columns import LabelColumn, ButtonsColumn, RelatedModelDetailLinkColumn, ButtonColumn
 from crm_core.models import Contract
 from django.utils.translation import ugettext_lazy as _
 
@@ -57,6 +57,27 @@ class ContractTable(tables.Table):
             }
         ],
         attrs={"th": {"width": "120px"}},
+        orderable=False
+    )
+    edit = ButtonsColumn(
+        [
+            {
+                'extra_class': 'btn-info',
+                'gl_icon': 'pencil',
+                'onclick': "location.href='{% url 'contract_edit' record.pk %}'"
+            },
+            {
+                'extra_class': 'btn-warning',
+                'gl_icon': 'knight',
+                'onclick': "location.href='{% url 'contract_create_quote' record.pk %}'"
+            },
+            {
+                'extra_class': 'btn-success',
+                'gl_icon': 'barcode',
+                'onclick': "location.href='{% url 'contract_create_purchaseorder' record.pk %}'"
+            }
+        ],
+        attrs={"th": {"width": "200px"}},
         orderable=False
     )
     state = LabelColumn(verbose_name=_('Status'))
