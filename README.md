@@ -68,11 +68,12 @@ Koalix CRM provides following benefits:
     *   English
     *   German
    
-    Upcoming translations:
+    Incomplete translations:
 
     *   Spanish
     *   Italian
     *   French
+    *   Russian
 
 
 ## About this project
