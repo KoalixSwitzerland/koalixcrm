@@ -69,6 +69,7 @@ Vagrant.configure(2) do |config|
   sudo apt-get install -y apache2 python python-pip build-essential python-dev
   cd /vagrant/
   sudo pip install -r requirements.txt
+  sudo python manage.py createinitialrevisions
   sudo run.sh
   SHELL
 end

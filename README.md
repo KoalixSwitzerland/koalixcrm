@@ -78,6 +78,10 @@ Koalix CRM provides following benefits:
     *   French
     *   Russian
 
+-   **Versioned data models:**
+    
+    All important models have a version history and can be reverted any time to any state
+    
 
 ## About this project
 KoalixCRM is a fork of [scaphilo's koalixcrm](https://github.com/scaphilo/koalixcrm) with the goal of a contemporary CRM/ERP 

@@ -12,3 +12,4 @@ django-crispy-forms
 django-datetime-widget
 django-extensions
 django-tables2
+django-reversion

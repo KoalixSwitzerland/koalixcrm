@@ -1,9 +1,9 @@
+import reversion
 from django.contrib import admin
-# from mezzanine.core import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
-from crm_core.models import UserExtension
+from crm_core.models import UserExtension, Customer, Invoice, PurchaseOrder, Quote, Supplier
 
 
 # Define an inline admin descriptor
@@ -17,10 +17,39 @@ class CRMUserProfileInline(admin.TabularInline):
 
 
 # Define a new User admin
-class UserAdmin(UserAdmin):
+class NewUserAdmin(UserAdmin):
     inlines = (CRMUserProfileInline, )
 
 
 # Re-register UserAdmin
 admin.site.unregister(User)
-admin.site.register(User, UserAdmin)
+admin.site.register(User, NewUserAdmin)
+
+
+# Define reversible models
+class CustomerAdmin(reversion.VersionAdmin):
+    pass
+
+
+class InvoiceAdmin(reversion.VersionAdmin):
+    pass
+
+
+class QuoteAdmin(reversion.VersionAdmin):
+    pass
+
+
+class PurchaseorderAdmin(reversion.VersionAdmin):
+    pass
+
+
+class SupplierAdmin(reversion.VersionAdmin):
+    pass
+
+
+# register reversible classes
+admin.site.register(Customer, CustomerAdmin)
+admin.site.register(Invoice, InvoiceAdmin)
+admin.site.register(Quote, QuoteAdmin)
+admin.site.register(PurchaseOrder, PurchaseorderAdmin)
+admin.site.register(Supplier, SupplierAdmin)

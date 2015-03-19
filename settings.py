@@ -251,16 +251,7 @@ INSTALLED_APPS = (
     "django.contrib.sites",
     "django.contrib.sitemaps",
     "django.contrib.staticfiles",
-    "django_utils",
-    "datetimewidget",
-    "international",
-    "braces",
-    "crispy_forms",
-    "po_localization",
-    "import_export",
-    "django_fsm",
-    "extra_views",
-    "django_tables2",
+
     "mezzanine.boot",
     "mezzanine.conf",
     "mezzanine.core",
@@ -269,9 +260,26 @@ INSTALLED_APPS = (
     "mezzanine.pages",
     "mezzanine.galleries",
     "mezzanine.blog",
-    "bootstrap3",
+
+    "django_utils",
+    "braces",
+    "extra_views",
+
+    "international",
+    "po_localization",
+
+    "import_export",
+    "django_fsm",
     "admin_backup",
+    "reversion",
+
+    "crispy_forms",
+    "datetimewidget",
+    "django_tables2",
+    "bootstrap3",
+
     "crm_core",
+
     # Uncomment the following if you want to use mezzanine's twitter plugin
     # "mezzanine.twitter",
 )
