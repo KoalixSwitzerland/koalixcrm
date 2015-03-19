@@ -26,6 +26,13 @@ class RelatedModelDetailLinkColumn(tables.TemplateColumn):
         super(RelatedModelDetailLinkColumn, self).__init__(**extra)
 
 
+class ModelDetailLinkColumn(tables.TemplateColumn):
+
+    def __init__(self, **extra):
+        extra['template_code'] = """<a href="{{ record.get_absolute_url }}">{{ record }}</a>"""
+        super(ModelDetailLinkColumn, self).__init__(**extra)
+
+
 class LabelColumn(tables.TemplateColumn):
 
     def __init__(self, **extra):
@@ -50,7 +57,7 @@ class ButtonsColumn(tables.TemplateColumn):
             if 'text' in btn:
                 text = btn['text']
             if 'condition' in btn:
-                condition = "record." + btn['condition']
+                condition = btn['condition']
             html_code += "{% if " + condition + " %}"
             html_code += """<button type="button" class="btn %s" onclick="%s">%s%s</button>""" \
                          % (extra_class, onclick, glyph_icon, text)
