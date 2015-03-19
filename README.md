@@ -26,7 +26,7 @@ Issue status:
     [![Stories in Progress](https://badge.waffle.io/tfroehlich82/koalixcrm.svg?label=in progress&title=Stories in Progress)](http://waffle.io/tfroehlich82/koalixcrm)
     
 Bountysource:
-     [![Bountysource](https://www.bountysource.com/badge/team?team_id=64296&style=bounties_received)](https://www.bountysource.com/badge/team?team_id=64296&style=bounties_received)
+     [![Bountysource](https://www.bountysource.com/badge/team?team_id=64296&style=bounties_received)](https://www.bountysource.com/teams/koalix-crm/issues)
     
 
 *****************************************************
