@@ -25,6 +25,9 @@ Issue status:
     [![Stories in Ready](https://badge.waffle.io/tfroehlich82/koalixcrm.svg?label=ready&title=Stories in Ready)](http://waffle.io/tfroehlich82/koalixcrm)
     [![Stories in Progress](https://badge.waffle.io/tfroehlich82/koalixcrm.svg?label=in progress&title=Stories in Progress)](http://waffle.io/tfroehlich82/koalixcrm)
     
+Bountysource:
+     [![Bountysource](https://www.bountysource.com/badge/team?team_id=64296&style=bounties_received)](https://www.bountysource.com/badge/team?team_id=64296&style=bounties_received)
+    
 
 *****************************************************
 Note: This project is not yet open for production use
@@ -82,7 +85,7 @@ as a small business solution with a beautiful user interface and a bunch of usef
 
 This project uses agile development methods such as [Scrum](http://en.wikipedia.org/wiki/Scrum_(software_development)) and [Continuous Integration](http://en.wikipedia.org/wiki/Continuous_integration). 
 
-Releases are organized in [Sprints](http://en.wikipedia.org/wiki/Scrum_(software_development)#Sprint) from 3 to 8 weeks. You can have a look at our [Taskboard](http://en.wikipedia.org/wiki/Scrum_(software_development)#Taskboard) at [waffle.io](http://waffle.io/tfroehlich82/koalixcrm). Sprints are managed by github milestones [here](https://github.com/tfroehlich82/koalixcrm/milestones). Each Release is the result of a completed Sprint.
+Releases are organized in [Sprints](http://en.wikipedia.org/wiki/Scrum_(software_development)#Sprint) from 4 to 16 weeks. You can have a look at our [Taskboard](http://en.wikipedia.org/wiki/Scrum_(software_development)#Taskboard) at [waffle.io](http://waffle.io/tfroehlich82/koalixcrm). Sprints are managed by github milestones [here](https://github.com/tfroehlich82/koalixcrm/milestones). Each Release is the result of a completed Sprint.
 
 
 Please make a donation if you like this project and want help to even make it better:
