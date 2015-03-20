@@ -18,7 +18,7 @@ from crm_core.models import Customer, Invoice, Supplier, Unit, TaxRate, Contract
     PurchaseOrderPosition, SalesContractPosition
 from django.shortcuts import render_to_response, redirect, render
 from django.contrib.auth import authenticate, login, logout
-from tables import ContractTable
+from tables import ContractTable, CustomerTable
 
 
 # ######################
@@ -227,6 +227,16 @@ class ListCustomers(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     permission_required = 'crm_core.view_customer'
     login_url = settings.LOGIN_URL
     fields = ['name', 'firstname', 'billingcycle', 'ismemberof']
+    object_list = Customer.objects.all().order_by('name')
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        config = RequestConfig(request)
+        customertable = CustomerTable(self.object_list)
+        config.configure(customertable)
+        customertable.paginate(page=request.GET.get('page', 1), per_page=20)
+        context['customertable'] = customertable
+        return self.render_to_response(context)
 
 
 class ViewCustomer(LoginRequiredMixin, PermissionRequiredMixin, DetailView):

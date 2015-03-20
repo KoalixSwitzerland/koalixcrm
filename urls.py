@@ -34,10 +34,6 @@ urlpatterns = \
         url(r'^customers/create/$', CreateCustomer.as_view(), name='customer_create'),
         url(r'^customers/createcontract/(?P<customer_pk>\d+)/$', create_contract_from_customer,
             name='customer_create_contract'),
-        url(r'^customers/createquote/(?P<customer_pk>\d+)/$', create_quote_from_customer,
-            name='customer_create_quote'),
-        url(r'^customers/createpurchaseorder/(?P<customer_pk>\d+)/$', create_purchaseorder_from_customer,
-            name='customer_create_purchaseorder'),
         url(r'^customers/edit/(?P<pk>\d+)/$', EditCustomer.as_view(), name='customer_edit'),
         url(r'^customers/delete/(?P<pk>\d+)/$', DeleteCustomer.as_view(), name='customer_delete'),
 

@@ -343,11 +343,7 @@ OPTIONAL_APPS = (
     PACKAGE_NAME_GRAPPELLI,
 )
 
-SEARCH_MODEL_CHOICES = [
-    'crm_core.Customer',
-    'crm_core.Supplier',
-    'crm_core.Product',
-]
+SEARCH_MODEL_CHOICES = None
 
 
 ##################

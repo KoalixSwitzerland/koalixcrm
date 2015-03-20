@@ -155,7 +155,7 @@ class EmailAddress(models.Model):
 # ########################
 
 
-class Customer(Displayable, Contact):
+class Customer(Contact):
     firstname = models.CharField(max_length=300, verbose_name=_("Prename"), blank=True, null=True)
     billingcycle = models.ForeignKey(CustomerBillingCycle, verbose_name=_('Default Billing Cycle'))
     ismemberof = models.ManyToManyField(CustomerGroup, verbose_name=_('Is member of'), blank=True, null=True)
