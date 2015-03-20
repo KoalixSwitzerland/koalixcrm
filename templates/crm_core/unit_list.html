@@ -37,13 +37,3 @@
         {% endif %}
     </div>
 {% endblock %}
-
-{% block rightbar_impex %}
-    <h3>{% trans 'Import / Export' %}</h3>
-    <p style="margin: 5px;">
-        <a href="{% url 'unit_export' 'xls' %}">{% trans "Export as XLS" %}</a><br>
-        <a href="{% url 'unit_export' 'xlsx' %}">{% trans "Export as XLSX" %}</a><br>
-        <a href="{% url 'unit_export' 'csv' %}">{% trans "Export as CSV" %}</a><br>
-        <a href="{% url 'unit_export' 'json' %}">{% trans "Export as JSON" %}</a>
-    </p>
-{% endblock %}

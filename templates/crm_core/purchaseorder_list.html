@@ -53,13 +53,3 @@
         </table>
     </div>
 {% endblock %}
-
-{% block rightbar_impex %}
-    <h3>{% trans 'Import / Export' %}</h3>
-    <p style="margin: 5px;">
-        <a href="{% url 'purchaseorder_export' 'xls' %}">{% trans "Export as XLS" %}</a><br>
-        <a href="{% url 'purchaseorder_export' 'xlsx' %}">{% trans "Export as XLSX" %}</a><br>
-        <a href="{% url 'purchaseorder_export' 'csv' %}">{% trans "Export as CSV" %}</a><br>
-        <a href="{% url 'purchaseorder_export' 'json' %}">{% trans "Export as JSON" %}</a>
-    </p>
-{% endblock %}
