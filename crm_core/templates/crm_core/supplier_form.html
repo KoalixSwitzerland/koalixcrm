@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load i18n bootstrap3 %}
+
+{% block meta_title %}{% trans "Suppliers" %}{% endblock %}
+{% block title %}{% trans "Suppliers" %}{% endblock %}
+
+{% block breadcrumb_menu %}
+    <li class="active"><a href="{% url 'supplier_list' %}">{% trans "Suppliers" %}</a></li>
+    <li class="active">{% if supplier %}{% trans "Edit supplier" %}{% else %}{% trans "Create supplier" %}{% endif%}</li>
+{% endblock %}
+
+{% block rightbar %}
+{% endblock %}
+
+{% block main %}
+    <div class="form-panel" style="margin: 30px">
+    <h4 class="mb"><i class="fa fa-angle-right"></i>
+    {% if supplier %}{% trans "Edit supplier" %}{% else %}{% trans "Create supplier" %}{% endif%}</h4>
+    <form method="POST" action="" class="form form-horizontal" style="margin: 30px;">
+    {% csrf_token %}
+
+            <div class="row well">
+                <div class="col-lg-6">
+                    <div style="margin: 0 12px 0 12px;">
+                    {% bootstrap_form form layout='inline' %}
+                </div>
+                    {% if postaladdress_formset and perms.crm_core.view_postaladdress %}
+                        <details class="form-wrapper" id="edit-advanced">
+                            <summary><i class="fa fa-envelope"></i> {% trans "Postal Address" %}</summary>
+                            <div style="margin: 0 12px 0 12px;">
+                                {% bootstrap_formset postaladdress_formset layout='inline' %}
+                            </div>
+                        </details>
+                    {% endif %}
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="col-lg-6">
+                    {% if phoneaddress_formset and perms.crm_core.view_phoneaddress %}
+                        <fieldset>
+                        <legend><i class="fa fa-phone"></i> {% trans "Phone Address" %}</legend>
+                            <div style="margin: 0 12px 0 12px;">
+                                {% bootstrap_formset phoneaddress_formset layout='inline' %}
+                            </div>
+                        </fieldset>
+                    {% endif %}
+                    </div>
+                    <div class="col-lg-6">
+                    {% if emailaddress_formset and perms.crm_core.view_emailaddress %}
+                    <fieldset>
+                        <legend><i class="fa fa-at"></i> {% trans "Email Address" %}</legend>
+                            <div style="margin: 0 12px 0 12px;">
+                                {% bootstrap_formset emailaddress_formset layout='inline' %}
+                            </div>
+                    </fieldset>
+                    {% endif %}
+                    </div>
+                </div>
+
+            </div>
+
+            <button type='submit' class='btn btn-primary'>
+                {% trans "Save" %}
+            </button>
+
+            <button type="button" class="btn btn-default"
+                    onclick="window.location.assign('{% url 'supplier_list' %}')">
+                {% trans "Cancel" %}
+            </button>
+
+    </form>
+    </div>
+{% endblock %}

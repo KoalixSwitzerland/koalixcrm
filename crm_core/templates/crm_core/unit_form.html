@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load i18n bootstrap3 %}
+
+{% block meta_title %}{% trans "Units" %}{% endblock %}
+{% block title %}{% trans "Units" %}{% endblock %}
+
+{% block breadcrumb_menu %}
+    <li class="active"><a href="{% url 'unit_list' %}">{% trans "Units" %}</a></li>
+    <li class="active">{% if unit %}{% trans "Edit unit" %}{% else %}{% trans "Create unit" %}{% endif%}</li>
+{% endblock %}
+
+{% block rightbar %}
+{% endblock %}
+
+{% block main %}
+    <div class="form-panel" style="margin: 30px">
+    <h4 class="mb"><i class="fa fa-angle-right"></i>
+    {% if unit %}{% trans "Edit unit" %}{% else %}{% trans "Create unit" %}{% endif%}</h4>
+    <form method="POST" action="" class="form form-horizontal" style="margin: 30px;">
+    {% csrf_token %}
+
+    <div class="row well">
+        <div style="margin: 0 12px 0 12px;">
+    {% bootstrap_form form layout='horizontal' %}
+        </div>
+    </div>
+
+    <button type='submit' class='btn btn-primary'>
+        {% trans "Save" %}
+    </button>
+
+    <button type="button" class="btn btn-default"
+            onclick="window.location.assign('{% url 'unit_list' %}')">
+        {% trans "Cancel" %}
+    </button>
+
+    </form>
+    </div>
+{% endblock %}

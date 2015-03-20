@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block meta_title %}{% trans "Customer Groups" %}{% endblock %}
+{% block title %}{% trans "Customer Groups" %}{% endblock %}
+
+{% block breadcrumb_menu %}
+    <li class="active">{% trans "Customer Groups" %}</li>
+{% endblock %}
+
+{% block main %}
+    <div class="content-panel" style="margin: 30px; padding: 10px;">
+    <h4><i class="fa fa-angle-right"></i> {% trans "Customer Groups" %}</h4>
+        {% if customergroup_list %}
+        <table class="table table-striped table-advance">
+            <tr><th>{% trans "Name" %}</th><th></th></tr>
+            {% for customergroup in customergroup_list %}
+                <tr>
+                    <td>{{ customergroup.name }}</td>
+                    <td>
+                        <p class="pull-right">
+                        {% if perms.crm_core.change_customergroup %}
+                        <button type="button" class="btn btn-sm btn-primary" onclick="window.location.assign('{% url 'customergroup_edit' customergroup.pk %}')">{% trans "Edit" %}</button>
+                        {% endif %}
+                        {% if perms.crm_core.delete_customergroup %}
+                        <button type="button" class="btn btn-sm btn-danger" onclick="window.location.assign('{% url 'customergroup_delete' customergroup.pk %}')">{% trans "Delete" %}</button>
+                        {% endif %}
+                        </p>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
+        {% if perms.crm_core.add_customergroup %}
+        <p><a href="{% url 'customergroup_create' %}">{% trans "Create a new customer group" %}</a></p>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load i18n bootstrap3 %}
+
+{% block meta_title %}{% trans "Quote" %}{% endblock %}
+{% block title %}{% trans "Quote" %}{% endblock %}
+
+{% block breadcrumb_menu %}
+    <li class="active"><a href="{% url 'quote_list' %}">{% trans "Quote" %}</a></li>
+    <li class="active">{% trans "Delete quote" %}</li>
+{% endblock %}
+
+{% block rightbar %}
+{% endblock %}
+
+{% block main %}
+    <div class="form-panel" style="margin: 30px">
+    <h4 class="mb"><i class="fa fa-angle-right"></i>
+        {% trans "Delete quote" %}</h4>
+    <form action = ""  method = "post">
+        {% csrf_token %}
+
+        <h3 class = ''>
+            {% trans "Are you you sure you want to delete the following item?" %}<br>{{object}}
+        </h3>
+
+        <button type='submit' class='btn btn-danger'>
+            {% trans "Delete" %}
+        </button>
+
+        <button type="button" class="btn btn-default"
+                onclick="window.location.assign('{% url 'quote_list' %}')">
+            {% trans "Cancel" %}
+        </button>
+    </form>
+    </div>
+{% endblock %}

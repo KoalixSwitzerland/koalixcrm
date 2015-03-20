@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% load i18n staticfiles crispy_forms_tags crispy_forms_field crispy_forms_filters %}
+
+{% block meta_title %}{% trans "Invoices" %}{% endblock %}
+{% block title %}{% trans "Invoices" %}{% endblock %}
+
+{% block extra_head %}
+<style type="text/css">
+    .add-row {
+        padding-left:18px;
+        background:url({% static  'assets/img/add.png' %}) no-repeat left center;
+    }
+    .delete-row {
+        float:right;
+        display:block;
+        margin-left:4px;
+        padding-left:18px;
+        background:url({% static  'assets/img/delete.png' %}) no-repeat left center;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+    {{ form.media }}
+{% endblock %}
+
+{% block breadcrumb_menu %}
+    <li class="active"><a href="{% url 'invoice_list' %}">{% trans "Invoices" %}</a></li>
+    <li class="active">{% if invoice %}{% trans "Edit invoice" %}{% else %}{% trans "Create invoice" %}{% endif%}</li>
+{% endblock %}
+
+{% block rightbar %}
+{% endblock %}
+
+{% block main %}
+    <div class="form-panel" style="margin: 30px">
+    <h4 class="mb"><i class="fa fa-angle-right"></i>
+    {% if invoice %}{% trans "Edit invoice" %}{% else %}{% trans "Create invoice" %}{% endif%}</h4>
+    <form {{ flat_attrs|safe }} method="post" action="" class="form form-horizontal" style="margin: 30px;" {% if formset.is_multipart %} enctype="multipart/form-data"{% endif %}>
+        <div style="margin: 0 12px 0 12px;">
+            <div class="row well">
+
+                <table>
+                    <tr>
+                        <td colspan="3"><h1>{{ invoice }}</h1></td>
+                        <td><span class="label {{ invoice.get_state_class }}">{{ invoice.get_state }}</span></td>
+                    </tr>
+                    <tr>
+                        <td>{% trans 'Contract' %}:</td>
+                        <td width="10px"></td>
+                        <td><a href="{% url 'contract_detail' invoice.contract.pk %}">
+                            {{ invoice.contract }}</a>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>{% trans 'Customer' %}:</td>
+                        <td width="10px"></td>
+                        <td><a href="{% url 'customer_detail' invoice.customer.pk %}">
+                            {{ invoice.customer }}</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>{% trans 'Last Calculated Price' %}:</td>
+                        <td width="10px"></td>
+                        <td>{{ invoice.last_calculated_price|default_if_none:"-" }}
+                            {% if invoice.last_pricing_date %}&nbsp;{% trans 'on' %}&nbsp;
+                                {{ invoice.last_pricing_date }}{% endif %}
+                            {% if invoice.last_calculated_tax %}&nbsp;({% trans 'Tax' %}:&nbsp;
+                                {{ invoice.last_calculated_tax }}){% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><small>{% trans 'Date of Creation' %}:</small></td>
+                        <td width="10px"></td>
+                        <td><small>{{ invoice.dateofcreation|default_if_none:"" }}</small></td>
+                    </tr>
+                    <tr>
+                        <td><small>{% trans 'Last Modified' %}:</small></td>
+                        <td width="10px"></td>
+                        <td><small>{{ invoice.lastmodification|default_if_none:"" }}
+                            {% if invoice.lastmodifiedby %}&nbsp;{% trans 'by' %}&nbsp;
+                                {{ invoice.lastmodifiedby }}{% endif %}</small>
+                        </td>
+                    </tr>
+                </table>
+
+                </p>
+
+                <div style="margin: 0 12px 0 12px;">
+                    {% crispy form %}
+                </div>
+
+                {% for formset in inlines %}
+
+                    <div>
+                        {{ formset.management_form|crispy }}
+                    </div>
+
+                    <table id="salescontract_position" class="table table-condensed">
+                        <thead>
+                        <tr>
+                            <th width="100px">{{ formset.forms.0.quantity.label }}*</th>
+                            <th width="100px">{{ formset.forms.0.unit.label }}</th>
+                            <th>{{ formset.forms.0.product.label }}</th>
+                            <th>{{ formset.forms.0.description.label }}</th>
+                            <th width="100px">{{ formset.forms.0.discount.label }}</th>
+                            <th width="20px"></th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        {% if form_show_errors and not form.is_extra %}
+                            {% include "bootstrap3/errors.html" %}
+                        {% endif %}
+
+                        {% for form in formset %}
+                            <tr id="{{ form.prefix }}-row">
+                                <td>
+                                    {% for fld in form.hidden_fields %}{{ fld }}{% endfor %}
+                                    {% crispy_field form.quantity %}
+                                </td>
+                                <td>{% crispy_field form.unit %}</td>
+                                <td>{% crispy_field form.product %}</td>
+                                <td>{% crispy_field form.description %}</td>
+                                <td>{% crispy_field form.discount %}</td>
+                                <td>{% if form.instance.pk %}{{ form.DELETE }}{% endif %}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <p>
+                        {{ formset.management_form }}
+                    </p>
+
+                {% endfor %}
+
+            </div>
+        </div>
+
+        <button type='submit' class='btn btn-primary'>
+            {% trans "Save" %}
+        </button>
+
+        <button type="button" class="btn btn-default"
+                onclick="window.location.assign('{% url 'invoice_list' %}')">
+            {% trans "Cancel" %}
+        </button>
+
+    </form>
+    </div>
+
+{% endblock %}
+
+{% block extrascript %}
+    <script type="text/javascript">
+        $(function() {
+            $('#salescontract_position tbody tr').formset({
+                prefix: "{{ inlines.0.prefix }}",
+                deleteText: "&nbsp;",
+                addText: " Add Position"
+            });
+        });
+    </script>
+{% endblock %}

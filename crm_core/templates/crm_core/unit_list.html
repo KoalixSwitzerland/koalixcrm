@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block meta_title %}{% trans "Units" %}{% endblock %}
+{% block title %}{% trans "Units" %}{% endblock %}
+
+{% block breadcrumb_menu %}
+    <li class="active">{% trans "Units" %}</li>
+{% endblock %}
+
+{% block main %}
+    <div class="content-panel" style="margin: 30px; padding: 10px;">
+    <h4><i class="fa fa-angle-right"></i> {% trans "Units" %}</h4>
+        {% if unit_list %}
+        <table class="table table-striped table-advance">
+            <tr><th>{% trans "Description" %}</th><th>{% trans "Shortname" %}</th><th></th></tr>
+            {% for unit in unit_list %}
+                <tr>
+                    <td>{{ unit.description }}</td>
+                    <td>{{ unit.shortname }}</td>
+                    <td>
+                        <p class="pull-right">
+                        {% if perms.crm_core.change_unit %}
+                        <button type="button" class="btn btn-sm btn-primary" onclick="window.location.assign('{% url 'unit_edit' unit.pk %}')">{% trans "Edit" %}</button>
+                        {% endif %}
+                        {% if perms.crm_core.delete_unit %}
+                        <button type="button" class="btn btn-sm btn-danger" onclick="window.location.assign('{% url 'unit_delete' unit.pk %}')">{% trans "Delete" %}</button>
+                        {% endif %}
+                        </p>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
+        {% if perms.crm_core.add_unit %}
+        <p><a href="{% url 'unit_create' %}">{% trans "Create a new unit" %}</a></p>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load i18n staticfiles %}
+{% load render_table from django_tables2 %}
+
+{% block meta_title %}{% trans "Contract Overview" %}{% endblock %}
+{% block title %}{% trans "Contract Overview" %}{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'assets/css/bootstrap-tables2.css' %}" />
+{% endblock %}
+
+{% block breadcrumb_menu %}
+    <li class="active">{% trans "Contract Overview" %}</li>
+{% endblock %}
+
+{% block main %}
+    <div class="content-panel" style="margin: 30px; padding: 10px;">
+    <h4><i class="fa fa-angle-right"></i> {% trans "Contract Overview" %}</h4>
+        <div>
+            {% render_table contracttable "tables2/bootstrapped-tables2.html" %}
+        </div>
+        {% if perms.crm_core.add_contract %}
+        <p><a href="{% url 'contract_create' %}">{% trans "Create a new contract" %}</a></p>
+        {% endif %}
+    </div>
+{% endblock %}
