@@ -159,7 +159,6 @@ class Customer(Contact):
     firstname = models.CharField(max_length=300, verbose_name=_("Prename"), blank=True, null=True)
     billingcycle = models.ForeignKey(CustomerBillingCycle, verbose_name=_('Default Billing Cycle'))
     ismemberof = models.ManyToManyField(CustomerGroup, verbose_name=_('Is member of'), blank=True, null=True)
-    search_fields = {"name": 10, "firstname": 8}
 
     class Meta():
         verbose_name = _('Customer')
@@ -264,10 +263,9 @@ class Customer(Contact):
         return self.name
 
 
-class Supplier(Displayable, Contact):
+class Supplier(Contact):
     direct_shipment_to_customers = models.BooleanField(verbose_name=_("Offers direct Shipment to Customer"),
                                                        default=False)
-    search_fields = {"name": 10}
 
     class Meta():
         verbose_name = _("Supplier")

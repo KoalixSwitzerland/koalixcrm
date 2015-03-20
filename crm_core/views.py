@@ -8,7 +8,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
 from django.http import HttpResponse
 from django.template import RequestContext, loader
-from django_tables2 import RequestConfig
+from django_tables2 import RequestConfig, SingleTableView
 from extra_views import UpdateWithInlinesView, InlineFormSet, NamedFormsetsMixin, CreateWithInlinesView
 from crm_core.const.states import InvoiceStatesEnum
 from crm_core.forms import PurchaseOrderPositionInlineForm, PurchaseOrderForm, SalesContractPositionInlineForm, \
@@ -18,7 +18,7 @@ from crm_core.models import Customer, Invoice, Supplier, Unit, TaxRate, Contract
     PurchaseOrderPosition, SalesContractPosition
 from django.shortcuts import render_to_response, redirect, render
 from django.contrib.auth import authenticate, login, logout
-from tables import ContractTable, CustomerTable
+from tables import ContractTable, CustomerTable, SupplierTable
 
 
 # ######################
@@ -222,21 +222,15 @@ class UpdateUserProfile(LoginRequiredMixin, NamedFormsetsMixin, UpdateWithInline
     success_url = reverse_lazy('home')
 
 
-class ListCustomers(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+class ListCustomers(LoginRequiredMixin, PermissionRequiredMixin, SingleTableView):
     model = Customer
     permission_required = 'crm_core.view_customer'
     login_url = settings.LOGIN_URL
     fields = ['name', 'firstname', 'billingcycle', 'ismemberof']
-    object_list = Customer.objects.all().order_by('name')
-
-    def get(self, request, *args, **kwargs):
-        context = self.get_context_data(**kwargs)
-        config = RequestConfig(request)
-        customertable = CustomerTable(self.object_list)
-        config.configure(customertable)
-        customertable.paginate(page=request.GET.get('page', 1), per_page=20)
-        context['customertable'] = customertable
-        return self.render_to_response(context)
+    table_class = CustomerTable
+    table_data = Customer.objects.all()
+    context_table_name = 'customertable'
+    table_pagination = 20
 
 
 class ViewCustomer(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
@@ -272,11 +266,15 @@ class DeleteCustomer(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     success_url = reverse_lazy('customer_list')
 
 
-class ListSuppliers(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+class ListSuppliers(LoginRequiredMixin, PermissionRequiredMixin, SingleTableView):
     model = Supplier
     permission_required = 'crm_core.view_supplier'
     login_url = settings.LOGIN_URL
     fields = ['name', 'direct_shipment_to_customers']
+    table_class = SupplierTable
+    table_data = Supplier.objects.all()
+    context_table_name = 'suppliertable'
+    table_pagination = 20
 
 
 class ViewSupplier(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
@@ -483,21 +481,16 @@ class DeleteCustomerGroup(LoginRequiredMixin, PermissionRequiredMixin, DeleteVie
     success_url = reverse_lazy('customergroup_list')
 
 
-class ListContracts(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+class ListContracts(LoginRequiredMixin, PermissionRequiredMixin, SingleTableView):
     model = Contract
     permission_required = 'crm_core.view_contract'
     login_url = settings.LOGIN_URL
     fields = ['description', 'default_customer', 'default_supplier']
     object_list = Contract.objects.all().reverse().order_by('lastmodification')
-
-    def get(self, request, *args, **kwargs):
-        context = self.get_context_data(**kwargs)
-        config = RequestConfig(request)
-        contracttable = ContractTable(self.object_list)
-        config.configure(contracttable)
-        contracttable.paginate(page=request.GET.get('page', 1), per_page=20)
-        context['contracttable'] = contracttable
-        return self.render_to_response(context)
+    table_class = ContractTable
+    table_data = Contract.objects.all()
+    context_table_name = 'contracttable'
+    table_pagination = 20
 
 
 class ViewContract(LoginRequiredMixin, PermissionRequiredMixin, DetailView):

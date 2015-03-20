@@ -1,8 +1,13 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n staticfiles %}
+{% load render_table from django_tables2 %}
 
 {% block meta_title %}{% trans "Suppliers" %}{% endblock %}
 {% block title %}{% trans "Suppliers" %}{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'assets/css/bootstrap-tables2.css' %}" />
+{% endblock %}
 
 {% block breadcrumb_menu %}
     <li class="active">{% trans "Suppliers" %}</li>
@@ -11,40 +16,9 @@
 {% block main %}
     <div class="content-panel" style="margin: 30px; padding: 10px;">
     <h4><i class="fa fa-angle-right"></i> {% trans "Suppliers" %}</h4>
-        <table class="table table-striped table-advance">
-            <tr><th>{% trans "Name" %}</th><th>{% trans 'Postal Address' %}</th>
-                <th>{% trans 'Phone Number' %}</th><th>{% trans 'Email Address' %}</th><th></th></tr>
-            {% for supplier in supplier_list %}
-                <tr>
-                    <td><a href="{% url 'supplier_detail' supplier.pk %}">{{ supplier }}</a></td>
-                    <td>
-                        {{ supplier.addresses.all|join:"<br>"|default:"-" }}
-                    </td>
-                    <td>
-                        {{ supplier.phonenumbers.all|join:"<br>"|default:"-" }}
-                    </td>
-                    <td>
-                        {{ supplier.emailaddresses.all|join:"<br>"|default:"-" }}
-                    </td>
-                    <td width="100px">
-                        <p class="pull-right">
-                        {% if perms.crm_core.change_supplier %}
-                            <button type="button" class="btn btn-sm btn-primary"
-                                    onclick="window.location.assign('{% url 'supplier_edit' supplier.pk %}')"
-                                    title="{% trans "Edit" %}"><i class="fa fa-pencil"></i></button>
-                        {% endif %}
-                        {% if perms.crm_core.delete_supplier %}
-                            <button type="button" class="btn btn-sm btn-danger"
-                                    onclick="window.location.assign('{% url 'supplier_delete' supplier.pk %}')"
-                                    title="{% trans "Delete" %}"><i class="fa fa-trash"></i></button>
-                        {% endif %}
-                        </p>
-                    </td>
-                </tr>
-            {% empty %}
-                {% trans 'No suppliers' %}
-            {% endfor %}
-        </table>
+        <div>
+            {% render_table suppliertable "tables2/bootstrapped-tables2.html" %}
+        </div>
         {% if perms.crm_core.add_supplier %}
         <p><a href="{% url 'supplier_create' %}">{% trans "Create a new supplier" %}</a></p>
         {% endif %}

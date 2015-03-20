@@ -1,7 +1,7 @@
 import django_tables2 as tables
 from crm_core.custom.custom_columns import LabelColumn, ButtonsColumn, RelatedModelDetailLinkColumn, \
     ModelDetailLinkColumn, ButtonColumn
-from crm_core.models import Contract, Customer
+from crm_core.models import Contract, Customer, Supplier
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -146,3 +146,35 @@ class CustomerTable(tables.Table):
         exclude = ('id', 'billingcycle', 'prefix', 'dateofcreation', 'lastmodification', 'lastmodifiedby',
                    'contact_ptr')
         sequence = ('name_prefix', 'firstname', 'name', 'default_currency')
+
+
+class SupplierTable(tables.Table):
+    name_prefix = tables.TemplateColumn("""{{ record.get_prefix }}""", orderable=False, verbose_name=_('Prefix'))
+    edit_customer = ButtonsColumn(
+        [
+            {
+                "extra_class": "btn-default",
+                "gl_icon": "search",
+                "onclick": "location.href='{% url 'customer_detail' record.pk %}'"
+            },
+            {
+                "extra_class": "btn-info",
+                "gl_icon": "pencil",
+                "onclick": "location.href='{% url 'customer_edit' record.pk %}'"
+            },
+            {
+                "extra_class": "btn-danger",
+                "gl_icon": "trash",
+                "onclick": "location.href='{% url 'customer_delete' record.pk %}'"
+            }
+        ],
+        attrs={"th": {"width": "120px"}},
+        verbose_name=" ",
+        orderable=False
+    )
+
+    class Meta:
+        model = Supplier
+        exclude = ('id', 'billingcycle', 'prefix', 'dateofcreation', 'lastmodification', 'lastmodifiedby',
+                   'contact_ptr')
+        sequence = ('name_prefix', 'name', 'default_currency')
