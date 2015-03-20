@@ -1,7 +1,7 @@
 import django_tables2 as tables
 from crm_core.custom.custom_columns import LabelColumn, ButtonsColumn, RelatedModelDetailLinkColumn, \
     ModelDetailLinkColumn, ButtonColumn
-from crm_core.models import Contract, Customer, Supplier
+from crm_core.models import Contract, Customer, Supplier, Product
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -155,17 +155,17 @@ class SupplierTable(tables.Table):
             {
                 "extra_class": "btn-default",
                 "gl_icon": "search",
-                "onclick": "location.href='{% url 'customer_detail' record.pk %}'"
+                "onclick": "location.href='{% url 'supplier_detail' record.pk %}'"
             },
             {
                 "extra_class": "btn-info",
                 "gl_icon": "pencil",
-                "onclick": "location.href='{% url 'customer_edit' record.pk %}'"
+                "onclick": "location.href='{% url 'supplier_edit' record.pk %}'"
             },
             {
                 "extra_class": "btn-danger",
                 "gl_icon": "trash",
-                "onclick": "location.href='{% url 'customer_delete' record.pk %}'"
+                "onclick": "location.href='{% url 'supplier_delete' record.pk %}'"
             }
         ],
         attrs={"th": {"width": "120px"}},
@@ -178,3 +178,36 @@ class SupplierTable(tables.Table):
         exclude = ('id', 'billingcycle', 'prefix', 'dateofcreation', 'lastmodification', 'lastmodifiedby',
                    'contact_ptr')
         sequence = ('name_prefix', 'name', 'default_currency')
+
+
+class ProductTable(tables.Table):
+    product = tables.Column(accessor='get_product_number', orderable=False, verbose_name=_('Prefix'))
+    price = tables.Column(accessor='get_price', orderable=False, verbose_name=_('Price'))
+    edit_customer = ButtonsColumn(
+        [
+            {
+                "extra_class": "btn-default",
+                "gl_icon": "search",
+                "onclick": "location.href='{% url 'product_detail' record.pk %}'"
+            },
+            {
+                "extra_class": "btn-info",
+                "gl_icon": "pencil",
+                "onclick": "location.href='{% url 'product_edit' record.pk %}'"
+            },
+            {
+                "extra_class": "btn-danger",
+                "gl_icon": "trash",
+                "onclick": "location.href='{% url 'product_delete' record.pk %}'"
+            }
+        ],
+        attrs={"th": {"width": "120px"}},
+        verbose_name=" ",
+        orderable=False
+    )
+
+    class Meta:
+        model = Product
+        exclude = ('id', 'item_category', 'item_prefix', 'dateofcreation', 'lastmodification', 'lastmodifiedby',
+                   'product_number', 'productitem_ptr')
+        sequence = ('product', 'item_title', 'item_description', 'price')

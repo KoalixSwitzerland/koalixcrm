@@ -8,7 +8,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
 from django.http import HttpResponse
 from django.template import RequestContext, loader
-from django_tables2 import RequestConfig, SingleTableView
+from django_tables2 import SingleTableView
 from extra_views import UpdateWithInlinesView, InlineFormSet, NamedFormsetsMixin, CreateWithInlinesView
 from crm_core.const.states import InvoiceStatesEnum
 from crm_core.forms import PurchaseOrderPositionInlineForm, PurchaseOrderForm, SalesContractPositionInlineForm, \
@@ -18,7 +18,7 @@ from crm_core.models import Customer, Invoice, Supplier, Unit, TaxRate, Contract
     PurchaseOrderPosition, SalesContractPosition
 from django.shortcuts import render_to_response, redirect, render
 from django.contrib.auth import authenticate, login, logout
-from tables import ContractTable, CustomerTable, SupplierTable
+from tables import ContractTable, CustomerTable, SupplierTable, ProductTable
 
 
 # ######################
@@ -364,12 +364,16 @@ class DeleteUnit(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     success_url = reverse_lazy('unit_list')
 
 
-class ListProducts(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+class ListProducts(LoginRequiredMixin, PermissionRequiredMixin, SingleTableView):
     model = Product
     permission_required = 'crm_core.view_product'
     login_url = settings.LOGIN_URL
     fields = ['item_prefix', 'product_number', 'item_title', 'item_description', 'item_unit', 'item_tax',
               'item_category']
+    table_class = ProductTable
+    table_data = Product.objects.all()
+    context_table_name = 'producttable'
+    table_pagination = 20
 
 
 class CreateProduct(LoginRequiredMixin, PermissionRequiredMixin, CreateView):

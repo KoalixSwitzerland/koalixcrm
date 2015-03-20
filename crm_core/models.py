@@ -167,10 +167,6 @@ class Customer(Contact):
             ('view_customer', 'Can view customers'),
         )
 
-    @staticmethod
-    def get_class_name():
-        return _('Customer')
-
     def get_absolute_url(self):
         url = '/customers/detail/' + str(self.pk)  # TODO: Bad solution
         return url
@@ -273,10 +269,6 @@ class Supplier(Contact):
         permissions = (
             ('view_supplier', 'Can view suppliers'),
         )
-
-    @staticmethod
-    def get_class_name():
-        return _('Supplier')
 
     def get_absolute_url(self):
         url = '/suppliers/detail/' + str(self.pk)  # TODO: Bad solution
@@ -736,9 +728,8 @@ class ProductItem(models.Model):
 
 
 # TODO
-class Product(Displayable, ProductItem):
+class Product(ProductItem):
     product_number = models.IntegerField(verbose_name=_("Product Number"))
-    search_fields = {"item_title": 10, "item_description": 8}
 
     class Meta():
         verbose_name = _('Product')
@@ -749,10 +740,6 @@ class Product(Displayable, ProductItem):
 
     def get_product_number(self):
         return "%s%s" % (self.item_prefix, self.product_number)
-
-    @staticmethod
-    def get_class_name():
-        return _('Product')
 
     def get_absolute_url(self):
         url = '/products/detail/' + str(self.pk)  # TODO: Bad solution
@@ -791,7 +778,7 @@ class Product(Displayable, ProductItem):
                     lowestprice = price
             return lowestprice
         else:
-            raise Product.NoPriceFound(customer, unit, date, self)
+            return 0
 
     def get_tax_rate(self):
         return self.item_tax.gettaxrate()
