@@ -268,7 +268,7 @@ INSTALLED_APPS = (
     "international",
     "po_localization",
 
-    "import_export",
+    "smuggler",
     "django_fsm",
     "admin_backup",
     "reversion",

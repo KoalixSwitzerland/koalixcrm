@@ -28,23 +28,23 @@ admin.site.register(User, NewUserAdmin)
 
 # Define reversible models
 class CustomerAdmin(reversion.VersionAdmin):
-    pass
+    change_list_template = 'smuggler/change_list.html'
 
 
 class InvoiceAdmin(reversion.VersionAdmin):
-    pass
+    change_list_template = 'smuggler/change_list.html'
 
 
 class QuoteAdmin(reversion.VersionAdmin):
-    pass
+    change_list_template = 'smuggler/change_list.html'
 
 
 class PurchaseorderAdmin(reversion.VersionAdmin):
-    pass
+    change_list_template = 'smuggler/change_list.html'
 
 
 class SupplierAdmin(reversion.VersionAdmin):
-    pass
+    change_list_template = 'smuggler/change_list.html'
 
 
 # register reversible classes

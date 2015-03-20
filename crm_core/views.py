@@ -13,9 +13,6 @@ from extra_views import UpdateWithInlinesView, InlineFormSet, NamedFormsetsMixin
 from crm_core.const.states import InvoiceStatesEnum
 from crm_core.forms import PurchaseOrderPositionInlineForm, PurchaseOrderForm, SalesContractPositionInlineForm, \
     QuoteForm, InvoiceForm
-from crm_core.impex import CustomerResource, SupplierResource, CustomerGroupResource, InvoiceResource, \
-    ProductResource, ContractResource, CustomerBillingCycleResource, PurchaseOrderResource, QuoteResource, \
-    TaxRateResource, UnitResource
 from crm_core.models import Customer, Invoice, Supplier, Unit, TaxRate, Contract, Product, CustomerBillingCycle, \
     PurchaseOrder, CustomerGroup, Quote, PostalAddress, PhoneAddress, EmailAddress, UserExtension, \
     PurchaseOrderPosition, SalesContractPosition
@@ -158,90 +155,6 @@ def create_pdf_from_invoice(request, invoice_pk):
                       .decode('utf8').encode('latin2'))
     invoice.create_pdf(html_string)
     return redirect('invoice_list')
-
-
-# #############################
-# ##   Import Export Views   ##
-# #############################
-
-
-def _get_export_response(dataset, name, format=None):
-    if format == 'xls':
-        response = HttpResponse(content_type='text/vnd.ms-excel')
-        response['Content-Disposition'] = 'attachment; filename="%s.xls"' % name
-        response.content = dataset.xls
-    elif format == 'xlsx':
-        response = HttpResponse(content_type='text/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-        response['Content-Disposition'] = 'attachment; filename="%s.xlsx"' % name
-        response.content = dataset.xlsx
-    elif format == 'csv':
-        response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename="%s.csv"' % name
-        response.content = dataset.csv
-    else:
-        response = HttpResponse(content_type='text/json')
-        response['Content-Disposition'] = 'attachment; filename="%s.json"' % name
-        response.content = dataset.json
-    return response
-
-
-def export_customers(request, format='xls'):
-    dataset = CustomerResource().export()
-    return _get_export_response(dataset, 'customers', format)
-
-
-def import_customers(request):
-    pass
-
-
-def export_suppliers(request, format='xls'):
-    dataset = SupplierResource().export()
-    return _get_export_response(dataset, 'suppliers', format)
-
-
-def export_products(request, format='xls'):
-    dataset = ProductResource().export()
-    return _get_export_response(dataset, 'products', format)
-
-
-def export_contracts(request, format='xls'):
-    dataset = ContractResource().export()
-    return _get_export_response(dataset, 'contracts', format)
-
-
-def export_quotes(request, format='xls'):
-    dataset = QuoteResource().export()
-    return _get_export_response(dataset, 'quotes', format)
-
-
-def export_invoices(request, format='xls'):
-    dataset = InvoiceResource().export()
-    return _get_export_response(dataset, 'invoices', format)
-
-
-def export_purchaseorders(request, format='xls'):
-    dataset = PurchaseOrderResource().export()
-    return _get_export_response(dataset, 'purchaseorders', format)
-
-
-def export_taxrates(request, format='xls'):
-    dataset = TaxRateResource().export()
-    return _get_export_response(dataset, 'taxrates', format)
-
-
-def export_units(request, format='xls'):
-    dataset = UnitResource().export()
-    return _get_export_response(dataset, 'units', format)
-
-
-def export_billingcycles(request, format='xls'):
-    dataset = CustomerBillingCycleResource().export()
-    return _get_export_response(dataset, 'billingcycles', format)
-
-
-def export_customergroups(request, format='xls'):
-    dataset = CustomerGroupResource().export()
-    return _get_export_response(dataset, 'customergroups', format)
 
 
 # ###########################

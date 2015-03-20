@@ -17,6 +17,7 @@ urlpatterns = \
         "",
         # Change the admin prefix here to use an alternate URL for the
         # admin interface, which would be marginally more secure.
+        ('^admin/', include('smuggler.urls')),
         ("^admin/", include(admin.site.urls)),
         url(r'^admin/backup/$', 'admin_backup.views.admin_backup', name='admin_backup'),
         url(r'^dashboard/$', show_dashboard, name='dashboard'),
@@ -29,8 +30,6 @@ urlpatterns = \
         # #############
 
         url(r'^customers/$', ListCustomers.as_view(), name='customer_list'),
-        # url(r'^customers/import/$', ListCustomers().import_action, name='customer_import'),
-        url(r'^customers/export/(?P<format>\w+)?/?$', export_customers, name='customer_export'),
         url(r'^customers/detail/(?P<pk>\d+)/$', ViewCustomer.as_view(), name='customer_detail'),
         url(r'^customers/create/$', CreateCustomer.as_view(), name='customer_create'),
         url(r'^customers/createcontract/(?P<customer_pk>\d+)/$', create_contract_from_customer,
@@ -47,7 +46,6 @@ urlpatterns = \
         # #############
 
         url(r'^suppliers/$', ListSuppliers.as_view(), name='supplier_list'),
-        url(r'^suppliers/export/(?P<format>\w+)?/?$', export_suppliers, name='supplier_export'),
         url(r'^suppliers/detail/(?P<pk>\d+)/$', ViewSupplier.as_view(), name='supplier_detail'),
         url(r'^suppliers/create/$', CreateSupplier.as_view(), name='supplier_create'),
         url(r'^suppliers/edit/(?P<pk>\d+)/$', EditSupplier.as_view(), name='supplier_edit'),
@@ -58,7 +56,6 @@ urlpatterns = \
         # ########
 
         url(r'^taxes/$', ListTaxes.as_view(), name='tax_list'),
-        url(r'^taxes/export/(?P<format>\w+)?/?$', export_taxrates, name='tax_export'),
         url(r'^taxes/create/$', CreateTax.as_view(), name='tax_create'),
         url(r'^taxes/edit/(?P<pk>\d+)/$', EditTax.as_view(), name='tax_edit'),
         url(r'^taxes/delete/(?P<pk>\d+)/$', DeleteTax.as_view(), name='tax_delete'),
@@ -68,7 +65,6 @@ urlpatterns = \
         # #########
 
         url(r'^units/$', ListUnits.as_view(), name='unit_list'),
-        url(r'^units/export/(?P<format>\w+)?/?$', export_units, name='unit_export'),
         url(r'^units/create/$', CreateUnit.as_view(), name='unit_create'),
         url(r'^units/edit/(?P<pk>\d+)/$', EditUnit.as_view(), name='unit_edit'),
         url(r'^units/delete/(?P<pk>\d+)/$', DeleteUnit.as_view(), name='unit_delete'),
@@ -78,7 +74,6 @@ urlpatterns = \
         # ############
 
         url(r'^products/$', ListProducts.as_view(), name='product_list'),
-        url(r'^products/export/(?P<format>\w+)?/?$', export_products, name='product_export'),
         url(r'^products/create/$', CreateProduct.as_view(), name='product_create'),
         url(r'^products/detail/(?P<pk>\d+)/$', ViewProduct.as_view(), name='product_detail'),
         url(r'^products/edit/(?P<pk>\d+)/$', EditProduct.as_view(), name='product_edit'),
@@ -89,7 +84,6 @@ urlpatterns = \
         # #################
 
         url(r'^billingcycles/$', ListBillingCycles.as_view(), name='customerbillingcycle_list'),
-        url(r'^billingcycles/export/(?P<format>\w+)?/?$', export_billingcycles, name='customerbillingcycle_export'),
         url(r'^billingcycles/create/$', CreateBillingCycle.as_view(), name='customerbillingcycle_create'),
         url(r'^billingcycles/edit/(?P<pk>\d+)/$', EditBillingCycle.as_view(), name='customerbillingcycle_edit'),
         url(r'^billingcycles/delete/(?P<pk>\d+)/$', DeleteBillingCycle.as_view(), name='customerbillingcycle_delete'),
@@ -99,7 +93,6 @@ urlpatterns = \
         # ##################
 
         url(r'^purchaseorders/$', ListPurchaseOrders.as_view(), name='purchaseorder_list'),
-        url(r'^purchaseorders/export/(?P<format>\w+)?/?$', export_purchaseorders, name='purchaseorder_export'),
         url(r'^purchaseorders/createpdf/(?P<purchaseorder_pk>\d+)/$', create_pdf_from_purchaseorder,
             name='purchaseorder_create_pdf'),
         url(r'^purchaseorders/edit/(?P<pk>\d+)/$', EditPurchaseOrder.as_view(), name='purchaseorder_edit'),
@@ -110,7 +103,6 @@ urlpatterns = \
         # ##################
 
         url(r'^customergroups/$', ListCustomerGroups.as_view(), name='customergroup_list'),
-        url(r'^customergroups/export/(?P<format>\w+)?/?$', export_customergroups, name='customergroup_export'),
         url(r'^customergroups/create/$', CreateCustomerGroup.as_view(), name='customergroup_create'),
         url(r'^customergroups/edit/(?P<pk>\d+)/$', EditCustomerGroup.as_view(), name='customergroup_edit'),
         url(r'^customergroups/delete/(?P<pk>\d+)/$', DeleteCustomerGroup.as_view(), name='customergroup_delete'),
@@ -120,7 +112,6 @@ urlpatterns = \
         # #############
 
         url(r'^contracts/$', ListContracts.as_view(), name='contract_list'),
-        url(r'^contracts/export/(?P<format>\w+)?/?$', export_contracts, name='contract_export'),
         url(r'^contracts/detail/(?P<pk>\d+)/$', ViewContract.as_view(), name='contract_detail'),
         url(r'^contracts/create/$', CreateContract.as_view(), name='contract_create'),
         url(r'^contracts/createinvoice/(?P<contract_pk>\d+)/$', create_invoice_from_contract,
@@ -136,7 +127,6 @@ urlpatterns = \
         # ############
 
         url(r'^invoices/$', ListInvoice.as_view(), name='invoice_list'),
-        url(r'^invoices/export/(?P<format>\w+)?/?$', export_invoices, name='invoice_export'),
         url(r'^invoices/createpdf/(?P<invoice_pk>\d+)/$', create_pdf_from_invoice, name='invoice_create_pdf'),
         url(r'^invoices/edit/(?P<pk>\d+)/$', EditInvoice.as_view(), name='invoice_edit'),
         url(r'^invoices/delete/(?P<pk>\d+)/$', DeleteInvoice.as_view(), name='invoice_delete'),
@@ -146,7 +136,6 @@ urlpatterns = \
         # ##########
 
         url(r'^quotes/$', ListQuotes.as_view(), name='quote_list'),
-        url(r'^quotes/export/(?P<format>\w+)?/?$', export_quotes, name='quote_export'),
         url(r'^quotes/create/$', CreateQuote.as_view(), name='quote_create'),
         url(r'^quotes/createinvoice/(?P<quote_pk>\d+)/$', create_invoice_from_quote, name='quote_create_invoice'),
         url(r'^quotes/createpurchaseorder/(?P<quote_pk>\d+)/$', create_purchaseorder_from_quote,
