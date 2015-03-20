@@ -274,7 +274,7 @@ class ListSuppliers(LoginRequiredMixin, PermissionRequiredMixin, SingleTableView
     table_class = SupplierTable
     table_data = Supplier.objects.all()
     context_table_name = 'suppliertable'
-    table_pagination = 20
+    table_pagination = 10
 
 
 class ViewSupplier(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
@@ -373,7 +373,7 @@ class ListProducts(LoginRequiredMixin, PermissionRequiredMixin, SingleTableView)
     table_class = ProductTable
     table_data = Product.objects.all()
     context_table_name = 'producttable'
-    table_pagination = 20
+    table_pagination = 10
 
 
 class CreateProduct(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
@@ -494,7 +494,7 @@ class ListContracts(LoginRequiredMixin, PermissionRequiredMixin, SingleTableView
     table_class = ContractTable
     table_data = Contract.objects.all()
     context_table_name = 'contracttable'
-    table_pagination = 20
+    table_pagination = 10
 
 
 class ViewContract(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
