@@ -2,7 +2,6 @@
 import StringIO
 from braces.views import PermissionRequiredMixin, LoginRequiredMixin
 from django.utils.translation import ugettext_lazy as _
-from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
@@ -10,12 +9,8 @@ from django.http import HttpResponse
 from django.template import RequestContext, loader
 from django_tables2 import SingleTableView
 from extra_views import UpdateWithInlinesView, InlineFormSet, NamedFormsetsMixin, CreateWithInlinesView
-from crm_core.const.states import InvoiceStatesEnum
-from crm_core.forms import PurchaseOrderPositionInlineForm, PurchaseOrderForm, SalesContractPositionInlineForm, \
-    QuoteForm, InvoiceForm
-from crm_core.models import Customer, Invoice, Supplier, Unit, TaxRate, Contract, Product, CustomerBillingCycle, \
-    PurchaseOrder, CustomerGroup, Quote, PostalAddress, PhoneAddress, EmailAddress, UserExtension, \
-    PurchaseOrderPosition, SalesContractPosition
+from crm_core.forms import *
+from crm_core.models import *
 from django.shortcuts import render_to_response, redirect, render
 from django.contrib.auth import authenticate, login, logout
 from tables import ContractTable, CustomerTable, SupplierTable, ProductTable
@@ -434,14 +429,6 @@ class DeleteBillingCycle(LoginRequiredMixin, PermissionRequiredMixin, DeleteView
     success_url = reverse_lazy('customerbillingcycle_list')
 
 
-class ListPurchaseOrders(LoginRequiredMixin, PermissionRequiredMixin, ListView):
-    model = PurchaseOrder
-    permission_required = 'crm_core.view_purchaseorder'
-    login_url = settings.LOGIN_URL
-    fields = ['description', 'contract', 'supplier', 'state', 'currency', 'last_calculated_price',
-              'last_pricing_date', ]
-
-
 class EditPurchaseOrder(LoginRequiredMixin, PermissionRequiredMixin, UpdateWithInlinesView):
     model = PurchaseOrder
     form_class = PurchaseOrderForm
@@ -526,14 +513,6 @@ class DeleteContract(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     success_url = reverse_lazy('contract_list')
 
 
-class ListInvoice(LoginRequiredMixin, PermissionRequiredMixin, ListView):
-    model = Invoice
-    permission_required = 'crm_core.view_invoice'
-    login_url = settings.LOGIN_URL
-    fields = ['description', 'contract', 'customer', 'payableuntil', 'state', 'currency', 'last_calculated_price',
-              'last_pricing_date']
-
-
 class EditInvoice(LoginRequiredMixin, PermissionRequiredMixin, UpdateWithInlinesView):
     model = Invoice
     form_class = InvoiceForm
@@ -549,14 +528,6 @@ class DeleteInvoice(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     permission_required = 'crm_core.delete_invoice'
     login_url = settings.LOGIN_URL
     success_url = reverse_lazy('invoice_list')
-
-
-class ListQuotes(LoginRequiredMixin, PermissionRequiredMixin, ListView):
-    model = Quote
-    permission_required = 'crm_core.view_quote'
-    login_url = settings.LOGIN_URL
-    fields = ['description', 'contract', 'customer', 'validuntil', 'lastmodifiedby',
-              'last_calculated_price', 'last_pricing_date']
 
 
 class CreateQuote(LoginRequiredMixin, PermissionRequiredMixin, CreateWithInlinesView):

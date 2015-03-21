@@ -1,7 +1,9 @@
-{% extends "base/base.html" %}
+{% extends 'base/main_section_base.html' %}
 
 {% block main %}
     <div class="panel panel-default" style="margin: 30px; padding: 10px;">
+    <form method="POST" action="" class="form form-horizontal">
+    {% csrf_token %}
 
         <div class="page-header">
             <h4>
@@ -19,7 +21,7 @@
             </h4>
         </div>
 
-        <div class="panel-body">
+        <div class="panel-body well">
 
             {% block main_inner %}
             {% endblock %}
@@ -33,5 +35,6 @@
 
         </div>
 
+    </form>
     </div>
 {% endblock %}

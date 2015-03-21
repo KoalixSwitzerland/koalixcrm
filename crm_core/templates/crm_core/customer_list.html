@@ -1,26 +1,29 @@
-{% extends "base.html" %}
-{% load i18n staticfiles %}
+{% extends "base/table_view_base.html" %}
+{% load i18n %}
 {% load render_table from django_tables2 %}
 
-{% block meta_title %}{% trans "Customers" %}{% endblock %}
-{% block title %}{% trans "Customers" %}{% endblock %}
+{% block meta_title %}
+    {% trans "Customers" %}
+{% endblock %}
 
-{% block extra_head %}
-    <link rel="stylesheet" href="{% static 'assets/css/bootstrap-tables2.css' %}" />
+{% block title %}
+    {% trans "Customers" %}
 {% endblock %}
 
 {% block breadcrumb_menu %}
     <li class="active">{% trans "Customers" %}</li>
 {% endblock %}
 
-{% block main %}
-    <div class="content-panel" style="margin: 30px; padding: 10px;">
-    <h4><i class="fa fa-angle-right"></i> {% trans "Customers" %}</h4>
-        <div>
-            {% render_table customertable "tables2/bootstrapped-tables2.html" %}
-        </div>
-        {% if perms.crm_core.add_customer %}
-        <p><a href="{% url 'customer_create' %}">{% trans "Create a new customer" %}</a></p>
-        {% endif %}
-    </div>
+{% block main_header %}
+    {% trans "Customers" %}
+{% endblock %}
+
+{% block main_toolbar %}
+    {% if perms.crm_core.add_customer %}
+        <button class="btn btn-success" onclick="location.href='{% url 'customer_create' %}'"><span class="glyphicon glyphicon-plus"></span></button>
+    {% endif %}
+{% endblock %}
+
+{% block main_inner %}
+    {% render_table customertable "tables2/bootstrapped-tables2.html" %}
 {% endblock %}

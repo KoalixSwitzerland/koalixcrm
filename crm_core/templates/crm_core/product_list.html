@@ -1,26 +1,29 @@
-{% extends "base.html" %}
-{% load i18n staticfiles %}
+{% extends "base/table_view_base.html" %}
+{% load i18n %}
 {% load render_table from django_tables2 %}
 
-{% block meta_title %}{% trans "Products" %}{% endblock %}
-{% block title %}{% trans "Products" %}{% endblock %}
+{% block meta_title %}
+    {% trans "Products" %}
+{% endblock %}
 
-{% block extra_head %}
-    <link rel="stylesheet" href="{% static 'assets/css/bootstrap-tables2.css' %}" />
+{% block title %}
+    {% trans "Products" %}
 {% endblock %}
 
 {% block breadcrumb_menu %}
     <li class="active">{% trans "Products" %}</li>
 {% endblock %}
 
-{% block main %}
-    <div class="content-panel" style="margin: 30px; padding: 10px;">
-    <h4><i class="fa fa-angle-right"></i> {% trans "Products" %}</h4>
-        <div>
-            {% render_table producttable "tables2/bootstrapped-tables2.html" %}
-        </div>
-        {% if perms.crm_core.add_product %}
-        <p><a href="{% url 'product_create' %}">{% trans "Create a new product" %}</a></p>
-        {% endif %}
-    </div>
+{% block main_header %}
+    {% trans "Products" %}
+{% endblock %}
+
+{% block main_toolbar %}
+    {% if perms.crm_core.add_product %}
+        <button class="btn btn-success" onclick="location.href='{% url 'product_create' %}'"><span class="glyphicon glyphicon-plus"></span></button>
+    {% endif %}
+{% endblock %}
+
+{% block main_inner %}
+    {% render_table producttable "tables2/bootstrapped-tables2.html" %}
 {% endblock %}

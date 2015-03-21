@@ -1,38 +1,33 @@
-{% extends "base.html" %}
+{% extends "base/form_view_base.html" %}
 {% load i18n bootstrap3 %}
 
-{% block meta_title %}{% trans "Customers" %}{% endblock %}
-{% block title %}{% trans "Customers" %}{% endblock %}
+{% block meta_title %}
+    {% trans "Customers" %}
+{% endblock %}
+
+{% block title %}
+    {% trans "Customers" %}
+{% endblock %}
 
 {% block breadcrumb_menu %}
     <li class="active"><a href="{% url 'customer_list' %}">{% trans "Customers" %}</a></li>
     <li class="active">{% if customer %}{% trans "Edit customer" %}{% else %}{% trans "Create customer" %}{% endif%}</li>
 {% endblock %}
 
-{% block rightbar %}
+{% block main_header %}
+    {% if customer %}{% trans "Edit customer" %}{% else %}{% trans "Create customer" %}{% endif%}
 {% endblock %}
 
-{% block main %}
-    <div class="form-panel" style="margin: 30px">
-    <h4 class="mb"><i class="fa fa-angle-right"></i>
-    {% if customer %}{% trans "Edit customer" %}{% else %}{% trans "Create customer" %}{% endif%}</h4>
-    <form method="POST" action="" class="form form-horizontal" style="margin: 30px;">
-        {% csrf_token %}
-
-            <div class="row well">
-                <div class="col-lg-6">
-                    <div style="margin: 0 12px 0 12px;">
-                        {%  bootstrap_form form %}
-                    </div>
-                    {% if postaladdress_formset and perms.crm_core.view_postaladdress %}
-                        <details class="form-wrapper" id="edit-advanced">
-                            <summary><i class="fa fa-envelope"></i> {% trans "Postal Address" %}</summary>
-                            <div style="margin: 0 12px 0 12px;">
-                                {% bootstrap_formset postaladdress_formset %}
-                            </div>
-                        </details>
-                    {% endif %}
-                </div>
+{% block main_inner %}
+    {% bootstrap_form form layout='horizontal' %}
+                {% if postaladdress_formset and perms.crm_core.view_postaladdress %}
+                    <details class="form-wrapper" id="edit-advanced">
+                        <summary><i class="fa fa-envelope"></i> {% trans "Postal Address" %}</summary>
+                        <div style="margin: 0 12px 0 12px;">
+                            {% bootstrap_formset postaladdress_formset %}
+                        </div>
+                    </details>
+                {% endif %}
 
                 <div class="col-lg-6">
                     <div class="col-lg-6">
@@ -56,18 +51,15 @@
                     {% endif %}
                     </div>
                 </div>
+{% endblock %}
 
-            </div>
+{% block main_footer %}
+    <button type='submit' class='btn btn-primary'>
+        {% trans "Save" %}
+    </button>
 
-            <button type='submit' class='btn btn-primary'>
-                {% trans "Save" %}
-            </button>
-
-            <button type="button" class="btn btn-default"
-                    onclick="window.location.assign('{% url 'customer_list' %}')">
-                {% trans "Cancel" %}
-            </button>
-
-        </form>
-    </div>
+    <button type="button" class="btn btn-default"
+            onclick="window.location.assign('{% url 'customer_list' %}')">
+        {% trans "Cancel" %}
+    </button>
 {% endblock %}

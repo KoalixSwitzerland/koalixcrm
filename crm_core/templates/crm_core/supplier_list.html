@@ -1,26 +1,29 @@
-{% extends "base.html" %}
-{% load i18n staticfiles %}
+{% extends "base/table_view_base.html" %}
+{% load i18n %}
 {% load render_table from django_tables2 %}
 
-{% block meta_title %}{% trans "Suppliers" %}{% endblock %}
-{% block title %}{% trans "Suppliers" %}{% endblock %}
+{% block meta_title %}
+    {% trans "Suppliers" %}
+{% endblock %}
 
-{% block extra_head %}
-    <link rel="stylesheet" href="{% static 'assets/css/bootstrap-tables2.css' %}" />
+{% block title %}
+    {% trans "Suppliers" %}
 {% endblock %}
 
 {% block breadcrumb_menu %}
     <li class="active">{% trans "Suppliers" %}</li>
 {% endblock %}
 
-{% block main %}
-    <div class="content-panel" style="margin: 30px; padding: 10px;">
-    <h4><i class="fa fa-angle-right"></i> {% trans "Suppliers" %}</h4>
-        <div>
-            {% render_table suppliertable "tables2/bootstrapped-tables2.html" %}
-        </div>
-        {% if perms.crm_core.add_supplier %}
-        <p><a href="{% url 'supplier_create' %}">{% trans "Create a new supplier" %}</a></p>
-        {% endif %}
-    </div>
+{% block main_header %}
+    {% trans "Suppliers" %}
+{% endblock %}
+
+{% block main_toolbar %}
+    {% if perms.crm_core.add_supplier %}
+        <button class="btn btn-success" onclick="location.href='{% url 'supplier_create' %}'"><span class="glyphicon glyphicon-plus"></span></button>
+    {% endif %}
+{% endblock %}
+
+{% block main_inner %}
+    {% render_table suppliertable "tables2/bootstrapped-tables2.html" %}
 {% endblock %}

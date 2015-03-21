@@ -1,26 +1,29 @@
-{% extends "base.html" %}
-{% load i18n staticfiles %}
+{% extends "base/table_view_base.html" %}
+{% load i18n %}
 {% load render_table from django_tables2 %}
 
-{% block meta_title %}{% trans "Contract Overview" %}{% endblock %}
-{% block title %}{% trans "Contract Overview" %}{% endblock %}
+{% block meta_title %}
+    {% trans "Contract Overview" %}
+{% endblock %}
 
-{% block extra_head %}
-    <link rel="stylesheet" href="{% static 'assets/css/bootstrap-tables2.css' %}" />
+{% block title %}
+    {% trans "Contract Overview" %}
 {% endblock %}
 
 {% block breadcrumb_menu %}
     <li class="active">{% trans "Contract Overview" %}</li>
 {% endblock %}
 
-{% block main %}
-    <div class="content-panel" style="margin: 30px; padding: 10px;">
-    <h4><i class="fa fa-angle-right"></i> {% trans "Contract Overview" %}</h4>
-        <div>
-            {% render_table contracttable "tables2/bootstrapped-tables2.html" %}
-        </div>
-        {% if perms.crm_core.add_contract %}
-        <p><a href="{% url 'contract_create' %}">{% trans "Create a new contract" %}</a></p>
-        {% endif %}
-    </div>
+{% block main_header %}
+    {% trans "Contract Overview" %}
+{% endblock %}
+
+{% block main_toolbar %}
+    {% if perms.crm_core.add_product %}
+        <button class="btn btn-success" onclick="location.href='{% url 'contract_create' %}'"><span class="glyphicon glyphicon-plus"></span></button>
+    {% endif %}
+{% endblock %}
+
+{% block main_inner %}
+        {% render_table contracttable "tables2/bootstrapped-tables2.html" %}
 {% endblock %}

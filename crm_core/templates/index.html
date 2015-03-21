@@ -1,4 +1,4 @@
-{% extends "pages/richtextpage.html" %}
+{% extends "base/base.html" %}
 {% load i18n mezzanine_tags %}
 
 {% block meta_title %}{% trans "Home" %}{% endblock %}
@@ -6,9 +6,6 @@
 
 {% block breadcrumb_menu %}
 <li class="active">{% trans "Home" %}</li>
-{% endblock %}
-
-{% block rightbar %}
 {% endblock %}
 
 {% block main %}
