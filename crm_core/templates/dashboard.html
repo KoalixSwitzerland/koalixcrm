@@ -19,7 +19,8 @@
 					  			<p>{{ contractcount }} open contracts in your database.</p>
                   		</div>
                   		<div class="col-md-2 col-sm-2 box0">
-                  			<div class="box1" onclick="window.location.assign('{% url 'invoice_list' %}')">
+{#                            TODO: filtered view  #}
+                  			<div class="box1" onclick="window.location.assign('{% url 'contract_list' %}')">
 					  			<span class="li_banknote"></span>
 					  			<h3>{{ invoicecount }}&nbsp;{% trans 'open' %}</h3>
                   			</div>
