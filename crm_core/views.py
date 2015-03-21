@@ -7,7 +7,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
 from django.http import HttpResponse
 from django.template import RequestContext, loader
-from django_tables2 import SingleTableView
+from django_tables2 import SingleTableView, RequestConfig
 from extra_views import UpdateWithInlinesView, InlineFormSet, NamedFormsetsMixin, CreateWithInlinesView
 from crm_core.forms import *
 from crm_core.models import *
@@ -16,10 +16,29 @@ from django.contrib.auth import authenticate, login, logout
 from tables import ContractTable, CustomerTable, SupplierTable, ProductTable
 
 
+# ###################
+# ##   Base Views  ##
+# ###################
+
+class PaginatedTableView(SingleTableView):
+
+    def __init__(self, **kwargs):
+        super(PaginatedTableView, self).__init__(**kwargs)
+        self.object_list = self.model.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        config = RequestConfig(request)
+        table = self.table_class(self.object_list)
+        config.configure(table)
+        table.paginate(page=request.GET.get('page', 1), per_page=self.table_pagination)
+        context[self.context_table_name] = table
+        return self.render_to_response(context)
+
+
 # ######################
 # ##   Helper Views   ##
 # ######################
-
 
 def login_user(request):
     logout(request)
@@ -217,7 +236,7 @@ class UpdateUserProfile(LoginRequiredMixin, NamedFormsetsMixin, UpdateWithInline
     success_url = reverse_lazy('home')
 
 
-class ListCustomers(LoginRequiredMixin, PermissionRequiredMixin, SingleTableView):
+class ListCustomers(LoginRequiredMixin, PermissionRequiredMixin, PaginatedTableView):
     model = Customer
     permission_required = 'crm_core.view_customer'
     login_url = settings.LOGIN_URL
@@ -225,7 +244,7 @@ class ListCustomers(LoginRequiredMixin, PermissionRequiredMixin, SingleTableView
     table_class = CustomerTable
     table_data = Customer.objects.all()
     context_table_name = 'customertable'
-    table_pagination = 20
+    table_pagination = 10
 
 
 class ViewCustomer(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
@@ -261,7 +280,7 @@ class DeleteCustomer(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     success_url = reverse_lazy('customer_list')
 
 
-class ListSuppliers(LoginRequiredMixin, PermissionRequiredMixin, SingleTableView):
+class ListSuppliers(LoginRequiredMixin, PermissionRequiredMixin, PaginatedTableView):
     model = Supplier
     permission_required = 'crm_core.view_supplier'
     login_url = settings.LOGIN_URL
@@ -359,7 +378,7 @@ class DeleteUnit(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     success_url = reverse_lazy('unit_list')
 
 
-class ListProducts(LoginRequiredMixin, PermissionRequiredMixin, SingleTableView):
+class ListProducts(LoginRequiredMixin, PermissionRequiredMixin, PaginatedTableView):
     model = Product
     permission_required = 'crm_core.view_product'
     login_url = settings.LOGIN_URL
@@ -435,14 +454,14 @@ class EditPurchaseOrder(LoginRequiredMixin, PermissionRequiredMixin, UpdateWithI
     inlines = [PurchaseOrderPositionInline]
     permission_required = 'crm_core.change_purchaseorder'
     login_url = settings.LOGIN_URL
-    success_url = reverse_lazy('purchaseorder_list')
+    success_url = reverse_lazy('contract_list')
 
 
 class DeletePurchaseOrder(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = PurchaseOrder
     permission_required = 'crm_core.delete_purchaseorder'
     login_url = settings.LOGIN_URL
-    success_url = reverse_lazy('purchaseorder_list')
+    success_url = reverse_lazy('contract_list')
 
 
 class ListCustomerGroups(LoginRequiredMixin, PermissionRequiredMixin, ListView):
@@ -472,7 +491,7 @@ class DeleteCustomerGroup(LoginRequiredMixin, PermissionRequiredMixin, DeleteVie
     success_url = reverse_lazy('customergroup_list')
 
 
-class ListContracts(LoginRequiredMixin, PermissionRequiredMixin, SingleTableView):
+class ListContracts(LoginRequiredMixin, PermissionRequiredMixin, PaginatedTableView):
     model = Contract
     permission_required = 'crm_core.view_contract'
     login_url = settings.LOGIN_URL
@@ -520,14 +539,14 @@ class EditInvoice(LoginRequiredMixin, PermissionRequiredMixin, UpdateWithInlines
     permission_required = 'crm_core.change_invoice'
     login_url = settings.LOGIN_URL
     fields = ['description', 'contract', 'customer', 'payableuntil', 'state', 'currency']
-    success_url = reverse_lazy('invoice_list')
+    success_url = reverse_lazy('contract_list')
 
 
 class DeleteInvoice(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Invoice
     permission_required = 'crm_core.delete_invoice'
     login_url = settings.LOGIN_URL
-    success_url = reverse_lazy('invoice_list')
+    success_url = reverse_lazy('contract_list')
 
 
 class CreateQuote(LoginRequiredMixin, PermissionRequiredMixin, CreateWithInlinesView):
@@ -538,7 +557,7 @@ class CreateQuote(LoginRequiredMixin, PermissionRequiredMixin, CreateWithInlines
     login_url = settings.LOGIN_URL
     fields = ['description', 'contract', 'customer', 'currency', 'lastmodifiedby',
               'last_calculated_price', 'last_pricing_date']
-    success_url = reverse_lazy('quote_list')
+    success_url = reverse_lazy('contract_list')
 
 
 class EditQuote(LoginRequiredMixin, PermissionRequiredMixin, UpdateWithInlinesView):
@@ -549,11 +568,11 @@ class EditQuote(LoginRequiredMixin, PermissionRequiredMixin, UpdateWithInlinesVi
     login_url = settings.LOGIN_URL
     fields = ['description', 'contract', 'customer', 'currency', 'lastmodifiedby',
               'last_calculated_price', 'last_pricing_date']
-    success_url = reverse_lazy('quote_list')
+    success_url = reverse_lazy('contract_list')
 
 
 class DeleteQuote(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Quote
     permission_required = 'crm_core.delete_quote'
     login_url = settings.LOGIN_URL
-    success_url = reverse_lazy('quote_list')
+    success_url = reverse_lazy('contract_list')

@@ -538,8 +538,9 @@ class SalesContract(models.Model):
         except SalesContract.DoesNotExist:
             return 0
 
+    # TODO
     def save(self, *args, **kwargs):
-        self.recalculate_prices(date.today())
+        # self.recalculate_prices(date.today())
         super(SalesContract, self).save(*args, **kwargs)
 
 
