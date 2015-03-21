@@ -1,21 +1,24 @@
-{% extends "base.html" %}
+{% extends "base/main_section_base.html" %}
 {% load i18n bootstrap3 %}
 
-{% block meta_title %}{% trans "Invoice" %}{% endblock %}
-{% block title %}{% trans "Invoice" %}{% endblock %}
+{% block meta_title %}
+    {% trans "Invoice" %}
+{% endblock %}
+
+{% block title %}
+    {% trans "Invoice" %}
+{% endblock %}
 
 {% block breadcrumb_menu %}
     <li class="active"><a href="{% url 'invoice_list' %}">{% trans "Invoice" %}</a></li>
     <li class="active">{% trans "Delete invoice" %}</li>
 {% endblock %}
 
-{% block rightbar %}
+{% block main_header %}
+    {% trans "Delete invoice" %}
 {% endblock %}
 
-{% block main %}
-    <div class="form-panel" style="margin: 30px">
-    <h4 class="mb"><i class="fa fa-angle-right"></i>
-        {% trans "Delete invoice" %}</h4>
+{% block main_inner %}
     <form action = ""  method = "post">
         {% csrf_token %}
 
@@ -28,9 +31,8 @@
         </button>
 
         <button type="button" class="btn btn-default"
-                onclick="window.location.assign('{% url 'invoice_list' %}')">
+                onclick="window.location.assign('{% url 'contract_list' %}')">
             {% trans "Cancel" %}
         </button>
     </form>
-    </div>
 {% endblock %}

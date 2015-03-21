@@ -1,21 +1,24 @@
-{% extends "base.html" %}
+{% extends "base/main_section_base.html" %}
 {% load i18n bootstrap3 %}
 
-{% block meta_title %}{% trans "Tax Rate" %}{% endblock %}
-{% block title %}{% trans "Tax Rate" %}{% endblock %}
+{% block meta_title %}
+    {% trans "Tax Rate" %}
+{% endblock %}
+
+{% block title %}
+    {% trans "Tax Rate" %}
+{% endblock %}
 
 {% block breadcrumb_menu %}
     <li class="active"><a href="{% url 'tax_list' %}">{% trans "Tax Rate" %}</a></li>
     <li class="active">{% trans "Delete tax rate" %}</li>
 {% endblock %}
 
-{% block rightbar %}
+{% block main_header %}
+    {% trans "Delete tax rate" %}
 {% endblock %}
 
-{% block main %}
-    <div class="form-panel" style="margin: 30px">
-    <h4 class="mb"><i class="fa fa-angle-right"></i>
-        {% trans "Delete tax rate" %}</h4>
+{% block main_inner %}
     <form action = ""  method = "post">
         {% csrf_token %}
 
@@ -32,5 +35,4 @@
             {% trans "Cancel" %}
         </button>
     </form>
-    </div>
 {% endblock %}

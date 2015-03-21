@@ -1,21 +1,24 @@
-{% extends "base.html" %}
+{% extends "base/main_section_base.html" %}
 {% load i18n bootstrap3 %}
 
-{% block meta_title %}{% trans "Customer Group" %}{% endblock %}
-{% block title %}{% trans "Customer Group" %}{% endblock %}
+{% block meta_title %}
+    {% trans "Customer Group" %}
+{% endblock %}
+
+{% block title %}
+    {% trans "Customer Group" %}
+{% endblock %}
 
 {% block breadcrumb_menu %}
     <li class="active"><a href="{% url 'customergroup_list' %}">{% trans "Customer Group" %}</a></li>
     <li class="active">{% trans "Delete customer group" %}</li>
 {% endblock %}
 
-{% block rightbar %}
+{% block main_header %}
+    {% trans "Delete customer group" %}
 {% endblock %}
 
-{% block main %}
-    <div class="form-panel" style="margin: 30px">
-    <h4 class="mb"><i class="fa fa-angle-right"></i>
-        {% trans "Delete customer group" %}</h4>
+{% block main_inner %}
     <form action = ""  method = "post">
         {% csrf_token %}
 
@@ -32,5 +35,4 @@
             {% trans "Cancel" %}
         </button>
     </form>
-    </div>
 {% endblock %}
