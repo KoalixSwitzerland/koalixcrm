@@ -1,0 +1,30 @@
+{% extends "base/base.html" %}
+
+{% block main %}
+    <div class="panel panel-default" style="margin: 30px; padding: 10px;">
+
+        <div class="page-header">
+            <h4>
+                <i class="fa fa-angle-right"></i>
+
+                {% block main_header %}
+                {% endblock %}
+
+                <span style="margin-left: 12%;">
+
+                    {% block main_toolbar %}
+                    {% endblock %}
+
+                </span>
+            </h4>
+        </div>
+
+        <div class="panel-body">
+
+            {% block main_inner %}
+            {% endblock %}
+
+        </div>
+
+    </div>
+{% endblock %}
