@@ -80,6 +80,12 @@ def show_dashboard(request):
     return HttpResponse(template.render(context))
 
 
+def show_settings(request):
+    template = loader.get_template('settings.html')
+    context = RequestContext(request, {})
+    return HttpResponse(template.render(context))
+
+
 # ##############################
 # ##   CRM Functional Views   ##
 # ##############################
@@ -324,12 +330,6 @@ class DeleteSupplier(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     success_url = reverse_lazy('supplier_list')
 
 
-class ListTaxes(LoginRequiredMixin, PermissionRequiredMixin, ListView):
-    model = TaxRate
-    permission_required = 'crm_core.view_tax'
-    login_url = settings.LOGIN_URL
-
-
 class CreateTax(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = TaxRate
     permission_required = 'crm_core.add_tax'
@@ -349,12 +349,6 @@ class DeleteTax(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     permission_required = 'crm_core.delete_tax'
     login_url = settings.LOGIN_URL
     success_url = reverse_lazy('tax_list')
-
-
-class ListUnits(LoginRequiredMixin, PermissionRequiredMixin, ListView):
-    model = Unit
-    permission_required = 'crm_core.view_unit'
-    login_url = settings.LOGIN_URL
 
 
 class CreateUnit(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
@@ -421,12 +415,6 @@ class DeleteProduct(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     success_url = reverse_lazy('product_list')
 
 
-class ListBillingCycles(LoginRequiredMixin, PermissionRequiredMixin, ListView):
-    model = CustomerBillingCycle
-    permission_required = 'crm_core.view_customerbillingcycles'
-    login_url = settings.LOGIN_URL
-
-
 class CreateBillingCycle(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = CustomerBillingCycle
     permission_required = 'crm_core.add_customerbillingcycle'
@@ -462,12 +450,6 @@ class DeletePurchaseOrder(LoginRequiredMixin, PermissionRequiredMixin, DeleteVie
     permission_required = 'crm_core.delete_purchaseorder'
     login_url = settings.LOGIN_URL
     success_url = reverse_lazy('contract_list')
-
-
-class ListCustomerGroups(LoginRequiredMixin, PermissionRequiredMixin, ListView):
-    model = CustomerGroup
-    permission_required = 'crm_core.view_customergroup'
-    login_url = settings.LOGIN_URL
 
 
 class CreateCustomerGroup(LoginRequiredMixin, PermissionRequiredMixin, CreateView):

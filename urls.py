@@ -24,6 +24,7 @@ urlpatterns = \
         url(r'^login/$', login_user, name='login'),
         url(r'^logout/$', login_user, name='logout'),
         url(r'^profileupdate/(?P<pk>\d+)/$', UpdateUserProfile.as_view(), name='profile_update'),
+        url(r'^settings/$', show_settings, name='settings'),
 
         # #############
         # Customer urls
@@ -51,7 +52,6 @@ urlpatterns = \
         # Tax urls
         # ########
 
-        url(r'^taxes/$', ListTaxes.as_view(), name='tax_list'),
         url(r'^taxes/create/$', CreateTax.as_view(), name='tax_create'),
         url(r'^taxes/edit/(?P<pk>\d+)/$', EditTax.as_view(), name='tax_edit'),
         url(r'^taxes/delete/(?P<pk>\d+)/$', DeleteTax.as_view(), name='tax_delete'),
@@ -60,7 +60,6 @@ urlpatterns = \
         # Unit urls
         # #########
 
-        url(r'^units/$', ListUnits.as_view(), name='unit_list'),
         url(r'^units/create/$', CreateUnit.as_view(), name='unit_create'),
         url(r'^units/edit/(?P<pk>\d+)/$', EditUnit.as_view(), name='unit_edit'),
         url(r'^units/delete/(?P<pk>\d+)/$', DeleteUnit.as_view(), name='unit_delete'),
@@ -79,7 +78,6 @@ urlpatterns = \
         # BillingCycle urls
         # #################
 
-        url(r'^billingcycles/$', ListBillingCycles.as_view(), name='customerbillingcycle_list'),
         url(r'^billingcycles/create/$', CreateBillingCycle.as_view(), name='customerbillingcycle_create'),
         url(r'^billingcycles/edit/(?P<pk>\d+)/$', EditBillingCycle.as_view(), name='customerbillingcycle_edit'),
         url(r'^billingcycles/delete/(?P<pk>\d+)/$', DeleteBillingCycle.as_view(), name='customerbillingcycle_delete'),
@@ -97,7 +95,6 @@ urlpatterns = \
         # CustomerGroup urls
         # ##################
 
-        url(r'^customergroups/$', ListCustomerGroups.as_view(), name='customergroup_list'),
         url(r'^customergroups/create/$', CreateCustomerGroup.as_view(), name='customergroup_create'),
         url(r'^customergroups/edit/(?P<pk>\d+)/$', EditCustomerGroup.as_view(), name='customergroup_edit'),
         url(r'^customergroups/delete/(?P<pk>\d+)/$', DeleteCustomerGroup.as_view(), name='customergroup_delete'),

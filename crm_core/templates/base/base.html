@@ -158,24 +158,10 @@
 
                     {% if perms.crm_core.view_customergroup or perms.crm_core.view_billingcycle or perms.crm_core.view_tax or perms.crm_core.view_unit %}
                       <li class="sub-menu">
-                          <a href="javascript:;" >
+                          <a href="/settings/" >
                               <i class="fa fa-wrench"></i>
                               <span>{% trans "Settings" %}</span>
                           </a>
-                          <ul class="sub">
-                              {% if perms.crm_core.view_customergroup %}
-                                <li><a href="/customergroups/">{% trans "Customer Groups" %}</a></li>
-                              {% endif %}
-                              {% if perms.crm_core.view_billingcycle %}
-                                <li><a href="/billingcycles/">{% trans "Billing Cycles" %}</a></li>
-                              {% endif %}
-                              {% if perms.crm_core.view_tax %}
-                                <li><a href="/taxes/">{% trans "Tax Rates" %}</a></li>
-                              {% endif %}
-                              {% if perms.crm_core.view_unit %}
-                                <li><a href="/units/">{% trans "Units" %}</a></li>
-                              {% endif %}
-                          </ul>
                       </li>
                     {% endif %}
 
