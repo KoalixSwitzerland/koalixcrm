@@ -1,8 +1,13 @@
-{% extends "base.html" %}
+{% extends "base/form_view_base.html" %}
 {% load i18n crispy_forms_tags crispy_forms_field crispy_forms_filters staticfiles %}
 
-{% block meta_title %}{% trans "Quotes" %}{% endblock %}
-{% block title %}{% trans "Quotes" %}{% endblock %}
+{% block meta_title %}
+    {% trans "Quotes" %}
+{% endblock %}
+
+{% block title %}
+    {% trans "Quotes" %}
+{% endblock %}
 
 {% block extra_head %}
 <style type="text/css">
@@ -21,7 +26,7 @@
 {% endblock %}
 
 {% block breadcrumb_menu %}
-    <li class="active"><a href="{% url 'quote_list' %}">{% trans "Quotes" %}</a></li>
+    <li class="active"><a href="{% url 'contract_list' %}">{% trans "Contracts" %}</a></li>
     <li class="active">{% if quote %}{% trans "Edit quote" %}{% else %}{% trans "Create Quote" %}{% endif%}</li>
 {% endblock %}
 
@@ -139,7 +144,7 @@
     </button>
 
     <button type="button" class="btn btn-default"
-            onclick="window.location.assign('{% url 'quote_list' %}')">
+            onclick="window.location.assign('{% url 'contract_list' %}')">
         {% trans "Cancel" %}
     </button>
 

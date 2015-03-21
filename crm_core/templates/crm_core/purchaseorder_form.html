@@ -1,8 +1,13 @@
-{% extends "base.html" %}
-{% load i18n staticfiles crispy_forms_tags crispy_forms_field crispy_forms_filters %}
+{% extends "base/form_view_base.html" %}
+{% load i18n crispy_forms_tags crispy_forms_field crispy_forms_filters staticfiles %}
 
-{% block meta_title %}{% trans "Purchase Orders" %}{% endblock %}
-{% block title %}{% trans "Purchase Orders" %}{% endblock %}
+{% block meta_title %}
+    {% trans "Purchase Orders" %}
+{% endblock %}
+
+{% block title %}
+    {% trans "Purchase Orders" %}
+{% endblock %}
 
 {% block extra_head %}
 <style type="text/css">
@@ -21,7 +26,7 @@
 {% endblock %}
 
 {% block breadcrumb_menu %}
-    <li class="active"><a href="{% url 'purchaseorder_list' %}">{% trans "Purchase Orders" %}</a></li>
+    <li class="active"><a href="{% url 'contract_list' %}">{% trans "Contracts" %}</a></li>
     <li class="active">{% if purchaseorder %}{% trans "Edit purchase order" %}{% else %}{% trans "Create Purchase Order" %}{% endif%}</li>
 {% endblock %}
 
@@ -134,14 +139,14 @@
             </div>
         </div>
 
-        <button type='submit' class='btn btn-primary'>
-            {% trans "Save" %}
-        </button>
+    <button type='submit' class='btn btn-primary'>
+        {% trans "Save" %}
+    </button>
 
-        <button type="button" class="btn btn-default"
-                onclick="window.location.assign('{% url 'purchaseorder_list' %}')">
-            {% trans "Cancel" %}
-        </button>
+    <button type="button" class="btn btn-default"
+            onclick="window.location.assign('{% url 'contract_list' %}')">
+        {% trans "Cancel" %}
+    </button>
 
     </form>
     </div>
