@@ -1,7 +1,8 @@
 import django_tables2 as tables
 from crm_core.custom.custom_columns import LabelColumn, ButtonsColumn, RelatedModelDetailLinkColumn, \
     ModelDetailLinkColumn, ButtonColumn
-from crm_core.models import Contract, Customer, Supplier, Product
+from crm_core.models import Contract, Customer, Supplier, Product, TaxRate, CustomerBillingCycle, Unit, \
+    ProductCategory, CustomerGroup
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -216,3 +217,38 @@ class ProductTable(tables.Table):
         exclude = ('id', 'item_category', 'item_prefix', 'dateofcreation', 'lastmodification', 'lastmodifiedby',
                    'product_number', 'productitem_ptr')
         sequence = ('product', 'item_title', 'item_description', 'price')
+
+
+class TaxTable(tables.Table):
+
+    class Meta:
+        model = TaxRate
+        exclude = ('id', )
+
+
+class BillingCycleTable(tables.Table):
+
+    class Meta:
+        model = CustomerBillingCycle
+        exclude = ('id', )
+
+
+class UnitTable(tables.Table):
+
+    class Meta:
+        model = Unit
+        exclude = ('id', )
+
+
+class ProductCategoryTable(tables.Table):
+
+    class Meta:
+        model = ProductCategory
+        exclude = ('id', )
+
+
+class CustomerGroupTable(tables.Table):
+
+    class Meta:
+        model = CustomerGroup
+        exclude = ('id', )

@@ -1,5 +1,6 @@
-{% extends "base/main_section_base.html" %}
+{% extends "base/base.html" %}
 {% load i18n mezzanine_tags %}
+{% load render_table from django_tables2 %}
 
 {% block meta_title %}
     {% trans "Settings" %}
@@ -13,10 +14,115 @@
 <li class="active">{% trans "Settings" %}</li>
 {% endblock %}
 
-{% block main_header %}
-    {% trans "Settings" %}
-{% endblock %}
-
-{% block main_inner %}
-
+{% block main %}
+    <div class="panel panel-default" style="margin: 10px">
+        <div class="panel-heading">
+        <table>
+            <tbody>
+                <tr>
+                    <td width="300px">
+                    <h4>&nbsp;
+                        <i class="fa fa-angle-right"></i>
+                        {% trans 'Tax Rates' %}</h4>
+                    <td>
+                    {% if perms.crm_core.add_taxrate %}
+                        <button class="btn btn-success" onclick="location.href='{% url 'tax_create' %}'"><span class="glyphicon glyphicon-plus"></span></button>
+                    {% endif %}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+        <div class="panel-body">
+            {% render_table taxtable "tables2/bootstrapped-tables2.html" %}
+        </div>
+    </div>
+    <div class="panel panel-default" style="margin: 10px">
+        <div class="panel-heading">
+        <table>
+            <tbody>
+                <tr>
+                    <td width="300px">
+                    <h4>&nbsp;
+                        <i class="fa fa-angle-right"></i>
+                        {% trans 'Billing Cycles' %}</h4>
+                    <td>
+                    {% if perms.crm_core.add_customerbillingcycle %}
+                        <button class="btn btn-success" onclick="location.href='{% url 'customerbillingcycle_create' %}'"><span class="glyphicon glyphicon-plus"></span></button>
+                    {% endif %}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+        <div class="panel-body">
+            {% render_table billingcycletable "tables2/bootstrapped-tables2.html" %}
+        </div>
+    </div>
+    <div class="panel panel-default" style="margin: 10px">
+        <div class="panel-heading">
+        <table>
+            <tbody>
+                <tr>
+                    <td width="300px">
+                    <h4>&nbsp;
+                        <i class="fa fa-angle-right"></i>
+                        {% trans 'Units' %}</h4>
+                    <td>
+                    {% if perms.crm_core.add_unit %}
+                        <button class="btn btn-success" onclick="location.href='{% url 'unit_create' %}'"><span class="glyphicon glyphicon-plus"></span></button>
+                    {% endif %}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+        <div class="panel-body">
+            {% render_table unittable "tables2/bootstrapped-tables2.html" %}
+        </div>
+    </div>
+{#    <div class="panel panel-default" style="margin: 10px">#}
+{#        <div class="panel-heading">#}
+{#        <table>#}
+{#            <tbody>#}
+{#                <tr>#}
+{#                    <td width="300px">#}
+{#                    <h4>&nbsp;#}
+{#                        <i class="fa fa-angle-right"></i>#}
+{#                        {% trans 'Product Categories' %}</h4>#}
+{#                    <td>#}
+{#                    {% if perms.crm_core.add_productcategory %}#}
+{#                        <button class="btn btn-default" onclick="location.href='{% url 'prod' %}'"><span class="glyphicon glyphicon-plus"></span></button>#}
+{#                    {% endif %}#}
+{#                    </td>#}
+{#                </tr>#}
+{#            </tbody>#}
+{#        </table>#}
+{#        </div>#}
+{#        <div class="panel-body">#}
+{#            {% render_table productcategorytable "tables2/bootstrapped-tables2.html" %}#}
+{#        </div>#}
+{#    </div>#}
+    <div class="panel panel-default" style="margin: 10px">
+        <div class="panel-heading">
+        <table>
+            <tbody>
+                <tr>
+                    <td width="300px">
+                    <h4>&nbsp;
+                        <i class="fa fa-angle-right"></i>
+                        {% trans 'Customer Groups' %}</h4>
+                    <td>
+                    {% if perms.crm_core.add_customergroup %}
+                        <button class="btn btn-success" onclick="location.href='{% url 'customergroup_create' %}'"><span class="glyphicon glyphicon-plus"></span></button>
+                    {% endif %}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+        <div class="panel-body">
+            {% render_table customergrouptable "tables2/bootstrapped-tables2.html" %}
+        </div>
+    </div>
 {% endblock %}

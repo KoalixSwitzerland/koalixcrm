@@ -1,11 +1,11 @@
-{% extends "base.html" %}
+{% extends "base/main_section_base.html" %}
 {% load i18n bootstrap3 %}
 
 {% block meta_title %}{% trans "Customer Groups" %}{% endblock %}
 {% block title %}{% trans "Customer Groups" %}{% endblock %}
 
 {% block breadcrumb_menu %}
-    <li class="active"><a href="{% url 'customergroup_list' %}">{% trans "Customer Groups" %}</a></li>
+    <li class="active"><a href="{% url 'settings' %}">{% trans "Settings" %}</a></li>
     <li class="active">{% if customergroup %}{% trans "Edit customer group" %}{% else %}{% trans "Create customer group" %}{% endif%}</li>
 {% endblock %}
 
@@ -30,7 +30,7 @@
     </button>
 
     <button type="button" class="btn btn-default"
-            onclick="window.location.assign('{% url 'customergroup_list' %}')">
+            onclick="window.location.assign('{% url 'settings' %}')">
         {% trans "Cancel" %}
     </button>
 

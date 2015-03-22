@@ -13,7 +13,8 @@ from crm_core.forms import *
 from crm_core.models import *
 from django.shortcuts import render_to_response, redirect, render
 from django.contrib.auth import authenticate, login, logout
-from tables import ContractTable, CustomerTable, SupplierTable, ProductTable
+from tables import ContractTable, CustomerTable, SupplierTable, ProductTable, TaxTable, BillingCycleTable, UnitTable, \
+    CustomerGroupTable, ProductCategoryTable
 
 
 # ###################
@@ -81,8 +82,30 @@ def show_dashboard(request):
 
 
 def show_settings(request):
+    config = RequestConfig(request)
     template = loader.get_template('settings.html')
-    context = RequestContext(request, {})
+    taxtable = TaxTable(TaxRate.objects.all(), prefix="tax-")
+    billingcycleable = BillingCycleTable(CustomerBillingCycle.objects.all(), prefix="billingcycle-")
+    unittable = UnitTable(Unit.objects.all(), prefix="unit-")
+    customergrouptable = CustomerGroupTable(CustomerGroup.objects.all(), prefix="customergroup-")
+    productcategorytable = ProductCategoryTable(ProductCategory.objects.all(), prefix="productcategory-")
+    config.configure(taxtable)
+    config.configure(billingcycleable)
+    config.configure(unittable)
+    config.configure(customergrouptable)
+    config.configure(productcategorytable)
+    taxtable.paginate(page=request.GET.get('page', 1), per_page=5)
+    billingcycleable.paginate(page=request.GET.get('page', 1), per_page=5)
+    unittable.paginate(page=request.GET.get('page', 1), per_page=5)
+    customergrouptable.paginate(page=request.GET.get('page', 1), per_page=5)
+    productcategorytable.paginate(page=request.GET.get('page', 1), per_page=5)
+    context = RequestContext(request, {
+        'taxtable': taxtable,
+        'billingcycletable': billingcycleable,
+        'unittable': unittable,
+        'customergrouptable': customergrouptable,
+        'productcategorytable': productcategorytable
+    })
     return HttpResponse(template.render(context))
 
 
@@ -334,42 +357,42 @@ class CreateTax(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = TaxRate
     permission_required = 'crm_core.add_tax'
     login_url = settings.LOGIN_URL
-    success_url = reverse_lazy('tax_list')
+    success_url = reverse_lazy('settings')
 
 
 class EditTax(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = TaxRate
     permission_required = 'crm_core.change_tax'
     login_url = settings.LOGIN_URL
-    success_url = reverse_lazy('tax_list')
+    success_url = reverse_lazy('settings')
 
 
 class DeleteTax(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = TaxRate
     permission_required = 'crm_core.delete_tax'
     login_url = settings.LOGIN_URL
-    success_url = reverse_lazy('tax_list')
+    success_url = reverse_lazy('settings')
 
 
 class CreateUnit(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Unit
     permission_required = 'crm_core.add_unit'
     login_url = settings.LOGIN_URL
-    success_url = reverse_lazy('unit_list')
+    success_url = reverse_lazy('settings')
 
 
 class EditUnit(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Unit
     permission_required = 'crm_core.change_unit'
     login_url = settings.LOGIN_URL
-    success_url = reverse_lazy('unit_list')
+    success_url = reverse_lazy('settings')
 
 
 class DeleteUnit(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Unit
     permission_required = 'crm_core.delete_unit'
     login_url = settings.LOGIN_URL
-    success_url = reverse_lazy('unit_list')
+    success_url = reverse_lazy('settings')
 
 
 class ListProducts(LoginRequiredMixin, PermissionRequiredMixin, PaginatedTableView):
@@ -419,21 +442,21 @@ class CreateBillingCycle(LoginRequiredMixin, PermissionRequiredMixin, CreateView
     model = CustomerBillingCycle
     permission_required = 'crm_core.add_customerbillingcycle'
     login_url = settings.LOGIN_URL
-    success_url = reverse_lazy('customerbillingcycle_list')
+    success_url = reverse_lazy('settings')
 
 
 class EditBillingCycle(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = CustomerBillingCycle
     permission_required = 'crm_core.change_customerbillingcycle'
     login_url = settings.LOGIN_URL
-    success_url = reverse_lazy('customerbillingcycle_list')
+    success_url = reverse_lazy('settings')
 
 
 class DeleteBillingCycle(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = CustomerBillingCycle
     permission_required = 'crm_core.delete_customerbillingcycle'
     login_url = settings.LOGIN_URL
-    success_url = reverse_lazy('customerbillingcycle_list')
+    success_url = reverse_lazy('settings')
 
 
 class EditPurchaseOrder(LoginRequiredMixin, PermissionRequiredMixin, UpdateWithInlinesView):
@@ -456,21 +479,21 @@ class CreateCustomerGroup(LoginRequiredMixin, PermissionRequiredMixin, CreateVie
     model = CustomerGroup
     permission_required = 'crm_core.add_customergroup'
     login_url = settings.LOGIN_URL
-    success_url = reverse_lazy('customergroup_list')
+    success_url = reverse_lazy('settings')
 
 
 class EditCustomerGroup(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = CustomerGroup
     permission_required = 'crm_core.change_customergroup'
     login_url = settings.LOGIN_URL
-    success_url = reverse_lazy('customergroup_list')
+    success_url = reverse_lazy('settings')
 
 
 class DeleteCustomerGroup(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = CustomerGroup
     permission_required = 'crm_core.delete_customergroup'
     login_url = settings.LOGIN_URL
-    success_url = reverse_lazy('customergroup_list')
+    success_url = reverse_lazy('settings')
 
 
 class ListContracts(LoginRequiredMixin, PermissionRequiredMixin, PaginatedTableView):

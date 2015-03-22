@@ -1,11 +1,11 @@
-{% extends "base.html" %}
+{% extends "base/main_section_base.html" %}
 {% load i18n bootstrap3 %}
 
 {% block meta_title %}{% trans "Tax Rates" %}{% endblock %}
 {% block title %}{% trans "Tax Rates" %}{% endblock %}
 
 {% block breadcrumb_menu %}
-    <li class="active"><a href="{% url 'tax_list' %}">{% trans "Tax Rates" %}</a></li>
+    <li class="active"><a href="{% url 'settings' %}">{% trans "Settings" %}</a></li>
     <li class="active">{% if tax %}{% trans "Edit tax rate" %}{% else %}{% trans "Create tax rate" %}{% endif%}</li>
 {% endblock %}
 
@@ -30,7 +30,7 @@
     </button>
 
     <button type="button" class="btn btn-default"
-            onclick="window.location.assign('{% url 'tax_list' %}')">
+            onclick="window.location.assign('{% url 'settings' %}')">
         {% trans "Cancel" %}
     </button>
 
