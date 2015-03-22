@@ -4,7 +4,7 @@ from braces.views import PermissionRequiredMixin, LoginRequiredMixin
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse_lazy
-from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
+from django.views.generic import CreateView, UpdateView, DeleteView, DetailView
 from django.http import HttpResponse
 from django.template import RequestContext, loader
 from django_tables2 import SingleTableView, RequestConfig

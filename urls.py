@@ -19,7 +19,6 @@ urlpatterns = \
         # admin interface, which would be marginally more secure.
         ('^admin/', include('smuggler.urls')),
         ("^admin/", include(admin.site.urls)),
-        url(r'^admin/backup/$', 'admin_backup.views.admin_backup', name='admin_backup'),
         url(r'^dashboard/$', show_dashboard, name='dashboard'),
         url(r'^login/$', login_user, name='login'),
         url(r'^logout/$', login_user, name='logout'),

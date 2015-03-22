@@ -273,7 +273,6 @@ INSTALLED_APPS = (
 
     "smuggler",
     "django_fsm",
-    "admin_backup",
     "reversion",
 
     "crispy_forms",
