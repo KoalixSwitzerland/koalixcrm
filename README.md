@@ -104,4 +104,4 @@ This project is released under the [new BSD license](LICENSE).
 ## Screenshots
 ![Alt Create customer view](/doc/source/images/customer_create.png "Create customer view")
 ![Alt Customer overview](/doc/source/images/customer_overview.png "Customer overview")
-![Alt Quote overview](/doc/source/images/quote_overview.png "Quote overview")
+![Alt Contract overview](/doc/source/images/contract_overview.png "Contract overview")
