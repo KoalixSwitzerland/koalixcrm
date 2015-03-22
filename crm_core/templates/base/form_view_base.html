@@ -6,19 +6,24 @@
     {% csrf_token %}
 
         <div class="page-header">
-            <h4>&nbsp;
-                <i class="fa fa-angle-right"></i>
+        <table>
+            <tbody>
+                <tr>
+                    <td width="300px">
+                        <h4>&nbsp;
+                            <i class="fa fa-angle-right"></i>
 
-                {% block main_header %}
-                {% endblock %}
-
-                <span style="margin-left: 12%;">
-
+                            {% block main_header %}
+                            {% endblock %}
+                        </h4>
+                    </td>
+                    <td>
                     {% block main_toolbar %}
                     {% endblock %}
-
-                </span>
-            </h4>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
         </div>
 
         <div  style="padding: 10px;">
