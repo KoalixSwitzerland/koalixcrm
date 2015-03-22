@@ -18,6 +18,12 @@
     {% trans "Supplier Details" %}
 {% endblock %}
 
+{% block main_toolbar %}
+    <div class="btn-group" role="group">
+        {% include 'crm_core/includes/supplier_edit_toolbar.html' %}
+    </div>
+{% endblock %}
+
 {% block main_inner %}
     <div class="col-lg-4">
         <div style="margin-top: -20px;">

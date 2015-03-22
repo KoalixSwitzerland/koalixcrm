@@ -18,6 +18,15 @@
     {% trans "Contract Details" %}
 {% endblock %}
 
+{% block main_toolbar %}
+    <div class="btn-group" role="group">
+        {% include 'crm_core/includes/contract_edit_toolbar.html' %}
+    </div>
+    <div class="btn-group" role="group">
+        {% include 'crm_core/includes/contract_actions_toolbar.html' %}
+    </div>
+{% endblock %}
+
 {% block main_inner %}
     <div class="well">
         <table>
