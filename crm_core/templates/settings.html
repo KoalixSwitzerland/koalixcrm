@@ -1,4 +1,4 @@
-{% extends "base/base.html" %}
+{% extends "base/main_section_base.html" %}
 {% load i18n mezzanine_tags %}
 
 {% block meta_title %}
@@ -13,5 +13,12 @@
 <li class="active">{% trans "Settings" %}</li>
 {% endblock %}
 
-{% block main %}
+{% block main_header %}
+    {% trans "Settings" %}
+{% endblock %}
+
+{% block main_inner %}
+{% endblock %}
+
+{% block main_footer %}
 {% endblock %}
