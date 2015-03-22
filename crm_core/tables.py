@@ -93,6 +93,11 @@ class ContractTable(tables.Table):
     edit_contract = ButtonsColumn(
         [
             {
+                "extra_class": "btn-default",
+                "gl_icon": "search",
+                "onclick": "location.href='{% url 'contract_detail' record.pk %}'"
+            },
+            {
                 "extra_class": "btn-info",
                 "gl_icon": "pencil",
                 "onclick": "location.href='{% url 'contract_edit' record.pk %}'"
@@ -103,7 +108,7 @@ class ContractTable(tables.Table):
                 "onclick": "location.href='{% url 'contract_delete' record.pk %}'"
             }
         ],
-        attrs={"th": {"width": "90px"}},
+        attrs={"th": {"width": "120px"}},
         orderable=False
     )
 
