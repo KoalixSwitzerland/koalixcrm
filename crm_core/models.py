@@ -155,11 +155,10 @@ class EmailAddress(models.Model):
 # ########################
 
 
-class Customer(Displayable, Contact):
+class Customer(Contact):
     firstname = models.CharField(max_length=300, verbose_name=_("Prename"), blank=True, null=True)
     billingcycle = models.ForeignKey(CustomerBillingCycle, verbose_name=_('Default Billing Cycle'))
     ismemberof = models.ManyToManyField(CustomerGroup, verbose_name=_('Is member of'), blank=True, null=True)
-    search_fields = {"name": 10, "firstname": 8}
 
     class Meta():
         verbose_name = _('Customer')
@@ -167,10 +166,6 @@ class Customer(Displayable, Contact):
         permissions = (
             ('view_customer', 'Can view customers'),
         )
-
-    @staticmethod
-    def get_class_name():
-        return _('Customer')
 
     def get_absolute_url(self):
         url = '/customers/detail/' + str(self.pk)  # TODO: Bad solution
@@ -264,10 +259,9 @@ class Customer(Displayable, Contact):
         return self.name
 
 
-class Supplier(Displayable, Contact):
+class Supplier(Contact):
     direct_shipment_to_customers = models.BooleanField(verbose_name=_("Offers direct Shipment to Customer"),
                                                        default=False)
-    search_fields = {"name": 10}
 
     class Meta():
         verbose_name = _("Supplier")
@@ -275,10 +269,6 @@ class Supplier(Displayable, Contact):
         permissions = (
             ('view_supplier', 'Can view suppliers'),
         )
-
-    @staticmethod
-    def get_class_name():
-        return _('Supplier')
 
     def get_absolute_url(self):
         url = '/suppliers/detail/' + str(self.pk)  # TODO: Bad solution
@@ -548,8 +538,9 @@ class SalesContract(models.Model):
         except SalesContract.DoesNotExist:
             return 0
 
+    # TODO
     def save(self, *args, **kwargs):
-        self.recalculate_prices(date.today())
+        # self.recalculate_prices(date.today())
         super(SalesContract, self).save(*args, **kwargs)
 
 
@@ -738,9 +729,8 @@ class ProductItem(models.Model):
 
 
 # TODO
-class Product(Displayable, ProductItem):
+class Product(ProductItem):
     product_number = models.IntegerField(verbose_name=_("Product Number"))
-    search_fields = {"item_title": 10, "item_description": 8}
 
     class Meta():
         verbose_name = _('Product')
@@ -751,10 +741,6 @@ class Product(Displayable, ProductItem):
 
     def get_product_number(self):
         return "%s%s" % (self.item_prefix, self.product_number)
-
-    @staticmethod
-    def get_class_name():
-        return _('Product')
 
     def get_absolute_url(self):
         url = '/products/detail/' + str(self.pk)  # TODO: Bad solution
@@ -793,7 +779,7 @@ class Product(Displayable, ProductItem):
                     lowestprice = price
             return lowestprice
         else:
-            raise Product.NoPriceFound(customer, unit, date, self)
+            return 0
 
     def get_tax_rate(self):
         return self.item_tax.gettaxrate()

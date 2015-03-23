@@ -235,7 +235,10 @@ ROOT_URLCONF = "%s.urls" % PROJECT_DIRNAME
 # or "C:/www/django/templates".
 # Always use forward slashes, even on Windows.
 # Don't forget to use absolute paths, not relative paths.
-TEMPLATE_DIRS = (os.path.join(PROJECT_ROOT, "templates"),)
+TEMPLATE_DIRS = (
+    os.path.join(PROJECT_ROOT, "crm_core/templates"),
+    # os.path.join(PROJECT_ROOT, "templates"),
+)
 
 
 ################
@@ -268,9 +271,8 @@ INSTALLED_APPS = (
     "international",
     "po_localization",
 
-    "import_export",
+    "smuggler",
     "django_fsm",
-    "admin_backup",
     "reversion",
 
     "crispy_forms",
@@ -343,11 +345,7 @@ OPTIONAL_APPS = (
     PACKAGE_NAME_GRAPPELLI,
 )
 
-SEARCH_MODEL_CHOICES = [
-    'crm_core.Customer',
-    'crm_core.Supplier',
-    'crm_core.Product',
-]
+SEARCH_MODEL_CHOICES = None
 
 
 ##################

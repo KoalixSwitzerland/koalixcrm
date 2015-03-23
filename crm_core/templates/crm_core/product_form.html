@@ -1,0 +1,34 @@
+{% extends "base/form_view_base.html" %}
+{% load i18n bootstrap3 %}
+
+{% block meta_title %}
+    {% trans "Products" %}
+{% endblock %}
+
+{% block title %}
+    {% trans "Products" %}
+{% endblock %}
+
+{% block breadcrumb_menu %}
+    <li class="active"><a href="{% url 'product_list' %}">{% trans "Products" %}</a></li>
+    <li class="active">{% if product %}{% trans "Edit product" %}{% else %}{% trans "Create product" %}{% endif%}</li>
+{% endblock %}
+
+{% block main_header %}
+    {% if product %}{% trans "Edit product" %}{% else %}{% trans "Create product" %}{% endif%}
+{% endblock %}
+
+{% block main_inner %}
+    {% bootstrap_form form layout='horizontal' %}
+{% endblock %}
+
+{% block main_footer %}
+    <button type='submit' class='btn btn-primary'>
+        {% trans "Save" %}
+    </button>
+
+    <button type="button" class="btn btn-default"
+            onclick="window.location.assign('{% url 'product_list' %}')">
+        {% trans "Cancel" %}
+    </button>
+{% endblock %}

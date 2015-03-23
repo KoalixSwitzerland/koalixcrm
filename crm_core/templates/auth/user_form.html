@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load i18n bootstrap3 %}
+
+{% block meta_title %}{% trans "Userprofile" %}{% endblock %}
+{% block title %}{% trans "Userprofile" %}{% endblock %}
+
+{% block breadcrumb_menu %}
+    <li class="active">{% trans "Change userprofile" %}</li>
+{% endblock %}
+
+{% block rightbar %}
+{% endblock %}
+
+{% block main %}
+    <div class="form-panel" style="margin: 30px">
+    <h4 class="mb"><i class="fa fa-angle-right"></i>&nbsp;{% trans "Change userprofile" %}</h4>
+    <form method="POST" action="" class="form form-horizontal" style="margin: 30px;">
+        {% csrf_token %}
+
+        <div class="row well">
+            <div class="col-lg-6">
+                <div style="margin: 0 12px 0 12px;">
+                    {%  bootstrap_form form %}
+                </div>
+                {% if userprofile_formset %}
+                <div style="margin: 0 12px 0 12px;">
+                    {% bootstrap_formset userprofile_formset %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <button type='submit' class='btn btn-primary'>
+            {% trans "Save" %}
+        </button>
+
+        <button type="button" class="btn btn-default"
+                onclick="window.location.assign('{% url 'home' %}')">
+            {% trans "Cancel" %}
+        </button>
+
+    </form>
+    </div>
+{% endblock %}

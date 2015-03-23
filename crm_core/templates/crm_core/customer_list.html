@@ -1,0 +1,29 @@
+{% extends "base/table_view_base.html" %}
+{% load i18n %}
+{% load render_table from django_tables2 %}
+
+{% block meta_title %}
+    {% trans "Customers" %}
+{% endblock %}
+
+{% block title %}
+    {% trans "Customers" %}
+{% endblock %}
+
+{% block breadcrumb_menu %}
+    <li class="active">{% trans "Customers" %}</li>
+{% endblock %}
+
+{% block main_header %}
+    {% trans "Customers" %}
+{% endblock %}
+
+{% block main_toolbar %}
+    {% if perms.crm_core.add_customer %}
+        <button class="btn btn-success" onclick="location.href='{% url 'customer_create' %}'"><span class="glyphicon glyphicon-plus"></span></button>
+    {% endif %}
+{% endblock %}
+
+{% block main_inner %}
+    {% render_table customertable "tables2/bootstrapped-tables2.html" %}
+{% endblock %}

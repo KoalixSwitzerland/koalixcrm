@@ -1,0 +1,86 @@
+{% extends "base/main_section_base.html" %}
+{% load i18n %}
+
+{% block meta_title %}
+    {% trans "Contracts" %}
+{% endblock %}
+
+{% block title %}
+    {% trans "Contract" %}
+{% endblock %}
+
+{% block breadcrumb_menu %}
+    <li class="active"><a href="{% url 'contract_list' %}">{% trans "Contracts" %}</a></li>
+    <li class="active">{{ contract.get_name }}</li>
+{% endblock %}
+
+{% block main_header %}
+    {% trans "Contract Details" %}
+{% endblock %}
+
+{% block main_toolbar %}
+    <div class="btn-group" role="group">
+        {% include 'crm_core/includes/contract_edit_toolbar.html' %}
+    </div>
+    <div class="btn-group" role="group">
+        {% include 'crm_core/includes/contract_actions_toolbar.html' %}
+    </div>
+{% endblock %}
+
+{% block main_inner %}
+    <div class="well">
+        <table>
+            <tr>
+                <td colspan="2"><h1>{{ contract.get_name }}</h1></td>
+                <td><span class="label {{ contract.get_state_class }}">{{ contract.get_state }}</span></td>
+            </tr>
+            <tr>
+                <td><small>{% trans 'Created' %}:&nbsp;</small></td>
+                <td><small>{{ contract.dateofcreation }}</small></td>
+            </tr>
+            <tr>
+                <td><small>{% trans 'Last modified' %}:&nbsp;</small></td>
+                <td><small>{{ contract.lastmodification|default_if_none:"-" }}
+                {% if contract.lastmodifiedby %}&nbsp;{% trans 'by' %}&nbsp;
+                    {{ contract.lastmodifiedby }}{% endif %}</small>
+                </td>
+            </tr>
+        </table>
+        <br>
+        <table>
+            <tr>
+                <td>{% trans 'Description' %}:&nbsp;</td>
+                <td>{{ contract.description|default_if_none:"-" }}</td>
+            </tr>
+            <tr>
+                <td>{% trans 'Customer' %}:&nbsp;</td>
+                <td><a href="{{ contract.default_customer.get_absolute_url }}">{{ contract.default_customer }}</a></td>
+            </tr>
+            <tr>
+                <td>{% trans 'Supplier' %}:&nbsp;</td>
+                <td>{% if contract.default_supplier %}<a href="{{ contract.default_supplier.get_absolute_url }}">{{ contract.default_supplier }}</a>{% endif %}</td>
+            </tr>
+            <tr>
+                <td>{% trans 'Currency' %}:&nbsp;</td>
+                <td>{{ contract.default_currency }}</td>
+            </tr>
+        </table><br><br>
+        <h3>{% trans 'Related Documents' %}:</h3>
+        <table>
+        <tr><td><b>{% trans 'Quotes' %}</b></td></tr>
+        {% for quote in contract.quotes.all %}
+            <tr><td><a href="{{ quote.get_absolute_url }}">{{ quote }}</a></td></tr>
+        {% endfor %}
+        <tr><td>&nbsp;</td></tr>
+        <tr><td><b>{% trans 'Purchase Orders' %}</b></td></tr>
+        {% for purchaseorder in contract.purchaseorders.all %}
+            <tr><td><a href="{{ purchaseorder.get_absolute_url }}">{{ purchaseorder }}</a></td></tr>
+        {% endfor %}
+        <tr><td>&nbsp;</td></tr>
+        <tr><td><b>{% trans 'Invoices' %}</b></td></tr>
+        {% for invoice in contract.invoices.all %}
+            <tr><td><a href="{{ invoice.get_absolute_url }}">{{ invoice }}</a></td></tr>
+        {% endfor %}
+        </table>
+    </div>
+{% endblock %}

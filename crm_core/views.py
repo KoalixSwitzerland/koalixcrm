@@ -2,32 +2,44 @@
 import StringIO
 from braces.views import PermissionRequiredMixin, LoginRequiredMixin
 from django.utils.translation import ugettext_lazy as _
-from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse_lazy
-from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
+from django.views.generic import CreateView, UpdateView, DeleteView, DetailView
 from django.http import HttpResponse
 from django.template import RequestContext, loader
-from django_tables2 import RequestConfig
+from django_tables2 import SingleTableView, RequestConfig
 from extra_views import UpdateWithInlinesView, InlineFormSet, NamedFormsetsMixin, CreateWithInlinesView
-from crm_core.const.states import InvoiceStatesEnum
-from crm_core.forms import PurchaseOrderPositionInlineForm, PurchaseOrderForm, SalesContractPositionInlineForm, \
-    QuoteForm, InvoiceForm
-from crm_core.impex import CustomerResource, SupplierResource, CustomerGroupResource, InvoiceResource, \
-    ProductResource, ContractResource, CustomerBillingCycleResource, PurchaseOrderResource, QuoteResource, \
-    TaxRateResource, UnitResource
-from crm_core.models import Customer, Invoice, Supplier, Unit, TaxRate, Contract, Product, CustomerBillingCycle, \
-    PurchaseOrder, CustomerGroup, Quote, PostalAddress, PhoneAddress, EmailAddress, UserExtension, \
-    PurchaseOrderPosition, SalesContractPosition
+from crm_core.forms import *
+from crm_core.models import *
 from django.shortcuts import render_to_response, redirect, render
 from django.contrib.auth import authenticate, login, logout
-from tables import ContractTable
+from tables import ContractTable, CustomerTable, SupplierTable, ProductTable, TaxTable, BillingCycleTable, UnitTable, \
+    CustomerGroupTable, ProductCategoryTable
+
+
+# ###################
+# ##   Base Views  ##
+# ###################
+
+class PaginatedTableView(SingleTableView):
+
+    def __init__(self, **kwargs):
+        super(PaginatedTableView, self).__init__(**kwargs)
+        self.object_list = self.model.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        config = RequestConfig(request)
+        table = self.table_class(self.object_list)
+        config.configure(table)
+        table.paginate(page=request.GET.get('page', 1), per_page=self.table_pagination)
+        context[self.context_table_name] = table
+        return self.render_to_response(context)
 
 
 # ######################
 # ##   Helper Views   ##
 # ######################
-
 
 def login_user(request):
     logout(request)
@@ -65,6 +77,34 @@ def show_dashboard(request):
         'suppliercount': suppliercount,
         'productcount': productcount,
         'opencontracts': opencontracts,
+    })
+    return HttpResponse(template.render(context))
+
+
+def show_settings(request):
+    config = RequestConfig(request)
+    template = loader.get_template('settings.html')
+    taxtable = TaxTable(TaxRate.objects.all(), prefix="tax-")
+    billingcycleable = BillingCycleTable(CustomerBillingCycle.objects.all(), prefix="billingcycle-")
+    unittable = UnitTable(Unit.objects.all(), prefix="unit-")
+    customergrouptable = CustomerGroupTable(CustomerGroup.objects.all(), prefix="customergroup-")
+    productcategorytable = ProductCategoryTable(ProductCategory.objects.all(), prefix="productcategory-")
+    config.configure(taxtable)
+    config.configure(billingcycleable)
+    config.configure(unittable)
+    config.configure(customergrouptable)
+    config.configure(productcategorytable)
+    taxtable.paginate(page=request.GET.get('page', 1), per_page=5)
+    billingcycleable.paginate(page=request.GET.get('page', 1), per_page=5)
+    unittable.paginate(page=request.GET.get('page', 1), per_page=5)
+    customergrouptable.paginate(page=request.GET.get('page', 1), per_page=5)
+    productcategorytable.paginate(page=request.GET.get('page', 1), per_page=5)
+    context = RequestContext(request, {
+        'taxtable': taxtable,
+        'billingcycletable': billingcycleable,
+        'unittable': unittable,
+        'customergrouptable': customergrouptable,
+        'productcategorytable': productcategorytable
     })
     return HttpResponse(template.render(context))
 
@@ -160,90 +200,6 @@ def create_pdf_from_invoice(request, invoice_pk):
     return redirect('invoice_list')
 
 
-# #############################
-# ##   Import Export Views   ##
-# #############################
-
-
-def _get_export_response(dataset, name, format=None):
-    if format == 'xls':
-        response = HttpResponse(content_type='text/vnd.ms-excel')
-        response['Content-Disposition'] = 'attachment; filename="%s.xls"' % name
-        response.content = dataset.xls
-    elif format == 'xlsx':
-        response = HttpResponse(content_type='text/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-        response['Content-Disposition'] = 'attachment; filename="%s.xlsx"' % name
-        response.content = dataset.xlsx
-    elif format == 'csv':
-        response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename="%s.csv"' % name
-        response.content = dataset.csv
-    else:
-        response = HttpResponse(content_type='text/json')
-        response['Content-Disposition'] = 'attachment; filename="%s.json"' % name
-        response.content = dataset.json
-    return response
-
-
-def export_customers(request, format='xls'):
-    dataset = CustomerResource().export()
-    return _get_export_response(dataset, 'customers', format)
-
-
-def import_customers(request):
-    pass
-
-
-def export_suppliers(request, format='xls'):
-    dataset = SupplierResource().export()
-    return _get_export_response(dataset, 'suppliers', format)
-
-
-def export_products(request, format='xls'):
-    dataset = ProductResource().export()
-    return _get_export_response(dataset, 'products', format)
-
-
-def export_contracts(request, format='xls'):
-    dataset = ContractResource().export()
-    return _get_export_response(dataset, 'contracts', format)
-
-
-def export_quotes(request, format='xls'):
-    dataset = QuoteResource().export()
-    return _get_export_response(dataset, 'quotes', format)
-
-
-def export_invoices(request, format='xls'):
-    dataset = InvoiceResource().export()
-    return _get_export_response(dataset, 'invoices', format)
-
-
-def export_purchaseorders(request, format='xls'):
-    dataset = PurchaseOrderResource().export()
-    return _get_export_response(dataset, 'purchaseorders', format)
-
-
-def export_taxrates(request, format='xls'):
-    dataset = TaxRateResource().export()
-    return _get_export_response(dataset, 'taxrates', format)
-
-
-def export_units(request, format='xls'):
-    dataset = UnitResource().export()
-    return _get_export_response(dataset, 'units', format)
-
-
-def export_billingcycles(request, format='xls'):
-    dataset = CustomerBillingCycleResource().export()
-    return _get_export_response(dataset, 'billingcycles', format)
-
-
-def export_customergroups(request, format='xls'):
-    dataset = CustomerGroupResource().export()
-    return _get_export_response(dataset, 'customergroups', format)
-
-
 # ###########################
 # ##   Class Based Views   ##
 # ###########################
@@ -309,11 +265,15 @@ class UpdateUserProfile(LoginRequiredMixin, NamedFormsetsMixin, UpdateWithInline
     success_url = reverse_lazy('home')
 
 
-class ListCustomers(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+class ListCustomers(LoginRequiredMixin, PermissionRequiredMixin, PaginatedTableView):
     model = Customer
     permission_required = 'crm_core.view_customer'
     login_url = settings.LOGIN_URL
     fields = ['name', 'firstname', 'billingcycle', 'ismemberof']
+    table_class = CustomerTable
+    table_data = Customer.objects.all()
+    context_table_name = 'customertable'
+    table_pagination = 10
 
 
 class ViewCustomer(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
@@ -349,11 +309,15 @@ class DeleteCustomer(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     success_url = reverse_lazy('customer_list')
 
 
-class ListSuppliers(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+class ListSuppliers(LoginRequiredMixin, PermissionRequiredMixin, PaginatedTableView):
     model = Supplier
     permission_required = 'crm_core.view_supplier'
     login_url = settings.LOGIN_URL
     fields = ['name', 'direct_shipment_to_customers']
+    table_class = SupplierTable
+    table_data = Supplier.objects.all()
+    context_table_name = 'suppliertable'
+    table_pagination = 10
 
 
 class ViewSupplier(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
@@ -389,66 +353,79 @@ class DeleteSupplier(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     success_url = reverse_lazy('supplier_list')
 
 
-class ListTaxes(LoginRequiredMixin, PermissionRequiredMixin, ListView):
-    model = TaxRate
-    permission_required = 'crm_core.view_tax'
-    login_url = settings.LOGIN_URL
-
-
 class CreateTax(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = TaxRate
     permission_required = 'crm_core.add_tax'
     login_url = settings.LOGIN_URL
-    success_url = reverse_lazy('tax_list')
+    success_url = reverse_lazy('settings')
 
 
 class EditTax(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = TaxRate
     permission_required = 'crm_core.change_tax'
     login_url = settings.LOGIN_URL
-    success_url = reverse_lazy('tax_list')
+    success_url = reverse_lazy('settings')
 
 
 class DeleteTax(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = TaxRate
     permission_required = 'crm_core.delete_tax'
     login_url = settings.LOGIN_URL
-    success_url = reverse_lazy('tax_list')
-
-
-class ListUnits(LoginRequiredMixin, PermissionRequiredMixin, ListView):
-    model = Unit
-    permission_required = 'crm_core.view_unit'
-    login_url = settings.LOGIN_URL
+    success_url = reverse_lazy('settings')
 
 
 class CreateUnit(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Unit
     permission_required = 'crm_core.add_unit'
     login_url = settings.LOGIN_URL
-    success_url = reverse_lazy('unit_list')
+    success_url = reverse_lazy('settings')
 
 
 class EditUnit(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Unit
     permission_required = 'crm_core.change_unit'
     login_url = settings.LOGIN_URL
-    success_url = reverse_lazy('unit_list')
+    success_url = reverse_lazy('settings')
 
 
 class DeleteUnit(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Unit
     permission_required = 'crm_core.delete_unit'
     login_url = settings.LOGIN_URL
-    success_url = reverse_lazy('unit_list')
+    success_url = reverse_lazy('settings')
 
 
-class ListProducts(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+class CreateProductCategory(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    model = ProductCategory
+    permission_required = 'crm_core.add_productcategory'
+    login_url = settings.LOGIN_URL
+    success_url = reverse_lazy('settings')
+
+
+class EditProductCategory(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    model = ProductCategory
+    permission_required = 'crm_core.change_productcategory'
+    login_url = settings.LOGIN_URL
+    success_url = reverse_lazy('settings')
+
+
+class DeleteProductCategory(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    model = ProductCategory
+    permission_required = 'crm_core.delete_productcategory'
+    login_url = settings.LOGIN_URL
+    success_url = reverse_lazy('settings')
+
+
+class ListProducts(LoginRequiredMixin, PermissionRequiredMixin, PaginatedTableView):
     model = Product
     permission_required = 'crm_core.view_product'
     login_url = settings.LOGIN_URL
     fields = ['item_prefix', 'product_number', 'item_title', 'item_description', 'item_unit', 'item_tax',
               'item_category']
+    table_class = ProductTable
+    table_data = Product.objects.all()
+    context_table_name = 'producttable'
+    table_pagination = 10
 
 
 class CreateProduct(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
@@ -482,39 +459,25 @@ class DeleteProduct(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     success_url = reverse_lazy('product_list')
 
 
-class ListBillingCycles(LoginRequiredMixin, PermissionRequiredMixin, ListView):
-    model = CustomerBillingCycle
-    permission_required = 'crm_core.view_customerbillingcycles'
-    login_url = settings.LOGIN_URL
-
-
 class CreateBillingCycle(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = CustomerBillingCycle
     permission_required = 'crm_core.add_customerbillingcycle'
     login_url = settings.LOGIN_URL
-    success_url = reverse_lazy('customerbillingcycle_list')
+    success_url = reverse_lazy('settings')
 
 
 class EditBillingCycle(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = CustomerBillingCycle
     permission_required = 'crm_core.change_customerbillingcycle'
     login_url = settings.LOGIN_URL
-    success_url = reverse_lazy('customerbillingcycle_list')
+    success_url = reverse_lazy('settings')
 
 
 class DeleteBillingCycle(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = CustomerBillingCycle
     permission_required = 'crm_core.delete_customerbillingcycle'
     login_url = settings.LOGIN_URL
-    success_url = reverse_lazy('customerbillingcycle_list')
-
-
-class ListPurchaseOrders(LoginRequiredMixin, PermissionRequiredMixin, ListView):
-    model = PurchaseOrder
-    permission_required = 'crm_core.view_purchaseorder'
-    login_url = settings.LOGIN_URL
-    fields = ['description', 'contract', 'supplier', 'state', 'currency', 'last_calculated_price',
-              'last_pricing_date', ]
+    success_url = reverse_lazy('settings')
 
 
 class EditPurchaseOrder(LoginRequiredMixin, PermissionRequiredMixin, UpdateWithInlinesView):
@@ -523,58 +486,47 @@ class EditPurchaseOrder(LoginRequiredMixin, PermissionRequiredMixin, UpdateWithI
     inlines = [PurchaseOrderPositionInline]
     permission_required = 'crm_core.change_purchaseorder'
     login_url = settings.LOGIN_URL
-    success_url = reverse_lazy('purchaseorder_list')
+    success_url = reverse_lazy('contract_list')
 
 
 class DeletePurchaseOrder(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = PurchaseOrder
     permission_required = 'crm_core.delete_purchaseorder'
     login_url = settings.LOGIN_URL
-    success_url = reverse_lazy('purchaseorder_list')
-
-
-class ListCustomerGroups(LoginRequiredMixin, PermissionRequiredMixin, ListView):
-    model = CustomerGroup
-    permission_required = 'crm_core.view_customergroup'
-    login_url = settings.LOGIN_URL
+    success_url = reverse_lazy('contract_list')
 
 
 class CreateCustomerGroup(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = CustomerGroup
     permission_required = 'crm_core.add_customergroup'
     login_url = settings.LOGIN_URL
-    success_url = reverse_lazy('customergroup_list')
+    success_url = reverse_lazy('settings')
 
 
 class EditCustomerGroup(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = CustomerGroup
     permission_required = 'crm_core.change_customergroup'
     login_url = settings.LOGIN_URL
-    success_url = reverse_lazy('customergroup_list')
+    success_url = reverse_lazy('settings')
 
 
 class DeleteCustomerGroup(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = CustomerGroup
     permission_required = 'crm_core.delete_customergroup'
     login_url = settings.LOGIN_URL
-    success_url = reverse_lazy('customergroup_list')
+    success_url = reverse_lazy('settings')
 
 
-class ListContracts(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+class ListContracts(LoginRequiredMixin, PermissionRequiredMixin, PaginatedTableView):
     model = Contract
     permission_required = 'crm_core.view_contract'
     login_url = settings.LOGIN_URL
     fields = ['description', 'default_customer', 'default_supplier']
     object_list = Contract.objects.all().reverse().order_by('lastmodification')
-
-    def get(self, request, *args, **kwargs):
-        context = self.get_context_data(**kwargs)
-        config = RequestConfig(request)
-        contracttable = ContractTable(self.object_list)
-        config.configure(contracttable)
-        contracttable.paginate(page=request.GET.get('page', 1), per_page=20)
-        context['contracttable'] = contracttable
-        return self.render_to_response(context)
+    table_class = ContractTable
+    table_data = Contract.objects.all()
+    context_table_name = 'contracttable'
+    table_pagination = 10
 
 
 class ViewContract(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
@@ -606,14 +558,6 @@ class DeleteContract(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     success_url = reverse_lazy('contract_list')
 
 
-class ListInvoice(LoginRequiredMixin, PermissionRequiredMixin, ListView):
-    model = Invoice
-    permission_required = 'crm_core.view_invoice'
-    login_url = settings.LOGIN_URL
-    fields = ['description', 'contract', 'customer', 'payableuntil', 'state', 'currency', 'last_calculated_price',
-              'last_pricing_date']
-
-
 class EditInvoice(LoginRequiredMixin, PermissionRequiredMixin, UpdateWithInlinesView):
     model = Invoice
     form_class = InvoiceForm
@@ -621,22 +565,14 @@ class EditInvoice(LoginRequiredMixin, PermissionRequiredMixin, UpdateWithInlines
     permission_required = 'crm_core.change_invoice'
     login_url = settings.LOGIN_URL
     fields = ['description', 'contract', 'customer', 'payableuntil', 'state', 'currency']
-    success_url = reverse_lazy('invoice_list')
+    success_url = reverse_lazy('contract_list')
 
 
 class DeleteInvoice(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Invoice
     permission_required = 'crm_core.delete_invoice'
     login_url = settings.LOGIN_URL
-    success_url = reverse_lazy('invoice_list')
-
-
-class ListQuotes(LoginRequiredMixin, PermissionRequiredMixin, ListView):
-    model = Quote
-    permission_required = 'crm_core.view_quote'
-    login_url = settings.LOGIN_URL
-    fields = ['description', 'contract', 'customer', 'validuntil', 'lastmodifiedby',
-              'last_calculated_price', 'last_pricing_date']
+    success_url = reverse_lazy('contract_list')
 
 
 class CreateQuote(LoginRequiredMixin, PermissionRequiredMixin, CreateWithInlinesView):
@@ -647,7 +583,7 @@ class CreateQuote(LoginRequiredMixin, PermissionRequiredMixin, CreateWithInlines
     login_url = settings.LOGIN_URL
     fields = ['description', 'contract', 'customer', 'currency', 'lastmodifiedby',
               'last_calculated_price', 'last_pricing_date']
-    success_url = reverse_lazy('quote_list')
+    success_url = reverse_lazy('contract_list')
 
 
 class EditQuote(LoginRequiredMixin, PermissionRequiredMixin, UpdateWithInlinesView):
@@ -658,11 +594,11 @@ class EditQuote(LoginRequiredMixin, PermissionRequiredMixin, UpdateWithInlinesVi
     login_url = settings.LOGIN_URL
     fields = ['description', 'contract', 'customer', 'currency', 'lastmodifiedby',
               'last_calculated_price', 'last_pricing_date']
-    success_url = reverse_lazy('quote_list')
+    success_url = reverse_lazy('contract_list')
 
 
 class DeleteQuote(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Quote
     permission_required = 'crm_core.delete_quote'
     login_url = settings.LOGIN_URL
-    success_url = reverse_lazy('quote_list')
+    success_url = reverse_lazy('contract_list')

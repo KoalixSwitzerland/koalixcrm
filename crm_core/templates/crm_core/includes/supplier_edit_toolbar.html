@@ -1,0 +1,9 @@
+    {% if perms.crm_core.add_supplier %}
+        <button class="btn btn-default" onclick="location.href='{% url 'supplier_create' %}'"><span class="glyphicon glyphicon-plus"></span></button>
+    {% endif %}
+    {% if perms.crm_core.edit_supplier %}
+        <button class="btn btn-info" onclick="location.href='{% url 'supplier_edit' supplier.pk %}'"><span class="glyphicon glyphicon-pencil"></span></button>
+    {% endif %}
+    {% if perms.crm_core.delete_supplier %}
+        <button class="btn btn-danger" onclick="location.href='{% url 'supplier_delete' supplier.pk %}'"><span class="glyphicon glyphicon-trash"></span></button>
+    {% endif %}

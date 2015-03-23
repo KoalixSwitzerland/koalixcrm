@@ -1,0 +1,29 @@
+{% extends "base/table_view_base.html" %}
+{% load i18n %}
+{% load render_table from django_tables2 %}
+
+{% block meta_title %}
+    {% trans "Contract Overview" %}
+{% endblock %}
+
+{% block title %}
+    {% trans "Contract Overview" %}
+{% endblock %}
+
+{% block breadcrumb_menu %}
+    <li class="active">{% trans "Contract Overview" %}</li>
+{% endblock %}
+
+{% block main_header %}
+    {% trans "Contract Overview" %}
+{% endblock %}
+
+{% block main_toolbar %}
+    {% if perms.crm_core.add_product %}
+        <button class="btn btn-success" onclick="location.href='{% url 'contract_create' %}'"><span class="glyphicon glyphicon-plus"></span></button>
+    {% endif %}
+{% endblock %}
+
+{% block main_inner %}
+        {% render_table contracttable "tables2/bootstrapped-tables2.html" %}
+{% endblock %}

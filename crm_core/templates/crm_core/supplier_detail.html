@@ -1,0 +1,64 @@
+{% extends "base/main_section_base.html" %}
+{% load i18n %}
+
+{% block meta_title %}
+    {% trans "Suppliers" %}
+{% endblock %}
+
+{% block title %}
+    {% trans "Suppliers" %}
+{% endblock %}
+
+{% block breadcrumb_menu %}
+    <li class="active"><a href="{% url 'supplier_list' %}">{% trans "Suppliers" %}</a></li>
+    <li class="active">{{ supplier.name }}</li>
+{% endblock %}
+
+{% block main_header %}
+    {% trans "Supplier Details" %}
+{% endblock %}
+
+{% block main_toolbar %}
+    <div class="btn-group" role="group">
+        {% include 'crm_core/includes/supplier_edit_toolbar.html' %}
+    </div>
+{% endblock %}
+
+{% block main_inner %}
+    <div class="col-lg-4">
+        <div style="margin-top: -20px;">
+            <br>
+            <table>
+                <tr>
+                    <td><small>{% trans 'Created' %}:&nbsp;</small></td>
+                    <td><small>{{ supplier.dateofcreation }}</small></td>
+                </tr>
+                <tr>
+                    <td><small>{% trans 'Last modified' %}:&nbsp;</small></td>
+                    <td><small>{{ supplier.lastmodification }}</small></td>
+                </tr>
+            </table>
+        </div>
+        <h2>{{ supplier.get_prefix }} {{ supplier.name }}</h2>
+        <br>
+        {% for address in supplier.addresses.all %}
+            <h4>{{ address.addressline1 }}</h4>
+            <h4>{{ address.addressline2 }}</h4>
+            <h4>{% if address.zipcode %}{{ address.zipcode }}&nbsp;{% endif %}
+                {{ address.city }}&nbsp;{{ address.state|default_if_none:"" }}</h4>
+            <h4>{{ address.get_country|default_if_none:"" }}</h4>
+        {% endfor %}
+        <br>
+    </div>
+    <div class="col-lg-4">
+        <fieldset>
+        <legend>{% trans 'Contact Data' %}</legend>
+        {% for email in supplier.emailaddresses.all %}
+            <h5><i class="fa fa-at"></i>&nbsp;&nbsp;<a href="mailto:{{ email.email }}">{{ email.email }}</a></h5>
+        {% endfor %}
+        {% for phonenumber in supplier.phonenumbers.all %}
+            <h5><i class="fa fa-phone"></i>&nbsp;&nbsp;{{ phonenumber.phone }}</h5>
+        {% endfor %}
+        </fieldset>
+    </div>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base/table_view_base.html" %}
+{% load i18n %}
+{% load render_table from django_tables2 %}
+
+{% block meta_title %}
+    {% trans "Suppliers" %}
+{% endblock %}
+
+{% block title %}
+    {% trans "Suppliers" %}
+{% endblock %}
+
+{% block breadcrumb_menu %}
+    <li class="active">{% trans "Suppliers" %}</li>
+{% endblock %}
+
+{% block main_header %}
+    {% trans "Suppliers" %}
+{% endblock %}
+
+{% block main_toolbar %}
+    {% if perms.crm_core.add_supplier %}
+        <button class="btn btn-success" onclick="location.href='{% url 'supplier_create' %}'"><span class="glyphicon glyphicon-plus"></span></button>
+    {% endif %}
+{% endblock %}
+
+{% block main_inner %}
+    {% render_table suppliertable "tables2/bootstrapped-tables2.html" %}
+{% endblock %}

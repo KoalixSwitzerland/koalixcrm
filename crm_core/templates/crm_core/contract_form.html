@@ -1,0 +1,34 @@
+{% extends "base/form_view_base.html" %}
+{% load i18n bootstrap3 %}
+
+{% block meta_title %}
+    {% trans "Contracts" %}
+{% endblock %}
+
+{% block title %}
+    {% trans "Contracts" %}
+{% endblock %}
+
+{% block breadcrumb_menu %}
+    <li class="active"><a href="{% url 'contract_list' %}">{% trans "Contracts" %}</a></li>
+    <li class="active">{% if contract %}{% trans "Edit contract" %}{% else %}{% trans "Create Contract" %}{% endif%}</li>
+{% endblock %}
+
+{% block main_header %}
+    {% if contract %}{% trans "Edit contract" %}{% else %}{% trans "Create Contract" %}{% endif%}
+{% endblock %}
+
+{% block main_inner %}
+    {% bootstrap_form form layout='horizontal' %}
+{% endblock %}
+
+{% block main_footer %}
+    <button type='submit' class='btn btn-primary'>
+        {% trans "Save" %}
+    </button>
+
+    <button type="button" class="btn btn-default"
+            onclick="window.location.assign('{% url 'contract_list' %}')">
+        {% trans "Cancel" %}
+    </button>
+{% endblock %}

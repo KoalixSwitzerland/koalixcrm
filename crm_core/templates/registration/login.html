@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load i18n admin_static bootstrap3 %}
+
+{% block meta_title %}{% trans "Login" %}{% endblock %}
+{% block title %}{% trans "Login" %}{% endblock %}
+
+{% block breadcrumb_menu %}
+<li class="active">{% trans "Login" %}</li>
+{% endblock %}
+
+{% block rightbar %}
+{% endblock %}
+
+{% block main %}
+
+      <!-- **********************************************************************************************************************************************************
+      MAIN CONTENT
+      *********************************************************************************************************************************************************** -->
+
+	  <div id="login-page">
+	  	<div class="container">
+
+            {% if form.errors and not form.non_field_errors %}
+            <p class="alert alert-danger">
+            {% if form.errors.items|length == 1 %}{% trans "Please correct the error below." %}{% else %}{% trans "Please correct the errors below." %}{% endif %}
+            </p>
+            {% endif %}
+
+            {% if form.non_field_errors %}
+            {% for error in form.non_field_errors %}
+            <p class="alert alert-danger">
+                {{ error }}
+            </p>
+            {% endfor %}
+            {% endif %}
+
+            <form class="form-login" action="{% url 'login' %}" method="post" id="login-form">
+                {% csrf_token %}
+		        <h2 class="form-login-heading">{% trans "sign in now" %}</h2>
+
+		        <div class="login-wrap">
+                    {{ form.username.errors }}
+		            <input id="id_username" type="text" class="form-control" placeholder="User ID" autofocus><br>
+                    {{ form.password.errors }}
+		            <input id="id_password" type="password" class="form-control" placeholder="Password"><br><br>
+                    <input type="hidden" name="next" value="{{ next }}" />
+                    <input type="hidden" name="username" id="username" />
+                    <input type="hidden" name="password" id="password" />
+                    {% url 'admin_password_reset' as password_reset_url %}
+                    {% if password_reset_url %}
+                    <div class="password-reset-link">
+                    <a href="{{ password_reset_url }}">{% trans 'Forgotten your password or username?' %}</a><br><br>
+                    </div>
+                    {% endif %}
+		            <button class="btn btn-theme btn-block" type="submit" id="submit_button">
+                        <i class="fa fa-lock"></i> {% trans 'Log in' %}
+                    </button>
+		            <hr>
+		        </div>
+
+		      </form>
+
+	  	</div>
+	  </div>
+
+    <!-- js placed at the end of the document so the pages load faster -->
+    <script src="{% static 'assets/js/jquery.js' %}"></script>
+    <script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
+
+    <script type="text/javascript">
+    $('#submit_button').click(function(){
+        var u_name = $('#id_username').val();
+        $('#username').val(u_name);
+        var u_pass = $('#id_password').val();
+        $('#password').val(u_pass);
+    });
+    document.getElementById('id_username').focus()
+    </script>
+
+{% endblock %}

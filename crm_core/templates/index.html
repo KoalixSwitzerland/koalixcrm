@@ -1,0 +1,22 @@
+{% extends "base/base.html" %}
+{% load i18n mezzanine_tags %}
+
+{% block meta_title %}{% trans "Home" %}{% endblock %}
+{% block title %}{% trans "Home" %}{% endblock %}
+
+{% block breadcrumb_menu %}
+<li class="active">{% trans "Home" %}</li>
+{% endblock %}
+
+{% block main %}
+    {% include 'includes/welcome.html' %}
+{{ block.super }}
+{% endblock %}
+
+{% block widgetpanel %}
+<div class="col-md-3 right">
+    {% nevercache %}
+    {% include "includes/user_panel.html" %}
+    {% endnevercache %}
+</div>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% load mezzanine_tags i18n future %}
+<form action="{% url "search" %}" class="form-inline" role="search">
+
+    <div class="input-group">
+        <input class="form-control" placeholder="{% trans "Search" %}" type="text" name="q" value="{{ request.REQUEST.q }}">
+        <span class="input-group-btn">
+            <button type="submit" class="btn btn-default">{% trans "Go" %}</button>
+        </span>
+    </div>
+
+</form>

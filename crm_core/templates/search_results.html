@@ -1,0 +1,41 @@
+{% extends "templates/../base.html" %}
+
+{% load i18n future mezzanine_tags %}
+
+{% block meta_title %}{% trans "Search Results" %}{% endblock %}
+{% block title %}{% trans "Search Results" %}{% endblock %}
+{% block extra_head %}
+<meta name="robots" content="noindex">
+{% endblock %}
+
+{% block breadcrumb_menu %}
+<li class="active">{% trans "Search Results" %}</li>
+{% endblock %}
+
+{% block main %}
+    <div class="content-panel" style="margin: 30px; padding: 10px;">
+    <h4><i class="fa fa-angle-right"></i> {% trans "Search Results" %}</h4>
+        <p class="text-info" style="margin-left: 12px;">
+        {% if results.paginator.count == 0 %}
+        {% blocktrans %}
+        No results were found in {{ search_type }} matching your query: {{ query }}
+        {% endblocktrans %}
+        {% else %}
+        {% blocktrans with start=results.start_index end=results.end_index total=results.paginator.count %}
+        Showing {{ start }} to {{ end }} of {{ total }} results in {{ search_type }} matching your query: {{ query }}
+        {% endblocktrans %}
+        {% endif %}
+        </p>
+
+        <div id="search-results" style="margin-top: 20px;">
+            {% for result in results.object_list %}
+            <h4>{{ forloop.counter0|add:results.start_index }}&nbsp;-&nbsp;
+                {{ result.get_class_name }}:&nbsp;<a href="{{ result.get_absolute_url }}">{{ result }}</a></h4>
+            {% endfor %}
+        </div>
+
+        {% pagination_for results %}
+
+    </div>
+
+{% endblock %}
