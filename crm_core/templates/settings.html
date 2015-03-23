@@ -93,28 +93,28 @@
             {% render_table unittable "tables2/bootstrapped-tables2.html" %}
         </div>
     </div>
-{#    <div class="panel panel-default" style="margin: 10px">#}
-{#        <div class="panel-heading">#}
-{#        <table>#}
-{#            <tbody>#}
-{#                <tr>#}
-{#                    <td width="300px">#}
-{#                    <h4>&nbsp;#}
-{#                        <i class="fa fa-angle-right"></i>#}
-{#                        {% trans 'Product Categories' %}</h4>#}
-{#                    <td>#}
-{#                    {% if perms.crm_core.add_productcategory %}#}
-{#                        <button class="btn btn-default" onclick="location.href='{% url 'prod' %}'"><span class="glyphicon glyphicon-plus"></span></button>#}
-{#                    {% endif %}#}
-{#                    </td>#}
-{#                </tr>#}
-{#            </tbody>#}
-{#        </table>#}
-{#        </div>#}
-{#        <div class="panel-body">#}
-{#            {% render_table productcategorytable "tables2/bootstrapped-tables2.html" %}#}
-{#        </div>#}
-{#    </div>#}
+    <div class="panel panel-default" style="margin: 10px">
+        <div class="panel-heading">
+        <table>
+            <tbody>
+                <tr>
+                    <td width="300px">
+                    <h4>&nbsp;
+                        <i class="fa fa-angle-right"></i>
+                        {% trans 'Product Categories' %}</h4>
+                    <td>
+                    {% if perms.crm_core.add_productcategory %}
+                        <button class="btn btn-success" onclick="location.href='{% url 'productcategory_create' %}'"><span class="glyphicon glyphicon-plus"></span></button>
+                    {% endif %}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+        <div class="panel-body">
+            {% render_table productcategorytable "tables2/bootstrapped-tables2.html" %}
+        </div>
+    </div>
     <div class="panel panel-default" style="margin: 10px">
         <div class="panel-heading">
         <table>

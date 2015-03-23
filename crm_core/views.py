@@ -395,6 +395,27 @@ class DeleteUnit(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     success_url = reverse_lazy('settings')
 
 
+class CreateProductCategory(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    model = ProductCategory
+    permission_required = 'crm_core.add_productcategory'
+    login_url = settings.LOGIN_URL
+    success_url = reverse_lazy('settings')
+
+
+class EditProductCategory(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    model = ProductCategory
+    permission_required = 'crm_core.change_productcategory'
+    login_url = settings.LOGIN_URL
+    success_url = reverse_lazy('settings')
+
+
+class DeleteProductCategory(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    model = ProductCategory
+    permission_required = 'crm_core.delete_productcategory'
+    login_url = settings.LOGIN_URL
+    success_url = reverse_lazy('settings')
+
+
 class ListProducts(LoginRequiredMixin, PermissionRequiredMixin, PaginatedTableView):
     model = Product
     permission_required = 'crm_core.view_product'

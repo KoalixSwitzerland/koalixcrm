@@ -89,6 +89,7 @@ class ContractTable(tables.Table):
             }
         ],
         attrs={"th": {"width": "120px"}},
+        verbose_name=" ",
         orderable=False
     )
     edit_contract = ButtonsColumn(
@@ -110,6 +111,7 @@ class ContractTable(tables.Table):
             }
         ],
         attrs={"th": {"width": "120px"}},
+        verbose_name=" ",
         orderable=False
     )
 
@@ -220,6 +222,23 @@ class ProductTable(tables.Table):
 
 
 class TaxTable(tables.Table):
+    edit_tax = ButtonsColumn(
+        [
+            {
+                "extra_class": "btn-info",
+                "gl_icon": "pencil",
+                "onclick": "location.href='{% url 'tax_edit' record.pk %}'"
+            },
+            {
+                "extra_class": "btn-danger",
+                "gl_icon": "trash",
+                "onclick": "location.href='{% url 'tax_delete' record.pk %}'"
+            }
+        ],
+        attrs={"th": {"width": "90px"}},
+        verbose_name=" ",
+        orderable=False
+    )
 
     class Meta:
         model = TaxRate
@@ -227,6 +246,23 @@ class TaxTable(tables.Table):
 
 
 class BillingCycleTable(tables.Table):
+    edit_billingcycle = ButtonsColumn(
+        [
+            {
+                "extra_class": "btn-info",
+                "gl_icon": "pencil",
+                "onclick": "location.href='{% url 'customerbillingcycle_edit' record.pk %}'"
+            },
+            {
+                "extra_class": "btn-danger",
+                "gl_icon": "trash",
+                "onclick": "location.href='{% url 'customerbillingcycle_delete' record.pk %}'"
+            }
+        ],
+        attrs={"th": {"width": "90px"}},
+        verbose_name=" ",
+        orderable=False
+    )
 
     class Meta:
         model = CustomerBillingCycle
@@ -234,6 +270,23 @@ class BillingCycleTable(tables.Table):
 
 
 class UnitTable(tables.Table):
+    edit_unit = ButtonsColumn(
+        [
+            {
+                "extra_class": "btn-info",
+                "gl_icon": "pencil",
+                "onclick": "location.href='{% url 'unit_edit' record.pk %}'"
+            },
+            {
+                "extra_class": "btn-danger",
+                "gl_icon": "trash",
+                "onclick": "location.href='{% url 'unit_delete' record.pk %}'"
+            }
+        ],
+        attrs={"th": {"width": "90px"}},
+        verbose_name=" ",
+        orderable=False
+    )
 
     class Meta:
         model = Unit
@@ -241,6 +294,23 @@ class UnitTable(tables.Table):
 
 
 class ProductCategoryTable(tables.Table):
+    edit_productcategory = ButtonsColumn(
+        [
+            {
+                "extra_class": "btn-info",
+                "gl_icon": "pencil",
+                "onclick": "location.href='{% url 'productcategory_edit' record.pk %}'"
+            },
+            {
+                "extra_class": "btn-danger",
+                "gl_icon": "trash",
+                "onclick": "location.href='{% url 'productcategory_delete' record.pk %}'"
+            }
+        ],
+        attrs={"th": {"width": "90px"}},
+        verbose_name=" ",
+        orderable=False
+    )
 
     class Meta:
         model = ProductCategory
@@ -248,6 +318,23 @@ class ProductCategoryTable(tables.Table):
 
 
 class CustomerGroupTable(tables.Table):
+    edit_customergroup = ButtonsColumn(
+        [
+            {
+                "extra_class": "btn-info",
+                "gl_icon": "pencil",
+                "onclick": "location.href='{% url 'customergroup_edit' record.pk %}'"
+            },
+            {
+                "extra_class": "btn-danger",
+                "gl_icon": "trash",
+                "onclick": "location.href='{% url 'customergroup_delete' record.pk %}'"
+            }
+        ],
+        attrs={"th": {"width": "90px"}},
+        verbose_name=" ",
+        orderable=False
+    )
 
     class Meta:
         model = CustomerGroup

@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block breadcrumb_menu %}
-    <li class="active"><a href="{% url 'customerbillingcycle_list' %}">{% trans "Customer Billing Cycles" %}</a></li>
+    <li class="active"><a href="{% url 'settings' %}">{% trans "Settings" %}</a></li>
     <li class="active">{% trans "Delete billing cycle" %}</li>
 {% endblock %}
 
@@ -31,7 +31,7 @@
         </button>
 
         <button type="button" class="btn btn-default"
-                onclick="window.location.assign('{% url 'customerbillingcycle_list' %}')">
+                onclick="window.location.assign('{% url 'settings' %}')">
             {% trans "Cancel" %}
         </button>
     </form>

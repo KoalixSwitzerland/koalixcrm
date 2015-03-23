@@ -63,6 +63,14 @@ urlpatterns = \
         url(r'^units/edit/(?P<pk>\d+)/$', EditUnit.as_view(), name='unit_edit'),
         url(r'^units/delete/(?P<pk>\d+)/$', DeleteUnit.as_view(), name='unit_delete'),
 
+        # #####################
+        # Product category urls
+        # #####################
+
+        url(r'^productcategory/create/$', CreateProductCategory.as_view(), name='productcategory_create'),
+        url(r'^productcategory/edit/(?P<pk>\d+)/$', EditProductCategory.as_view(), name='productcategory_edit'),
+        url(r'^productcategory/delete/(?P<pk>\d+)/$', DeleteProductCategory.as_view(), name='productcategory_delete'),
+
         # ############
         # Product urls
         # ############
