@@ -22,7 +22,7 @@ class ContractTable(tables.Table):
                 "condition": "record.has_quotes",
             },
             {
-                "extra_class": 'btn-info',
+                "extra_class": 'btn-primary',
                 "gl_icon": 'pencil',
                 "onclick": "location.href='{{ record.get_quote_edit_url }}'",
                 "condition": "record.has_quotes",
@@ -40,7 +40,7 @@ class ContractTable(tables.Table):
                 "condition": "record.has_purchaseorders",
             },
             {
-                "extra_class": "btn-info",
+                "extra_class": "btn-success",
                 "gl_icon": "pencil",
                 "onclick": "location.href='{{ record.get_purchaseorder_edit_url }}'",
                 "condition": "record.has_purchaseorders",
@@ -58,7 +58,7 @@ class ContractTable(tables.Table):
                 "condition": "record.has_invoices",
             },
             {
-                "extra_class": "btn-info",
+                "extra_class": "btn-warning",
                 "gl_icon": "pencil",
                 "onclick": "location.href='{{ record.get_invoice_edit_url }}'",
                 "condition": "record.has_invoices",
