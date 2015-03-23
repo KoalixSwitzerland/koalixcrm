@@ -1,5 +1,5 @@
 {% extends "base/base.html" %}
-{% load i18n mezzanine_tags %}
+{% load i18n mezzanine_tags staticfiles %}
 {% load render_table from django_tables2 %}
 
 {% block meta_title %}
@@ -12,6 +12,18 @@
 
 {% block breadcrumb_menu %}
 <li class="active">{% trans "Settings" %}</li>
+{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'assets/css/bootstrap-tables2.css' %}" />
+{% endblock %}
+
+{% block extra_css %}
+    <style type="text/css">
+    .panel-body {
+        padding: 0;
+    }
+    </style>
 {% endblock %}
 
 {% block main %}
