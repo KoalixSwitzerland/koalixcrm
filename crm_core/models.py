@@ -16,6 +16,7 @@ from const.purpose import PhoneAddressPurpose, PostalAddressPurpose, EmailAddres
 from const.states import InvoiceStatesEnum, PurchaseOrderStatesEnum, QuoteStatesEnum, InvoiceStatesLabelEnum, \
     QuoteStatesLabelEnum, PurchaseOrderStatesLabelEnum, ContractStatesEnum, ContractStatesLabelEnum
 from django_extensions.db.fields import CreationDateTimeField, ModificationDateTimeField
+from django.apps import apps as django_apps
 
 
 # ######################
@@ -739,6 +740,13 @@ class Product(ProductItem):
             ('view_product', 'Can view products'),
         )
 
+    def to_cartridge_product(self):
+        if django_apps.is_installed('cartridge'):
+            from cartridge.shop import models
+            cart_prod = models.Product()
+            cart_prod.description = self.item_description
+            cart_prod.save()
+
     def get_product_number(self):
         return "%s%s" % (self.item_prefix, self.product_number)
 
@@ -783,6 +791,10 @@ class Product(ProductItem):
 
     def get_tax_rate(self):
         return self.item_tax.gettaxrate()
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        # self.to_cartridge_product()
+        super(Product, self).save(force_insert, force_update, using, update_fields)
 
     def __unicode__(self):
         return '%s (#%s)' % (self.item_title, str(self.product_number))
