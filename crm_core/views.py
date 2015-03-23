@@ -168,36 +168,33 @@ def create_purchaseorder_from_quote(request, quote_pk):
     return redirect('purchaseorder_edit', pk=purchase_order.pk)
 
 
-# ############################
-# ##   PDF Creation Views   ##
-# ############################
+# ###################
+# ##   PDF Views   ##
+# ###################
 
 
-def create_pdf_from_quote(request, quote_pk):
-    quote = Quote.objects.get(pk=quote_pk)
-    html_string = StringIO.StringIO()
-    html_string.write(render(request, 'pdf_templates/quote.html', {'quote': quote}).content
-                      .decode('utf8').encode('latin2'))
-    quote.create_pdf(html_string)
-    return redirect('quote_list')
+def view_quote_pdf(request, pk):
+    quote = Quote.objects.get(pk=int(pk))
+    with open(quote.pdf_path, 'r') as pdf:
+        response = HttpResponse(pdf.read(), content_type='application/pdf')
+        response['Content-Disposition'] = 'filename=quote.pdf'
+        return response
 
 
-def create_pdf_from_purchaseorder(request, purchaseorder_pk):
-    purchase_order = PurchaseOrder.objects.get(pk=purchaseorder_pk)
-    html_string = StringIO.StringIO()
-    html_string.write(render(request, 'pdf_templates/purchaseorder.html', {'purchaseorder': purchase_order}).content
-                      .decode('utf8').encode('latin2'))
-    purchase_order.create_pdf(html_string)
-    return redirect('purchaseorder_list')
+def view_purchaseorder_pdf(request, pk):
+    puchaseorder = PurchaseOrder.objects.get(pk=int(pk))
+    with open(puchaseorder.pdf_path, 'r') as pdf:
+        response = HttpResponse(pdf.read(), content_type='application/pdf')
+        response['Content-Disposition'] = 'filename=puchaseorder.pdf'
+        return response
 
 
-def create_pdf_from_invoice(request, invoice_pk):
-    invoice = Invoice.objects.get(pk=invoice_pk)
-    html_string = StringIO.StringIO()
-    html_string.write(render(request, 'pdf_templates/invoice.html', {'invoice': invoice}).content
-                      .decode('utf8').encode('latin2'))
-    invoice.create_pdf(html_string)
-    return redirect('invoice_list')
+def view_invoice_pdf(request, pk):
+    invoice = Invoice.objects.get(pk=int(pk))
+    with open(invoice.pdf_path, 'r') as pdf:
+        response = HttpResponse(pdf.read(), content_type='application/pdf')
+        response['Content-Disposition'] = 'filename=invoice.pdf'
+        return response
 
 
 # ###########################

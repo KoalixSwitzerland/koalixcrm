@@ -93,10 +93,9 @@ urlpatterns = \
         # Purchaseorder urls
         # ##################
 
-        url(r'^purchaseorders/createpdf/(?P<purchaseorder_pk>\d+)/$', create_pdf_from_purchaseorder,
-            name='purchaseorder_create_pdf'),
         url(r'^purchaseorders/edit/(?P<pk>\d+)/$', EditPurchaseOrder.as_view(), name='purchaseorder_edit'),
         url(r'^purchaseorders/delete/(?P<pk>\d+)/$', DeletePurchaseOrder.as_view(), name='purchaseorder_delete'),
+        url(r'^purchaseorders/detail/(?P<pk>\d+)/$', view_purchaseorder_pdf, name='purchaseorder_detail'),  # TODO
 
         # ##################
         # CustomerGroup urls
@@ -125,9 +124,9 @@ urlpatterns = \
         # Invoice urls
         # ############
 
-        url(r'^invoices/createpdf/(?P<invoice_pk>\d+)/$', create_pdf_from_invoice, name='invoice_create_pdf'),
         url(r'^invoices/edit/(?P<pk>\d+)/$', EditInvoice.as_view(), name='invoice_edit'),
         url(r'^invoices/delete/(?P<pk>\d+)/$', DeleteInvoice.as_view(), name='invoice_delete'),
+        url(r'^invoices/detail/(?P<pk>\d+)/$', view_invoice_pdf, name='invoice_detail'),  # TODO
 
         # ##########
         # Quote urls
@@ -137,9 +136,9 @@ urlpatterns = \
         url(r'^quotes/createinvoice/(?P<quote_pk>\d+)/$', create_invoice_from_quote, name='quote_create_invoice'),
         url(r'^quotes/createpurchaseorder/(?P<quote_pk>\d+)/$', create_purchaseorder_from_quote,
             name='quote_create_purchaseorder'),
-        url(r'^quotes/createpdf/(?P<quote_pk>\d+)/$', create_pdf_from_quote, name='quote_create_pdf'),
         url(r'^quotes/edit/(?P<pk>\d+)/$', EditQuote.as_view(), name='quote_edit'),
         url(r'^quotes/delete/(?P<pk>\d+)/$', DeleteQuote.as_view(), name='quote_delete'),
+        url(r'^quotes/detail/(?P<pk>\d+)/$', view_quote_pdf, name='quote_detail'),  # TODO
     )
 
 urlpatterns += patterns('',
