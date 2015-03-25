@@ -752,8 +752,10 @@ class Product(ProductItem):
     def get_absolute_url(self):
         return reverse('product_detail', args=[str(self.id)])
 
-    def get_price(self, date, unit, customer, currency):
+    def get_price(self):
         prices = Price.objects.filter(product=self.id)
+        # if not len(prices) > 0:
+        return 0
         unit_transforms = UnitTransform.objects.filter(product=self.id)
         customer_group_transforms = CustomerGroupTransform.objects.filter(product=self.id)
         validpriceslist = list()
@@ -854,7 +856,7 @@ class CustomerGroupTransform(models.Model):
 
 
 class Price(models.Model):
-    product = models.ForeignKey(Product, verbose_name=_("Product"))
+    product = models.ForeignKey(Product, verbose_name=_("Product"), related_name="prices")
     unit = models.ForeignKey(Unit, blank=False, verbose_name=_("Unit"))
     currency = models.CharField(max_length=3, choices=currencies, blank=False, null=False, verbose_name='Currency')
     customer_group = models.ForeignKey(CustomerGroup, blank=True, null=True, verbose_name=_("Customer Group"))
@@ -900,6 +902,7 @@ class Price(models.Model):
     class Meta():
         verbose_name = _('Price')
         verbose_name_plural = _('Prices')
+        get_latest_by = 'id'
 
 
 class Position(models.Model):

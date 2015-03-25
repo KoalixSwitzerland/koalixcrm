@@ -8,8 +8,8 @@ from django.utils.translation import ugettext_lazy as _
 
 class ContractTable(tables.Table):
     state = LabelColumn(verbose_name=_('Status'))
-    name = ModelDetailLinkColumn(sortable=False)
-    default_customer = RelatedModelDetailLinkColumn(verbose_name=_('Customer'))
+    name = ModelDetailLinkColumn(accessor='id', verbose_name=_('Name'))
+    default_customer = RelatedModelDetailLinkColumn(accessor='default_customer.name', verbose_name=_('Customer'))
     description = tables.Column(orderable=False, default="-")
     lastmodification = tables.DateTimeColumn()
 
@@ -88,7 +88,7 @@ class ContractTable(tables.Table):
 
 
 class CustomerTable(tables.Table):
-    name_prefix = tables.TemplateColumn("""{{ record.get_prefix }}""", orderable=False, verbose_name=_('Prefix'))
+    name_prefix = tables.TemplateColumn("""{{ record.get_prefix }}""", accessor='-prefix', verbose_name=_('Prefix'))
     new_contract = IncludeColumn(
         'crm_core/includes/customer_row_actions_toolbar.html',
         attrs={"th": {"width": "50px"}},
@@ -111,7 +111,7 @@ class CustomerTable(tables.Table):
 
 
 class SupplierTable(tables.Table):
-    name_prefix = tables.TemplateColumn("""{{ record.get_prefix }}""", orderable=False, verbose_name=_('Prefix'))
+    name_prefix = tables.TemplateColumn("""{{ record.get_prefix }}""", accessor='prefix', verbose_name=_('Prefix'))
     edit_supplier = IncludeColumn(
         'crm_core/includes/supplier_row_edit_toolbar.html',
         attrs={"th": {"width": "120px"}},
@@ -128,8 +128,8 @@ class SupplierTable(tables.Table):
 
 
 class ProductTable(tables.Table):
-    product = tables.Column(accessor='get_product_number', orderable=False, verbose_name=_('Prefix'))
-    price = tables.Column(accessor='get_price', orderable=False, verbose_name=_('Price'))
+    product = tables.TemplateColumn("{{ record.get_product_number }}", accessor='product_number', verbose_name="#")
+    price = tables.TemplateColumn("{{ record.get_price }}", accessor='prices.price', verbose_name=_('Price'))
     edit_product = IncludeColumn(
         'crm_core/includes/product_row_edit_toolbar.html',
         attrs={"th": {"width": "120px"}},
@@ -141,7 +141,7 @@ class ProductTable(tables.Table):
         model = Product
         exclude = ('id', 'item_category', 'item_prefix', 'dateofcreation', 'lastmodification', 'lastmodifiedby',
                    'product_number', 'productitem_ptr')
-        sequence = ('product', 'item_title', 'item_description', 'price')
+        sequence = ('product', 'item_title', 'item_description', 'item_unit', 'price', 'item_tax')
 
 
 class TaxTable(tables.Table):
