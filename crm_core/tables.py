@@ -1,6 +1,5 @@
 import django_tables2 as tables
-from crm_core.custom.custom_columns import LabelColumn, ButtonsColumn, RelatedModelDetailLinkColumn, \
-    ModelDetailLinkColumn, IncludeColumn
+from crm_core.custom.custom_columns import LabelColumn, ButtonsColumn, ModelDetailLinkColumn, IncludeColumn
 from crm_core.models import Contract, Customer, Supplier, Product, TaxRate, CustomerBillingCycle, Unit, \
     ProductCategory, CustomerGroup
 from django.utils.translation import ugettext_lazy as _
@@ -9,7 +8,9 @@ from django.utils.translation import ugettext_lazy as _
 class ContractTable(tables.Table):
     state = LabelColumn(verbose_name=_('Status'))
     name = ModelDetailLinkColumn(verbose_name=_('Name'))
-    default_customer = RelatedModelDetailLinkColumn(accessor='default_customer.name', verbose_name=_('Customer'))
+    default_customer = tables.TemplateColumn("<a href='{{ record.default_customer.get_absolute_url }}'>"
+                                             "{{ record.default_customer.short_name }}</a>",
+                                             accessor='default_customer.name', verbose_name=_('Customer'))
     description = tables.Column()
     price = tables.TemplateColumn("{{ record.get_price }}", accessor='prices.price', verbose_name=_('Price'))
     lastmodification = tables.DateTimeColumn()

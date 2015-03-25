@@ -20,13 +20,6 @@ class ImageLinkColumn(tables.TemplateColumn):
         super(ImageLinkColumn, self).__init__(**extra)
 
 
-class RelatedModelDetailLinkColumn(tables.TemplateColumn):
-
-    def __init__(self, **extra):
-        extra['template_code'] = """<a href="{{ value.get_absolute_url }}">{{ value }}</a>"""
-        super(RelatedModelDetailLinkColumn, self).__init__(**extra)
-
-
 class ModelDetailLinkColumn(tables.TemplateColumn):
 
     def __init__(self, **extra):

@@ -38,7 +38,9 @@ class Contact(models.Model):
 
     @property
     def get_prefix(self):
-        return PostalAddressPrefix.choices[self.prefix]
+        if self.prefix:
+            return PostalAddressPrefix.choices[self.prefix]
+        return ""
 
 
 # #########################
@@ -253,12 +255,16 @@ class Customer(Contact):
                 return 1
         return 0
 
+    def short_name(self):
+        if self.firstname:
+            return "%s %s" % (self.firstname, self.name)
+        return self.name
+
     def __unicode__(self):
         if self.prefix and self.firstname:
             return "%s %s %s" % (self.get_prefix, self.firstname, self.name)
-        elif self.firstname:
-            return "%s %s" % (self.firstname, self.name)
-        return self.name
+        else:
+            return self.short_name()
 
 
 class Supplier(Contact):
