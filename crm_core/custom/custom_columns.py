@@ -65,3 +65,10 @@ class ButtonsColumn(tables.TemplateColumn):
         html_code += """</div>"""
         extra['template_code'] = html_code
         super(ButtonsColumn, self).__init__(**extra)
+
+
+class IncludeColumn(tables.TemplateColumn):
+
+    def __init__(self, include_name, **extra):
+        extra['template_code'] = "{% include '" + include_name + "' %}"
+        super(IncludeColumn, self).__init__(**extra)

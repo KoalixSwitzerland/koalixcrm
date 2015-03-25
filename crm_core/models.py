@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from datetime import date, timedelta, datetime
+from datetime import date, timedelta
 from decimal import Decimal
-import StringIO
-import os
 from django.conf import settings
-from django.db import models
-from django.shortcuts import render
+from django.db import models, transaction
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
@@ -14,12 +11,12 @@ from filebrowser_safe.fields import FileBrowseField
 from django_fsm import FSMIntegerField
 from mezzanine.core.models import Displayable
 from os import path
+import reversion
 from weasyprint import HTML
 from international.models import countries, currencies, countries_raw
 from const.postaladdressprefix import PostalAddressPrefix
 from const.purpose import PhoneAddressPurpose, PostalAddressPurpose, EmailAddressPurpose
-from const.states import InvoiceStatesEnum, PurchaseOrderStatesEnum, QuoteStatesEnum, InvoiceStatesLabelEnum, \
-    QuoteStatesLabelEnum, PurchaseOrderStatesLabelEnum, ContractStatesEnum, ContractStatesLabelEnum
+from const.states import ContractStatesEnum, ContractStatesLabelEnum
 from django_extensions.db.fields import CreationDateTimeField, ModificationDateTimeField
 from django.apps import apps as django_apps
 
@@ -403,7 +400,6 @@ class Contract(models.Model):
 
 
 class PurchaseOrder(models.Model):
-    state = FSMIntegerField(default=PurchaseOrderStatesEnum.New, choices=PurchaseOrderStatesEnum.choices)
     contract = models.ForeignKey(Contract, verbose_name=_("Contract"), related_name='purchaseorders')
     customer = models.ForeignKey(Customer, verbose_name=_("Customer"))
     external_reference = models.CharField(verbose_name=_("External Reference"), max_length=100, blank=True, null=True)
@@ -476,12 +472,6 @@ class PurchaseOrder(models.Model):
             settings.PROJECT_ROOT, settings.MEDIA_URL, self.pk))
         self.pdf_path = pth
         HTML(string=html, encoding="utf8").write_pdf(target=pth)
-
-    def get_state(self):
-        return PurchaseOrderStatesEnum.choices[self.state]
-
-    def get_state_class(self):
-        return PurchaseOrderStatesLabelEnum.choices[self.state]
 
     def get_absolute_url(self):
         return reverse('purchaseorder_edit', args=[str(self.id)])
@@ -556,7 +546,6 @@ class SalesContract(models.Model):
 
 class Quote(SalesContract):
     contract = models.ForeignKey(Contract, verbose_name=_('Contract'), related_name='quotes')
-    state = FSMIntegerField(default=QuoteStatesEnum.New, choices=QuoteStatesEnum.choices, editable=False)
     validuntil = models.DateField(verbose_name=_("Valid until"))
 
     class Meta():
@@ -582,7 +571,6 @@ class Quote(SalesContract):
         invoice.dateofcreation = date.today().__str__()
         invoice.customerBillingCycle = self.customer.billingcycle
         invoice.save()
-        self.state = QuoteStatesEnum.Quote_sent
         self.save()
         try:
             quote_positions = SalesContractPosition.objects.filter(contract=self.id)
@@ -611,7 +599,6 @@ class Quote(SalesContract):
 
     def create_purchase_order(self):
         purchase_order = self.contract.create_purchase_order()
-        self.state = QuoteStatesEnum.Purchaseorder_created
         self.save()
         return purchase_order
 
@@ -625,12 +612,6 @@ class Quote(SalesContract):
         self.pdf_path = pth
         HTML(string=html, encoding="utf8").write_pdf(target=pth)
 
-    def get_state(self):
-        return QuoteStatesEnum.choices[self.state]
-
-    def get_state_class(self):
-        return QuoteStatesLabelEnum.choices[self.state]
-
     def get_absolute_url(self):
         return reverse('quote_edit', args=[str(self.id)])
 
@@ -640,6 +621,8 @@ class Quote(SalesContract):
     def __unicode__(self):
         return _('Quote') + ' #' + str(self.id)
 
+    @transaction.atomic()
+    @reversion.create_revision()
     def save(self, *args, **kwargs):
         self.create_pdf()
         super(Quote, self).save(*args, **kwargs)
@@ -647,7 +630,6 @@ class Quote(SalesContract):
 
 class Invoice(SalesContract):
     contract = models.ForeignKey(Contract, verbose_name=_('Contract'), related_name='invoices')
-    state = FSMIntegerField(default=InvoiceStatesEnum.Open, choices=InvoiceStatesEnum.choices, editable=False)
     payableuntil = models.DateField(verbose_name=_("To pay until"))
     derived_from_quote = models.ForeignKey(Quote, blank=True, null=True, editable=False)
     payment_bank_reference = models.CharField(verbose_name=_("Payment Bank Reference"), max_length=100, blank=True,
@@ -670,12 +652,6 @@ class Invoice(SalesContract):
             ('view_invoice', 'Can view invoices'),
         )
         get_latest_by = 'lastmodification'
-
-    def get_state(self):
-        return InvoiceStatesEnum.choices[self.state]
-
-    def get_state_class(self):
-        return InvoiceStatesLabelEnum.choices[self.state]
 
     def get_absolute_url(self):
         return reverse('invoice_edit', args=[str(self.id)])

@@ -1,6 +1,6 @@
 import django_tables2 as tables
 from crm_core.custom.custom_columns import LabelColumn, ButtonsColumn, RelatedModelDetailLinkColumn, \
-    ModelDetailLinkColumn, ButtonColumn
+    ModelDetailLinkColumn, ButtonColumn, IncludeColumn
 from crm_core.models import Contract, Customer, Supplier, Product, TaxRate, CustomerBillingCycle, Unit, \
     ProductCategory, CustomerGroup
 from django.utils.translation import ugettext_lazy as _
@@ -67,31 +67,11 @@ class ContractTable(tables.Table):
         attrs={"th": {"width": "90px"}},
         orderable=False
     )
-    edit_status = ButtonsColumn(
-        [
-            {
-                "extra_class": "btn-primary",
-                "gl_icon": "list-alt",
-                "onclick": "location.href='{% url 'contract_create_quote' record.pk %}'",
-                "condition": "not record.has_quotes and not record.has_purchaseorders"
-            },
-            {
-                "extra_class": "btn-success",
-                "gl_icon": "shopping-cart",
-                "onclick": "location.href='{% url 'contract_create_purchaseorder' record.pk %}'",
-                "condition": "not record.has_purchaseorders and not record.has_invoices"
-            },
-            {
-                "extra_class": "btn-warning",
-                "gl_icon": "usd",
-                "onclick": "location.href='{% url 'contract_create_invoice' record.pk %}'",
-                "condition": "not record.has_invoices and record.has_purchaseorders or record.has_quotes"
-            }
-        ],
-        attrs={"th": {"width": "120px"}},
-        verbose_name=" ",
-        orderable=False
-    )
+    edit_status = IncludeColumn('crm_core/includes/contract_row_actions_toolbar.html',
+                                attrs={"th": {"width": "120px"}},
+                                verbose_name=" ",
+                                orderable=False
+                                )
     edit_contract = ButtonsColumn(
         [
             {
