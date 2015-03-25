@@ -1,9 +1,20 @@
+{% load i18n %}
+
     {% if perms.crm_core.add_contract %}
-        <button class="btn btn-default" onclick="location.href='{% url 'contract_create' %}'"><span class="glyphicon glyphicon-plus"></span></button>
+        <button class="btn btn-default" onclick="location.href=
+                '{% url 'contract_create' %}'" title="{% trans 'Create Contract' %}"
+                data-toggle="tooltip" data-placement="top">
+            <span class="glyphicon glyphicon-plus"></span></button>
     {% endif %}
     {% if perms.crm_core.edit_contract %}
-        <button class="btn btn-info" onclick="location.href='{% url 'contract_edit' contract.pk %}'"><span class="glyphicon glyphicon-pencil"></span></button>
+        <button class="btn btn-info" onclick="location.href=
+                '{% url 'contract_edit' contract.pk %}'" title="{% trans 'Edit Contract' %}"
+                data-toggle="tooltip" data-placement="top">
+            <span class="glyphicon glyphicon-pencil"></span></button>
     {% endif %}
     {% if perms.crm_core.delete_contract %}
-        <button class="btn btn-danger" onclick="location.href='{% url 'contract_delete' contract.pk %}'"><span class="glyphicon glyphicon-trash"></span></button>
+        <button class="btn btn-danger" onclick="location.href=
+                '{% url 'contract_delete' contract.pk %}'" title="{% trans 'Delete Contract' %}"
+                data-toggle="tooltip" data-placement="top">
+            <span class="glyphicon glyphicon-trash"></span></button>
     {% endif %}
