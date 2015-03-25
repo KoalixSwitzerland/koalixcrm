@@ -1,4 +1,21 @@
-{% extends "base/base.html" %}
+{% extends "base/form_view_base.html" %}
+{% load i18n crispy_forms_tags crispy_forms_field crispy_forms_filters staticfiles %}
+
+{% block extra_css %}
+<style type="text/css">
+    .add-row {
+        padding-left:18px;
+        background:url({% static  'assets/img/add.png' %}) no-repeat left center;
+    }
+    .delete-row {
+        float:right;
+        display:block;
+        margin-left:4px;
+        padding-left:18px;
+        background:url({% static  'assets/img/delete.png' %}) no-repeat left center;
+    }
+</style>
+{% endblock %}
 
 {% block main %}
     <div class="panel panel-default" style="margin: 10px;">
@@ -15,6 +32,7 @@
 
                             {% block main_header %}
                             {% endblock %}
+
                         </h4>
                     </td>
                     <td>
@@ -44,4 +62,16 @@
 
     </form>
     </div>
+{% endblock %}
+
+{% block extrascript %}
+    <script type="text/javascript">
+        $(function() {
+            $('#position tbody tr').formset({
+                prefix: "{{ inlines.0.prefix }}",
+                deleteText: "&nbsp;",
+                addText: "{% trans 'Add Position' %}"
+            });
+        });
+    </script>
 {% endblock %}

@@ -10,88 +10,84 @@
 
 {% block main %}
 
-                  	<div class="row mtbox">
-                  		<div class="col-md-2 col-sm-2 col-md-offset-1 box0">
-                  			<div class="box1" onclick="window.location.assign('{% url 'contract_list' %}')">
-					  			<span class="li_note"></span>
-					  			<h3>{{ contractcount }}&nbsp;{% trans 'open' %}</h3>
-                  			</div>
-					  			<p>{{ contractcount }} open contracts in your database.</p>
-                  		</div>
-                  		<div class="col-md-2 col-sm-2 box0">
+        <div class="row mtbox">
+            <div class="col-md-2 col-sm-2 col-md-offset-1 box0">
+                <div class="box1" onclick="window.location.assign('{% url 'contract_list' %}')">
+                    <span class="li_note"></span>
+                    <h3>{{ contractcount }}&nbsp;{% trans 'open' %}</h3>
+                </div>
+                    <p>{{ contractcount }} open contracts in your database.</p>
+            </div>
+            <div class="col-md-2 col-sm-2 box0">
 {#                            TODO: filtered view  #}
-                  			<div class="box1" onclick="window.location.assign('{% url 'contract_list' %}')">
-					  			<span class="li_banknote"></span>
-					  			<h3>{{ invoicecount }}&nbsp;{% trans 'open' %}</h3>
-                  			</div>
-					  			<p>{{ invoicecount }} open invoices in your database.</p>
-                  		</div>
-                  		<div class="col-md-2 col-sm-2 box0">
-                  			<div class="box1" onclick="window.location.assign('{% url 'customer_list' %}')">
-					  			<span class="li_user"></span>
-					  			<h3>{{ customercount }}</h3>
-                  			</div>
-					  			<p>{{ customercount }} customers in your database.</p>
-                  		</div>
-                  		<div class="col-md-2 col-sm-2 box0">
-                  			<div class="box1" onclick="window.location.assign('{% url 'supplier_list' %}')">
-					  			<span class="li_truck"></span>
-					  			<h3>{{ suppliercount }}</h3>
-                  			</div>
-					  			<p>{{ suppliercount }} suppliers in your database.</p>
-                  		</div>
-                  		<div class="col-md-2 col-sm-2 box0">
-                  			<div class="box1" onclick="window.location.assign('{% url 'product_list' %}')">
-					  			<span class="li_shop"></span>
-					  			<h3>{{ productcount }}</h3>
-                  			</div>
-					  			<p>{{ productcount }} products in your database.</p>
-                  		</div>
-                  	</div><!-- /row mt -->
+                <div class="box1" onclick="window.location.assign('{% url 'contract_list' %}')">
+                    <span class="li_banknote"></span>
+                    <h3>{{ invoicecount }}&nbsp;{% trans 'open' %}</h3>
+                </div>
+                    <p>{{ invoicecount }} open invoices in your database.</p>
+            </div>
+            <div class="col-md-2 col-sm-2 box0">
+                <div class="box1" onclick="window.location.assign('{% url 'customer_list' %}')">
+                    <span class="li_user"></span>
+                    <h3>{{ customercount }}</h3>
+                </div>
+                    <p>{{ customercount }} customers in your database.</p>
+            </div>
+            <div class="col-md-2 col-sm-2 box0">
+                <div class="box1" onclick="window.location.assign('{% url 'supplier_list' %}')">
+                    <span class="li_truck"></span>
+                    <h3>{{ suppliercount }}</h3>
+                </div>
+                    <p>{{ suppliercount }} suppliers in your database.</p>
+            </div>
+            <div class="col-md-2 col-sm-2 box0">
+                <div class="box1" onclick="window.location.assign('{% url 'product_list' %}')">
+                    <span class="li_shop"></span>
+                    <h3>{{ productcount }}</h3>
+                </div>
+                    <p>{{ productcount }} products in your database.</p>
+            </div>
+        </div><!-- /row mt -->
 
-                    <div class="row mt" style="margin-left: 15px;margin-right: 15px;">
+        <div class="row mt" style="margin-left: 15px;margin-right: 15px;">
 
-                        <div class="col-md-4 col-sm-4 mb">
-							<div class="darkblue-panel pn">
-								<div class="darkblue-header">
-									<h5>{% trans 'Open Contracts' %}</h5>
-	                 	        </div>
-                                <div class="panel-body">
-                                   <ul>
-                                       {% for contract in opencontracts %}
-                                       <li style="margin-left: -20px; margin-top: 2px; margin-right: 15px;">
-                                          <div>
-                                              <span class="task-title-sp pull-left">
-                                                  <a href="{% url 'contract_detail' contract.pk %}">{{ contract }}</a>
-                                              </span>
-                                              <span class="pull-right label {{ contract.get_state_class }}">{{ contract.get_state }}</span>
-                                           </div>
-                                       </li><br>
-                                       {% endfor %}
-                                  </ul>
-                                </div>
-                            </div>
-                        </div>
-						<div class="col-md-4 col-sm-4 mb">
-							<!-- REVENUE PANEL -->
-							<div class="darkblue-panel pn">
-								<div class="darkblue-header">
-									<h5>REVENUE</h5>
-								</div>
-								<div class="chart mt">
-									<div class="sparkline" data-type="line" data-resize="true" data-height="75"
-                                         data-width="90%" data-line-width="1" data-line-color="#fff"
-                                         data-spot-color="#fff" data-fill-color="" data-highlight-line-color="#fff"
-                                         data-spot-radius="4" data-data="[200,135,667,333,526,996,564,123,890,464,655]">
-                                        <canvas width="358" height="75" style="display: inline-block; width: 358px; height: 75px; vertical-align: top;"></canvas></div>
-								</div>
-								<p class="mt"><b>$ 17,980</b><br>Month Income</p>
-							</div>
-						</div><!-- /col-md-4 -->
-					</div>
-
-    <script>
-
-    </script>
+            <div class="col-md-4 col-sm-4 mb">
+                <div class="darkblue-panel pn">
+                    <div class="darkblue-header">
+                        <h5>{% trans 'Open Contracts' %}</h5>
+                    </div>
+                    <div class="panel-body">
+                       <ul>
+                           {% for contract in opencontracts %}
+                           <li style="margin-left: -20px; margin-top: 2px; margin-right: 15px;">
+                              <div>
+                                  <span class="task-title-sp pull-left">
+                                      <a href="{% url 'contract_detail' contract.pk %}">{{ contract }}</a>
+                                  </span>
+                                  <span class="pull-right label {{ contract.get_state_class }}">{{ contract.get_state }}</span>
+                               </div>
+                           </li><br>
+                           {% endfor %}
+                      </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-4 mb">
+                <!-- REVENUE PANEL -->
+                <div class="darkblue-panel pn">
+                    <div class="darkblue-header">
+                        <h5>REVENUE</h5>
+                    </div>
+                    <div class="chart mt">
+                        <div class="sparkline" data-type="line" data-resize="true" data-height="75"
+                             data-width="90%" data-line-width="1" data-line-color="#fff"
+                             data-spot-color="#fff" data-fill-color="" data-highlight-line-color="#fff"
+                             data-spot-radius="4" data-data="[200,135,667,333,526,996,564,123,890,464,655]">
+                            <canvas width="358" height="75" style="display: inline-block; width: 358px; height: 75px; vertical-align: top;"></canvas></div>
+                    </div>
+                    <p class="mt"><b>$ 17,980</b><br>Month Income</p>
+                </div>
+            </div><!-- /col-md-4 -->
+        </div>
 
 {% endblock %}

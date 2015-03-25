@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import StringIO
 from braces.views import PermissionRequiredMixin, LoginRequiredMixin
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
@@ -11,7 +10,7 @@ from django_tables2 import SingleTableView, RequestConfig
 from extra_views import UpdateWithInlinesView, InlineFormSet, NamedFormsetsMixin, CreateWithInlinesView
 from crm_core.forms import *
 from crm_core.models import *
-from django.shortcuts import render_to_response, redirect, render
+from django.shortcuts import render_to_response, redirect
 from django.contrib.auth import authenticate, login, logout
 from tables import ContractTable, CustomerTable, SupplierTable, ProductTable, TaxTable, BillingCycleTable, UnitTable, \
     CustomerGroupTable, ProductCategoryTable
@@ -62,11 +61,7 @@ def show_dashboard(request):
     suppliercount = Supplier.objects.all().count()
     productcount = Product.objects.all().count()
     opencontracts = []
-    for invoice in Invoice.objects.all():
-        if invoice.state != InvoiceStatesEnum.Payed or invoice.state != InvoiceStatesEnum.Deleted \
-                and invoice not in opencontracts:
-            opencontracts.append(invoice.contract)
-    for contract in Contract.objects.all():
+    for contract in Contract.objects.exclude(state=ContractStatesEnum.Payed or ContractStatesEnum.Deleted):
         if contract not in opencontracts:
             opencontracts.append(contract)
     template = loader.get_template('dashboard.html')
