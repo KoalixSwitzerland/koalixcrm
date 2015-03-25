@@ -31,6 +31,8 @@ class ModelDetailLinkColumn(tables.TemplateColumn):
 
     def __init__(self, **extra):
         extra['template_code'] = """<a href="{{ record.get_absolute_url }}">{{ record }}</a>"""
+        if 'accessor' not in extra:
+            extra['accessor'] = "id"
         super(ModelDetailLinkColumn, self).__init__(**extra)
 
 

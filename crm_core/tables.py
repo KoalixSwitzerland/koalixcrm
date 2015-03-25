@@ -8,9 +8,10 @@ from django.utils.translation import ugettext_lazy as _
 
 class ContractTable(tables.Table):
     state = LabelColumn(verbose_name=_('Status'))
-    name = ModelDetailLinkColumn(accessor='id', verbose_name=_('Name'))
+    name = ModelDetailLinkColumn(verbose_name=_('Name'))
     default_customer = RelatedModelDetailLinkColumn(accessor='default_customer.name', verbose_name=_('Customer'))
-    description = tables.Column(orderable=False, default="-")
+    description = tables.Column()
+    price = tables.TemplateColumn("{{ record.get_price }}", accessor='prices.price', verbose_name=_('Price'))
     lastmodification = tables.DateTimeColumn()
 
     quote = ButtonsColumn(
@@ -83,7 +84,7 @@ class ContractTable(tables.Table):
     class Meta:
         model = Contract
         exclude = ('id', 'staff', 'default_supplier', 'default_currency', 'dateofcreation', 'lastmodifiedby')
-        sequence = ('state', 'name', 'default_customer', 'description', 'lastmodification')
+        sequence = ('state', 'name', 'default_customer', 'description', 'price', 'lastmodification')
         order_by = ('state', '-lastmodification')
 
 
@@ -111,7 +112,7 @@ class CustomerTable(tables.Table):
 
 
 class SupplierTable(tables.Table):
-    name_prefix = tables.TemplateColumn("""{{ record.get_prefix }}""", accessor='prefix', verbose_name=_('Prefix'))
+    name = ModelDetailLinkColumn(accessor='name')
     edit_supplier = IncludeColumn(
         'crm_core/includes/supplier_row_edit_toolbar.html',
         attrs={"th": {"width": "120px"}},
@@ -123,12 +124,13 @@ class SupplierTable(tables.Table):
         model = Supplier
         exclude = ('id', 'billingcycle', 'prefix', 'dateofcreation', 'lastmodification', 'lastmodifiedby',
                    'contact_ptr')
-        sequence = ('name_prefix', 'name', 'default_currency')
+        sequence = ('name', 'default_currency')
         order_by = ('name', )
 
 
 class ProductTable(tables.Table):
-    product = tables.TemplateColumn("{{ record.get_product_number }}", accessor='product_number', verbose_name="#")
+    product = tables.TemplateColumn("<a href='{{ record.get_absolute_url }}'>{{ record.get_product_number }}</a>",
+                                    accessor='product_number', verbose_name="#")
     price = tables.TemplateColumn("{{ record.get_price }}", accessor='prices.price', verbose_name=_('Price'))
     edit_product = IncludeColumn(
         'crm_core/includes/product_row_edit_toolbar.html',
