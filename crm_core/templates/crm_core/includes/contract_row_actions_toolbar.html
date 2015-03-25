@@ -1,3 +1,4 @@
+<div class="btn-group btn-group-sm" role="group">
     {% if not record.has_quotes and not record.has_purchaseorders %}
     <button class="btn btn-primary btn-sm" onclick="location.href='{% url 'contract_create_quote' record.pk %}'"><span class="glyphicon glyphicon-list-alt"></span></button>
     {% endif %}
@@ -7,3 +8,4 @@
     {% if record.has_purchaseorders and not record.has_invoices %}
         <button class="btn btn-warning btn-sm" onclick="location.href='{% url 'contract_create_invoice' record.pk %}'"><span class="glyphicon glyphicon-usd"></span></button>
     {% endif %}
+</div>

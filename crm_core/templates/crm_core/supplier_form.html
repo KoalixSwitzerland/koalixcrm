@@ -18,6 +18,17 @@
     {% if supplier %}{% trans "Edit supplier" %}{% else %}{% trans "Create supplier" %}{% endif%}
 {% endblock %}
 
+{% block main_toolbar %}
+    <button type='submit' class='btn btn-primary'>
+        {% trans "Save" %}
+    </button>
+
+    <button type="button" class="btn btn-default"
+            onclick="window.location.assign('{% url 'supplier_list' %}')">
+        {% trans "Cancel" %}
+    </button>
+{% endblock %}
+
 {% block main_inner %}
     {% bootstrap_form form layout='horizontal' %}
                 {% if postaladdress_formset and perms.crm_core.view_postaladdress %}
