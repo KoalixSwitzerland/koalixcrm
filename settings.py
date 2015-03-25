@@ -109,6 +109,7 @@ USE_TZ = True
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = "en"
+SHOP_CURRENCY_LOCALE = "en_US.utf8"  # This value must be the same value as represented by 'locale -a' on linux
 
 # Supported languages
 _ = lambda s: s
@@ -306,6 +307,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 # these middleware classes will be applied in the order given, and in the
 # response phase the middleware will be applied in reverse order.
 MIDDLEWARE_CLASSES = (
+    "reversion.middleware.RevisionMiddleware",
     "mezzanine.core.middleware.UpdateCacheMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
@@ -341,11 +343,14 @@ CRISPY_TEMPLATE_PACK = "bootstrap3"
 OPTIONAL_APPS = (
     "debug_toolbar",
     "django_extensions",
+    "cartridge",
     PACKAGE_NAME_FILEBROWSER,
     PACKAGE_NAME_GRAPPELLI,
 )
 
 SEARCH_MODEL_CHOICES = None
+SHOP_OPTION_TYPE_CHOICES = ((1, 'Size'), (2, 'Colour'))
+SHOP_ORDER_STATUS_CHOICES = ((1, 'Unprocessed'), (2, 'Processed'))
 
 
 ##################

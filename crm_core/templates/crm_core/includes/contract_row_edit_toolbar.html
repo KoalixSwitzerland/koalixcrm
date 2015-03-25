@@ -1,20 +1,22 @@
 {% load i18n %}
 
-    {% if perms.crm_core.add_customer %}
+<div class="btn-group btn-group-sm" role="group">
+    {% if perms.crm_core.view_contract %}
         <button class="btn btn-default" onclick="location.href=
-                '{% url 'customer_create' %}'" title="{% trans 'Create Customer' %}"
+                '{% url 'contract_detail' record.pk %}'" title="{% trans 'View Contract' %}"
                 data-toggle="tooltip" data-placement="top">
-            <span class="glyphicon glyphicon-plus"></span></button>
+            <span class="glyphicon glyphicon-search"></span></button>
     {% endif %}
-    {% if perms.crm_core.edit_customer %}
+    {% if perms.crm_core.edit_contract %}
         <button class="btn btn-info" onclick="location.href=
-                '{% url 'customer_edit' customer.pk %}'" title="{% trans 'Edit Customer' %}"
+                '{% url 'contract_edit' record.pk %}'" title="{% trans 'Edit Contract' %}"
                 data-toggle="tooltip" data-placement="top">
             <span class="glyphicon glyphicon-pencil"></span></button>
     {% endif %}
-    {% if perms.crm_core.delete_customer %}
+    {% if perms.crm_core.delete_contract %}
         <button class="btn btn-danger" onclick="location.href=
-                '{% url 'customer_delete' customer.pk %}'" title="{% trans 'Delete Customer' %}"
+                '{% url 'contract_delete' record.pk %}'" title="{% trans 'Delete Contract' %}"
                 data-toggle="tooltip" data-placement="top">
             <span class="glyphicon glyphicon-trash"></span></button>
     {% endif %}
+</div>

@@ -1,6 +1,6 @@
 import django_tables2 as tables
 from crm_core.custom.custom_columns import LabelColumn, ButtonsColumn, RelatedModelDetailLinkColumn, \
-    ModelDetailLinkColumn, ButtonColumn
+    ModelDetailLinkColumn, IncludeColumn
 from crm_core.models import Contract, Customer, Supplier, Product, TaxRate, CustomerBillingCycle, Unit, \
     ProductCategory, CustomerGroup
 from django.utils.translation import ugettext_lazy as _
@@ -8,9 +8,10 @@ from django.utils.translation import ugettext_lazy as _
 
 class ContractTable(tables.Table):
     state = LabelColumn(verbose_name=_('Status'))
-    name = ModelDetailLinkColumn(sortable=False)
-    default_customer = RelatedModelDetailLinkColumn(verbose_name=_('Customer'))
-    description = tables.Column(orderable=False, default="-")
+    name = ModelDetailLinkColumn(verbose_name=_('Name'))
+    default_customer = RelatedModelDetailLinkColumn(accessor='default_customer.name', verbose_name=_('Customer'))
+    description = tables.Column()
+    price = tables.TemplateColumn("{{ record.get_price }}", accessor='prices.price', verbose_name=_('Price'))
     lastmodification = tables.DateTimeColumn()
 
     quote = ButtonsColumn(
@@ -22,7 +23,7 @@ class ContractTable(tables.Table):
                 "condition": "record.has_quotes",
             },
             {
-                "extra_class": 'btn-info',
+                "extra_class": 'btn-primary',
                 "gl_icon": 'pencil',
                 "onclick": "location.href='{{ record.get_quote_edit_url }}'",
                 "condition": "record.has_quotes",
@@ -40,7 +41,7 @@ class ContractTable(tables.Table):
                 "condition": "record.has_purchaseorders",
             },
             {
-                "extra_class": "btn-info",
+                "extra_class": "btn-success",
                 "gl_icon": "pencil",
                 "onclick": "location.href='{{ record.get_purchaseorder_edit_url }}'",
                 "condition": "record.has_purchaseorders",
@@ -58,7 +59,7 @@ class ContractTable(tables.Table):
                 "condition": "record.has_invoices",
             },
             {
-                "extra_class": "btn-info",
+                "extra_class": "btn-warning",
                 "gl_icon": "pencil",
                 "onclick": "location.href='{{ record.get_invoice_edit_url }}'",
                 "condition": "record.has_invoices",
@@ -67,49 +68,14 @@ class ContractTable(tables.Table):
         attrs={"th": {"width": "90px"}},
         orderable=False
     )
-    edit_status = ButtonsColumn(
-        [
-            {
-                "extra_class": "btn-primary",
-                "gl_icon": "list-alt",
-                "onclick": "location.href='{% url 'contract_create_quote' record.pk %}'",
-                "condition": "not record.has_quotes and not record.has_purchaseorders"
-            },
-            {
-                "extra_class": "btn-success",
-                "gl_icon": "shopping-cart",
-                "onclick": "location.href='{% url 'contract_create_purchaseorder' record.pk %}'",
-                "condition": "not record.has_purchaseorders and not record.has_invoices"
-            },
-            {
-                "extra_class": "btn-warning",
-                "gl_icon": "usd",
-                "onclick": "location.href='{% url 'contract_create_invoice' record.pk %}'",
-                "condition": "not record.has_invoices and record.has_purchaseorders or record.has_quotes"
-            }
-        ],
-        attrs={"th": {"width": "120px"}},
+    edit_status = IncludeColumn(
+        'crm_core/includes/contract_row_actions_toolbar.html',
+        attrs={"th": {"width": "90px"}},
         verbose_name=" ",
         orderable=False
     )
-    edit_contract = ButtonsColumn(
-        [
-            {
-                "extra_class": "btn-default",
-                "gl_icon": "search",
-                "onclick": "location.href='{% url 'contract_detail' record.pk %}'"
-            },
-            {
-                "extra_class": "btn-info",
-                "gl_icon": "pencil",
-                "onclick": "location.href='{% url 'contract_edit' record.pk %}'"
-            },
-            {
-                "extra_class": "btn-danger",
-                "gl_icon": "trash",
-                "onclick": "location.href='{% url 'contract_delete' record.pk %}'"
-            }
-        ],
+    edit_contract = IncludeColumn(
+        'crm_core/includes/contract_row_edit_toolbar.html',
         attrs={"th": {"width": "120px"}},
         verbose_name=" ",
         orderable=False
@@ -118,32 +84,20 @@ class ContractTable(tables.Table):
     class Meta:
         model = Contract
         exclude = ('id', 'staff', 'default_supplier', 'default_currency', 'dateofcreation', 'lastmodifiedby')
-        sequence = ('state', 'name', 'default_customer', 'description', 'lastmodification')
+        sequence = ('state', 'name', 'default_customer', 'description', 'price', 'lastmodification')
+        order_by = ('state', '-lastmodification')
 
 
 class CustomerTable(tables.Table):
-    name_prefix = tables.TemplateColumn("""{{ record.get_prefix }}""", orderable=False, verbose_name=_('Prefix'))
-    new_contract = ButtonColumn(onclick="location.href='{% url 'customer_create_contract' record.pk %}'",
-                                gl_icon='star', extra_class='btn-success',
-                                attrs={"th": {"width": "70px"}}, orderable=False)
-    edit_customer = ButtonsColumn(
-        [
-            {
-                "extra_class": "btn-default",
-                "gl_icon": "search",
-                "onclick": "location.href='{% url 'customer_detail' record.pk %}'"
-            },
-            {
-                "extra_class": "btn-info",
-                "gl_icon": "pencil",
-                "onclick": "location.href='{% url 'customer_edit' record.pk %}'"
-            },
-            {
-                "extra_class": "btn-danger",
-                "gl_icon": "trash",
-                "onclick": "location.href='{% url 'customer_delete' record.pk %}'"
-            }
-        ],
+    name_prefix = tables.TemplateColumn("""{{ record.get_prefix }}""", accessor='-prefix', verbose_name=_('Prefix'))
+    new_contract = IncludeColumn(
+        'crm_core/includes/customer_row_actions_toolbar.html',
+        attrs={"th": {"width": "50px"}},
+        verbose_name=" ",
+        orderable=False
+    )
+    edit_customer = IncludeColumn(
+        'crm_core/includes/customer_row_edit_toolbar.html',
         attrs={"th": {"width": "120px"}},
         verbose_name=" ",
         orderable=False
@@ -154,28 +108,13 @@ class CustomerTable(tables.Table):
         exclude = ('id', 'billingcycle', 'prefix', 'dateofcreation', 'lastmodification', 'lastmodifiedby',
                    'contact_ptr')
         sequence = ('name_prefix', 'firstname', 'name', 'default_currency')
+        order_by = ('name', 'firstname')
 
 
 class SupplierTable(tables.Table):
-    name_prefix = tables.TemplateColumn("""{{ record.get_prefix }}""", orderable=False, verbose_name=_('Prefix'))
-    edit_customer = ButtonsColumn(
-        [
-            {
-                "extra_class": "btn-default",
-                "gl_icon": "search",
-                "onclick": "location.href='{% url 'supplier_detail' record.pk %}'"
-            },
-            {
-                "extra_class": "btn-info",
-                "gl_icon": "pencil",
-                "onclick": "location.href='{% url 'supplier_edit' record.pk %}'"
-            },
-            {
-                "extra_class": "btn-danger",
-                "gl_icon": "trash",
-                "onclick": "location.href='{% url 'supplier_delete' record.pk %}'"
-            }
-        ],
+    name = ModelDetailLinkColumn(accessor='name')
+    edit_supplier = IncludeColumn(
+        'crm_core/includes/supplier_row_edit_toolbar.html',
         attrs={"th": {"width": "120px"}},
         verbose_name=" ",
         orderable=False
@@ -185,30 +124,16 @@ class SupplierTable(tables.Table):
         model = Supplier
         exclude = ('id', 'billingcycle', 'prefix', 'dateofcreation', 'lastmodification', 'lastmodifiedby',
                    'contact_ptr')
-        sequence = ('name_prefix', 'name', 'default_currency')
+        sequence = ('name', 'default_currency')
+        order_by = ('name', )
 
 
 class ProductTable(tables.Table):
-    product = tables.Column(accessor='get_product_number', orderable=False, verbose_name=_('Prefix'))
-    price = tables.Column(accessor='get_price', orderable=False, verbose_name=_('Price'))
-    edit_customer = ButtonsColumn(
-        [
-            {
-                "extra_class": "btn-default",
-                "gl_icon": "search",
-                "onclick": "location.href='{% url 'product_detail' record.pk %}'"
-            },
-            {
-                "extra_class": "btn-info",
-                "gl_icon": "pencil",
-                "onclick": "location.href='{% url 'product_edit' record.pk %}'"
-            },
-            {
-                "extra_class": "btn-danger",
-                "gl_icon": "trash",
-                "onclick": "location.href='{% url 'product_delete' record.pk %}'"
-            }
-        ],
+    product = tables.TemplateColumn("<a href='{{ record.get_absolute_url }}'>{{ record.get_product_number }}</a>",
+                                    accessor='product_number', verbose_name="#")
+    price = tables.TemplateColumn("{{ record.get_price }}", accessor='prices.price', verbose_name=_('Price'))
+    edit_product = IncludeColumn(
+        'crm_core/includes/product_row_edit_toolbar.html',
         attrs={"th": {"width": "120px"}},
         verbose_name=" ",
         orderable=False
@@ -218,23 +143,12 @@ class ProductTable(tables.Table):
         model = Product
         exclude = ('id', 'item_category', 'item_prefix', 'dateofcreation', 'lastmodification', 'lastmodifiedby',
                    'product_number', 'productitem_ptr')
-        sequence = ('product', 'item_title', 'item_description', 'price')
+        sequence = ('product', 'item_title', 'item_description', 'item_unit', 'price', 'item_tax')
 
 
 class TaxTable(tables.Table):
-    edit_tax = ButtonsColumn(
-        [
-            {
-                "extra_class": "btn-info",
-                "gl_icon": "pencil",
-                "onclick": "location.href='{% url 'tax_edit' record.pk %}'"
-            },
-            {
-                "extra_class": "btn-danger",
-                "gl_icon": "trash",
-                "onclick": "location.href='{% url 'tax_delete' record.pk %}'"
-            }
-        ],
+    edit_tax = IncludeColumn(
+        'crm_core/includes/tax_row_edit_toolbar.html',
         attrs={"th": {"width": "90px"}},
         verbose_name=" ",
         orderable=False
@@ -246,19 +160,8 @@ class TaxTable(tables.Table):
 
 
 class BillingCycleTable(tables.Table):
-    edit_billingcycle = ButtonsColumn(
-        [
-            {
-                "extra_class": "btn-info",
-                "gl_icon": "pencil",
-                "onclick": "location.href='{% url 'customerbillingcycle_edit' record.pk %}'"
-            },
-            {
-                "extra_class": "btn-danger",
-                "gl_icon": "trash",
-                "onclick": "location.href='{% url 'customerbillingcycle_delete' record.pk %}'"
-            }
-        ],
+    edit_billingcycle = IncludeColumn(
+        'crm_core/includes/billingcycle_row_edit_toolbar.html',
         attrs={"th": {"width": "90px"}},
         verbose_name=" ",
         orderable=False
@@ -270,19 +173,8 @@ class BillingCycleTable(tables.Table):
 
 
 class UnitTable(tables.Table):
-    edit_unit = ButtonsColumn(
-        [
-            {
-                "extra_class": "btn-info",
-                "gl_icon": "pencil",
-                "onclick": "location.href='{% url 'unit_edit' record.pk %}'"
-            },
-            {
-                "extra_class": "btn-danger",
-                "gl_icon": "trash",
-                "onclick": "location.href='{% url 'unit_delete' record.pk %}'"
-            }
-        ],
+    edit_unit = IncludeColumn(
+        'crm_core/includes/unit_row_edit_toolbar.html',
         attrs={"th": {"width": "90px"}},
         verbose_name=" ",
         orderable=False
@@ -294,19 +186,8 @@ class UnitTable(tables.Table):
 
 
 class ProductCategoryTable(tables.Table):
-    edit_productcategory = ButtonsColumn(
-        [
-            {
-                "extra_class": "btn-info",
-                "gl_icon": "pencil",
-                "onclick": "location.href='{% url 'productcategory_edit' record.pk %}'"
-            },
-            {
-                "extra_class": "btn-danger",
-                "gl_icon": "trash",
-                "onclick": "location.href='{% url 'productcategory_delete' record.pk %}'"
-            }
-        ],
+    edit_productcategory = IncludeColumn(
+        'crm_core/includes/productcategory_row_edit_toolbar.html',
         attrs={"th": {"width": "90px"}},
         verbose_name=" ",
         orderable=False
@@ -318,19 +199,8 @@ class ProductCategoryTable(tables.Table):
 
 
 class CustomerGroupTable(tables.Table):
-    edit_customergroup = ButtonsColumn(
-        [
-            {
-                "extra_class": "btn-info",
-                "gl_icon": "pencil",
-                "onclick": "location.href='{% url 'customergroup_edit' record.pk %}'"
-            },
-            {
-                "extra_class": "btn-danger",
-                "gl_icon": "trash",
-                "onclick": "location.href='{% url 'customergroup_delete' record.pk %}'"
-            }
-        ],
+    edit_customergroup = IncludeColumn(
+        'crm_core/includes/customergroup_row_edit_toolbar.html',
         attrs={"th": {"width": "90px"}},
         verbose_name=" ",
         orderable=False

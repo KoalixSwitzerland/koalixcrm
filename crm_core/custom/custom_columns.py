@@ -3,12 +3,13 @@ import django_tables2 as tables
 
 class ButtonColumn(tables.TemplateColumn):
 
-    def __init__(self, text="", onclick="location.href='#'", gl_icon=None, extra_class="btn-default", **extra):
+    def __init__(self, text="", onclick="location.href='#'", title="", gl_icon=None, extra_class="btn-default", **extra):
         glyph_icon = ""
         if gl_icon:
             glyph_icon = "<span class='glyphicon glyphicon-%s' aria-hidden='true'></span> " % gl_icon
-        extra['template_code'] = """<button type="button" class="btn btn-sm %s pull-right" onclick="%s">%s%s</button>""" \
-                                 % (extra_class, onclick, glyph_icon, text)
+        extra['template_code'] = """<button type="button" class="btn btn-sm %s pull-right" onclick="%s" title="%s"
+                data-toggle="tooltip" data-placement="top">%s%s</button>""" \
+                                 % (extra_class, onclick, title, glyph_icon, text)
         super(ButtonColumn, self).__init__(**extra)
 
 
@@ -30,6 +31,8 @@ class ModelDetailLinkColumn(tables.TemplateColumn):
 
     def __init__(self, **extra):
         extra['template_code'] = """<a href="{{ record.get_absolute_url }}">{{ record }}</a>"""
+        if 'accessor' not in extra:
+            extra['accessor'] = "id"
         super(ModelDetailLinkColumn, self).__init__(**extra)
 
 
@@ -65,3 +68,10 @@ class ButtonsColumn(tables.TemplateColumn):
         html_code += """</div>"""
         extra['template_code'] = html_code
         super(ButtonsColumn, self).__init__(**extra)
+
+
+class IncludeColumn(tables.TemplateColumn):
+
+    def __init__(self, include_name, **extra):
+        extra['template_code'] = "{% include '" + include_name + "' %}"
+        super(IncludeColumn, self).__init__(**extra)

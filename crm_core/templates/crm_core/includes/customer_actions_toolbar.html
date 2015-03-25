@@ -1,1 +1,6 @@
-<button class="btn btn-success" onclick="location.href='{% url 'customer_create_contract' customer.pk %}'"><span class="glyphicon glyphicon-star"></span></button>
+{% load i18n %}
+
+<button class="btn btn-success" onclick="location.href=
+        '{% url 'customer_create_contract' customer.pk %}'" title="{% trans 'Create Contract' %}"
+        data-toggle="tooltip" data-placement="top">
+    <span class="glyphicon glyphicon-star"></span></button>

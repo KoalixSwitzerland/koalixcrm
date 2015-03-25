@@ -1,0 +1,16 @@
+{% load i18n %}
+
+<div class="btn-group btn-group-sm" role="group">
+    {% if perms.crm_core.edit_productcategory %}
+        <button class="btn btn-info" onclick="location.href=
+                '{% url 'productcategory_edit' record.pk %}'" title="{% trans 'Edit Product Category' %}"
+                data-toggle="tooltip" data-placement="top">
+            <span class="glyphicon glyphicon-pencil"></span></button>
+    {% endif %}
+    {% if perms.crm_core.delete_productcategory %}
+        <button class="btn btn-danger" onclick="location.href=
+                '{% url 'productcategory_delete' record.pk %}'" title="{% trans 'Delete Product Category' %}"
+                data-toggle="tooltip" data-placement="top">
+            <span class="glyphicon glyphicon-trash"></span></button>
+    {% endif %}
+</div>

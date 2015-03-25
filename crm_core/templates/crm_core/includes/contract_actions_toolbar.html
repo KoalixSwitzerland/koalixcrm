@@ -1,9 +1,20 @@
+{% load i18n %}
+
     {% if not contract.has_quotes and not contract.has_purchaseorders %}
-    <button class="btn btn-primary" onclick="location.href='{% url 'contract_create_quote' contract.pk %}'"><span class="glyphicon glyphicon-list-alt"></span></button>
+    <button class="btn btn-primary" onclick="location.href=
+            '{% url 'contract_create_quote' contract.pk %}'" title="{% trans 'Create Quote' %}"
+            data-toggle="tooltip" data-placement="top">
+        <span class="glyphicon glyphicon-list-alt"></span></button>
     {% endif %}
     {% if not contract.has_purchaseorders and not contract.has_invoices %}
-        <button class="btn btn-success" onclick="location.href='{% url 'contract_create_purchaseorder' contract.pk %}'"><span class="glyphicon glyphicon-shopping-cart"></span></button>
+        <button class="btn btn-success" onclick="location.href=
+                '{% url 'contract_create_purchaseorder' contract.pk %}'" title="{% trans 'Create Purchase Order' %}"
+                data-toggle="tooltip" data-placement="top">
+            <span class="glyphicon glyphicon-shopping-cart"></span></button>
     {% endif %}
-    {% if not contract.has_invoices and contract.has_purchaseorders or contract.has_quotes %}
-        <button class="btn btn-warning" onclick="location.href='{% url 'contract_create_invoice' contract.pk %}'"><span class="glyphicon glyphicon-usd"></span></button>
+    {% if contract.has_purchaseorders and not contract.has_invoices %}
+        <button class="btn btn-warning" onclick="location.href=
+                '{% url 'contract_create_invoice' contract.pk %}'"  title="{% trans 'Create Invoice' %}"
+                data-toggle="tooltip" data-placement="top">
+            <span class="glyphicon glyphicon-usd"></span></button>
     {% endif %}

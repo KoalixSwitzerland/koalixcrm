@@ -18,6 +18,17 @@
     {% if product %}{% trans "Edit product" %}{% else %}{% trans "Create product" %}{% endif%}
 {% endblock %}
 
+{% block main_toolbar %}
+    <button type='submit' class='btn btn-primary'>
+        {% trans "Save" %}
+    </button>
+
+    <button type="button" class="btn btn-default"
+            onclick="window.location.assign('{% url 'product_list' %}')">
+        {% trans "Cancel" %}
+    </button>
+{% endblock %}
+
 {% block main_inner %}
     {% bootstrap_form form layout='horizontal' %}
 {% endblock %}

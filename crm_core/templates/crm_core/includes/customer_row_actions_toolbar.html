@@ -1,0 +1,8 @@
+{% load i18n %}
+
+<div class="btn-group btn-group-sm" role="group">
+        <button class="btn btn-success btn-sm" onclick="location.href=
+                '{% url 'customer_create_contract' record.pk %}'" title="{% trans 'Create Contract' %}"
+                data-toggle="tooltip" data-placement="top">
+            <span class="glyphicon glyphicon-star"></span></button>
+</div>

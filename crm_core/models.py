@@ -1,21 +1,24 @@
 # -*- coding: utf-8 -*-
 
-from datetime import date, timedelta, datetime
+from datetime import date, timedelta
 from decimal import Decimal
 from django.conf import settings
-from django.db import models
+from django.db import models, transaction
+from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
+from django.core.urlresolvers import reverse
 from filebrowser_safe.fields import FileBrowseField
 from django_fsm import FSMIntegerField
 from mezzanine.core.models import Displayable
 from os import path
+import reversion
 from weasyprint import HTML
 from international.models import countries, currencies, countries_raw
 from const.postaladdressprefix import PostalAddressPrefix
 from const.purpose import PhoneAddressPurpose, PostalAddressPurpose, EmailAddressPurpose
-from const.states import InvoiceStatesEnum, PurchaseOrderStatesEnum, QuoteStatesEnum, InvoiceStatesLabelEnum, \
-    QuoteStatesLabelEnum, PurchaseOrderStatesLabelEnum, ContractStatesEnum, ContractStatesLabelEnum
+from const.states import ContractStatesEnum, ContractStatesLabelEnum
 from django_extensions.db.fields import CreationDateTimeField, ModificationDateTimeField
+from django.apps import apps as django_apps
 
 
 # ######################
@@ -168,8 +171,7 @@ class Customer(Contact):
         )
 
     def get_absolute_url(self):
-        url = '/customers/detail/' + str(self.pk)  # TODO: Bad solution
-        return url
+        return reverse('customer_detail', args=[str(self.id)])
 
     def create_contract(self, request):
         contract = Contract()
@@ -271,8 +273,7 @@ class Supplier(Contact):
         )
 
     def get_absolute_url(self):
-        url = '/suppliers/detail/' + str(self.pk)  # TODO: Bad solution
-        return url
+        return reverse('supplier_detail', args=[str(self.id)])
 
     def __unicode__(self):
         if self.prefix:
@@ -386,20 +387,19 @@ class Contract(models.Model):
         return self.invoices.latest().get_absolute_url()
 
     def has_quotes(self):
-        return self.quotes.count() > 0
+        return bool(self.quotes.count() > 0)
 
     def has_purchaseorders(self):
-        return self.purchaseorders.count() > 0
+        return bool(self.purchaseorders.count() > 0)
 
     def has_invoices(self):
-        return self.invoices.count() > 0
+        return bool(self.invoices.count() > 0)
 
     def __unicode__(self):
         return self.get_name()
 
 
 class PurchaseOrder(models.Model):
-    state = FSMIntegerField(default=PurchaseOrderStatesEnum.New, choices=PurchaseOrderStatesEnum.choices)
     contract = models.ForeignKey(Contract, verbose_name=_("Contract"), related_name='purchaseorders')
     customer = models.ForeignKey(Customer, verbose_name=_("Customer"))
     external_reference = models.CharField(verbose_name=_("External Reference"), max_length=100, blank=True, null=True)
@@ -419,6 +419,7 @@ class PurchaseOrder(models.Model):
                                        verbose_name=_("Last modified by"), related_name="db_polstmodified", null=True,
                                        blank=True)
     derived_from_quote = models.ForeignKey('Quote', related_name='purchaseorders', null=True, blank=True)
+    pdf_path = models.CharField(max_length=200, null=True, blank=True, editable=False)
 
     class Meta():
         verbose_name = _('Purchase Order')
@@ -462,27 +463,25 @@ class PurchaseOrder(models.Model):
             exit()
             return 0
 
-    def create_pdf(self, html):
-        HTML(html).write_pdf(target=path.normpath('%s/%s/uploads/pdf/purchaseorders/purchaseorder-%s_%s.pdf'
-                                                  % (settings.PROJECT_ROOT, settings.MEDIA_URL, self.pk,
-                                                     datetime.now().strftime('%d%m%Y_%H%M%S'))))
+    def to_html(self):
+        return render_to_string('pdf_templates/purchaseorder.html', {'purchaseorder': self})
 
-    def get_state(self):
-        return PurchaseOrderStatesEnum.choices[self.state]
-
-    def get_state_class(self):
-        return PurchaseOrderStatesLabelEnum.choices[self.state]
+    def create_pdf(self):
+        html = self.to_html()
+        pth = path.normpath('%s/%s/uploads/pdf/purchaseorders/purchaseorder-%s.pdf' % (
+            settings.PROJECT_ROOT, settings.MEDIA_URL, self.pk))
+        self.pdf_path = pth
+        HTML(string=html, encoding="utf8").write_pdf(target=pth)
 
     def get_absolute_url(self):
-        url = '/purchaseorders/edit/' + str(self.pk)  # TODO: Bad solution
-        return url
+        return reverse('purchaseorder_edit', args=[str(self.id)])
 
     def get_document_url(self):
-        url = '/purchaseorders/view/' + str(self.pk)  # TODO: Bad solution
-        return url
+        return reverse('purchaseorder_detail', args=[str(self.id)])
 
     def save(self, *args, **kwargs):
-        self.recalculate_prices(date.today())
+        # self.recalculate_prices(date.today())
+        self.create_pdf()
         super(PurchaseOrder, self).save(*args, **kwargs)
 
     def __unicode__(self):
@@ -508,6 +507,7 @@ class SalesContract(models.Model):
     lastmodifiedby = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True},
                                        verbose_name=_("Last modified by"), related_name="db_lstscmodified", null=True,
                                        blank="True", editable=False)
+    pdf_path = models.CharField(max_length=200, null=True, blank=True, editable=False)
 
     def recalculate_prices(self, pricing_date):
         price = 0
@@ -546,7 +546,6 @@ class SalesContract(models.Model):
 
 class Quote(SalesContract):
     contract = models.ForeignKey(Contract, verbose_name=_('Contract'), related_name='quotes')
-    state = FSMIntegerField(default=QuoteStatesEnum.New, choices=QuoteStatesEnum.choices, editable=False)
     validuntil = models.DateField(verbose_name=_("Valid until"))
 
     class Meta():
@@ -572,7 +571,6 @@ class Quote(SalesContract):
         invoice.dateofcreation = date.today().__str__()
         invoice.customerBillingCycle = self.customer.billingcycle
         invoice.save()
-        self.state = QuoteStatesEnum.Quote_sent
         self.save()
         try:
             quote_positions = SalesContractPosition.objects.filter(contract=self.id)
@@ -601,45 +599,51 @@ class Quote(SalesContract):
 
     def create_purchase_order(self):
         purchase_order = self.contract.create_purchase_order()
-        self.state = QuoteStatesEnum.Purchaseorder_created
         self.save()
         return purchase_order
 
-    def create_pdf(self, html):
-        HTML(string=html, encoding="utf8").write_pdf(target=path.normpath('%s/%s/uploads/pdf/quotes/quote-%s_%s.pdf'
-                                                  % (settings.PROJECT_ROOT, settings.MEDIA_URL, self.pk,
-                                                     datetime.now().strftime('%d%m%Y_%H%M%S'))))
+    def to_html(self):
+        return render_to_string('pdf_templates/quote.html', {'quote': self})
 
-    def get_state(self):
-        return QuoteStatesEnum.choices[self.state]
-
-    def get_state_class(self):
-        return QuoteStatesLabelEnum.choices[self.state]
+    def create_pdf(self):
+        html = self.to_html()
+        pth = path.normpath('%s/%s/uploads/pdf/quotes/quote-%s.pdf' % (
+            settings.PROJECT_ROOT, settings.MEDIA_URL, self.pk))
+        self.pdf_path = pth
+        HTML(string=html, encoding="utf8").write_pdf(target=pth)
 
     def get_absolute_url(self):
-        url = '/quotes/edit/' + str(self.pk)  # TODO: Bad solution
-        return url
+        return reverse('quote_edit', args=[str(self.id)])
 
     def get_document_url(self):
-        url = '/quotes/view/' + str(self.pk)  # TODO: Bad solution
-        return url
+        return reverse('quote_detail', args=[str(self.id)])
 
     def __unicode__(self):
         return _('Quote') + ' #' + str(self.id)
 
+    @transaction.atomic()
+    @reversion.create_revision()
+    def save(self, *args, **kwargs):
+        self.create_pdf()
+        super(Quote, self).save(*args, **kwargs)
+
 
 class Invoice(SalesContract):
     contract = models.ForeignKey(Contract, verbose_name=_('Contract'), related_name='invoices')
-    state = FSMIntegerField(default=InvoiceStatesEnum.Open, choices=InvoiceStatesEnum.choices, editable=False)
     payableuntil = models.DateField(verbose_name=_("To pay until"))
     derived_from_quote = models.ForeignKey(Quote, blank=True, null=True, editable=False)
     payment_bank_reference = models.CharField(verbose_name=_("Payment Bank Reference"), max_length=100, blank=True,
                                               null=True)
 
-    def create_pdf(self, html):
-        HTML(html).write_pdf(target=path.normpath('%s/%s/uploads/pdf/invoices/invoice-%s_%s.pdf'
-                                                  % (settings.PROJECT_ROOT, settings.MEDIA_URL, self.pk,
-                                                     datetime.now().strftime('%d%m%Y_%H%M%S'))))
+    def to_html(self):
+        return render_to_string('pdf_templates/invoice.html', {'invoice': self})
+
+    def create_pdf(self):
+        html = self.to_html()
+        pth = path.normpath('%s/%s/uploads/pdf/invoices/invoice-%s.pdf' % (
+            settings.PROJECT_ROOT, settings.MEDIA_URL, self.pk))
+        self.pdf_path = pth
+        HTML(string=html, encoding="utf8").write_pdf(target=pth)
 
     class Meta():
         verbose_name = _('Invoice')
@@ -649,22 +653,18 @@ class Invoice(SalesContract):
         )
         get_latest_by = 'lastmodification'
 
-    def get_state(self):
-        return InvoiceStatesEnum.choices[self.state]
-
-    def get_state_class(self):
-        return InvoiceStatesLabelEnum.choices[self.state]
-
     def get_absolute_url(self):
-        url = '/invoices/edit/' + str(self.pk)  # TODO: Bad solution
-        return url
+        return reverse('invoice_edit', args=[str(self.id)])
 
     def get_document_url(self):
-        url = '/invoices/view/' + str(self.pk)  # TODO: Bad solution
-        return url
+        return reverse('invoice_detail', args=[str(self.id)])
 
     def __unicode__(self):
         return _("Invoice") + " #" + str(self.id)
+
+    def save(self, *args, **kwargs):
+        self.create_pdf()
+        super(Invoice, self).save(*args, **kwargs)
 
 
 class Unit(models.Model):
@@ -739,15 +739,23 @@ class Product(ProductItem):
             ('view_product', 'Can view products'),
         )
 
+    def to_cartridge_product(self):
+        if django_apps.is_installed('cartridge'):
+            from cartridge.shop import models
+            cart_prod = models.Product()
+            cart_prod.description = self.item_description
+            cart_prod.save()
+
     def get_product_number(self):
         return "%s%s" % (self.item_prefix, self.product_number)
 
     def get_absolute_url(self):
-        url = '/products/detail/' + str(self.pk)  # TODO: Bad solution
-        return url
+        return reverse('product_detail', args=[str(self.id)])
 
-    def get_price(self, date, unit, customer, currency):
+    def get_price(self):
         prices = Price.objects.filter(product=self.id)
+        # if not len(prices) > 0:
+        return 0
         unit_transforms = UnitTransform.objects.filter(product=self.id)
         customer_group_transforms = CustomerGroupTransform.objects.filter(product=self.id)
         validpriceslist = list()
@@ -783,6 +791,10 @@ class Product(ProductItem):
 
     def get_tax_rate(self):
         return self.item_tax.gettaxrate()
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        # self.to_cartridge_product()
+        super(Product, self).save(force_insert, force_update, using, update_fields)
 
     def __unicode__(self):
         return '%s (#%s)' % (self.item_title, str(self.product_number))
@@ -844,7 +856,7 @@ class CustomerGroupTransform(models.Model):
 
 
 class Price(models.Model):
-    product = models.ForeignKey(Product, verbose_name=_("Product"))
+    product = models.ForeignKey(Product, verbose_name=_("Product"), related_name="prices")
     unit = models.ForeignKey(Unit, blank=False, verbose_name=_("Unit"))
     currency = models.CharField(max_length=3, choices=currencies, blank=False, null=False, verbose_name='Currency')
     customer_group = models.ForeignKey(CustomerGroup, blank=True, null=True, verbose_name=_("Customer Group"))
@@ -890,6 +902,7 @@ class Price(models.Model):
     class Meta():
         verbose_name = _('Price')
         verbose_name_plural = _('Prices')
+        get_latest_by = 'id'
 
 
 class Position(models.Model):
@@ -964,13 +977,13 @@ class PurchaseOrderPosition(Position):
         return _("Purchaseorder Position") + ": " + str(self.id)
 
 
-class XSLFile(models.Model):
+class HTMLFile(models.Model):
     title = models.CharField(verbose_name=_("Title"), max_length=100, blank=True, null=True)
-    xslfile = FileBrowseField(verbose_name=_("XSL File"), max_length=200)
+    file = FileBrowseField(verbose_name=_("HTML File"), max_length=200)
 
     class Meta():
-        verbose_name = _('XSL File')
-        verbose_name_plural = _('XSL Files')
+        verbose_name = _('HTML File')
+        verbose_name_plural = _('HTML Files')
 
     def __unicode__(self):
         return self.title
@@ -979,26 +992,16 @@ class XSLFile(models.Model):
 class TemplateSet(models.Model):
     organisationname = models.CharField(verbose_name=_("Name of the Organisation"), max_length=200)
     title = models.CharField(verbose_name=_("Title"), max_length=100)
-    invoice_xsl_file = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Invoice"),
-                                         related_name="db_reltemplateinvoice")
-    quote_xsl_file = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Quote"),
-                                       related_name="db_reltemplatequote")
-    purchaseorder_xsl_file = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Purchaseorder"),
-                                               related_name="db_reltemplatepurchaseorder")
-    purchaseconfirmation_xsl_file = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Purchase Confirmation"),
-                                                      related_name="db_reltemplatepurchaseconfirmation")
-    deilveryorder_xsl_file = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Deilvery Order"),
-                                               related_name="db_reltemplatedeliveryorder")
-    profit_loss_statement_xsl_file = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Profit Loss Statement"),
-                                                       related_name="db_reltemplateprofitlossstatement")
-    balancesheet_xsl_file = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Balancesheet"),
-                                              related_name="db_reltemplatebalancesheet")
+    invoice_html_file = models.ForeignKey(HTMLFile, verbose_name=_("HTML File for Invoice"),
+                                          related_name="invoice_template",
+                                          default="pdf_templates/invoice.html")
+    quote_html_file = models.ForeignKey(HTMLFile, verbose_name=_("HTML File for Quote"), related_name="quote_template",
+                                        default="pdf_templates/quote.html")
+    purchaseorder_html_file = models.ForeignKey(HTMLFile, verbose_name=_("HTML File for Purchaseorder"),
+                                                related_name="purchaseorder_template",
+                                                default="pdf_templates/purchaseorder.html")
     logo = FileBrowseField(verbose_name=_("Logo"), blank=True, null=True, max_length=200)
-    bankingaccountref = models.CharField(max_length=60, verbose_name=_("Reference to Banking Account"), blank=True,
-                                         null=True)
     addresser = models.CharField(max_length=200, verbose_name=_("Addresser"), blank=True, null=True)
-    fop_configuration_file = FileBrowseField(verbose_name=_("FOP Configuration File"), blank=True, null=True,
-                                             max_length=200)
     footer_text_salesorders = models.TextField(verbose_name=_("Footer Text On Salesorders"), blank=True, null=True)
     header_text_salesorders = models.TextField(verbose_name=_("Header Text On Salesorders"), blank=True, null=True)
     header_text_purchaseorders = models.TextField(verbose_name=_("Header Text On Purchaseorders"), blank=True,

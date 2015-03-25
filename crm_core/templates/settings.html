@@ -38,7 +38,9 @@
                         {% trans 'Tax Rates' %}</h4>
                     <td>
                     {% if perms.crm_core.add_taxrate %}
-                        <button class="btn btn-success" onclick="location.href='{% url 'tax_create' %}'"><span class="glyphicon glyphicon-plus"></span></button>
+                        <button class="btn btn-success" onclick="location.href='{% url 'tax_create' %}'"
+                                title="{% trans 'Create Taxrate' %}" data-toggle="tooltip" data-placement="top">
+                            <span class="glyphicon glyphicon-plus"></span></button>
                     {% endif %}
                     </td>
                 </tr>
@@ -60,7 +62,9 @@
                         {% trans 'Billing Cycles' %}</h4>
                     <td>
                     {% if perms.crm_core.add_customerbillingcycle %}
-                        <button class="btn btn-success" onclick="location.href='{% url 'customerbillingcycle_create' %}'"><span class="glyphicon glyphicon-plus"></span></button>
+                        <button class="btn btn-success" onclick="location.href='{% url 'customerbillingcycle_create' %}'"
+                                title="{% trans 'Create Billing Cycle' %}" data-toggle="tooltip" data-placement="top">
+                            <span class="glyphicon glyphicon-plus"></span></button>
                     {% endif %}
                     </td>
                 </tr>
@@ -82,7 +86,9 @@
                         {% trans 'Units' %}</h4>
                     <td>
                     {% if perms.crm_core.add_unit %}
-                        <button class="btn btn-success" onclick="location.href='{% url 'unit_create' %}'"><span class="glyphicon glyphicon-plus"></span></button>
+                        <button class="btn btn-success" onclick="location.href='{% url 'unit_create' %}'"
+                                title="{% trans 'Create Unit' %}" data-toggle="tooltip" data-placement="top">
+                            <span class="glyphicon glyphicon-plus"></span></button>
                     {% endif %}
                     </td>
                 </tr>
@@ -104,7 +110,9 @@
                         {% trans 'Product Categories' %}</h4>
                     <td>
                     {% if perms.crm_core.add_productcategory %}
-                        <button class="btn btn-success" onclick="location.href='{% url 'productcategory_create' %}'"><span class="glyphicon glyphicon-plus"></span></button>
+                        <button class="btn btn-success" onclick="location.href='{% url 'productcategory_create' %}'"
+                                title="{% trans 'Create Product Category' %}" data-toggle="tooltip" data-placement="top">
+                            <span class="glyphicon glyphicon-plus"></span></button>
                     {% endif %}
                     </td>
                 </tr>
@@ -126,7 +134,9 @@
                         {% trans 'Customer Groups' %}</h4>
                     <td>
                     {% if perms.crm_core.add_customergroup %}
-                        <button class="btn btn-success" onclick="location.href='{% url 'customergroup_create' %}'"><span class="glyphicon glyphicon-plus"></span></button>
+                        <button class="btn btn-success" onclick="location.href='{% url 'customergroup_create' %}'"
+                                title="{% trans 'Create Customer Group' %}" data-toggle="tooltip" data-placement="top">
+                            <span class="glyphicon glyphicon-plus"></span></button>
                     {% endif %}
                     </td>
                 </tr>
@@ -137,4 +147,12 @@
             {% render_table customergrouptable "tables2/bootstrapped-tables2.html" %}
         </div>
     </div>
+{% endblock %}
+
+{% block extrascript %}
+    <script>
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip()
+    })
+    </script>
 {% endblock %}

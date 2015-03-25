@@ -1,9 +1,20 @@
+{% load i18n %}
+
     {% if perms.crm_core.add_product %}
-        <button class="btn btn-default" onclick="location.href='{% url 'product_create' %}'"><span class="glyphicon glyphicon-plus"></span></button>
+        <button class="btn btn-default" onclick="location.href=
+                '{% url 'product_create' %}'" title="{% trans 'Create Product' %}"
+                data-toggle="tooltip" data-placement="top">
+            <span class="glyphicon glyphicon-plus"></span></button>
     {% endif %}
     {% if perms.crm_core.edit_product %}
-        <button class="btn btn-info" onclick="location.href='{% url 'product_edit' product.pk %}'"><span class="glyphicon glyphicon-pencil"></span></button>
+        <button class="btn btn-info" onclick="location.href=
+                '{% url 'product_edit' product.pk %}'" title="{% trans 'Edit Product' %}"
+                data-toggle="tooltip" data-placement="top">
+            <span class="glyphicon glyphicon-pencil"></span></button>
     {% endif %}
     {% if perms.crm_core.delete_product %}
-        <button class="btn btn-danger" onclick="location.href='{% url 'product_delete' product.pk %}'"><span class="glyphicon glyphicon-trash"></span></button>
+        <button class="btn btn-danger" onclick="location.href=
+                '{% url 'product_delete' product.pk %}'" title="{% trans 'Delete Product' %}"
+                data-toggle="tooltip" data-placement="top">
+            <span class="glyphicon glyphicon-trash"></span></button>
     {% endif %}
