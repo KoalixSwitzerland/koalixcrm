@@ -1,0 +1,16 @@
+{% load i18n %}
+
+<div class="btn-group btn-group-sm" role="group">
+    {% if perms.crm_core.edit_unit %}
+        <button class="btn btn-info" onclick="location.href=
+                '{% url 'unit_edit' record.pk %}'" title="{% trans 'Edit Unit' %}"
+                data-toggle="tooltip" data-placement="top">
+            <span class="glyphicon glyphicon-pencil"></span></button>
+    {% endif %}
+    {% if perms.crm_core.delete_unit %}
+        <button class="btn btn-danger" onclick="location.href=
+                '{% url 'unit_delete' record.pk %}'" title="{% trans 'Delete Unit' %}"
+                data-toggle="tooltip" data-placement="top">
+            <span class="glyphicon glyphicon-trash"></span></button>
+    {% endif %}
+</div>

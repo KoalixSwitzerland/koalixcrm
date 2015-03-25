@@ -19,8 +19,10 @@
 {% endblock %}
 
 {% block main_toolbar %}
-    {% if perms.crm_core.add_product %}
-        <button class="btn btn-success" onclick="location.href='{% url 'contract_create' %}'"><span class="glyphicon glyphicon-plus"></span></button>
+    {% if perms.crm_core.add_contract %}
+        <button class="btn btn-success" onclick="location.href='{% url 'contract_create' %}'"
+                title="{% trans 'Create Contract' %}" data-toggle="tooltip" data-placement="top">
+            <span class="glyphicon glyphicon-plus"></span></button>
     {% endif %}
 {% endblock %}
 

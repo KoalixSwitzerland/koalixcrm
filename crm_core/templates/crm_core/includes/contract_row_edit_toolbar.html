@@ -1,0 +1,22 @@
+{% load i18n %}
+
+<div class="btn-group btn-group-sm" role="group">
+    {% if perms.crm_core.view_contract %}
+        <button class="btn btn-default" onclick="location.href=
+                '{% url 'contract_detail' record.pk %}'" title="{% trans 'View Contract' %}"
+                data-toggle="tooltip" data-placement="top">
+            <span class="glyphicon glyphicon-search"></span></button>
+    {% endif %}
+    {% if perms.crm_core.edit_contract %}
+        <button class="btn btn-info" onclick="location.href=
+                '{% url 'contract_edit' record.pk %}'" title="{% trans 'Edit Contract' %}"
+                data-toggle="tooltip" data-placement="top">
+            <span class="glyphicon glyphicon-pencil"></span></button>
+    {% endif %}
+    {% if perms.crm_core.delete_contract %}
+        <button class="btn btn-danger" onclick="location.href=
+                '{% url 'contract_delete' record.pk %}'" title="{% trans 'Delete Contract' %}"
+                data-toggle="tooltip" data-placement="top">
+            <span class="glyphicon glyphicon-trash"></span></button>
+    {% endif %}
+</div>

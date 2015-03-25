@@ -20,7 +20,9 @@
 
 {% block main_toolbar %}
     {% if perms.crm_core.add_product %}
-        <button class="btn btn-success" onclick="location.href='{% url 'product_create' %}'"><span class="glyphicon glyphicon-plus"></span></button>
+        <button class="btn btn-success" onclick="location.href='{% url 'product_create' %}'"
+                title="{% trans 'Create Product' %}" data-toggle="tooltip" data-placement="top">
+            <span class="glyphicon glyphicon-plus"></span></button>
     {% endif %}
 {% endblock %}
 
