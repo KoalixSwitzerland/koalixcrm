@@ -1,30 +1,24 @@
-{% extends "base/main_section_base.html" %}
+{% extends "base/form_view_base.html" %}
 {% load i18n bootstrap3 %}
 
-{% block meta_title %}{% trans "Billing Cycle" %}{% endblock %}
-{% block title %}{% trans "Billing Cycle" %}{% endblock %}
+{% block meta_title %}
+    {% trans "Billing Cycle" %}
+{% endblock %}
+
+{% block title %}
+    {% trans "Billing Cycle" %}
+{% endblock %}
 
 {% block breadcrumb_menu %}
     <li class="active"><a href="{% url 'settings' %}">{% trans "Settings" %}</a></li>
     <li class="active">{% if billingcycle %}{% trans "Edit billing cycle" %}{% else %}{% trans "Create billing cycle" %}{% endif%}</li>
 {% endblock %}
 
-{% block rightbar %}
+{% block main_header %}
+    {% if billingcycle %}{% trans "Edit billing cycle" %}{% else %}{% trans "Create billing cycle" %}{% endif%}
 {% endblock %}
 
-{% block main %}
-    <div class="form-panel" style="margin: 30px">
-    <h4 class="mb"><i class="fa fa-angle-right"></i>
-    {% if billingcycle %}{% trans "Edit billing cycle" %}{% else %}{% trans "Create billing cycle" %}{% endif%}</h4>
-    <form method="POST" action="" class="form form-horizontal" style="margin: 30px;">
-    {% csrf_token %}
-
-    <div class="row well">
-        <div style="margin: 0 12px 0 12px;">
-    {% bootstrap_form form layout='horizontal' %}
-        </div>
-    </div>
-
+{% block main_toolbar %}
     <button type='submit' class='btn btn-primary'>
         {% trans "Save" %}
     </button>
@@ -33,7 +27,19 @@
             onclick="window.location.assign('{% url 'settings' %}')">
         {% trans "Cancel" %}
     </button>
+{% endblock %}
 
-    </form>
-    </div>
+{% block main_inner %}
+    {% bootstrap_form form layout='horizontal' %}
+{% endblock %}
+
+{% block main_footer %}
+    <button type='submit' class='btn btn-primary'>
+        {% trans "Save" %}
+    </button>
+
+    <button type="button" class="btn btn-default"
+            onclick="window.location.assign('{% url 'settings' %}')">
+        {% trans "Cancel" %}
+    </button>
 {% endblock %}

@@ -12,7 +12,7 @@ class ContractTable(tables.Table):
                                              "{{ record.default_customer.short_name }}</a>",
                                              accessor='default_customer.name', verbose_name=_('Customer'))
     description = tables.Column()
-    price = tables.TemplateColumn("{{ record.get_price }}", accessor='prices.price', verbose_name=_('Price'))
+    price = tables.TemplateColumn("{{ record.get_price }}", accessor='get_price', verbose_name=_('Price'))
     lastmodification = tables.DateTimeColumn()
 
     quote = ButtonsColumn(
@@ -145,6 +145,7 @@ class ProductTable(tables.Table):
         exclude = ('id', 'item_category', 'item_prefix', 'dateofcreation', 'lastmodification', 'lastmodifiedby',
                    'product_number', 'productitem_ptr')
         sequence = ('product', 'item_title', 'item_description', 'item_unit', 'price', 'item_tax')
+        order_by = ('-product', )
 
 
 class TaxTable(tables.Table):
