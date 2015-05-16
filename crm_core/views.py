@@ -63,7 +63,7 @@ def show_dashboard(request):
     suppliercount = Supplier.objects.all().count()
     productcount = Product.objects.all().count()
     opencontracts = []
-    for contract in Contract.objects.exclude(state=ContractStatesEnum.Payed or ContractStatesEnum.Deleted):
+    for contract in Contract.objects.exclude(state=20 or 100):
         if contract not in opencontracts:
             opencontracts.append(contract)
     template = loader.get_template('dashboard.html')
