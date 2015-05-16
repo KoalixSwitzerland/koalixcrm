@@ -14,9 +14,9 @@ from os import path
 import reversion
 from weasyprint import HTML
 from international.models import countries, currencies, countries_raw
-from const.postaladdressprefix import PostalAddressPrefix
-from const.purpose import PhoneAddressPurpose, PostalAddressPurpose, EmailAddressPurpose
-from const.states import ContractStatesEnum, ContractStatesLabelEnum
+from const.postaladdressprefix import POSTAL_ADDRESS_PREFIX_CHOICES
+from const.purpose import POSTAL_ADDRESS_PURPOSE_CHOICES, PHONE_ADDRESS_PURPOSE_CHOICES, EMAIL_ADDRESS_PURPOSE_CHOICES
+from const.states import CONTRACT_STATE_CHOICES, CONTRACT_LABEL_CLASS_CHOICES
 from django_extensions.db.fields import CreationDateTimeField, ModificationDateTimeField
 from django.apps import apps as django_apps
 
@@ -27,8 +27,8 @@ from django.apps import apps as django_apps
 
 
 class Contact(models.Model):
-    prefix = models.CharField(max_length=1, choices=PostalAddressPrefix.choices, verbose_name=_("Title"), blank=True,
-                              null=True)
+    prefix = models.CharField(max_length=1, choices=POSTAL_ADDRESS_PREFIX_CHOICES,
+                              verbose_name=_("Title"), blank=True, null=True)
     name = models.CharField(max_length=300, verbose_name=_("Name"))
     dateofcreation = CreationDateTimeField(verbose_name=_("Created at"))
     lastmodification = ModificationDateTimeField(verbose_name=_("Last modified"))
@@ -39,8 +39,20 @@ class Contact(models.Model):
     @property
     def get_prefix(self):
         if self.prefix:
-            return PostalAddressPrefix.choices[self.prefix]
+            for choice in PHONE_ADDRESS_PURPOSE_CHOICES:
+                if self.prefix == choice[0]:
+                    return choice[1]
         return ""
+
+    @transaction.atomic()
+    @reversion.create_revision()
+    def save(self, *args, **kwargs):
+        super(Contact, self).save(*args, **kwargs)
+
+    def __unicode__(self):
+        if self.prefix:
+            return "%s %s" % (self.get_prefix, self.name)
+        return self.name
 
 
 # #########################
@@ -52,7 +64,7 @@ class CustomerBillingCycle(models.Model):
     name = models.CharField(max_length=300, verbose_name=_("Name"))
     days_to_payment = models.IntegerField(verbose_name=_("Days to Payment Date"))
 
-    class Meta():
+    class Meta:
         verbose_name = _('Customer Billing Cycle')
         verbose_name_plural = _('Customer Billing Cycle')
         permissions = (
@@ -69,7 +81,7 @@ class CustomerGroup(models.Model):
     def __unicode__(self):
         return self.name
 
-    class Meta():
+    class Meta:
         verbose_name = _('Customer Group')
         verbose_name_plural = _('Customer Groups')
         permissions = (
@@ -84,11 +96,11 @@ class PostalAddress(models.Model):
     city = models.CharField(max_length=100, verbose_name=_("City"), blank=True, null=True)
     state = models.CharField(max_length=100, verbose_name=_("State"), blank=True, null=True)
     country = models.CharField(max_length=2, choices=countries, verbose_name=_("Country"), blank=True, null=True)
-    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PostalAddressPurpose.choices,
-                               default=PostalAddressPurpose.ContactAddress)
+    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=POSTAL_ADDRESS_PURPOSE_CHOICES,
+                               default='C')
     person = models.ForeignKey(Contact, related_name='addresses')
 
-    class Meta():
+    class Meta:
         verbose_name = _('Postal Address')
         verbose_name_plural = _('Postal Address')
         permissions = (
@@ -96,7 +108,10 @@ class PostalAddress(models.Model):
         )
 
     def get_purpose(self):
-        return PostalAddressPurpose.choices[self.purpose]
+        for purpose in POSTAL_ADDRESS_PURPOSE_CHOICES:
+            if self.purpose == purpose[0]:
+                return purpose[1]
+        return ""
 
     def get_country(self):
         return list(c[4].partition(',')[0].partition('(')[0].strip() for c in countries_raw if c[1] == self.country)[0]
@@ -117,11 +132,11 @@ class PostalAddress(models.Model):
 
 class PhoneAddress(models.Model):
     phone = models.CharField(max_length=20, verbose_name=_("Phone Number"))
-    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PhoneAddressPurpose.choices,
-                               default=PhoneAddressPurpose.Private)
+    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PHONE_ADDRESS_PURPOSE_CHOICES,
+                               default='H')
     person = models.ForeignKey(Contact, related_name='phonenumbers')
 
-    class Meta():
+    class Meta:
         verbose_name = _('Phone Address')
         verbose_name_plural = _('Phone Address')
         permissions = (
@@ -129,7 +144,10 @@ class PhoneAddress(models.Model):
         )
 
     def get_purpose(self):
-        return PhoneAddressPurpose.choices[self.purpose]
+        for purpose in PHONE_ADDRESS_PURPOSE_CHOICES:
+            if self.purpose == purpose[0]:
+                return purpose[1]
+        return ""
 
     def __unicode__(self):
         return "%s: %s" % (self.get_purpose(), self.phone)
@@ -137,11 +155,11 @@ class PhoneAddress(models.Model):
 
 class EmailAddress(models.Model):
     email = models.EmailField(max_length=200, verbose_name=_("Email Address"))
-    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=EmailAddressPurpose.choices,
-                               default=EmailAddressPurpose.Private)
+    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=EMAIL_ADDRESS_PURPOSE_CHOICES,
+                               default='H')
     person = models.ForeignKey(Contact, related_name='emailaddresses')
 
-    class Meta():
+    class Meta:
         verbose_name = _('Email Address')
         verbose_name_plural = _('Email Address')
         permissions = (
@@ -149,7 +167,10 @@ class EmailAddress(models.Model):
         )
 
     def get_purpose(self):
-        return EmailAddressPurpose.choices[self.purpose]
+        for purpose in EMAIL_ADDRESS_PURPOSE_CHOICES:
+            if self.purpose == purpose[0]:
+                return purpose[1]
+        return ""
 
     def __unicode__(self):
         return "%s: %s" % (self.get_purpose(), self.email)
@@ -165,7 +186,7 @@ class Customer(Contact):
     billingcycle = models.ForeignKey(CustomerBillingCycle, verbose_name=_('Default Billing Cycle'))
     ismemberof = models.ManyToManyField(CustomerGroup, verbose_name=_('Is member of'), blank=True, null=True)
 
-    class Meta():
+    class Meta:
         verbose_name = _('Customer')
         verbose_name_plural = _('Customers')
         permissions = (
@@ -186,53 +207,53 @@ class Customer(Contact):
 
     def get_invoice_address(self):
         for address in self.addresses.all():
-            if address.purpose == PostalAddressPurpose.BillingAddress:
+            if address.purpose == 'B':
                 return address
-            elif address.purpose == PostalAddressPurpose.DeliveryAddress:
+            elif address.purpose == 'D':
                 return address
-            elif address.purpose == PostalAddressPurpose.ContactAddress:
+            elif address.purpose == 'C':
                 return address
         return "No Address"
 
     def get_quote_address(self):
         for address in self.addresses.all():
-            if address.purpose == PostalAddressPurpose.BillingAddress:
+            if address.purpose == 'B':
                 return address
-            elif address.purpose == PostalAddressPurpose.DeliveryAddress:
+            elif address.purpose == 'D':
                 return address
-            elif address.purpose == PostalAddressPurpose.ContactAddress:
+            elif address.purpose == 'C':
                 return address
         return "No Address"
 
     def get_contact_address(self):
         for address in self.addresses.all():
-            if address.purpose == PostalAddressPurpose.ContactAddress:
+            if address.purpose == 'C':
                 return address
-            elif address.purpose == PostalAddressPurpose.BillingAddress:
+            elif address.purpose == 'B':
                 return address
-            elif address.purpose == PostalAddressPurpose.DeliveryAddress:
+            elif address.purpose == 'D':
                 return address
         return "No Address"
 
     def get_phone_address(self):
         for pn in self.phonenumbers.all():
-            if pn.purpose == PhoneAddressPurpose.Business:
+            if pn.purpose == 'O':
                 return pn
-            elif pn.purpose == PhoneAddressPurpose.MobileBusiness:
+            elif pn.purpose == 'B':
                 return pn
-            elif pn.purpose == PhoneAddressPurpose.Private:
+            elif pn.purpose == 'H':
                 return pn
-            elif pn.purpose == PhoneAddressPurpose.MobilePrivate:
+            elif pn.purpose == 'P':
                 return pn
         return "No Phone"
 
     def get_email_address(self):
-        for pn in self.phonenumbers.all():
-            if pn.purpose == PhoneAddressPurpose.Business:
-                return pn
-            elif pn.purpose == PhoneAddressPurpose.Private:
-                return pn
-        return "No Phone"
+        for ea in self.emailaddresses.all():
+            if ea.purpose == 'O':
+                return ea
+            elif ea.purpose == 'H':
+                return ea
+        return "No email address"
 
     def create_invoice(self, request):
         contract = self.create_contract(request)
@@ -271,7 +292,7 @@ class Supplier(Contact):
     direct_shipment_to_customers = models.BooleanField(verbose_name=_("Offers direct Shipment to Customer"),
                                                        default=False)
 
-    class Meta():
+    class Meta:
         verbose_name = _("Supplier")
         verbose_name_plural = _("Suppliers")
         permissions = (
@@ -293,7 +314,7 @@ class Supplier(Contact):
 
 
 class Contract(models.Model):
-    state = FSMIntegerField(default=ContractStatesEnum.Open, choices=ContractStatesEnum.choices)
+    state = FSMIntegerField(default=10, choices=CONTRACT_STATE_CHOICES)
     staff = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, blank=True,
                               verbose_name=_("Staff"), related_name="db_relcontractstaff", null=True)
     description = models.TextField(verbose_name=_("Description"), blank=True, null=True)
@@ -307,13 +328,23 @@ class Contract(models.Model):
                                        verbose_name=_("Last modified by"), related_name="db_contractlstmodified",
                                        null=True)
 
-    class Meta():
+    class Meta:
         verbose_name = _('Contract')
         verbose_name_plural = _('Contracts')
         permissions = (
             ('view_contract', 'Can view contracts'),
         )
         get_latest_by = 'lastmodification'
+
+    def get_price(self):
+        res = "N/A"
+        if self.has_quotes() and not self.has_invoices() and not self.has_purchaseorders():
+            res = str(self.quotes.last().get_price()) + " " + self.default_currency
+        elif self.has_purchaseorders() and not self.has_invoices():
+            res = str(self.purchaseorders.last().get_price()) + " " + self.default_currency
+        elif self.has_invoices():
+            res = str(self.invoices.last().get_price()) + " " + self.default_currency
+        return res
 
     def create_invoice(self):
         invoice = Invoice()
@@ -326,7 +357,7 @@ class Contract(models.Model):
         invoice.payableuntil = date.today() + timedelta(days=self.default_customer.billingcycle.days_to_payment)
         invoice.dateofcreation = date.today().__str__()
         invoice.save()
-        self.state = ContractStatesEnum.Invoice_created
+        self.state = 30
         self.save()
         return invoice
 
@@ -338,10 +369,10 @@ class Contract(models.Model):
         quote.customer = self.default_customer
         quote.status = 1
         quote.currency = self.default_currency
-        quote.validuntil = date.today().__str__()
-        quote.dateofcreation = date.today().__str__()
+        quote.validuntil = date.today()
+        quote.dateofcreation = date.today()
         quote.save()
-        self.state = ContractStatesEnum.Quote_created
+        self.state = 50
         self.save()
         return quote
 
@@ -354,10 +385,9 @@ class Contract(models.Model):
         purchaseorder.currency = self.default_currency
         purchaseorder.supplier = self.default_supplier
         purchaseorder.status = 1
-        purchaseorder.dateofcreation = date.today().__str__()
-        # TODO: today is not correct it has to be replaced
+        purchaseorder.dateofcreation = date.today()
         purchaseorder.save()
-        self.state = ContractStatesEnum.PurchaseOrder_created
+        self.state = 70
         self.save()
         return purchaseorder
 
@@ -365,10 +395,16 @@ class Contract(models.Model):
         return _('Contract') + ' #' + str(self.id)
 
     def get_state(self):
-        return ContractStatesEnum.choices[self.state]
+        for state in CONTRACT_STATE_CHOICES:
+            if self.state == state[0]:
+                return state[1]
+        return "Unknown"
 
     def get_state_class(self):
-        return ContractStatesLabelEnum.choices[self.state]
+        for state in CONTRACT_LABEL_CLASS_CHOICES:
+            if self.state == state[0]:
+                return state[1]
+        return "default"
 
     def get_absolute_url(self):
         url = '/contracts/detail/' + str(self.pk)  # TODO: Bad solution
@@ -427,13 +463,16 @@ class PurchaseOrder(models.Model):
     derived_from_quote = models.ForeignKey('Quote', related_name='purchaseorders', null=True, blank=True)
     pdf_path = models.CharField(max_length=200, null=True, blank=True, editable=False)
 
-    class Meta():
+    class Meta:
         verbose_name = _('Purchase Order')
         verbose_name_plural = _('Purchase Order')
         permissions = (
             ('view_purchaseorder', 'Can view purchase orders'),
         )
         get_latest_by = 'lastmodification'
+
+    def get_price(self):
+        return 10
 
     def recalculate_prices(self, pricing_date):
         price = 0
@@ -485,8 +524,11 @@ class PurchaseOrder(models.Model):
     def get_document_url(self):
         return reverse('purchaseorder_detail', args=[str(self.id)])
 
+    @transaction.atomic()
+    @reversion.create_revision()
     def save(self, *args, **kwargs):
         # self.recalculate_prices(date.today())
+        super(PurchaseOrder, self).save(*args, **kwargs)
         self.create_pdf()
         super(PurchaseOrder, self).save(*args, **kwargs)
 
@@ -545,6 +587,8 @@ class SalesContract(models.Model):
             return 0
 
     # TODO
+    @transaction.atomic()
+    @reversion.create_revision()
     def save(self, *args, **kwargs):
         # self.recalculate_prices(date.today())
         super(SalesContract, self).save(*args, **kwargs)
@@ -554,13 +598,16 @@ class Quote(SalesContract):
     contract = models.ForeignKey(Contract, verbose_name=_('Contract'), related_name='quotes')
     validuntil = models.DateField(verbose_name=_("Valid until"))
 
-    class Meta():
+    class Meta:
         verbose_name = _('Quote')
         verbose_name_plural = _('Quotes')
         permissions = (
             ('view_quote', 'Can view quotes'),
         )
         get_latest_by = "lastmodification"
+
+    def get_price(self):
+        return 20
 
     def create_invoice(self):
         invoice = Invoice()
@@ -630,6 +677,7 @@ class Quote(SalesContract):
     @transaction.atomic()
     @reversion.create_revision()
     def save(self, *args, **kwargs):
+        super(Quote, self).save(*args, **kwargs)
         self.create_pdf()
         super(Quote, self).save(*args, **kwargs)
 
@@ -641,6 +689,17 @@ class Invoice(SalesContract):
     payment_bank_reference = models.CharField(verbose_name=_("Payment Bank Reference"), max_length=100, blank=True,
                                               null=True)
 
+    class Meta:
+        verbose_name = _('Invoice')
+        verbose_name_plural = _('Invoices')
+        permissions = (
+            ('view_invoice', 'Can view invoices'),
+        )
+        get_latest_by = 'lastmodification'
+
+    def get_price(self):
+        return 30
+
     def to_html(self):
         return render_to_string('pdf_templates/invoice.html', {'invoice': self})
 
@@ -650,14 +709,6 @@ class Invoice(SalesContract):
             settings.PROJECT_ROOT, settings.MEDIA_URL, self.pk))
         self.pdf_path = pth
         HTML(string=html, encoding="utf8").write_pdf(target=pth)
-
-    class Meta():
-        verbose_name = _('Invoice')
-        verbose_name_plural = _('Invoices')
-        permissions = (
-            ('view_invoice', 'Can view invoices'),
-        )
-        get_latest_by = 'lastmodification'
 
     def get_absolute_url(self):
         return reverse('invoice_edit', args=[str(self.id)])
@@ -669,6 +720,7 @@ class Invoice(SalesContract):
         return _("Invoice") + " #" + str(self.id)
 
     def save(self, *args, **kwargs):
+        super(Invoice, self).save(*args, **kwargs)
         self.create_pdf()
         super(Invoice, self).save(*args, **kwargs)
 
@@ -680,7 +732,7 @@ class Unit(models.Model):
     factor = models.IntegerField(verbose_name=_("Factor Between This And Next Higher Unit"),
                                  blank=True, null=True)
 
-    class Meta():
+    class Meta:
         verbose_name = _('Unit')
         verbose_name_plural = _('Units')
         permissions = (
@@ -699,7 +751,7 @@ class TaxRate(models.Model):
     def gettaxrate(self):
         return self.taxrate_in_percent
 
-    class Meta():
+    class Meta:
         verbose_name = _('Tax')
         verbose_name_plural = _('Taxes')
         permissions = (
@@ -713,7 +765,7 @@ class TaxRate(models.Model):
 class ProductCategory(models.Model):
     title = models.CharField(verbose_name=_("Product Category Title"), max_length=50)
 
-    class Meta():
+    class Meta:
         verbose_name = _('Product Category')
         verbose_name_plural = _('Product Categories')
 
@@ -738,7 +790,7 @@ class ProductItem(models.Model):
 class Product(ProductItem):
     product_number = models.IntegerField(verbose_name=_("Product Number"))
 
-    class Meta():
+    class Meta:
         verbose_name = _('Product')
         verbose_name_plural = _('Products')
         permissions = (
@@ -831,7 +883,7 @@ class UnitTransform(models.Model):
         else:
             return unit
 
-    class Meta():
+    class Meta:
         verbose_name = _('Unit Transform')
         verbose_name_plural = _('Unit Transforms')
 
@@ -856,7 +908,7 @@ class CustomerGroupTransform(models.Model):
     def __unicode__(self):
         return "From " + self.from_customer_group.name + " to " + self.to_customer_group.name
 
-    class Meta():
+    class Meta:
         verbose_name = _('Customer Group Price Transform')
         verbose_name_plural = _('Customer Group Price Transforms')
 
@@ -905,7 +957,7 @@ class Price(models.Model):
                         self.customer_group == customer_group) & (self.currency == currency):
                 return 1
 
-    class Meta():
+    class Meta:
         verbose_name = _('Price')
         verbose_name_plural = _('Prices')
         get_latest_by = 'id'
@@ -956,7 +1008,7 @@ class Position(models.Model):
     def __unicode__(self):
         return _("Position") + ": " + str(self.id)
 
-    class Meta():
+    class Meta:
         verbose_name = _('Position')
         verbose_name_plural = _('Positions')
 
@@ -964,7 +1016,7 @@ class Position(models.Model):
 class SalesContractPosition(Position):
     contract = models.ForeignKey(SalesContract, verbose_name=_("Contract"), related_name='positions')
 
-    class Meta():
+    class Meta:
         verbose_name = _('Salescontract Position')
         verbose_name_plural = _('Salescontract Positions')
 
@@ -975,7 +1027,7 @@ class SalesContractPosition(Position):
 class PurchaseOrderPosition(Position):
     contract = models.ForeignKey(PurchaseOrder, verbose_name=_("Contract"))
 
-    class Meta():
+    class Meta:
         verbose_name = _('Purchaseorder Position')
         verbose_name_plural = _('Purchaseorder Positions')
 
@@ -987,7 +1039,7 @@ class HTMLFile(models.Model):
     title = models.CharField(verbose_name=_("Title"), max_length=100, blank=True, null=True)
     file = FileBrowseField(verbose_name=_("HTML File"), max_length=200)
 
-    class Meta():
+    class Meta:
         verbose_name = _('HTML File')
         verbose_name_plural = _('HTML Files')
 
@@ -1017,7 +1069,7 @@ class TemplateSet(models.Model):
     page_footer_left = models.CharField(max_length=40, verbose_name=_("Page Footer Left"), blank=True, null=True)
     page_footer_middle = models.CharField(max_length=40, verbose_name=_("Page Footer Middle"), blank=True, null=True)
 
-    class Meta():
+    class Meta:
         verbose_name = _('Templateset')
         verbose_name_plural = _('Templatesets')
 
@@ -1031,7 +1083,7 @@ class UserExtension(models.Model):
     default_templateset = models.ForeignKey(TemplateSet, null=True, blank=True)
     default_currency = models.CharField(max_length=3, choices=currencies, null=True, blank=True)
 
-    class Meta():
+    class Meta:
         verbose_name = _('User Extension')
         verbose_name_plural = _('User Extensions')
 
