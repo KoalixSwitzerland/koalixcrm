@@ -1,0 +1,13 @@
+{% load i18n future staticfiles %}
+
+<div id="editable-toolbar" method="POST" action="{% url "admin:logout" %}">
+    {% url "admin:index" as admin_index_url %}
+    {% url "admin:logout" as admin_logout_url %}
+    {% url "logout" as accounts_logout_url %}
+    <a id="editable-toolbar-toggle" href="#"></a>
+    <a href="{{ editable_obj.get_admin_url|default:admin_index_url }}">{% trans "Admin" %}</a>
+    <a href="{{ accounts_logout_url|default:admin_logout_url }}?{{ REDIRECT_FIELD_NAME }}={{ request.path }}">{% trans "Log out" %}</a>
+</div>
+
+<img id="editable-loading" src="{% static "mezzanine/img/loadingAnimation.gif" %}">
+

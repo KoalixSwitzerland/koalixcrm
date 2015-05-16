@@ -1,0 +1,17 @@
+{% extends "email/base.html" %}
+{% load i18n %}
+
+{% block main %}
+<p>
+    {% trans "A new comment has been posted on" %}
+    <a href="http://{{ request.get_host }}{{ comment_url }}">{{ obj }}</a>
+</p>
+<p>
+    {% blocktrans with submit_date=comment.submit_date user_name=comment.user_name %}
+    At {{ submit_date }} {{ user_name }} wrote:
+    {% endblocktrans %}
+</p>
+<p>
+    {{ comment.comment|linebreaksbr|urlize }}
+</p>
+{% endblock %}
