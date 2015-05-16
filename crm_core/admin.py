@@ -1,9 +1,13 @@
+# -*- coding: utf-8 -*-
 import reversion
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
-from crm_core.models import UserExtension, Customer, Invoice, PurchaseOrder, Quote, Supplier
+from crm_core.models import UserExtension, Customer, Invoice, PurchaseOrder, Quote, Supplier, PurchaseOrderPosition, \
+    HTMLFile, Price, Position, TemplateSet, SalesContractPosition, CustomerGroupTransform, Contact, CustomerBillingCycle, \
+    CustomerGroup, PostalAddress, PhoneAddress, EmailAddress, Contract, SalesContract, Unit, TaxRate, ProductCategory, \
+    ProductItem, Product, UnitTransform
 
 
 # Define an inline admin descriptor
@@ -26,30 +30,290 @@ admin.site.unregister(User)
 admin.site.register(User, NewUserAdmin)
 
 
-# Define reversible models
+class CustomerBillingCycleAdmin(admin.ModelAdmin):
+    list_display = (u'id', 'name', 'days_to_payment')
+    search_fields = ('name',)
+admin.site.register(CustomerBillingCycle, CustomerBillingCycleAdmin)
+
+
+class CustomerGroupAdmin(admin.ModelAdmin):
+    list_display = (u'id', 'name')
+    search_fields = ('name',)
+admin.site.register(CustomerGroup, CustomerGroupAdmin)
+
+
 class CustomerAdmin(reversion.VersionAdmin):
     change_list_template = 'smuggler/change_list.html'
-
-
-class InvoiceAdmin(reversion.VersionAdmin):
-    change_list_template = 'smuggler/change_list.html'
-
-
-class QuoteAdmin(reversion.VersionAdmin):
-    change_list_template = 'smuggler/change_list.html'
-
-
-class PurchaseorderAdmin(reversion.VersionAdmin):
-    change_list_template = 'smuggler/change_list.html'
+    list_display = (
+        u'id',
+        'prefix',
+        'name',
+        'firstname',
+        'default_currency',
+        'billingcycle',
+        'dateofcreation',
+        'lastmodification',
+        'lastmodifiedby',
+    )
+    list_filter = (
+        'billingcycle',
+        'dateofcreation',
+        'lastmodification',
+        'lastmodifiedby',
+    )
+    raw_id_fields = ('ismemberof',)
+    search_fields = ('name',)
+admin.site.register(Customer, CustomerAdmin)
 
 
 class SupplierAdmin(reversion.VersionAdmin):
     change_list_template = 'smuggler/change_list.html'
-
-
-# register reversible classes
-admin.site.register(Customer, CustomerAdmin)
-admin.site.register(Invoice, InvoiceAdmin)
-admin.site.register(Quote, QuoteAdmin)
-admin.site.register(PurchaseOrder, PurchaseorderAdmin)
+    list_display = (
+        u'id',
+        'prefix',
+        'name',
+        'default_currency',
+        'direct_shipment_to_customers',
+        'dateofcreation',
+        'lastmodification',
+        'lastmodifiedby',
+    )
+    list_filter = (
+        'direct_shipment_to_customers',
+        'dateofcreation',
+        'lastmodification',
+        'lastmodifiedby',
+    )
+    search_fields = ('name',)
 admin.site.register(Supplier, SupplierAdmin)
+
+
+class ContractAdmin(admin.ModelAdmin):
+    list_display = (
+        u'id',
+        'state',
+        'default_customer',
+        'default_supplier',
+        'description',
+        'default_currency',
+        'staff',
+        'dateofcreation',
+        'lastmodification',
+        'lastmodifiedby',
+    )
+    list_filter = (
+        'default_customer',
+        'default_supplier',
+        'staff',
+        'dateofcreation',
+        'lastmodification',
+        'lastmodifiedby',
+    )
+admin.site.register(Contract, ContractAdmin)
+
+
+class PurchaseOrderAdmin(reversion.VersionAdmin):
+    change_list_template = 'smuggler/change_list.html'
+    list_display = (
+        u'id',
+        'contract',
+        'customer',
+        'supplier',
+        'currency',
+        'last_calculated_price',
+        'last_pricing_date',
+        'derived_from_quote',
+        'staff',
+        'dateofcreation',
+        'lastmodification',
+        'lastmodifiedby',
+    )
+    list_filter = (
+        'contract',
+        'customer',
+        'supplier',
+        'last_pricing_date',
+        'derived_from_quote',
+        'staff',
+        'dateofcreation',
+        'lastmodification',
+        'lastmodifiedby',
+    )
+admin.site.register(PurchaseOrder, PurchaseOrderAdmin)
+
+
+class QuoteAdmin(reversion.VersionAdmin):
+    change_list_template = 'smuggler/change_list.html'
+    list_display = (
+        u'id',
+        'contract',
+        'customer',
+        'validuntil',
+        'currency',
+        'discount',
+        'last_calculated_price',
+        'last_pricing_date',
+        'staff',
+        'lastmodification',
+        'lastmodifiedby',
+    )
+    list_filter = (
+        'validuntil',
+        'contract',
+        'customer',
+        'staff',
+        'last_pricing_date',
+        'lastmodification',
+        'lastmodifiedby',
+    )
+admin.site.register(Quote, QuoteAdmin)
+
+
+class InvoiceAdmin(reversion.VersionAdmin):
+    change_list_template = 'smuggler/change_list.html'
+    list_display = (
+        u'id',
+        'contract',
+        'customer',
+        'payableuntil',
+        'currency',
+        'discount',
+        'last_calculated_price',
+        'last_pricing_date',
+        'staff',
+        'lastmodification',
+        'lastmodifiedby',
+        'derived_from_quote',
+    )
+    list_filter = (
+        'payableuntil',
+        'contract',
+        'customer',
+        'staff',
+        'last_pricing_date',
+        'lastmodification',
+        'lastmodifiedby',
+        'derived_from_quote',
+    )
+admin.site.register(Invoice, InvoiceAdmin)
+
+
+class UnitAdmin(admin.ModelAdmin):
+    list_display = (
+        u'id',
+        'shortname',
+        'description',
+        'fractionof',
+        'factor',
+    )
+    list_filter = ('fractionof',)
+admin.site.register(Unit, UnitAdmin)
+
+
+class TaxRateAdmin(admin.ModelAdmin):
+    list_display = (
+        u'id',
+        'name',
+        'taxrate_in_percent',
+    )
+    search_fields = ('name',)
+admin.site.register(TaxRate, TaxRateAdmin)
+
+
+class ProductCategoryAdmin(admin.ModelAdmin):
+    list_display = (u'id', 'title')
+admin.site.register(ProductCategory, ProductCategoryAdmin)
+
+
+class ProductAdmin(admin.ModelAdmin):
+    list_display = (
+        u'id',
+        'item_prefix',
+        'item_description',
+        'item_title',
+        'item_unit',
+        'item_tax',
+        'dateofcreation',
+        'lastmodification',
+        'lastmodifiedby',
+        'item_category',
+        'product_number',
+    )
+    list_filter = (
+        'item_unit',
+        'item_tax',
+        'dateofcreation',
+        'lastmodification',
+        'lastmodifiedby',
+        'item_category',
+    )
+admin.site.register(Product, ProductAdmin)
+
+
+class UnitTransformAdmin(admin.ModelAdmin):
+    list_display = (u'id', 'from_unit', 'to_unit', 'product', 'factor')
+    list_filter = ('from_unit', 'to_unit', 'product')
+admin.site.register(UnitTransform, UnitTransformAdmin)
+
+
+class CustomerGroupTransformAdmin(admin.ModelAdmin):
+    list_display = (
+        u'id',
+        'from_customer_group',
+        'to_customer_group',
+        'product',
+        'factor',
+    )
+    list_filter = ('from_customer_group', 'to_customer_group', 'product')
+admin.site.register(CustomerGroupTransform, CustomerGroupTransformAdmin)
+
+
+class PriceAdmin(admin.ModelAdmin):
+    list_display = (
+        u'id',
+        'product',
+        'price',
+        'unit',
+        'currency',
+        'customer_group',
+        'validfrom',
+        'validuntil',
+    )
+    list_filter = (
+        'product',
+        'unit',
+        'customer_group',
+        'validfrom',
+        'validuntil',
+    )
+admin.site.register(Price, PriceAdmin)
+
+
+class HTMLFileAdmin(admin.ModelAdmin):
+    list_display = (u'id', 'title', 'file')
+admin.site.register(HTMLFile, HTMLFileAdmin)
+
+
+class TemplateSetAdmin(admin.ModelAdmin):
+    list_display = (
+        u'id',
+        'organisationname',
+        'title',
+        'invoice_html_file',
+        'quote_html_file',
+        'purchaseorder_html_file',
+        'logo',
+        'addresser',
+        'footer_text_salesorders',
+        'header_text_salesorders',
+        'header_text_purchaseorders',
+        'footer_text_purchaseorders',
+        'page_footer_left',
+        'page_footer_middle',
+    )
+    list_filter = (
+        'invoice_html_file',
+        'quote_html_file',
+        'purchaseorder_html_file',
+    )
+admin.site.register(TemplateSet, TemplateSetAdmin)
