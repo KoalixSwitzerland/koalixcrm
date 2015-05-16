@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base/base.html" %}
 {% load i18n admin_static bootstrap3 %}
 
 {% block meta_title %}{% trans "Login" %}{% endblock %}
@@ -74,7 +74,7 @@
         var u_pass = $('#id_password').val();
         $('#password').val(u_pass);
     });
-    document.getElementById('id_username').focus()
+    document.getElementById('id_username').focus();
     </script>
 
 {% endblock %}
