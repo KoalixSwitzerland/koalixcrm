@@ -142,9 +142,9 @@ class ProductTable(tables.Table):
 
     class Meta:
         model = Product
-        exclude = ('id', 'item_category', 'item_prefix', 'dateofcreation', 'lastmodification', 'lastmodifiedby',
+        exclude = ('id', 'item_prefix', 'dateofcreation', 'lastmodification', 'lastmodifiedby',
                    'product_number', 'productitem_ptr')
-        sequence = ('product', 'item_title', 'item_description', 'item_unit', 'price', 'item_tax')
+        sequence = ('product', 'item_title', 'item_description', 'item_unit', 'price', 'item_tax', 'item_category')
         order_by = ('-product', )
 
 
