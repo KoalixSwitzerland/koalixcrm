@@ -4,10 +4,11 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
-from crm_core.models import UserExtension, Customer, Invoice, PurchaseOrder, Quote, Supplier, PurchaseOrderPosition, \
-    HTMLFile, Price, Position, TemplateSet, SalesContractPosition, CustomerGroupTransform, Contact, CustomerBillingCycle, \
-    CustomerGroup, PostalAddress, PhoneAddress, EmailAddress, Contract, SalesContract, Unit, TaxRate, ProductCategory, \
-    ProductItem, Product, UnitTransform
+
+from crm_core.models import UserExtension, Customer, Invoice, PurchaseOrder, Quote, Supplier, HTMLFile, TemplateSet, \
+    CustomerBillingCycle, CustomerGroup, Contract, Unit, TaxRate, ProductCategory, \
+    UnitTransform, ProductItem
+
 
 
 # Define an inline admin descriptor
@@ -22,8 +23,7 @@ class CRMUserProfileInline(admin.TabularInline):
 
 # Define a new User admin
 class NewUserAdmin(UserAdmin):
-    inlines = (CRMUserProfileInline, )
-
+    inlines = (CRMUserProfileInline,)
 
 # Re-register UserAdmin
 admin.site.unregister(User)
@@ -33,12 +33,16 @@ admin.site.register(User, NewUserAdmin)
 class CustomerBillingCycleAdmin(admin.ModelAdmin):
     list_display = (u'id', 'name', 'days_to_payment')
     search_fields = ('name',)
+
+
 admin.site.register(CustomerBillingCycle, CustomerBillingCycleAdmin)
 
 
 class CustomerGroupAdmin(admin.ModelAdmin):
     list_display = (u'id', 'name')
     search_fields = ('name',)
+
+
 admin.site.register(CustomerGroup, CustomerGroupAdmin)
 
 
@@ -63,6 +67,8 @@ class CustomerAdmin(reversion.VersionAdmin):
     )
     raw_id_fields = ('ismemberof',)
     search_fields = ('name',)
+
+
 admin.site.register(Customer, CustomerAdmin)
 
 
@@ -85,6 +91,8 @@ class SupplierAdmin(reversion.VersionAdmin):
         'lastmodifiedby',
     )
     search_fields = ('name',)
+
+
 admin.site.register(Supplier, SupplierAdmin)
 
 
@@ -109,6 +117,8 @@ class ContractAdmin(admin.ModelAdmin):
         'lastmodification',
         'lastmodifiedby',
     )
+
+
 admin.site.register(Contract, ContractAdmin)
 
 
@@ -139,6 +149,8 @@ class PurchaseOrderAdmin(reversion.VersionAdmin):
         'lastmodification',
         'lastmodifiedby',
     )
+
+
 admin.site.register(PurchaseOrder, PurchaseOrderAdmin)
 
 
@@ -166,6 +178,8 @@ class QuoteAdmin(reversion.VersionAdmin):
         'lastmodification',
         'lastmodifiedby',
     )
+
+
 admin.site.register(Quote, QuoteAdmin)
 
 
@@ -195,6 +209,8 @@ class InvoiceAdmin(reversion.VersionAdmin):
         'lastmodifiedby',
         'derived_from_quote',
     )
+
+
 admin.site.register(Invoice, InvoiceAdmin)
 
 
@@ -207,6 +223,8 @@ class UnitAdmin(admin.ModelAdmin):
         'factor',
     )
     list_filter = ('fractionof',)
+
+
 admin.site.register(Unit, UnitAdmin)
 
 
@@ -217,80 +235,23 @@ class TaxRateAdmin(admin.ModelAdmin):
         'taxrate_in_percent',
     )
     search_fields = ('name',)
+
+
 admin.site.register(TaxRate, TaxRateAdmin)
-
-
-class ProductCategoryAdmin(admin.ModelAdmin):
-    list_display = (u'id', 'title')
-admin.site.register(ProductCategory, ProductCategoryAdmin)
-
-
-class ProductAdmin(admin.ModelAdmin):
-    list_display = (
-        u'id',
-        'item_prefix',
-        'item_description',
-        'item_title',
-        'item_unit',
-        'item_tax',
-        'dateofcreation',
-        'lastmodification',
-        'lastmodifiedby',
-        'item_category',
-        'product_number',
-    )
-    list_filter = (
-        'item_unit',
-        'item_tax',
-        'dateofcreation',
-        'lastmodification',
-        'lastmodifiedby',
-        'item_category',
-    )
-admin.site.register(Product, ProductAdmin)
 
 
 class UnitTransformAdmin(admin.ModelAdmin):
     list_display = (u'id', 'from_unit', 'to_unit', 'product', 'factor')
     list_filter = ('from_unit', 'to_unit', 'product')
+
+
 admin.site.register(UnitTransform, UnitTransformAdmin)
-
-
-class CustomerGroupTransformAdmin(admin.ModelAdmin):
-    list_display = (
-        u'id',
-        'from_customer_group',
-        'to_customer_group',
-        'product',
-        'factor',
-    )
-    list_filter = ('from_customer_group', 'to_customer_group', 'product')
-admin.site.register(CustomerGroupTransform, CustomerGroupTransformAdmin)
-
-
-class PriceAdmin(admin.ModelAdmin):
-    list_display = (
-        u'id',
-        'product',
-        'price',
-        'unit',
-        'currency',
-        'customer_group',
-        'validfrom',
-        'validuntil',
-    )
-    list_filter = (
-        'product',
-        'unit',
-        'customer_group',
-        'validfrom',
-        'validuntil',
-    )
-admin.site.register(Price, PriceAdmin)
 
 
 class HTMLFileAdmin(admin.ModelAdmin):
     list_display = (u'id', 'title', 'file')
+
+
 admin.site.register(HTMLFile, HTMLFileAdmin)
 
 
@@ -316,4 +277,6 @@ class TemplateSetAdmin(admin.ModelAdmin):
         'quote_html_file',
         'purchaseorder_html_file',
     )
+
+
 admin.site.register(TemplateSet, TemplateSetAdmin)

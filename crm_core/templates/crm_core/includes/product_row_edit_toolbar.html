@@ -3,7 +3,7 @@
 <div class="btn-group btn-group-sm" role="group">
     {% if perms.crm_core.view_product %}
         <button class="btn btn-default" onclick="location.href=
-                '{% url 'product_detail' record.pk %}'" title="{% trans 'View Product' %}"
+                '{% url 'shop_product' record.slug %}'" title="{% trans 'View Product' %}"
                 data-toggle="tooltip" data-placement="top">
             <span class="glyphicon glyphicon-search"></span></button>
     {% endif %}

@@ -1,0 +1,5 @@
+{% if not LANGUAGE_BIDI %}
+    {% include "shop/includes/order_details.html" %}
+{% else %}
+    {% include "shop/includes/order_details_rtl.html" %}
+{% endif %}

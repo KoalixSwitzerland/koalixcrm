@@ -1,6 +1,6 @@
 import django_tables2 as tables
 from crm_core.custom.custom_columns import LabelColumn, ButtonsColumn, ModelDetailLinkColumn, IncludeColumn
-from crm_core.models import Contract, Customer, Supplier, Product, TaxRate, CustomerBillingCycle, Unit, \
+from crm_core.models import Contract, Customer, Supplier, ProductItem, TaxRate, CustomerBillingCycle, Unit, \
     ProductCategory, CustomerGroup
 from django.utils.translation import ugettext_lazy as _
 
@@ -130,9 +130,6 @@ class SupplierTable(tables.Table):
 
 
 class ProductTable(tables.Table):
-    product = tables.TemplateColumn("<a href='{{ record.get_absolute_url }}'>{{ record.get_product_number }}</a>",
-                                    accessor='product_number', verbose_name="#")
-    price = tables.TemplateColumn("{{ record.get_price }}", accessor='prices.price', verbose_name=_('Price'))
     edit_product = IncludeColumn(
         'crm_core/includes/product_row_edit_toolbar.html',
         attrs={"th": {"width": "120px"}},
@@ -141,11 +138,14 @@ class ProductTable(tables.Table):
     )
 
     class Meta:
-        model = Product
-        exclude = ('id', 'item_prefix', 'dateofcreation', 'lastmodification', 'lastmodifiedby',
-                   'product_number', 'productitem_ptr')
-        sequence = ('product', 'item_title', 'item_description', 'item_unit', 'price', 'item_tax', 'item_category')
-        order_by = ('-product', )
+        model = ProductItem
+        exclude = ('id', 'rating_count', 'rating_sum', 'publish_date', 'expiry_date', 'short_url', 'in_sitemap',
+                   'sale_id', 'sale_price', 'sale_from', 'sale_to', 'sku', 'content', 'image', 'date_added',
+                   'related_products', 'upsell_products', 'product_ptr', 'keywords_string', 'site', 'slug',
+                   'gen_description', '_meta_title', 'rating_average')
+        sequence = ('status', 'title', 'description', 'unit_price', 'item_unit', 'item_tax', 'item_category',
+                    'available', 'num_in_stock')
+        order_by = ('id', )
 
 
 class TaxTable(tables.Table):
@@ -188,12 +188,12 @@ class UnitTable(tables.Table):
 
 
 class ProductCategoryTable(tables.Table):
-    edit_productcategory = IncludeColumn(
-        'crm_core/includes/productcategory_row_edit_toolbar.html',
-        attrs={"th": {"width": "90px"}},
-        verbose_name=" ",
-        orderable=False
-    )
+    # edit_productcategory = IncludeColumn(
+    #     'crm_core/includes/productcategory_row_edit_toolbar.html',
+    #     attrs={"th": {"width": "90px"}},
+    #     verbose_name=" ",
+    #     orderable=False
+    # )
 
     class Meta:
         model = ProductCategory

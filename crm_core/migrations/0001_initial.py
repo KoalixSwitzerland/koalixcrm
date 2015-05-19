@@ -13,6 +13,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        ('shop', '__first__'),
     ]
 
     operations = [
@@ -203,41 +204,27 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ProductCategory',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('title', models.CharField(max_length=50, verbose_name='Product Category Title')),
+                ('category_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='shop.Category')),
             ],
             options={
+                'ordering': ('_order',),
                 'verbose_name': 'Product Category',
                 'verbose_name_plural': 'Product Categories',
             },
-            bases=(models.Model,),
+            bases=('shop.category',),
         ),
         migrations.CreateModel(
             name='ProductItem',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('item_prefix', models.CharField(default=b'#', max_length=10, verbose_name='Prefix')),
-                ('item_description', models.TextField(null=True, verbose_name='Description', blank=True)),
-                ('item_title', models.CharField(max_length=200, verbose_name='Title')),
-                ('dateofcreation', django_extensions.db.fields.CreationDateTimeField(default=django.utils.timezone.now, verbose_name='Created at', editable=False, blank=True)),
-                ('lastmodification', django_extensions.db.fields.ModificationDateTimeField(default=django.utils.timezone.now, verbose_name='Last modified', editable=False, blank=True)),
-            ],
-            options={
-            },
-            bases=(models.Model,),
-        ),
-        migrations.CreateModel(
-            name='Product',
-            fields=[
-                ('productitem_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='crm_core.ProductItem')),
-                ('product_number', models.IntegerField(verbose_name='Product Number')),
+                ('product_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='shop.Product')),
+                ('item_category', models.ForeignKey(verbose_name='Product Categorie', blank=True, to='crm_core.ProductCategory', null=True)),
             ],
             options={
                 'verbose_name': 'Product',
                 'verbose_name_plural': 'Products',
                 'permissions': (('view_product', 'Can view products'),),
             },
-            bases=('crm_core.productitem',),
+            bases=('shop.product',),
         ),
         migrations.CreateModel(
             name='PurchaseOrder',
@@ -379,9 +366,9 @@ class Migration(migrations.Migration):
                 ('footer_text_purchaseorders', models.TextField(null=True, verbose_name='Footer Text On Purchaseorders', blank=True)),
                 ('page_footer_left', models.CharField(max_length=40, null=True, verbose_name='Page Footer Left', blank=True)),
                 ('page_footer_middle', models.CharField(max_length=40, null=True, verbose_name='Page Footer Middle', blank=True)),
-                ('invoice_html_file', models.ForeignKey(related_name='invoice_template', default=b'pdf_templates/invoice.html', verbose_name='HTML File for Invoice', to='crm_core.HTMLFile')),
-                ('purchaseorder_html_file', models.ForeignKey(related_name='purchaseorder_template', default=b'pdf_templates/purchaseorder.html', verbose_name='HTML File for Purchaseorder', to='crm_core.HTMLFile')),
-                ('quote_html_file', models.ForeignKey(related_name='quote_template', default=b'pdf_templates/quote.html', verbose_name='HTML File for Quote', to='crm_core.HTMLFile')),
+                ('invoice_html_file', models.ForeignKey(related_name='invoice_template', verbose_name='HTML File for Invoice', to='crm_core.HTMLFile')),
+                ('purchaseorder_html_file', models.ForeignKey(related_name='purchaseorder_template', verbose_name='HTML File for Purchaseorder', to='crm_core.HTMLFile')),
+                ('quote_html_file', models.ForeignKey(related_name='quote_template', verbose_name='HTML File for Quote', to='crm_core.HTMLFile')),
             ],
             options={
                 'verbose_name': 'Templateset',
@@ -411,7 +398,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('factor', models.IntegerField(null=True, verbose_name='Factor between From and To Unit', blank=True)),
                 ('from_unit', models.ForeignKey(related_name='db_reltransformfromunit', verbose_name='From Unit', to='crm_core.Unit')),
-                ('product', models.ForeignKey(verbose_name='Product', to='crm_core.Product')),
+                ('product', models.ForeignKey(verbose_name='Product', to='crm_core.ProductItem')),
                 ('to_unit', models.ForeignKey(related_name='db_reltransformtounit', verbose_name='To Unit', to='crm_core.Unit')),
             ],
             options={
@@ -479,12 +466,6 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='productitem',
-            name='item_category',
-            field=models.ForeignKey(verbose_name='Product Categorie', blank=True, to='crm_core.ProductCategory', null=True),
-            preserve_default=True,
-        ),
-        migrations.AddField(
-            model_name='productitem',
             name='item_tax',
             field=models.ForeignKey(to='crm_core.TaxRate'),
             preserve_default=True,
@@ -496,15 +477,9 @@ class Migration(migrations.Migration):
             preserve_default=True,
         ),
         migrations.AddField(
-            model_name='productitem',
-            name='lastmodifiedby',
-            field=models.ForeignKey(verbose_name='Last modified by', blank=b'True', to=settings.AUTH_USER_MODEL, null=True),
-            preserve_default=True,
-        ),
-        migrations.AddField(
             model_name='price',
             name='product',
-            field=models.ForeignKey(related_name='prices', verbose_name='Product', to='crm_core.Product'),
+            field=models.ForeignKey(related_name='prices', verbose_name='Product', to='crm_core.ProductItem'),
             preserve_default=True,
         ),
         migrations.AddField(
@@ -522,7 +497,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='position',
             name='product',
-            field=models.ForeignKey(verbose_name='Product', blank=True, to='crm_core.Product', null=True),
+            field=models.ForeignKey(verbose_name='Product', blank=True, to='crm_core.ProductItem', null=True),
             preserve_default=True,
         ),
         migrations.AddField(
@@ -552,7 +527,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='customergrouptransform',
             name='product',
-            field=models.ForeignKey(verbose_name='Product', to='crm_core.Product'),
+            field=models.ForeignKey(verbose_name='Product', to='crm_core.ProductItem'),
             preserve_default=True,
         ),
         migrations.AddField(

@@ -1,3 +1,5 @@
-{% block main %}{% endblock %}
+{% load i18n %}
+{% get_current_language_bidi as LANGUAGE_BIDI %}
 
-<br><a href="http://{{ request.get_host }}">http://{{ request.get_host }}</a>
+{% block main %}
+{% endblock %}

@@ -61,7 +61,7 @@ def show_dashboard(request):
     invoicecount = Invoice.objects.all().count()
     customercount = Customer.objects.all().count()
     suppliercount = Supplier.objects.all().count()
-    productcount = Product.objects.all().count()
+    productcount = ProductItem.objects.all().count()
     opencontracts = []
     for contract in Contract.objects.exclude(state=20 or 100):
         if contract not in opencontracts:
@@ -393,6 +393,7 @@ class CreateProductCategory(LoginRequiredMixin, PermissionRequiredMixin, CreateV
     model = ProductCategory
     permission_required = 'crm_core.add_productcategory'
     login_url = settings.LOGIN_URL
+    fields = ['title', 'description']
     success_url = reverse_lazy('settings')
 
 
@@ -411,43 +412,43 @@ class DeleteProductCategory(LoginRequiredMixin, PermissionRequiredMixin, DeleteV
 
 
 class ListProducts(LoginRequiredMixin, PermissionRequiredMixin, PaginatedTableView):
-    model = Product
+    model = ProductItem
     permission_required = 'crm_core.view_product'
     login_url = settings.LOGIN_URL
-    fields = ['item_prefix', 'product_number', 'item_title', 'item_description', 'item_unit', 'item_tax',
-              'item_category']
     table_class = ProductTable
-    table_data = Product.objects.all()
+    table_data = ProductItem.objects.all()
     context_table_name = 'producttable'
     table_pagination = 10
 
 
 class CreateProduct(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
-    model = Product
+    model = ProductItem
     permission_required = 'crm_core.add_product'
     login_url = settings.LOGIN_URL
-    fields = ['item_prefix', 'product_number', 'item_title', 'item_description', 'item_unit', 'item_tax',
-              'item_category']
+    fields = ['sku', 'title', 'image', 'description', 'unit_price', 'available', 'num_in_stock', 'item_unit',
+              'item_tax', 'item_category', 'keywords', 'content', 'sale_price', 'sale_from', 'sale_to',
+              'related_products', 'upsell_products', 'publish_date', 'expiry_date']
     success_url = reverse_lazy('product_list')
 
 
 class EditProduct(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
-    model = Product
+    model = ProductItem
     permission_required = 'crm_core.change_product'
     login_url = settings.LOGIN_URL
-    fields = ['item_prefix', 'product_number', 'item_title', 'item_description', 'item_unit', 'item_tax',
-              'item_category']
+    fields = ['sku', 'title', 'image', 'description', 'unit_price', 'available', 'num_in_stock', 'item_unit',
+              'item_tax', 'item_category', 'keywords', 'content', 'sale_price', 'sale_from', 'sale_to',
+              'related_products', 'upsell_products', 'publish_date', 'expiry_date']
     success_url = reverse_lazy('product_list')
 
 
 class ViewProduct(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
-    model = Product
+    model = ProductItem
     permission_required = 'crm_core.view_product'
     login_url = settings.LOGIN_URL
 
 
 class DeleteProduct(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
-    model = Product
+    model = ProductItem
     permission_required = 'crm_core.delete_product'
     login_url = settings.LOGIN_URL
     success_url = reverse_lazy('product_list')
