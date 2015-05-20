@@ -1,0 +1,38 @@
+{% load i18n future %}
+
+<div id="header">
+    <div class="branding">Beautiful CRM/ERP for small business</div>
+    <!-- Title -->
+    <div class="admin-title">Koalix CRM</div>
+    {% if user.is_authenticated and user.is_staff %}
+    <!-- Bookmarks (temporary) -->
+    <ul id="user-tools">
+        <!-- Username -->
+        <li><strong>{% firstof user.first_name user.username %}</strong></li>
+        <!-- Userlinks -->
+        {% block userlinks %}
+        <!-- Documentation -->
+        {% url "django-admindocs-docroot" as docsroot %}
+        {% if docsroot %}
+        <li><a href="{{ docsroot }}">{% trans 'Documentation' %}</a></li>
+        {% endif %}
+        <!-- Change Password -->
+        {% url "admin:password_change" as password_change_url %}
+        {% if password_change_url %}
+        <li><a href="{{ password_change_url }}">
+        {% else %}
+        <li><a href="{{ root_path }}password_change/">
+        {% endif %}
+        {% trans 'Change password' %}</a></li>
+        <!-- Logout -->
+        {% url "admin:logout" as logout_url %}
+        {% if logout_url %}
+        <li><a href="{{ logout_url }}">
+        {% else %}
+        <li><a href="{{ root_path }}logout/">
+        {% endif %}
+        {% trans 'Log out' %}</a></li>
+        {% endblock %}
+    </ul>
+    {% endif %}
+</div>

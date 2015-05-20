@@ -280,3 +280,5 @@ class TemplateSetAdmin(admin.ModelAdmin):
 
 
 admin.site.register(TemplateSet, TemplateSetAdmin)
+
+admin.site.register(ProductCategory)

@@ -80,10 +80,10 @@ from __future__ import absolute_import, unicode_literals
 # Controls the ordering and grouping of the admin menu.
 #
 ADMIN_MENU_ORDER = (
-    ("Content", ("pages.Page", ("Media Library", "fb_browse"),)),
-    ("Users", ("auth.User", "auth.Group", )),
-    ("Site", ("sites.Site", "redirects.Redirect", "conf.Setting", "business_theme.SitewideContent")),
-    ("Blog", ("blog.BlogPost", "generic.ThreadedComment", )),
+    ("Content", ("pages.Page", "blog.BlogPost", "generic.ThreadedComment", ("Media Library", "fb_browse"),)),
+    ("Site", ("auth.User", "auth.Group", "sites.Site", "redirects.Redirect", "conf.Setting",
+              # "business_theme.SitewideContent"
+              )),
 )
 
 # A three item sequence, each containing a sequence of template tags
@@ -135,8 +135,6 @@ DASHBOARD_TAGS = (
 USE_SOUTH = False
 
 SITE_TITLE = 'Koalix CRM'
-
-GRAPPELLI_ADMIN_TITLE = SITE_TITLE
 
 
 ########################

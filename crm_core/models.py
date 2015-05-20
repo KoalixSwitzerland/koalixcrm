@@ -16,9 +16,10 @@ from os import path
 import reversion
 from weasyprint import HTML
 from international.models import countries, currencies, countries_raw
-from const.postaladdressprefix import POSTAL_ADDRESS_PREFIX_CHOICES
-from const.purpose import POSTAL_ADDRESS_PURPOSE_CHOICES, PHONE_ADDRESS_PURPOSE_CHOICES, EMAIL_ADDRESS_PURPOSE_CHOICES
-from const.states import CONTRACT_STATE_CHOICES, CONTRACT_LABEL_CLASS_CHOICES
+from const.postaladdressprefix import POSTAL_ADDRESS_PREFIX_CHOICES, PostalAddressPrefix
+from const.purpose import POSTAL_ADDRESS_PURPOSE_CHOICES, PHONE_ADDRESS_PURPOSE_CHOICES, \
+    EMAIL_ADDRESS_PURPOSE_CHOICES, EmailAddressPurpose, PhoneAddressPurpose, PostalAddressPurpose
+from const.states import CONTRACT_STATE_CHOICES, ContractStatesEnum, ContractStatesLabelEnum
 from django_extensions.db.fields import CreationDateTimeField, ModificationDateTimeField
 
 
@@ -40,9 +41,7 @@ class Contact(models.Model):
     @property
     def get_prefix(self):
         if self.prefix:
-            for choice in POSTAL_ADDRESS_PREFIX_CHOICES:
-                if self.prefix == choice[0]:
-                    return choice[1]
+            return PostalAddressPrefix.choices[self.prefix]
         return ""
 
     @transaction.atomic()
@@ -109,10 +108,7 @@ class PostalAddress(models.Model):
         )
 
     def get_purpose(self):
-        for purpose in POSTAL_ADDRESS_PURPOSE_CHOICES:
-            if self.purpose == purpose[0]:
-                return purpose[1]
-        return ""
+        return PostalAddressPurpose.choices[self.purpose]
 
     def get_country(self):
         return list(c[4].partition(',')[0].partition('(')[0].strip() for c in countries_raw if c[1] == self.country)[0]
@@ -145,10 +141,7 @@ class PhoneAddress(models.Model):
         )
 
     def get_purpose(self):
-        for purpose in PHONE_ADDRESS_PURPOSE_CHOICES:
-            if self.purpose == purpose[0]:
-                return purpose[1]
-        return ""
+        return PhoneAddressPurpose.choices[self.purpose]
 
     def __unicode__(self):
         return "%s: %s" % (self.get_purpose(), self.phone)
@@ -168,10 +161,7 @@ class EmailAddress(models.Model):
         )
 
     def get_purpose(self):
-        for purpose in EMAIL_ADDRESS_PURPOSE_CHOICES:
-            if self.purpose == purpose[0]:
-                return purpose[1]
-        return ""
+        return EmailAddressPurpose.choices[self.purpose]
 
     def __unicode__(self):
         return "%s: %s" % (self.get_purpose(), self.email)
@@ -396,16 +386,10 @@ class Contract(models.Model):
         return _('Contract') + ' #' + str(self.id)
 
     def get_state(self):
-        for state in CONTRACT_STATE_CHOICES:
-            if self.state == state[0]:
-                return state[1]
-        return "Unknown"
+        return ContractStatesEnum.choices[self.state]
 
     def get_state_class(self):
-        for state in CONTRACT_LABEL_CLASS_CHOICES:
-            if self.state == state[0]:
-                return state[1]
-        return "default"
+        return ContractStatesLabelEnum.choices[self.state]
 
     def get_absolute_url(self):
         url = '/contracts/detail/' + str(self.pk)  # TODO: Bad solution
