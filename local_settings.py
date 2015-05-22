@@ -21,3 +21,6 @@ DATABASES = {
         "PORT": "",
     }
 }
+
+# SHOP_CURRENCY_LOCALE = "de_CH"
+APPEND_SLASH = True

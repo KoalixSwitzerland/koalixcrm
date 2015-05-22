@@ -1,17 +1,20 @@
 # -*- coding: utf-8 -*-
+
 from braces.views import PermissionRequiredMixin, LoginRequiredMixin
-from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import CreateView, UpdateView, DeleteView, DetailView
 from django.http import HttpResponse
 from django.template import RequestContext, loader
 from django_tables2 import SingleTableView, RequestConfig
-from extra_views import UpdateWithInlinesView, InlineFormSet, NamedFormsetsMixin, CreateWithInlinesView
-from crm_core.forms import *
-from crm_core.models import *
+from extra_views import UpdateWithInlinesView, InlineFormSet, NamedFormsetsMixin
 from django.shortcuts import render_to_response, redirect
 from django.contrib.auth import authenticate, login, logout
+from crm_core.custom.mixins import UpdateWithModifiedByMixin, CreateWithModifieByMixin, \
+    UpdateWithNamedInlinesAndModifiedByMixin, CreateWithNamedInlinesAndModifiedByMixin, \
+    CreateWithInlinesAndModifiedByMixin, UpdateWithInlinesAndModifiedByMixin
+from crm_core.forms import *
+from crm_core.models import *
 from tables import ContractTable, CustomerTable, SupplierTable, ProductTable, TaxTable, BillingCycleTable, UnitTable, \
     CustomerGroupTable, ProductCategoryTable
 
@@ -276,7 +279,7 @@ class ViewCustomer(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
     login_url = settings.LOGIN_URL
 
 
-class CreateCustomer(LoginRequiredMixin, PermissionRequiredMixin, NamedFormsetsMixin, CreateWithInlinesView):
+class CreateCustomer(LoginRequiredMixin, PermissionRequiredMixin, CreateWithNamedInlinesAndModifiedByMixin):
     model = Customer
     permission_required = 'crm_core.add_customer'
     login_url = settings.LOGIN_URL
@@ -286,7 +289,7 @@ class CreateCustomer(LoginRequiredMixin, PermissionRequiredMixin, NamedFormsetsM
     success_url = reverse_lazy('customer_list')
 
 
-class EditCustomer(LoginRequiredMixin, PermissionRequiredMixin, NamedFormsetsMixin, UpdateWithInlinesView):
+class EditCustomer(LoginRequiredMixin, PermissionRequiredMixin, UpdateWithNamedInlinesAndModifiedByMixin):
     model = Customer
     permission_required = 'crm_core.change_customer'
     login_url = settings.LOGIN_URL
@@ -320,7 +323,7 @@ class ViewSupplier(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
     login_url = settings.LOGIN_URL
 
 
-class CreateSupplier(LoginRequiredMixin, PermissionRequiredMixin, NamedFormsetsMixin, CreateWithInlinesView):
+class CreateSupplier(LoginRequiredMixin, PermissionRequiredMixin, CreateWithNamedInlinesAndModifiedByMixin):
     model = Supplier
     permission_required = 'crm_core.add_supplier'
     login_url = settings.LOGIN_URL
@@ -330,7 +333,7 @@ class CreateSupplier(LoginRequiredMixin, PermissionRequiredMixin, NamedFormsetsM
     success_url = reverse_lazy('supplier_list')
 
 
-class EditSupplier(LoginRequiredMixin, PermissionRequiredMixin, NamedFormsetsMixin, UpdateWithInlinesView):
+class EditSupplier(LoginRequiredMixin, PermissionRequiredMixin, UpdateWithNamedInlinesAndModifiedByMixin):
     model = Supplier
     permission_required = 'crm_core.change_supplier'
     login_url = settings.LOGIN_URL
@@ -475,7 +478,7 @@ class DeleteBillingCycle(LoginRequiredMixin, PermissionRequiredMixin, DeleteView
     success_url = reverse_lazy('settings')
 
 
-class EditPurchaseOrder(LoginRequiredMixin, PermissionRequiredMixin, UpdateWithInlinesView):
+class EditPurchaseOrder(LoginRequiredMixin, PermissionRequiredMixin, UpdateWithInlinesAndModifiedByMixin):
     model = PurchaseOrder
     form_class = PurchaseOrderForm
     inlines = [PurchaseOrderPositionInline]
@@ -530,7 +533,7 @@ class ViewContract(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
     login_url = settings.LOGIN_URL
 
 
-class CreateContract(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+class CreateContract(LoginRequiredMixin, PermissionRequiredMixin, CreateWithModifieByMixin):
     model = Contract
     permission_required = 'crm_core.add_contract'
     login_url = settings.LOGIN_URL
@@ -538,7 +541,7 @@ class CreateContract(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     success_url = reverse_lazy('contract_list')
 
 
-class EditContract(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+class EditContract(LoginRequiredMixin, PermissionRequiredMixin, UpdateWithModifiedByMixin):
     model = Contract
     permission_required = 'crm_core.change_contract'
     login_url = settings.LOGIN_URL
@@ -553,7 +556,7 @@ class DeleteContract(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     success_url = reverse_lazy('contract_list')
 
 
-class EditInvoice(LoginRequiredMixin, PermissionRequiredMixin, UpdateWithInlinesView):
+class EditInvoice(LoginRequiredMixin, PermissionRequiredMixin, UpdateWithInlinesAndModifiedByMixin):
     model = Invoice
     form_class = InvoiceForm
     inlines = [SalesContractPositionInline]
@@ -570,7 +573,7 @@ class DeleteInvoice(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     success_url = reverse_lazy('contract_list')
 
 
-class CreateQuote(LoginRequiredMixin, PermissionRequiredMixin, CreateWithInlinesView):
+class CreateQuote(LoginRequiredMixin, PermissionRequiredMixin, CreateWithInlinesAndModifiedByMixin):
     model = Quote
     inlines = [SalesContractPositionInline]
     form_class = QuoteForm
@@ -581,7 +584,7 @@ class CreateQuote(LoginRequiredMixin, PermissionRequiredMixin, CreateWithInlines
     success_url = reverse_lazy('contract_list')
 
 
-class EditQuote(LoginRequiredMixin, PermissionRequiredMixin, UpdateWithInlinesView):
+class EditQuote(LoginRequiredMixin, PermissionRequiredMixin, UpdateWithInlinesAndModifiedByMixin):
     model = Quote
     inlines = [SalesContractPositionInline]
     form_class = QuoteForm
