@@ -1,5 +1,5 @@
-{% extends "shop/base.html" %}
-{% load staticfiles mezzanine_tags shop_tags rating_tags i18n %}
+{% extends "base/main_section_base.html" %}
+{% load staticfiles mezzanine_tags shop_tags rating_tags i18n bootstrap3 %}
 
 {% block meta_title %}{{ product.meta_title }}{% endblock %}
 {% block body_id %}category{% endblock %}
@@ -50,7 +50,11 @@ $(document).ready(function() {
 {% editable product.title %}{{ product.title }}{% endeditable %}
 {% endblock %}
 
-{% block main %}
+{% block main_header %}
+{{ product.title }}
+{% endblock %}
+
+{% block main_inner %}
 
 {% if images %}
 {% spaceless %}
@@ -108,7 +112,8 @@ $(document).ready(function() {
 {% errors_for add_product_form %}
 
 <form method="post" id="add-cart" class="shop-form">
-    {% fields_for add_product_form %}
+    {% csrf_token %}
+    {% bootstrap_form add_product_form layout='horizontal' %}
     <div class="form-actions">
         <input type="submit" class="btn btn-primary btn-lg pull-right" name="add_cart" value="{% trans "Buy" %}">
         {% if settings.SHOP_USE_WISHLIST %}

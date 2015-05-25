@@ -68,3 +68,10 @@ class IncludeColumn(tables.TemplateColumn):
     def __init__(self, include_name, **extra):
         extra['template_code'] = "{% include '" + include_name + "' %}"
         super(IncludeColumn, self).__init__(**extra)
+
+
+class SafeFieldColumn(tables.TemplateColumn):
+
+    def __init__(self, field, **extra):
+        extra['template_code'] = "{{ " + field + "|safe }}"
+        super(SafeFieldColumn, self).__init__(**extra)

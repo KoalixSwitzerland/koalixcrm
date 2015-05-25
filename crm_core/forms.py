@@ -2,7 +2,7 @@
 from datetimewidget.widgets import DateWidget
 from django import forms
 from crispy_forms.helper import FormHelper
-from models import PurchaseOrder, PurchaseOrderPosition, SalesContractPosition, Quote, Invoice
+from models import PurchaseOrder, PurchaseOrderPosition, Quote, Invoice, QuotePosition, InvoicePosition
 
 
 class PurchaseOrderForm(forms.ModelForm):
@@ -58,14 +58,27 @@ class PurchaseOrderPositionInlineForm(forms.ModelForm):
         self.helper.form_tag = False
 
 
-class SalesContractPositionInlineForm(forms.ModelForm):
+class QuotePositionInlineForm(forms.ModelForm):
 
     class Meta:
-        model = SalesContractPosition
-        fields = ['quantity', 'description', 'product', 'unit']
+        model = QuotePosition
+        fields = ['quantity', 'description', 'product' ]
 
     def __init__(self, *args, **kwargs):
-        super(SalesContractPositionInlineForm, self).__init__(*args, **kwargs)
+        super(QuotePositionInlineForm, self).__init__(*args, **kwargs)
+        self.fields['description'].widget = forms.TextInput()
+        self.helper = FormHelper()
+        self.helper.form_tag = False
+
+
+class InvoicePositionInlineForm(forms.ModelForm):
+
+    class Meta:
+        model = InvoicePosition
+        fields = ['quantity', 'description', 'product' ]
+
+    def __init__(self, *args, **kwargs):
+        super(InvoicePositionInlineForm, self).__init__(*args, **kwargs)
         self.fields['description'].widget = forms.TextInput()
         self.helper = FormHelper()
         self.helper.form_tag = False

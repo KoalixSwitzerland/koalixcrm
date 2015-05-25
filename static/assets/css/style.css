@@ -12,7 +12,7 @@ Premium: http://www.gridgum.com
 /* BASIC THEME CONFIGURATION */
 body {
     color: #797979;
-	background: #f2f2f2;
+	background: #8e95a6;
     font-family: 'Ruda', sans-serif;
     padding: 0px !important;
     margin: 0px !important;
@@ -1736,11 +1736,14 @@ label {
 
 /*footer*/
 .site-footer {
-    background: #68dff0;
+    background: rgba(48, 72, 84, 0.87);
     color: #fff;
     padding: 10px 0;
 }
 
+.site-footer a {
+    color: #8e95a6;
+}
 
 .go-top {
     margin-right: 1%;

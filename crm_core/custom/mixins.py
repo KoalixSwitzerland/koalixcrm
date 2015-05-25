@@ -1,5 +1,5 @@
 from django.views.generic import UpdateView, CreateView
-from extra_views import NamedFormsetsMixin, UpdateWithInlinesView, CreateWithInlinesView
+from extra_views import UpdateWithInlinesView, CreateWithInlinesView
 
 
 # ################
@@ -40,23 +40,3 @@ class CreateWithInlinesAndModifiedByMixin(CreateWithInlinesView):
         self.object.lastmodifiedby = request.user
         self.object.save()
         return res
-
-
-class UpdateWithNamedInlinesAndModifiedByMixin(NamedFormsetsMixin, UpdateWithInlinesView):
-
-    def post(self, request, *args, **kwargs):
-        res = super(UpdateWithNamedInlinesAndModifiedByMixin, self).post(request, *args, **kwargs)
-        self.object.lastmodifiedby = request.user
-        self.object.save()
-        return res
-
-
-class CreateWithNamedInlinesAndModifiedByMixin(NamedFormsetsMixin, CreateWithInlinesView):
-
-    def post(self, request, *args, **kwargs):
-        res = super(CreateWithNamedInlinesAndModifiedByMixin, self).post(request, *args, **kwargs)
-        self.object.lastmodifiedby = request.user
-        self.object.save()
-        return res
-
-

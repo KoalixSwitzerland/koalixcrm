@@ -3,11 +3,11 @@
 {% load mezzanine_tags shop_tags i18n %}
 {% block body_id %}category{% endblock %}
 
-{% block main %}{{ block.super }}
+{% block main_inner %}{{ block.super }}
 
-{% editable page.category.content %}
-{{ page.category.content|safe }}
-{% endeditable %}
+{#{% editable page.category.content %}#}
+{#{{ page.category.content|safe }}#}
+{#{% endeditable %}#}
 
 {% if child_categories %}
 <div class="row shop-category-list">
@@ -24,7 +24,7 @@
             <h4>{{ category.title }}</h4>
         </div>
     </a>
-    </div>  
+    </div>
     {% endfor %}
 {% else %}
     {% for category in child_categories %}
@@ -41,6 +41,7 @@
 {% if products.paginator.count != 0 %}
 
 <form class="product-sorting" role="form">
+    {% csrf_token %}
     <div class="form-group">
     <label class="control-label" for="sorting-select">{% trans "Sort by" %}</label>
         <select onchange="location.href = this[this.selectedIndex].value;" class="form-control" id="sorting-select">

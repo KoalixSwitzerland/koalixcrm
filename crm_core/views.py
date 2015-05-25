@@ -11,7 +11,6 @@ from extra_views import UpdateWithInlinesView, InlineFormSet, NamedFormsetsMixin
 from django.shortcuts import render_to_response, redirect
 from django.contrib.auth import authenticate, login, logout
 from crm_core.custom.mixins import UpdateWithModifiedByMixin, CreateWithModifieByMixin, \
-    UpdateWithNamedInlinesAndModifiedByMixin, CreateWithNamedInlinesAndModifiedByMixin, \
     CreateWithInlinesAndModifiedByMixin, UpdateWithInlinesAndModifiedByMixin
 from crm_core.forms import *
 from crm_core.models import *
@@ -64,7 +63,7 @@ def show_dashboard(request):
     invoicecount = Invoice.objects.all().count()
     customercount = Customer.objects.all().count()
     suppliercount = Supplier.objects.all().count()
-    productcount = ProductItem.objects.all().count()
+    productcount = cartridge_models.Product.objects.all().count()
     opencontracts = []
     for contract in Contract.objects.exclude(state=20 or 100):
         if contract not in opencontracts:
@@ -88,7 +87,7 @@ def show_settings(request):
     billingcycleable = BillingCycleTable(CustomerBillingCycle.objects.all(), prefix="billingcycle-")
     unittable = UnitTable(Unit.objects.all(), prefix="unit-")
     customergrouptable = CustomerGroupTable(CustomerGroup.objects.all(), prefix="customergroup-")
-    productcategorytable = ProductCategoryTable(ProductCategory.objects.all(), prefix="productcategory-")
+    productcategorytable = ProductCategoryTable(cartridge_models.Category.objects.all(), prefix="productcategory-")
     config.configure(taxtable)
     config.configure(billingcycleable)
     config.configure(unittable)
@@ -210,16 +209,24 @@ class PurchaseOrderPositionInline(InlineFormSet):
     prefix = 'purchaseorderposition'
 
 
-class SalesContractPositionInline(InlineFormSet):
-    model = SalesContractPosition
+class QuotePositionInline(InlineFormSet):
+    model = QuotePosition
     extra = 5
     can_delete = True
-    form_class = SalesContractPositionInlineForm
+    form_class = QuotePositionInlineForm
     prefix = 'salescontractposition'
 
 
-class PostalAddressInline(LoginRequiredMixin, PermissionRequiredMixin, InlineFormSet):
-    model = PostalAddress
+class InvoicePositionInline(InlineFormSet):
+    model = InvoicePosition
+    extra = 5
+    can_delete = True
+    form_class = InvoicePositionInlineForm
+    prefix = 'salescontractposition'
+
+
+class CustomerPostalAddressInline(LoginRequiredMixin, PermissionRequiredMixin, InlineFormSet):
+    model = CustomerPostalAddress
     permission_required = 'crm_core.view_postaladdress'
     raise_exception = False
     extra = 1
@@ -227,8 +234,17 @@ class PostalAddressInline(LoginRequiredMixin, PermissionRequiredMixin, InlineFor
     fields = ['addressline1', 'addressline2', 'zipcode', 'city', 'state', 'country', 'purpose']
 
 
-class PhoneAddressInline(LoginRequiredMixin, PermissionRequiredMixin, InlineFormSet):
-    model = PhoneAddress
+class SupplierPostalAddressInline(LoginRequiredMixin, PermissionRequiredMixin, InlineFormSet):
+    model = SupplierPostalAddress
+    permission_required = 'crm_core.view_postaladdress'
+    raise_exception = False
+    extra = 1
+    can_delete = False
+    fields = ['addressline1', 'addressline2', 'zipcode', 'city', 'state', 'country', 'purpose']
+
+
+class CustomerPhoneAddressInline(LoginRequiredMixin, PermissionRequiredMixin, InlineFormSet):
+    model = CustomerPhoneAddress
     permission_required = 'crm_core.view_phoneaddress'
     raise_exception = False
     extra = 1
@@ -237,8 +253,28 @@ class PhoneAddressInline(LoginRequiredMixin, PermissionRequiredMixin, InlineForm
     fields = ['phone', 'purpose']
 
 
-class EmailAddressInline(LoginRequiredMixin, PermissionRequiredMixin, InlineFormSet):
-    model = EmailAddress
+class SupplierPhoneAddressInline(LoginRequiredMixin, PermissionRequiredMixin, InlineFormSet):
+    model = SupplierPhoneAddress
+    permission_required = 'crm_core.view_phoneaddress'
+    raise_exception = False
+    extra = 1
+    max_num = 4
+    can_delete = False
+    fields = ['phone', 'purpose']
+
+
+class CustomerEmailAddressInline(LoginRequiredMixin, PermissionRequiredMixin, InlineFormSet):
+    model = CustomerEmailAddress
+    permission_required = 'crm_core.view_emailaddress'
+    raise_exception = False
+    extra = 1
+    max_num = 2
+    can_delete = False
+    fields = ['email', 'purpose']
+
+
+class SupplierEmailAddressInline(LoginRequiredMixin, PermissionRequiredMixin, InlineFormSet):
+    model = SupplierEmailAddress
     permission_required = 'crm_core.view_emailaddress'
     raise_exception = False
     extra = 1
@@ -279,22 +315,24 @@ class ViewCustomer(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
     login_url = settings.LOGIN_URL
 
 
-class CreateCustomer(LoginRequiredMixin, PermissionRequiredMixin, CreateWithNamedInlinesAndModifiedByMixin):
+class CreateCustomer(LoginRequiredMixin, PermissionRequiredMixin,
+                     NamedFormsetsMixin, CreateWithInlinesAndModifiedByMixin):
     model = Customer
     permission_required = 'crm_core.add_customer'
     login_url = settings.LOGIN_URL
     fields = ['prefix', 'name', 'firstname', 'default_currency', 'billingcycle', 'ismemberof']
-    inlines = [PostalAddressInline, PhoneAddressInline, EmailAddressInline]
+    inlines = [CustomerPostalAddressInline, CustomerPhoneAddressInline, CustomerEmailAddressInline]
     inlines_names = ['postaladdress_formset', 'phoneaddress_formset', 'emailaddress_formset']
     success_url = reverse_lazy('customer_list')
 
 
-class EditCustomer(LoginRequiredMixin, PermissionRequiredMixin, UpdateWithNamedInlinesAndModifiedByMixin):
+class EditCustomer(LoginRequiredMixin, PermissionRequiredMixin,
+                   NamedFormsetsMixin, UpdateWithInlinesAndModifiedByMixin):
     model = Customer
     permission_required = 'crm_core.change_customer'
     login_url = settings.LOGIN_URL
     fields = ['prefix', 'name', 'firstname', 'default_currency', 'billingcycle', 'ismemberof']
-    inlines = [PostalAddressInline, PhoneAddressInline, EmailAddressInline]
+    inlines = [CustomerPostalAddressInline, CustomerPhoneAddressInline, CustomerEmailAddressInline]
     inlines_names = ['postaladdress_formset', 'phoneaddress_formset', 'emailaddress_formset']
     success_url = reverse_lazy('customer_list')
 
@@ -323,22 +361,24 @@ class ViewSupplier(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
     login_url = settings.LOGIN_URL
 
 
-class CreateSupplier(LoginRequiredMixin, PermissionRequiredMixin, CreateWithNamedInlinesAndModifiedByMixin):
+class CreateSupplier(LoginRequiredMixin, PermissionRequiredMixin,
+                     NamedFormsetsMixin, CreateWithInlinesAndModifiedByMixin):
     model = Supplier
     permission_required = 'crm_core.add_supplier'
     login_url = settings.LOGIN_URL
     fields = ['prefix', 'name', 'default_currency', 'direct_shipment_to_customers']
-    inlines = [PostalAddressInline, PhoneAddressInline, EmailAddressInline]
+    inlines = [SupplierPostalAddressInline, SupplierPhoneAddressInline, SupplierEmailAddressInline]
     inlines_names = ['postaladdress_formset', 'phoneaddress_formset', 'emailaddress_formset']
     success_url = reverse_lazy('supplier_list')
 
 
-class EditSupplier(LoginRequiredMixin, PermissionRequiredMixin, UpdateWithNamedInlinesAndModifiedByMixin):
+class EditSupplier(LoginRequiredMixin, PermissionRequiredMixin,
+                   NamedFormsetsMixin, UpdateWithInlinesAndModifiedByMixin):
     model = Supplier
     permission_required = 'crm_core.change_supplier'
     login_url = settings.LOGIN_URL
     fields = ['prefix', 'name', 'default_currency', 'direct_shipment_to_customers']
-    inlines = [PostalAddressInline, PhoneAddressInline, EmailAddressInline]
+    inlines = [SupplierPostalAddressInline, SupplierPhoneAddressInline, SupplierEmailAddressInline]
     inlines_names = ['postaladdress_formset', 'phoneaddress_formset', 'emailaddress_formset']
     success_url = reverse_lazy('supplier_list')
 
@@ -393,7 +433,7 @@ class DeleteUnit(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
 
 
 class CreateProductCategory(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
-    model = ProductCategory
+    model = cartridge_models.Category
     permission_required = 'crm_core.add_productcategory'
     login_url = settings.LOGIN_URL
     fields = ['title', 'description']
@@ -401,57 +441,57 @@ class CreateProductCategory(LoginRequiredMixin, PermissionRequiredMixin, CreateV
 
 
 class EditProductCategory(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
-    model = ProductCategory
+    model = cartridge_models.Category
     permission_required = 'crm_core.change_productcategory'
     login_url = settings.LOGIN_URL
     success_url = reverse_lazy('settings')
 
 
 class DeleteProductCategory(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
-    model = ProductCategory
+    model = cartridge_models.Category
     permission_required = 'crm_core.delete_productcategory'
     login_url = settings.LOGIN_URL
     success_url = reverse_lazy('settings')
 
 
 class ListProducts(LoginRequiredMixin, PermissionRequiredMixin, PaginatedTableView):
-    model = ProductItem
+    model = cartridge_models.Product
     permission_required = 'crm_core.view_product'
     login_url = settings.LOGIN_URL
     table_class = ProductTable
-    table_data = ProductItem.objects.all()
+    table_data = cartridge_models.Product.objects.all()
     context_table_name = 'producttable'
     table_pagination = 10
 
 
 class CreateProduct(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
-    model = ProductItem
+    model = cartridge_models.Product
     permission_required = 'crm_core.add_product'
     login_url = settings.LOGIN_URL
-    fields = ['sku', 'title', 'image', 'description', 'unit_price', 'available', 'num_in_stock', 'item_unit',
-              'item_tax', 'item_category', 'keywords', 'content', 'sale_price', 'sale_from', 'sale_to',
-              'related_products', 'upsell_products', 'publish_date', 'expiry_date']
+    fields = ['sku', 'title', 'image', 'description', 'unit_price', 'available', 'num_in_stock', 'keywords',
+              'sale_price', 'sale_from', 'sale_to', 'related_products', 'upsell_products', 'publish_date',
+              'expiry_date']
     success_url = reverse_lazy('product_list')
 
 
 class EditProduct(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
-    model = ProductItem
+    model = cartridge_models.Product
     permission_required = 'crm_core.change_product'
     login_url = settings.LOGIN_URL
-    fields = ['sku', 'title', 'image', 'description', 'unit_price', 'available', 'num_in_stock', 'item_unit',
-              'item_tax', 'item_category', 'keywords', 'content', 'sale_price', 'sale_from', 'sale_to',
-              'related_products', 'upsell_products', 'publish_date', 'expiry_date']
+    fields = ['sku', 'title', 'image', 'description', 'unit_price', 'available', 'num_in_stock', 'keywords',
+              'sale_price', 'sale_from', 'sale_to', 'related_products', 'upsell_products', 'publish_date',
+              'expiry_date']
     success_url = reverse_lazy('product_list')
 
 
 class ViewProduct(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
-    model = ProductItem
+    model = cartridge_models.Product
     permission_required = 'crm_core.view_product'
     login_url = settings.LOGIN_URL
 
 
 class DeleteProduct(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
-    model = ProductItem
+    model = cartridge_models.Product
     permission_required = 'crm_core.delete_product'
     login_url = settings.LOGIN_URL
     success_url = reverse_lazy('product_list')
@@ -559,7 +599,7 @@ class DeleteContract(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
 class EditInvoice(LoginRequiredMixin, PermissionRequiredMixin, UpdateWithInlinesAndModifiedByMixin):
     model = Invoice
     form_class = InvoiceForm
-    inlines = [SalesContractPositionInline]
+    inlines = [InvoicePositionInline]
     permission_required = 'crm_core.change_invoice'
     login_url = settings.LOGIN_URL
     fields = ['description', 'contract', 'customer', 'payableuntil', 'state', 'currency']
@@ -575,7 +615,7 @@ class DeleteInvoice(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
 
 class CreateQuote(LoginRequiredMixin, PermissionRequiredMixin, CreateWithInlinesAndModifiedByMixin):
     model = Quote
-    inlines = [SalesContractPositionInline]
+    inlines = [QuotePositionInline]
     form_class = QuoteForm
     permission_required = 'crm_core.add_quote'
     login_url = settings.LOGIN_URL
@@ -586,7 +626,7 @@ class CreateQuote(LoginRequiredMixin, PermissionRequiredMixin, CreateWithInlines
 
 class EditQuote(LoginRequiredMixin, PermissionRequiredMixin, UpdateWithInlinesAndModifiedByMixin):
     model = Quote
-    inlines = [SalesContractPositionInline]
+    inlines = [QuotePositionInline]
     form_class = QuoteForm
     permission_required = 'crm_core.change_quote'
     login_url = settings.LOGIN_URL

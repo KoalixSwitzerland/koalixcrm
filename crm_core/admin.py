@@ -4,10 +4,11 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
-
+from cartridge.shop import models as cartridge_models
+from cartridge.shop.admin import admin as cartridge_admin
 from crm_core.models import UserExtension, Customer, Invoice, PurchaseOrder, Quote, Supplier, HTMLFile, TemplateSet, \
-    CustomerBillingCycle, CustomerGroup, Contract, Unit, TaxRate, ProductCategory, \
-    UnitTransform, ProductItem
+    CustomerBillingCycle, CustomerGroup, Contract, Unit, TaxRate, \
+    UnitTransform
 
 
 
@@ -31,6 +32,7 @@ admin.site.register(User, NewUserAdmin)
 
 
 class CustomerBillingCycleAdmin(admin.ModelAdmin):
+    change_list_template = 'smuggler/change_list.html'
     list_display = (u'id', 'name', 'days_to_payment')
     search_fields = ('name',)
 
@@ -39,6 +41,7 @@ admin.site.register(CustomerBillingCycle, CustomerBillingCycleAdmin)
 
 
 class CustomerGroupAdmin(admin.ModelAdmin):
+    change_list_template = 'smuggler/change_list.html'
     list_display = (u'id', 'name')
     search_fields = ('name',)
 
@@ -67,6 +70,7 @@ class CustomerAdmin(reversion.VersionAdmin):
     )
     raw_id_fields = ('ismemberof',)
     search_fields = ('name',)
+    exclude = ('lastmodifiedby',)
 
 
 admin.site.register(Customer, CustomerAdmin)
@@ -127,11 +131,8 @@ class PurchaseOrderAdmin(reversion.VersionAdmin):
     list_display = (
         u'id',
         'contract',
-        'customer',
-        'supplier',
+        'user_id',
         'currency',
-        'last_calculated_price',
-        'last_pricing_date',
         'derived_from_quote',
         'staff',
         'dateofcreation',
@@ -140,9 +141,7 @@ class PurchaseOrderAdmin(reversion.VersionAdmin):
     )
     list_filter = (
         'contract',
-        'customer',
-        'supplier',
-        'last_pricing_date',
+        'user_id',
         'derived_from_quote',
         'staff',
         'dateofcreation',
@@ -166,7 +165,6 @@ class QuoteAdmin(reversion.VersionAdmin):
         'last_calculated_price',
         'last_pricing_date',
         'staff',
-        'lastmodification',
         'lastmodifiedby',
     )
     list_filter = (
@@ -175,7 +173,6 @@ class QuoteAdmin(reversion.VersionAdmin):
         'customer',
         'staff',
         'last_pricing_date',
-        'lastmodification',
         'lastmodifiedby',
     )
 
@@ -195,7 +192,6 @@ class InvoiceAdmin(reversion.VersionAdmin):
         'last_calculated_price',
         'last_pricing_date',
         'staff',
-        'lastmodification',
         'lastmodifiedby',
         'derived_from_quote',
     )
@@ -205,7 +201,6 @@ class InvoiceAdmin(reversion.VersionAdmin):
         'customer',
         'staff',
         'last_pricing_date',
-        'lastmodification',
         'lastmodifiedby',
         'derived_from_quote',
     )
@@ -215,6 +210,7 @@ admin.site.register(Invoice, InvoiceAdmin)
 
 
 class UnitAdmin(admin.ModelAdmin):
+    change_list_template = 'smuggler/change_list.html'
     list_display = (
         u'id',
         'shortname',
@@ -229,6 +225,7 @@ admin.site.register(Unit, UnitAdmin)
 
 
 class TaxRateAdmin(admin.ModelAdmin):
+    change_list_template = 'smuggler/change_list.html'
     list_display = (
         u'id',
         'name',
@@ -249,6 +246,7 @@ admin.site.register(UnitTransform, UnitTransformAdmin)
 
 
 class HTMLFileAdmin(admin.ModelAdmin):
+    change_list_template = 'smuggler/change_list.html'
     list_display = (u'id', 'title', 'file')
 
 
@@ -256,6 +254,7 @@ admin.site.register(HTMLFile, HTMLFileAdmin)
 
 
 class TemplateSetAdmin(admin.ModelAdmin):
+    change_list_template = 'smuggler/change_list.html'
     list_display = (
         u'id',
         'organisationname',
@@ -281,4 +280,42 @@ class TemplateSetAdmin(admin.ModelAdmin):
 
 admin.site.register(TemplateSet, TemplateSetAdmin)
 
-admin.site.register(ProductCategory)
+
+cartridge_admin.site.unregister(cartridge_models.Category)
+
+class CategoryAdmin(admin.ModelAdmin):
+    change_list_template = 'smuggler/change_list.html'
+
+admin.site.register(cartridge_models.Category, CategoryAdmin)
+
+
+cartridge_admin.site.unregister(cartridge_models.Product)
+
+class ProductAdmin(admin.ModelAdmin):
+    change_list_template = 'smuggler/change_list.html'
+
+admin.site.register(cartridge_models.Product, ProductAdmin)
+
+
+cartridge_admin.site.unregister(cartridge_models.Sale)
+
+class SaleAdmin(admin.ModelAdmin):
+    change_list_template = 'smuggler/change_list.html'
+
+admin.site.register(cartridge_models.Sale, SaleAdmin)
+
+
+cartridge_admin.site.unregister(cartridge_models.DiscountCode)
+
+class DiscountCodeAdmin(admin.ModelAdmin):
+    change_list_template = 'smuggler/change_list.html'
+
+admin.site.register(cartridge_models.DiscountCode, DiscountCodeAdmin)
+
+
+cartridge_admin.site.unregister(cartridge_models.ProductOption)
+
+class ProductOptionAdmin(admin.ModelAdmin):
+    change_list_template = 'smuggler/change_list.html'
+
+admin.site.register(cartridge_models.ProductOption, ProductOptionAdmin)

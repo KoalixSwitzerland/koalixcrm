@@ -106,10 +106,12 @@
                         {% for fld in form.hidden_fields %}{{ fld }}{% endfor %}
                         {% crispy_field form.quantity %}
                     </td>
-                    <td>{% crispy_field form.unit %}</td>
+{#                    <td>{% crispy_field form.unit %}</td>#}
+                <td></td>
                     <td>{% crispy_field form.product %}</td>
                     <td>{% crispy_field form.description %}</td>
-                    <td>{% crispy_field form.discount %}</td>
+{#                    <td>{% crispy_field form.discount %}</td>#}
+                <td></td>
                     <td>{% if form.instance.pk %}{{ form.DELETE }}{% endif %}</td>
                 </tr>
             {% endfor %}

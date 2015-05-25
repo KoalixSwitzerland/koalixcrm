@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from datetime import date, timedelta
-from decimal import Decimal
-
 from django.conf import settings
 from django.db import models, transaction
 from django.template.loader import render_to_string
@@ -38,6 +36,9 @@ class Contact(models.Model):
                                        verbose_name=_("Last modified by"), null=True)
     default_currency = models.CharField(max_length=3, choices=currencies, blank=True, null=True)
 
+    class Meta:
+        abstract = True
+
     @property
     def get_prefix(self):
         if self.prefix:
@@ -55,38 +56,44 @@ class Contact(models.Model):
         return self.name
 
 
-# #########################
-# ##   Contact Related   ##
-# #########################
-
-
-class CustomerBillingCycle(models.Model):
-    name = models.CharField(max_length=300, verbose_name=_("Name"))
-    days_to_payment = models.IntegerField(verbose_name=_("Days to Payment Date"))
+class EmailAddress(models.Model):
+    email = models.EmailField(max_length=200, verbose_name=_("Email Address"))
+    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=EMAIL_ADDRESS_PURPOSE_CHOICES,
+                               default='H')
 
     class Meta:
-        verbose_name = _('Customer Billing Cycle')
-        verbose_name_plural = _('Customer Billing Cycle')
+        abstract = True
+        verbose_name = _('Email Address')
+        verbose_name_plural = _('Email Address')
         permissions = (
-            ('view_customerbillingcycle', 'Can view billing cycles'),
+            ('view_emailaddress', 'Can view email address'),
         )
 
-    def __unicode__(self):
-        return self.name
-
-
-class CustomerGroup(models.Model):
-    name = models.CharField(max_length=300)
+    def get_purpose(self):
+        return EmailAddressPurpose.choices[self.purpose]
 
     def __unicode__(self):
-        return self.name
+        return "%s: %s" % (self.get_purpose(), self.email)
+
+
+class PhoneAddress(models.Model):
+    phone = models.CharField(max_length=20, verbose_name=_("Phone Number"))
+    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PHONE_ADDRESS_PURPOSE_CHOICES,
+                               default='H')
 
     class Meta:
-        verbose_name = _('Customer Group')
-        verbose_name_plural = _('Customer Groups')
+        abstract = True
+        verbose_name = _('Phone Address')
+        verbose_name_plural = _('Phone Address')
         permissions = (
-            ('view_customer_group', 'Can view customer groups'),
+            ('view_phoneaddress', 'Can view phone address'),
         )
+
+    def get_purpose(self):
+        return PhoneAddressPurpose.choices[self.purpose]
+
+    def __unicode__(self):
+        return "%s: %s" % (self.get_purpose(), self.phone)
 
 
 class PostalAddress(models.Model):
@@ -98,9 +105,9 @@ class PostalAddress(models.Model):
     country = models.CharField(max_length=2, choices=countries, verbose_name=_("Country"), blank=True, null=True)
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=POSTAL_ADDRESS_PURPOSE_CHOICES,
                                default='C')
-    person = models.ForeignKey(Contact, related_name='addresses')
 
     class Meta:
+        abstract = True
         verbose_name = _('Postal Address')
         verbose_name_plural = _('Postal Address')
         permissions = (
@@ -127,55 +134,50 @@ class PostalAddress(models.Model):
         return self.addressline1
 
 
-class PhoneAddress(models.Model):
-    phone = models.CharField(max_length=20, verbose_name=_("Phone Number"))
-    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PHONE_ADDRESS_PURPOSE_CHOICES,
-                               default='H')
-    person = models.ForeignKey(Contact, related_name='phonenumbers')
+class SalesContract(models.Model):
+    external_reference = models.CharField(verbose_name=_("External Reference"), max_length=100, blank=True)
+    discount = models.DecimalField(max_digits=5, decimal_places=2, verbose_name=_("Discount"), blank=True, null=True)
+    description = models.CharField(verbose_name=_("Description"), max_length=100, blank=True, null=True)
+    last_pricing_date = models.DateField(verbose_name=_("Last Pricing Date"), blank=True, null=True, editable=False)
+    last_calculated_price = models.DecimalField(max_digits=17, decimal_places=2,
+                                                verbose_name=_("Last Calculated Price With Tax"),
+                                                blank=True, null=True, editable=False)
+    last_calculated_tax = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculated Tax"),
+                                              blank=True, null=True, editable=False)
+    customer = models.ForeignKey('crm_core.Customer', verbose_name=_("Customer"))
+    currency = models.CharField(max_length=3, choices=currencies, verbose_name=_("Currency"), blank=False, null=False)
+    dateofcreation = CreationDateTimeField(verbose_name=_("Created at"), editable=False)
+    lastmodification = ModificationDateTimeField(verbose_name=_("Last modified"), editable=False)
+    pdf_path = models.CharField(max_length=200, null=True, blank=True, editable=False)
+    cart = cartridge_models.Cart()
 
     class Meta:
-        verbose_name = _('Phone Address')
-        verbose_name_plural = _('Phone Address')
-        permissions = (
-            ('view_phoneaddress', 'Can view phone address'),
-        )
+        abstract = True
 
-    def get_purpose(self):
-        return PhoneAddressPurpose.choices[self.purpose]
-
-    def __unicode__(self):
-        return "%s: %s" % (self.get_purpose(), self.phone)
+    @transaction.atomic()
+    @reversion.create_revision()
+    def save(self, *args, **kwargs):
+        super(SalesContract, self).save(*args, **kwargs)
 
 
-class EmailAddress(models.Model):
-    email = models.EmailField(max_length=200, verbose_name=_("Email Address"))
-    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=EMAIL_ADDRESS_PURPOSE_CHOICES,
-                               default='H')
-    person = models.ForeignKey(Contact, related_name='emailaddresses')
+class Position(cartridge_models.CartItem):
+    position_number = models.IntegerField(verbose_name=_("Position Number"), default=0)
+    product = models.ForeignKey(cartridge_models.Product, verbose_name=_("Product"), blank=True, null=True)
+    unit = models.ForeignKey('crm_core.Unit', verbose_name=_("Unit"), blank=True, null=True)
+    contract = models.ForeignKey('crm_core.Contract', verbose_name=_("Contract"))
 
     class Meta:
-        verbose_name = _('Email Address')
-        verbose_name_plural = _('Email Address')
-        permissions = (
-            ('view_emailaddress', 'Can view email address'),
-        )
-
-    def get_purpose(self):
-        return EmailAddressPurpose.choices[self.purpose]
-
-    def __unicode__(self):
-        return "%s: %s" % (self.get_purpose(), self.email)
+        abstract = True
 
 
 # ########################
 # ##    PARTICIPANTS    ##
 # ########################
 
-
 class Customer(Contact):
     firstname = models.CharField(max_length=300, verbose_name=_("Prename"), blank=True, null=True)
-    billingcycle = models.ForeignKey(CustomerBillingCycle, verbose_name=_('Default Billing Cycle'))
-    ismemberof = models.ManyToManyField(CustomerGroup, verbose_name=_('Is member of'), blank=True, null=True)
+    billingcycle = models.ForeignKey('crm_core.CustomerBillingCycle', verbose_name=_('Default Billing Cycle'))
+    ismemberof = models.ManyToManyField('crm_core.CustomerGroup', verbose_name=_('Is member of'), blank=True, null=True)
 
     class Meta:
         verbose_name = _('Customer')
@@ -299,6 +301,63 @@ class Supplier(Contact):
         return self.name
 
 
+# #########################
+# ##   Contact Related   ##
+# #########################
+
+class CustomerPostalAddress(PostalAddress):
+    person = models.ForeignKey(Customer, related_name='addresses')
+
+
+class SupplierPostalAddress(PostalAddress):
+    person = models.ForeignKey(Supplier, related_name='addresses')
+
+
+class CustomerPhoneAddress(PhoneAddress):
+    person = models.ForeignKey(Customer, related_name='phonenumbers')
+
+
+class SupplierPhoneAddress(PhoneAddress):
+    person = models.ForeignKey(Supplier, related_name='phonenumbers')
+
+
+class CustomerEmailAddress(EmailAddress):
+    person = models.ForeignKey(Customer, related_name='emailaddresses')
+
+
+class SupplierEmailAddress(EmailAddress):
+    person = models.ForeignKey(Supplier, related_name='emailaddresses')
+
+
+class CustomerBillingCycle(models.Model):
+    name = models.CharField(max_length=300, verbose_name=_("Name"))
+    days_to_payment = models.IntegerField(verbose_name=_("Days to Payment Date"))
+
+    class Meta:
+        verbose_name = _('Customer Billing Cycle')
+        verbose_name_plural = _('Customer Billing Cycle')
+        permissions = (
+            ('view_customerbillingcycle', 'Can view billing cycles'),
+        )
+
+    def __unicode__(self):
+        return self.name
+
+
+class CustomerGroup(models.Model):
+    name = models.CharField(max_length=300)
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = _('Customer Group')
+        verbose_name_plural = _('Customer Groups')
+        permissions = (
+            ('view_customer_group', 'Can view customer groups'),
+        )
+
+
 # ##########################
 # ##   CONTRACT RELATED   ##
 # ##########################
@@ -340,13 +399,13 @@ class Contract(models.Model):
     def create_invoice(self):
         invoice = Invoice()
         invoice.contract = self
-        invoice.discount = 0
+        # invoice.discount = 0
         invoice.staff = self.staff
         invoice.customer = self.default_customer
-        invoice.status = 1
+        # invoice.status = 1
         invoice.currency = self.default_currency
         invoice.payableuntil = date.today() + timedelta(days=self.default_customer.billingcycle.days_to_payment)
-        invoice.dateofcreation = date.today().__str__()
+        # invoice.dateofcreation = date.today().__str__()
         invoice.save()
         self.state = 30
         self.save()
@@ -426,17 +485,15 @@ class Contract(models.Model):
         return self.get_name()
 
 
-class PurchaseOrder(models.Model):
+class PurchaseOrder(cartridge_models.Order):
     contract = models.ForeignKey(Contract, verbose_name=_("Contract"), related_name='purchaseorders')
-    customer = models.ForeignKey(Customer, verbose_name=_("Customer"))
-    external_reference = models.CharField(verbose_name=_("External Reference"), max_length=100, blank=True, null=True)
-    supplier = models.ForeignKey(Supplier, verbose_name=_("Supplier"), blank=True, null=True)
+    billing_detail_external_reference = models.CharField(verbose_name=_("External Reference"), max_length=100, blank=True, null=True)
     description = models.CharField(verbose_name=_("Description"), max_length=100, blank=True, null=True)
-    last_pricing_date = models.DateField(verbose_name=_("Last Pricing Date"), blank=True, null=True)
-    last_calculated_price = models.DecimalField(max_digits=17, decimal_places=2,
-                                                verbose_name=_("Last Calculated Price With Tax"), blank=True, null=True)
-    last_calculated_tax = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculated Tax"),
-                                              blank=True, null=True)
+    # last_pricing_date = models.DateField(verbose_name=_("Last Pricing Date"), blank=True, null=True)
+    # last_calculated_price = models.DecimalField(max_digits=17, decimal_places=2,
+    #                                             verbose_name=_("Last Calculated Price With Tax"), blank=True, null=True)
+    # last_calculated_tax = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculated Tax"),
+    #                                           blank=True, null=True)
     staff = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, blank=True,
                               verbose_name=_("Staff"), related_name="db_relpostaff", null=True)
     currency = models.CharField(max_length=3, choices=currencies, verbose_name=_("Currency"), blank=False, null=False)
@@ -456,43 +513,6 @@ class PurchaseOrder(models.Model):
         )
         get_latest_by = 'lastmodification'
 
-    def get_price(self):
-        return 10
-
-    def recalculate_prices(self, pricing_date):
-        price = 0
-        tax = 0
-        try:
-            positions = PurchaseOrderPosition.objects.filter(contract=self.id)
-            if type(positions) == PurchaseOrderPosition:
-                if type(self.discount) == Decimal:
-                    price = int(positions.recalculate_prices(pricing_date, self.customer, self.currency) * (
-                        1 - self.discount / 100) / self.currency.rounding) * self.currency.rounding
-                    tax = int(positions.recalculate_tax(self.currency) * (
-                        1 - self.discount / 100) / self.currency.rounding) * self.currency.rounding
-                else:
-                    price = positions.recalculate_prices(pricing_date, self.customer, self.currency)
-                    tax = positions.recalculate_tax(self.currency)
-            else:
-                for position in positions:
-                    if type(self.discount) == Decimal:
-                        price += int(position.recalculate_prices(pricing_date, self.customer, self.currency) * (
-                            1 - self.discount / 100) / self.currency.rounding) * self.currency.rounding
-                        tax += int(position.recalculate_tax(self.currency) * (
-                            1 - self.discount / 100) / self.currency.rounding) * self.currency.rounding
-                    else:
-                        price += position.recalculate_prices(pricing_date, self.customer, self.currency)
-                        tax += position.recalculate_tax(self.currency)
-            self.last_calculated_price = price
-            self.last_calculated_tax = tax
-            self.last_pricing_date = pricing_date
-            return 1
-        except Quote.DoesNotExist, e:
-            print "ERROR " + e.__str__()
-            print "Der Fehler trat beim File: " + self.sourcefile
-            exit()
-            return 0
-
     def to_html(self):
         return render_to_string('pdf_templates/purchaseorder.html', {'purchaseorder': self})
 
@@ -509,10 +529,12 @@ class PurchaseOrder(models.Model):
     def get_document_url(self):
         return reverse('purchaseorder_detail', args=[str(self.id)])
 
+    def get_price(self):
+        return self.total
+
     @transaction.atomic()
     @reversion.create_revision()
     def save(self, *args, **kwargs):
-        # self.recalculate_prices(date.today())
         super(PurchaseOrder, self).save(*args, **kwargs)
         self.create_pdf()
         super(PurchaseOrder, self).save(*args, **kwargs)
@@ -521,67 +543,13 @@ class PurchaseOrder(models.Model):
         return _("Purchase Order") + " #" + str(self.id)
 
 
-class SalesContract(models.Model):
-    external_reference = models.CharField(verbose_name=_("External Reference"), max_length=100, blank=True)
-    discount = models.DecimalField(max_digits=5, decimal_places=2, verbose_name=_("Discount"), blank=True, null=True)
-    description = models.CharField(verbose_name=_("Description"), max_length=100, blank=True, null=True)
-    last_pricing_date = models.DateField(verbose_name=_("Last Pricing Date"), blank=True, null=True, editable=False)
-    last_calculated_price = models.DecimalField(max_digits=17, decimal_places=2,
-                                                verbose_name=_("Last Calculated Price With Tax"),
-                                                blank=True, null=True, editable=False)
-    last_calculated_tax = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculated Tax"),
-                                              blank=True, null=True, editable=False)
-    customer = models.ForeignKey(Customer, verbose_name=_("Customer"))
-    staff = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, blank=True,
-                              verbose_name=_("Staff"), related_name="db_relscstaff", null=True)
-    currency = models.CharField(max_length=3, choices=currencies, verbose_name=_("Currency"), blank=False, null=False)
-    dateofcreation = CreationDateTimeField(verbose_name=_("Created at"), editable=False)
-    lastmodification = ModificationDateTimeField(verbose_name=_("Last modified"), editable=False)
-    lastmodifiedby = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True},
-                                       verbose_name=_("Last modified by"), related_name="db_lstscmodified", null=True,
-                                       blank="True", editable=False)
-    pdf_path = models.CharField(max_length=200, null=True, blank=True, editable=False)
-
-    def recalculate_prices(self, pricing_date):
-        price = 0
-        tax = 0
-        try:
-            positions = SalesContractPosition.objects.filter(contract=self.id)
-            if type(positions) == SalesContractPosition:
-                if type(self.discount) == Decimal:
-                    price = int(positions.recalculate_prices(pricing_date, self.customer, self.currency) * (
-                        1 - self.discount / 100) / self.currency.rounding) * self.currency.rounding
-                    tax = int(positions.recalculate_tax(self.currency) * (
-                        1 - self.discount / 100) / self.currency.rounding) * self.currency.rounding
-                else:
-                    price = positions.recalculate_prices(pricing_date, self.customer, self.currency)
-                    tax = positions.recalculate_tax(self.currency)
-            else:
-                for position in positions:
-                    price += position.recalculate_prices(pricing_date, self.customer, self.currency)
-                    tax += position.recalculate_tax(self.currency)
-                if type(self.discount) == Decimal:
-                    price = int(price * (1 - self.discount / 100) / self.currency.rounding) * self.currency.rounding
-                    tax = int(tax * (1 - self.discount / 100) / self.currency.rounding) * self.currency.rounding
-
-            self.last_calculated_price = price
-            self.last_calculated_tax = tax
-            self.last_pricing_date = pricing_date
-            return 1
-        except SalesContract.DoesNotExist:
-            return 0
-
-    # TODO
-    @transaction.atomic()
-    @reversion.create_revision()
-    def save(self, *args, **kwargs):
-        # self.recalculate_prices(date.today())
-        super(SalesContract, self).save(*args, **kwargs)
-
-
 class Quote(SalesContract):
     contract = models.ForeignKey(Contract, verbose_name=_('Contract'), related_name='quotes')
     validuntil = models.DateField(verbose_name=_("Valid until"))
+    staff = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, blank=True,
+                              verbose_name=_("Staff"), null=True, related_name="quote_staff")
+    lastmodifiedby = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True},
+                                       verbose_name=_("Last modified by"), null=True, blank="True", editable=False)
 
     class Meta:
         verbose_name = _('Quote')
@@ -592,7 +560,7 @@ class Quote(SalesContract):
         get_latest_by = "lastmodification"
 
     def get_price(self):
-        return 20
+        return self.cart.total_price()
 
     def create_invoice(self):
         invoice = Invoice()
@@ -611,9 +579,9 @@ class Quote(SalesContract):
         invoice.save()
         self.save()
         try:
-            quote_positions = SalesContractPosition.objects.filter(contract=self.id)
+            quote_positions = InvoicePosition.objects.filter(contract=self.id)
             for quotePosition in list(quote_positions):
-                invoice_position = SalesContractPosition()
+                invoice_position = InvoicePosition()
                 invoice_position.product = quotePosition.product
                 invoice_position.position_number = quotePosition.positionNumber
                 invoice_position.quantity = quotePosition.quantity
@@ -673,6 +641,10 @@ class Invoice(SalesContract):
     derived_from_quote = models.ForeignKey(Quote, blank=True, null=True, editable=False)
     payment_bank_reference = models.CharField(verbose_name=_("Payment Bank Reference"), max_length=100, blank=True,
                                               null=True)
+    staff = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, blank=True,
+                              verbose_name=_("Staff"), related_name="db_relscstaff", null=True)
+    lastmodifiedby = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True},
+                                       verbose_name=_("Last modified by"), null=True, blank="True", editable=False)
 
     class Meta:
         verbose_name = _('Invoice')
@@ -732,10 +704,6 @@ class TaxRate(models.Model):
     taxrate_in_percent = models.DecimalField(max_digits=5, decimal_places=2, verbose_name=_("Taxrate in Percentage"))
     name = models.CharField(verbose_name=_("Taxname"), max_length=100)
 
-    # TODO
-    def gettaxrate(self):
-        return self.taxrate_in_percent
-
     class Meta:
         verbose_name = _('Tax')
         verbose_name_plural = _('Taxes')
@@ -747,42 +715,16 @@ class TaxRate(models.Model):
         return self.name
 
 
-class ProductCategory(cartridge_models.Category):
-
-    class Meta:
-        verbose_name = _('Product Category')
-        verbose_name_plural = _('Product Categories')
-
-    def __unicode__(self):
-        return self.title
-
-
-class ProductItem(cartridge_models.Product):
-    item_unit = models.ForeignKey(Unit, verbose_name=_("Unit"))
-    item_tax = models.ForeignKey(TaxRate, blank=False)
-    item_category = models.ForeignKey(ProductCategory, verbose_name=_("Product Categorie"), null=True, blank=True)
-
-    class Meta:
-        verbose_name = _('Product')
-        verbose_name_plural = _('Products')
-        permissions = (
-            ('view_product', 'Can view products'),
-        )
-
-    def get_price(self):
-        return self.price()
-
-    def get_tax_rate(self):
-        return self.item_tax.gettaxrate()
-
-    def __unicode__(self):
-        return '%s (#%s)' % (self.title, str(self.pk))
+# class ProductCategory(cartridge_models.Category):
+#
+#     def __unicode__(self):
+#         return self.title
 
 
 class UnitTransform(models.Model):
     from_unit = models.ForeignKey(Unit, verbose_name=_("From Unit"), related_name="db_reltransformfromunit")
     to_unit = models.ForeignKey(Unit, verbose_name=_("To Unit"), related_name="db_reltransformtounit")
-    product = models.ForeignKey(ProductItem, verbose_name=_("Product"))
+    product = models.ForeignKey(cartridge_models.Product, verbose_name=_("Product"))
     factor = models.IntegerField(verbose_name=_("Factor between From and To Unit"), blank=True, null=True)
 
     def transform(self, unit):
@@ -799,69 +741,30 @@ class UnitTransform(models.Model):
         return "From " + self.from_unit.shortname + " to " + self.to_unit.shortname
 
 
-class Position(models.Model):
-    position_number = models.IntegerField(verbose_name=_("Position Number"), default=0)
-    quantity = models.DecimalField(verbose_name=_("Quantity"), decimal_places=3, max_digits=10)
-    description = models.TextField(verbose_name=_("Description"), blank=True, null=True)
-    discount = models.DecimalField(max_digits=5, decimal_places=2, verbose_name=_("Discount"), blank=True, null=True)
-    product = models.ForeignKey(ProductItem, verbose_name=_("Product"), blank=True, null=True)
-    unit = models.ForeignKey(Unit, verbose_name=_("Unit"), blank=True, null=True)
-    sent_on = models.DateField(verbose_name=_("Shipment on"), blank=True, null=True)
-    supplier = models.ForeignKey(Supplier, verbose_name=_("Shipment Supplier"),
-                                 limit_choices_to={'direct_shipment_to_customers': True}, blank=True, null=True)
-    shipment_id = models.CharField(max_length=100, verbose_name=_("Shipment ID"), blank=True, null=True)
-    overwrite_product_price = models.BooleanField(verbose_name=_('Overwrite Product Price'), default=False)
-    position_price_per_unit = models.DecimalField(verbose_name=_("Price Per Unit"), max_digits=17, decimal_places=2,
-                                                  blank=True, null=True)
-    last_pricing_date = models.DateField(verbose_name=_("Last Pricing Date"), blank=True, null=True)
-    last_calculated_price = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculated Price"),
-                                                blank=True, null=True)
-    last_calculated_tax = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculated Tax"),
-                                              blank=True, null=True)
-
-    def recalculate_prices(self, pricing_date, customer, currency):
-        if not self.overwrite_product_price:
-            self.position_price_per_unit = self.product.get_price()
-        if type(self.discount) == Decimal:
-            self.last_calculated_price = int(self.position_price_per_unit * self.quantity * (
-                1 - self.discount / 100) / currency.rounding) * currency.rounding
-        else:
-            self.last_calculated_price = self.position_price_per_unit * self.quantity
-        self.last_pricing_date = pricing_date
-        self.save()
-        return self.last_calculated_price
-
-    def recalculate_tax(self, currency):
-        if type(self.discount) == Decimal:
-            self.last_calculated_tax = int(
-                self.product.get_tax_rate() / 100 * self.position_price_per_unit * self.quantity * (
-                    1 - self.discount / 100) / currency.rounding) * currency.rounding
-        else:
-            self.last_calculated_tax = self.product.get_tax_rate() / 100 * self.position_price_per_unit * self.quantity
-        self.save()
-        return self.last_calculated_tax
-
-    def __unicode__(self):
-        return _("Position") + ": " + str(self.id)
+class QuotePosition(Position):
+    quote = models.ForeignKey(Quote)
 
     class Meta:
-        verbose_name = _('Position')
-        verbose_name_plural = _('Positions')
-
-
-class SalesContractPosition(Position):
-    contract = models.ForeignKey(SalesContract, verbose_name=_("Contract"), related_name='positions')
-
-    class Meta:
-        verbose_name = _('Salescontract Position')
-        verbose_name_plural = _('Salescontract Positions')
+        verbose_name = _('Quote Position')
+        verbose_name_plural = _('Quote Positions')
 
     def __unicode__(self):
-        return _("Salescontract Position") + ": " + str(self.id)
+        return _("Quote Position") + ": " + str(self.id)
 
 
-class PurchaseOrderPosition(Position):
-    contract = models.ForeignKey(PurchaseOrder, verbose_name=_("Contract"))
+class InvoicePosition(Position):
+    invoice = models.ForeignKey(Invoice)
+
+    class Meta:
+        verbose_name = _('Invoice Position')
+        verbose_name_plural = _('Invoice Positions')
+
+    def __unicode__(self):
+        return _("Invoice Position") + ": " + str(self.id)
+
+
+class PurchaseOrderPosition(cartridge_models.OrderItem):
+    # contract = models.ForeignKey(PurchaseOrder, verbose_name=_("Contract"))
 
     class Meta:
         verbose_name = _('Purchaseorder Position')
