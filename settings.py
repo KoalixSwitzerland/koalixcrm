@@ -332,6 +332,7 @@ INSTALLED_APPS = (
     "django_utils",
     "braces",
     "extra_views",
+    "ajax_select",
 
     "international",
     "po_localization",
@@ -396,7 +397,9 @@ MIDDLEWARE_CLASSES = (
 PACKAGE_NAME_FILEBROWSER = "filebrowser_safe"
 PACKAGE_NAME_GRAPPELLI = "grappelli_safe"
 
+CRISPY_FAIL_SILENTLY = not DEBUG
 CRISPY_TEMPLATE_PACK = "bootstrap3"
+
 
 #########################
 # OPTIONAL APPLICATIONS #
@@ -413,6 +416,11 @@ OPTIONAL_APPS = (
 SEARCH_MODEL_CHOICES = None
 SHOP_OPTION_TYPE_CHOICES = ((1, 'Size'), (2, 'Colour'))
 SHOP_ORDER_STATUS_CHOICES = ((1, 'Unprocessed'), (2, 'Processed'))
+
+AJAX_LOOKUP_CHANNELS = {
+    'unit': {'model': 'crm_core.models.QuotePosition', 'search_field': 'product'},
+    'unit_price': {'model': 'crm_core.models.QuotePosition', 'search_field': 'product'},
+}
 
 
 ##################

@@ -4,7 +4,10 @@ from django.conf.urls import patterns, include, url
 from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
 from mezzanine.core.views import direct_to_template
-from crm_core.views import *
+from crm_core import views
+from ajax_select import urls as ajax_select_urls
+
+
 admin.autodiscover()
 
 
@@ -19,125 +22,127 @@ urlpatterns = \
         # admin interface, which would be marginally more secure.
         ('^admin/', include('smuggler.urls')),
         ("^admin/", include(admin.site.urls)),
-        url(r'^dashboard/$', show_dashboard, name='dashboard'),
-        url(r'^login/$', login_user, name='login'),
-        url(r'^logout/$', login_user, name='logout'),
-        url(r'^profileupdate/(?P<pk>\d+)/$', UpdateUserProfile.as_view(), name='profile_update'),
-        url(r'^settings/$', show_settings, name='settings'),
+        url(r'^dashboard/$', views.show_dashboard, name='dashboard'),
+        url(r'^login/$', views.login_user, name='login'),
+        url(r'^logout/$', views.login_user, name='logout'),
+        url(r'^profileupdate/(?P<pk>\d+)/$', views.UpdateUserProfile.as_view(), name='profile_update'),
+        url(r'^settings/$', views.show_settings, name='settings'),
 
         # #############
         # Customer urls
         # #############
 
-        url(r'^customers/$', ListCustomers.as_view(), name='customer_list'),
-        url(r'^customers/detail/(?P<pk>\d+)/$', ViewCustomer.as_view(), name='customer_detail'),
-        url(r'^customers/create/$', CreateCustomer.as_view(), name='customer_create'),
-        url(r'^customers/createcontract/(?P<customer_pk>\d+)/$', create_contract_from_customer,
+        url(r'^customers/$', views.ListCustomers.as_view(), name='customer_list'),
+        url(r'^customers/detail/(?P<pk>\d+)/$', views.ViewCustomer.as_view(), name='customer_detail'),
+        url(r'^customers/create/$', views.CreateCustomer.as_view(), name='customer_create'),
+        url(r'^customers/createcontract/(?P<customer_pk>\d+)/$', views.create_contract_from_customer,
             name='customer_create_contract'),
-        url(r'^customers/edit/(?P<pk>\d+)/$', EditCustomer.as_view(), name='customer_edit'),
-        url(r'^customers/delete/(?P<pk>\d+)/$', DeleteCustomer.as_view(), name='customer_delete'),
+        url(r'^customers/edit/(?P<pk>\d+)/$', views.EditCustomer.as_view(), name='customer_edit'),
+        url(r'^customers/delete/(?P<pk>\d+)/$', views.DeleteCustomer.as_view(), name='customer_delete'),
 
         # #############
         # Supplier urls
         # #############
 
-        url(r'^suppliers/$', ListSuppliers.as_view(), name='supplier_list'),
-        url(r'^suppliers/detail/(?P<pk>\d+)/$', ViewSupplier.as_view(), name='supplier_detail'),
-        url(r'^suppliers/create/$', CreateSupplier.as_view(), name='supplier_create'),
-        url(r'^suppliers/edit/(?P<pk>\d+)/$', EditSupplier.as_view(), name='supplier_edit'),
-        url(r'^suppliers/delete/(?P<pk>\d+)/$', DeleteSupplier.as_view(), name='supplier_delete'),
+        url(r'^suppliers/$', views.ListSuppliers.as_view(), name='supplier_list'),
+        url(r'^suppliers/detail/(?P<pk>\d+)/$', views.ViewSupplier.as_view(), name='supplier_detail'),
+        url(r'^suppliers/create/$', views.CreateSupplier.as_view(), name='supplier_create'),
+        url(r'^suppliers/edit/(?P<pk>\d+)/$', views.EditSupplier.as_view(), name='supplier_edit'),
+        url(r'^suppliers/delete/(?P<pk>\d+)/$', views.DeleteSupplier.as_view(), name='supplier_delete'),
 
         # ########
         # Tax urls
         # ########
 
-        url(r'^taxes/create/$', CreateTax.as_view(), name='tax_create'),
-        url(r'^taxes/edit/(?P<pk>\d+)/$', EditTax.as_view(), name='tax_edit'),
-        url(r'^taxes/delete/(?P<pk>\d+)/$', DeleteTax.as_view(), name='tax_delete'),
+        url(r'^taxes/create/$', views.CreateTax.as_view(), name='tax_create'),
+        url(r'^taxes/edit/(?P<pk>\d+)/$', views.EditTax.as_view(), name='tax_edit'),
+        url(r'^taxes/delete/(?P<pk>\d+)/$', views.DeleteTax.as_view(), name='tax_delete'),
 
         # #########
         # Unit urls
         # #########
 
-        url(r'^units/create/$', CreateUnit.as_view(), name='unit_create'),
-        url(r'^units/edit/(?P<pk>\d+)/$', EditUnit.as_view(), name='unit_edit'),
-        url(r'^units/delete/(?P<pk>\d+)/$', DeleteUnit.as_view(), name='unit_delete'),
+        url(r'^units/create/$', views.CreateUnit.as_view(), name='unit_create'),
+        url(r'^units/edit/(?P<pk>\d+)/$', views.EditUnit.as_view(), name='unit_edit'),
+        url(r'^units/delete/(?P<pk>\d+)/$', views.DeleteUnit.as_view(), name='unit_delete'),
 
         # #####################
         # Product category urls
         # #####################
 
-        url(r'^productcategory/create/$', CreateProductCategory.as_view(), name='productcategory_create'),
-        url(r'^productcategory/edit/(?P<pk>\d+)/$', EditProductCategory.as_view(), name='productcategory_edit'),
-        url(r'^productcategory/delete/(?P<pk>\d+)/$', DeleteProductCategory.as_view(), name='productcategory_delete'),
+        url(r'^productcategory/create/$', views.CreateProductCategory.as_view(), name='productcategory_create'),
+        url(r'^productcategory/edit/(?P<pk>\d+)/$', views.EditProductCategory.as_view(), name='productcategory_edit'),
+        url(r'^productcategory/delete/(?P<pk>\d+)/$',
+            views.DeleteProductCategory.as_view(), name='productcategory_delete'),
 
         # ############
         # Product urls
         # ############
 
-        url(r'^products/$', ListProducts.as_view(), name='product_list'),
-        url(r'^products/create/$', CreateProduct.as_view(), name='product_create'),
-        url(r'^products/edit/(?P<pk>\d+)/$', EditProduct.as_view(), name='product_edit'),
-        url(r'^products/delete/(?P<pk>\d+)/$', DeleteProduct.as_view(), name='product_delete'),
+        url(r'^products/$', views.ListProducts.as_view(), name='product_list'),
+        url(r'^products/create/$', views.CreateProduct.as_view(), name='product_create'),
+        url(r'^products/edit/(?P<pk>\d+)/$', views.EditProduct.as_view(), name='product_edit'),
+        url(r'^products/delete/(?P<pk>\d+)/$', views.DeleteProduct.as_view(), name='product_delete'),
 
         # #################
         # BillingCycle urls
         # #################
 
-        url(r'^billingcycles/create/$', CreateBillingCycle.as_view(), name='customerbillingcycle_create'),
-        url(r'^billingcycles/edit/(?P<pk>\d+)/$', EditBillingCycle.as_view(), name='customerbillingcycle_edit'),
-        url(r'^billingcycles/delete/(?P<pk>\d+)/$', DeleteBillingCycle.as_view(), name='customerbillingcycle_delete'),
+        url(r'^billingcycles/create/$', views.CreateBillingCycle.as_view(), name='customerbillingcycle_create'),
+        url(r'^billingcycles/edit/(?P<pk>\d+)/$', views.EditBillingCycle.as_view(), name='customerbillingcycle_edit'),
+        url(r'^billingcycles/delete/(?P<pk>\d+)/$',
+            views.DeleteBillingCycle.as_view(), name='customerbillingcycle_delete'),
 
         # ##################
         # Purchaseorder urls
         # ##################
 
-        url(r'^purchaseorders/edit/(?P<pk>\d+)/$', EditPurchaseOrder.as_view(), name='purchaseorder_edit'),
-        url(r'^purchaseorders/delete/(?P<pk>\d+)/$', DeletePurchaseOrder.as_view(), name='purchaseorder_delete'),
-        url(r'^purchaseorders/detail/(?P<pk>\d+)/$', view_purchaseorder_pdf, name='purchaseorder_detail'),  # TODO
+        url(r'^purchaseorders/edit/(?P<pk>\d+)/$', views.EditPurchaseOrder.as_view(), name='purchaseorder_edit'),
+        url(r'^purchaseorders/delete/(?P<pk>\d+)/$', views.DeletePurchaseOrder.as_view(), name='purchaseorder_delete'),
+        url(r'^purchaseorders/detail/(?P<pk>\d+)/$', views.view_purchaseorder_pdf, name='purchaseorder_detail'),  # TODO
 
         # ##################
         # CustomerGroup urls
         # ##################
 
-        url(r'^customergroups/create/$', CreateCustomerGroup.as_view(), name='customergroup_create'),
-        url(r'^customergroups/edit/(?P<pk>\d+)/$', EditCustomerGroup.as_view(), name='customergroup_edit'),
-        url(r'^customergroups/delete/(?P<pk>\d+)/$', DeleteCustomerGroup.as_view(), name='customergroup_delete'),
+        url(r'^customergroups/create/$', views.CreateCustomerGroup.as_view(), name='customergroup_create'),
+        url(r'^customergroups/edit/(?P<pk>\d+)/$', views.EditCustomerGroup.as_view(), name='customergroup_edit'),
+        url(r'^customergroups/delete/(?P<pk>\d+)/$', views.DeleteCustomerGroup.as_view(), name='customergroup_delete'),
 
         # #############
         # Contract urls
         # #############
 
-        url(r'^contracts/$', ListContracts.as_view(), name='contract_list'),
-        url(r'^contracts/detail/(?P<pk>\d+)/$', ViewContract.as_view(), name='contract_detail'),
-        url(r'^contracts/create/$', CreateContract.as_view(), name='contract_create'),
-        url(r'^contracts/createinvoice/(?P<contract_pk>\d+)/$', create_invoice_from_contract,
+        url(r'^contracts/$', views.ListContracts.as_view(), name='contract_list'),
+        url(r'^contracts/detail/(?P<pk>\d+)/$', views.ViewContract.as_view(), name='contract_detail'),
+        url(r'^contracts/create/$', views.CreateContract.as_view(), name='contract_create'),
+        url(r'^contracts/createinvoice/(?P<contract_pk>\d+)/$', views.create_invoice_from_contract,
             name='contract_create_invoice'),
-        url(r'^contracts/createquote/(?P<contract_pk>\d+)/$', create_quote_from_contract, name='contract_create_quote'),
-        url(r'^contracts/createpurchaseorder/(?P<contract_pk>\d+)/$', create_purchaseorder_from_contract,
+        url(r'^contracts/createquote/(?P<contract_pk>\d+)/$',
+            views.create_quote_from_contract, name='contract_create_quote'),
+        url(r'^contracts/createpurchaseorder/(?P<contract_pk>\d+)/$', views.create_purchaseorder_from_contract,
             name='contract_create_purchaseorder'),
-        url(r'^contracts/edit/(?P<pk>\d+)/$', EditContract.as_view(), name='contract_edit'),
-        url(r'^contracts/delete/(?P<pk>\d+)/$', DeleteContract.as_view(), name='contract_delete'),
+        url(r'^contracts/edit/(?P<pk>\d+)/$', views.EditContract.as_view(), name='contract_edit'),
+        url(r'^contracts/delete/(?P<pk>\d+)/$', views.DeleteContract.as_view(), name='contract_delete'),
 
         # ############
         # Invoice urls
         # ############
 
-        url(r'^invoices/edit/(?P<pk>\d+)/$', EditInvoice.as_view(), name='invoice_edit'),
-        url(r'^invoices/delete/(?P<pk>\d+)/$', DeleteInvoice.as_view(), name='invoice_delete'),
-        url(r'^invoices/detail/(?P<pk>\d+)/$', view_invoice_pdf, name='invoice_detail'),  # TODO
+        url(r'^invoices/edit/(?P<pk>\d+)/$', views.EditInvoice.as_view(), name='invoice_edit'),
+        url(r'^invoices/delete/(?P<pk>\d+)/$', views.DeleteInvoice.as_view(), name='invoice_delete'),
+        url(r'^invoices/detail/(?P<pk>\d+)/$', views.view_invoice_pdf, name='invoice_detail'),  # TODO
 
         # ##########
         # Quote urls
         # ##########
 
-        url(r'^quotes/create/$', CreateQuote.as_view(), name='quote_create'),
-        url(r'^quotes/createinvoice/(?P<quote_pk>\d+)/$', create_invoice_from_quote, name='quote_create_invoice'),
-        url(r'^quotes/createpurchaseorder/(?P<quote_pk>\d+)/$', create_purchaseorder_from_quote,
+        url(r'^quotes/createinvoice/(?P<quote_pk>\d+)/$', views.create_invoice_from_quote, name='quote_create_invoice'),
+        url(r'^quotes/createpurchaseorder/(?P<quote_pk>\d+)/$', views.create_purchaseorder_from_quote,
             name='quote_create_purchaseorder'),
-        url(r'^quotes/edit/(?P<pk>\d+)/$', EditQuote.as_view(), name='quote_edit'),
-        url(r'^quotes/delete/(?P<pk>\d+)/$', DeleteQuote.as_view(), name='quote_delete'),
-        url(r'^quotes/detail/(?P<pk>\d+)/$', view_quote_pdf, name='quote_detail'),  # TODO
+        url(r'^quotes/edit/(?P<pk>\d+)/$', views.EditQuote.as_view(), name='quote_edit'),
+        url(r'^quotes/delete/(?P<pk>\d+)/$', views.DeleteQuote.as_view(), name='quote_delete'),
+        url(r'^quotes/detail/(?P<pk>\d+)/$', views.view_quote_pdf, name='quote_detail'),  # TODO
     )
 
 urlpatterns += patterns('',
@@ -191,7 +196,7 @@ try:
     import ajax_select
     # If django-ajax-selects is installed, include its URLs:
     urlpatterns += patterns('',
-                            (r'^ajax-select/', include('ajax_select.urls'))
+                            (r'^admin/lookups/', include(ajax_select_urls)),
     )
 except ImportError:
     pass

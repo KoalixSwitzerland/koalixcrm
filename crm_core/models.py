@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 from django.conf import settings
 from django.db import models, transaction
 from django.template.loader import render_to_string
@@ -138,18 +138,14 @@ class SalesContract(models.Model):
     external_reference = models.CharField(verbose_name=_("External Reference"), max_length=100, blank=True)
     discount = models.DecimalField(max_digits=5, decimal_places=2, verbose_name=_("Discount"), blank=True, null=True)
     description = models.CharField(verbose_name=_("Description"), max_length=100, blank=True, null=True)
-    last_pricing_date = models.DateField(verbose_name=_("Last Pricing Date"), blank=True, null=True, editable=False)
-    last_calculated_price = models.DecimalField(max_digits=17, decimal_places=2,
-                                                verbose_name=_("Last Calculated Price With Tax"),
-                                                blank=True, null=True, editable=False)
-    last_calculated_tax = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculated Tax"),
-                                              blank=True, null=True, editable=False)
     customer = models.ForeignKey('crm_core.Customer', verbose_name=_("Customer"))
     currency = models.CharField(max_length=3, choices=currencies, verbose_name=_("Currency"), blank=False, null=False)
     dateofcreation = CreationDateTimeField(verbose_name=_("Created at"), editable=False)
     lastmodification = ModificationDateTimeField(verbose_name=_("Last modified"), editable=False)
+    lastmodifiedby = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, blank=True,
+                                       verbose_name=_("Last modified by"), null=True)
     pdf_path = models.CharField(max_length=200, null=True, blank=True, editable=False)
-    cart = cartridge_models.Cart()
+    # cart = models.ForeignKey('crm_core.CustomerCart', null=True)
 
     class Meta:
         abstract = True
@@ -160,14 +156,15 @@ class SalesContract(models.Model):
         super(SalesContract, self).save(*args, **kwargs)
 
 
-class Position(cartridge_models.CartItem):
-    position_number = models.IntegerField(verbose_name=_("Position Number"), default=0)
-    product = models.ForeignKey(cartridge_models.Product, verbose_name=_("Product"), blank=True, null=True)
-    unit = models.ForeignKey('crm_core.Unit', verbose_name=_("Unit"), blank=True, null=True)
-    contract = models.ForeignKey('crm_core.Contract', verbose_name=_("Contract"))
+# #############################
+# ## CARTRIDGE MODIFICATIONS ##
+# #############################
 
-    class Meta:
-        abstract = True
+class CustomerCartItem(cartridge_models.CartItem):
+    product = models.ForeignKey(cartridge_models.Product, verbose_name=_('Product'))
+
+CustomerCartItem._meta.get_field('description').blank = True
+CustomerCartItem._meta.get_field('quantity').min_value = 0
 
 
 # ########################
@@ -399,27 +396,22 @@ class Contract(models.Model):
     def create_invoice(self):
         invoice = Invoice()
         invoice.contract = self
-        # invoice.discount = 0
         invoice.staff = self.staff
         invoice.customer = self.default_customer
-        # invoice.status = 1
         invoice.currency = self.default_currency
         invoice.payableuntil = date.today() + timedelta(days=self.default_customer.billingcycle.days_to_payment)
-        # invoice.dateofcreation = date.today().__str__()
         invoice.save()
         self.state = 30
         self.save()
         return invoice
 
     def create_quote(self):
-        quote = Quote()
-        quote.contract = self
+        quote = Quote(contract=self, customer=self.default_customer)
         quote.discount = 0
         quote.staff = self.staff
-        quote.customer = self.default_customer
         quote.status = 1
         quote.currency = self.default_currency
-        quote.validuntil = date.today()
+        quote.validuntil = date.today() + timedelta(days=self.default_customer.billingcycle.days_to_payment)
         quote.dateofcreation = date.today()
         quote.save()
         self.state = 50
@@ -451,8 +443,7 @@ class Contract(models.Model):
         return ContractStatesLabelEnum.choices[self.state]
 
     def get_absolute_url(self):
-        url = '/contracts/detail/' + str(self.pk)  # TODO: Bad solution
-        return url
+        return reverse('contract_detail', args=[str(self.pk)])
 
     def get_quote_detail_url(self):
         return self.quotes.latest().get_document_url()
@@ -487,21 +478,18 @@ class Contract(models.Model):
 
 class PurchaseOrder(cartridge_models.Order):
     contract = models.ForeignKey(Contract, verbose_name=_("Contract"), related_name='purchaseorders')
-    billing_detail_external_reference = models.CharField(verbose_name=_("External Reference"), max_length=100, blank=True, null=True)
+    billing_detail_external_reference = models.CharField(
+        verbose_name=_("External Reference"), max_length=100, blank=True, null=True)
     description = models.CharField(verbose_name=_("Description"), max_length=100, blank=True, null=True)
-    # last_pricing_date = models.DateField(verbose_name=_("Last Pricing Date"), blank=True, null=True)
-    # last_calculated_price = models.DecimalField(max_digits=17, decimal_places=2,
-    #                                             verbose_name=_("Last Calculated Price With Tax"), blank=True, null=True)
-    # last_calculated_tax = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculated Tax"),
-    #                                           blank=True, null=True)
-    staff = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, blank=True,
-                              verbose_name=_("Staff"), related_name="db_relpostaff", null=True)
+    staff = models.ForeignKey(
+        settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, blank=True, verbose_name=_("Staff"), null=True,
+        related_name='purchaseorder_staff')
     currency = models.CharField(max_length=3, choices=currencies, verbose_name=_("Currency"), blank=False, null=False)
     dateofcreation = CreationDateTimeField(verbose_name=_("Created at"))
     lastmodification = ModificationDateTimeField(verbose_name=_("Last modified"))
-    lastmodifiedby = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True},
-                                       verbose_name=_("Last modified by"), related_name="db_polstmodified", null=True,
-                                       blank=True)
+    lastmodifiedby = models.ForeignKey(
+        settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, verbose_name=_("Last modified by"), blank=True,
+        related_name='purchaseorder_modifiedby')
     derived_from_quote = models.ForeignKey('Quote', related_name='purchaseorders', null=True, blank=True)
     pdf_path = models.CharField(max_length=200, null=True, blank=True, editable=False)
 
@@ -535,9 +523,9 @@ class PurchaseOrder(cartridge_models.Order):
     @transaction.atomic()
     @reversion.create_revision()
     def save(self, *args, **kwargs):
-        super(PurchaseOrder, self).save(*args, **kwargs)
-        self.create_pdf()
-        super(PurchaseOrder, self).save(*args, **kwargs)
+        return super(PurchaseOrder, self).save(*args, **kwargs)
+        # self.create_pdf()
+        # super(PurchaseOrder, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return _("Purchase Order") + " #" + str(self.id)
@@ -545,11 +533,11 @@ class PurchaseOrder(cartridge_models.Order):
 
 class Quote(SalesContract):
     contract = models.ForeignKey(Contract, verbose_name=_('Contract'), related_name='quotes')
-    validuntil = models.DateField(verbose_name=_("Valid until"))
-    staff = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, blank=True,
-                              verbose_name=_("Staff"), null=True, related_name="quote_staff")
-    lastmodifiedby = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True},
-                                       verbose_name=_("Last modified by"), null=True, blank="True", editable=False)
+    validuntil = models.DateField(verbose_name=_("Valid until"), null=True)
+    staff = models.ForeignKey(
+        settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, blank=True, verbose_name=_("Staff"),
+        null=True, related_name="quote_staff")
+    cart = models.ForeignKey(cartridge_models.Cart, null=True)
 
     class Meta:
         verbose_name = _('Quote')
@@ -558,6 +546,14 @@ class Quote(SalesContract):
             ('view_quote', 'Can view quotes'),
         )
         get_latest_by = "lastmodification"
+
+    def __init__(self, *args, **kwargs):
+        super(Quote, self).__init__(*args, **kwargs)
+        if not self.cart:
+            cart = cartridge_models.Cart()
+            cart.save()
+            self.cart = cart
+            self.save()
 
     def get_price(self):
         return self.cart.total_price()
@@ -574,34 +570,33 @@ class Quote(SalesContract):
         invoice.currency = self.currency
         invoice.payableuntil = date.today() + timedelta(
             days=self.customer.billingcycle.days_to_payment)
-        invoice.dateofcreation = date.today().__str__()
         invoice.customerBillingCycle = self.customer.billingcycle
         invoice.save()
         self.save()
-        try:
-            quote_positions = InvoicePosition.objects.filter(contract=self.id)
-            for quotePosition in list(quote_positions):
-                invoice_position = InvoicePosition()
-                invoice_position.product = quotePosition.product
-                invoice_position.position_number = quotePosition.positionNumber
-                invoice_position.quantity = quotePosition.quantity
-                invoice_position.description = quotePosition.description
-                invoice_position.discount = quotePosition.discount
-                invoice_position.product = quotePosition.product
-                invoice_position.unit = quotePosition.unit
-                invoice_position.sent_on = quotePosition.sentOn
-                invoice_position.supplier = quotePosition.supplier
-                invoice_position.shipment_id = quotePosition.shipmentID
-                invoice_position.overwrite_product_price = quotePosition.overwriteProductPrice
-                invoice_position.position_price_per_unit = quotePosition.positionPricePerUnit
-                invoice_position.last_pricing_date = quotePosition.lastPricingDate
-                invoice_position.last_calculated_price = quotePosition.lastCalculatedPrice
-                invoice_position.last_calculated_tax = quotePosition.lastCalculatedTax
-                invoice_position.contract = invoice
-                invoice_position.save()
-            return invoice
-        except Quote.DoesNotExist:
-            return
+        # try:
+        #     quote_positions = InvoicePosition.objects.filter(contract=self.pk)
+        #     for quotePosition in list(quote_positions):
+        #         invoice_position = InvoicePosition()
+        #         invoice_position.product = quotePosition.product
+        #         invoice_position.position_number = quotePosition.positionNumber
+        #         invoice_position.quantity = quotePosition.quantity
+        #         invoice_position.description = quotePosition.description
+        #         invoice_position.discount = quotePosition.discount
+        #         invoice_position.product = quotePosition.product
+        #         invoice_position.unit = quotePosition.unit
+        #         invoice_position.sent_on = quotePosition.sentOn
+        #         invoice_position.supplier = quotePosition.supplier
+        #         invoice_position.shipment_id = quotePosition.shipmentID
+        #         invoice_position.overwrite_product_price = quotePosition.overwriteProductPrice
+        #         invoice_position.position_price_per_unit = quotePosition.positionPricePerUnit
+        #         invoice_position.last_pricing_date = quotePosition.lastPricingDate
+        #         invoice_position.last_calculated_price = quotePosition.lastCalculatedPrice
+        #         invoice_position.last_calculated_tax = quotePosition.lastCalculatedTax
+        #         invoice_position.contract = invoice
+        #         invoice_position.save()
+        #     return invoice
+        # except Quote.DoesNotExist:
+        return
 
     def create_purchase_order(self):
         purchase_order = self.contract.create_purchase_order()
@@ -630,9 +625,10 @@ class Quote(SalesContract):
     @transaction.atomic()
     @reversion.create_revision()
     def save(self, *args, **kwargs):
-        super(Quote, self).save(*args, **kwargs)
-        self.create_pdf()
-        super(Quote, self).save(*args, **kwargs)
+        self.cart.last_updated = datetime.now()
+        self.cart.save()
+        return super(Quote, self).save(*args, **kwargs)
+        # self.create_pdf()
 
 
 class Invoice(SalesContract):
@@ -643,8 +639,6 @@ class Invoice(SalesContract):
                                               null=True)
     staff = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, blank=True,
                               verbose_name=_("Staff"), related_name="db_relscstaff", null=True)
-    lastmodifiedby = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True},
-                                       verbose_name=_("Last modified by"), null=True, blank="True", editable=False)
 
     class Meta:
         verbose_name = _('Invoice')
@@ -655,7 +649,7 @@ class Invoice(SalesContract):
         get_latest_by = 'lastmodification'
 
     def get_price(self):
-        return 30
+        return self.cart.total_price()
 
     def to_html(self):
         return render_to_string('pdf_templates/invoice.html', {'invoice': self})
@@ -715,12 +709,6 @@ class TaxRate(models.Model):
         return self.name
 
 
-# class ProductCategory(cartridge_models.Category):
-#
-#     def __unicode__(self):
-#         return self.title
-
-
 class UnitTransform(models.Model):
     from_unit = models.ForeignKey(Unit, verbose_name=_("From Unit"), related_name="db_reltransformfromunit")
     to_unit = models.ForeignKey(Unit, verbose_name=_("To Unit"), related_name="db_reltransformtounit")
@@ -739,39 +727,6 @@ class UnitTransform(models.Model):
 
     def __unicode__(self):
         return "From " + self.from_unit.shortname + " to " + self.to_unit.shortname
-
-
-class QuotePosition(Position):
-    quote = models.ForeignKey(Quote)
-
-    class Meta:
-        verbose_name = _('Quote Position')
-        verbose_name_plural = _('Quote Positions')
-
-    def __unicode__(self):
-        return _("Quote Position") + ": " + str(self.id)
-
-
-class InvoicePosition(Position):
-    invoice = models.ForeignKey(Invoice)
-
-    class Meta:
-        verbose_name = _('Invoice Position')
-        verbose_name_plural = _('Invoice Positions')
-
-    def __unicode__(self):
-        return _("Invoice Position") + ": " + str(self.id)
-
-
-class PurchaseOrderPosition(cartridge_models.OrderItem):
-    # contract = models.ForeignKey(PurchaseOrder, verbose_name=_("Contract"))
-
-    class Meta:
-        verbose_name = _('Purchaseorder Position')
-        verbose_name_plural = _('Purchaseorder Positions')
-
-    def __unicode__(self):
-        return _("Purchaseorder Position") + ": " + str(self.id)
 
 
 class HTMLFile(models.Model):
@@ -825,3 +780,27 @@ class UserExtension(models.Model):
 
     def __unicode__(self):
         return self.user.__unicode__()
+
+
+class ProductUnit(models.Model):
+    product = models.OneToOneField(cartridge_models.Product, verbose_name=_('Product'), related_name='item_unit')
+    unit = models.ForeignKey(Unit, verbose_name=_('Unit'))
+
+    class Meta:
+        verbose_name = _('Product Unit')
+        verbose_name_plural = _('Product Units')
+
+    def __unicode__(self):
+        return "%s [%s]" % (self.product, self.unit)
+
+
+class ProductTax(models.Model):
+    product = models.OneToOneField(cartridge_models.Product, verbose_name=_('Product'), related_name='item_tax')
+    tax = models.ForeignKey(TaxRate, verbose_name=_('Taxrate'))
+
+    class Meta:
+        verbose_name = _('Product Taxrate')
+        verbose_name_plural = _('Product Taxrates')
+
+    def __unicode__(self):
+        return "%s [%s]" % (self.product, self.tax)

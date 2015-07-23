@@ -8,8 +8,7 @@ from cartridge.shop import models as cartridge_models
 from cartridge.shop.admin import admin as cartridge_admin
 from crm_core.models import UserExtension, Customer, Invoice, PurchaseOrder, Quote, Supplier, HTMLFile, TemplateSet, \
     CustomerBillingCycle, CustomerGroup, Contract, Unit, TaxRate, \
-    UnitTransform
-
+    UnitTransform, ProductUnit, ProductTax
 
 
 # Define an inline admin descriptor
@@ -162,8 +161,6 @@ class QuoteAdmin(reversion.VersionAdmin):
         'validuntil',
         'currency',
         'discount',
-        'last_calculated_price',
-        'last_pricing_date',
         'staff',
         'lastmodifiedby',
     )
@@ -172,7 +169,6 @@ class QuoteAdmin(reversion.VersionAdmin):
         'contract',
         'customer',
         'staff',
-        'last_pricing_date',
         'lastmodifiedby',
     )
 
@@ -189,8 +185,6 @@ class InvoiceAdmin(reversion.VersionAdmin):
         'payableuntil',
         'currency',
         'discount',
-        'last_calculated_price',
-        'last_pricing_date',
         'staff',
         'lastmodifiedby',
         'derived_from_quote',
@@ -200,7 +194,6 @@ class InvoiceAdmin(reversion.VersionAdmin):
         'contract',
         'customer',
         'staff',
-        'last_pricing_date',
         'lastmodifiedby',
         'derived_from_quote',
     )
@@ -319,3 +312,14 @@ class ProductOptionAdmin(admin.ModelAdmin):
     change_list_template = 'smuggler/change_list.html'
 
 admin.site.register(cartridge_models.ProductOption, ProductOptionAdmin)
+
+
+class ProductUnitAdmin(admin.ModelAdmin):
+    change_list_template = 'smuggler/change_list.html'
+
+admin.site.register(ProductUnit, ProductUnitAdmin)
+
+class ProductTaxAdmin(admin.ModelAdmin):
+    change_list_template = 'smuggler/change_list.html'
+
+admin.site.register(ProductTax, ProductTaxAdmin)

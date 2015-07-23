@@ -1,0 +1,13 @@
+{% extends "email/base.html" %}
+{% load i18n %}
+
+
+{% block main %}
+
+{% if not LANGUAGE_BIDI %}
+    {% include "email/receipt.html" %}
+{% else %}
+    {% include "email/receipt_rtl.html" %}
+{% endif %}
+
+{% endblock %}

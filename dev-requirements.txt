@@ -1,4 +1,4 @@
-Mezzanine>=3.1.10
+Mezzanine>=4.0.0
 django-debug-toolbar
 sphinx-rtd-theme
 django-extensions

@@ -1,8 +1,12 @@
 # coding=utf-8
+
 from datetimewidget.widgets import DateWidget
 from django import forms
 from crispy_forms.helper import FormHelper
-from models import PurchaseOrder, PurchaseOrderPosition, Quote, Invoice, QuotePosition, InvoicePosition
+from django.forms import inlineformset_factory
+from models import PurchaseOrder, Quote, Invoice, CustomerCartItem, ProductUnit, ProductTax
+from cartridge.shop.models import Cart, Product
+from ajax_select import make_ajax_field
 
 
 class PurchaseOrderForm(forms.ModelForm):
@@ -45,40 +49,27 @@ class InvoiceForm(forms.ModelForm):
         self.helper.form_tag = False
 
 
-class PurchaseOrderPositionInlineForm(forms.ModelForm):
+class ProductForm(forms.ModelForm):
 
     class Meta:
-        model = PurchaseOrderPosition
-        fields = ['quantity', 'description', ]
-
-    def __init__(self, *args, **kwargs):
-        super(PurchaseOrderPositionInlineForm, self).__init__(*args, **kwargs)
-        self.fields['description'].widget = forms.TextInput()
-        self.helper = FormHelper()
-        self.helper.form_tag = False
+        model = Product
+        exclude = ('status', 'meta_title', )
 
 
-class QuotePositionInlineForm(forms.ModelForm):
+class ProductUnitForm(forms.ModelForm):
 
     class Meta:
-        model = QuotePosition
-        fields = ['quantity', 'description', 'product' ]
-
-    def __init__(self, *args, **kwargs):
-        super(QuotePositionInlineForm, self).__init__(*args, **kwargs)
-        self.fields['description'].widget = forms.TextInput()
-        self.helper = FormHelper()
-        self.helper.form_tag = False
+        model = ProductUnit
+        exclude = ('product', )
 
 
-class InvoicePositionInlineForm(forms.ModelForm):
+class ProductTaxForm(forms.ModelForm):
 
     class Meta:
-        model = InvoicePosition
-        fields = ['quantity', 'description', 'product' ]
+        model = ProductTax
+        exclude = ('product', )
 
-    def __init__(self, *args, **kwargs):
-        super(InvoicePositionInlineForm, self).__init__(*args, **kwargs)
-        self.fields['description'].widget = forms.TextInput()
-        self.helper = FormHelper()
-        self.helper.form_tag = False
+
+PositionFormSet = inlineformset_factory(Cart, CustomerCartItem,
+    fields=('quantity', 'description', 'unit_price', 'total_price', 'product'),
+    extra=5, can_delete=True)

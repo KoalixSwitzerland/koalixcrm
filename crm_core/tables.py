@@ -1,7 +1,7 @@
 from cartridge.shop.models import Product, Category
 import django_tables2 as tables
 from crm_core.custom.custom_columns import LabelColumn, ButtonsColumn, ModelDetailLinkColumn, IncludeColumn, \
-    SafeFieldColumn
+    SafeFieldColumn, CssFieldColumn
 from crm_core.models import Contract, Customer, Supplier, TaxRate, CustomerBillingCycle, Unit, \
     CustomerGroup
 from django.utils.translation import ugettext_lazy as _
@@ -132,6 +132,8 @@ class SupplierTable(tables.Table):
 
 
 class ProductTable(tables.Table):
+    unit = CssFieldColumn('record.item_unit.unit', verbose_name=_('Unit'))
+    tax = CssFieldColumn('record.item_tax.tax', verbose_name=_('Taxrate'))
     description = SafeFieldColumn('record.description')
     edit_product = IncludeColumn(
         'crm_core/includes/product_row_edit_toolbar.html',
@@ -146,7 +148,7 @@ class ProductTable(tables.Table):
                    'sale_id', 'sale_price', 'sale_from', 'sale_to', 'sku', 'content', 'image', 'date_added',
                    'related_products', 'upsell_products', 'product_ptr', 'keywords_string', 'site', 'slug',
                    'gen_description', '_meta_title', 'rating_average', 'created')
-        sequence = ('status', 'title', 'description', 'available', 'unit_price', 'num_in_stock')
+        sequence = ('status', 'title', 'description', 'available', 'unit_price', 'num_in_stock', 'unit', 'tax')
         order_by = ('id', )
 
 

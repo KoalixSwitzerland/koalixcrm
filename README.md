@@ -27,7 +27,11 @@ Issue status:
     
 Bountysource:
      [![Bountysource](https://www.bountysource.com/badge/team?team_id=64296&style=bounties_received)](https://www.bountysource.com/teams/koalix-crm/issues)
-    
+
+Donate:
+    [![PayPal](https://img.shields.io/badge/paypal-donate-yellow.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ES8RFB7JN9CXC)
+
+
 
 *****************************************************
 Note: This project is not yet open for production use
@@ -93,8 +97,11 @@ Releases are organized in [Sprints](http://en.wikipedia.org/wiki/Scrum_(software
 
 
 Please make a donation if you like this project and want help to even make it better:
-    
+
 [<img src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif">](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ES8RFB7JN9CXC)
+
+## Thank you!
+We really appreciate every donation that helps us take KoalixCRM to the next level.    
 
 
 ## License

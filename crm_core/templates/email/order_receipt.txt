@@ -1,0 +1,27 @@
+{% extends "email/base.txt" %}
+{% load shop_tags i18n %}
+
+{% block main %}
+{% trans "Dear" %} {{ order.billing_detail_first_name }},
+
+{% trans "Your order has been successful, details are below." %}
+
+{% trans "Order ID:" %} #{{ order.id }}
+
+{% trans "Billing Details:" %}
+{% for field, value in order_billing_detail_fields %}
+{{ field }}: {{ value }}
+{% endfor %}
+
+{% trans "Shipping Details:" %}
+{% for field, value in order_shipping_detail_fields %}
+{{ field }}: {{ value }}
+{% endfor %}
+
+{% trans "Items Ordered:" %}
+{% for item in order_items %}
+{{ item.quantity }} x {{ item.description }} {{ item.unit_price|currency }} {% trans "each" %}
+{% endfor %}
+
+{% order_totals_text %}
+{% endblock %}

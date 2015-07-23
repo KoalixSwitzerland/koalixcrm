@@ -37,6 +37,14 @@ class LabelColumn(tables.TemplateColumn):
         super(LabelColumn, self).__init__(**extra)
 
 
+class CssFieldColumn(tables.TemplateColumn):
+
+    def __init__(self, field, **extra):
+        css_class = "class=%s" % extra.get('class', '')
+        extra['template_code'] = "<span %s>{{ %s }}</span>" % (css_class, field)
+        super(CssFieldColumn, self).__init__(**extra)
+
+
 class ButtonsColumn(tables.TemplateColumn):
 
     def __init__(self, btn_list, **extra):
