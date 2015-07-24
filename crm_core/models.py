@@ -163,6 +163,12 @@ class SalesContract(models.Model):
 class CustomerCartItem(cartridge_models.CartItem):
     product = models.ForeignKey(cartridge_models.Product, verbose_name=_('Product'))
 
+    def save(self, *args, **kwargs):
+        self.sku = self.product.sku
+        self.unit_price = self.product.price()
+        self.url = self.product.get_absolute_url()
+        super(CustomerCartItem, self).save(*args, **kwargs)
+
 CustomerCartItem._meta.get_field('description').blank = True
 CustomerCartItem._meta.get_field('quantity').min_value = 0
 
@@ -383,6 +389,7 @@ class Contract(models.Model):
         )
         get_latest_by = 'lastmodification'
 
+    # ToDo
     def get_price(self):
         res = "N/A"
         if self.has_quotes() and not self.has_invoices() and not self.has_purchaseorders():

@@ -70,6 +70,11 @@ class ProductTaxForm(forms.ModelForm):
         exclude = ('product', )
 
 
-PositionFormSet = inlineformset_factory(Cart, CustomerCartItem,
+PositionFormSet = inlineformset_factory(
+    Cart, CustomerCartItem,
     fields=('quantity', 'description', 'unit_price', 'total_price', 'product'),
+    widgets={
+        'total_price': forms.TextInput(attrs={'readonly': True}),
+        'unit_price': forms.TextInput(attrs={'readonly': True})
+    },
     extra=5, can_delete=True)
