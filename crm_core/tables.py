@@ -88,7 +88,7 @@ class ContractTable(tables.Table):
         model = Contract
         exclude = ('id', 'staff', 'default_supplier', 'default_currency', 'dateofcreation', 'lastmodifiedby')
         sequence = ('state', 'name', 'default_customer', 'description', 'price', 'lastmodification')
-        order_by = ('state', '-lastmodification')
+        order_by = ('-lastmodification', 'state')
 
 
 class CustomerTable(tables.Table):

@@ -170,7 +170,6 @@ class CustomerCartItem(cartridge_models.CartItem):
         super(CustomerCartItem, self).save(*args, **kwargs)
 
 CustomerCartItem._meta.get_field('description').blank = True
-CustomerCartItem._meta.get_field('quantity').min_value = 0
 
 
 # ########################
@@ -540,7 +539,7 @@ class PurchaseOrder(SalesContract):
         super(PurchaseOrder, self).save(*args, **kwargs)
         self.contract.state = 70
         self.contract.save()
-        # self.create_pdf()
+        self.create_pdf()
 
 
 class Quote(SalesContract):
@@ -618,7 +617,7 @@ class Quote(SalesContract):
         super(Quote, self).save(*args, **kwargs)
         self.contract.state = 50
         self.contract.save()
-        # self.create_pdf()
+        self.create_pdf()
 
 
 class Invoice(SalesContract):
@@ -676,7 +675,7 @@ class Invoice(SalesContract):
         super(Invoice, self).save(*args, **kwargs)
         self.contract.state = 30
         self.contract.save()
-        # self.create_pdf()
+        self.create_pdf()
 
 
 class Unit(models.Model):

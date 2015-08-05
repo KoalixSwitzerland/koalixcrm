@@ -4,7 +4,7 @@ po-localization
 django-bootstrap3
 django-braces>=1.4.0
 django-fsm>=2.2.0
-django-extra-views==0.6.5
+django-extra-views>=0.6.5
 django-utils2>=1.8.0
 WeasyPrint
 django-crispy-forms

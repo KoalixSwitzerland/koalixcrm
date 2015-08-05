@@ -1,9 +1,5 @@
-Mezzanine>=4.0.0
-django-debug-toolbar
-sphinx-rtd-theme
-django-extensions
-coverage
-Django<1.8
+Mezzanine>=4.0.1
+cartridge
 po-localization
 django-bootstrap3
 django-braces>=1.4.0
@@ -17,3 +13,9 @@ django-extensions
 django-tables2
 django-reversion
 django-smuggler
+django-ajax-selects
+Django<1.8
+django-debug-toolbar
+sphinx-rtd-theme
+django-extensions
+coverage

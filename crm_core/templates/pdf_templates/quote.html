@@ -41,12 +41,12 @@
     </tr>
     </thead>
     <tbody>
-    {% for position in quote.positions.all %}
+    {% for position in quote.cart.items.all %}
         <tr>
-        <td>{{ position.position_number }}</td>
-        <td>{{ position.product }}</td>
-        <td style="text-align: center">{{ position.quantity }}{{ position.unit }}</td>
-        <td style="text-align: right">{{ position.product.get_price }}</td>
+        <td>{{ position.sku }}</td>
+        <td>{{ position.product.title }}</td>
+        <td style="text-align: center">{{ position.quantity }} {{ position.item_unit }}</td>
+        <td style="text-align: right">{{ position.total_price }}</td>
         </tr>
     {% endfor %}
     </tbody>
