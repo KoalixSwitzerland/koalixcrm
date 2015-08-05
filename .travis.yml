@@ -9,8 +9,9 @@ install:
   - pip install python-coveralls
   - pip install coverage
 script:
+  - python manage.py migrate shop
+  - python manage.py migrate
   - python manage.py check
-  -python manage.py migrate
   - coverage run --source='.' manage.py test crm_core
   - coverage report
 after_success:
