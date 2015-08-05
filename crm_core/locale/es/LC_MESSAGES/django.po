@@ -1,18 +1,584 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: \n"
+"PO-Revision-Date: 2015-07-27 23:17+0200\n"
 "Language-Team: \n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.3\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: es\n"
 
-msgid "Created"
+# #################
+# ##   GENERIC   ##
+# #################
+msgid "Create PDF"
+msgstr "Crear PDF"
+
+msgid "Description"
+msgstr "Descripción"
+
+msgid "Created at"
 msgstr "creado"
 
-msgid "Details"
-msgstr "Detalles"
+msgid "Last modified"
+msgstr "Última modificación"
+
+msgid "Last modified by"
+msgstr "Última modificación por"
+
+msgid "Everything"
+msgstr "Todo"
+
+msgid "open"
+msgstr "abrir"
+
+msgid "Ordered"
+msgstr "Ordenado"
+
+msgid "Delayed"
+msgstr "Retrasado"
+
+msgid "Delivered"
+msgstr "Entregado"
+
+msgid "Filters"
+msgstr "Filtros"
+
+msgid "Filter"
+msgstr "Filtro"
+
+msgid "sign in now"
+msgstr "Regístrese ahora"
+
+msgid "Purpose"
+msgstr "Propósito"
+
+msgid "Status"
+msgstr "Estado"
+
+msgid "Deleted"
+msgstr "Borrado"
+
+msgid "Success"
+msgstr "Éxito"
+
+msgid "Basics"
+msgstr ""
+
+msgid "Title"
+msgstr ""
+
+msgid "Is member of"
+msgstr ""
+
+msgid "Staff"
+msgstr ""
+
+msgid "External Reference"
+msgstr ""
+
+msgid "Valid Until"
+msgstr ""
+
+msgid "Payed"
+msgstr ""
+
+msgid "Valid from"
+msgstr ""
+
+msgid "Valid to"
+msgstr ""
+
+msgid "Quantity"
+msgstr ""
+
+# ###############################
+# ##   PURCHASEORDER RELATED   ##
+# ###############################
+msgid "Purchaseorder created"
+msgstr ""
+
+msgid "Create Purchaseorder"
+msgstr ""
+
+# #######################
+# ##   QUOTE REALTED   ##
+# #######################
+msgid "Quote created"
+msgstr ""
+
+msgid "Create Quote"
+msgstr ""
+
+msgid "Create a new quote"
+msgstr ""
+
+msgid "Quote"
+msgstr ""
+
+msgid "Quotes"
+msgstr ""
+
+msgid "Quote sent"
+msgstr ""
+
+# #########################
+# ##   INVOICE RELATED   ##
+# #########################
+msgid "Invoice created"
+msgstr ""
+
+msgid "Create Invoice"
+msgstr ""
+
+msgid "Invoice"
+msgstr ""
+
+msgid "Invoices"
+msgstr ""
+
+msgid "Create a new invoice"
+msgstr ""
+
+msgid "Create invoice"
+msgstr ""
+
+msgid "First reminder sent"
+msgstr ""
+
+msgid "Second reminder sent"
+msgstr ""
+
+msgid "Invoice registered"
+msgstr ""
+
+msgid "Invoice payed"
+msgstr ""
+
+msgid "Days to Payment Date"
+msgstr ""
+
+msgid "Customer Billing Cycle"
+msgstr ""
+
+msgid "To pay until"
+msgstr ""
+
+msgid "Invoice sent"
+msgstr ""
+
+msgid "Customer cant pay"
+msgstr ""
+
+# ##########################
+# ##   CONTRACT RELATED   ##
+# ##########################
+msgid "Create Contract"
+msgstr ""
+
+msgid "Contract"
+msgstr ""
+
+msgid "Contracts"
+msgstr ""
+
+msgid "Create a new contract"
+msgstr ""
+
+msgid "Position"
+msgstr ""
+
+msgid "Positions"
+msgstr ""
+
+msgid "from Contract"
+msgstr ""
+
+msgid "Position Number"
+msgstr ""
+
+msgid "Salescontract Position"
+msgstr ""
+
+msgid "Salescontract Positions"
+msgstr ""
+
+msgid "Order Management"
+msgstr ""
+
+msgid "Open Contracts"
+msgstr ""
+
+# #########################
+# ##   CONTACT RELATED   ##
+# #########################
+msgid "Prefix"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "Prename"
+msgstr ""
+
+msgid "Customer"
+msgstr ""
+
+msgid "Customers"
+msgstr ""
+
+msgid "Create customer"
+msgstr ""
+
+msgid "Create a new customer"
+msgstr ""
+
+msgid "Supplier"
+msgstr ""
+
+msgid "Suppliers"
+msgstr ""
+
+msgid "Default Supplier"
+msgstr ""
+
+msgid "Create supplier"
+msgstr ""
+
+msgid "Create a new supplier"
+msgstr ""
+
+msgid "Customer Group"
+msgstr ""
+
+msgid "Customer Groups"
+msgstr ""
+
+msgid "Create a new customer group"
+msgstr ""
+
+msgid "Create customer group"
+msgstr ""
+
+msgid "Factor between From and To Customer Group"
+msgstr ""
+
+msgid "Customer Group Price Transform"
+msgstr ""
+
+msgid "Customer Group Price Transforms"
+msgstr ""
+
+msgid "Offers direct Shipment to Customer"
+msgstr ""
+
+# #########################
+# ##   ADDRESS RELATED   ##
+# #########################
+msgid "Addressline 1"
+msgstr ""
+
+msgid "Addressline 2"
+msgstr ""
+
+msgid "Zipcode"
+msgstr ""
+
+msgid "City"
+msgstr ""
+
+msgid "State"
+msgstr ""
+
+msgid "Country"
+msgstr ""
+
+msgid "Postal Address"
+msgstr ""
+
+msgid "Phone Number"
+msgstr ""
+
+msgid "Phone Address"
+msgstr ""
+
+msgid "Email Address"
+msgstr ""
+
+msgid "Delivery Address"
+msgstr ""
+
+msgid "Billing Address"
+msgstr ""
+
+msgid "Contact Address"
+msgstr ""
+
+msgid "Private"
+msgstr ""
+
+msgid "Business"
+msgstr ""
+
+msgid "Mobile Private"
+msgstr ""
+
+msgid "Mobile Business"
+msgstr ""
+
+msgid "Company"
+msgstr ""
+
+msgid "Mrs"
+msgstr ""
+
+msgid "Mr"
+msgstr ""
+
+msgid "Ms"
+msgstr ""
+
+# #########################
+# ##   PRODUCT RELATED   ##
+# #########################
+msgid "Product Number"
+msgstr ""
+
+msgid "Product Category"
+msgstr ""
+
+msgid "Product"
+msgstr ""
+
+msgid "Products"
+msgstr ""
+
+msgid "Create a new product"
+msgstr ""
+
+msgid "Create product"
+msgstr ""
+
+msgid "Overwrite Product Price"
+msgstr ""
+
+# #############################
+# ##   TEMPLATESET RELATED   ##
+# #############################
+msgid "Logo"
+msgstr ""
+
+msgid "Footer Text On Salesorders"
+msgstr ""
+
+msgid "Header Text On Salesorders"
+msgstr ""
+
+msgid "Header Text On Purchaseorders"
+msgstr ""
+
+msgid "Footer Text On Purchaseorders"
+msgstr ""
+
+msgid "Templateset"
+msgstr ""
+
+msgid "Templatesets"
+msgstr ""
+
+msgid "XSL File"
+msgstr ""
+
+msgid "XSL Files"
+msgstr ""
+
+msgid "User Extension"
+msgstr ""
+
+msgid "User Extensions"
+msgstr ""
+
+# #######################
+# ##   MONEY RELATED   ##
+# #######################
+msgid "Price"
+msgstr ""
+
+msgid "Prices"
+msgstr ""
+
+msgid "Default Currency"
+msgstr ""
+
+msgid "Currency"
+msgstr ""
+
+msgid "Payable until"
+msgstr ""
+
+msgid "Tax"
+msgstr ""
+
+msgid "Taxes"
+msgstr ""
+
+msgid "Price Per Unit"
+msgstr ""
+
+msgid "Last Pricing Date"
+msgstr ""
+
+msgid "Last Calculated Price"
+msgstr ""
+
+msgid "Last Calculated Price With Tax"
+msgstr ""
+
+msgid "Last Calculated Tax"
+msgstr ""
+
+msgid "Taxrate in Percentage"
+msgstr ""
+
+msgid "Taxname"
+msgstr ""
+
+msgid "Discount"
+msgstr ""
+
+msgid "Billing Cycle"
+msgstr ""
+
+msgid "Billing Cycles"
+msgstr ""
+
+msgid "Create a new billing cycle"
+msgstr ""
+
+msgid "Create billing cycle"
+msgstr ""
+
+msgid "Default Billing Cycle"
+msgstr ""
+
+msgid "Payment Bank Reference"
+msgstr ""
+
+msgid "Tax Rates"
+msgstr ""
+
+msgid "Tax Rate"
+msgstr ""
+
+msgid "Create tax rate"
+msgstr ""
+
+msgid "Create a new tax rate"
+msgstr ""
+
+msgid "Activa Account"
+msgstr ""
+
+msgid "Passiva Account"
+msgstr ""
+
+# ######################
+# ##   UNIT RELATED   ##
+# ######################
+msgid "Unit"
+msgstr ""
+
+msgid "Units"
+msgstr ""
+
+msgid "Is A Fraction Of"
+msgstr ""
+
+msgid "Factor Between This And Next Higher Unit"
+msgstr ""
+
+msgid "Displayed Name After Quantity In The Position"
+msgstr ""
+
+msgid " and unit"
+msgstr ""
+
+msgid "From Unit"
+msgstr ""
+
+msgid "To Unit"
+msgstr ""
+
+msgid "Factor between From and To Unit"
+msgstr ""
+
+msgid "Unit Transform"
+msgstr ""
+
+msgid "Unit Transforms"
+msgstr ""
+
+msgid "Create unit"
+msgstr ""
+
+msgid "Create a new unit"
+msgstr ""
+
+msgid "Shortname"
+msgstr ""
+
+# ##########################
+# ##   SHIPMENT RELATED   ##
+# ##########################
+msgid "Shipment on"
+msgstr ""
+
+msgid "Shipment Supplier"
+msgstr ""
+
+msgid "Shipment ID"
+msgstr ""
+
+# ################################
+# ##   PURCHASE ORDER RELATED   ##
+# ################################
+msgid "Purchase Order"
+msgstr ""
+
+msgid "Purchaseorder Position"
+msgstr ""
+
+msgid "Purchaseorder Positions"
+msgstr ""
+
+msgid "Purchase Orders"
+msgstr ""
+
+msgid "Create a new purchaseorder"
+msgstr ""
+
+msgid "Create Purchase Order"
+msgstr ""
+
+# ###############################
+# ##   IMPORT/EXPORT RELATED   ##
+# ###############################
+msgid "Import / Export"
+msgstr ""
+
+msgid "Export as JSON"
+msgstr ""
+
+msgid "Export as XLS"
+msgstr ""
+
+msgid "Export as XLSX"
+msgstr ""
+
+msgid "Export as CSV"
+msgstr ""
