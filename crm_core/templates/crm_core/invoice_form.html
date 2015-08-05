@@ -1,5 +1,5 @@
 {% extends "base/form_with_inlines_base.html" %}
-{% load i18n crispy_forms_tags crispy_forms_field crispy_forms_filters staticfiles %}
+{% load i18n crispy_forms_tags crispy_forms_field crispy_forms_filters staticfiles bootstrap3 %}
 
 {% block meta_title %}
     {% trans "Invoices" %}
@@ -41,7 +41,6 @@
             <td><a href="{% url 'contract_detail' invoice.contract.pk %}">
                 {{ invoice.contract }}</a>
             </td>
-            <td></td>
         </tr>
         <tr>
             <td>{% trans 'Customer' %}:</td>
@@ -53,12 +52,7 @@
         <tr>
             <td>{% trans 'Last Calculated Price' %}:</td>
             <td width="10px"></td>
-            <td>{{ invoice.last_calculated_price|default_if_none:"-" }}
-                {% if invoice.last_pricing_date %}&nbsp;{% trans 'on' %}&nbsp;
-                    {{ invoice.last_pricing_date }}{% endif %}
-                {% if invoice.last_calculated_tax %}&nbsp;({% trans 'Tax' %}:&nbsp;
-                    {{ invoice.last_calculated_tax }}){% endif %}
-            </td>
+            <td>{{ invoice.cart.total_price|default_if_none:"" }}&nbsp;{{ invoice.contract.default_currency }}</td>
         </tr>
         <tr>
             <td><small>{% trans 'Date of Creation' %}:</small></td>
@@ -77,20 +71,19 @@
 
     {% crispy form %}
 
-    {% for formset in inlines %}
-
         <div>
-            {{ formset.management_form|crispy }}
+            {{ position_formset.management_form|crispy }}
         </div>
 
         <table id="position" class="table table-condensed">
             <thead>
             <tr>
-                <th width="100px">{{ formset.forms.0.quantity.label }}*</th>
-                <th width="100px">{{ formset.forms.0.unit.label }}</th>
-                <th>{{ formset.forms.0.product.label }}</th>
-                <th>{{ formset.forms.0.description.label }}</th>
-                <th width="100px">{{ formset.forms.0.discount.label }}</th>
+                <th width="100px">{{ position_formset.forms.0.quantity.label }}*</th>
+{#                <th>{% trans 'Unit' %}</th>#}
+                <th>{% trans 'Product' %}*</th>
+                <th>{{ position_formset.forms.0.description.label }}</th>
+                <th width="100px">{{ position_formset.forms.0.unit_price.label }}</th>
+                <th width="100px">{{ position_formset.forms.0.total_price.label }}</th>
                 <th width="20px"></th>
             </tr>
             </thead>
@@ -100,29 +93,25 @@
                 {% include "bootstrap3/errors.html" %}
             {% endif %}
 
-            {% for form in formset %}
+            {% for form in position_formset.forms %}
+
                 <tr id="{{ form.prefix }}-row">
                     <td>
                         {% for fld in form.hidden_fields %}{{ fld }}{% endfor %}
                         {% crispy_field form.quantity %}
                     </td>
-{#                    <td>{% crispy_field form.unit %}</td>#}
-                <td></td>
+{#                    <td>{% crispy_field form.item_unit %}</td>#}
                     <td>{% crispy_field form.product %}</td>
                     <td>{% crispy_field form.description %}</td>
-{#                    <td>{% crispy_field form.discount %}</td>#}
-                <td></td>
+                    <td>{% crispy_field form.unit_price %}</td>
+                    <td>{% crispy_field form.total_price %}</td>
                     <td>{% if form.instance.pk %}{{ form.DELETE }}{% endif %}</td>
                 </tr>
             {% endfor %}
             </tbody>
+
         </table>
 
-        <p>
-            {{ formset.management_form }}
-        </p>
-
-    {% endfor %}
 {% endblock %}
 
 {% block main_footer %}
@@ -134,4 +123,16 @@
             onclick="window.location.assign('{% url 'contract_list' %}')">
         {% trans "Cancel" %}
     </button>
+
+{% endblock %}
+
+{% block extrascript %}
+    <script type="text/javascript">
+        $(function() {
+            $('#position tbody tr').formset({
+                prefix: "{{ position_formset.prefix }}",
+                deleteText: "&nbsp;"
+            });
+        });
+    </script>
 {% endblock %}

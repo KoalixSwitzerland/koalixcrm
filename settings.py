@@ -416,6 +416,7 @@ OPTIONAL_APPS = (
 SEARCH_MODEL_CHOICES = None
 SHOP_OPTION_TYPE_CHOICES = ((1, 'Size'), (2, 'Colour'))
 SHOP_ORDER_STATUS_CHOICES = ((1, 'Unprocessed'), (2, 'Processed'))
+SHOP_USE_VARIATIONS = False
 
 AJAX_LOOKUP_CHANNELS = {
     'unit': {'model': 'crm_core.models.QuotePosition', 'search_field': 'product'},

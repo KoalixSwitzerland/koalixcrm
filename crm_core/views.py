@@ -518,7 +518,26 @@ class EditPurchaseOrder(LoginRequiredMixin, PermissionRequiredMixin, UpdateWithM
     form_class = forms.PurchaseOrderForm
     permission_required = 'crm_core.change_purchaseorder'
     login_url = settings.LOGIN_URL
+    fields = ['discount', 'description', 'contract', 'customer', 'currency', 'lastmodifiedby',
+              'validuntil', 'last_pricing_date', 'last_calculated_price']
     success_url = reverse_lazy('contract_list')
+
+    def get_context_data(self, **kwargs):
+        context = super(EditPurchaseOrder, self).get_context_data(**kwargs)
+        if self.request.POST:
+            context['position_formset'] = forms.PositionFormSet(self.request.POST)
+        else:
+            purchaseorder_cart = models.PurchaseOrder.objects.get(pk=context.get('object').pk).cart
+            formset = forms.PositionFormSet(instance=purchaseorder_cart)
+            context['position_formset'] = formset
+        return context
+
+    def post(self, request, *args, **kwargs):
+        quote_cart = models.PurchaseOrder.objects.get(pk=kwargs.get('pk')).cart
+        formset = forms.PositionFormSet(request.POST, request.FILES, instance=quote_cart)
+        if formset.is_valid():
+            formset.save()
+        return super(EditPurchaseOrder, self).post(request, *args, **kwargs)
 
 
 class DeletePurchaseOrder(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
@@ -603,14 +622,14 @@ class EditInvoice(LoginRequiredMixin, PermissionRequiredMixin, UpdateWithModifie
         if self.request.POST:
             context['position_formset'] = forms.PositionFormSet(self.request.POST)
         else:
-            quote_cart = models.Invoice.objects.get(pk=context.get('object').pk).cart
-            formset = forms.PositionFormSet(instance=quote_cart)
+            invoice_cart = models.Invoice.objects.get(pk=context.get('object').pk).cart
+            formset = forms.PositionFormSet(instance=invoice_cart)
             context['position_formset'] = formset
         return context
 
     def post(self, request, *args, **kwargs):
-        quote_cart = models.Quote.objects.get(pk=kwargs.get('pk')).cart
-        formset = forms.PositionFormSet(request.POST, request.FILES, instance=quote_cart)
+        invoice_cart = models.Invoice.objects.get(pk=kwargs.get('pk')).cart
+        formset = forms.PositionFormSet(request.POST, request.FILES, instance=invoice_cart)
         if formset.is_valid():
             formset.save()
         return super(EditInvoice, self).post(request, *args, **kwargs)

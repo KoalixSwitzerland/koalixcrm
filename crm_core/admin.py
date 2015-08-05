@@ -130,21 +130,17 @@ class PurchaseOrderAdmin(reversion.VersionAdmin):
     list_display = (
         u'id',
         'contract',
-        'user_id',
-        'currency',
-        'derived_from_quote',
+        'customer',
+        'validuntil',
+        'discount',
         'staff',
-        'dateofcreation',
-        'lastmodification',
         'lastmodifiedby',
     )
     list_filter = (
+        'validuntil',
         'contract',
-        'user_id',
-        'derived_from_quote',
+        'customer',
         'staff',
-        'dateofcreation',
-        'lastmodification',
         'lastmodifiedby',
     )
 
@@ -159,7 +155,6 @@ class QuoteAdmin(reversion.VersionAdmin):
         'contract',
         'customer',
         'validuntil',
-        'currency',
         'discount',
         'staff',
         'lastmodifiedby',
@@ -183,11 +178,9 @@ class InvoiceAdmin(reversion.VersionAdmin):
         'contract',
         'customer',
         'payableuntil',
-        'currency',
         'discount',
         'staff',
         'lastmodifiedby',
-        'derived_from_quote',
     )
     list_filter = (
         'payableuntil',
@@ -195,7 +188,6 @@ class InvoiceAdmin(reversion.VersionAdmin):
         'customer',
         'staff',
         'lastmodifiedby',
-        'derived_from_quote',
     )
 
 
@@ -272,54 +264,3 @@ class TemplateSetAdmin(admin.ModelAdmin):
 
 
 admin.site.register(TemplateSet, TemplateSetAdmin)
-
-
-cartridge_admin.site.unregister(cartridge_models.Category)
-
-class CategoryAdmin(admin.ModelAdmin):
-    change_list_template = 'smuggler/change_list.html'
-
-admin.site.register(cartridge_models.Category, CategoryAdmin)
-
-
-cartridge_admin.site.unregister(cartridge_models.Product)
-
-class ProductAdmin(admin.ModelAdmin):
-    change_list_template = 'smuggler/change_list.html'
-
-admin.site.register(cartridge_models.Product, ProductAdmin)
-
-
-cartridge_admin.site.unregister(cartridge_models.Sale)
-
-class SaleAdmin(admin.ModelAdmin):
-    change_list_template = 'smuggler/change_list.html'
-
-admin.site.register(cartridge_models.Sale, SaleAdmin)
-
-
-cartridge_admin.site.unregister(cartridge_models.DiscountCode)
-
-class DiscountCodeAdmin(admin.ModelAdmin):
-    change_list_template = 'smuggler/change_list.html'
-
-admin.site.register(cartridge_models.DiscountCode, DiscountCodeAdmin)
-
-
-cartridge_admin.site.unregister(cartridge_models.ProductOption)
-
-class ProductOptionAdmin(admin.ModelAdmin):
-    change_list_template = 'smuggler/change_list.html'
-
-admin.site.register(cartridge_models.ProductOption, ProductOptionAdmin)
-
-
-class ProductUnitAdmin(admin.ModelAdmin):
-    change_list_template = 'smuggler/change_list.html'
-
-admin.site.register(ProductUnit, ProductUnitAdmin)
-
-class ProductTaxAdmin(admin.ModelAdmin):
-    change_list_template = 'smuggler/change_list.html'
-
-admin.site.register(ProductTax, ProductTaxAdmin)
