@@ -201,6 +201,10 @@ class ProductCategoryTable(tables.Table):
 
     class Meta:
         model = Category
+        exclude = ('id', 'combined', 'in_menus', 'featured_image', 'expiry_date', 'in_sitemap', 'description',
+                   'short_url', 'publish_date', 'status', 'site', 'slug', 'created', 'updated',
+                   'gen_description', 'keywords_string', 'keywords', '_meta_title', 'titles', 'content_model',
+                   'login_required', 'parent', '_order', 'content', 'sale', 'price_max', 'price_min', 'page_ptr')
 
 
 class CustomerGroupTable(tables.Table):

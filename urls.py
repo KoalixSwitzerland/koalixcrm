@@ -186,17 +186,17 @@ urlpatterns += patterns('',
                         # ``mezzanine.urls``.
 
                          # Cartridge URLs.
-                        ("^shop/", include("cartridge.shop.urls")),
+                        url("^shop/", include("cartridge.shop.urls")),
                         url(r"^account/orders/$", "cartridge.shop.views.order_history", name="shop_order_history"),
 
-                        ("^", include("mezzanine.urls")),
+                        url("^", include("mezzanine.urls")),
 )
 
 try:
     import ajax_select
     # If django-ajax-selects is installed, include its URLs:
     urlpatterns += patterns('',
-                            (r'^admin/lookups/', include(ajax_select_urls)),
+                            url(r'^admin/lookups/', include(ajax_select_urls)),
     )
 except ImportError:
     pass
