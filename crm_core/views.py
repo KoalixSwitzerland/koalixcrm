@@ -174,26 +174,23 @@ def create_purchaseorder_from_quote(request, quote_pk):
 
 def view_quote_pdf(request, pk):
     quote = models.Quote.objects.get(pk=int(pk))
-    with open(quote.pdf_path, 'r') as pdf:
-        response = HttpResponse(pdf.read(), content_type='application/pdf')
-        response['Content-Disposition'] = 'filename=quote.pdf'
-        return response
+    pdf = open(quote.pdf_path, 'rb')
+    response = HttpResponse(pdf.read(), content_type='application/pdf')
+    return response
 
 
 def view_purchaseorder_pdf(request, pk):
     puchaseorder = models.PurchaseOrder.objects.get(pk=int(pk))
-    with open(puchaseorder.pdf_path, 'r') as pdf:
-        response = HttpResponse(pdf.read(), content_type='application/pdf')
-        response['Content-Disposition'] = 'filename=puchaseorder.pdf'
-        return response
+    pdf = open(puchaseorder.pdf_path, 'rb')
+    response = HttpResponse(pdf.read(), content_type='application/pdf')
+    return response
 
 
 def view_invoice_pdf(request, pk):
     invoice = models.Invoice.objects.get(pk=int(pk))
-    with open(invoice.pdf_path, 'r') as pdf:
-        response = HttpResponse(pdf.read(), content_type='application/pdf')
-        response['Content-Disposition'] = 'filename=invoice.pdf'
-        return response
+    pdf = open(invoice.pdf_path, 'rb')
+    response = HttpResponse(pdf.read(), content_type='application/pdf')
+    return response
 
 
 # ###########################
