@@ -257,6 +257,10 @@ DATABASES = {
 }
 
 
+MIGRATION_MODULES = {
+    "shop": "shop.migrations",
+}
+
 #########
 # PATHS #
 #########
