@@ -256,6 +256,10 @@ DATABASES = {
     }
 }
 
+MIGRATION_MODULES = {
+    "shop": "crm_core.migrations.shop",
+}
+
 
 #########
 # PATHS #
