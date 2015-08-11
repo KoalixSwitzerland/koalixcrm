@@ -1,20 +1,20 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2015-08-11 21:52+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
-"Language: \n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.4\n"
 
 # #################
 # ##   GENERIC   ##
 # #################
-
 msgid "Create PDF"
 msgstr "Erzeuge PDF"
 
@@ -96,22 +96,18 @@ msgstr "Gültig bis"
 msgid "Quantity"
 msgstr "Anzahl"
 
-
 # ###############################
 # ##   PURCHASEORDER RELATED   ##
 # ###############################
-
 msgid "Purchaseorder created"
 msgstr "Bestellung erstellt"
 
 msgid "Create Purchaseorder"
 msgstr "Bestellung erstellen"
 
-
 # #######################
 # ##   QUOTE REALTED   ##
 # #######################
-
 msgid "Quote created"
 msgstr "Angebot erstellt"
 
@@ -130,11 +126,9 @@ msgstr "Angebote"
 msgid "Quote sent"
 msgstr "Angebot verschickt"
 
-
 # #########################
 # ##   INVOICE RELATED   ##
 # #########################
-
 msgid "Invoice created"
 msgstr "Rechnung erstellt"
 
@@ -180,11 +174,9 @@ msgstr "Rechung geschickt"
 msgid "Customer cant pay"
 msgstr "Kunde kann nicht zahlen"
 
-
 # ##########################
 # ##   CONTRACT RELATED   ##
 # ##########################
-
 msgid "Create Contract"
 msgstr "Auftrag erstellen"
 
@@ -221,11 +213,9 @@ msgstr "Auftragsverwaltung"
 msgid "Open Contracts"
 msgstr "Offene Aufträge"
 
-
 # #########################
 # ##   CONTACT RELATED   ##
 # #########################
-
 msgid "Prefix"
 msgstr "Prefix"
 
@@ -286,11 +276,9 @@ msgstr "Kundengruppen Preisumrechnungen"
 msgid "Offers direct Shipment to Customer"
 msgstr "Direkte Lieferung zum Kunden möglich"
 
-
 # #########################
 # ##   ADDRESS RELATED   ##
 # #########################
-
 msgid "Addressline 1"
 msgstr "Adresszeile 1"
 
@@ -354,11 +342,9 @@ msgstr "Herr"
 msgid "Ms"
 msgstr " "
 
-
 # #########################
 # ##   PRODUCT RELATED   ##
 # #########################
-
 msgid "Product Number"
 msgstr "Produktnummer"
 
@@ -380,11 +366,9 @@ msgstr "Produkt erstellen"
 msgid "Overwrite Product Price"
 msgstr "Überschreibe Produkt Preis"
 
-
 # #############################
 # ##   TEMPLATESET RELATED   ##
 # #############################
-
 msgid "Logo"
 msgstr "Logo"
 
@@ -418,11 +402,9 @@ msgstr "Benutzer Erweiterung"
 msgid "User Extensions"
 msgstr "Benutzer Erweiterungen"
 
-
 # #######################
 # ##   MONEY RELATED   ##
 # #######################
-
 msgid "Price"
 msgstr "Preis"
 
@@ -504,11 +486,9 @@ msgstr "Aktiv Konto"
 msgid "Passiva Account"
 msgstr "Passiv Konto"
 
-
 # ######################
 # ##   UNIT RELATED   ##
 # ######################
-
 msgid "Unit"
 msgstr "Masseinheit"
 
@@ -551,11 +531,9 @@ msgstr "Neue Masseinheit hinzufügen"
 msgid "Shortname"
 msgstr "Kürzel"
 
-
 # ##########################
 # ##   SHIPMENT RELATED   ##
 # ##########################
-
 msgid "Shipment on"
 msgstr "Verschickt am"
 
@@ -565,11 +543,9 @@ msgstr "Versandunternehmen"
 msgid "Shipment ID"
 msgstr "Lieferungs ID"
 
-
 # ################################
 # ##   PURCHASE ORDER RELATED   ##
 # ################################
-
 msgid "Purchase Order"
 msgstr "Bestellung"
 
@@ -588,11 +564,9 @@ msgstr "Neue Bestellung hinzufügen"
 msgid "Create Purchase Order"
 msgstr "Bestellung erstellen"
 
-
 # ###############################
 # ##   IMPORT/EXPORT RELATED   ##
 # ###############################
-
 msgid "Import / Export"
 msgstr ""
 
