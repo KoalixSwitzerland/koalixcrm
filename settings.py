@@ -339,7 +339,6 @@ INSTALLED_APPS = (
     "ajax_select",
 
     "international",
-    "po_localization",
 
     "smuggler",
     "django_fsm",
@@ -383,7 +382,6 @@ MIDDLEWARE_CLASSES = (
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
-    "po_localization.middleware.PoLocalizationMiddleware",
     "cartridge.shop.middleware.ShopMiddleware",
     "mezzanine.core.request.CurrentRequestMiddleware",
     "mezzanine.core.middleware.TemplateForDeviceMiddleware",
