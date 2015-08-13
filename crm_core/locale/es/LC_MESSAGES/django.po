@@ -1,584 +1,478 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: \n"
-"PO-Revision-Date: 2015-08-11 21:52+0200\n"
+"POT-Creation-Date: 2015-08-13 20:19+0200\n"
+"PO-Revision-Date: 2015-08-13 20:39+0200\n"
+"Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.8.4\n"
-"Last-Translator: \n"
+"X-Poedit-Basepath: .\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "Language: es\n"
+"X-Poedit-SearchPath-0: .\n"
 
-# #################
-# ##   GENERIC   ##
-# #################
-msgid "Create PDF"
-msgstr "Crear PDF"
+#: admin.py:21
+msgid "User Profile Extensions"
+msgstr "Extensiones de Perfil de usuario"
 
-msgid "Description"
-msgstr "Descripción"
+#: const/postaladdressprefix.py:8 const/postaladdressprefix.py:14
+msgid "Company"
+msgstr "Empresa"
 
-msgid "Created at"
-msgstr "creado"
+#: const/postaladdressprefix.py:9 const/postaladdressprefix.py:15
+msgid "Mr"
+msgstr "Sr."
 
-msgid "Last modified"
-msgstr "Última modificación"
+#: const/postaladdressprefix.py:10 const/postaladdressprefix.py:16
+msgid "Mrs"
+msgstr "Sra."
 
-msgid "Last modified by"
-msgstr "Última modificación por"
+#: const/postaladdressprefix.py:11 const/postaladdressprefix.py:17
+msgid "Ms"
+msgstr "Sra. o Srta."
 
-msgid "Everything"
-msgstr "Todo"
-
-msgid "open"
-msgstr "abrir"
-
-msgid "Ordered"
-msgstr "Ordenado"
-
-msgid "Delayed"
-msgstr "Retrasado"
-
-msgid "Delivered"
-msgstr "Entregado"
-
-msgid "Filters"
-msgstr "Filtros"
-
-msgid "Filter"
-msgstr "Filtro"
-
-msgid "sign in now"
-msgstr "Regístrese ahora"
-
-msgid "Purpose"
-msgstr "Propósito"
-
-msgid "Status"
-msgstr "Estado"
-
-msgid "Deleted"
-msgstr "Borrado"
-
-msgid "Success"
-msgstr "Éxito"
-
-msgid "Basics"
-msgstr ""
-
-msgid "Title"
-msgstr ""
-
-msgid "Is member of"
-msgstr ""
-
-msgid "Staff"
-msgstr ""
-
-msgid "External Reference"
-msgstr ""
-
-msgid "Valid Until"
-msgstr ""
-
-msgid "Payed"
-msgstr ""
-
-msgid "Valid from"
-msgstr ""
-
-msgid "Valid to"
-msgstr ""
-
-msgid "Quantity"
-msgstr ""
-
-# ###############################
-# ##   PURCHASEORDER RELATED   ##
-# ###############################
-msgid "Purchaseorder created"
-msgstr ""
-
-msgid "Create Purchaseorder"
-msgstr ""
-
-# #######################
-# ##   QUOTE REALTED   ##
-# #######################
-msgid "Quote created"
-msgstr ""
-
-msgid "Create Quote"
-msgstr ""
-
-msgid "Create a new quote"
-msgstr ""
-
-msgid "Quote"
-msgstr ""
-
-msgid "Quotes"
-msgstr ""
-
-msgid "Quote sent"
-msgstr ""
-
-# #########################
-# ##   INVOICE RELATED   ##
-# #########################
-msgid "Invoice created"
-msgstr ""
-
-msgid "Create Invoice"
-msgstr ""
-
-msgid "Invoice"
-msgstr ""
-
-msgid "Invoices"
-msgstr ""
-
-msgid "Create a new invoice"
-msgstr ""
-
-msgid "Create invoice"
-msgstr ""
-
-msgid "First reminder sent"
-msgstr ""
-
-msgid "Second reminder sent"
-msgstr ""
-
-msgid "Invoice registered"
-msgstr ""
-
-msgid "Invoice payed"
-msgstr ""
-
-msgid "Days to Payment Date"
-msgstr ""
-
-msgid "Customer Billing Cycle"
-msgstr ""
-
-msgid "To pay until"
-msgstr ""
-
-msgid "Invoice sent"
-msgstr ""
-
-msgid "Customer cant pay"
-msgstr ""
-
-# ##########################
-# ##   CONTRACT RELATED   ##
-# ##########################
-msgid "Create Contract"
-msgstr ""
-
-msgid "Contract"
-msgstr ""
-
-msgid "Contracts"
-msgstr ""
-
-msgid "Create a new contract"
-msgstr ""
-
-msgid "Position"
-msgstr ""
-
-msgid "Positions"
-msgstr ""
-
-msgid "from Contract"
-msgstr ""
-
-msgid "Position Number"
-msgstr ""
-
-msgid "Salescontract Position"
-msgstr ""
-
-msgid "Salescontract Positions"
-msgstr ""
-
-msgid "Order Management"
-msgstr ""
-
-msgid "Open Contracts"
-msgstr ""
-
-# #########################
-# ##   CONTACT RELATED   ##
-# #########################
-msgid "Prefix"
-msgstr ""
-
-msgid "Name"
-msgstr ""
-
-msgid "Prename"
-msgstr ""
-
-msgid "Customer"
-msgstr ""
-
-msgid "Customers"
-msgstr ""
-
-msgid "Create customer"
-msgstr ""
-
-msgid "Create a new customer"
-msgstr ""
-
-msgid "Supplier"
-msgstr ""
-
-msgid "Suppliers"
-msgstr ""
-
-msgid "Default Supplier"
-msgstr ""
-
-msgid "Create supplier"
-msgstr ""
-
-msgid "Create a new supplier"
-msgstr ""
-
-msgid "Customer Group"
-msgstr ""
-
-msgid "Customer Groups"
-msgstr ""
-
-msgid "Create a new customer group"
-msgstr ""
-
-msgid "Create customer group"
-msgstr ""
-
-msgid "Factor between From and To Customer Group"
-msgstr ""
-
-msgid "Customer Group Price Transform"
-msgstr ""
-
-msgid "Customer Group Price Transforms"
-msgstr ""
-
-msgid "Offers direct Shipment to Customer"
-msgstr ""
-
-# #########################
-# ##   ADDRESS RELATED   ##
-# #########################
-msgid "Addressline 1"
-msgstr ""
-
-msgid "Addressline 2"
-msgstr ""
-
-msgid "Zipcode"
-msgstr ""
-
-msgid "City"
-msgstr ""
-
-msgid "State"
-msgstr ""
-
-msgid "Country"
-msgstr ""
-
-msgid "Postal Address"
-msgstr ""
-
-msgid "Phone Number"
-msgstr ""
-
-msgid "Phone Address"
-msgstr ""
-
-msgid "Email Address"
-msgstr ""
-
+#: const/purpose.py:8 const/purpose.py:13
 msgid "Delivery Address"
-msgstr ""
+msgstr "Dirección de envío"
 
+#: const/purpose.py:9 const/purpose.py:14
 msgid "Billing Address"
 msgstr ""
 
+#: const/purpose.py:10 const/purpose.py:15
 msgid "Contact Address"
-msgstr ""
+msgstr "Dirección de contacto"
 
+#: const/purpose.py:20 const/purpose.py:26 const/purpose.py:34
+#: const/purpose.py:38
 msgid "Private"
-msgstr ""
+msgstr "Privado"
 
+#: const/purpose.py:21 const/purpose.py:27 const/purpose.py:35
+#: const/purpose.py:39
 msgid "Business"
-msgstr ""
+msgstr "Servicios"
 
+#: const/purpose.py:22 const/purpose.py:28
 msgid "Mobile Private"
-msgstr ""
+msgstr "Móvil privado"
 
+#: const/purpose.py:23 const/purpose.py:29
 msgid "Mobile Business"
 msgstr ""
 
-msgid "Company"
+#: const/states.py:8 const/states.py:19
+msgid "open"
+msgstr "abrir"
+
+#: const/states.py:9 const/states.py:20
+msgid "payed"
+msgstr "pagado"
+
+#: const/states.py:10 const/states.py:21
+msgid "Invoice created"
+msgstr "Factura creada"
+
+#: const/states.py:11 const/states.py:22
+msgid "Invoice sent"
+msgstr "Factura enviada"
+
+#: const/states.py:12 const/states.py:23
+msgid "Quote created"
 msgstr ""
 
-msgid "Mrs"
+#: const/states.py:13 const/states.py:24
+msgid "Quote sent"
 msgstr ""
 
-msgid "Mr"
+#: const/states.py:14 const/states.py:25
+msgid "Purchaseorder created"
 msgstr ""
 
-msgid "Ms"
+#: const/states.py:15 const/states.py:26
+msgid "Unpayed"
 msgstr ""
 
-# #########################
-# ##   PRODUCT RELATED   ##
-# #########################
-msgid "Product Number"
+#: const/states.py:16 const/states.py:27
+msgid "Deleted"
+msgstr "Borrado"
+
+#: models.py:31 models.py:735 models.py:748
+msgid "Title"
+msgstr "Titulo"
+
+#: models.py:32 models.py:335 tables.py:12
+msgid "Name"
+msgstr "Nombre"
+
+msgid "name"
+msgstr "nombre"
+
+#: models.py:33 models.py:143 models.py:377
+msgid "Created at"
+msgstr "Creado el"
+
+#: models.py:34 models.py:144 models.py:378
+msgid "Last modified"
+msgstr "Última modificación"
+
+#: models.py:36 models.py:146 models.py:380
+msgid "Last modified by"
+msgstr "Última modificación por"
+
+#: models.py:60 models.py:66 models.py:67
+msgid "Email Address"
+msgstr "Dirección de correo electrónico"
+
+#: models.py:61 models.py:81 models.py:106
+msgid "Purpose"
+msgstr "Propósito"
+
+#: models.py:80
+msgid "Phone Number"
+msgstr "Número de teléfono"
+
+#: models.py:86 models.py:87
+msgid "Phone Address"
+msgstr "Número de teléfono"
+
+#: models.py:100
+msgid "Addressline 1"
 msgstr ""
 
-msgid "Product Category"
+#: models.py:101
+msgid "Addressline 2"
 msgstr ""
 
+#: models.py:102
+msgid "Zipcode"
+msgstr "Código Postal"
+
+#: models.py:103
+msgid "City"
+msgstr "Ciudad"
+
+#: models.py:104
+msgid "State"
+msgstr "Estado / Provincia"
+
+#: models.py:105
+msgid "Country"
+msgstr "País"
+
+#: models.py:111 models.py:112
+msgid "Postal Address"
+msgstr "Dirección postal"
+
+#: models.py:138
+msgid "External Reference"
+msgstr "Referencia externa"
+
+#: models.py:139
+msgid "Discount"
+msgstr "Decuento"
+
+#: models.py:140 models.py:372 models.py:682
+msgid "Description"
+msgstr "Descripción"
+
+#: models.py:141 models.py:185 tables.py:15
+msgid "Customer"
+msgstr "Cliente"
+
+#: models.py:164 models.py:717 models.py:788 models.py:800
 msgid "Product"
+msgstr "Libro"
+
+#: models.py:180
+msgid "Prename"
+msgstr "Apellidos"
+
+#: models.py:181
+msgid "Default Billing Cycle"
+msgstr "Ciclo de Facturación"
+
+#: models.py:182
+msgid "Is member of"
+msgstr "Es miembro de"
+
+#: models.py:186
+msgid "Customers"
+msgstr "Clientes"
+
+#: models.py:287
+msgid "Offers direct Shipment to Customer"
+msgstr "Ofrece directo de envío al cliente"
+
+#: models.py:291
+msgid "Supplier"
+msgstr "Proveedor"
+
+#: models.py:292
+msgid "Suppliers"
+msgstr "Proveedores"
+
+#: models.py:336
+msgid "Days to Payment Date"
 msgstr ""
 
-msgid "Products"
+#: models.py:339 models.py:340
+msgid "Customer Billing Cycle"
 msgstr ""
 
-msgid "Create a new product"
+#: models.py:356
+msgid "Customer Group"
 msgstr ""
 
-msgid "Create product"
+#: models.py:357
+msgid "Customer Groups"
 msgstr ""
 
-msgid "Overwrite Product Price"
+#: models.py:371 models.py:492 models.py:549 models.py:629
+msgid "Staff"
+msgstr "Personal"
+
+#: models.py:373
+msgid "Default Customer"
 msgstr ""
 
-# #############################
-# ##   TEMPLATESET RELATED   ##
-# #############################
-msgid "Logo"
+#: models.py:374
+msgid "Default Supplier"
 msgstr ""
 
-msgid "Footer Text On Salesorders"
-msgstr ""
-
-msgid "Header Text On Salesorders"
-msgstr ""
-
-msgid "Header Text On Purchaseorders"
-msgstr ""
-
-msgid "Footer Text On Purchaseorders"
-msgstr ""
-
-msgid "Templateset"
-msgstr ""
-
-msgid "Templatesets"
-msgstr ""
-
-msgid "XSL File"
-msgstr ""
-
-msgid "XSL Files"
-msgstr ""
-
-msgid "User Extension"
-msgstr ""
-
-msgid "User Extensions"
-msgstr ""
-
-# #######################
-# ##   MONEY RELATED   ##
-# #######################
-msgid "Price"
-msgstr ""
-
-msgid "Prices"
-msgstr ""
-
+#: models.py:375
 msgid "Default Currency"
 msgstr ""
 
-msgid "Currency"
+msgid "default currency"
 msgstr ""
 
-msgid "Payable until"
+#: models.py:384 models.py:446 models.py:489 models.py:546 models.py:624
+msgid "Contract"
 msgstr ""
 
-msgid "Tax"
+#: models.py:385
+msgid "Contracts"
 msgstr ""
 
-msgid "Taxes"
+#: models.py:490 models.py:547
+msgid "Valid until"
 msgstr ""
 
-msgid "Price Per Unit"
-msgstr ""
-
-msgid "Last Pricing Date"
-msgstr ""
-
-msgid "Last Calculated Price"
-msgstr ""
-
-msgid "Last Calculated Price With Tax"
-msgstr ""
-
-msgid "Last Calculated Tax"
-msgstr ""
-
-msgid "Taxrate in Percentage"
-msgstr ""
-
-msgid "Taxname"
-msgstr ""
-
-msgid "Discount"
-msgstr ""
-
-msgid "Billing Cycle"
-msgstr ""
-
-msgid "Billing Cycles"
-msgstr ""
-
-msgid "Create a new billing cycle"
-msgstr ""
-
-msgid "Create billing cycle"
-msgstr ""
-
-msgid "Default Billing Cycle"
-msgstr ""
-
-msgid "Payment Bank Reference"
-msgstr ""
-
-msgid "Tax Rates"
-msgstr ""
-
-msgid "Tax Rate"
-msgstr ""
-
-msgid "Create tax rate"
-msgstr ""
-
-msgid "Create a new tax rate"
-msgstr ""
-
-msgid "Activa Account"
-msgstr ""
-
-msgid "Passiva Account"
-msgstr ""
-
-# ######################
-# ##   UNIT RELATED   ##
-# ######################
-msgid "Unit"
-msgstr ""
-
-msgid "Units"
-msgstr ""
-
-msgid "Is A Fraction Of"
-msgstr ""
-
-msgid "Factor Between This And Next Higher Unit"
-msgstr ""
-
-msgid "Displayed Name After Quantity In The Position"
-msgstr ""
-
-msgid " and unit"
-msgstr ""
-
-msgid "From Unit"
-msgstr ""
-
-msgid "To Unit"
-msgstr ""
-
-msgid "Factor between From and To Unit"
-msgstr ""
-
-msgid "Unit Transform"
-msgstr ""
-
-msgid "Unit Transforms"
-msgstr ""
-
-msgid "Create unit"
-msgstr ""
-
-msgid "Create a new unit"
-msgstr ""
-
-msgid "Shortname"
-msgstr ""
-
-# ##########################
-# ##   SHIPMENT RELATED   ##
-# ##########################
-msgid "Shipment on"
-msgstr ""
-
-msgid "Shipment Supplier"
-msgstr ""
-
-msgid "Shipment ID"
-msgstr ""
-
-# ################################
-# ##   PURCHASE ORDER RELATED   ##
-# ################################
+#: models.py:497 models.py:498 models.py:532
 msgid "Purchase Order"
 msgstr ""
 
-msgid "Purchaseorder Position"
+#: models.py:554 models.py:610
+msgid "Quote"
 msgstr ""
 
-msgid "Purchaseorder Positions"
+#: models.py:555
+msgid "Quotes"
 msgstr ""
 
-msgid "Purchase Orders"
+#: models.py:625
+msgid "To pay until"
 msgstr ""
 
-msgid "Create a new purchaseorder"
+#: models.py:626
+msgid "Payment Bank Reference"
 msgstr ""
 
-msgid "Create Purchase Order"
+#: models.py:633 models.py:668
+msgid "Invoice"
 msgstr ""
 
-# ###############################
-# ##   IMPORT/EXPORT RELATED   ##
-# ###############################
-msgid "Import / Export"
+#: models.py:634
+msgid "Invoices"
 msgstr ""
 
-msgid "Export as JSON"
+#: models.py:683
+msgid "Displayed Name After Quantity In The Position"
 msgstr ""
 
-msgid "Export as XLS"
+#: models.py:684
+msgid "Is A Fraction Of"
 msgstr ""
 
-msgid "Export as XLSX"
+#: models.py:685
+msgid "Factor Between This And Next Higher Unit"
 msgstr ""
 
-msgid "Export as CSV"
+#: models.py:689 models.py:789 tables.py:135
+msgid "Unit"
+msgstr ""
+
+#: models.py:690
+msgid "Units"
+msgstr ""
+
+#: models.py:700
+msgid "Taxrate in Percentage"
+msgstr ""
+
+#: models.py:701
+msgid "Taxname"
+msgstr ""
+
+#: models.py:704
+msgid "Tax"
+msgstr ""
+
+#: models.py:705
+msgid "Taxes"
+msgstr ""
+
+#: models.py:715
+msgid "From Unit"
+msgstr ""
+
+#: models.py:716
+msgid "To Unit"
+msgstr ""
+
+#: models.py:718
+msgid "Factor between From and To Unit"
+msgstr ""
+
+#: models.py:727
+msgid "Unit Transform"
+msgstr ""
+
+#: models.py:728
+msgid "Unit Transforms"
+msgstr ""
+
+#: models.py:736 models.py:739
+msgid "HTML File"
+msgstr ""
+
+#: models.py:740
+msgid "HTML Files"
+msgstr ""
+
+#: models.py:747
+msgid "Name of the Organisation"
+msgstr ""
+
+#: models.py:749
+msgid "HTML File for Invoice"
+msgstr ""
+
+#: models.py:751
+msgid "HTML File for Quote"
+msgstr ""
+
+#: models.py:752
+msgid "HTML File for Purchaseorder"
+msgstr ""
+
+#: models.py:754
+msgid "Logo"
+msgstr "Logo"
+
+#: models.py:755
+msgid "Addresser"
+msgstr ""
+
+#: models.py:756
+msgid "Footer Text On Salesorders"
+msgstr ""
+
+#: models.py:757
+msgid "Header Text On Salesorders"
+msgstr ""
+
+#: models.py:758
+msgid "Header Text On Purchaseorders"
+msgstr ""
+
+#: models.py:760
+msgid "Footer Text On Purchaseorders"
+msgstr ""
+
+#: models.py:762
+msgid "Page Footer Left"
+msgstr ""
+
+#: models.py:763
+msgid "Page Footer Middle"
+msgstr ""
+
+#: models.py:766
+msgid "Templateset"
+msgstr ""
+
+#: models.py:767
+msgid "Templatesets"
+msgstr ""
+
+#: models.py:780
+msgid "User Extension"
+msgstr ""
+
+#: models.py:781
+msgid "User Extensions"
+msgstr ""
+
+#: models.py:792
+msgid "Product Unit"
+msgstr ""
+
+#: models.py:793
+msgid "Product Units"
+msgstr ""
+
+#: models.py:801 tables.py:136
+msgid "Taxrate"
+msgstr ""
+
+#: models.py:804
+msgid "Product Taxrate"
+msgstr ""
+
+#: models.py:805
+msgid "Product Taxrates"
+msgstr ""
+
+#: tables.py:11
+msgid "Status"
+msgstr "Estado"
+
+#: tables.py:17
+msgid "Price"
+msgstr "Precio"
+
+#: tables.py:95
+msgid "Prefix"
+msgstr ""
+
+msgid "Administration"
+msgstr "Administrativo"
+
+msgid "Contract Overview"
+msgstr ""
+
+msgid "Dashboard"
+msgstr ""
+
+msgid "Theme based on"
+msgstr ""
+
+msgid "open contracts in your database."
+msgstr ""
+
+msgid "open invoices in your database."
+msgstr ""
+
+msgid "customers in your database."
+msgstr ""
+
+msgid "suppliers in your database."
+msgstr ""
+
+msgid "products in your database."
 msgstr ""
