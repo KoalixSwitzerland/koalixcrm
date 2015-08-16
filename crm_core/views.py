@@ -260,6 +260,7 @@ class UserExtensionInline(InlineFormSet):
     extra = 1
     max_num = 1
     can_delete = False
+    exclude = ()
 
 
 class ProductUnitInline(InlineFormSet):
@@ -267,6 +268,7 @@ class ProductUnitInline(InlineFormSet):
     extra = 1
     max_num = 1
     can_delete = False
+    exclude = ()
 
 
 class ProductTaxInline(InlineFormSet):
@@ -274,6 +276,7 @@ class ProductTaxInline(InlineFormSet):
     extra = 1
     max_num = 1
     can_delete = False
+    exclude = ()
 
 
 class UpdateUserProfile(LoginRequiredMixin, NamedFormsetsMixin, UpdateWithInlinesView):
@@ -381,6 +384,7 @@ class CreateTax(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     permission_required = 'crm_core.add_tax'
     login_url = settings.LOGIN_URL
     success_url = reverse_lazy('settings')
+    fields = ['taxrate_in_percent', 'name']
 
 
 class EditTax(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
@@ -388,6 +392,7 @@ class EditTax(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     permission_required = 'crm_core.change_tax'
     login_url = settings.LOGIN_URL
     success_url = reverse_lazy('settings')
+    fields = ['taxrate_in_percent', 'name']
 
 
 class DeleteTax(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
@@ -400,6 +405,7 @@ class DeleteTax(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
 class CreateUnit(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = models.Unit
     permission_required = 'crm_core.add_unit'
+    fields = ['shortname', 'description', 'fractionof', 'factor']
     login_url = settings.LOGIN_URL
     success_url = reverse_lazy('settings')
 
@@ -407,6 +413,7 @@ class CreateUnit(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
 class EditUnit(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = models.Unit
     permission_required = 'crm_core.change_unit'
+    fields = ['shortname', 'description', 'fractionof', 'factor']
     login_url = settings.LOGIN_URL
     success_url = reverse_lazy('settings')
 
@@ -456,9 +463,6 @@ class CreateProduct(LoginRequiredMixin, PermissionRequiredMixin, NamedFormsetsMi
     login_url = settings.LOGIN_URL
     inlines = [ProductUnitInline, ProductTaxInline]
     inlines_names = ['productunit_formset', 'producttax_formset']
-    fields = ['sku', 'title', 'image', 'description', 'unit_price', 'available', 'num_in_stock', 'keywords',
-              'sale_price', 'sale_from', 'sale_to', 'related_products', 'upsell_products', 'publish_date',
-              'expiry_date']
     success_url = reverse_lazy('product_list')
     form_class = forms.ProductForm
 
@@ -469,9 +473,6 @@ class EditProduct(LoginRequiredMixin, PermissionRequiredMixin, NamedFormsetsMixi
     login_url = settings.LOGIN_URL
     inlines = [ProductUnitInline, ProductTaxInline]
     inlines_names = ['productunit_formset', 'producttax_formset']
-    fields = ['sku', 'title', 'image', 'description', 'unit_price', 'available', 'num_in_stock', 'unit',
-              'keywords', 'sale_price', 'sale_from', 'sale_to', 'related_products', 'upsell_products', 'publish_date',
-              'expiry_date']
     success_url = reverse_lazy('product_list')
     form_class = forms.ProductForm
 
@@ -492,6 +493,7 @@ class DeleteProduct(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
 class CreateBillingCycle(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = models.CustomerBillingCycle
     permission_required = 'crm_core.add_customerbillingcycle'
+    fields = ['name', 'days_to_payment']
     login_url = settings.LOGIN_URL
     success_url = reverse_lazy('settings')
 
@@ -499,6 +501,7 @@ class CreateBillingCycle(LoginRequiredMixin, PermissionRequiredMixin, CreateView
 class EditBillingCycle(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = models.CustomerBillingCycle
     permission_required = 'crm_core.change_customerbillingcycle'
+    fields = ['name', 'days_to_payment']
     login_url = settings.LOGIN_URL
     success_url = reverse_lazy('settings')
 
@@ -547,6 +550,7 @@ class DeletePurchaseOrder(LoginRequiredMixin, PermissionRequiredMixin, DeleteVie
 class CreateCustomerGroup(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = models.CustomerGroup
     permission_required = 'crm_core.add_customergroup'
+    fields = ['name']
     login_url = settings.LOGIN_URL
     success_url = reverse_lazy('settings')
 
@@ -554,6 +558,7 @@ class CreateCustomerGroup(LoginRequiredMixin, PermissionRequiredMixin, CreateVie
 class EditCustomerGroup(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = models.CustomerGroup
     permission_required = 'crm_core.change_customergroup'
+    fields = ['name']
     login_url = settings.LOGIN_URL
     success_url = reverse_lazy('settings')
 
