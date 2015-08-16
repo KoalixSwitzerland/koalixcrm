@@ -518,8 +518,6 @@ class EditPurchaseOrder(LoginRequiredMixin, PermissionRequiredMixin, UpdateWithM
     form_class = forms.PurchaseOrderForm
     permission_required = 'crm_core.change_purchaseorder'
     login_url = settings.LOGIN_URL
-    fields = ['discount', 'description', 'contract', 'customer', 'currency', 'lastmodifiedby',
-              'validuntil', 'last_pricing_date', 'last_calculated_price']
     success_url = reverse_lazy('contract_list')
 
     def get_context_data(self, **kwargs):
@@ -616,7 +614,6 @@ class EditInvoice(LoginRequiredMixin, PermissionRequiredMixin, UpdateWithModifie
     form_class = forms.InvoiceForm
     permission_required = 'crm_core.change_invoice'
     login_url = settings.LOGIN_URL
-    fields = ['description', 'contract', 'customer', 'payableuntil', 'state', 'currency']
     success_url = reverse_lazy('contract_list')
 
     def get_context_data(self, **kwargs):
@@ -649,8 +646,6 @@ class EditQuote(LoginRequiredMixin, PermissionRequiredMixin, UpdateWithModifiedB
     form_class = forms.QuoteForm
     permission_required = 'crm_core.change_quote'
     login_url = settings.LOGIN_URL
-    fields = ['discount', 'description', 'contract', 'customer', 'currency', 'lastmodifiedby',
-              'validuntil', 'last_pricing_date', 'last_calculated_price']
     success_url = reverse_lazy('contract_list')
 
     def get_context_data(self, **kwargs):
