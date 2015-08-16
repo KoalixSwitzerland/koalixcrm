@@ -33,7 +33,8 @@ class ContractTable(tables.Table):
             }
         ],
         attrs={"th": {"width": "90px"}},
-        orderable=False
+        orderable=False,
+        verbose_name=_('Quote')
     )
     purchase_order = ButtonsColumn(
         [
@@ -51,7 +52,8 @@ class ContractTable(tables.Table):
             }
         ],
         attrs={"th": {"width": "90px"}},
-        orderable=False
+        orderable=False,
+        verbose_name=_('Purchase Order')
     )
     invoice = ButtonsColumn(
         [
@@ -69,7 +71,8 @@ class ContractTable(tables.Table):
             }
         ],
         attrs={"th": {"width": "90px"}},
-        orderable=False
+        orderable=False,
+        verbose_name=_('Invoice')
     )
     edit_status = IncludeColumn(
         'crm_core/includes/contract_row_actions_toolbar.html',
