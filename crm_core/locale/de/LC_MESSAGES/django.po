@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-08-16 20:54+0200\n"
-"PO-Revision-Date: 2015-08-16 21:42+0200\n"
+"PO-Revision-Date: 2015-08-25 16:52+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de\n"
@@ -220,13 +220,6 @@ msgstr "Produkt"
 msgid "Prename"
 msgstr "Vorname"
 
-#: .\crm_core\models.py:181 .\crm_core\models.py:339
-#: .\crm_core\templates\crm_core\customer_detail.html:70
-#: .\crm_core\templates\crm_core\customerbillingcycle_form.html:5
-#: .\crm_core\templates\crm_core\customerbillingcycle_form.html:9
-msgid "Billing Cycle"
-msgstr "Zahlungsbedingung"
-
 #: .\crm_core\models.py:182
 msgid "Is member of"
 msgstr "Ist Mitglied von"
@@ -277,10 +270,6 @@ msgstr "Lieferanten"
 #: .\crm_core\models.py:336
 msgid "Days to Payment Date"
 msgstr "Tage bis zur Fälligkeit"
-
-#: .\crm_core\models.py:340 .\crm_core\templates\settings.html:62
-msgid "Billing Cycles"
-msgstr "Zahlungsbedingungen"
 
 #: .\crm_core\models.py:356
 #: .\crm_core\templates\crm_core\customergroup_confirm_delete.html:5
@@ -750,11 +739,6 @@ msgstr "Kunde erstellen"
 msgid "Create Customer"
 msgstr "Kunde anlegen"
 
-#: .\crm_core\templates\crm_core\customerbillingcycle_confirm_delete.html:5
-#: .\crm_core\templates\crm_core\customerbillingcycle_confirm_delete.html:9
-msgid "Customer Billing Cycle"
-msgstr "Zahlungsbedingung"
-
 #: .\crm_core\templates\crm_core\customerbillingcycle_confirm_delete.html:14
 #: .\crm_core\templates\crm_core\customerbillingcycle_confirm_delete.html:18
 msgid "Delete billing cycle"
@@ -1098,6 +1082,13 @@ msgstr "Einloggen"
 #: .\crm_core\templates\settings.html:42
 msgid "Create Taxrate"
 msgstr "Steuersatz erstellen"
+
+msgid "Billing Cycle"
+msgstr "Zahlungszyklus"
+
+#: .\crm_core\templates\settings.html:62
+msgid "Billing Cycles"
+msgstr "Zahlungszyklen"
 
 #: .\crm_core\templates\settings.html:66
 msgid "Create Billing Cycle"
