@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-08-16 20:54+0200\n"
-"PO-Revision-Date: 2015-08-25 16:57+0200\n"
+"PO-Revision-Date: 2015-08-25 17:05+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: it\n"
@@ -524,7 +524,7 @@ msgstr ""
 
 #: .\crm_core\tables.py:11 .\crm_core\templates\shop\order_history.html:22
 msgid "Status"
-msgstr ""
+msgstr "Stato"
 
 #: .\crm_core\tables.py:17 .\crm_core\templates\pdf_templates\invoice.html:41
 #: .\crm_core\templates\pdf_templates\purchaseorder.html:40
@@ -533,7 +533,7 @@ msgstr ""
 #: .\crm_core\templates\shop\includes\order_details.html:42
 #: .\crm_core\templates\shop\includes\order_details_rtl.html:42
 msgid "Price"
-msgstr ""
+msgstr "Prezzo"
 
 #: .\crm_core\tables.py:95
 msgid "Prefix"
@@ -616,7 +616,7 @@ msgstr ""
 #: .\crm_core\templates\shop\category_confirm_delete.html:13
 #: .\crm_core\templates\shop\category_form.html:13
 msgid "Settings"
-msgstr ""
+msgstr "Impostazioni"
 
 #: .\crm_core\templates\base\base.html:252
 msgid "Theme based on"
