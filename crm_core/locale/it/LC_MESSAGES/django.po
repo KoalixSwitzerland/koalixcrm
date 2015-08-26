@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-08-16 20:54+0200\n"
-"PO-Revision-Date: 2015-08-25 17:05+0200\n"
+"PO-Revision-Date: 2015-08-26 22:05+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: it\n"
@@ -1138,6 +1138,9 @@ msgid "Administration"
 msgstr ""
 
 msgid "open contracts in your database."
+msgstr ""
+
+msgid "open invoices in your database."
 msgstr ""
 
 msgid "customers in your database."
