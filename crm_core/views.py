@@ -4,11 +4,11 @@ from braces.views import PermissionRequiredMixin, LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import CreateView, UpdateView, DeleteView, DetailView
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.template import RequestContext, loader
 from django_tables2 import SingleTableView, RequestConfig
 from extra_views import UpdateWithInlinesView, InlineFormSet, NamedFormsetsMixin, CreateWithInlinesView
-from django.shortcuts import render_to_response, redirect, get_object_or_404
+from django.shortcuts import render_to_response, redirect
 from django.contrib.auth import authenticate, login, logout
 from crm_core.custom.mixins import UpdateWithModifiedByMixin, CreateWithModifieByMixin, \
     CreateWithInlinesAndModifiedByMixin, UpdateWithInlinesAndModifiedByMixin
@@ -121,22 +121,6 @@ def create_contract_from_customer(request, customer_pk):
     return redirect('contract_detail', pk=contract.pk)
 
 
-def create_quote_from_customer(request, customer_pk):
-    customer = models.Customer.objects.get(pk=customer_pk)
-    quote = customer.create_quote(request)
-    if not customer.default_currency:
-        return redirect('contract_edit', pk=quote.contract.pk)
-    return redirect('quote_edit', pk=quote.pk)
-
-
-def create_purchaseorder_from_customer(request, customer_pk):
-    customer = models.Customer.objects.get(pk=customer_pk)
-    purchase_order = customer.create_purchase_order(request)
-    if not customer.default_currency:
-        return redirect('contract_edit', pk=purchase_order.contract.pk)
-    return redirect('purchaseorder_edit', pk=purchase_order.pk)
-
-
 def create_quote_from_contract(request, contract_pk):
     contract = models.Contract.objects.get(pk=contract_pk)
     quote = contract.create_quote()
@@ -152,18 +136,6 @@ def create_invoice_from_contract(request, contract_pk):
 def create_purchaseorder_from_contract(request, contract_pk):
     contract = models.Contract.objects.get(pk=contract_pk)
     purchase_order = contract.create_purchase_order()
-    return redirect('purchaseorder_edit', pk=purchase_order.pk)
-
-
-def create_invoice_from_quote(request, quote_pk):
-    quote = models.Quote.objects.get(pk=quote_pk)
-    invoice = quote.create_invoice()
-    return redirect('invoice_edit', pk=invoice.pk)
-
-
-def create_purchaseorder_from_quote(request, quote_pk):
-    quote = models.Quote.objects.get(pk=quote_pk)
-    purchase_order = quote.create_purchase_order()
     return redirect('purchaseorder_edit', pk=purchase_order.pk)
 
 
@@ -260,6 +232,7 @@ class UserExtensionInline(InlineFormSet):
     extra = 1
     max_num = 1
     can_delete = False
+    exclude = ()
 
 
 class ProductUnitInline(InlineFormSet):
@@ -267,6 +240,7 @@ class ProductUnitInline(InlineFormSet):
     extra = 1
     max_num = 1
     can_delete = False
+    exclude = ()
 
 
 class ProductTaxInline(InlineFormSet):
@@ -274,6 +248,7 @@ class ProductTaxInline(InlineFormSet):
     extra = 1
     max_num = 1
     can_delete = False
+    exclude = ()
 
 
 class UpdateUserProfile(LoginRequiredMixin, NamedFormsetsMixin, UpdateWithInlinesView):
@@ -381,6 +356,7 @@ class CreateTax(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     permission_required = 'crm_core.add_tax'
     login_url = settings.LOGIN_URL
     success_url = reverse_lazy('settings')
+    fields = ['taxrate_in_percent', 'name']
 
 
 class EditTax(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
@@ -388,6 +364,7 @@ class EditTax(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     permission_required = 'crm_core.change_tax'
     login_url = settings.LOGIN_URL
     success_url = reverse_lazy('settings')
+    fields = ['taxrate_in_percent', 'name']
 
 
 class DeleteTax(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
@@ -400,6 +377,7 @@ class DeleteTax(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
 class CreateUnit(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = models.Unit
     permission_required = 'crm_core.add_unit'
+    fields = ['shortname', 'description', 'fractionof', 'factor']
     login_url = settings.LOGIN_URL
     success_url = reverse_lazy('settings')
 
@@ -407,6 +385,7 @@ class CreateUnit(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
 class EditUnit(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = models.Unit
     permission_required = 'crm_core.change_unit'
+    fields = ['shortname', 'description', 'fractionof', 'factor']
     login_url = settings.LOGIN_URL
     success_url = reverse_lazy('settings')
 
@@ -456,9 +435,6 @@ class CreateProduct(LoginRequiredMixin, PermissionRequiredMixin, NamedFormsetsMi
     login_url = settings.LOGIN_URL
     inlines = [ProductUnitInline, ProductTaxInline]
     inlines_names = ['productunit_formset', 'producttax_formset']
-    fields = ['sku', 'title', 'image', 'description', 'unit_price', 'available', 'num_in_stock', 'keywords',
-              'sale_price', 'sale_from', 'sale_to', 'related_products', 'upsell_products', 'publish_date',
-              'expiry_date']
     success_url = reverse_lazy('product_list')
     form_class = forms.ProductForm
 
@@ -469,9 +445,6 @@ class EditProduct(LoginRequiredMixin, PermissionRequiredMixin, NamedFormsetsMixi
     login_url = settings.LOGIN_URL
     inlines = [ProductUnitInline, ProductTaxInline]
     inlines_names = ['productunit_formset', 'producttax_formset']
-    fields = ['sku', 'title', 'image', 'description', 'unit_price', 'available', 'num_in_stock', 'unit',
-              'keywords', 'sale_price', 'sale_from', 'sale_to', 'related_products', 'upsell_products', 'publish_date',
-              'expiry_date']
     success_url = reverse_lazy('product_list')
     form_class = forms.ProductForm
 
@@ -492,6 +465,7 @@ class DeleteProduct(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
 class CreateBillingCycle(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = models.CustomerBillingCycle
     permission_required = 'crm_core.add_customerbillingcycle'
+    fields = ['name', 'days_to_payment']
     login_url = settings.LOGIN_URL
     success_url = reverse_lazy('settings')
 
@@ -499,6 +473,7 @@ class CreateBillingCycle(LoginRequiredMixin, PermissionRequiredMixin, CreateView
 class EditBillingCycle(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = models.CustomerBillingCycle
     permission_required = 'crm_core.change_customerbillingcycle'
+    fields = ['name', 'days_to_payment']
     login_url = settings.LOGIN_URL
     success_url = reverse_lazy('settings')
 
@@ -515,8 +490,6 @@ class EditPurchaseOrder(LoginRequiredMixin, PermissionRequiredMixin, UpdateWithM
     form_class = forms.PurchaseOrderForm
     permission_required = 'crm_core.change_purchaseorder'
     login_url = settings.LOGIN_URL
-    fields = ['discount', 'description', 'contract', 'customer', 'currency', 'lastmodifiedby',
-              'validuntil', 'last_pricing_date', 'last_calculated_price']
     success_url = reverse_lazy('contract_list')
 
     def get_context_data(self, **kwargs):
@@ -547,6 +520,7 @@ class DeletePurchaseOrder(LoginRequiredMixin, PermissionRequiredMixin, DeleteVie
 class CreateCustomerGroup(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = models.CustomerGroup
     permission_required = 'crm_core.add_customergroup'
+    fields = ['name']
     login_url = settings.LOGIN_URL
     success_url = reverse_lazy('settings')
 
@@ -554,6 +528,7 @@ class CreateCustomerGroup(LoginRequiredMixin, PermissionRequiredMixin, CreateVie
 class EditCustomerGroup(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = models.CustomerGroup
     permission_required = 'crm_core.change_customergroup'
+    fields = ['name']
     login_url = settings.LOGIN_URL
     success_url = reverse_lazy('settings')
 
@@ -611,7 +586,6 @@ class EditInvoice(LoginRequiredMixin, PermissionRequiredMixin, UpdateWithModifie
     form_class = forms.InvoiceForm
     permission_required = 'crm_core.change_invoice'
     login_url = settings.LOGIN_URL
-    fields = ['description', 'contract', 'customer', 'payableuntil', 'state', 'currency']
     success_url = reverse_lazy('contract_list')
 
     def get_context_data(self, **kwargs):
@@ -644,8 +618,6 @@ class EditQuote(LoginRequiredMixin, PermissionRequiredMixin, UpdateWithModifiedB
     form_class = forms.QuoteForm
     permission_required = 'crm_core.change_quote'
     login_url = settings.LOGIN_URL
-    fields = ['discount', 'description', 'contract', 'customer', 'currency', 'lastmodifiedby',
-              'validuntil', 'last_pricing_date', 'last_calculated_price']
     success_url = reverse_lazy('contract_list')
 
     def get_context_data(self, **kwargs):

@@ -16,7 +16,7 @@
                     <span class="li_note"></span>
                     <h3>{{ contractcount }}&nbsp;{% trans 'open' %}</h3>
                 </div>
-                    <p>{{ contractcount }} open contracts in your database.</p>
+                    <p>{{ contractcount }} {% trans 'open contracts in your database.' %}</p>
             </div>
             <div class="col-md-2 col-sm-2 box0">
 {#                            TODO: filtered view  #}
@@ -24,28 +24,28 @@
                     <span class="li_banknote"></span>
                     <h3>{{ invoicecount }}&nbsp;{% trans 'open' %}</h3>
                 </div>
-                    <p>{{ invoicecount }} open invoices in your database.</p>
+                    <p>{{ invoicecount }} {% trans 'open invoices in your database.' %}</p>
             </div>
             <div class="col-md-2 col-sm-2 box0">
                 <div class="box1" onclick="window.location.assign('{% url 'customer_list' %}')">
                     <span class="li_user"></span>
                     <h3>{{ customercount }}</h3>
                 </div>
-                    <p>{{ customercount }} customers in your database.</p>
+                    <p>{{ customercount }} {% trans 'customers in your database.' %}</p>
             </div>
             <div class="col-md-2 col-sm-2 box0">
                 <div class="box1" onclick="window.location.assign('{% url 'supplier_list' %}')">
                     <span class="li_truck"></span>
                     <h3>{{ suppliercount }}</h3>
                 </div>
-                    <p>{{ suppliercount }} suppliers in your database.</p>
+                    <p>{{ suppliercount }} {% trans 'suppliers in your database.' %}</p>
             </div>
             <div class="col-md-2 col-sm-2 box0">
                 <div class="box1" onclick="window.location.assign('{% url 'product_list' %}')">
                     <span class="li_shop"></span>
                     <h3>{{ productcount }}</h3>
                 </div>
-                    <p>{{ productcount }} products in your database.</p>
+                    <p>{{ productcount }} {% trans 'products in your database.' %}</p>
             </div>
         </div><!-- /row mt -->
 

@@ -27,14 +27,16 @@ from django_extensions.db.fields import CreationDateTimeField, ModificationDateT
 
 
 class Contact(models.Model):
-    prefix = models.CharField(max_length=1, choices=POSTAL_ADDRESS_PREFIX_CHOICES,
-                              verbose_name=_("Title"), blank=True, null=True)
+    prefix = models.CharField(
+        max_length=1, choices=POSTAL_ADDRESS_PREFIX_CHOICES, verbose_name=_("Title"), blank=True, null=True)
     name = models.CharField(max_length=300, verbose_name=_("Name"))
     dateofcreation = CreationDateTimeField(verbose_name=_("Created at"))
     lastmodification = ModificationDateTimeField(verbose_name=_("Last modified"))
-    lastmodifiedby = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, blank=True,
-                                       verbose_name=_("Last modified by"), null=True)
-    default_currency = models.CharField(max_length=3, choices=currencies, blank=True, null=True)
+    lastmodifiedby = models.ForeignKey(
+        settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True},
+        blank=True, verbose_name=_("Last modified by"), null=True)
+    default_currency = models.CharField(
+        verbose_name=_('Currency'), max_length=3, choices=currencies, blank=True, null=True)
 
     class Meta:
         abstract = True
@@ -58,8 +60,8 @@ class Contact(models.Model):
 
 class EmailAddress(models.Model):
     email = models.EmailField(max_length=200, verbose_name=_("Email Address"))
-    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=EMAIL_ADDRESS_PURPOSE_CHOICES,
-                               default='H')
+    purpose = models.CharField(
+        verbose_name=_("Purpose"), max_length=1, choices=EMAIL_ADDRESS_PURPOSE_CHOICES, default='H')
 
     class Meta:
         abstract = True
@@ -78,8 +80,8 @@ class EmailAddress(models.Model):
 
 class PhoneAddress(models.Model):
     phone = models.CharField(max_length=20, verbose_name=_("Phone Number"))
-    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PHONE_ADDRESS_PURPOSE_CHOICES,
-                               default='H')
+    purpose = models.CharField(
+        verbose_name=_("Purpose"), max_length=1, choices=PHONE_ADDRESS_PURPOSE_CHOICES, default='H')
 
     class Meta:
         abstract = True
@@ -178,7 +180,7 @@ CustomerCartItem._meta.get_field('description').blank = True
 
 class Customer(Contact):
     firstname = models.CharField(max_length=300, verbose_name=_("Prename"), blank=True, null=True)
-    billingcycle = models.ForeignKey('crm_core.CustomerBillingCycle', verbose_name=_('Default Billing Cycle'))
+    billingcycle = models.ForeignKey('crm_core.CustomerBillingCycle', verbose_name=_('Billing Cycle'))
     ismemberof = models.ManyToManyField('crm_core.CustomerGroup', verbose_name=_('Is member of'), blank=True, null=True)
 
     class Meta:
@@ -249,21 +251,6 @@ class Customer(Contact):
             elif ea.purpose == 'H':
                 return ea
         return "No email address"
-
-    def create_invoice(self, request):
-        contract = self.create_contract(request)
-        invoice = contract.create_invoice()
-        return invoice
-
-    def create_purchase_order(self, request):
-        contract = self.create_contract(request)
-        purchase_order = contract.create_purchase_order()
-        return purchase_order
-
-    def create_quote(self, request):
-        contract = self.create_contract(request)
-        quote = contract.create_quote()
-        return quote
 
     def is_in_group(self, customer_group):
         for customerGroupMembership in self.ismemberof.all():
@@ -336,8 +323,8 @@ class CustomerBillingCycle(models.Model):
     days_to_payment = models.IntegerField(verbose_name=_("Days to Payment Date"))
 
     class Meta:
-        verbose_name = _('Customer Billing Cycle')
-        verbose_name_plural = _('Customer Billing Cycle')
+        verbose_name = _('Billing Cycle')
+        verbose_name_plural = _('Billing Cycles')
         permissions = (
             ('view_customerbillingcycle', 'Can view billing cycles'),
         )
@@ -347,7 +334,7 @@ class CustomerBillingCycle(models.Model):
 
 
 class CustomerGroup(models.Model):
-    name = models.CharField(max_length=300)
+    name = models.CharField(verbose_name=_('Name'), max_length=300)
 
     def __unicode__(self):
         return self.name
@@ -372,7 +359,7 @@ class Contract(models.Model):
     description = models.TextField(verbose_name=_("Description"), blank=True, null=True)
     default_customer = models.ForeignKey(Customer, verbose_name=_("Default Customer"), null=True, blank=True)
     default_supplier = models.ForeignKey(Supplier, verbose_name=_("Default Supplier"), null=True, blank=True)
-    default_currency = models.CharField(max_length=3, choices=currencies, verbose_name=_("Default Currency"),
+    default_currency = models.CharField(max_length=3, choices=currencies, verbose_name=_("Currency"),
                                         blank=True, null=True)
     dateofcreation = CreationDateTimeField(verbose_name=_("Created at"))
     lastmodification = ModificationDateTimeField(verbose_name=_("Last modified"))
@@ -407,12 +394,7 @@ class Contract(models.Model):
         )
         invoice.discount = 0
         invoice.staff = self.staff
-        invoice.dateofcreation = date.today()
-        purchaseorder = self.purchaseorders.last()
-        if purchaseorder:
-            for itm in purchaseorder.cart.items.all():
-                cartitem = itm.customercartitem
-                invoice.cart.items.add(cartitem)
+        invoice.cart = self.purchaseorders.latest().cart
         invoice.save()
         return invoice
 
@@ -422,7 +404,6 @@ class Contract(models.Model):
         quote.staff = self.staff
         quote.status = 1
         quote.validuntil = date.today() + timedelta(days=self.default_customer.billingcycle.days_to_payment)
-        quote.dateofcreation = date.today()
         quote.save()
         return quote
 
@@ -433,12 +414,7 @@ class Contract(models.Model):
         purchaseorder.staff = self.staff
         purchaseorder.supplier = self.default_supplier
         purchaseorder.status = 1
-        purchaseorder.dateofcreation = date.today()
-        quote = self.quotes.last()
-        if quote:
-            for itm in quote.cart.items.all():
-                cartitem = itm.customercartitem
-                purchaseorder.cart.items.add(cartitem)
+        purchaseorder.cart = self.quotes.latest().cart
         purchaseorder.save()
         return purchaseorder
 
@@ -746,19 +722,19 @@ class HTMLFile(models.Model):
 class TemplateSet(models.Model):
     organisationname = models.CharField(verbose_name=_("Name of the Organisation"), max_length=200)
     title = models.CharField(verbose_name=_("Title"), max_length=100)
-    invoice_html_file = models.ForeignKey(HTMLFile, verbose_name=_("HTML File for Invoice"),
-                                          related_name="invoice_template")
+    invoice_html_file = models.ForeignKey(
+        HTMLFile, verbose_name=_("HTML File for Invoice"), related_name="invoice_template")
     quote_html_file = models.ForeignKey(HTMLFile, verbose_name=_("HTML File for Quote"), related_name="quote_template")
-    purchaseorder_html_file = models.ForeignKey(HTMLFile, verbose_name=_("HTML File for Purchaseorder"),
-                                                related_name="purchaseorder_template")
+    purchaseorder_html_file = models.ForeignKey(
+        HTMLFile, verbose_name=_("HTML File for Purchaseorder"), related_name="purchaseorder_template")
     logo = FileBrowseField(verbose_name=_("Logo"), blank=True, null=True, max_length=200)
     addresser = models.CharField(max_length=200, verbose_name=_("Addresser"), blank=True, null=True)
     footer_text_salesorders = models.TextField(verbose_name=_("Footer Text On Salesorders"), blank=True, null=True)
     header_text_salesorders = models.TextField(verbose_name=_("Header Text On Salesorders"), blank=True, null=True)
-    header_text_purchaseorders = models.TextField(verbose_name=_("Header Text On Purchaseorders"), blank=True,
-                                                  null=True)
-    footer_text_purchaseorders = models.TextField(verbose_name=_("Footer Text On Purchaseorders"), blank=True,
-                                                  null=True)
+    header_text_purchaseorders = models.TextField(
+        verbose_name=_("Header Text On Purchaseorders"), blank=True, null=True)
+    footer_text_purchaseorders = models.TextField(
+        verbose_name=_("Footer Text On Purchaseorders"), blank=True, null=True)
     page_footer_left = models.CharField(max_length=40, verbose_name=_("Page Footer Left"), blank=True, null=True)
     page_footer_middle = models.CharField(max_length=40, verbose_name=_("Page Footer Middle"), blank=True, null=True)
 
@@ -771,10 +747,12 @@ class TemplateSet(models.Model):
 
 
 class UserExtension(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='extension')
-    image = models.ImageField(upload_to='avatars/', default='avatars/avatar.jpg', null=True, blank=True)
-    default_templateset = models.ForeignKey(TemplateSet, null=True, blank=True)
-    default_currency = models.CharField(max_length=3, choices=currencies, null=True, blank=True)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='extension', verbose_name=_('Benutzer'))
+    image = models.ImageField(
+        upload_to='avatars/', default='avatars/avatar.jpg', verbose_name=_('Bild'), null=True, blank=True)
+    default_templateset = models.ForeignKey(TemplateSet, verbose_name=_('Vorlagen'), null=True, blank=True)
+    default_currency = models.CharField(
+        verbose_name=_('Currency'), max_length=3, choices=currencies, null=True, blank=True)
 
     class Meta:
         verbose_name = _('User Extension')
@@ -798,7 +776,7 @@ class ProductUnit(models.Model):
 
 class ProductTax(models.Model):
     product = models.OneToOneField(cartridge_models.Product, verbose_name=_('Product'), related_name='item_tax')
-    tax = models.ForeignKey(TaxRate, verbose_name=_('Taxrate'))
+    tax = models.ForeignKey(TaxRate, verbose_name=_('Tax Rate'))
 
     class Meta:
         verbose_name = _('Product Taxrate')
