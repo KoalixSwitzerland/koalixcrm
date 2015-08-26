@@ -252,21 +252,6 @@ class Customer(Contact):
                 return ea
         return "No email address"
 
-    def create_invoice(self, request):
-        contract = self.create_contract(request)
-        invoice = contract.create_invoice()
-        return invoice
-
-    def create_purchase_order(self, request):
-        contract = self.create_contract(request)
-        purchase_order = contract.create_purchase_order()
-        return purchase_order
-
-    def create_quote(self, request):
-        contract = self.create_contract(request)
-        quote = contract.create_quote()
-        return quote
-
     def is_in_group(self, customer_group):
         for customerGroupMembership in self.ismemberof.all():
             if customerGroupMembership.id == customer_group.id:
@@ -412,6 +397,7 @@ class Contract(models.Model):
         purchaseorder = self.purchaseorders.last()
         if purchaseorder:
             for itm in purchaseorder.cart.items.all():
+                invoice.cart = itm.cart
                 cartitem = itm.customercartitem
                 invoice.cart.items.add(cartitem)
         invoice.save()
@@ -436,6 +422,7 @@ class Contract(models.Model):
         quote = self.quotes.last()
         if quote:
             for itm in quote.cart.items.all():
+                purchaseorder.cart = itm.cart
                 cartitem = itm.customercartitem
                 purchaseorder.cart.items.add(cartitem)
         purchaseorder.save()

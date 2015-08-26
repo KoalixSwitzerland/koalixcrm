@@ -121,22 +121,6 @@ def create_contract_from_customer(request, customer_pk):
     return redirect('contract_detail', pk=contract.pk)
 
 
-def create_quote_from_customer(request, customer_pk):
-    customer = models.Customer.objects.get(pk=customer_pk)
-    quote = customer.create_quote(request)
-    if not customer.default_currency:
-        return redirect('contract_edit', pk=quote.contract.pk)
-    return redirect('quote_edit', pk=quote.pk)
-
-
-def create_purchaseorder_from_customer(request, customer_pk):
-    customer = models.Customer.objects.get(pk=customer_pk)
-    purchase_order = customer.create_purchase_order(request)
-    if not customer.default_currency:
-        return redirect('contract_edit', pk=purchase_order.contract.pk)
-    return redirect('purchaseorder_edit', pk=purchase_order.pk)
-
-
 def create_quote_from_contract(request, contract_pk):
     contract = models.Contract.objects.get(pk=contract_pk)
     quote = contract.create_quote()
@@ -152,18 +136,6 @@ def create_invoice_from_contract(request, contract_pk):
 def create_purchaseorder_from_contract(request, contract_pk):
     contract = models.Contract.objects.get(pk=contract_pk)
     purchase_order = contract.create_purchase_order()
-    return redirect('purchaseorder_edit', pk=purchase_order.pk)
-
-
-def create_invoice_from_quote(request, quote_pk):
-    quote = models.Quote.objects.get(pk=quote_pk)
-    invoice = quote.create_invoice()
-    return redirect('invoice_edit', pk=invoice.pk)
-
-
-def create_purchaseorder_from_quote(request, quote_pk):
-    quote = models.Quote.objects.get(pk=quote_pk)
-    purchase_order = quote.create_purchase_order()
     return redirect('purchaseorder_edit', pk=purchase_order.pk)
 
 
