@@ -1,6 +1,14 @@
 {% extends "base/form_with_inlines_base.html" %}
 {% load i18n crispy_forms_tags crispy_forms_field crispy_forms_filters staticfiles bootstrap3 %}
 
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static "assets/css/datetimepicker.css" %}">
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static "assets/js/bootstrap-datetimepicker.js" %}"></script>
+{% endblock %}
+
 {% block meta_title %}
     {% trans "Invoices" %}
 {% endblock %}
