@@ -4,11 +4,11 @@ from braces.views import PermissionRequiredMixin, LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import CreateView, UpdateView, DeleteView, DetailView
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.template import RequestContext, loader
 from django_tables2 import SingleTableView, RequestConfig
 from extra_views import UpdateWithInlinesView, InlineFormSet, NamedFormsetsMixin, CreateWithInlinesView
-from django.shortcuts import render_to_response, redirect, get_object_or_404
+from django.shortcuts import render_to_response, redirect
 from django.contrib.auth import authenticate, login, logout
 from crm_core.custom.mixins import UpdateWithModifiedByMixin, CreateWithModifieByMixin, \
     CreateWithInlinesAndModifiedByMixin, UpdateWithInlinesAndModifiedByMixin

@@ -394,12 +394,7 @@ class Contract(models.Model):
         )
         invoice.discount = 0
         invoice.staff = self.staff
-        purchaseorder = self.purchaseorders.last()
-        if purchaseorder:
-            for itm in purchaseorder.cart.items.all():
-                invoice.cart = itm.cart
-                cartitem = itm.customercartitem
-                invoice.cart.items.add(cartitem)
+        invoice.cart = self.purchaseorders.latest().cart
         invoice.save()
         return invoice
 
@@ -419,12 +414,7 @@ class Contract(models.Model):
         purchaseorder.staff = self.staff
         purchaseorder.supplier = self.default_supplier
         purchaseorder.status = 1
-        quote = self.quotes.last()
-        if quote:
-            for itm in quote.cart.items.all():
-                purchaseorder.cart = itm.cart
-                cartitem = itm.customercartitem
-                purchaseorder.cart.items.add(cartitem)
+        purchaseorder.cart = self.quotes.latest().cart
         purchaseorder.save()
         return purchaseorder
 
