@@ -380,11 +380,11 @@ class Contract(models.Model):
     def get_price(self):
         res = "N/A"
         if self.has_quotes() and not self.has_invoices() and not self.has_purchaseorders():
-            res = str(self.quotes.last().get_price()) + " " + self.default_currency
+            res = str(self.quotes.last().get_price())
         elif self.has_purchaseorders() and not self.has_invoices():
-            res = str(self.purchaseorders.last().get_price()) + " " + self.default_currency
+            res = str(self.purchaseorders.last().get_price())
         elif self.has_invoices():
-            res = str(self.invoices.last().get_price()) + " " + self.default_currency
+            res = str(self.invoices.last().get_price())
         return res
 
     def create_invoice(self):
