@@ -1157,3 +1157,6 @@ msgstr ""
 
 msgid "updated"
 msgstr ""
+
+msgid "External reference"
+msgstr ""

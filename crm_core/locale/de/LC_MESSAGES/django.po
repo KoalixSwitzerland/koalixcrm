@@ -1157,3 +1157,6 @@ msgstr "Produktkategorie erstellen"
 
 msgid "updated"
 msgstr "aktualisiert"
+
+msgid "External reference"
+msgstr "Externe Referenz"
