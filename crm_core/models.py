@@ -321,6 +321,7 @@ class SupplierEmailAddress(EmailAddress):
 class CustomerBillingCycle(models.Model):
     name = models.CharField(max_length=300, verbose_name=_("Name"))
     days_to_payment = models.IntegerField(verbose_name=_("Days to Payment Date"))
+    prefix = models.CharField(max_length=300, verbose_name=_("Prefix"), null=True)
 
     class Meta:
         verbose_name = _('Billing Cycle')
@@ -330,7 +331,7 @@ class CustomerBillingCycle(models.Model):
         )
 
     def __unicode__(self):
-        return self.name
+        return "%s %s" % (self.prefix, self.name)
 
 
 class CustomerGroup(models.Model):
@@ -486,7 +487,10 @@ class PurchaseOrder(SalesContract):
             self.save()
 
     def to_html(self):
-        return render_to_string('pdf_templates/purchaseorder.html', {'purchaseorder': self})
+        crtitems = []
+        for itm in self.cart.items.all():
+            crtitems.append(CustomerCartItem.objects.get(cartitem_ptr_id=itm.id))
+        return render_to_string('pdf_templates/purchaseorder.html', {'purchaseorder': self, 'positions': crtitems})
 
     def create_pdf(self):
         html = self.to_html()
@@ -502,7 +506,7 @@ class PurchaseOrder(SalesContract):
         return reverse('purchaseorder_detail', args=[str(self.id)])
 
     def get_price(self):
-        return self.cart.total_price()
+        return "%s %s" % (self.cart.total_price(), self.contract.default_currency)
 
     def __unicode__(self):
         return _("Purchase Order") + " #" + str(self.id)
@@ -564,7 +568,10 @@ class Quote(SalesContract):
         return purchase_order
 
     def to_html(self):
-        return render_to_string('pdf_templates/quote.html', {'quote': self})
+        crtitems = []
+        for itm in self.cart.items.all():
+            crtitems.append(CustomerCartItem.objects.get(cartitem_ptr_id=itm.id))
+        return render_to_string('pdf_templates/quote.html', {'quote': self, 'positions': crtitems})
 
     def create_pdf(self):
         html = self.to_html()
@@ -580,7 +587,7 @@ class Quote(SalesContract):
         return reverse('quote_detail', args=[str(self.id)])
 
     def get_price(self):
-        return self.cart.total_price()
+        return "%s %s" % (self.cart.total_price(), self.contract.default_currency)
 
     def __unicode__(self):
         return _('Quote') + ' #' + str(self.id)
@@ -622,7 +629,10 @@ class Invoice(SalesContract):
             self.save()
 
     def to_html(self):
-        return render_to_string('pdf_templates/invoice.html', {'invoice': self})
+        crtitems = []
+        for itm in self.cart.items.all():
+            crtitems.append(CustomerCartItem.objects.get(cartitem_ptr_id=itm.id))
+        return render_to_string('pdf_templates/invoice.html', {'invoice': self, 'positions': crtitems})
 
     def create_pdf(self):
         html = self.to_html()
@@ -638,7 +648,7 @@ class Invoice(SalesContract):
         return reverse('invoice_detail', args=[str(self.id)])
 
     def get_price(self):
-        return self.cart.total_price()
+        return "%s %s" % (self.cart.total_price(), self.contract.default_currency)
 
     def __unicode__(self):
         return _("Invoice") + " #" + str(self.id)
