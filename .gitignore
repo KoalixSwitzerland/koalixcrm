@@ -5,10 +5,10 @@
 .coverage
 local_settings.py
 /static/media/galleries/
-/static/media/uploads/galleries/
-/static/media/uploads/icons/
-/static/media/uploads/slider/
-/static/media/uploads/xfgs/
+/static/media/data/galleries/
+/static/media/data/icons/
+/static/media/data/slider/
+/static/media/data/xfgs/
 .idea
 doc/build/
 /Theme/

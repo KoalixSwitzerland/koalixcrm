@@ -376,7 +376,7 @@ class Contract(models.Model):
         )
         get_latest_by = 'lastmodification'
 
-    # ToDo
+    # ToDo refs #67
     def get_price(self):
         res = "N/A"
         if self.has_quotes() and not self.has_invoices() and not self.has_purchaseorders():
@@ -490,11 +490,11 @@ class PurchaseOrder(SalesContract):
         crtitems = []
         for itm in self.cart.items.all():
             crtitems.append(CustomerCartItem.objects.get(cartitem_ptr_id=itm.id))
-        return render_to_string('pdf_templates/purchaseorder.html', {'purchaseorder': self, 'positions': crtitems})
+        return render_to_string('../static/media/data/pdf_templates/purchaseorder.html', {'purchaseorder': self, 'positions': crtitems})
 
     def create_pdf(self):
         html = self.to_html()
-        pth = path.normpath('%s/%s/uploads/pdf/purchaseorders/purchaseorder-%s.pdf' % (
+        pth = path.normpath('%s/%s/data/pdf/purchaseorders/purchaseorder-%s.pdf' % (
             settings.PROJECT_ROOT, settings.MEDIA_URL, self.pk))
         self.pdf_path = pth
         HTML(string=html, encoding="utf8").write_pdf(target=pth)
@@ -571,11 +571,11 @@ class Quote(SalesContract):
         crtitems = []
         for itm in self.cart.items.all():
             crtitems.append(CustomerCartItem.objects.get(cartitem_ptr_id=itm.id))
-        return render_to_string('pdf_templates/quote.html', {'quote': self, 'positions': crtitems})
+        return render_to_string('../static/media/data/pdf_templates/quote.html', {'quote': self, 'positions': crtitems})
 
     def create_pdf(self):
         html = self.to_html()
-        pth = path.normpath('%s/%s/uploads/pdf/quotes/quote-%s.pdf' % (
+        pth = path.normpath('%s/%s/data/pdf/quotes/quote-%s.pdf' % (
             settings.PROJECT_ROOT, settings.MEDIA_URL, self.pk))
         self.pdf_path = pth
         HTML(string=html, encoding="utf8").write_pdf(target=pth)
@@ -632,11 +632,11 @@ class Invoice(SalesContract):
         crtitems = []
         for itm in self.cart.items.all():
             crtitems.append(CustomerCartItem.objects.get(cartitem_ptr_id=itm.id))
-        return render_to_string('pdf_templates/invoice.html', {'invoice': self, 'positions': crtitems})
+        return render_to_string('../static/media/data/pdf_templates/invoice.html', {'invoice': self, 'positions': crtitems})
 
     def create_pdf(self):
         html = self.to_html()
-        pth = path.normpath('%s/%s/uploads/pdf/invoices/invoice-%s.pdf' % (
+        pth = path.normpath('%s/%s/data/pdf/invoices/invoice-%s.pdf' % (
             settings.PROJECT_ROOT, settings.MEDIA_URL, self.pk))
         self.pdf_path = pth
         HTML(string=html, encoding="utf8").write_pdf(target=pth)
@@ -718,7 +718,7 @@ class UnitTransform(models.Model):
 
 
 class HTMLFile(models.Model):
-    title = models.CharField(verbose_name=_("Title"), max_length=100, blank=True, null=True)
+    title = models.CharField(verbose_name=_("Title"), max_length=60)
     file = FileBrowseField(verbose_name=_("HTML File"), max_length=200)
 
     class Meta:
@@ -730,23 +730,12 @@ class HTMLFile(models.Model):
 
 
 class TemplateSet(models.Model):
-    organisationname = models.CharField(verbose_name=_("Name of the Organisation"), max_length=200)
-    title = models.CharField(verbose_name=_("Title"), max_length=100)
+    title = models.CharField(verbose_name=_("Title"), max_length=60)
     invoice_html_file = models.ForeignKey(
         HTMLFile, verbose_name=_("HTML File for Invoice"), related_name="invoice_template")
     quote_html_file = models.ForeignKey(HTMLFile, verbose_name=_("HTML File for Quote"), related_name="quote_template")
     purchaseorder_html_file = models.ForeignKey(
         HTMLFile, verbose_name=_("HTML File for Purchaseorder"), related_name="purchaseorder_template")
-    logo = FileBrowseField(verbose_name=_("Logo"), blank=True, null=True, max_length=200)
-    addresser = models.CharField(max_length=200, verbose_name=_("Addresser"), blank=True, null=True)
-    footer_text_salesorders = models.TextField(verbose_name=_("Footer Text On Salesorders"), blank=True, null=True)
-    header_text_salesorders = models.TextField(verbose_name=_("Header Text On Salesorders"), blank=True, null=True)
-    header_text_purchaseorders = models.TextField(
-        verbose_name=_("Header Text On Purchaseorders"), blank=True, null=True)
-    footer_text_purchaseorders = models.TextField(
-        verbose_name=_("Footer Text On Purchaseorders"), blank=True, null=True)
-    page_footer_left = models.CharField(max_length=40, verbose_name=_("Page Footer Left"), blank=True, null=True)
-    page_footer_middle = models.CharField(max_length=40, verbose_name=_("Page Footer Middle"), blank=True, null=True)
 
     class Meta:
         verbose_name = _('Templateset')
@@ -754,6 +743,27 @@ class TemplateSet(models.Model):
 
     def __unicode__(self):
         return self.title
+
+
+class CompanyContactData(Contact):
+    slogan = models.CharField(verbose_name=_("Slogan"), max_length=120, blank=True, null=True)
+    logo = FileBrowseField(verbose_name=_("Logo"), blank=True, null=True, max_length=200)
+    addresser = models.CharField(max_length=200, verbose_name=_("Addresser"), blank=True, null=True)
+    header_text_salesorders = models.TextField(verbose_name=_("Header Text On Salesorders"), blank=True, null=True)
+    header_text_purchaseorders = models.TextField(
+        verbose_name=_("Header Text On Purchaseorders"), blank=True, null=True)
+    page_footer_left = models.CharField(max_length=40, verbose_name=_("Page Footer Left"), blank=True, null=True)
+    page_footer_middle = models.CharField(max_length=40, verbose_name=_("Page Footer Middle"), blank=True, null=True)
+    footer_text_salesorders = models.TextField(verbose_name=_("Footer Text On Salesorders"), blank=True, null=True)
+    footer_text_purchaseorders = models.TextField(
+        verbose_name=_("Footer Text On Purchaseorders"), blank=True, null=True)
+
+    class Meta:
+        verbose_name = _('Company settings')
+        verbose_name_plural = _('Company settings')
+
+    def __unicode__(self):
+        return self.name
 
 
 class UserExtension(models.Model):

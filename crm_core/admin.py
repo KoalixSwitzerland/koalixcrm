@@ -8,7 +8,7 @@ from cartridge.shop import models as cartridge_models
 from cartridge.shop.admin import admin as cartridge_admin
 from crm_core.models import UserExtension, Customer, Invoice, PurchaseOrder, Quote, Supplier, HTMLFile, TemplateSet, \
     CustomerBillingCycle, CustomerGroup, Contract, Unit, TaxRate, \
-    UnitTransform, ProductUnit, ProductTax
+    UnitTransform, CompanyContactData
 
 
 # Define an inline admin descriptor
@@ -242,19 +242,9 @@ class TemplateSetAdmin(admin.ModelAdmin):
     change_list_template = 'smuggler/change_list.html'
     list_display = (
         u'id',
-        'organisationname',
-        'title',
         'invoice_html_file',
         'quote_html_file',
         'purchaseorder_html_file',
-        'logo',
-        'addresser',
-        'footer_text_salesorders',
-        'header_text_salesorders',
-        'header_text_purchaseorders',
-        'footer_text_purchaseorders',
-        'page_footer_left',
-        'page_footer_middle',
     )
     list_filter = (
         'invoice_html_file',
@@ -262,5 +252,17 @@ class TemplateSetAdmin(admin.ModelAdmin):
         'purchaseorder_html_file',
     )
 
-
 admin.site.register(TemplateSet, TemplateSetAdmin)
+
+
+class CompanyContactDataAdmin(admin.ModelAdmin):
+    change_list_template = 'smuggler/change_list.html'
+    list_display = (
+        u'id',
+        'name',
+        'slogan',
+        'logo',
+    )
+    exclude = ('lastmodifiedby', 'lastmodification', 'dateofcreation', 'prefix', 'default_currency')
+
+admin.site.register(CompanyContactData, CompanyContactDataAdmin)
