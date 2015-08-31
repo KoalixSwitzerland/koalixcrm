@@ -339,7 +339,7 @@ INSTALLED_APPS = (
     "ajax_select",
 
     "international",
-
+    "solo",
     "smuggler",
     "django_fsm",
     "reversion",

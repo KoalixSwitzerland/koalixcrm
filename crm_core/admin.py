@@ -258,11 +258,7 @@ admin.site.register(TemplateSet, TemplateSetAdmin)
 class CompanyContactDataAdmin(admin.ModelAdmin):
     change_list_template = 'smuggler/change_list.html'
     list_display = (
-        u'id',
         'name',
-        'slogan',
-        'logo',
     )
-    exclude = ('lastmodifiedby', 'lastmodification', 'dateofcreation', 'prefix', 'default_currency')
 
 admin.site.register(CompanyContactData, CompanyContactDataAdmin)

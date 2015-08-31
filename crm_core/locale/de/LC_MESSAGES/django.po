@@ -438,10 +438,6 @@ msgstr "HTML Vorlage"
 msgid "HTML Files"
 msgstr "HTML Vorlagen"
 
-#: .\crm_core\models.py:747
-msgid "Name of the Organisation"
-msgstr "Firmenname"
-
 #: .\crm_core\models.py:749
 msgid "HTML File for Invoice"
 msgstr "HTML Vorlage für Rechnung"
@@ -1160,3 +1156,9 @@ msgstr "aktualisiert"
 
 msgid "External reference"
 msgstr "Externe Referenz"
+
+msgid "Company settings"
+msgstr "Firmeneinstellungen"
+
+msgid "Slogan"
+msgstr "Slogan"

@@ -19,12 +19,12 @@ from const.purpose import POSTAL_ADDRESS_PURPOSE_CHOICES, PHONE_ADDRESS_PURPOSE_
     EMAIL_ADDRESS_PURPOSE_CHOICES, EmailAddressPurpose, PhoneAddressPurpose, PostalAddressPurpose
 from const.states import CONTRACT_STATE_CHOICES, ContractStatesEnum, ContractStatesLabelEnum
 from django_extensions.db.fields import CreationDateTimeField, ModificationDateTimeField
+from solo.models import SingletonModel
 
 
 # ######################
 # ##   Base Classes   ##
 # ######################
-
 
 class Contact(models.Model):
     prefix = models.CharField(
@@ -490,7 +490,7 @@ class PurchaseOrder(SalesContract):
         crtitems = []
         for itm in self.cart.items.all():
             crtitems.append(CustomerCartItem.objects.get(cartitem_ptr_id=itm.id))
-        return render_to_string('../static/media/data/pdf_templates/purchaseorder.html', {'purchaseorder': self, 'positions': crtitems})
+        return render_to_string('pdf_templates/purchaseorder.html', {'purchaseorder': self, 'positions': crtitems})
 
     def create_pdf(self):
         html = self.to_html()
@@ -571,7 +571,7 @@ class Quote(SalesContract):
         crtitems = []
         for itm in self.cart.items.all():
             crtitems.append(CustomerCartItem.objects.get(cartitem_ptr_id=itm.id))
-        return render_to_string('../static/media/data/pdf_templates/quote.html', {'quote': self, 'positions': crtitems})
+        return render_to_string('pdf_templates/quote.html', {'quote': self, 'positions': crtitems})
 
     def create_pdf(self):
         html = self.to_html()
@@ -632,7 +632,7 @@ class Invoice(SalesContract):
         crtitems = []
         for itm in self.cart.items.all():
             crtitems.append(CustomerCartItem.objects.get(cartitem_ptr_id=itm.id))
-        return render_to_string('../static/media/data/pdf_templates/invoice.html', {'invoice': self, 'positions': crtitems})
+        return render_to_string('pdf_templates/invoice.html', {'invoice': self, 'positions': crtitems})
 
     def create_pdf(self):
         html = self.to_html()
@@ -745,10 +745,19 @@ class TemplateSet(models.Model):
         return self.title
 
 
-class CompanyContactData(Contact):
+class CompanyContactData(SingletonModel):
+    name = models.CharField(max_length=300, verbose_name=_("Name"))
     slogan = models.CharField(verbose_name=_("Slogan"), max_length=120, blank=True, null=True)
     logo = FileBrowseField(verbose_name=_("Logo"), blank=True, null=True, max_length=200)
     addresser = models.CharField(max_length=200, verbose_name=_("Addresser"), blank=True, null=True)
+    addressline1 = models.CharField(max_length=200, verbose_name=_("Addressline 1"), blank=True, null=True)
+    addressline2 = models.CharField(max_length=200, verbose_name=_("Addressline 2"), blank=True, null=True)
+    zipcode = models.IntegerField(verbose_name=_("Zipcode"), blank=True, null=True)
+    city = models.CharField(max_length=100, verbose_name=_("City"), blank=True, null=True)
+    state = models.CharField(max_length=100, verbose_name=_("State"), blank=True, null=True)
+    country = models.CharField(max_length=2, choices=countries, verbose_name=_("Country"), blank=True, null=True)
+    phone = models.CharField(max_length=20, verbose_name=_("Phone Number"), blank=True, null=True)
+    email = models.EmailField(max_length=200, verbose_name=_("Email Address"), blank=True, null=True)
     header_text_salesorders = models.TextField(verbose_name=_("Header Text On Salesorders"), blank=True, null=True)
     header_text_purchaseorders = models.TextField(
         verbose_name=_("Header Text On Purchaseorders"), blank=True, null=True)

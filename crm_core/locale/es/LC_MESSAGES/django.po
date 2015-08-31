@@ -438,10 +438,6 @@ msgstr ""
 msgid "HTML Files"
 msgstr ""
 
-#: .\crm_core\models.py:747
-msgid "Name of the Organisation"
-msgstr ""
-
 #: .\crm_core\models.py:749
 msgid "HTML File for Invoice"
 msgstr ""
@@ -1159,4 +1155,10 @@ msgid "updated"
 msgstr ""
 
 msgid "External reference"
+msgstr ""
+
+msgid "Company settings"
+msgstr ""
+
+msgid "Slogan"
 msgstr ""

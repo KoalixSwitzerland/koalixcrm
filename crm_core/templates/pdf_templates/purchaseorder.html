@@ -1,21 +1,19 @@
-{% extends '/pdf_base.html' %}
+{% extends 'pdf_templates/pdf_base.html' %}
 {% load i18n %}
 
 {% block title %}
-    <h2>{{ invoice }}</h2>
-    <h3>{% trans 'Payable until' %}:&nbsp;{{ invoice.payableuntil }}</h3>
-
-    {% if invoice.external_reference %}
-        <h4>{% trans 'External reference' %}: {{ invoice.external_reference }}</h4>
+    <h2>{{ purchaseorder }}</h2>
+    {% if purchaseorder.external_reference %}
+        <h4>{% trans 'External reference' %}: {{ purchaseorder.external_reference }}</h4>
     {% endif %}
 {% endblock %}
 
 {% block customername %}
-    {{ invoice.customer|linebreaks }}
+    {{ purchaseorder.customer|linebreaks }}
 {% endblock %}
 
 {% block customeraddress %}
-    {% with address=invoice.customer.get_quote_address %}
+    {% with address=purchaseorder.customer.get_quote_address %}
     {{ address.addressline1|linebreaks }}
     {{ address.addressline2|linebreaks }}
     {{ address.zipcode }}&nbsp;{{ address.city }}
@@ -23,20 +21,20 @@
 {% endblock %}
 
 {% block customerphone %}
-    {% with address=invoice.customer.get_phone_address %}
+    {% with address=purchaseorder.customer.get_phone_address %}
         <b>{% trans 'Phone' %}&nbsp;({{ address.get_purpose }}):</b>&nbsp;{{ address.phone }}
     {% endwith %}
 {% endblock %}
 
 {% block customeremail %}
-    {% with address=invoice.customer.get_email_address %}
+    {% with address=purchaseorder.customer.get_email_address %}
         <b>{% trans 'Email' %}&nbsp;({{ address.get_purpose }}):</b>&nbsp;{{ address.email }}
     {% endwith %}
 {% endblock %}
 
 {% block contentpositions %}
     <h2>{% trans 'Positions' %}</h2>
-    <table class="table table-bordered">
+    <table width="800px">
     <thead>
     <tr>
         <td width="80px">#</td>
@@ -52,16 +50,16 @@
         <td>{{ position.sku }}</td>
         <td>{{ position.product }}</td>
         <td style="text-align: center">{{ position.quantity }} {{ position.product.item_unit.unit }}</td>
-        <td style="text-align: right">{{ position.unit_price }} {{ invoice.contract.default_currency }}</td>
-        <td style="text-align: right">{{ position.total_price }} {{ invoice.contract.default_currency }}</td>
+        <td style="text-align: right">{{ position.unit_price }} {{ purchaseorder.contract.default_currency }}</td>
+        <td style="text-align: right">{{ position.total_price }} {{ purchaseorder.contract.default_currency }}</td>
     </tr>
     {% endfor %}
     <tr>
         <td colspan="5"><hr></td>
     </tr>
     <tr>
-        <td colspan="4">{{ invoice.contract.default_customer.billingcycle }}</td>
-        <td style="text-align: right">{{ invoice.get_price }}</td>
+        <td colspan="4">{{ purchaseorder.contract.default_customer.billingcycle }}</td>
+        <td style="text-align: right">{{ purchaseorder.get_price }}</td>
     </tr>
     </tbody>
     </table>
