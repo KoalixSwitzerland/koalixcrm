@@ -89,7 +89,10 @@ class ContractTable(tables.Table):
 
     class Meta:
         model = Contract
-        exclude = ('id', 'staff', 'default_supplier', 'default_currency', 'dateofcreation', 'lastmodifiedby')
+        exclude = ('id', 'staff', 'default_supplier', 'default_currency', 'dateofcreation', 'lastmodifiedby',
+                   'contact_ptr', 'keywords_string', 'gen_description', 'site', 'updated',
+                   'created', 'publish_date', 'expiry_date', 'short_url', 'in_sitemap', '_meta_title',
+                   'title', 'status', 'slug')
         sequence = ('state', 'name', 'default_customer', 'description', 'price', 'lastmodification')
         order_by = ('-lastmodification', 'state')
 
@@ -112,7 +115,9 @@ class CustomerTable(tables.Table):
     class Meta:
         model = Customer
         exclude = ('id', 'billingcycle', 'prefix', 'dateofcreation', 'lastmodification', 'lastmodifiedby',
-                   'contact_ptr')
+                   'contact_ptr', 'keywords_string', 'description', 'gen_description', 'site', 'updated',
+                   'created', 'publish_date', 'expiry_date', 'short_url', 'in_sitemap', '_meta_title',
+                   'title', 'status', 'slug')
         sequence = ('name_prefix', 'firstname', 'name', 'default_currency')
         order_by = ('name', 'firstname')
 
@@ -129,7 +134,9 @@ class SupplierTable(tables.Table):
     class Meta:
         model = Supplier
         exclude = ('id', 'billingcycle', 'prefix', 'dateofcreation', 'lastmodification', 'lastmodifiedby',
-                   'contact_ptr')
+                   'contact_ptr', 'keywords_string', 'description', 'gen_description', 'site', 'updated',
+                   'created', 'publish_date', 'expiry_date', 'short_url', 'in_sitemap', '_meta_title',
+                   'title', 'status', 'slug')
         sequence = ('name', 'default_currency')
         order_by = ('name', )
 
