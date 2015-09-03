@@ -139,15 +139,12 @@ class PostalAddress(models.Model):
 class SalesContract(models.Model):
     external_reference = models.CharField(verbose_name=_("External Reference"), max_length=100, blank=True)
     discount = models.DecimalField(max_digits=5, decimal_places=2, verbose_name=_("Discount"), blank=True, null=True)
-    description = models.CharField(verbose_name=_("Description"), max_length=100, blank=True, null=True)
     customer = models.ForeignKey('crm_core.Customer', verbose_name=_("Customer"))
-    # currency = models.CharField(max_length=3, choices=currencies, verbose_name=_("Currency"), blank=False, null=False)
     dateofcreation = CreationDateTimeField(verbose_name=_("Created at"), editable=False)
     lastmodification = ModificationDateTimeField(verbose_name=_("Last modified"), editable=False)
     lastmodifiedby = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, blank=True,
                                        verbose_name=_("Last modified by"), null=True)
     pdf_path = models.CharField(max_length=200, null=True, blank=True, editable=False)
-    # cart = models.ForeignKey('crm_core.CustomerCart', null=True)
 
     class Meta:
         abstract = True
@@ -178,10 +175,11 @@ CustomerCartItem._meta.get_field('description').blank = True
 # ##    PARTICIPANTS    ##
 # ########################
 
-class Customer(Contact):
+class Customer(Contact, Displayable):
     firstname = models.CharField(max_length=300, verbose_name=_("Prename"), blank=True, null=True)
     billingcycle = models.ForeignKey('crm_core.CustomerBillingCycle', verbose_name=_('Billing Cycle'))
-    ismemberof = models.ManyToManyField('crm_core.CustomerGroup', verbose_name=_('Is member of'), blank=True, null=True)
+    ismemberof = models.ManyToManyField('crm_core.CustomerGroup', verbose_name=_('Is member of'), blank=True)
+    search_fields = ('firstname', 'name')
 
     class Meta:
         verbose_name = _('Customer')
@@ -270,9 +268,10 @@ class Customer(Contact):
             return self.short_name()
 
 
-class Supplier(Contact):
+class Supplier(Contact, Displayable):
     direct_shipment_to_customers = models.BooleanField(verbose_name=_("Offers direct Shipment to Customer"),
                                                        default=False)
+    search_fields = ('name', )
 
     class Meta:
         verbose_name = _("Supplier")
@@ -353,11 +352,10 @@ class CustomerGroup(models.Model):
 # ##########################
 
 
-class Contract(models.Model):
+class Contract(Displayable):
     state = FSMIntegerField(default=10, choices=CONTRACT_STATE_CHOICES)
     staff = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, blank=True,
                               verbose_name=_("Staff"), related_name="db_relcontractstaff", null=True)
-    description = models.TextField(verbose_name=_("Description"), blank=True, null=True)
     default_customer = models.ForeignKey(Customer, verbose_name=_("Default Customer"), null=True, blank=True)
     default_supplier = models.ForeignKey(Supplier, verbose_name=_("Default Supplier"), null=True, blank=True)
     default_currency = models.CharField(max_length=3, choices=currencies, verbose_name=_("Currency"),
@@ -367,6 +365,7 @@ class Contract(models.Model):
     lastmodifiedby = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True},
                                        verbose_name=_("Last modified by"), related_name="db_contractlstmodified",
                                        null=True)
+    search_fields = ('title', 'description', )
 
     class Meta:
         verbose_name = _('Contract')
@@ -380,11 +379,11 @@ class Contract(models.Model):
     def get_price(self):
         res = "N/A"
         if self.has_quotes() and not self.has_invoices() and not self.has_purchaseorders():
-            res = str(self.quotes.last().get_price()) + " " + self.default_currency
+            res = str(self.quotes.last().get_price())
         elif self.has_purchaseorders() and not self.has_invoices():
-            res = str(self.purchaseorders.last().get_price()) + " " + self.default_currency
+            res = str(self.purchaseorders.last().get_price())
         elif self.has_invoices():
-            res = str(self.invoices.last().get_price()) + " " + self.default_currency
+            res = str(self.invoices.last().get_price())
         return res
 
     def create_invoice(self):
@@ -462,13 +461,14 @@ class Contract(models.Model):
         return self.get_name()
 
 
-class PurchaseOrder(SalesContract):
+class PurchaseOrder(SalesContract, Displayable):
     contract = models.ForeignKey(Contract, verbose_name=_("Contract"), related_name='purchaseorders')
     validuntil = models.DateField(verbose_name=_("Valid until"), null=True)
     staff = models.ForeignKey(
         settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, blank=True, verbose_name=_("Staff"), null=True,
         related_name='purchaseorder_staff')
     cart = models.ForeignKey(cartridge_models.Cart, null=True)
+    search_fields = ('title', 'description', )
 
     class Meta:
         verbose_name = _('Purchase Order')
@@ -522,13 +522,14 @@ class PurchaseOrder(SalesContract):
         self.create_pdf()
 
 
-class Quote(SalesContract):
+class Quote(SalesContract, Displayable):
     contract = models.ForeignKey(Contract, verbose_name=_('Contract'), related_name='quotes')
     validuntil = models.DateField(verbose_name=_("Valid until"), null=True)
     staff = models.ForeignKey(
         settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, blank=True, verbose_name=_("Staff"),
         null=True, related_name="quote_staff")
     cart = models.ForeignKey(cartridge_models.Cart, null=True)
+    search_fields = ('title', 'description', )
 
     class Meta:
         verbose_name = _('Quote')
@@ -603,7 +604,7 @@ class Quote(SalesContract):
         self.create_pdf()
 
 
-class Invoice(SalesContract):
+class Invoice(SalesContract, Displayable):
     contract = models.ForeignKey(Contract, verbose_name=_('Contract'), related_name='invoices')
     payableuntil = models.DateField(verbose_name=_("To pay until"))
     payment_bank_reference = models.CharField(verbose_name=_("Payment Bank Reference"), max_length=100, blank=True,
@@ -611,6 +612,7 @@ class Invoice(SalesContract):
     staff = models.ForeignKey(settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, blank=True,
                               verbose_name=_("Staff"), related_name="db_relscstaff", null=True)
     cart = models.ForeignKey(cartridge_models.Cart, null=True)
+    search_fields = ('title', 'description', )
 
     class Meta:
         verbose_name = _('Invoice')

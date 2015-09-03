@@ -465,7 +465,7 @@ class DeleteProduct(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
 class CreateBillingCycle(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = models.CustomerBillingCycle
     permission_required = 'crm_core.add_customerbillingcycle'
-    fields = ['name', 'days_to_payment']
+    fields = ['name', 'days_to_payment', 'prefix']
     login_url = settings.LOGIN_URL
     success_url = reverse_lazy('settings')
 
@@ -473,7 +473,7 @@ class CreateBillingCycle(LoginRequiredMixin, PermissionRequiredMixin, CreateView
 class EditBillingCycle(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = models.CustomerBillingCycle
     permission_required = 'crm_core.change_customerbillingcycle'
-    fields = ['name', 'days_to_payment']
+    fields = ['name', 'days_to_payment', 'prefix']
     login_url = settings.LOGIN_URL
     success_url = reverse_lazy('settings')
 

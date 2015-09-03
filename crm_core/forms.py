@@ -13,6 +13,7 @@ class PurchaseOrderForm(forms.ModelForm):
 
     class Meta:
         model = PurchaseOrder
+        exclude = ('status', '_meta_title', 'gen_description', 'slug', 'short_url', 'in_sitemap', 'content')
         fields = ['external_reference', 'description']
 
     def __init__(self, *args, **kwargs):
@@ -26,6 +27,7 @@ class QuoteForm(forms.ModelForm):
 
     class Meta:
         model = Quote
+        exclude = ('status', '_meta_title', 'gen_description', 'slug', 'short_url', 'in_sitemap', 'content')
         fields = ['validuntil', 'external_reference', 'description']
 
     def __init__(self, *args, **kwargs):
@@ -40,6 +42,7 @@ class InvoiceForm(forms.ModelForm):
 
     class Meta:
         model = Invoice
+        exclude = ('status', '_meta_title', 'gen_description', 'slug', 'short_url', 'in_sitemap', 'content')
         fields = ['payableuntil', 'external_reference', 'description']
 
     def __init__(self, *args, **kwargs):
