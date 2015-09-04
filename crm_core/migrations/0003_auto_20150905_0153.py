@@ -2,13 +2,12 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-import filebrowser_safe.fields
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('crm_core', '0002_auto_20150828_2351'),
+        ('crm_core', '0002_auto_20150903_2104'),
     ]
 
     operations = [
@@ -18,7 +17,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=300, verbose_name='Name')),
                 ('slogan', models.CharField(max_length=120, null=True, verbose_name='Slogan', blank=True)),
-                ('logo', filebrowser_safe.fields.FileBrowseField(max_length=200, null=True, verbose_name='Logo', blank=True)),
+                ('logo', models.ImageField(max_length=200, upload_to=b'', null=True, verbose_name='Logo', blank=True)),
                 ('addresser', models.CharField(max_length=200, null=True, verbose_name='Addresser', blank=True)),
                 ('addressline1', models.CharField(max_length=200, null=True, verbose_name='Addressline 1', blank=True)),
                 ('addressline2', models.CharField(max_length=200, null=True, verbose_name='Addressline 2', blank=True)),
@@ -31,7 +30,6 @@ class Migration(migrations.Migration):
                 ('header_text_salesorders', models.TextField(null=True, verbose_name='Header Text On Salesorders', blank=True)),
                 ('header_text_purchaseorders', models.TextField(null=True, verbose_name='Header Text On Purchaseorders', blank=True)),
                 ('page_footer_left', models.CharField(max_length=40, null=True, verbose_name='Page Footer Left', blank=True)),
-                ('page_footer_middle', models.CharField(max_length=40, null=True, verbose_name='Page Footer Middle', blank=True)),
                 ('footer_text_salesorders', models.TextField(null=True, verbose_name='Footer Text On Salesorders', blank=True)),
                 ('footer_text_purchaseorders', models.TextField(null=True, verbose_name='Footer Text On Purchaseorders', blank=True)),
             ],

@@ -139,27 +139,29 @@ def create_purchaseorder_from_contract(request, contract_pk):
     return redirect('purchaseorder_edit', pk=purchase_order.pk)
 
 
-# ###################
-# ##   PDF Views   ##
-# ###################
+# ########################
+# ##   Document Views   ##
+# ########################
 
 
-def view_quote_pdf(request, pk):
+def view_quote_details(request, pk):
     quote = models.Quote.objects.get(pk=int(pk))
+    # return HttpResponse(quote.to_html())
     pdf = open(quote.pdf_path, 'rb')
-    response = HttpResponse(pdf.read(), content_type='application/pdf')
-    return response
+    return HttpResponse(pdf.read(), content_type='application/pdf')
 
 
-def view_purchaseorder_pdf(request, pk):
+def view_purchaseorder_details(request, pk):
     puchaseorder = models.PurchaseOrder.objects.get(pk=int(pk))
+    # return HttpResponse(puchaseorder.to_html())
     pdf = open(puchaseorder.pdf_path, 'rb')
     response = HttpResponse(pdf.read(), content_type='application/pdf')
     return response
 
 
-def view_invoice_pdf(request, pk):
+def view_invoice_details(request, pk):
     invoice = models.Invoice.objects.get(pk=int(pk))
+    # return HttpResponse(invoice.to_html())
     pdf = open(invoice.pdf_path, 'rb')
     response = HttpResponse(pdf.read(), content_type='application/pdf')
     return response

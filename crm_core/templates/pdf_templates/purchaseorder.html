@@ -1,6 +1,26 @@
 {% extends 'pdf_templates/pdf_base.html' %}
 {% load i18n %}
 
+{% block customerdata %}
+
+    <p class="customer-name">
+        {{ customer }}
+    </p>
+
+    <div class="customer-address">
+    {{ customer.get_quote_address.addressline1 }}
+    {% if customer.get_quote_address.addressline2 %}{{ customer.get_quote_address.addressline2 }}{% endif %}
+    <p>
+    {% if customer.get_quote_address.country %}{{ customer.get_quote_address.country }}&nbsp;-&nbsp;{% endif %}{{ customer.get_quote_address.zipcode }}&nbsp;{{ customer.get_quote_address.city }}
+    </p>
+    </div>
+    <div class="customer-contact">
+    {% if customer.get_phone_address %}<p>{% trans 'Phone' %}:&nbsp;{{ customer.get_phone_address }}</p>{% endif %}
+    {% if customer.get_email_address %}<p>{% trans 'Email' %}:&nbsp;<a href="mailto:{{ customer.get_email_address }}">{{ customer.get_email_address }}</a></p>{% endif %}
+    </div>
+
+{% endblock %}
+
 {% block title %}
     <h2>{{ purchaseorder }}</h2>
     {% if purchaseorder.external_reference %}
@@ -8,28 +28,10 @@
     {% endif %}
 {% endblock %}
 
-{% block customername %}
-    {{ purchaseorder.customer|linebreaks }}
-{% endblock %}
-
-{% block customeraddress %}
-    {% with address=purchaseorder.customer.get_quote_address %}
-    {{ address.addressline1|linebreaks }}
-    {{ address.addressline2|linebreaks }}
-    {{ address.zipcode }}&nbsp;{{ address.city }}
-    {% endwith %}
-{% endblock %}
-
-{% block customerphone %}
-    {% with address=purchaseorder.customer.get_phone_address %}
-        <b>{% trans 'Phone' %}&nbsp;({{ address.get_purpose }}):</b>&nbsp;{{ address.phone }}
-    {% endwith %}
-{% endblock %}
-
-{% block customeremail %}
-    {% with address=purchaseorder.customer.get_email_address %}
-        <b>{% trans 'Email' %}&nbsp;({{ address.get_purpose }}):</b>&nbsp;{{ address.email }}
-    {% endwith %}
+{% block header_text %}
+    <p>
+    {{ company_data.header_text_purchaseorders|safe }}
+    </p>
 {% endblock %}
 
 {% block contentpositions_last_row %}
@@ -37,4 +39,10 @@
         <td colspan="4">{{ purchaseorder.contract.default_customer.billingcycle }}</td>
         <td style="text-align: right">{{ purchaseorder.get_price }}</td>
     </tr>
+{% endblock %}
+
+{% block footertext %}
+    <p>
+    {{ company_data.footer_text_purchaseorders|safe }}
+    </p>
 {% endblock %}

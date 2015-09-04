@@ -5,9 +5,12 @@
     <style>
         @page {
             margin: 1cm;
-            padding-left: 1.5cm;
+            padding-left: 1.2cm;
             @bottom-right {
                 content: "{% trans 'Page' %} " counter(page) " {% trans 'of' %} " counter(pages)
+            }
+            @bottom-left {
+                content: "{{ company_data.page_footer_left }}"
             }
         }
         h1, h2, h3 {
@@ -23,41 +26,87 @@
 			font-family: Arial, Helvetica, sans-serif;
 			font-size: 12px;
 		}
+        img {
+            width: 100px;
+            height: auto;
+        }
         #header {
             max-width: 20cm;
         }
-        .title {
-            left: 0;
-            top: 250px;
+        .company-data {
+            float: right;
+            right: 0;
+            top: 0;
             position: absolute;
+            width: 220px;
+        }
+        .company-logo {
+            left: 0;
+            top: 0;
+            position: absolute;
+        }
+        .company-name {
+            left: 100px;
+            top: 0;
+            position: absolute;
+			font-size: 14px;
+            font-weight: bold;
+        }
+        .company-slogan {
+            left: 100px;
+            top: 20px;
+            position: absolute;
+			font-size: 11px;
+        }
+        .company-address {
+            left: 0;
+            top: 60px;
+            position: absolute;
+			font-size: 11px
+        }
+        .company-contact {
+            left: 0;
+            top: 160px;
+            position: absolute;
+			font-size: 10px
+        }
+        .customer-data {
+            float: left;
+            left: 0;
+            top: 0;
+            position: absolute;
+            width: 300px;
         }
         .customer-name {
             left: 0;
-            top: 100px;
+            top: 190px;
             position: absolute;
         }
         .customer-address {
             left: 0;
-            top: 120px;
-            position: absolute;
-        }
-        .customer-phone {
-            left: 0;
-            top: 200px;
-            position: absolute;
-        }
-        .customer-email {
-            left: 0;
             top: 220px;
+            position: absolute;
+        }
+        .customer-contact {
+            left: 0;
+            top: 270px;
+            position: absolute;
+        }
+        .title {
+            left: 0;
+            top: 370px;
             position: absolute;
         }
         .content-positions {
             left: 0;
-            top: 350px;
+            top: 480px;
             position: absolute;
         }
         #positiontable {
             width: 600px;
+        }
+        .footer-text {
+
         }
     </style>
 </head>
@@ -65,45 +114,61 @@
 
 <div id="header">
 
-    <span class="customer-name">
-        {% block customername %}
+    <div class="company-data">
+        {% block companydata %}
+
+            {% if company_data.logo %}
+                <p class="company-logo">
+                    <img src="file:////{{ company_data.logo.path|escape }}">
+                </p>
+            {% endif %}
+
+            <p class="company-name">
+                {{ company_data.name }}
+            </p>
+
+            {% if company_data.slogan %}
+                <p class="company-slogan">
+                    {{ company_data.slogan }}
+                </p>
+            {% endif %}
+
+            <div class="company-address">
+            {% if company_data.addresser %}<p>{{ company_data.addresser }}</p>{% endif %}
+            <p>{{ company_data.addressline1 }}</p>
+            {% if company_data.addressline2 %}<p>{{ company_data.addressline2 }}</p>{% endif %}
+            {% if company_data.state %}<p>{{ company_data.state }}</p>{% endif %}
+            <p>
+            {% if company_data.country %}{{ company_data.country }}&nbsp;-&nbsp;{% endif %}{{ company_data.zipcode }}&nbsp;{{ company_data.city }}
+            </p>
+            </div>
+            <div class="company-contact">
+            {% if company_data.phone %}<p>{% trans 'Phone' %}:&nbsp;{{ company_data.phone }}</p>{% endif %}
+            {% if company_data.email %}<p>{% trans 'Email' %}:&nbsp;<a href="mailto:{{ company_data.email }}">{{ company_data.email }}</a></p>{% endif %}
+            </div>
         {% endblock %}
-    </span>
+    </div>
 
-    <span class="customer-address">
-
-        {% block customeraddress %}
+    <div class="customer-data">
+        {% block customerdata %}
         {% endblock %}
-
-    </span>
-
-    <span class="customer-phone">
-
-        {% block customerphone %}
-        {% endblock %}
-
-    </span>
-
-    <span class="customer-email">
-
-        {% block customeremail %}
-        {% endblock %}
-
-    </span>
-
-    <span class="title">
-
-        {% block title %}
-        {% endblock %}
-
-    </span>
+    </div>
 
 </div>
 
+<span class="title">
+    {% block title %}
+    {% endblock %}
+</span>
+
 <div class="content-positions">
 
+    <div>
+        {% block header_text %}
+        {% endblock %}
+    </div>
+
     {% block contentpositions %}
-        {% block common_contentpositions %}
         <h2>{% trans 'Positions' %}</h2>
         <table id="positiontable">
         <thead>
@@ -132,8 +197,12 @@
         {% endblock %}
         </tbody>
         </table>
-        {% endblock %}
     {% endblock %}
+
+    <div>
+        {% block footertext %}
+        {% endblock %}
+    </div>
 
 </div>
 

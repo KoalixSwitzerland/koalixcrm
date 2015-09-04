@@ -75,7 +75,7 @@ class EmailAddress(models.Model):
         return EmailAddressPurpose.choices[self.purpose]
 
     def __unicode__(self):
-        return "%s: %s" % (self.get_purpose(), self.email)
+        return "%s" % self.email
 
 
 class PhoneAddress(models.Model):
@@ -95,7 +95,7 @@ class PhoneAddress(models.Model):
         return PhoneAddressPurpose.choices[self.purpose]
 
     def __unicode__(self):
-        return "%s: %s" % (self.get_purpose(), self.phone)
+        return "%s" % self.phone
 
 
 class PostalAddress(models.Model):
@@ -123,9 +123,7 @@ class PostalAddress(models.Model):
         return list(c[4].partition(',')[0].partition('(')[0].strip() for c in countries_raw if c[1] == self.country)[0]
 
     def __unicode__(self):
-        if self.purpose and self.addressline1 and self.zipcode and self.city:
-            return '%s: %s, %s %s' % (self.get_purpose(), self.addressline1, self.zipcode, self.city)
-        elif self.addressline1 and self.zipcode and self.city:
+        if self.addressline1 and self.zipcode and self.city:
             return '%s, %s %s' % (self.addressline1, self.zipcode, self.city)
         elif self.addressline1 and self.city:
             return '%s, %s' % (self.addressline1, self.city)
@@ -490,7 +488,15 @@ class PurchaseOrder(SalesContract, Displayable):
         crtitems = []
         for itm in self.cart.items.all():
             crtitems.append(CustomerCartItem.objects.get(cartitem_ptr_id=itm.id))
-        return render_to_string('pdf_templates/purchaseorder.html', {'purchaseorder': self, 'positions': crtitems})
+        company_data = CompanyContactData.objects.get(pk=1)
+        customer = self.customer
+        return render_to_string('pdf_templates/purchaseorder.html',
+                                {
+                                    'purchaseorder': self,
+                                    'positions': crtitems,
+                                    'company_data': company_data,
+                                    'customer': customer
+                                })
 
     def create_pdf(self):
         html = self.to_html()
@@ -572,7 +578,15 @@ class Quote(SalesContract, Displayable):
         crtitems = []
         for itm in self.cart.items.all():
             crtitems.append(CustomerCartItem.objects.get(cartitem_ptr_id=itm.id))
-        return render_to_string('pdf_templates/quote.html', {'quote': self, 'positions': crtitems})
+        company_data = CompanyContactData.objects.get(pk=1)
+        customer = self.customer
+        return render_to_string('pdf_templates/quote.html',
+                                {
+                                    'quote': self,
+                                    'positions': crtitems,
+                                    'company_data': company_data,
+                                    'customer': customer
+                                })
 
     def create_pdf(self):
         html = self.to_html()
@@ -634,7 +648,15 @@ class Invoice(SalesContract, Displayable):
         crtitems = []
         for itm in self.cart.items.all():
             crtitems.append(CustomerCartItem.objects.get(cartitem_ptr_id=itm.id))
-        return render_to_string('pdf_templates/invoice.html', {'invoice': self, 'positions': crtitems})
+        company_data = CompanyContactData.objects.get(pk=1)
+        customer = self.customer
+        return render_to_string('pdf_templates/invoice.html',
+                                {
+                                    'invoice': self,
+                                    'positions': crtitems,
+                                    'company_data': company_data,
+                                    'customer': customer
+                                })
 
     def create_pdf(self):
         html = self.to_html()
@@ -750,7 +772,7 @@ class TemplateSet(models.Model):
 class CompanyContactData(SingletonModel):
     name = models.CharField(max_length=300, verbose_name=_("Name"))
     slogan = models.CharField(verbose_name=_("Slogan"), max_length=120, blank=True, null=True)
-    logo = FileBrowseField(verbose_name=_("Logo"), blank=True, null=True, max_length=200)
+    logo = models.ImageField(verbose_name=_("Logo"), blank=True, null=True, max_length=200)
     addresser = models.CharField(max_length=200, verbose_name=_("Addresser"), blank=True, null=True)
     addressline1 = models.CharField(max_length=200, verbose_name=_("Addressline 1"), blank=True, null=True)
     addressline2 = models.CharField(max_length=200, verbose_name=_("Addressline 2"), blank=True, null=True)
@@ -764,7 +786,6 @@ class CompanyContactData(SingletonModel):
     header_text_purchaseorders = models.TextField(
         verbose_name=_("Header Text On Purchaseorders"), blank=True, null=True)
     page_footer_left = models.CharField(max_length=40, verbose_name=_("Page Footer Left"), blank=True, null=True)
-    page_footer_middle = models.CharField(max_length=40, verbose_name=_("Page Footer Middle"), blank=True, null=True)
     footer_text_salesorders = models.TextField(verbose_name=_("Footer Text On Salesorders"), blank=True, null=True)
     footer_text_purchaseorders = models.TextField(
         verbose_name=_("Footer Text On Purchaseorders"), blank=True, null=True)
