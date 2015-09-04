@@ -34,35 +34,9 @@
     {% endwith %}
 {% endblock %}
 
-{% block contentpositions %}
-    <h2>{% trans 'Positions' %}</h2>
-    <table id="positiontable">
-    <thead>
-    <tr>
-        <td width="80px">#</td>
-        <td width="400px">{% trans 'Product' %}</td>
-        <td width="180px">{% trans 'Quantity' %}</td>
-        <td style="text-align: right">{% trans 'Price' %}</td>
-        <td style="text-align: right">{% trans 'Total' %}</td>
-    </tr>
-    </thead>
-    <tbody>
-    {% for position in positions %}
-    <tr>
-        <td>{{ position.sku }}</td>
-        <td>{{ position.product }}</td>
-        <td style="text-align: center">{{ position.quantity }} {{ position.product.item_unit.unit }}</td>
-        <td style="text-align: right">{{ position.unit_price }} {{ quote.contract.default_currency }}</td>
-        <td style="text-align: right">{{ position.total_price }} {{ quote.contract.default_currency }}</td>
-    </tr>
-    {% endfor %}
-    <tr>
-        <td colspan="5"><hr></td>
-    </tr>
+{% block contentpositions_last_row %}
     <tr>
         <td colspan="4">{{ quote.contract.default_customer.billingcycle }}</td>
         <td style="text-align: right">{{ quote.get_price }}</td>
     </tr>
-    </tbody>
-    </table>
 {% endblock %}
