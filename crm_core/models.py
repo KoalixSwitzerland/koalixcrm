@@ -412,7 +412,8 @@ class Contract(Displayable):
         purchaseorder.staff = self.staff
         purchaseorder.supplier = self.default_supplier
         purchaseorder.status = 1
-        purchaseorder.cart = self.quotes.latest().cart
+        if self.quotes.count() > 0:
+            purchaseorder.cart = self.quotes.latest().cart
         purchaseorder.save()
         return purchaseorder
 
