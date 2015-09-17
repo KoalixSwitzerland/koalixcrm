@@ -1,10 +1,17 @@
 language: python
 python:
   - "2.7"
+  - "3.2"
+  - "3.3"
+  - "3.4"
+env:
+  - DJANGO_VERSION=1.7
+  - DJANGO_VERSION=1.8
 before_install:
   - sudo apt-get update -qq
   - sudo apt-get install python-dev python-pip python-lxml libcairo2 libpango1.0-0 libgdk-pixbuf2.0-0 libffi-dev shared-mime-info
 install:
+  - pip install -q Django==$DJANGO_VERSION
   - pip install -r requirements.txt
   - pip install python-coveralls
   - pip install coverage
