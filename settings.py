@@ -450,9 +450,9 @@ except ImportError:
 # without Mezzanine installed, as the case may be when using the
 # fabfile, where setting the dynamic settings below isn't strictly
 # required.
-# try:
-#     from mezzanine.utils.conf import set_dynamic_settings
-# except ImportError:
-#     pass
-# else:
-#     set_dynamic_settings(globals())
+try:
+    from mezzanine.utils.conf import set_dynamic_settings
+except ImportError:
+    pass
+else:
+    set_dynamic_settings(globals())
