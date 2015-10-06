@@ -67,7 +67,7 @@ msgstr "Móvil privado"
 
 #: .\crm_core\const\purpose.py:23 .\crm_core\const\purpose.py:29
 msgid "Mobile Business"
-msgstr ""
+msgstr "Móvil Negocios"
 
 #: .\crm_core\const\states.py:8 .\crm_core\const\states.py:19
 #: .\crm_core\templates\dashboard.html:17
@@ -89,19 +89,19 @@ msgstr "Factura enviada"
 
 #: .\crm_core\const\states.py:12 .\crm_core\const\states.py:23
 msgid "Quote created"
-msgstr ""
+msgstr "Cotización creada"
 
 #: .\crm_core\const\states.py:13 .\crm_core\const\states.py:24
 msgid "Quote sent"
-msgstr ""
+msgstr "Cotización enviada"
 
 #: .\crm_core\const\states.py:14 .\crm_core\const\states.py:25
 msgid "Purchaseorder created"
-msgstr ""
+msgstr "Orden de compra creada"
 
 #: .\crm_core\const\states.py:15 .\crm_core\const\states.py:26
 msgid "Unpayed"
-msgstr ""
+msgstr "Pago pendiente"
 
 #: .\crm_core\const\states.py:16 .\crm_core\const\states.py:27
 msgid "Deleted"
@@ -152,11 +152,11 @@ msgstr "Número de teléfono"
 
 #: .\crm_core\models.py:100
 msgid "Addressline 1"
-msgstr ""
+msgstr "Primera linea de dirección"
 
 #: .\crm_core\models.py:101
 msgid "Addressline 2"
-msgstr ""
+msgstr "Segunda linea de dirección"
 
 #: .\crm_core\models.py:102
 msgid "Zipcode"
@@ -295,7 +295,7 @@ msgstr "Cliente"
 
 #: .\crm_core\models.py:374
 msgid "Default Supplier"
-msgstr ""
+msgstr "Proveedor por defecto"
 
 #: .\crm_core\models.py:384 .\crm_core\models.py:446 .\crm_core\models.py:489
 #: .\crm_core\models.py:546 .\crm_core\models.py:624
@@ -330,21 +330,21 @@ msgstr "Válido hasta"
 #: .\crm_core\templates\crm_core\purchaseorder_confirm_delete.html:9
 #: .\crm_core\templates\crm_core\purchaseorder_confirm_delete.html:13
 msgid "Purchase Order"
-msgstr ""
+msgstr "Orden de compra"
 
 #: .\crm_core\models.py:554 .\crm_core\models.py:610
 #: .\crm_core\templates\crm_core\quote_confirm_delete.html:5
 #: .\crm_core\templates\crm_core\quote_confirm_delete.html:9
 #: .\crm_core\templates\crm_core\quote_confirm_delete.html:13
 msgid "Quote"
-msgstr ""
+msgstr "Cotización"
 
 #: .\crm_core\models.py:555
 #: .\crm_core\templates\crm_core\contract_detail.html:70
 #: .\crm_core\templates\crm_core\quote_form.html:5
 #: .\crm_core\templates\crm_core\quote_form.html:9
 msgid "Quotes"
-msgstr ""
+msgstr "Cotizaciones"
 
 #: .\crm_core\models.py:625
 msgid "To pay until"
@@ -370,15 +370,15 @@ msgstr "Facturas"
 
 #: .\crm_core\models.py:683
 msgid "Displayed Name After Quantity In The Position"
-msgstr ""
+msgstr "Nombre a mostrar después de la cantidad en la posición"
 
 #: .\crm_core\models.py:684
 msgid "Is A Fraction Of"
-msgstr ""
+msgstr "Es una fracción de"
 
 #: .\crm_core\models.py:685
 msgid "Factor Between This And Next Higher Unit"
-msgstr ""
+msgstr "Factor entre esta y la siguiente unidad mas alta"
 
 #: .\crm_core\models.py:689 .\crm_core\models.py:789 .\crm_core\tables.py:135
 #: .\crm_core\templates\crm_core\unit_confirm_delete.html:5
@@ -394,29 +394,29 @@ msgstr "Unidades"
 
 #: .\crm_core\models.py:700
 msgid "Taxrate in Percentage"
-msgstr ""
+msgstr "Taza de impuestos en porcentaje"
 
 #: .\crm_core\models.py:701
 msgid "Taxname"
-msgstr ""
+msgstr "Nombre del impuesto"
 
 #: .\crm_core\models.py:704
 #: .\crm_core\templates\shop\includes\order_totals.html:34
 #: .\crm_core\templates\shop\includes\order_totals.txt:8
 msgid "Tax"
-msgstr ""
+msgstr "Impuesto"
 
 #: .\crm_core\models.py:705
 msgid "Taxes"
-msgstr ""
+msgstr "Impuestos"
 
 #: .\crm_core\models.py:715
 msgid "From Unit"
-msgstr ""
+msgstr "De la unidad"
 
 #: .\crm_core\models.py:716
 msgid "To Unit"
-msgstr ""
+msgstr "Hacia la unidad"
 
 #: .\crm_core\models.py:718
 msgid "Factor between From and To Unit"
@@ -424,7 +424,7 @@ msgstr "Factor entre desde y hacia unidad"
 
 #: .\crm_core\models.py:727
 msgid "Unit Transform"
-msgstr ""
+msgstr "T"
 
 #: .\crm_core\models.py:728
 msgid "Unit Transforms"
@@ -432,23 +432,23 @@ msgstr ""
 
 #: .\crm_core\models.py:736 .\crm_core\models.py:739
 msgid "HTML File"
-msgstr ""
+msgstr "Archivo HTML"
 
 #: .\crm_core\models.py:740
 msgid "HTML Files"
-msgstr ""
+msgstr "Archivos HTML"
 
 #: .\crm_core\models.py:749
 msgid "HTML File for Invoice"
-msgstr ""
+msgstr "Archivo HTML para la factura"
 
 #: .\crm_core\models.py:751
 msgid "HTML File for Quote"
-msgstr ""
+msgstr "Archivo HTML para la cotizacion"
 
 #: .\crm_core\models.py:752
 msgid "HTML File for Purchaseorder"
-msgstr ""
+msgstr "Archivo HTML para la orden de compra"
 
 #: .\crm_core\models.py:754
 msgid "Logo"
@@ -456,23 +456,23 @@ msgstr "Logo"
 
 #: .\crm_core\models.py:755
 msgid "Addresser"
-msgstr ""
+msgstr "Remitente"
 
 #: .\crm_core\models.py:756
 msgid "Footer Text On Salesorders"
-msgstr ""
+msgstr "Pie de pagina en orden de venta"
 
 #: .\crm_core\models.py:757
 msgid "Header Text On Salesorders"
-msgstr ""
+msgstr "Encabezado en orden de venta"
 
 #: .\crm_core\models.py:758
 msgid "Header Text On Purchaseorders"
-msgstr ""
+msgstr "Encabezado en orden de compra"
 
 #: .\crm_core\models.py:760
 msgid "Footer Text On Purchaseorders"
-msgstr ""
+msgstr "Pie de pagina en orden de compra"
 
 #: .\crm_core\models.py:762
 msgid "Page Footer Left"
