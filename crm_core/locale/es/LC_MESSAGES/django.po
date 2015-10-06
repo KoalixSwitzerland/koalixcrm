@@ -424,11 +424,11 @@ msgstr "Factor entre desde y hacia unidad"
 
 #: .\crm_core\models.py:727
 msgid "Unit Transform"
-msgstr ""
+msgstr "Unidad de transformación"
 
 #: .\crm_core\models.py:728
 msgid "Unit Transforms"
-msgstr ""
+msgstr "Unidades de transformación"
 
 #: .\crm_core\models.py:736 .\crm_core\models.py:739
 msgid "HTML File"
