@@ -794,12 +794,12 @@ msgstr "Crear cotización"
 #: .\crm_core\templates\crm_core\purchaseorder_form.html:14
 #: .\crm_core\templates\crm_core\purchaseorder_form.html:18
 msgid "Create Purchase Order"
-msgstr ""
+msgstr "Crear orden de compra"
 
 #: .\crm_core\templates\crm_core\includes\contract_actions_toolbar.html:17
 #: .\crm_core\templates\crm_core\includes\contract_row_actions_toolbar.html:17
 msgid "Create Invoice"
-msgstr ""
+msgstr "Crear factura"
 
 #: .\crm_core\templates\crm_core\includes\contract_edit_toolbar.html:11
 #: .\crm_core\templates\crm_core\includes\contract_row_edit_toolbar.html:12
@@ -809,11 +809,11 @@ msgstr "Editar contrato"
 #: .\crm_core\templates\crm_core\includes\contract_edit_toolbar.html:17
 #: .\crm_core\templates\crm_core\includes\contract_row_edit_toolbar.html:18
 msgid "Delete Contract"
-msgstr ""
+msgstr "Borrar contrato"
 
 #: .\crm_core\templates\crm_core\includes\contract_row_edit_toolbar.html:6
 msgid "View Contract"
-msgstr ""
+msgstr "Revisar contrato"
 
 #: .\crm_core\templates\crm_core\includes\customer_edit_toolbar.html:11
 #: .\crm_core\templates\crm_core\includes\customer_row_edit_toolbar.html:12
@@ -859,29 +859,29 @@ msgstr "Ver producto"
 #: .\crm_core\templates\crm_core\includes\supplier_edit_toolbar.html:5
 #: .\crm_core\templates\crm_core\supplier_list.html:24
 msgid "Create Supplier"
-msgstr ""
+msgstr "Crear proveedor"
 
 #: .\crm_core\templates\crm_core\includes\supplier_edit_toolbar.html:11
 #: .\crm_core\templates\crm_core\includes\supplier_row_edit_toolbar.html:12
 msgid "Edit Supplier"
-msgstr ""
+msgstr "Editar proveedor"
 
 #: .\crm_core\templates\crm_core\includes\supplier_edit_toolbar.html:17
 #: .\crm_core\templates\crm_core\includes\supplier_row_edit_toolbar.html:18
 msgid "Delete Supplier"
-msgstr ""
+msgstr "Borrar proveedor"
 
 #: .\crm_core\templates\crm_core\includes\supplier_row_edit_toolbar.html:6
 msgid "View Supplier"
-msgstr ""
+msgstr "Ver proveedor"
 
 #: .\crm_core\templates\crm_core\includes\tax_row_edit_toolbar.html:6
 msgid "Edit Taxrate"
-msgstr ""
+msgstr "Editar impuesto"
 
 #: .\crm_core\templates\crm_core\includes\tax_row_edit_toolbar.html:12
 msgid "Delete Taxrate"
-msgstr ""
+msgstr "Borrar impuesto"
 
 #: .\crm_core\templates\crm_core\includes\unit_row_edit_toolbar.html:6
 msgid "Edit Unit"
@@ -910,84 +910,84 @@ msgstr "Crear Factura"
 #: .\crm_core\templates\crm_core\purchaseorder_form.html:53
 #: .\crm_core\templates\crm_core\quote_form.html:53
 msgid "Last Calculated Price"
-msgstr ""
+msgstr "Ultimo precio calculado"
 
 #: .\crm_core\templates\crm_core\invoice_form.html:58
 #: .\crm_core\templates\crm_core\purchaseorder_form.html:58
 #: .\crm_core\templates\crm_core\quote_form.html:58
 msgid "Date of Creation"
-msgstr ""
+msgstr "Fecha de creación"
 
 #: .\crm_core\templates\crm_core\invoice_form.html:63
 #: .\crm_core\templates\crm_core\purchaseorder_form.html:63
 #: .\crm_core\templates\crm_core\quote_form.html:63
 msgid "Last Modified"
-msgstr ""
+msgstr "Ultima modificación"
 
 #: .\crm_core\templates\crm_core\purchaseorder_confirm_delete.html:14
 #: .\crm_core\templates\crm_core\purchaseorder_confirm_delete.html:18
 msgid "Delete purchase order"
-msgstr ""
+msgstr "Borrar orden de compra"
 
 #: .\crm_core\templates\crm_core\purchaseorder_form.html:14
 #: .\crm_core\templates\crm_core\purchaseorder_form.html:18
 msgid "Edit purchase order"
-msgstr ""
+msgstr "Editar orden de compra"
 
 #: .\crm_core\templates\crm_core\quote_confirm_delete.html:14
 #: .\crm_core\templates\crm_core\quote_confirm_delete.html:18
 msgid "Delete quote"
-msgstr ""
+msgstr "Eliminar cotización"
 
 #: .\crm_core\templates\crm_core\quote_form.html:14
 #: .\crm_core\templates\crm_core\quote_form.html:18
 msgid "Edit quote"
-msgstr ""
+msgstr "Editar cotización"
 
 #: .\crm_core\templates\crm_core\supplier_confirm_delete.html:14
 #: .\crm_core\templates\crm_core\supplier_confirm_delete.html:18
 msgid "Delete supplier"
-msgstr ""
+msgstr "Borrar proveedor"
 
 #: .\crm_core\templates\crm_core\supplier_detail.html:18
 msgid "Supplier Details"
-msgstr ""
+msgstr "Detalles del proveedor"
 
 #: .\crm_core\templates\crm_core\supplier_form.html:14
 #: .\crm_core\templates\crm_core\supplier_form.html:18
 msgid "Edit supplier"
-msgstr ""
+msgstr "Editar proveedor"
 
 #: .\crm_core\templates\crm_core\supplier_form.html:14
 #: .\crm_core\templates\crm_core\supplier_form.html:18
 msgid "Create supplier"
-msgstr ""
+msgstr "Crear proveedor"
 
 #: .\crm_core\templates\crm_core\taxrate_confirm_delete.html:5
 #: .\crm_core\templates\crm_core\taxrate_confirm_delete.html:9
 msgid "Tax Rate"
-msgstr ""
+msgstr "Impuesto"
 
 #: .\crm_core\templates\crm_core\taxrate_confirm_delete.html:14
 #: .\crm_core\templates\crm_core\taxrate_confirm_delete.html:18
 msgid "Delete tax rate"
-msgstr ""
+msgstr "Borrar impuesto"
 
 #: .\crm_core\templates\crm_core\taxrate_form.html:5
 #: .\crm_core\templates\crm_core\taxrate_form.html:9
 #: .\crm_core\templates\settings.html:38
 msgid "Tax Rates"
-msgstr ""
+msgstr "Impuestos"
 
 #: .\crm_core\templates\crm_core\taxrate_form.html:14
 #: .\crm_core\templates\crm_core\taxrate_form.html:18
 msgid "Edit tax rate"
-msgstr ""
+msgstr "Editar impuestos"
 
 #: .\crm_core\templates\crm_core\taxrate_form.html:14
 #: .\crm_core\templates\crm_core\taxrate_form.html:18
 msgid "Create tax rate"
-msgstr ""
+msgstr "Crear impuestos"
 
 #: .\crm_core\templates\crm_core\unit_confirm_delete.html:14
 #: .\crm_core\templates\crm_core\unit_confirm_delete.html:18
@@ -997,7 +997,7 @@ msgstr "Eliminar unidad"
 #: .\crm_core\templates\crm_core\unit_form.html:14
 #: .\crm_core\templates\crm_core\unit_form.html:18
 msgid "Edit unit"
-msgstr ""
+msgstr "Eliminar unidad"
 
 #: .\crm_core\templates\crm_core\unit_form.html:14
 #: .\crm_core\templates\crm_core\unit_form.html:18
@@ -1007,11 +1007,11 @@ msgstr "Crear unidad"
 #: .\crm_core\templates\dashboard.html:4 .\crm_core\templates\dashboard.html:5
 #: .\crm_core\templates\dashboard.html:8
 msgid "Dashboard"
-msgstr ""
+msgstr "Tablero de control"
 
 #: .\crm_core\templates\dashboard.html:57
 msgid "Open Contracts"
-msgstr ""
+msgstr "Contratos abiertos"
 
 #: .\crm_core\templates\index.html:4 .\crm_core\templates\index.html.py:5
 #: .\crm_core\templates\index.html:8
@@ -1023,23 +1023,23 @@ msgstr ""
 #: .\crm_core\templates\pages\menus\primary.html:8
 #: .\crm_core\templates\pages\menus\tree.html:9
 msgid "Home"
-msgstr ""
+msgstr "Inicio"
 
 #: .\crm_core\templates\pdf_templates\invoice.html:6
 msgid "Payable until"
-msgstr ""
+msgstr "Pagadero antes de"
 
 #: .\crm_core\templates\pdf_templates\invoice.html:23
 #: .\crm_core\templates\pdf_templates\purchaseorder.html:22
 #: .\crm_core\templates\pdf_templates\quote.html:22
 msgid "Phone"
-msgstr ""
+msgstr "Telefono"
 
 #: .\crm_core\templates\pdf_templates\invoice.html:29
 #: .\crm_core\templates\pdf_templates\purchaseorder.html:28
 #: .\crm_core\templates\pdf_templates\quote.html:28
 msgid "Email"
-msgstr ""
+msgstr "Correo electronico"
 
 #: .\crm_core\templates\pdf_templates\invoice.html:34
 #: .\crm_core\templates\pdf_templates\purchaseorder.html:33
@@ -1051,36 +1051,36 @@ msgstr "Posiciones"
 #: .\crm_core\templates\pdf_templates\purchaseorder.html:39
 #: .\crm_core\templates\pdf_templates\quote.html:39
 msgid "Quantity"
-msgstr ""
+msgstr "Cantidad"
 
 #: .\crm_core\templates\registration\login.html:4
 #: .\crm_core\templates\registration\login.html:5
 #: .\crm_core\templates\registration\login.html:8
 msgid "Login"
-msgstr ""
+msgstr "Iniciar sesión"
 
 #: .\crm_core\templates\registration\login.html:25
 msgid "Please correct the error below."
-msgstr ""
+msgstr "Por favor, corrija el error resaltado a continuacion"
 
 #: .\crm_core\templates\registration\login.html:39
 msgid "sign in now"
-msgstr ""
+msgstr "Registrese ahora"
 
 #: .\crm_core\templates\registration\login.html:52
 msgid "Forgotten your password or username?"
-msgstr ""
+msgstr "¿Olvido su contraseña y/o usuario?"
 
 #: .\crm_core\templates\registration\login.html:56
 msgid "Log in"
-msgstr ""
+msgstr "Iniciar sesión"
 
 #: .\crm_core\templates\settings.html:42
 msgid "Create Taxrate"
-msgstr ""
+msgstr "Crear impuesto"
 
 msgid "Billing Cycle"
-msgstr ""
+msgstr "Ciclo de facturación"
 
 #: .\crm_core\templates\settings.html:62
 msgid "Billing Cycles"
@@ -1096,7 +1096,7 @@ msgstr "Crear unidad"
 
 #: .\crm_core\templates\settings.html:110
 msgid "Product Categories"
-msgstr ""
+msgstr "Categorias de los productos"
 
 #: .\crm_core\templates\settings.html:114
 msgid "Create Product Category"
@@ -1104,19 +1104,19 @@ msgstr "Crear la categoría de producto"
 
 #: .\crm_core\templates\settings.html:138
 msgid "Create Customer Group"
-msgstr ""
+msgstr "Crear grupo de clientes"
 
 #: .\settings.py:181
 msgid "English"
-msgstr ""
+msgstr "Ingles"
 
 #: .\settings.py:182
 msgid "German"
-msgstr ""
+msgstr "Aleman"
 
 #: .\settings.py:183
 msgid "Russian"
-msgstr ""
+msgstr "Ruso"
 
 #: .\settings.py:184
 msgid "Spanish"
@@ -1124,41 +1124,41 @@ msgstr ""
 
 #: .\settings.py:185
 msgid "French"
-msgstr ""
+msgstr "Frances"
 
 #: .\settings.py:186
 msgid "Italian"
 msgstr ""
 
 msgid "Administration"
-msgstr ""
+msgstr "Administración"
 
 msgid "open contracts in your database."
-msgstr ""
+msgstr "Abrir contratos en la base de datos."
 
 msgid "open invoices in your database."
-msgstr ""
+msgstr "Abrir facturas en la base de datos."
 
 msgid "customers in your database."
-msgstr ""
+msgstr "Clientes en la base de datos."
 
 msgid "suppliers in your database."
-msgstr ""
+msgstr "Proveedores para su base de datos"
 
 msgid "products in your database."
-msgstr ""
+msgstr "Productos en su base de datos"
 
 msgid "Create product category"
-msgstr ""
+msgstr "Crear categoria de producto"
 
 msgid "updated"
-msgstr ""
+msgstr "Actualizado"
 
 msgid "External reference"
-msgstr ""
+msgstr "Referencia externa"
 
 msgid "Company settings"
-msgstr ""
+msgstr "Configuración de la compaña"
 
 msgid "Slogan"
-msgstr ""
+msgstr "Lema"
