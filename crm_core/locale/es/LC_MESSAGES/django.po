@@ -394,7 +394,7 @@ msgstr "Unidades"
 
 #: .\crm_core\models.py:700
 msgid "Taxrate in Percentage"
-msgstr "Taza de impuestos en porcentaje"
+msgstr "Tasa de impuestos en porcentaje"
 
 #: .\crm_core\models.py:701
 msgid "Taxname"
@@ -424,7 +424,7 @@ msgstr "Factor entre desde y hacia unidad"
 
 #: .\crm_core\models.py:727
 msgid "Unit Transform"
-msgstr "T"
+msgstr ""
 
 #: .\crm_core\models.py:728
 msgid "Unit Transforms"
@@ -476,27 +476,27 @@ msgstr "Pie de pagina en orden de compra"
 
 #: .\crm_core\models.py:762
 msgid "Page Footer Left"
-msgstr ""
+msgstr "Bloque izquierdo del pie de pagina"
 
 #: .\crm_core\models.py:763
 msgid "Page Footer Middle"
-msgstr ""
+msgstr "Bloque central del pie de pagina"
 
 #: .\crm_core\models.py:766
 msgid "Templateset"
-msgstr ""
+msgstr "Conjunto de plantillas"
 
 #: .\crm_core\models.py:767
 msgid "Templatesets"
-msgstr ""
+msgstr "Conjuntos de plantillas"
 
 #: .\crm_core\models.py:780
 msgid "User Extension"
-msgstr ""
+msgstr "Extension del usuario"
 
 #: .\crm_core\models.py:781
 msgid "User Extensions"
-msgstr ""
+msgstr "Extensiones del usuario"
 
 #: .\crm_core\models.py:792
 msgid "Product Unit"
@@ -504,19 +504,19 @@ msgstr "Unidad de producto"
 
 #: .\crm_core\models.py:793
 msgid "Product Units"
-msgstr ""
+msgstr "Unidades de producto"
 
 #: .\crm_core\models.py:801 .\crm_core\tables.py:136
 msgid "Taxrate"
-msgstr ""
+msgstr "Tasa de impuestos"
 
 #: .\crm_core\models.py:804
 msgid "Product Taxrate"
-msgstr ""
+msgstr "Impuesto del producto"
 
 #: .\crm_core\models.py:805
 msgid "Product Taxrates"
-msgstr ""
+msgstr "Impuestos del producto"
 
 #: .\crm_core\tables.py:11 .\crm_core\templates\shop\order_history.html:22
 msgid "Status"
@@ -533,19 +533,19 @@ msgstr "Precio"
 
 #: .\crm_core\tables.py:95
 msgid "Prefix"
-msgstr ""
+msgstr "Prefijo"
 
 #: .\crm_core\templates\accounts\account_profile_update.html:6
 msgid "View past orders"
-msgstr ""
+msgstr "Ver ordenes anteriores"
 
 #: .\crm_core\templates\admin\includes\backup.html:4
 msgid "Backup"
-msgstr ""
+msgstr "Respaldar"
 
 #: .\crm_core\templates\admin\includes\backup.html:5
 msgid "Restore"
-msgstr ""
+msgstr "Restablecer"
 
 #: .\crm_core\templates\admin\includes_grappelli\header.html:17
 msgid "Documentation"
@@ -553,7 +553,7 @@ msgstr "Documentación"
 
 #: .\crm_core\templates\admin\includes_grappelli\header.html:26
 msgid "Change password"
-msgstr ""
+msgstr "Cambiar contraseña"
 
 #: .\crm_core\templates\admin\includes_grappelli\header.html:34
 #: .\crm_core\templates\includes\editable_toolbar.html:9
@@ -563,12 +563,12 @@ msgstr "Cerrar sesión"
 #: .\crm_core\templates\auth\user_form.html:4
 #: .\crm_core\templates\auth\user_form.html:5
 msgid "Userprofile"
-msgstr ""
+msgstr "Perfil de usuario"
 
 #: .\crm_core\templates\auth\user_form.html:8
 #: .\crm_core\templates\auth\user_form.html:16
 msgid "Change userprofile"
-msgstr ""
+msgstr "Cambiar información del perfil"
 
 #: .\crm_core\templates\base.html:55
 msgid "Toggle Navigation"
@@ -576,7 +576,7 @@ msgstr "Alternar navegación"
 
 #: .\crm_core\templates\base.html:132 .\crm_core\templates\base\base.html:247
 msgid "Powered by"
-msgstr ""
+msgstr "Provisto por"
 
 #: .\crm_core\templates\base.html:135 .\crm_core\templates\base\base.html:249
 msgid "and"
@@ -596,7 +596,7 @@ msgstr "Ver versión móvil"
 #: .\crm_core\templates\crm_core\contract_list.html:14
 #: .\crm_core\templates\crm_core\contract_list.html:18
 msgid "Contract Overview"
-msgstr ""
+msgstr "Vista previa del contrato"
 
 #: .\crm_core\templates\base\base.html:163
 #: .\crm_core\templates\crm_core\customerbillingcycle_confirm_delete.html:13
@@ -625,7 +625,7 @@ msgstr "Añadir la posición"
 #: .\crm_core\templates\crm_core\contract_confirm_delete.html:14
 #: .\crm_core\templates\crm_core\contract_confirm_delete.html:18
 msgid "Delete contract"
-msgstr ""
+msgstr "Borrar contrato"
 
 #: .\crm_core\templates\crm_core\contract_confirm_delete.html:26
 #: .\crm_core\templates\crm_core\customer_confirm_delete.html:26
@@ -640,7 +640,7 @@ msgstr ""
 #: .\crm_core\templates\shop\category_confirm_delete.html:26
 #: .\crm_core\templates\shop\product_confirm_delete.html:26
 msgid "Are you you sure you want to delete the following item?"
-msgstr ""
+msgstr "¿Esta seguro que desea borrar el siguiente elemento?"
 
 #: .\crm_core\templates\crm_core\contract_confirm_delete.html:30
 #: .\crm_core\templates\crm_core\customer_confirm_delete.html:30
@@ -686,7 +686,7 @@ msgstr "Documentos Relacionados"
 #: .\crm_core\templates\crm_core\purchaseorder_form.html:5
 #: .\crm_core\templates\crm_core\purchaseorder_form.html:9
 msgid "Purchase Orders"
-msgstr ""
+msgstr "Ordenes de compra"
 
 #: .\crm_core\templates\crm_core\contract_form.html:14
 #: .\crm_core\templates\crm_core\contract_form.html:18
@@ -754,17 +754,17 @@ msgstr "Crear ciclo de facturación"
 #: .\crm_core\templates\crm_core\customergroup_confirm_delete.html:18
 #: .\crm_core\templates\shop\category_confirm_delete.html:14
 msgid "Delete customer group"
-msgstr ""
+msgstr "Borrar grupo del cliente"
 
 #: .\crm_core\templates\crm_core\customergroup_form.html:14
 #: .\crm_core\templates\crm_core\customergroup_form.html:18
 msgid "Edit customer group"
-msgstr ""
+msgstr "Editar grupo del cliente"
 
 #: .\crm_core\templates\crm_core\customergroup_form.html:14
 #: .\crm_core\templates\crm_core\customergroup_form.html:18
 msgid "Create customer group"
-msgstr ""
+msgstr "Crear grupo del cliente"
 
 #: .\crm_core\templates\crm_core\includes\billingcycle_row_edit_toolbar.html:6
 msgid "Edit Billing Cycle"
@@ -787,7 +787,7 @@ msgstr "Eliminar categoría de producto"
 #: .\crm_core\templates\crm_core\quote_form.html:14
 #: .\crm_core\templates\crm_core\quote_form.html:18
 msgid "Create Quote"
-msgstr ""
+msgstr "Crear cotización"
 
 #: .\crm_core\templates\crm_core\includes\contract_actions_toolbar.html:11
 #: .\crm_core\templates\crm_core\includes\contract_row_actions_toolbar.html:11
