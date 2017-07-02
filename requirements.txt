@@ -1,1 +1,2 @@
--r requirements/main.txt
+Django=1.11
+django-filerowser-no-grappelli=v3.7.1
