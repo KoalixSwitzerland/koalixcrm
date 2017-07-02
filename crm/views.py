@@ -3,9 +3,9 @@ from os import path
 from django.http import Http404
 from crm.models import *
 from django.http import HttpResponse
-from exceptions import TemplateSetMissing
-from exceptions import UserExtensionMissing
-from django.core.servers.basehttp import FileWrapper
+from crm.exceptions import TemplateSetMissing
+from crm.exceptions import UserExtensionMissing
+from wsgiref.util import FileWrapper
 from django.http import Http404
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
@@ -32,7 +32,7 @@ def exportPDF(callingModelAdmin, request, whereToCreateFrom, whatToCreate, redir
     pdf = whereToCreateFrom.createPDF(whatToCreate)
     response = HttpResponse(FileWrapper(file(pdf)), mimetype='application/pdf')
     response['Content-Length'] = path.getsize(pdf) 
-  except (TemplateSetMissing, UserExtensionMissing, CalledProcessError), e:
+  except (TemplateSetMissing, UserExtensionMissing, CalledProcessError) as e:
     if type(e) == UserExtensionMissing:
       response = HttpResponseRedirect(redirectTo)
       callingModelAdmin.message_user(request, _("User Extension Missing"))

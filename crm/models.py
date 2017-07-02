@@ -1,31 +1,30 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from const.country import *
-from const.postaladdressprefix import *
-from const.purpose import *
-from const.status import *
+from crm.const.country import *
+from crm.const.postaladdressprefix import *
+from crm.const.purpose import *
+from crm.const.status import *
 from datetime import *
 from django.utils.translation import ugettext as _
 from decimal import Decimal
 from django.core import serializers
-from exceptions import TemplateSetMissing
-from exceptions import UserExtensionMissing
-from exceptions import OpenInterestAccountMissing
-import djangoUserExtension
+from crm.exceptions import TemplateSetMissing
+from crm.exceptions import UserExtensionMissing
+from crm.exceptions import OpenInterestAccountMissing
 from django.contrib import auth
 from lxml import etree
 import accounting 
-import settings
+import koalixcrm.settings
 import copy
-from subprocess import *
+import djangoUserExtension
 
 class Currency (models.Model):
   description = models.CharField(verbose_name = _("Description"), max_length=100)
   shortName = models.CharField(verbose_name = _("Displayed Name After Price In The Position"), max_length=3)
   rounding = models.DecimalField(max_digits=5, decimal_places=2, verbose_name = _("Rounding"), blank=True, null=True)
 
-  def __unicode__(self):
+  def __str__(self):
     return  self.shortName
   
   class Meta:
@@ -86,13 +85,13 @@ class CustomerBillingCycle(models.Model):
       verbose_name = _('Customer Billing Cycle')
       verbose_name_plural = _('Customer Billing Cycle')
 
-   def __unicode__(self):
+   def __str__(self):
       return str(self.id) + ' ' + self.name
 
 class CustomerGroup(models.Model):
    name = models.CharField(max_length=300)
       
-   def __unicode__(self):
+   def __str__(self):
       return str(self.id) + ' ' + self.name
       
    class Meta:
@@ -134,7 +133,7 @@ class Customer(Contact):
       verbose_name = _('Customer')
       verbose_name_plural = _('Customers')
 
-   def __unicode__(self):
+   def __str__(self):
       return str(self.id) + ' ' + self.name
 
 class Supplier(Contact):
@@ -144,7 +143,7 @@ class Supplier(Contact):
       verbose_name = _('Supplier')
       verbose_name_plural = _('Supplier')
 
-   def __unicode__(self):
+   def __str__(self):
       return str(self.id) + ' ' + self.name
 
 class Contract(models.Model):
@@ -201,7 +200,7 @@ class Contract(models.Model):
       purchaseorder.save()
       return purchaseorder
 
-   def __unicode__(self):
+   def __str__(self):
       return _("Contract") + " " + str(self.id)
 
 class PurchaseOrder(models.Model):
@@ -244,16 +243,16 @@ class PurchaseOrder(models.Model):
         self.lastPricingDate = pricingDate
         self.save()
         return 1
-    except Quote.DoesNotExist, e:  
-        print "ERROR "+e.__str__()
-        print "Der Fehler trat beim File: "+ self.sourcefile +" / Cell: "+listOfLines[0][listOfLines[0].find("cell ")+4:listOfLines[0].find("(cellType ")-1]+" auf!"
+    except Quote.DoesNotExist as e:  
+        print("ERROR "+e.__str__())
+        print("Der Fehler trat beim File: "+ self.sourcefile +" / Cell: "+listOfLines[0][listOfLines[0].find("cell ")+4:listOfLines[0].find("(cellType ")-1]+" auf!")
         exit()
         return 0
          
   def createPDF(self, whatToExport):
     XMLSerializer = serializers.get_serializer("xml")
     xml_serializer = XMLSerializer()
-    out = open(settings.PDF_OUTPUT_ROOT+"purchaseorder_"+str(self.id)+".xml", "w")
+    out = open(koalixcrm.settings.PDF_OUTPUT_ROOT+"purchaseorder_"+str(self.id)+".xml", "w")
     objectsToSerialize = list(PurchaseOrder.objects.filter(id=self.id)) 
     objectsToSerialize += list(Contact.objects.filter(id=self.supplier.id))
     objectsToSerialize += list(Currency.objects.filter(id=self.currency.id))
@@ -279,15 +278,15 @@ class PurchaseOrder(models.Model):
         objectsToSerialize += list(PostalAddress.objects.filter(id=address.id))
     xml_serializer.serialize(objectsToSerialize, stream=out, indent=3)
     out.close()
-    check_output(['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path, '-xml', settings.PDF_OUTPUT_ROOT+'purchaseorder_'+str(self.id)+'.xml', '-xsl', userExtension[0].defaultTemplateSet.purchaseorderXSLFile.xslfile.path, '-pdf', settings.PDF_OUTPUT_ROOT+'purchaseorder_'+str(self.id)+'.pdf'], stderr=STDOUT)
-    return settings.PDF_OUTPUT_ROOT+"purchaseorder_"+str(self.id)+".pdf"   
+    check_output(['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml', koalixcrm.settings.PDF_OUTPUT_ROOT+'purchaseorder_'+str(self.id)+'.xml', '-xsl', userExtension[0].defaultTemplateSet.purchaseorderXSLFile.xslfile.path_full, '-pdf', koalixcrm.settings.PDF_OUTPUT_ROOT+'purchaseorder_'+str(self.id)+'.pdf'], stderr=STDOUT)
+    return koalixcrm.settings.PDF_OUTPUT_ROOT+"purchaseorder_"+str(self.id)+".pdf"   
 
   class Meta:
     app_label = "crm"
     verbose_name = _('Purchase Order')
     verbose_name_plural = _('Purchase Order')
 
-  def __unicode__(self):
+  def __str__(self):
     return _("Purchase Order")+ ": " + str(self.id) + " "+ _("from Contract") + ": " + str(self.contract.id) 
 
 class SalesContract(models.Model):
@@ -338,7 +337,7 @@ class SalesContract(models.Model):
       verbose_name = _('Sales Contract')
       verbose_name_plural = _('Sales Contracts')
 
-   def __unicode__(self):
+   def __str__(self):
       return _("Sales Contract")+ ": " + str(self.id) + " "+_("from Contract")+": " + str(self.contract.id) 
       
 class Quote(SalesContract):
@@ -387,7 +386,7 @@ class Quote(SalesContract):
    def createPDF(self, whatToExport):
      XMLSerializer = serializers.get_serializer("xml")
      xml_serializer = XMLSerializer()
-     out = open(settings.PDF_OUTPUT_ROOT+"quote_"+str(self.id)+".xml", "w")
+     out = open(koalixcrm.settings.PDF_OUTPUT_ROOT+"quote_"+str(self.id)+".xml", "w")
      objectsToSerialize = list(Quote.objects.filter(id=self.id)) 
      objectsToSerialize += list(SalesContract.objects.filter(id=self.id)) 
      objectsToSerialize += list(Contact.objects.filter(id=self.customer.id))
@@ -414,19 +413,19 @@ class Quote(SalesContract):
          objectsToSerialize += list(PostalAddress.objects.filter(id=address.id))
      xml_serializer.serialize(objectsToSerialize, stream=out, indent=3)
      out.close()
-     xml = etree.parse(settings.PDF_OUTPUT_ROOT+"quote_"+str(self.id)+".xml")
+     xml = etree.parse(koalixcrm.settings.PDF_OUTPUT_ROOT+"quote_"+str(self.id)+".xml")
      rootelement = xml.getroot()
-     projectroot = etree.SubElement(rootelement, "projectroot")
-     projectroot.text = settings.PROJECT_ROOT
-     xml.write(settings.PDF_OUTPUT_ROOT+"quote_"+str(self.id)+".xml")
+     filebrowserdirectory = etree.SubElement(rootelement, "filebrowserdirectory")
+     filebrowserdirectory.text = koalixcrm.settings.FILEBROWSER_DIRECTORY
+     xml.write(koalixcrm.settings.PDF_OUTPUT_ROOT+"quote_"+str(self.id)+".xml")
      if (whatToExport == "quote"):
-        check_output(['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path, '-xml', settings.PDF_OUTPUT_ROOT+'quote_'+str(self.id)+'.xml', '-xsl', userExtension[0].defaultTemplateSet.quoteXSLFile.xslfile.path, '-pdf', settings.PDF_OUTPUT_ROOT+'quote_'+str(self.id)+'.pdf'], stderr=STDOUT)
-        return settings.PDF_OUTPUT_ROOT+"quote_"+str(self.id)+".pdf"
+        check_output(['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml', koalixcrm.settings.PDF_OUTPUT_ROOT+'quote_'+str(self.id)+'.xml', '-xsl', userExtension[0].defaultTemplateSet.quoteXSLFile.xslfile.path_full, '-pdf', koalixcrm.settings.PDF_OUTPUT_ROOT+'quote_'+str(self.id)+'.pdf'], stderr=STDOUT)
+        return koalixcrm.settings.PDF_OUTPUT_ROOT+"quote_"+str(self.id)+".pdf"
      else:
-        check_output(['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path, '-xml', settings.PDF_OUTPUT_ROOT+'quote_'+str(self.id)+'.xml', '-xsl', userExtension[0].defaultTemplateSet.purchaseconfirmationXSLFile.xslfile.path, '-pdf', settings.PDF_OUTPUT_ROOT+'purchaseconfirmation_'+str(self.id)+'.pdf'], stderr=STDOUT)
-        return settings.PDF_OUTPUT_ROOT+"purchaseconfirmation_"+str(self.id)+".pdf"  
+        check_output(['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml', koalixcrm.settings.PDF_OUTPUT_ROOT+'quote_'+str(self.id)+'.xml', '-xsl', userExtension[0].defaultTemplateSet.purchaseconfirmationXSLFile.xslfile.path_full, '-pdf', koalixcrm.settings.PDF_OUTPUT_ROOT+'purchaseconfirmation_'+str(self.id)+'.pdf'], stderr=STDOUT)
+        return koalixcrm.settings.PDF_OUTPUT_ROOT+"purchaseconfirmation_"+str(self.id)+".pdf"  
      
-   def __unicode__(self):
+   def __str__(self):
       return _("Quote")+ ": " + str(self.id) + " "+_("from Contract")+": " + str(self.contract.id) 
       
    class Meta:
@@ -484,7 +483,7 @@ class Invoice(SalesContract):
    def createPDF(self, whatToExport):
      XMLSerializer = serializers.get_serializer("xml")
      xml_serializer = XMLSerializer()
-     out = open(settings.PDF_OUTPUT_ROOT+"invoice_"+str(self.id)+".xml", "w")
+     out = open(koalixcrm.settings.PDF_OUTPUT_ROOT+"invoice_"+str(self.id)+".xml", "w")
      objectsToSerialize = list(Invoice.objects.filter(id=self.id)) 
      objectsToSerialize += list(SalesContract.objects.filter(id=self.id)) 
      objectsToSerialize += list(Contact.objects.filter(id=self.customer.id))
@@ -511,20 +510,20 @@ class Invoice(SalesContract):
          objectsToSerialize += list(PostalAddress.objects.filter(id=address.id))
      xml_serializer.serialize(objectsToSerialize, stream=out, indent=3)
      out.close()
-     xml = etree.parse(settings.PDF_OUTPUT_ROOT+"invoice_"+str(self.id)+".xml")
+     xml = etree.parse(koalixcrm.settings.PDF_OUTPUT_ROOT+"invoice_"+str(self.id)+".xml")
      rootelement = xml.getroot()
-     projectroot = etree.SubElement(rootelement, "projectroot")
-     projectroot.text = settings.PROJECT_ROOT
-     xml.write(settings.PDF_OUTPUT_ROOT+"invoice_"+str(self.id)+".xml")
+     filebrowserdirectory = etree.SubElement(rootelement, "filebrowserdirectory")
+     filebrowserdirectory.text = koalixcrm.settings.FILEBROWSER_DIRECTORY
+     xml.write(koalixcrm.settings.PDF_OUTPUT_ROOT+"invoice_"+str(self.id)+".xml")
      if (whatToExport == "invoice"):
-        check_output(['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path, '-xml', settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.xml', '-xsl', userExtension[0].defaultTemplateSet.invoiceXSLFile.xslfile.path, '-pdf', settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.pdf'], stderr=STDOUT)
-        return settings.PDF_OUTPUT_ROOT+"invoice_"+str(self.id)+".pdf"
+        check_output(['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml', koalixcrm.settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.xml', '-xsl', userExtension[0].defaultTemplateSet.invoiceXSLFile.xslfile.path_full, '-pdf', koalixcrm.settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.pdf'], stderr=STDOUT)
+        return koalixcrm.settings.PDF_OUTPUT_ROOT+"invoice_"+str(self.id)+".pdf"
      else:
-        check_output(['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path, '-xml', settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.xml', '-xsl', userExtension[0].defaultTemplateSet.deilveryorderXSLFile.xslfile.path, '-pdf', settings.PDF_OUTPUT_ROOT+'deliveryorder_'+str(self.id)+'.pdf'], stderr=STDOUT)
-        return settings.PDF_OUTPUT_ROOT+"deliveryorder_"+str(self.id)+".pdf"  
+        check_output(['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml', koalixcrm.settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.xml', '-xsl', userExtension[0].defaultTemplateSet.deilveryorderXSLFile.xslfile.path_full, '-pdf', koalixcrm.settings.PDF_OUTPUT_ROOT+'deliveryorder_'+str(self.id)+'.pdf'], stderr=STDOUT)
+        return koalixcrm.settings.PDF_OUTPUT_ROOT+"deliveryorder_"+str(self.id)+".pdf"  
 
 #  TODO: def registerPayment(self, amount, registerpaymentinaccounting):
-   def __unicode__(self):
+   def __str__(self):
       return _("Invoice")+ ": " + str(self.id) + " "+_("from Contract")+": " + str(self.contract.id) 
       
    class Meta:
@@ -538,7 +537,7 @@ class Unit(models.Model):
    isAFractionOf = models.ForeignKey('self', blank=True, null=True, verbose_name = _("Is A Fraction Of"))
    fractionFactorToNextHigherUnit = models.IntegerField(verbose_name = _("Factor Between This And Next Higher Unit"), blank=True, null=True)
 
-   def __unicode__(self):
+   def __str__(self):
       return  self.shortName
 
    class Meta:
@@ -555,7 +554,7 @@ class Tax(models.Model):
    def getTaxRate(self):
       return self.taxrate;
 
-   def __unicode__(self):
+   def __str__(self):
       return  self.name
 
    class Meta:
@@ -604,7 +603,7 @@ class Product(models.Model):
    def getTaxRate(self):
       return self.tax.getTaxRate();
 
-   def __unicode__(self):
+   def __str__(self):
       return str(self.productNumber) + ' ' + self.title
 
    class Meta:
@@ -620,7 +619,7 @@ class Product(models.Model):
        self.product = product
        return 
      def __str__ (self):
-       return _("There is no Price for this product")+": "+ self.product.__unicode__() + _("that matches the date")+": "+self.date.__str__() +" ,"+ _("customer")+ ": " +self.customer.__unicode__()+_(" and unit")+":"+ self.unit.__unicode__()
+       return _("There is no Price for this product")+": "+ self.product.__str__() + _("that matches the date")+": "+self.date.__str__() +" ,"+ _("customer")+ ": " +self.customer.__str__()+_(" and unit")+":"+ self.unit.__str__()
 
       
 class UnitTransform(models.Model):
@@ -635,7 +634,7 @@ class UnitTransform(models.Model):
       else:
          return unit
          
-   def __unicode__(self):
+   def __str__(self):
       return  "From " + self.fromUnit.shortName + " to " + self.toUnit.shortName
 
    class Meta:
@@ -655,7 +654,7 @@ class CustomerGroupTransform(models.Model):
       else:
          return unit
          
-   def __unicode__(self):
+   def __str__(self):
       return  "From " + self.fromCustomerGroup.name + " to " + self.toCustomerGroup.name
 
    class Meta:
@@ -741,7 +740,7 @@ class Position(models.Model):
      self.save()
      return self.lastCalculatedTax
      
-   def __unicode__(self):
+   def __str__(self):
       return _("Position")+ ": " + str(self.id)
 
    class Meta:
@@ -757,7 +756,7 @@ class SalesContractPosition(Position):
       verbose_name = _('Salescontract Position')
       verbose_name_plural = _('Salescontract Positions')
       
-   def __unicode__(self):
+   def __str__(self):
       return _("Salescontract Position")+ ": " + str(self.id)
 
 
@@ -769,7 +768,7 @@ class PurchaseOrderPosition(Position):
       verbose_name = _('Purchaseorder Position')
       verbose_name_plural = _('Purchaseorder Positions')
       
-   def __unicode__(self):
+   def __str__(self):
       return _("Purchaseorder Position")+ ": " + str(self.id)
 
 class PhoneAddressForContact(PhoneAddress):
@@ -781,7 +780,7 @@ class PhoneAddressForContact(PhoneAddress):
       verbose_name = _('Phone Address For Contact')
       verbose_name_plural = _('Phone Address For Contact')
 
-   def __unicode__(self):
+   def __str__(self):
       return str(self.phone)
 
 class EmailAddressForContact(EmailAddress):
@@ -793,7 +792,7 @@ class EmailAddressForContact(EmailAddress):
       verbose_name = _('Email Address For Contact')
       verbose_name_plural = _('Email Address For Contact')
 
-   def __unicode__(self):
+   def __str__(self):
       return str(self.email)
 
 class PostalAddressForContact(PostalAddress):
@@ -805,7 +804,7 @@ class PostalAddressForContact(PostalAddress):
       verbose_name = _('Postal Address For Contact')
       verbose_name_plural = _('Postal Address For Contact')
 
-   def __unicode__(self):
+   def __str__(self):
       return self.prename + ' ' + self.name + ' ' + self.addressline1
    
 class PostalAddressForContract(PostalAddress):
@@ -817,7 +816,7 @@ class PostalAddressForContract(PostalAddress):
       verbose_name = _('Postal Address For Contracts')
       verbose_name_plural = _('Postal Address For Contracts')
 
-   def __unicode__(self):
+   def __str__(self):
       return self.prename + ' ' + self.name + ' ' + self.addressline1
    
 class PostalAddressForPurchaseOrder(PostalAddress):
@@ -829,7 +828,7 @@ class PostalAddressForPurchaseOrder(PostalAddress):
       verbose_name = _('Postal Address For Contracts')
       verbose_name_plural = _('Postal Address For Contracts')
 
-   def __unicode__(self):
+   def __str__(self):
       return self.prename + ' ' + self.name + ' ' + self.addressline1
    
 class PostalAddressForSalesContract(PostalAddress):
@@ -841,7 +840,7 @@ class PostalAddressForSalesContract(PostalAddress):
       verbose_name = _('Postal Address For Contracts')
       verbose_name_plural = _('Postal Address For Contracts')
 
-   def __unicode__(self):
+   def __str__(self):
       return self.prename + ' ' + self.name + ' ' + self.addressline1
 
 class PhoneAddressForContract(PhoneAddress):
@@ -853,7 +852,7 @@ class PhoneAddressForContract(PhoneAddress):
       verbose_name = _('Phone Address For Contracts')
       verbose_name_plural = _('Phone Address For Contracts')
 
-   def __unicode__(self):
+   def __str__(self):
       return str(self.phone)
 
 class PhoneAddressForSalesContract(PhoneAddress):
@@ -865,7 +864,7 @@ class PhoneAddressForSalesContract(PhoneAddress):
       verbose_name = _('Phone Address For Contracts')
       verbose_name_plural = _('Phone Address For Contracts')
 
-   def __unicode__(self):
+   def __str__(self):
       return str(self.phone)
 
 class PhoneAddressForPurchaseOrder(PhoneAddress):
@@ -877,7 +876,7 @@ class PhoneAddressForPurchaseOrder(PhoneAddress):
       verbose_name = _('Phone Address For Contracts')
       verbose_name_plural = _('Phone Address For Contracts')
 
-   def __unicode__(self):
+   def __str__(self):
       return str(self.phone)
 
 class EmailAddressForContract(EmailAddress):
@@ -889,7 +888,7 @@ class EmailAddressForContract(EmailAddress):
       verbose_name = _('Email Address For Contracts')
       verbose_name_plural = _('Email Address For Contracts')
 
-   def __unicode__(self):
+   def __str__(self):
       return str(self.email)
 
 class EmailAddressForSalesContract(EmailAddress):
@@ -901,7 +900,7 @@ class EmailAddressForSalesContract(EmailAddress):
       verbose_name = _('Email Address For Contracts')
       verbose_name_plural = _('Email Address For Contracts')
 
-   def __unicode__(self):
+   def __str__(self):
       return str(self.email)
 
 class EmailAddressForPurchaseOrder(EmailAddress):
@@ -913,6 +912,6 @@ class EmailAddressForPurchaseOrder(EmailAddress):
       verbose_name = _('Email Address For Contracts')
       verbose_name_plural = _('Email Address For Contracts')
 
-   def __unicode__(self):
+   def __str__(self):
       return str(self.email)
     

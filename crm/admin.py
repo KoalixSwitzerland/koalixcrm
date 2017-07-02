@@ -3,7 +3,7 @@ import os
 from django import forms
 from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response
-from django.core.context_processors import csrf
+from django.template.context_processors import csrf
 from datetime import date
 from crm.models import *
 from crm.views import *
@@ -13,7 +13,7 @@ from django.utils.translation import ugettext as _
 from django.contrib import admin
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
-from django.core.servers.basehttp import FileWrapper
+from wsgiref.util import FileWrapper
 from django.template import RequestContext
 from django.contrib.admin import helpers
 

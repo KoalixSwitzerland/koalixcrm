@@ -2,7 +2,7 @@
 from os import path
 from accounting.models import *
 from django.http import HttpResponse
-from django.core.servers.basehttp import FileWrapper
+from wsgiref.util import FileWrapper
 from django.http import Http404
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
@@ -28,7 +28,7 @@ def exportPDF(callingModelAdmin, request, whereToCreateFrom, whatToCreate, redir
     pdf = whereToCreateFrom.createPDF(request.user, whatToCreate)
     response = HttpResponse(FileWrapper(file(pdf)), mimetype='application/pdf')
     response['Content-Length'] = path.getsize(pdf) 
-  except (TemplateSetMissing, UserExtensionMissing, CalledProcessError), e:
+  except (TemplateSetMissing, UserExtensionMissing, CalledProcessError) as e:
     if type(e) == UserExtensionMissing:
       response = HttpResponseRedirect(redirectTo)
       callingModelAdmin.message_user(request, _("User Extension Missing"))
@@ -62,7 +62,7 @@ def exportXML(callingModelAdmin, request, whereToCreateFrom, whatToCreate, redir
     xml = whereToCreateFrom.createXML(request.user, whatToCreate)
     response = HttpResponse(FileWrapper(file(xml)), mimetype='application/xml')
     response['Content-Length'] = path.getsize(xml) 
-  except (TemplateSetMissing, UserExtensionMissing, CalledProcessError), e:
+  except (TemplateSetMissing, UserExtensionMissing, CalledProcessError) as e:
     if type(e) == UserExtensionMissing:
       response = HttpResponseRedirect(redirectTo)
       callingModelAdmin.message_user(request, _("User Extension Missing"))

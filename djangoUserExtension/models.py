@@ -3,7 +3,7 @@
 from django.utils.translation import ugettext as _
 from django.db import models
 from filebrowser.fields import FileBrowseField
-from const.purpose import *
+from djangoUserExtension.const.purpose import *
 from crm import models as crmmodels
    
 class XSLFile(models.Model):
@@ -12,11 +12,10 @@ class XSLFile(models.Model):
    
    class Meta:
       app_label = "djangoUserExtension"
-      #app_label_koalix = _('Djang User Extention')
       verbose_name = _('XSL File')
       verbose_name_plural = _('XSL Files')
       
-   def __unicode__(self):
+   def __str__(self):
       return str(self.id) + ' ' + self.title
       
 class UserExtension(models.Model):
@@ -26,12 +25,11 @@ class UserExtension(models.Model):
    
    class Meta:
       app_label = "djangoUserExtension"
-      #app_label_koalix = _('Djang User Extention')
       verbose_name = _('User Extention')
       verbose_name_plural = _('User Extentions')
       
-   def __unicode__(self):
-      return str(self.id) + ' ' + self.user.__unicode__()
+   def __str__(self):
+      return str(self.id) + ' ' + self.user.__str__()
       
 class TemplateSet(models.Model):
    organisationname = models.CharField(verbose_name = _("Name of the Organisation"), max_length=200)
@@ -56,11 +54,10 @@ class TemplateSet(models.Model):
       
    class Meta:
       app_label = "djangoUserExtension"
-      #app_label_koalix = _('Djang User Extention')
       verbose_name = _('Templateset')
       verbose_name_plural = _('Templatesets')
       
-   def __unicode__(self):
+   def __str__(self):
       return str(self.id) + ' ' + self.title
    
 
@@ -68,7 +65,7 @@ class UserExtensionPostalAddress(crmmodels.PostalAddress):
    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINUSEREXTENTION)
    userExtension = models.ForeignKey(UserExtension)
    
-   def __unicode__(self):
+   def __str__(self):
       return self.name + ' ' + self.prename
    
    class Meta:
@@ -81,7 +78,7 @@ class UserExtensionPhoneAddress(crmmodels.PhoneAddress):
    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINUSEREXTENTION)
    userExtension = models.ForeignKey(UserExtension)
    
-   def __unicode__(self):
+   def __str__(self):
       return self.phone
    
    class Meta:
@@ -94,7 +91,7 @@ class UserExtensionEmailAddress(crmmodels.EmailAddress):
    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINUSEREXTENTION)
    userExtension = models.ForeignKey(UserExtension)
    
-   def __unicode__(self):
+   def __str__(self):
       return self.email
    
    class Meta:

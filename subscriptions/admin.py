@@ -8,7 +8,7 @@ from django.utils.translation import ugettext as _
 from django.contrib import admin
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
-from django.core.servers.basehttp import FileWrapper
+from wsgiref.util import FileWrapper
 from subscriptions.models import *
  
 

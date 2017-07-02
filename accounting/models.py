@@ -1,20 +1,18 @@
 # -*- coding: utf-8 -*-
 
-from subprocess import *
-from const.accountTypeChoices import *
+from accounting.const.accountTypeChoices import *
 from crm.models import Contract
 from crm.exceptions import TemplateSetMissing
 from crm.exceptions import UserExtensionMissing
 from django.db import models
-from django.contrib.contenttypes import generic
 from django.utils.translation import ugettext as _
 from django.db.models import signals
 from django.core import serializers
-from exceptions import ProgrammingError
-from exceptions import NoObjectsToBeSerialzed
+from accounting.exceptions import ProgrammingError
+from accounting.exceptions import NoObjectsToBeSerialzed
 from xml.dom.minidom import Document
 from datetime import *
-import settings
+import koalixcrm.settings
 import djangoUserExtension
 
    
@@ -50,7 +48,7 @@ class AccountingPeriod(models.Model):
         whatToCreate (str): Which objects that have to be serialized
 
       Returns:
-        path to the location of the file 
+        path_full to the location of the file 
             
       Raises:
         ProgrammingError will be raised when incorrect objects to be serialized was selected
@@ -58,9 +56,9 @@ class AccountingPeriod(models.Model):
 
     XMLSerializer = serializers.get_serializer("xml")
     xml_serializer = XMLSerializer()
-    pathToOutputFile = " "
+    path_fullToOutputFile = " "
     if whatToCreate == "allAccount":
-      pathToOutputFile = settings.PDF_OUTPUT_ROOT+"accounts.xml"
+      path_fullToOutputFile = settings.PDF_OUTPUT_ROOT+"accounts.xml"
       objectsToSerialize = Account.objects.all()
     else:  
       raise ProgrammingError(_("During XML Export it was not correctly specified which data that has to be exported")) 
@@ -70,7 +68,7 @@ class AccountingPeriod(models.Model):
     else:
       xml_serializer.serialize(objectsToSerialize, stream=out, indent=3)
     out.close() 
-    return pathToOutputFile
+    return path_fullToOutputFile
 
 # TODO  def importAllAccountsXML(self):
 
@@ -87,7 +85,7 @@ class AccountingPeriod(models.Model):
       main = doc.createElement("koalixaccountingprofitlossstatement")
       out = open(settings.PDF_OUTPUT_ROOT+"profitlossstatement_"+str(self.id)+".xml", "w")
     accountingPeriodName = doc.createElement("accountingPeriodName")
-    accountingPeriodName.appendChild(doc.createTextNode(self.__unicode__()))
+    accountingPeriodName.appendChild(doc.createTextNode(self.__str__()))
     main.appendChild(accountingPeriodName)
     organisiationname = doc.createElement("organisiationname")
     organisiationname.appendChild(doc.createTextNode(settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.organisationname))
@@ -99,7 +97,7 @@ class AccountingPeriod(models.Model):
     accountingPeriodFrom.appendChild(doc.createTextNode(self.begin.year.__str__()))
     main.appendChild(accountingPeriodFrom)
     headerPicture = doc.createElement("headerpicture")
-    headerPicture.appendChild(doc.createTextNode(settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.logo.path))
+    headerPicture.appendChild(doc.createTextNode(settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.logo.path_full))
     main.appendChild(headerPicture)
     accountNumber = doc.createElement("AccountNumber")
     accounts = Account.objects.all()
@@ -138,14 +136,14 @@ class AccountingPeriod(models.Model):
     out.write(doc.toxml("utf-8"))
     out.close()
     if (whatToCreate == "balanceSheet"):
-      check_output(['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path, '-xml', settings.PDF_OUTPUT_ROOT+'balancesheet_'+str(self.id)+'.xml', '-xsl', userExtension[0].defaultTemplateSet.balancesheetXSLFile.xslfile.path, '-pdf', settings.PDF_OUTPUT_ROOT+'balancesheet_'+str(self.id)+'.pdf'], stderr=STDOUT)
+      check_output(['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml', settings.PDF_OUTPUT_ROOT+'balancesheet_'+str(self.id)+'.xml', '-xsl', userExtension[0].defaultTemplateSet.balancesheetXSLFile.xslfile.path_full, '-pdf', settings.PDF_OUTPUT_ROOT+'balancesheet_'+str(self.id)+'.pdf'], stderr=STDOUT)
       return settings.PDF_OUTPUT_ROOT+"balancesheet_"+str(self.id)+".pdf"  
     else:
-       check_output(['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path, '-xml', settings.PDF_OUTPUT_ROOT+'profitlossstatement_'+str(self.id)+'.xml', '-xsl', userExtension[0].defaultTemplateSet.profitLossStatementXSLFile.xslfile.path, '-pdf', settings.PDF_OUTPUT_ROOT+'profitlossstatement_'+str(self.id)+'.pdf'], stderr=STDOUT)
+       check_output(['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml', settings.PDF_OUTPUT_ROOT+'profitlossstatement_'+str(self.id)+'.xml', '-xsl', userExtension[0].defaultTemplateSet.profitLossStatementXSLFile.xslfile.path_full, '-pdf', settings.PDF_OUTPUT_ROOT+'profitlossstatement_'+str(self.id)+'.pdf'], stderr=STDOUT)
        return settings.PDF_OUTPUT_ROOT+"profitlossstatement_"+str(self.id)+".pdf" 
     
   
-  def __unicode__(self):
+  def __str__(self):
       return  self.title
 
 # TODO: def createNewAccountingPeriod() Neues Geschäftsjahr erstellen
@@ -200,7 +198,7 @@ class Account(models.Model):
          
       return sum
       
-   def __unicode__(self):
+   def __str__(self):
       return  self.accountNumber.__str__()  + " " + self.title
       
    class Meta:
@@ -218,7 +216,7 @@ class ProductCategorie(models.Model):
       app_label = "accounting"
       verbose_name = _('Product Categorie')
       verbose_name_plural = _('Product Categories')
-   def __unicode__(self):
+   def __str__(self):
       return  self.title
 
 class Booking(models.Model):
@@ -234,7 +232,7 @@ class Booking(models.Model):
    lastmodification = models.DateTimeField(verbose_name = _("Last modified"), auto_now_add=True)
    lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True, verbose_name = _("Last modified by"), related_name="db_booking_lstmodified")
    
-   def __unicode__(self):
+   def __str__(self):
       return  self.fromAccount.__str__()  + " " + self.toAccount.__str__()  + " " + self.amount.__str__() 
       
    class Meta:

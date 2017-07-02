@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.translation import ugettext as _
 from filebrowser.fields import FileBrowseField
-from const.events import *
+from subscriptions.const.events import *
 from datetime import *
 from crm import models as crmmodels
 
@@ -51,7 +51,7 @@ class SubscriptionEvent(models.Model):
   eventdate = models.DateField(verbose_name = _("Event Date"), blank=True, null=True)
   event = models.CharField(max_length=1, choices=SUBSCRITIONEVENTS, verbose_name=_('Event'))
     
-  def __unicode__(self):
+  def __str__(self):
     return  self.event
    
   class Meta:
