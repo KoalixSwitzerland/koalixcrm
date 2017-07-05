@@ -101,7 +101,7 @@ class CustomerGroup(models.Model):
 
 class Customer(Contact):
    defaultCustomerBillingCycle = models.ForeignKey('CustomerBillingCycle', verbose_name= _('Default Billing Cycle'))
-   ismemberof = models.ManyToManyField(CustomerGroup, verbose_name = _('Is member of'), blank=True, null=True)
+   ismemberof = models.ManyToManyField(CustomerGroup, verbose_name = _('Is member of'), blank=True)
    
    def createContract(self, request):
       contract = Contract()

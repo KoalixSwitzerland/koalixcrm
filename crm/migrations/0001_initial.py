@@ -1,812 +1,670 @@
 # -*- coding: utf-8 -*-
-import datetime
-from south.db import db
-from south.v2 import SchemaMigration
-from django.db import models
-
-
-class Migration(SchemaMigration):
-
-    def forwards(self, orm):
-        # Adding model 'Currency'
-        db.create_table('crm_currency', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('description', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('shortName', self.gf('django.db.models.fields.CharField')(max_length=3)),
-            ('rounding', self.gf('django.db.models.fields.DecimalField')(null=True, max_digits=5, decimal_places=2, blank=True)),
-        ))
-        db.send_create_signal('crm', ['Currency'])
-
-        # Adding model 'PostalAddress'
-        db.create_table('crm_postaladdress', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('prefix', self.gf('django.db.models.fields.CharField')(max_length=1, null=True, blank=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=100, null=True, blank=True)),
-            ('prename', self.gf('django.db.models.fields.CharField')(max_length=100, null=True, blank=True)),
-            ('addressline1', self.gf('django.db.models.fields.CharField')(max_length=200, null=True, blank=True)),
-            ('addressline2', self.gf('django.db.models.fields.CharField')(max_length=200, null=True, blank=True)),
-            ('addressline3', self.gf('django.db.models.fields.CharField')(max_length=200, null=True, blank=True)),
-            ('addressline4', self.gf('django.db.models.fields.CharField')(max_length=200, null=True, blank=True)),
-            ('zipcode', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
-            ('town', self.gf('django.db.models.fields.CharField')(max_length=100, null=True, blank=True)),
-            ('state', self.gf('django.db.models.fields.CharField')(max_length=100, null=True, blank=True)),
-            ('country', self.gf('django.db.models.fields.CharField')(max_length=2, null=True, blank=True)),
-        ))
-        db.send_create_signal('crm', ['PostalAddress'])
-
-        # Adding model 'PhoneAddress'
-        db.create_table('crm_phoneaddress', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('phone', self.gf('django.db.models.fields.CharField')(max_length=20)),
-        ))
-        db.send_create_signal('crm', ['PhoneAddress'])
-
-        # Adding model 'EmailAddress'
-        db.create_table('crm_emailaddress', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('email', self.gf('django.db.models.fields.EmailField')(max_length=200)),
-        ))
-        db.send_create_signal('crm', ['EmailAddress'])
-
-        # Adding model 'Contact'
-        db.create_table('crm_contact', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=300)),
-            ('dateofcreation', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
-            ('lastmodification', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-            ('lastmodifiedby', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'], blank=True)),
-        ))
-        db.send_create_signal('crm', ['Contact'])
-
-        # Adding model 'CustomerBillingCycle'
-        db.create_table('crm_customerbillingcycle', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=300)),
-            ('timeToPaymentDate', self.gf('django.db.models.fields.IntegerField')()),
-        ))
-        db.send_create_signal('crm', ['CustomerBillingCycle'])
-
-        # Adding model 'CustomerGroup'
-        db.create_table('crm_customergroup', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=300)),
-        ))
-        db.send_create_signal('crm', ['CustomerGroup'])
-
-        # Adding model 'Customer'
-        db.create_table('crm_customer', (
-            ('contact_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['crm.Contact'], unique=True, primary_key=True)),
-            ('defaultCustomerBillingCycle', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['crm.CustomerBillingCycle'])),
-        ))
-        db.send_create_signal('crm', ['Customer'])
-
-        # Adding M2M table for field ismemberof on 'Customer'
-        db.create_table('crm_customer_ismemberof', (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('customer', models.ForeignKey(orm['crm.customer'], null=False)),
-            ('customergroup', models.ForeignKey(orm['crm.customergroup'], null=False))
-        ))
-        db.create_unique('crm_customer_ismemberof', ['customer_id', 'customergroup_id'])
-
-        # Adding model 'Supplier'
-        db.create_table('crm_supplier', (
-            ('contact_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['crm.Contact'], unique=True, primary_key=True)),
-            ('offersShipmentToCustomers', self.gf('django.db.models.fields.BooleanField')(default=False)),
-        ))
-        db.send_create_signal('crm', ['Supplier'])
-
-        # Adding model 'Contract'
-        db.create_table('crm_contract', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('staff', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='db_relcontractstaff', null=True, to=orm['auth.User'])),
-            ('description', self.gf('django.db.models.fields.TextField')()),
-            ('defaultcustomer', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['crm.Customer'], null=True, blank=True)),
-            ('defaultSupplier', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['crm.Supplier'], null=True, blank=True)),
-            ('defaultcurrency', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['crm.Currency'])),
-            ('dateofcreation', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
-            ('lastmodification', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-            ('lastmodifiedby', self.gf('django.db.models.fields.related.ForeignKey')(related_name='db_contractlstmodified', to=orm['auth.User'])),
-        ))
-        db.send_create_signal('crm', ['Contract'])
-
-        # Adding model 'PurchaseOrder'
-        db.create_table('crm_purchaseorder', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('contract', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['crm.Contract'])),
-            ('externalReference', self.gf('django.db.models.fields.CharField')(max_length=100, null=True, blank=True)),
-            ('supplier', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['crm.Supplier'])),
-            ('description', self.gf('django.db.models.fields.CharField')(max_length=100, null=True, blank=True)),
-            ('lastPricingDate', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
-            ('lastCalculatedPrice', self.gf('django.db.models.fields.DecimalField')(null=True, max_digits=17, decimal_places=2, blank=True)),
-            ('lastCalculatedTax', self.gf('django.db.models.fields.DecimalField')(null=True, max_digits=17, decimal_places=2, blank=True)),
-            ('status', self.gf('django.db.models.fields.CharField')(max_length=1)),
-            ('staff', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='db_relpostaff', null=True, to=orm['auth.User'])),
-            ('currency', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['crm.Currency'])),
-            ('dateofcreation', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
-            ('lastmodification', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-            ('lastmodifiedby', self.gf('django.db.models.fields.related.ForeignKey')(related_name='db_polstmodified', to=orm['auth.User'])),
-        ))
-        db.send_create_signal('crm', ['PurchaseOrder'])
-
-        # Adding model 'SalesContract'
-        db.create_table('crm_salescontract', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('contract', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['crm.Contract'])),
-            ('externalReference', self.gf('django.db.models.fields.CharField')(max_length=100, blank=True)),
-            ('discount', self.gf('django.db.models.fields.DecimalField')(null=True, max_digits=5, decimal_places=2, blank=True)),
-            ('description', self.gf('django.db.models.fields.CharField')(max_length=100, null=True, blank=True)),
-            ('lastPricingDate', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
-            ('lastCalculatedPrice', self.gf('django.db.models.fields.DecimalField')(null=True, max_digits=17, decimal_places=2, blank=True)),
-            ('lastCalculatedTax', self.gf('django.db.models.fields.DecimalField')(null=True, max_digits=17, decimal_places=2, blank=True)),
-            ('customer', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['crm.Customer'])),
-            ('staff', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='db_relscstaff', null=True, to=orm['auth.User'])),
-            ('currency', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['crm.Currency'])),
-            ('dateofcreation', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
-            ('lastmodification', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-            ('lastmodifiedby', self.gf('django.db.models.fields.related.ForeignKey')(blank='True', related_name='db_lstscmodified', null=True, to=orm['auth.User'])),
-        ))
-        db.send_create_signal('crm', ['SalesContract'])
-
-        # Adding model 'Quote'
-        db.create_table('crm_quote', (
-            ('salescontract_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['crm.SalesContract'], unique=True, primary_key=True)),
-            ('validuntil', self.gf('django.db.models.fields.DateField')()),
-            ('status', self.gf('django.db.models.fields.CharField')(max_length=1)),
-        ))
-        db.send_create_signal('crm', ['Quote'])
-
-        # Adding model 'Invoice'
-        db.create_table('crm_invoice', (
-            ('salescontract_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['crm.SalesContract'], unique=True, primary_key=True)),
-            ('payableuntil', self.gf('django.db.models.fields.DateField')()),
-            ('derivatedFromQuote', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['crm.Quote'], null=True, blank=True)),
-            ('paymentBankReference', self.gf('django.db.models.fields.CharField')(max_length=100, null=True, blank=True)),
-            ('status', self.gf('django.db.models.fields.CharField')(max_length=1)),
-        ))
-        db.send_create_signal('crm', ['Invoice'])
-
-        # Adding model 'Unit'
-        db.create_table('crm_unit', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('description', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('shortName', self.gf('django.db.models.fields.CharField')(max_length=3)),
-            ('isAFractionOf', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['crm.Unit'], null=True, blank=True)),
-            ('fractionFactorToNextHigherUnit', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
-        ))
-        db.send_create_signal('crm', ['Unit'])
-
-        # Adding model 'Tax'
-        db.create_table('crm_tax', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('taxrate', self.gf('django.db.models.fields.DecimalField')(max_digits=5, decimal_places=2)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('accountActiva', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='db_relaccountactiva', null=True, to=orm['accounting.Account'])),
-            ('accountPassiva', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='db_relaccountpassiva', null=True, to=orm['accounting.Account'])),
-        ))
-        db.send_create_signal('crm', ['Tax'])
-
-        # Adding model 'Product'
-        db.create_table('crm_product', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('description', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
-            ('title', self.gf('django.db.models.fields.CharField')(max_length=200)),
-            ('productNumber', self.gf('django.db.models.fields.IntegerField')()),
-            ('defaultunit', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['crm.Unit'])),
-            ('dateofcreation', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
-            ('lastmodification', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-            ('lastmodifiedby', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'], null=True, blank='True')),
-            ('tax', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['crm.Tax'])),
-            ('accoutingProductCategorie', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['accounting.ProductCategorie'], null=True, blank='True')),
-        ))
-        db.send_create_signal('crm', ['Product'])
-
-        # Adding model 'UnitTransform'
-        db.create_table('crm_unittransform', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('fromUnit', self.gf('django.db.models.fields.related.ForeignKey')(related_name='db_reltransfromfromunit', to=orm['crm.Unit'])),
-            ('toUnit', self.gf('django.db.models.fields.related.ForeignKey')(related_name='db_reltransfromtounit', to=orm['crm.Unit'])),
-            ('product', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['crm.Product'])),
-            ('factor', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
-        ))
-        db.send_create_signal('crm', ['UnitTransform'])
-
-        # Adding model 'CustomerGroupTransform'
-        db.create_table('crm_customergrouptransform', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('fromCustomerGroup', self.gf('django.db.models.fields.related.ForeignKey')(related_name='db_reltransfromfromcustomergroup', to=orm['crm.CustomerGroup'])),
-            ('toCustomerGroup', self.gf('django.db.models.fields.related.ForeignKey')(related_name='db_reltransfromtocustomergroup', to=orm['crm.CustomerGroup'])),
-            ('product', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['crm.Product'])),
-            ('factor', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
-        ))
-        db.send_create_signal('crm', ['CustomerGroupTransform'])
-
-        # Adding model 'Price'
-        db.create_table('crm_price', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('product', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['crm.Product'])),
-            ('unit', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['crm.Unit'])),
-            ('currency', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['crm.Currency'])),
-            ('customerGroup', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['crm.CustomerGroup'], null=True, blank=True)),
-            ('price', self.gf('django.db.models.fields.DecimalField')(max_digits=17, decimal_places=2)),
-            ('validfrom', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
-            ('validuntil', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
-        ))
-        db.send_create_signal('crm', ['Price'])
-
-        # Adding model 'Position'
-        db.create_table('crm_position', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('positionNumber', self.gf('django.db.models.fields.IntegerField')()),
-            ('quantity', self.gf('django.db.models.fields.DecimalField')(max_digits=10, decimal_places=3)),
-            ('description', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
-            ('discount', self.gf('django.db.models.fields.DecimalField')(null=True, max_digits=5, decimal_places=2, blank=True)),
-            ('product', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['crm.Product'], null=True, blank=True)),
-            ('unit', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['crm.Unit'], null=True, blank=True)),
-            ('sentOn', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
-            ('supplier', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['crm.Supplier'], null=True, blank=True)),
-            ('shipmentID', self.gf('django.db.models.fields.CharField')(max_length=100, null=True, blank=True)),
-            ('overwriteProductPrice', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('positionPricePerUnit', self.gf('django.db.models.fields.DecimalField')(null=True, max_digits=17, decimal_places=2, blank=True)),
-            ('lastPricingDate', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
-            ('lastCalculatedPrice', self.gf('django.db.models.fields.DecimalField')(null=True, max_digits=17, decimal_places=2, blank=True)),
-            ('lastCalculatedTax', self.gf('django.db.models.fields.DecimalField')(null=True, max_digits=17, decimal_places=2, blank=True)),
-        ))
-        db.send_create_signal('crm', ['Position'])
-
-        # Adding model 'SalesContractPosition'
-        db.create_table('crm_salescontractposition', (
-            ('position_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['crm.Position'], unique=True, primary_key=True)),
-            ('contract', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['crm.SalesContract'])),
-        ))
-        db.send_create_signal('crm', ['SalesContractPosition'])
-
-        # Adding model 'PurchaseOrderPosition'
-        db.create_table('crm_purchaseorderposition', (
-            ('position_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['crm.Position'], unique=True, primary_key=True)),
-            ('contract', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['crm.PurchaseOrder'])),
-        ))
-        db.send_create_signal('crm', ['PurchaseOrderPosition'])
-
-        # Adding model 'PhoneAddressForContact'
-        db.create_table('crm_phoneaddressforcontact', (
-            ('phoneaddress_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['crm.PhoneAddress'], unique=True, primary_key=True)),
-            ('purpose', self.gf('django.db.models.fields.CharField')(max_length=1)),
-            ('person', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['crm.Contact'])),
-        ))
-        db.send_create_signal('crm', ['PhoneAddressForContact'])
-
-        # Adding model 'EmailAddressForContact'
-        db.create_table('crm_emailaddressforcontact', (
-            ('emailaddress_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['crm.EmailAddress'], unique=True, primary_key=True)),
-            ('purpose', self.gf('django.db.models.fields.CharField')(max_length=1)),
-            ('person', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['crm.Contact'])),
-        ))
-        db.send_create_signal('crm', ['EmailAddressForContact'])
-
-        # Adding model 'PostalAddressForContact'
-        db.create_table('crm_postaladdressforcontact', (
-            ('postaladdress_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['crm.PostalAddress'], unique=True, primary_key=True)),
-            ('purpose', self.gf('django.db.models.fields.CharField')(max_length=1)),
-            ('person', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['crm.Contact'])),
-        ))
-        db.send_create_signal('crm', ['PostalAddressForContact'])
-
-        # Adding model 'PostalAddressForContract'
-        db.create_table('crm_postaladdressforcontract', (
-            ('postaladdress_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['crm.PostalAddress'], unique=True, primary_key=True)),
-            ('purpose', self.gf('django.db.models.fields.CharField')(max_length=1)),
-            ('contract', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['crm.Contract'])),
-        ))
-        db.send_create_signal('crm', ['PostalAddressForContract'])
-
-        # Adding model 'PostalAddressForPurchaseOrder'
-        db.create_table('crm_postaladdressforpurchaseorder', (
-            ('postaladdress_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['crm.PostalAddress'], unique=True, primary_key=True)),
-            ('purpose', self.gf('django.db.models.fields.CharField')(max_length=1)),
-            ('contract', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['crm.PurchaseOrder'])),
-        ))
-        db.send_create_signal('crm', ['PostalAddressForPurchaseOrder'])
-
-        # Adding model 'PostalAddressForSalesContract'
-        db.create_table('crm_postaladdressforsalescontract', (
-            ('postaladdress_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['crm.PostalAddress'], unique=True, primary_key=True)),
-            ('purpose', self.gf('django.db.models.fields.CharField')(max_length=1)),
-            ('contract', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['crm.SalesContract'])),
-        ))
-        db.send_create_signal('crm', ['PostalAddressForSalesContract'])
-
-        # Adding model 'PhoneAddressForContract'
-        db.create_table('crm_phoneaddressforcontract', (
-            ('phoneaddress_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['crm.PhoneAddress'], unique=True, primary_key=True)),
-            ('purpose', self.gf('django.db.models.fields.CharField')(max_length=1)),
-            ('contract', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['crm.Contract'])),
-        ))
-        db.send_create_signal('crm', ['PhoneAddressForContract'])
-
-        # Adding model 'PhoneAddressForSalesContract'
-        db.create_table('crm_phoneaddressforsalescontract', (
-            ('phoneaddress_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['crm.PhoneAddress'], unique=True, primary_key=True)),
-            ('purpose', self.gf('django.db.models.fields.CharField')(max_length=1)),
-            ('contract', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['crm.SalesContract'])),
-        ))
-        db.send_create_signal('crm', ['PhoneAddressForSalesContract'])
-
-        # Adding model 'PhoneAddressForPurchaseOrder'
-        db.create_table('crm_phoneaddressforpurchaseorder', (
-            ('phoneaddress_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['crm.PhoneAddress'], unique=True, primary_key=True)),
-            ('purpose', self.gf('django.db.models.fields.CharField')(max_length=1)),
-            ('contract', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['crm.PurchaseOrder'])),
-        ))
-        db.send_create_signal('crm', ['PhoneAddressForPurchaseOrder'])
-
-        # Adding model 'EmailAddressForContract'
-        db.create_table('crm_emailaddressforcontract', (
-            ('emailaddress_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['crm.EmailAddress'], unique=True, primary_key=True)),
-            ('purpose', self.gf('django.db.models.fields.CharField')(max_length=1)),
-            ('contract', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['crm.Contract'])),
-        ))
-        db.send_create_signal('crm', ['EmailAddressForContract'])
-
-        # Adding model 'EmailAddressForSalesContract'
-        db.create_table('crm_emailaddressforsalescontract', (
-            ('emailaddress_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['crm.EmailAddress'], unique=True, primary_key=True)),
-            ('purpose', self.gf('django.db.models.fields.CharField')(max_length=1)),
-            ('contract', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['crm.SalesContract'])),
-        ))
-        db.send_create_signal('crm', ['EmailAddressForSalesContract'])
-
-        # Adding model 'EmailAddressForPurchaseOrder'
-        db.create_table('crm_emailaddressforpurchaseorder', (
-            ('emailaddress_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['crm.EmailAddress'], unique=True, primary_key=True)),
-            ('purpose', self.gf('django.db.models.fields.CharField')(max_length=1)),
-            ('contract', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['crm.PurchaseOrder'])),
-        ))
-        db.send_create_signal('crm', ['EmailAddressForPurchaseOrder'])
-
-
-    def backwards(self, orm):
-        # Deleting model 'Currency'
-        db.delete_table('crm_currency')
-
-        # Deleting model 'PostalAddress'
-        db.delete_table('crm_postaladdress')
-
-        # Deleting model 'PhoneAddress'
-        db.delete_table('crm_phoneaddress')
-
-        # Deleting model 'EmailAddress'
-        db.delete_table('crm_emailaddress')
-
-        # Deleting model 'Contact'
-        db.delete_table('crm_contact')
-
-        # Deleting model 'CustomerBillingCycle'
-        db.delete_table('crm_customerbillingcycle')
-
-        # Deleting model 'CustomerGroup'
-        db.delete_table('crm_customergroup')
-
-        # Deleting model 'Customer'
-        db.delete_table('crm_customer')
-
-        # Removing M2M table for field ismemberof on 'Customer'
-        db.delete_table('crm_customer_ismemberof')
-
-        # Deleting model 'Supplier'
-        db.delete_table('crm_supplier')
-
-        # Deleting model 'Contract'
-        db.delete_table('crm_contract')
-
-        # Deleting model 'PurchaseOrder'
-        db.delete_table('crm_purchaseorder')
-
-        # Deleting model 'SalesContract'
-        db.delete_table('crm_salescontract')
-
-        # Deleting model 'Quote'
-        db.delete_table('crm_quote')
-
-        # Deleting model 'Invoice'
-        db.delete_table('crm_invoice')
-
-        # Deleting model 'Unit'
-        db.delete_table('crm_unit')
-
-        # Deleting model 'Tax'
-        db.delete_table('crm_tax')
-
-        # Deleting model 'Product'
-        db.delete_table('crm_product')
-
-        # Deleting model 'UnitTransform'
-        db.delete_table('crm_unittransform')
-
-        # Deleting model 'CustomerGroupTransform'
-        db.delete_table('crm_customergrouptransform')
-
-        # Deleting model 'Price'
-        db.delete_table('crm_price')
-
-        # Deleting model 'Position'
-        db.delete_table('crm_position')
-
-        # Deleting model 'SalesContractPosition'
-        db.delete_table('crm_salescontractposition')
-
-        # Deleting model 'PurchaseOrderPosition'
-        db.delete_table('crm_purchaseorderposition')
-
-        # Deleting model 'PhoneAddressForContact'
-        db.delete_table('crm_phoneaddressforcontact')
-
-        # Deleting model 'EmailAddressForContact'
-        db.delete_table('crm_emailaddressforcontact')
-
-        # Deleting model 'PostalAddressForContact'
-        db.delete_table('crm_postaladdressforcontact')
-
-        # Deleting model 'PostalAddressForContract'
-        db.delete_table('crm_postaladdressforcontract')
-
-        # Deleting model 'PostalAddressForPurchaseOrder'
-        db.delete_table('crm_postaladdressforpurchaseorder')
-
-        # Deleting model 'PostalAddressForSalesContract'
-        db.delete_table('crm_postaladdressforsalescontract')
-
-        # Deleting model 'PhoneAddressForContract'
-        db.delete_table('crm_phoneaddressforcontract')
-
-        # Deleting model 'PhoneAddressForSalesContract'
-        db.delete_table('crm_phoneaddressforsalescontract')
-
-        # Deleting model 'PhoneAddressForPurchaseOrder'
-        db.delete_table('crm_phoneaddressforpurchaseorder')
-
-        # Deleting model 'EmailAddressForContract'
-        db.delete_table('crm_emailaddressforcontract')
-
-        # Deleting model 'EmailAddressForSalesContract'
-        db.delete_table('crm_emailaddressforsalescontract')
-
-        # Deleting model 'EmailAddressForPurchaseOrder'
-        db.delete_table('crm_emailaddressforpurchaseorder')
-
-
-    models = {
-        'accounting.account': {
-            'Meta': {'ordering': "['accountNumber']", 'object_name': 'Account'},
-            'accountNumber': ('django.db.models.fields.IntegerField', [], {}),
-            'accountType': ('django.db.models.fields.CharField', [], {'max_length': '1'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'isACustomerPaymentAccount': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'isProductInventoryActiva': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'isopeninterestaccount': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'isopenreliabilitiesaccount': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '50'})
-        },
-        'accounting.productcategorie': {
-            'Meta': {'object_name': 'ProductCategorie'},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'lossAccount': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'db_loss_account'", 'to': "orm['accounting.Account']"}),
-            'profitAccount': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'db_profit_account'", 'to': "orm['accounting.Account']"}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '50'})
-        },
-        'auth.group': {
-            'Meta': {'object_name': 'Group'},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '80'}),
-            'permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'})
-        },
-        'auth.permission': {
-            'Meta': {'ordering': "('content_type__app_label', 'content_type__model', 'codename')", 'unique_together': "(('content_type', 'codename'),)", 'object_name': 'Permission'},
-            'codename': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'content_type': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['contenttypes.ContentType']"}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
-        },
-        'auth.user': {
-            'Meta': {'object_name': 'User'},
-            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
-            'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
-            'groups': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Group']", 'symmetrical': 'False', 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'is_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
-            'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
-            'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'}),
-            'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'})
-        },
-        'contenttypes.contenttype': {
-            'Meta': {'ordering': "('name',)", 'unique_together': "(('app_label', 'model'),)", 'object_name': 'ContentType', 'db_table': "'django_content_type'"},
-            'app_label': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
-        },
-        'crm.contact': {
-            'Meta': {'object_name': 'Contact'},
-            'dateofcreation': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'lastmodification': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'lastmodifiedby': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']", 'blank': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '300'})
-        },
-        'crm.contract': {
-            'Meta': {'object_name': 'Contract'},
-            'dateofcreation': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
-            'defaultSupplier': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['crm.Supplier']", 'null': 'True', 'blank': 'True'}),
-            'defaultcurrency': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['crm.Currency']"}),
-            'defaultcustomer': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['crm.Customer']", 'null': 'True', 'blank': 'True'}),
-            'description': ('django.db.models.fields.TextField', [], {}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'lastmodification': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'lastmodifiedby': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'db_contractlstmodified'", 'to': "orm['auth.User']"}),
-            'staff': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'db_relcontractstaff'", 'null': 'True', 'to': "orm['auth.User']"})
-        },
-        'crm.currency': {
-            'Meta': {'object_name': 'Currency'},
-            'description': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'rounding': ('django.db.models.fields.DecimalField', [], {'null': 'True', 'max_digits': '5', 'decimal_places': '2', 'blank': 'True'}),
-            'shortName': ('django.db.models.fields.CharField', [], {'max_length': '3'})
-        },
-        'crm.customer': {
-            'Meta': {'object_name': 'Customer', '_ormbases': ['crm.Contact']},
-            'contact_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['crm.Contact']", 'unique': 'True', 'primary_key': 'True'}),
-            'defaultCustomerBillingCycle': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['crm.CustomerBillingCycle']"}),
-            'ismemberof': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': "orm['crm.CustomerGroup']", 'null': 'True', 'blank': 'True'})
-        },
-        'crm.customerbillingcycle': {
-            'Meta': {'object_name': 'CustomerBillingCycle'},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '300'}),
-            'timeToPaymentDate': ('django.db.models.fields.IntegerField', [], {})
-        },
-        'crm.customergroup': {
-            'Meta': {'object_name': 'CustomerGroup'},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '300'})
-        },
-        'crm.customergrouptransform': {
-            'Meta': {'object_name': 'CustomerGroupTransform'},
-            'factor': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'fromCustomerGroup': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'db_reltransfromfromcustomergroup'", 'to': "orm['crm.CustomerGroup']"}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'product': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['crm.Product']"}),
-            'toCustomerGroup': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'db_reltransfromtocustomergroup'", 'to': "orm['crm.CustomerGroup']"})
-        },
-        'crm.emailaddress': {
-            'Meta': {'object_name': 'EmailAddress'},
-            'email': ('django.db.models.fields.EmailField', [], {'max_length': '200'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
-        },
-        'crm.emailaddressforcontact': {
-            'Meta': {'object_name': 'EmailAddressForContact', '_ormbases': ['crm.EmailAddress']},
-            'emailaddress_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['crm.EmailAddress']", 'unique': 'True', 'primary_key': 'True'}),
-            'person': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['crm.Contact']"}),
-            'purpose': ('django.db.models.fields.CharField', [], {'max_length': '1'})
-        },
-        'crm.emailaddressforcontract': {
-            'Meta': {'object_name': 'EmailAddressForContract', '_ormbases': ['crm.EmailAddress']},
-            'contract': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['crm.Contract']"}),
-            'emailaddress_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['crm.EmailAddress']", 'unique': 'True', 'primary_key': 'True'}),
-            'purpose': ('django.db.models.fields.CharField', [], {'max_length': '1'})
-        },
-        'crm.emailaddressforpurchaseorder': {
-            'Meta': {'object_name': 'EmailAddressForPurchaseOrder', '_ormbases': ['crm.EmailAddress']},
-            'contract': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['crm.PurchaseOrder']"}),
-            'emailaddress_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['crm.EmailAddress']", 'unique': 'True', 'primary_key': 'True'}),
-            'purpose': ('django.db.models.fields.CharField', [], {'max_length': '1'})
-        },
-        'crm.emailaddressforsalescontract': {
-            'Meta': {'object_name': 'EmailAddressForSalesContract', '_ormbases': ['crm.EmailAddress']},
-            'contract': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['crm.SalesContract']"}),
-            'emailaddress_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['crm.EmailAddress']", 'unique': 'True', 'primary_key': 'True'}),
-            'purpose': ('django.db.models.fields.CharField', [], {'max_length': '1'})
-        },
-        'crm.invoice': {
-            'Meta': {'object_name': 'Invoice', '_ormbases': ['crm.SalesContract']},
-            'derivatedFromQuote': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['crm.Quote']", 'null': 'True', 'blank': 'True'}),
-            'payableuntil': ('django.db.models.fields.DateField', [], {}),
-            'paymentBankReference': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
-            'salescontract_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['crm.SalesContract']", 'unique': 'True', 'primary_key': 'True'}),
-            'status': ('django.db.models.fields.CharField', [], {'max_length': '1'})
-        },
-        'crm.phoneaddress': {
-            'Meta': {'object_name': 'PhoneAddress'},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'phone': ('django.db.models.fields.CharField', [], {'max_length': '20'})
-        },
-        'crm.phoneaddressforcontact': {
-            'Meta': {'object_name': 'PhoneAddressForContact', '_ormbases': ['crm.PhoneAddress']},
-            'person': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['crm.Contact']"}),
-            'phoneaddress_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['crm.PhoneAddress']", 'unique': 'True', 'primary_key': 'True'}),
-            'purpose': ('django.db.models.fields.CharField', [], {'max_length': '1'})
-        },
-        'crm.phoneaddressforcontract': {
-            'Meta': {'object_name': 'PhoneAddressForContract', '_ormbases': ['crm.PhoneAddress']},
-            'contract': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['crm.Contract']"}),
-            'phoneaddress_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['crm.PhoneAddress']", 'unique': 'True', 'primary_key': 'True'}),
-            'purpose': ('django.db.models.fields.CharField', [], {'max_length': '1'})
-        },
-        'crm.phoneaddressforpurchaseorder': {
-            'Meta': {'object_name': 'PhoneAddressForPurchaseOrder', '_ormbases': ['crm.PhoneAddress']},
-            'contract': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['crm.PurchaseOrder']"}),
-            'phoneaddress_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['crm.PhoneAddress']", 'unique': 'True', 'primary_key': 'True'}),
-            'purpose': ('django.db.models.fields.CharField', [], {'max_length': '1'})
-        },
-        'crm.phoneaddressforsalescontract': {
-            'Meta': {'object_name': 'PhoneAddressForSalesContract', '_ormbases': ['crm.PhoneAddress']},
-            'contract': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['crm.SalesContract']"}),
-            'phoneaddress_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['crm.PhoneAddress']", 'unique': 'True', 'primary_key': 'True'}),
-            'purpose': ('django.db.models.fields.CharField', [], {'max_length': '1'})
-        },
-        'crm.position': {
-            'Meta': {'object_name': 'Position'},
-            'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'discount': ('django.db.models.fields.DecimalField', [], {'null': 'True', 'max_digits': '5', 'decimal_places': '2', 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'lastCalculatedPrice': ('django.db.models.fields.DecimalField', [], {'null': 'True', 'max_digits': '17', 'decimal_places': '2', 'blank': 'True'}),
-            'lastCalculatedTax': ('django.db.models.fields.DecimalField', [], {'null': 'True', 'max_digits': '17', 'decimal_places': '2', 'blank': 'True'}),
-            'lastPricingDate': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
-            'overwriteProductPrice': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'positionNumber': ('django.db.models.fields.IntegerField', [], {}),
-            'positionPricePerUnit': ('django.db.models.fields.DecimalField', [], {'null': 'True', 'max_digits': '17', 'decimal_places': '2', 'blank': 'True'}),
-            'product': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['crm.Product']", 'null': 'True', 'blank': 'True'}),
-            'quantity': ('django.db.models.fields.DecimalField', [], {'max_digits': '10', 'decimal_places': '3'}),
-            'sentOn': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
-            'shipmentID': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
-            'supplier': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['crm.Supplier']", 'null': 'True', 'blank': 'True'}),
-            'unit': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['crm.Unit']", 'null': 'True', 'blank': 'True'})
-        },
-        'crm.postaladdress': {
-            'Meta': {'object_name': 'PostalAddress'},
-            'addressline1': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
-            'addressline2': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
-            'addressline3': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
-            'addressline4': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
-            'country': ('django.db.models.fields.CharField', [], {'max_length': '2', 'null': 'True', 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
-            'prefix': ('django.db.models.fields.CharField', [], {'max_length': '1', 'null': 'True', 'blank': 'True'}),
-            'prename': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
-            'state': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
-            'town': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
-            'zipcode': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'})
-        },
-        'crm.postaladdressforcontact': {
-            'Meta': {'object_name': 'PostalAddressForContact', '_ormbases': ['crm.PostalAddress']},
-            'person': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['crm.Contact']"}),
-            'postaladdress_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['crm.PostalAddress']", 'unique': 'True', 'primary_key': 'True'}),
-            'purpose': ('django.db.models.fields.CharField', [], {'max_length': '1'})
-        },
-        'crm.postaladdressforcontract': {
-            'Meta': {'object_name': 'PostalAddressForContract', '_ormbases': ['crm.PostalAddress']},
-            'contract': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['crm.Contract']"}),
-            'postaladdress_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['crm.PostalAddress']", 'unique': 'True', 'primary_key': 'True'}),
-            'purpose': ('django.db.models.fields.CharField', [], {'max_length': '1'})
-        },
-        'crm.postaladdressforpurchaseorder': {
-            'Meta': {'object_name': 'PostalAddressForPurchaseOrder', '_ormbases': ['crm.PostalAddress']},
-            'contract': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['crm.PurchaseOrder']"}),
-            'postaladdress_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['crm.PostalAddress']", 'unique': 'True', 'primary_key': 'True'}),
-            'purpose': ('django.db.models.fields.CharField', [], {'max_length': '1'})
-        },
-        'crm.postaladdressforsalescontract': {
-            'Meta': {'object_name': 'PostalAddressForSalesContract', '_ormbases': ['crm.PostalAddress']},
-            'contract': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['crm.SalesContract']"}),
-            'postaladdress_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['crm.PostalAddress']", 'unique': 'True', 'primary_key': 'True'}),
-            'purpose': ('django.db.models.fields.CharField', [], {'max_length': '1'})
-        },
-        'crm.price': {
-            'Meta': {'object_name': 'Price'},
-            'currency': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['crm.Currency']"}),
-            'customerGroup': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['crm.CustomerGroup']", 'null': 'True', 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'price': ('django.db.models.fields.DecimalField', [], {'max_digits': '17', 'decimal_places': '2'}),
-            'product': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['crm.Product']"}),
-            'unit': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['crm.Unit']"}),
-            'validfrom': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
-            'validuntil': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'})
-        },
-        'crm.product': {
-            'Meta': {'object_name': 'Product'},
-            'accoutingProductCategorie': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['accounting.ProductCategorie']", 'null': 'True', 'blank': "'True'"}),
-            'dateofcreation': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
-            'defaultunit': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['crm.Unit']"}),
-            'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'lastmodification': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'lastmodifiedby': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']", 'null': 'True', 'blank': "'True'"}),
-            'productNumber': ('django.db.models.fields.IntegerField', [], {}),
-            'tax': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['crm.Tax']"}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '200'})
-        },
-        'crm.purchaseorder': {
-            'Meta': {'object_name': 'PurchaseOrder'},
-            'contract': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['crm.Contract']"}),
-            'currency': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['crm.Currency']"}),
-            'dateofcreation': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
-            'description': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
-            'externalReference': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'lastCalculatedPrice': ('django.db.models.fields.DecimalField', [], {'null': 'True', 'max_digits': '17', 'decimal_places': '2', 'blank': 'True'}),
-            'lastCalculatedTax': ('django.db.models.fields.DecimalField', [], {'null': 'True', 'max_digits': '17', 'decimal_places': '2', 'blank': 'True'}),
-            'lastPricingDate': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
-            'lastmodification': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'lastmodifiedby': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'db_polstmodified'", 'to': "orm['auth.User']"}),
-            'staff': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'db_relpostaff'", 'null': 'True', 'to': "orm['auth.User']"}),
-            'status': ('django.db.models.fields.CharField', [], {'max_length': '1'}),
-            'supplier': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['crm.Supplier']"})
-        },
-        'crm.purchaseorderposition': {
-            'Meta': {'object_name': 'PurchaseOrderPosition', '_ormbases': ['crm.Position']},
-            'contract': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['crm.PurchaseOrder']"}),
-            'position_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['crm.Position']", 'unique': 'True', 'primary_key': 'True'})
-        },
-        'crm.quote': {
-            'Meta': {'object_name': 'Quote', '_ormbases': ['crm.SalesContract']},
-            'salescontract_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['crm.SalesContract']", 'unique': 'True', 'primary_key': 'True'}),
-            'status': ('django.db.models.fields.CharField', [], {'max_length': '1'}),
-            'validuntil': ('django.db.models.fields.DateField', [], {})
-        },
-        'crm.salescontract': {
-            'Meta': {'object_name': 'SalesContract'},
-            'contract': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['crm.Contract']"}),
-            'currency': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['crm.Currency']"}),
-            'customer': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['crm.Customer']"}),
-            'dateofcreation': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
-            'description': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
-            'discount': ('django.db.models.fields.DecimalField', [], {'null': 'True', 'max_digits': '5', 'decimal_places': '2', 'blank': 'True'}),
-            'externalReference': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'lastCalculatedPrice': ('django.db.models.fields.DecimalField', [], {'null': 'True', 'max_digits': '17', 'decimal_places': '2', 'blank': 'True'}),
-            'lastCalculatedTax': ('django.db.models.fields.DecimalField', [], {'null': 'True', 'max_digits': '17', 'decimal_places': '2', 'blank': 'True'}),
-            'lastPricingDate': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
-            'lastmodification': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'lastmodifiedby': ('django.db.models.fields.related.ForeignKey', [], {'blank': "'True'", 'related_name': "'db_lstscmodified'", 'null': 'True', 'to': "orm['auth.User']"}),
-            'staff': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'db_relscstaff'", 'null': 'True', 'to': "orm['auth.User']"})
-        },
-        'crm.salescontractposition': {
-            'Meta': {'object_name': 'SalesContractPosition', '_ormbases': ['crm.Position']},
-            'contract': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['crm.SalesContract']"}),
-            'position_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['crm.Position']", 'unique': 'True', 'primary_key': 'True'})
-        },
-        'crm.supplier': {
-            'Meta': {'object_name': 'Supplier', '_ormbases': ['crm.Contact']},
-            'contact_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['crm.Contact']", 'unique': 'True', 'primary_key': 'True'}),
-            'offersShipmentToCustomers': ('django.db.models.fields.BooleanField', [], {'default': 'False'})
-        },
-        'crm.tax': {
-            'Meta': {'object_name': 'Tax'},
-            'accountActiva': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'db_relaccountactiva'", 'null': 'True', 'to': "orm['accounting.Account']"}),
-            'accountPassiva': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'db_relaccountpassiva'", 'null': 'True', 'to': "orm['accounting.Account']"}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'taxrate': ('django.db.models.fields.DecimalField', [], {'max_digits': '5', 'decimal_places': '2'})
-        },
-        'crm.unit': {
-            'Meta': {'object_name': 'Unit'},
-            'description': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'fractionFactorToNextHigherUnit': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'isAFractionOf': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['crm.Unit']", 'null': 'True', 'blank': 'True'}),
-            'shortName': ('django.db.models.fields.CharField', [], {'max_length': '3'})
-        },
-        'crm.unittransform': {
-            'Meta': {'object_name': 'UnitTransform'},
-            'factor': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'fromUnit': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'db_reltransfromfromunit'", 'to': "orm['crm.Unit']"}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'product': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['crm.Product']"}),
-            'toUnit': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'db_reltransfromtounit'", 'to': "orm['crm.Unit']"})
-        }
-    }
-
-    complete_apps = ['crm']
+# Generated by Django 1.11.2 on 2017-07-05 17:02
+from __future__ import unicode_literals
+
+from django.conf import settings
+from django.db import migrations, models
+import django.db.models.deletion
+
+
+class Migration(migrations.Migration):
+
+    initial = True
+
+    dependencies = [
+        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        ('accounting', '0001_initial'),
+    ]
+
+    operations = [
+        migrations.CreateModel(
+            name='Contact',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('name', models.CharField(max_length=300, verbose_name='Name')),
+                ('dateofcreation', models.DateTimeField(auto_now=True, verbose_name='Created at')),
+                ('lastmodification', models.DateTimeField(auto_now_add=True, verbose_name='Last modified')),
+            ],
+            options={
+                'verbose_name': 'Contact',
+                'verbose_name_plural': 'Contact',
+            },
+        ),
+        migrations.CreateModel(
+            name='Contract',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('description', models.TextField(verbose_name='Description')),
+                ('dateofcreation', models.DateTimeField(auto_now=True, verbose_name='Created at')),
+                ('lastmodification', models.DateTimeField(auto_now_add=True, verbose_name='Last modified')),
+            ],
+            options={
+                'verbose_name': 'Contract',
+                'verbose_name_plural': 'Contracts',
+            },
+        ),
+        migrations.CreateModel(
+            name='Currency',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('description', models.CharField(max_length=100, verbose_name='Description')),
+                ('shortName', models.CharField(max_length=3, verbose_name='Displayed Name After Price In The Position')),
+                ('rounding', models.DecimalField(blank=True, decimal_places=2, max_digits=5, null=True, verbose_name='Rounding')),
+            ],
+            options={
+                'verbose_name': 'Currency',
+                'verbose_name_plural': 'Currency',
+            },
+        ),
+        migrations.CreateModel(
+            name='CustomerBillingCycle',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('name', models.CharField(max_length=300, verbose_name='Name')),
+                ('timeToPaymentDate', models.IntegerField(verbose_name='Days To Payment Date')),
+            ],
+            options={
+                'verbose_name': 'Customer Billing Cycle',
+                'verbose_name_plural': 'Customer Billing Cycle',
+            },
+        ),
+        migrations.CreateModel(
+            name='CustomerGroup',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('name', models.CharField(max_length=300)),
+            ],
+            options={
+                'verbose_name': 'Customer Group',
+                'verbose_name_plural': 'Customer Groups',
+            },
+        ),
+        migrations.CreateModel(
+            name='CustomerGroupTransform',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('factor', models.IntegerField(blank=True, null=True, verbose_name='Factor between From and To Customer Group')),
+                ('fromCustomerGroup', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='db_reltransfromfromcustomergroup', to='crm.CustomerGroup', verbose_name='From Unit')),
+            ],
+            options={
+                'verbose_name': 'Customer Group Price Transfrom',
+                'verbose_name_plural': 'Customer Group Price Transfroms',
+            },
+        ),
+        migrations.CreateModel(
+            name='EmailAddress',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('email', models.EmailField(max_length=200, verbose_name='Email Address')),
+            ],
+            options={
+                'verbose_name': 'Email Address',
+                'verbose_name_plural': 'Email Address',
+            },
+        ),
+        migrations.CreateModel(
+            name='PhoneAddress',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('phone', models.CharField(max_length=20, verbose_name='Phone Number')),
+            ],
+            options={
+                'verbose_name': 'Phone Address',
+                'verbose_name_plural': 'Phone Address',
+            },
+        ),
+        migrations.CreateModel(
+            name='Position',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('positionNumber', models.IntegerField(verbose_name='Position Number')),
+                ('quantity', models.DecimalField(decimal_places=3, max_digits=10, verbose_name='Quantity')),
+                ('description', models.TextField(blank=True, null=True, verbose_name='Description')),
+                ('discount', models.DecimalField(blank=True, decimal_places=2, max_digits=5, null=True, verbose_name='Discount')),
+                ('sentOn', models.DateField(blank=True, null=True, verbose_name='Shipment on')),
+                ('shipmentID', models.CharField(blank=True, max_length=100, null=True, verbose_name='Shipment ID')),
+                ('overwriteProductPrice', models.BooleanField(verbose_name='Overwrite Product Price')),
+                ('positionPricePerUnit', models.DecimalField(blank=True, decimal_places=2, max_digits=17, null=True, verbose_name='Price Per Unit')),
+                ('lastPricingDate', models.DateField(blank=True, null=True, verbose_name='Last Pricing Date')),
+                ('lastCalculatedPrice', models.DecimalField(blank=True, decimal_places=2, max_digits=17, null=True, verbose_name='Last Calculted Price')),
+                ('lastCalculatedTax', models.DecimalField(blank=True, decimal_places=2, max_digits=17, null=True, verbose_name='Last Calculted Tax')),
+            ],
+            options={
+                'verbose_name': 'Position',
+                'verbose_name_plural': 'Positions',
+            },
+        ),
+        migrations.CreateModel(
+            name='PostalAddress',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('prefix', models.CharField(blank=True, choices=[('F', 'Company'), ('W', 'Mrs'), ('H', 'Mr'), ('G', 'Ms')], max_length=1, null=True, verbose_name='Prefix')),
+                ('name', models.CharField(blank=True, max_length=100, null=True, verbose_name='Name')),
+                ('prename', models.CharField(blank=True, max_length=100, null=True, verbose_name='Prename')),
+                ('addressline1', models.CharField(blank=True, max_length=200, null=True, verbose_name='Addressline 1')),
+                ('addressline2', models.CharField(blank=True, max_length=200, null=True, verbose_name='Addressline 2')),
+                ('addressline3', models.CharField(blank=True, max_length=200, null=True, verbose_name='Addressline 3')),
+                ('addressline4', models.CharField(blank=True, max_length=200, null=True, verbose_name='Addressline 4')),
+                ('zipcode', models.IntegerField(blank=True, null=True, verbose_name='Zipcode')),
+                ('town', models.CharField(blank=True, max_length=100, null=True, verbose_name='City')),
+                ('state', models.CharField(blank=True, max_length=100, null=True, verbose_name='State')),
+                ('country', models.CharField(blank=True, choices=[('AF', 'Afghanistan'), ('AX', 'Aland Islands'), ('AL', 'Albania'), ('DZ', 'Algeria'), ('AS', 'American Samoa'), ('AD', 'Andorra'), ('AO', 'Angola'), ('AI', 'Anguilla'), ('AQ', 'Antarctica'), ('AG', 'Antigua and Barbuda'), ('AR', 'Argentina'), ('AM', 'Armenia'), ('AW', 'Aruba'), ('AU', 'Australia'), ('AT', 'Austria'), ('AZ', 'Azerbaijan'), ('BS', 'the Bahamas'), ('BH', 'Bahrain'), ('BD', 'Bangladesh'), ('BB', 'Barbados'), ('BY', 'Belarus'), ('BE', 'Belgium'), ('BZ', 'Belize'), ('BJ', 'Benin'), ('BM', 'Bermuda'), ('BT', 'Bhutan'), ('BO', 'Bolivia'), ('BA', 'Bosnia and Herzegovina'), ('BW', 'Botswana'), ('BV', 'Bouvet Island'), ('BR', 'Brazil'), ('IO', 'British Indian Ocean Territory'), ('BN', 'Brunei Darussalam'), ('BG', 'Bulgaria'), ('BF', 'Burkina Faso'), ('BI', 'Burundi'), ('KH', 'Cambodia'), ('CM', 'Cameroon'), ('CA', 'Canada'), ('CV', 'Cape Verde'), ('KY', 'Cayman Islands'), ('CF', 'Central African Republic'), ('TD', 'Chad'), ('CL', 'Chile'), ('CN', 'China'), ('CX', 'Christmas Island'), ('CC', 'Cocos (Keeling) Islands'), ('CO', 'Colombia'), ('KM', 'Comoros'), ('CG', 'Congo'), ('CD', 'Democratic Republic of the Congo'), ('CK', 'Cook Islands'), ('CR', 'Costa Rica'), ('CI', "Cote d'Ivoire"), ('HR', 'Croatia'), ('CU', 'Cuba'), ('CY', 'Cyprus'), ('CZ', 'Czech Republic'), ('DK', 'Denmark'), ('DJ', 'Djibouti'), ('DM', 'Dominica'), ('DO', 'Dominican Republic'), ('EC', 'Ecuador'), ('EG', 'Egypt'), ('SV', 'El Salvador'), ('GQ', 'Equatorial Guinea'), ('ER', 'Eritrea'), ('EE', 'Estonia'), ('ET', 'Ethiopia'), ('FK', 'Falkland Islands (Malvinas)'), ('FO', 'Faroe Islands'), ('FJ', 'Fiji'), ('FI', 'Finland'), ('FR', 'France'), ('GF', 'French Guiana'), ('PF', 'French Polynesia'), ('TF', 'French Southern and Antarctic Lands'), ('GA', 'Gabon'), ('GM', 'Gambia'), ('GE', 'Georgia'), ('DE', 'Germany'), ('GH', 'Ghana'), ('GI', 'Gibraltar'), ('GR', 'Greece'), ('GL', 'Greenland'), ('GD', 'Grenada'), ('GP', 'Guadeloupe'), ('GU', 'Guam'), ('GT', 'Guatemala'), ('GG', 'Guernsey'), ('GN', 'Guinea'), ('GW', 'Guinea-Bissau'), ('GY', 'Guyana'), ('HT', 'Haiti'), ('HM', 'Heard Island and McDonald Islands'), ('VA', 'Vatican City Holy See'), ('HN', 'Honduras'), ('HK', 'Hong Kong'), ('HU', 'Hungary'), ('IS', 'Iceland'), ('IN', 'India'), ('ID', 'Indonesia'), ('IR', 'Iran'), ('IQ', 'Iraq'), ('IE', 'Ireland'), ('IM', 'Isle of Man'), ('IL', 'Israel'), ('IT', 'Italy'), ('JM', 'Jamaica'), ('JP', 'Japan'), ('JE', 'Jersey'), ('JO', 'Jordan'), ('KZ', 'Kazakhstan'), ('KE', 'Kenya'), ('KI', 'Kiribati'), ('KP', 'North Korea'), ('KR', 'South Korea'), ('KW', 'Kuwait'), ('KG', 'Kyrgyzstan'), ('LA', 'Laos Lao'), ('LV', 'Latvia'), ('LB', 'Lebanon'), ('LS', 'Lesotho'), ('LR', 'Liberia'), ('LY', 'Libya Libyan Arab Jamahiriya'), ('LI', 'Liechtenstein'), ('LT', 'Lithuania'), ('LU', 'Luxembourg'), ('MO', 'Macau Macao'), ('MK', 'Macedonia'), ('MG', 'Madagascar'), ('MW', 'Malawi'), ('MY', 'Malaysia'), ('MV', 'Maldives'), ('ML', 'Mali'), ('MT', 'Malta'), ('MH', 'Marshall Islands'), ('MQ', 'Martinique'), ('MR', 'Mauritania'), ('MU', 'Mauritius'), ('YT', 'Mayotte'), ('MX', 'Mexico'), ('FM', 'Micronesia'), ('MD', 'Moldova'), ('MC', 'Monaco'), ('MN', 'Mongolia'), ('ME', 'Montenegro'), ('MS', 'Montserrat'), ('MA', 'Morocco'), ('MZ', 'Mozambique'), ('MM', 'Myanmar'), ('NA', 'Namibia'), ('NR', 'Nauru'), ('NP', 'Nepal'), ('NL', 'Netherlands'), ('AN', 'Netherlands Antilles'), ('NC', 'New Caledonia'), ('NZ', 'New Zealand'), ('NI', 'Nicaragua'), ('NE', 'Niger'), ('NG', 'Nigeria'), ('NU', 'Niue'), ('NF', 'Norfolk Island Norfolk Island'), ('MP', 'Northern Mariana Islands'), ('NO', 'Norway'), ('OM', 'Oman'), ('PK', 'Pakistan'), ('PW', 'Palau'), ('PS', 'Palestinian Territory'), ('PA', 'Panama'), ('PG', 'Papua New Guinea'), ('PY', 'Paraguay'), ('PE', 'Peru'), ('PH', 'Philippines'), ('PN', 'Pitcairn Islands'), ('PL', 'Poland'), ('PT', 'Portugal'), ('PR', 'Puerto Rico'), ('QA', 'Qatar'), ('RE', 'Reunion'), ('RO', 'Romania'), ('RU', 'Russia'), ('RW', 'Rwanda'), ('SH', 'Saint Helena'), ('KN', 'Saint Kitts and Nevis'), ('LC', 'Saint Lucia'), ('PM', 'Saint Pierre and Miquelon'), ('VC', 'Saint Vincent and the Grenadines'), ('WS', 'Samoa'), ('SM', 'San Marino'), ('ST', 'Sao Tome and Principe'), ('SA', 'Saudi Arabia'), ('SN', 'Senegal'), ('RS', 'Serbia'), ('SC', 'Seychelles'), ('SL', 'Sierra Leone'), ('SG', 'Singapore'), ('SK', 'Slovakia'), ('SI', 'Slovenia'), ('SB', 'Solomon Islands'), ('SO', 'Somalia'), ('ZA', 'South Africa'), ('GS', 'South Georgia and the South Sandwich Islands'), ('ES', 'Spain'), ('LK', 'Sri Lanka'), ('SD', 'Sudan'), ('SR', 'Suriname'), ('SJ', 'Svalbard and Jan Mayen'), ('SZ', 'Swaziland'), ('SE', 'Sweden'), ('CH', 'Switzerland'), ('SY', 'Syria'), ('TW', 'Taiwan'), ('TJ', 'Tajikistan'), ('TZ', 'Tanzania'), ('TH', 'Thailand'), ('TL', 'East Timor'), ('TG', 'Togo'), ('TK', 'Tokelau'), ('TO', 'Tonga'), ('TT', 'Trinidad and Tobago'), ('TN', 'Tunisia'), ('TR', 'Turkey'), ('TM', 'Turkmenistan'), ('TC', 'Turks and Caicos Islands'), ('TV', 'Tuvalu'), ('UG', 'Uganda'), ('UA', 'Ukraine'), ('AE', 'United Arab Emirates'), ('GB', 'United Kingdom'), ('US', 'United States'), ('UM', 'United States Minor Outlying Islands'), ('UY', 'Uruguay'), ('UZ', 'Uzbekistan'), ('VU', 'Vanuatu'), ('VE', 'Venezuela'), ('VN', 'Vietnam Viet Nam'), ('VG', 'British Virgin Islands'), ('VI', 'United States Virgin Islands'), ('WF', 'Wallis and Futuna'), ('EH', 'Western Sahara'), ('YE', 'Yemen'), ('ZM', 'Zambia'), ('ZW', 'Zimbabwe')], max_length=2, null=True, verbose_name='Country')),
+            ],
+            options={
+                'verbose_name': 'Postal Address',
+                'verbose_name_plural': 'Postal Address',
+            },
+        ),
+        migrations.CreateModel(
+            name='Price',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('price', models.DecimalField(decimal_places=2, max_digits=17, verbose_name='Price Per Unit')),
+                ('validfrom', models.DateField(blank=True, null=True, verbose_name='Valid from')),
+                ('validuntil', models.DateField(blank=True, null=True, verbose_name='Valid until')),
+                ('currency', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.Currency', verbose_name='Currency')),
+                ('customerGroup', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='crm.CustomerGroup', verbose_name='Customer Group')),
+            ],
+            options={
+                'verbose_name': 'Price',
+                'verbose_name_plural': 'Prices',
+            },
+        ),
+        migrations.CreateModel(
+            name='Product',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('description', models.TextField(blank=True, null=True, verbose_name='Description')),
+                ('title', models.CharField(max_length=200, verbose_name='Title')),
+                ('productNumber', models.IntegerField(verbose_name='Product Number')),
+                ('dateofcreation', models.DateTimeField(auto_now=True, verbose_name='Created at')),
+                ('lastmodification', models.DateTimeField(auto_now_add=True, verbose_name='Last modified')),
+                ('accoutingProductCategorie', models.ForeignKey(blank='True', null=True, on_delete=django.db.models.deletion.CASCADE, to='accounting.ProductCategorie', verbose_name='Accounting Product Categorie')),
+            ],
+            options={
+                'verbose_name': 'Product',
+                'verbose_name_plural': 'Products',
+            },
+        ),
+        migrations.CreateModel(
+            name='PurchaseOrder',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('externalReference', models.CharField(blank=True, max_length=100, null=True, verbose_name='External Reference')),
+                ('description', models.CharField(blank=True, max_length=100, null=True, verbose_name='Description')),
+                ('lastPricingDate', models.DateField(blank=True, null=True, verbose_name='Last Pricing Date')),
+                ('lastCalculatedPrice', models.DecimalField(blank=True, decimal_places=2, max_digits=17, null=True, verbose_name='Last Calculted Price With Tax')),
+                ('lastCalculatedTax', models.DecimalField(blank=True, decimal_places=2, max_digits=17, null=True, verbose_name='Last Calculted Tax')),
+                ('status', models.CharField(choices=[('O', 'Ordered'), ('D', 'Delayed'), ('Y', 'Delivered'), ('I', 'Invoice registered'), ('P', 'Invoice payed')], max_length=1)),
+                ('dateofcreation', models.DateTimeField(auto_now=True, verbose_name='Created at')),
+                ('lastmodification', models.DateTimeField(auto_now_add=True, verbose_name='Last modified')),
+                ('contract', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.Contract', verbose_name='Contract')),
+                ('currency', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.Currency', verbose_name='Currency')),
+                ('lastmodifiedby', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='db_polstmodified', to=settings.AUTH_USER_MODEL, verbose_name='Last modified by')),
+                ('staff', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='db_relpostaff', to=settings.AUTH_USER_MODEL, verbose_name='Staff')),
+            ],
+            options={
+                'verbose_name': 'Purchase Order',
+                'verbose_name_plural': 'Purchase Order',
+            },
+        ),
+        migrations.CreateModel(
+            name='SalesContract',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('externalReference', models.CharField(blank=True, max_length=100, verbose_name='External Reference')),
+                ('discount', models.DecimalField(blank=True, decimal_places=2, max_digits=5, null=True, verbose_name='Discount')),
+                ('description', models.CharField(blank=True, max_length=100, null=True, verbose_name='Description')),
+                ('lastPricingDate', models.DateField(blank=True, null=True, verbose_name='Last Pricing Date')),
+                ('lastCalculatedPrice', models.DecimalField(blank=True, decimal_places=2, max_digits=17, null=True, verbose_name='Last Calculted Price With Tax')),
+                ('lastCalculatedTax', models.DecimalField(blank=True, decimal_places=2, max_digits=17, null=True, verbose_name='Last Calculted Tax')),
+                ('dateofcreation', models.DateTimeField(auto_now=True, verbose_name='Created at')),
+                ('lastmodification', models.DateTimeField(auto_now_add=True, verbose_name='Last modified')),
+            ],
+            options={
+                'verbose_name': 'Sales Contract',
+                'verbose_name_plural': 'Sales Contracts',
+            },
+        ),
+        migrations.CreateModel(
+            name='Tax',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('taxrate', models.DecimalField(decimal_places=2, max_digits=5, verbose_name='Taxrate in Percentage')),
+                ('name', models.CharField(max_length=100, verbose_name='Taxname')),
+                ('accountActiva', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='db_relaccountactiva', to='accounting.Account', verbose_name='Activa Account')),
+                ('accountPassiva', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='db_relaccountpassiva', to='accounting.Account', verbose_name='Passiva Account')),
+            ],
+            options={
+                'verbose_name': 'Tax',
+                'verbose_name_plural': 'Taxes',
+            },
+        ),
+        migrations.CreateModel(
+            name='Unit',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('description', models.CharField(max_length=100, verbose_name='Description')),
+                ('shortName', models.CharField(max_length=3, verbose_name='Displayed Name After Quantity In The Position')),
+                ('fractionFactorToNextHigherUnit', models.IntegerField(blank=True, null=True, verbose_name='Factor Between This And Next Higher Unit')),
+                ('isAFractionOf', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='crm.Unit', verbose_name='Is A Fraction Of')),
+            ],
+            options={
+                'verbose_name': 'Unit',
+                'verbose_name_plural': 'Units',
+            },
+        ),
+        migrations.CreateModel(
+            name='UnitTransform',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('factor', models.IntegerField(blank=True, null=True, verbose_name='Factor between From and To Unit')),
+                ('fromUnit', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='db_reltransfromfromunit', to='crm.Unit', verbose_name='From Unit')),
+                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.Product', verbose_name='Product')),
+                ('toUnit', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='db_reltransfromtounit', to='crm.Unit', verbose_name='To Unit')),
+            ],
+            options={
+                'verbose_name': 'Unit Transfrom',
+                'verbose_name_plural': 'Unit Transfroms',
+            },
+        ),
+        migrations.CreateModel(
+            name='Customer',
+            fields=[
+                ('contact_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='crm.Contact')),
+                ('defaultCustomerBillingCycle', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.CustomerBillingCycle', verbose_name='Default Billing Cycle')),
+                ('ismemberof', models.ManyToManyField(blank=True, to='crm.CustomerGroup', verbose_name='Is member of')),
+            ],
+            options={
+                'verbose_name': 'Customer',
+                'verbose_name_plural': 'Customers',
+            },
+            bases=('crm.contact',),
+        ),
+        migrations.CreateModel(
+            name='EmailAddressForContact',
+            fields=[
+                ('emailaddress_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='crm.EmailAddress')),
+                ('purpose', models.CharField(choices=[('H', 'Private'), ('O', 'Business'), ('P', 'Mobile Private'), ('B', 'Mobile Business')], max_length=1, verbose_name='Purpose')),
+            ],
+            options={
+                'verbose_name': 'Email Address For Contact',
+                'verbose_name_plural': 'Email Address For Contact',
+            },
+            bases=('crm.emailaddress',),
+        ),
+        migrations.CreateModel(
+            name='EmailAddressForContract',
+            fields=[
+                ('emailaddress_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='crm.EmailAddress')),
+                ('purpose', models.CharField(choices=[('D', 'Delivery Address'), ('B', 'Billing Address'), ('C', 'Contact Address')], max_length=1, verbose_name='Purpose')),
+            ],
+            options={
+                'verbose_name': 'Email Address For Contracts',
+                'verbose_name_plural': 'Email Address For Contracts',
+            },
+            bases=('crm.emailaddress',),
+        ),
+        migrations.CreateModel(
+            name='EmailAddressForPurchaseOrder',
+            fields=[
+                ('emailaddress_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='crm.EmailAddress')),
+                ('purpose', models.CharField(choices=[('D', 'Delivery Address'), ('B', 'Billing Address'), ('C', 'Contact Address')], max_length=1, verbose_name='Purpose')),
+            ],
+            options={
+                'verbose_name': 'Email Address For Contracts',
+                'verbose_name_plural': 'Email Address For Contracts',
+            },
+            bases=('crm.emailaddress',),
+        ),
+        migrations.CreateModel(
+            name='EmailAddressForSalesContract',
+            fields=[
+                ('emailaddress_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='crm.EmailAddress')),
+                ('purpose', models.CharField(choices=[('D', 'Delivery Address'), ('B', 'Billing Address'), ('C', 'Contact Address')], max_length=1, verbose_name='Purpose')),
+            ],
+            options={
+                'verbose_name': 'Email Address For Contracts',
+                'verbose_name_plural': 'Email Address For Contracts',
+            },
+            bases=('crm.emailaddress',),
+        ),
+        migrations.CreateModel(
+            name='Invoice',
+            fields=[
+                ('salescontract_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='crm.SalesContract')),
+                ('payableuntil', models.DateField(verbose_name='To pay until')),
+                ('paymentBankReference', models.CharField(blank=True, max_length=100, null=True, verbose_name='Payment Bank Reference')),
+                ('status', models.CharField(choices=[('P', 'Payed'), ('C', 'Invoice created'), ('I', 'Invoice sent'), ('F', 'First reminder sent'), ('R', 'Second reminder sent'), ('U', 'Customer cant pay'), ('D', 'Deleted')], max_length=1)),
+            ],
+            options={
+                'verbose_name': 'Invoice',
+                'verbose_name_plural': 'Invoices',
+            },
+            bases=('crm.salescontract',),
+        ),
+        migrations.CreateModel(
+            name='PhoneAddressForContact',
+            fields=[
+                ('phoneaddress_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='crm.PhoneAddress')),
+                ('purpose', models.CharField(choices=[('H', 'Private'), ('O', 'Business'), ('P', 'Mobile Private'), ('B', 'Mobile Business')], max_length=1, verbose_name='Purpose')),
+            ],
+            options={
+                'verbose_name': 'Phone Address For Contact',
+                'verbose_name_plural': 'Phone Address For Contact',
+            },
+            bases=('crm.phoneaddress',),
+        ),
+        migrations.CreateModel(
+            name='PhoneAddressForContract',
+            fields=[
+                ('phoneaddress_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='crm.PhoneAddress')),
+                ('purpose', models.CharField(choices=[('D', 'Delivery Address'), ('B', 'Billing Address'), ('C', 'Contact Address')], max_length=1, verbose_name='Purpose')),
+            ],
+            options={
+                'verbose_name': 'Phone Address For Contracts',
+                'verbose_name_plural': 'Phone Address For Contracts',
+            },
+            bases=('crm.phoneaddress',),
+        ),
+        migrations.CreateModel(
+            name='PhoneAddressForPurchaseOrder',
+            fields=[
+                ('phoneaddress_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='crm.PhoneAddress')),
+                ('purpose', models.CharField(choices=[('D', 'Delivery Address'), ('B', 'Billing Address'), ('C', 'Contact Address')], max_length=1, verbose_name='Purpose')),
+            ],
+            options={
+                'verbose_name': 'Phone Address For Contracts',
+                'verbose_name_plural': 'Phone Address For Contracts',
+            },
+            bases=('crm.phoneaddress',),
+        ),
+        migrations.CreateModel(
+            name='PhoneAddressForSalesContract',
+            fields=[
+                ('phoneaddress_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='crm.PhoneAddress')),
+                ('purpose', models.CharField(choices=[('D', 'Delivery Address'), ('B', 'Billing Address'), ('C', 'Contact Address')], max_length=1, verbose_name='Purpose')),
+            ],
+            options={
+                'verbose_name': 'Phone Address For Contracts',
+                'verbose_name_plural': 'Phone Address For Contracts',
+            },
+            bases=('crm.phoneaddress',),
+        ),
+        migrations.CreateModel(
+            name='PostalAddressForContact',
+            fields=[
+                ('postaladdress_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='crm.PostalAddress')),
+                ('purpose', models.CharField(choices=[('H', 'Private'), ('O', 'Business'), ('P', 'Mobile Private'), ('B', 'Mobile Business')], max_length=1, verbose_name='Purpose')),
+            ],
+            options={
+                'verbose_name': 'Postal Address For Contact',
+                'verbose_name_plural': 'Postal Address For Contact',
+            },
+            bases=('crm.postaladdress',),
+        ),
+        migrations.CreateModel(
+            name='PostalAddressForContract',
+            fields=[
+                ('postaladdress_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='crm.PostalAddress')),
+                ('purpose', models.CharField(choices=[('D', 'Delivery Address'), ('B', 'Billing Address'), ('C', 'Contact Address')], max_length=1, verbose_name='Purpose')),
+            ],
+            options={
+                'verbose_name': 'Postal Address For Contracts',
+                'verbose_name_plural': 'Postal Address For Contracts',
+            },
+            bases=('crm.postaladdress',),
+        ),
+        migrations.CreateModel(
+            name='PostalAddressForPurchaseOrder',
+            fields=[
+                ('postaladdress_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='crm.PostalAddress')),
+                ('purpose', models.CharField(choices=[('D', 'Delivery Address'), ('B', 'Billing Address'), ('C', 'Contact Address')], max_length=1, verbose_name='Purpose')),
+            ],
+            options={
+                'verbose_name': 'Postal Address For Contracts',
+                'verbose_name_plural': 'Postal Address For Contracts',
+            },
+            bases=('crm.postaladdress',),
+        ),
+        migrations.CreateModel(
+            name='PostalAddressForSalesContract',
+            fields=[
+                ('postaladdress_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='crm.PostalAddress')),
+                ('purpose', models.CharField(choices=[('D', 'Delivery Address'), ('B', 'Billing Address'), ('C', 'Contact Address')], max_length=1, verbose_name='Purpose')),
+            ],
+            options={
+                'verbose_name': 'Postal Address For Contracts',
+                'verbose_name_plural': 'Postal Address For Contracts',
+            },
+            bases=('crm.postaladdress',),
+        ),
+        migrations.CreateModel(
+            name='PurchaseOrderPosition',
+            fields=[
+                ('position_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='crm.Position')),
+                ('contract', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.PurchaseOrder', verbose_name='Contract')),
+            ],
+            options={
+                'verbose_name': 'Purchaseorder Position',
+                'verbose_name_plural': 'Purchaseorder Positions',
+            },
+            bases=('crm.position',),
+        ),
+        migrations.CreateModel(
+            name='Quote',
+            fields=[
+                ('salescontract_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='crm.SalesContract')),
+                ('validuntil', models.DateField(verbose_name='Valid until')),
+                ('status', models.CharField(choices=[('S', 'Success'), ('I', 'Quote created'), ('Q', 'Quote sent'), ('F', 'First reminder sent'), ('R', 'Second reminder sent'), ('D', 'Deleted')], max_length=1, verbose_name='Status')),
+            ],
+            options={
+                'verbose_name': 'Quote',
+                'verbose_name_plural': 'Quotes',
+            },
+            bases=('crm.salescontract',),
+        ),
+        migrations.CreateModel(
+            name='SalesContractPosition',
+            fields=[
+                ('position_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='crm.Position')),
+            ],
+            options={
+                'verbose_name': 'Salescontract Position',
+                'verbose_name_plural': 'Salescontract Positions',
+            },
+            bases=('crm.position',),
+        ),
+        migrations.CreateModel(
+            name='Supplier',
+            fields=[
+                ('contact_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='crm.Contact')),
+                ('offersShipmentToCustomers', models.BooleanField(verbose_name='Offers Shipment to Customer')),
+            ],
+            options={
+                'verbose_name': 'Supplier',
+                'verbose_name_plural': 'Supplier',
+            },
+            bases=('crm.contact',),
+        ),
+        migrations.AddField(
+            model_name='salescontract',
+            name='contract',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.Contract', verbose_name='Contract'),
+        ),
+        migrations.AddField(
+            model_name='salescontract',
+            name='currency',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.Currency', verbose_name='Currency'),
+        ),
+        migrations.AddField(
+            model_name='salescontract',
+            name='lastmodifiedby',
+            field=models.ForeignKey(blank='True', null=True, on_delete=django.db.models.deletion.CASCADE, related_name='db_lstscmodified', to=settings.AUTH_USER_MODEL, verbose_name='Last modified by'),
+        ),
+        migrations.AddField(
+            model_name='salescontract',
+            name='staff',
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='db_relscstaff', to=settings.AUTH_USER_MODEL, verbose_name='Staff'),
+        ),
+        migrations.AddField(
+            model_name='product',
+            name='defaultunit',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.Unit', verbose_name='Unit'),
+        ),
+        migrations.AddField(
+            model_name='product',
+            name='lastmodifiedby',
+            field=models.ForeignKey(blank='True', null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='Last modified by'),
+        ),
+        migrations.AddField(
+            model_name='product',
+            name='tax',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.Tax'),
+        ),
+        migrations.AddField(
+            model_name='price',
+            name='product',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.Product', verbose_name='Product'),
+        ),
+        migrations.AddField(
+            model_name='price',
+            name='unit',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.Unit', verbose_name='Unit'),
+        ),
+        migrations.AddField(
+            model_name='position',
+            name='product',
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='crm.Product', verbose_name='Product'),
+        ),
+        migrations.AddField(
+            model_name='position',
+            name='unit',
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='crm.Unit', verbose_name='Unit'),
+        ),
+        migrations.AddField(
+            model_name='customergrouptransform',
+            name='product',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.Product', verbose_name='Product'),
+        ),
+        migrations.AddField(
+            model_name='customergrouptransform',
+            name='toCustomerGroup',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='db_reltransfromtocustomergroup', to='crm.CustomerGroup', verbose_name='To Unit'),
+        ),
+        migrations.AddField(
+            model_name='contract',
+            name='defaultcurrency',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.Currency', verbose_name='Default Currency'),
+        ),
+        migrations.AddField(
+            model_name='contract',
+            name='lastmodifiedby',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='db_contractlstmodified', to=settings.AUTH_USER_MODEL, verbose_name='Last modified by'),
+        ),
+        migrations.AddField(
+            model_name='contract',
+            name='staff',
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='db_relcontractstaff', to=settings.AUTH_USER_MODEL, verbose_name='Staff'),
+        ),
+        migrations.AddField(
+            model_name='contact',
+            name='lastmodifiedby',
+            field=models.ForeignKey(blank=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='Last modified by'),
+        ),
+        migrations.AddField(
+            model_name='salescontractposition',
+            name='contract',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.SalesContract', verbose_name='Contract'),
+        ),
+        migrations.AddField(
+            model_name='salescontract',
+            name='customer',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.Customer', verbose_name='Customer'),
+        ),
+        migrations.AddField(
+            model_name='purchaseorder',
+            name='supplier',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.Supplier', verbose_name='Supplier'),
+        ),
+        migrations.AddField(
+            model_name='postaladdressforsalescontract',
+            name='contract',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.SalesContract'),
+        ),
+        migrations.AddField(
+            model_name='postaladdressforpurchaseorder',
+            name='contract',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.PurchaseOrder'),
+        ),
+        migrations.AddField(
+            model_name='postaladdressforcontract',
+            name='contract',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.Contract'),
+        ),
+        migrations.AddField(
+            model_name='postaladdressforcontact',
+            name='person',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.Contact'),
+        ),
+        migrations.AddField(
+            model_name='position',
+            name='supplier',
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='crm.Supplier', verbose_name='Shipment Supplier'),
+        ),
+        migrations.AddField(
+            model_name='phoneaddressforsalescontract',
+            name='contract',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.SalesContract'),
+        ),
+        migrations.AddField(
+            model_name='phoneaddressforpurchaseorder',
+            name='contract',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.PurchaseOrder'),
+        ),
+        migrations.AddField(
+            model_name='phoneaddressforcontract',
+            name='contract',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.Contract'),
+        ),
+        migrations.AddField(
+            model_name='phoneaddressforcontact',
+            name='person',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.Contact'),
+        ),
+        migrations.AddField(
+            model_name='invoice',
+            name='derivatedFromQuote',
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='crm.Quote'),
+        ),
+        migrations.AddField(
+            model_name='emailaddressforsalescontract',
+            name='contract',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.SalesContract'),
+        ),
+        migrations.AddField(
+            model_name='emailaddressforpurchaseorder',
+            name='contract',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.PurchaseOrder'),
+        ),
+        migrations.AddField(
+            model_name='emailaddressforcontract',
+            name='contract',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.Contract'),
+        ),
+        migrations.AddField(
+            model_name='emailaddressforcontact',
+            name='person',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.Contact'),
+        ),
+        migrations.AddField(
+            model_name='contract',
+            name='defaultSupplier',
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='crm.Supplier', verbose_name='Default Supplier'),
+        ),
+        migrations.AddField(
+            model_name='contract',
+            name='defaultcustomer',
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='crm.Customer', verbose_name='Default Customer'),
+        ),
+    ]
