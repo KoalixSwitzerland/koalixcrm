@@ -14,4 +14,7 @@ To be able to log in use the following
 You can find the documentation of koalixcrm here: [doc](http://readthedocs.org/docs/koalixcrm/en/master/)
 
 ## Installation
-Currently there is no easy install guide but to give an idea: [installation](https://github.com/scaphilo/koalixcrm/wiki/Installation)
+Sime information about the installation of koalixcrm: [installation](https://github.com/scaphilo/koalixcrm/wiki/Installation)
+
+## Update from version 1.3 to 1.11
+Some information about the update procedure from Version 1.3 to Version 1.11: [update](https://github.com/scaphilo/koalixcrm/wiki/Update)
