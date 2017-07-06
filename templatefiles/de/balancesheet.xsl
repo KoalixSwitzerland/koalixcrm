@@ -42,7 +42,7 @@
               color="black"
               text-align="left"
               font-weight="bold">
-        Bilanz der koalix Riedener
+        Balanancesheet of  <xsl:value-of select="organisationname"/>
        </fo:block>
       </fo:static-content>
     <fo:static-content flow-name="xsl-region-after" >
@@ -67,7 +67,7 @@
             <fo:block font-size="8pt"
               font-family="BitstreamVeraSans"
               font-weight="bold"
-              text-align="end">Seite <fo:page-number/>/<fo:page-number-citation ref-id="last-page"/></fo:block>
+              text-align="end">Page <fo:page-number/>/<fo:page-number-citation ref-id="last-page"/></fo:block>
            </fo:table-cell>
          </fo:table-row>
         </fo:table-body>
@@ -78,7 +78,7 @@
        <fo:block font-size="9pt"
               font-family="BitstreamVeraSans"
               text-align="left"
-              line-height="13pt" >Aktiva</fo:block>
+              line-height="13pt" >Assets</fo:block>
        <fo:table table-layout="fixed" width="100%">
           <fo:table-column column-width="3cm"/>
           <fo:table-column column-width="11cm"/>
@@ -86,17 +86,17 @@
      <fo:table-header font-size="9pt" line-height="9pt" font-weight="bold" font-family="BitstreamVeraSans">
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="start" >
-                      Kontonummer
+                      Account Number
                    </fo:block>
                 </fo:table-cell>
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="start" >
-                      Konto
+                      Account
                    </fo:block>
                 </fo:table-cell>
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="end" >
-                      Wert
+                      Value
                    </fo:block>
                 </fo:table-cell>
              </fo:table-header>
@@ -133,25 +133,25 @@
               font-family="BitstreamVeraSans"
               text-align="left"
               line-height="13pt"
-              padding-top="0.7cm">Passiva</fo:block>
+              padding-top="0.7cm">Liabilities</fo:block>
        <fo:table table-layout="fixed" width="100%">
           <fo:table-column column-width="3cm"/>
           <fo:table-column column-width="11cm"/>
           <fo:table-column column-width="3cm"/>
-            <fo:table-header font-size="9pt" line-height="9pt" font-weight="bold" font-family="BitstreamVeraSans">
+          <fo:table-header font-size="9pt" line-height="9pt" font-weight="bold" font-family="BitstreamVeraSans">
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
-                   <fo:block  text-align="start" font-size="9pt" line-height="9pt" font-weight="bold" font-family="BitstreamVeraSans" >
-                      Kontonummer
+                   <fo:block  text-align="start" >
+                      Account Number
                    </fo:block>
                 </fo:table-cell>
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="start" >
-                      Konto
+                      Account
                    </fo:block>
                 </fo:table-cell>
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="end" >
-                      Wert
+                      Value
                    </fo:block>
                 </fo:table-cell>
              </fo:table-header>
@@ -183,7 +183,7 @@
               font-family="BitstreamVeraSans"
               text-align="left"
               line-height="13pt"
-              padding-top="0.7cm">Gewinn/Verlust</fo:block>
+              padding-top="0.7cm">Profit/Loss</fo:block>
        <fo:table table-layout="fixed" width="100%">
           <fo:table-column column-width="3cm"/>
           <fo:table-column column-width="11cm"/>
@@ -194,10 +194,11 @@
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="start" >
                       <xsl:choose>
-                        <xsl:when test="TotalBalance &gt; 0">
-                          Gewinn</xsl:when>
+                        <xsl:when test="TotalProfitLoss &gt; 0">
+                          Profit
+                        </xsl:when>
                         <xsl:otherwise>
-                          Verlust
+                          Loss
                         </xsl:otherwise>
                       </xsl:choose>
                    </fo:block>
@@ -208,7 +209,7 @@
                 </fo:table-cell>
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="end" >
-                      <xsl:value-of select="format-number(TotalBalance,'#.##0,00', 'european')"/> CHF
+                      <xsl:value-of select="format-number(TotalProfitLoss,'#.##0,00', 'european')"/> CHF
                    </fo:block>
                 </fo:table-cell>
              </fo:table-row>

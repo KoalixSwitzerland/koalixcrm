@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from subprocess import *
 from accounting.const.accountTypeChoices import *
 from crm.models import Contract
 from crm.exceptions import TemplateSetMissing
@@ -14,6 +15,7 @@ from xml.dom.minidom import Document
 from datetime import *
 import koalixcrm.settings
 import djangoUserExtension
+
 
    
 class AccountingPeriod(models.Model):
@@ -58,11 +60,11 @@ class AccountingPeriod(models.Model):
     xml_serializer = XMLSerializer()
     path_fullToOutputFile = " "
     if whatToCreate == "allAccount":
-      path_fullToOutputFile = settings.PDF_OUTPUT_ROOT+"accounts.xml"
+      path_fullToOutputFile = koalixcrm.settings.PDF_OUTPUT_ROOT+"accounts.xml"
       objectsToSerialize = Account.objects.all()
     else:  
       raise ProgrammingError(_("During XML Export it was not correctly specified which data that has to be exported")) 
-    out = open(settings.PDF_OUTPUT_ROOT+"accounts.xml", "w")
+    out = open(koalixcrm.settings.PDF_OUTPUT_ROOT+"accounts.xml", "w")
     if objectsToSerialize == '':
       raise NoObjectsToBeSerialzed(_("During XML Export it was not correctly specied data has to be exported")) 
     else:
@@ -80,15 +82,15 @@ class AccountingPeriod(models.Model):
     doc = Document()
     if (whatToCreate == "balanceSheet"):
       main = doc.createElement("koalixaccountingbalacesheet")
-      out = open(settings.PDF_OUTPUT_ROOT+"balancesheet_"+str(self.id)+".xml", "w")
+      out = open(koalixcrm.settings.PDF_OUTPUT_ROOT+"balancesheet_"+str(self.id)+".xml", "wb")
     else:
       main = doc.createElement("koalixaccountingprofitlossstatement")
-      out = open(settings.PDF_OUTPUT_ROOT+"profitlossstatement_"+str(self.id)+".xml", "w")
+      out = open(koalixcrm.settings.PDF_OUTPUT_ROOT+"profitlossstatement_"+str(self.id)+".xml", "wb")
     accountingPeriodName = doc.createElement("accountingPeriodName")
     accountingPeriodName.appendChild(doc.createTextNode(self.__str__()))
     main.appendChild(accountingPeriodName)
     organisiationname = doc.createElement("organisiationname")
-    organisiationname.appendChild(doc.createTextNode(settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.organisationname))
+    organisiationname.appendChild(doc.createTextNode(userExtension[0].defaultTemplateSet.organisationname))
     main.appendChild(organisiationname)
     accountingPeriodTo = doc.createElement("accountingPeriodTo")
     accountingPeriodTo.appendChild(doc.createTextNode(self.end.year.__str__()))
@@ -97,7 +99,7 @@ class AccountingPeriod(models.Model):
     accountingPeriodFrom.appendChild(doc.createTextNode(self.begin.year.__str__()))
     main.appendChild(accountingPeriodFrom)
     headerPicture = doc.createElement("headerpicture")
-    headerPicture.appendChild(doc.createTextNode(settings.MEDIA_ROOT+userExtension[0].defaultTemplateSet.logo.path_full))
+    headerPicture.appendChild(doc.createTextNode(userExtension[0].defaultTemplateSet.logo.path_full))
     main.appendChild(headerPicture)
     accountNumber = doc.createElement("AccountNumber")
     accounts = Account.objects.all()
@@ -133,14 +135,14 @@ class AccountingPeriod(models.Model):
     totalBalance.appendChild(doc.createTextNode(overallValueBalance.__str__()))
     main.appendChild(totalBalance)
     doc.appendChild(main)
-    out.write(doc.toxml("utf-8"))
+    out.write(doc.toprettyxml(indent=" ", newl="\n", encoding="utf-8"))
     out.close()
     if (whatToCreate == "balanceSheet"):
-      check_output(['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml', settings.PDF_OUTPUT_ROOT+'balancesheet_'+str(self.id)+'.xml', '-xsl', userExtension[0].defaultTemplateSet.balancesheetXSLFile.xslfile.path_full, '-pdf', settings.PDF_OUTPUT_ROOT+'balancesheet_'+str(self.id)+'.pdf'], stderr=STDOUT)
-      return settings.PDF_OUTPUT_ROOT+"balancesheet_"+str(self.id)+".pdf"  
+      check_output(['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml', koalixcrm.settings.PDF_OUTPUT_ROOT+'balancesheet_'+str(self.id)+'.xml', '-xsl', userExtension[0].defaultTemplateSet.balancesheetXSLFile.xslfile.path_full, '-pdf', koalixcrm.settings.PDF_OUTPUT_ROOT+'balancesheet_'+str(self.id)+'.pdf'], stderr=STDOUT)
+      return koalixcrm.settings.PDF_OUTPUT_ROOT+"balancesheet_"+str(self.id)+".pdf"  
     else:
-       check_output(['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml', settings.PDF_OUTPUT_ROOT+'profitlossstatement_'+str(self.id)+'.xml', '-xsl', userExtension[0].defaultTemplateSet.profitLossStatementXSLFile.xslfile.path_full, '-pdf', settings.PDF_OUTPUT_ROOT+'profitlossstatement_'+str(self.id)+'.pdf'], stderr=STDOUT)
-       return settings.PDF_OUTPUT_ROOT+"profitlossstatement_"+str(self.id)+".pdf" 
+       check_output(['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml', koalixcrm.settings.PDF_OUTPUT_ROOT+'profitlossstatement_'+str(self.id)+'.xml', '-xsl', userExtension[0].defaultTemplateSet.profitLossStatementXSLFile.xslfile.path_full, '-pdf', koalixcrm.settings.PDF_OUTPUT_ROOT+'profitlossstatement_'+str(self.id)+'.pdf'], stderr=STDOUT)
+       return koalixcrm.settings.PDF_OUTPUT_ROOT+"profitlossstatement_"+str(self.id)+".pdf" 
     
   
   def __str__(self):
@@ -166,12 +168,14 @@ class Account(models.Model):
    
    def value(self):
       sum = self.allBookings(fromAccount = False) - self.allBookings(fromAccount = True)
-      if (self.accountType == 'P' or self.accountType == 'E'):
-        sum = 0 - sum
+      if (self.accountType == 'S' or self.accountType == 'L'):
+          sum = 0 - sum
       return sum
       
    def valueNow(self, accountingPeriod):
       sum = self.allBookingsInAccountingPeriod(fromAccount = False, accountingPeriod = accountingPeriod) - self.allBookingsInAccountingPeriod(fromAccount = True, accountingPeriod = accountingPeriod)
+      if (self.accountType == 'S' or self.accountType == 'L'):
+          sum = 0 - sum
       return sum
       
    def allBookings(self, fromAccount):

@@ -26,7 +26,7 @@ def exportPDF(callingModelAdmin, request, whereToCreateFrom, whatToCreate, redir
         Http404 exception if anything goes wrong"""
   try:
     pdf = whereToCreateFrom.createPDF(request.user, whatToCreate)
-    response = HttpResponse(FileWrapper(file(pdf)), mimetype='application/pdf')
+    response = HttpResponse(FileWrapper(open(pdf, 'rb')), content_type='application/pdf')
     response['Content-Length'] = path.getsize(pdf) 
   except (TemplateSetMissing, UserExtensionMissing, CalledProcessError) as e:
     if type(e) == UserExtensionMissing:
@@ -60,7 +60,7 @@ def exportXML(callingModelAdmin, request, whereToCreateFrom, whatToCreate, redir
         raises Http404 exception if anything goes wrong"""
   try:
     xml = whereToCreateFrom.createXML(request.user, whatToCreate)
-    response = HttpResponse(FileWrapper(file(xml)), mimetype='application/xml')
+    response = HttpResponse(FileWrapper(open(xml, 'rb')), mimetype='application/xml')
     response['Content-Length'] = path.getsize(xml) 
   except (TemplateSetMissing, UserExtensionMissing, CalledProcessError) as e:
     if type(e) == UserExtensionMissing:
