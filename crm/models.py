@@ -468,14 +468,15 @@ class Invoice(SalesContract):
         booking.lastmodifiedby = request.user
         booking.save()
       
-   def registerpaymentinaccounting(self, request, paymentaccount, amount, date):
-      activaaccount = accounting.Account.objects.filter(isopeninterestaccount=True)
-      booking = accounting.Booking()
-      booking.toAccount = activaaccount
-      booking.fromAccount = paymentaccount
+   def registerpaymentinaccounting(self, request, amount, paymentaccount):
+      currentValidAccountingPeriod = accounting.models.AccountingPeriod.getCurrentValidAccountingPeriod()
+      activaaccount = accounting.models.Account.objects.filter(isopeninterestaccount=True)
+      booking = accounting.models.Booking()
+      booking.toAccount = paymentaccount
+      booking.fromAccount = activaaccount[0]
       booking.bookingDate = date.today().__str__()
       booking.bookingReference = self
-      booking.accountingPeriod = accounting.models.AccountingPeriod.objects.all()[0]
+      booking.accountingPeriod = currentValidAccountingPeriod
       booking.amount = self.lastCalculatedPrice
       booking.staff = request.user
       booking.lastmodifiedby = request.user

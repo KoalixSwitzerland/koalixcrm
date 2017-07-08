@@ -8,6 +8,7 @@ from datetime import date
 from crm.models import *
 from crm.views import *
 from accounting.models import Booking
+from accounting.models import Account
 from plugin import *
 from django.utils.translation import ugettext as _
 from django.contrib import admin
@@ -266,7 +267,12 @@ class OptionInvoice(admin.ModelAdmin):
    inlines = [SalesContractInlinePosition, SalesContractPostalAddress, SalesContractPhoneAddress, SalesContractEmailAddress, InlineBookings]
    pluginProcessor = PluginProcessor()
    inlines.extend(pluginProcessor.getPluginAdditions("invoiceInlines"))
-   
+  
+   class PaymentForm(forms.Form):
+        paymentAmount = forms.DecimalField()
+        _selected_action = forms.CharField(widget=forms.MultipleHiddenInput)
+        paymentAccount = forms.ModelChoiceField(Account.objects.filter(accountType="A"))
+  
    def response_add(self, request, new_object):
         obj = self.after_saving_model_and_related_inlines(request, new_object)
         return super(OptionInvoice, self).response_add(request, obj)
@@ -329,19 +335,20 @@ class OptionInvoice(admin.ModelAdmin):
      form = None
      if request.POST.get('post'):
         if 'cancel' in request.POST:
-            self.message_user(request, _("Canceled registeration of payment in the accounting"))
-            return 
+          self.message_user(request, _("Canceled registeration of payment in the accounting"))
+          return 
         elif 'register' in request.POST:
-            form = self.SeriesForm(request.POST)
-            if form.is_valid():
-                series = form.cleaned_data['series']
-                for x in queryset:
-                  y = Link(series = series, comic = x)
-                  y.save()
-                self.message_user(request, _("Successfully registered Payment in the Accounting"))
-                return HttpResponseRedirect(request.get_full_path())
+          form = self.PaymentForm(request.POST)
+          if form.is_valid():
+            paymentAmount = form.cleaned_data['paymentAmount']
+            paymentAccount = form.cleaned_data['paymentAccount']
+            for obj in queryset:
+              obj.registerpaymentinaccounting(request, paymentAmount, paymentAccount)
+            self.message_user(request, _("Successfully registered Payment in the Accounting"))
+            return HttpResponseRedirect(request.get_full_path())
      else:
-        c = {'action_checkbox_name': helpers.ACTION_CHECKBOX_NAME, 'queryset': queryset, 'form': form, 'path':request.get_full_path()}
+        form = self.PaymentForm
+        c = {'action_checkbox_name': helpers.ACTION_CHECKBOX_NAME, 'queryset': queryset, 'form': form}
         c.update(csrf(request))
         return render(request, 'crm/admin/registerPayment.html', c)
 

@@ -1,0 +1,33 @@
+{% extends "admin/base.html" %}
+{% block title %}
+Register Payment Amount
+{% endblock %}
+
+{% block content %}
+
+<form action="" method="post">{% csrf_token %}
+<table>
+{% for obj in queryset %}
+  <tr>
+    <td>
+      Amount to Register:
+    </td>
+    <td>
+      {{ form }}
+    </td>
+    <td>
+      Amount on Invoice:
+    </td>
+    <td>
+      {{ obj.lastCalculatedPrice }}
+    </td>
+  </tr>
+  <input type="hidden" name="{{ action_checkbox_name }}" value="{{ obj.pk }}" />
+{% endfor %}
+<input type="hidden" name="action" value="registerPaymentInAccounting" />
+<input type="hidden" name="post" value="yes" />
+<input type="submit" name="cancel" value="cancel" />
+<input type="submit" name="register" value="register" />
+</form>
+{% endblock %}
+
