@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from subprocess import *
 from django.db import models
 from crm.const.country import *
 from crm.const.postaladdressprefix import *
@@ -252,7 +253,7 @@ class PurchaseOrder(models.Model):
   def createPDF(self, whatToExport):
     XMLSerializer = serializers.get_serializer("xml")
     xml_serializer = XMLSerializer()
-    out = open(koalixcrm.settings.PDF_OUTPUT_ROOT+"purchaseorder_"+str(self.id)+".xml", "w")
+    out = open(koalixcrm.settings.PDF_OUTPUT_ROOT+"purchaseorder_"+str(self.id)+".xml", "wb")
     objectsToSerialize = list(PurchaseOrder.objects.filter(id=self.id)) 
     objectsToSerialize += list(Contact.objects.filter(id=self.supplier.id))
     objectsToSerialize += list(Currency.objects.filter(id=self.currency.id))
@@ -386,7 +387,7 @@ class Quote(SalesContract):
    def createPDF(self, whatToExport):
      XMLSerializer = serializers.get_serializer("xml")
      xml_serializer = XMLSerializer()
-     out = open(koalixcrm.settings.PDF_OUTPUT_ROOT+"quote_"+str(self.id)+".xml", "w")
+     out = open(koalixcrm.settings.PDF_OUTPUT_ROOT+"quote_"+str(self.id)+".xml", "wb")
      objectsToSerialize = list(Quote.objects.filter(id=self.id)) 
      objectsToSerialize += list(SalesContract.objects.filter(id=self.id)) 
      objectsToSerialize += list(Contact.objects.filter(id=self.customer.id))
@@ -455,7 +456,7 @@ class Invoice(SalesContract):
       for booking in accounting.models.Booking.objects.filter(accountingPeriod=currentValidAccountingPeriod):
         if booking.bookingReference == self:
           raise InvoiceAlreadyRegistered()
-      for profitaccount, amount in dictprices.iteritems():
+      for profitaccount, amount in iter(dictprices.items()):
         booking = accounting.models.Booking()
         booking.toAccount = activaaccount[0]
         booking.fromAccount = profitaccount
@@ -483,7 +484,7 @@ class Invoice(SalesContract):
    def createPDF(self, whatToExport):
      XMLSerializer = serializers.get_serializer("xml")
      xml_serializer = XMLSerializer()
-     out = open(koalixcrm.settings.PDF_OUTPUT_ROOT+"invoice_"+str(self.id)+".xml", "w")
+     out = open(koalixcrm.settings.PDF_OUTPUT_ROOT+"invoice_"+str(self.id)+".xml", "wb")
      objectsToSerialize = list(Invoice.objects.filter(id=self.id)) 
      objectsToSerialize += list(SalesContract.objects.filter(id=self.id)) 
      objectsToSerialize += list(Contact.objects.filter(id=self.customer.id))

@@ -2,7 +2,7 @@
 import os
 from django import forms
 from django.core.urlresolvers import reverse
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.template.context_processors import csrf
 from datetime import date
 from crm.models import *
@@ -14,7 +14,6 @@ from django.contrib import admin
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from wsgiref.util import FileWrapper
-from django.template import RequestContext
 from django.contrib.admin import helpers
 
    
@@ -344,7 +343,7 @@ class OptionInvoice(admin.ModelAdmin):
      else:
         c = {'action_checkbox_name': helpers.ACTION_CHECKBOX_NAME, 'queryset': queryset, 'form': form, 'path':request.get_full_path()}
         c.update(csrf(request))
-        return render_to_response('admin/crm/registerPayment.html', c, context_instance=RequestContext(request))
+        return render(request, 'crm/admin/registerPayment.html', c)
 
    registerPaymentInAccounting.short_description = _("Register Payment in Accounting")
    
