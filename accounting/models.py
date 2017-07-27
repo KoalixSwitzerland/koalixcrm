@@ -271,6 +271,10 @@ class Booking(models.Model):
    lastmodification = models.DateTimeField(verbose_name = _("Last modified"), auto_now_add=True)
    lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True, verbose_name = _("Last modified by"), related_name="db_booking_lstmodified")
    
+   def bookingDateOnly(self):
+      return self.bookingDate.date()
+   bookingDateOnly.short_description = _("Date");
+   
    def __str__(self):
       return  self.fromAccount.__str__()  + " " + self.toAccount.__str__()  + " " + self.amount.__str__() 
       

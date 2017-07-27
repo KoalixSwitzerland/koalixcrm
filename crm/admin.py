@@ -21,10 +21,10 @@ from django.contrib.admin import helpers
 class ContractPostalAddress(admin.StackedInline):
    model = PostalAddressForContract
    extra = 1
-   classes = ('collapse-open',)
+   classes = ['collapse']
    fieldsets = (
       ('Basics', {
-         'fields': ('prefix', 'prename', 'name', 'addressline1', 'addressline2', 'addressline3', 'addressline4', 'zipcode', 'town', 'state', 'country', 'purpose')
+         'fields': ('prefix', 'prename', 'name', 'addressline1', 'addressline2', 'addressline3', 'addressline4', 'zipcode', 'town', 'state', 'country', 'purpose'),
       }),
    )
    allow_add = True
@@ -32,7 +32,7 @@ class ContractPostalAddress(admin.StackedInline):
 class ContractPhoneAddress(admin.TabularInline):
    model = PhoneAddressForContract
    extra = 1
-   classes = ('collapse-open',)
+   classes = ['collapse']
    fieldsets = (
       ('Basics', {
          'fields': ('phone', 'purpose',)
@@ -43,7 +43,7 @@ class ContractPhoneAddress(admin.TabularInline):
 class ContractEmailAddress(admin.TabularInline):
    model = EmailAddressForContract
    extra = 1
-   classes = ('collapse-open',)
+   classes = ['collapse']
    fieldsets = (
       ('Basics', {
          'fields': ('email', 'purpose',)
@@ -54,7 +54,7 @@ class ContractEmailAddress(admin.TabularInline):
 class PurchaseOrderPostalAddress(admin.StackedInline):
    model = PostalAddressForPurchaseOrder
    extra = 1
-   classes = ('collapse-open',)
+   classes = ['collapse']
    fieldsets = (
       ('Basics', {
          'fields': ('prefix', 'prename', 'name', 'addressline1', 'addressline2', 'addressline3', 'addressline4', 'zipcode', 'town', 'state', 'country', 'purpose')
@@ -65,7 +65,7 @@ class PurchaseOrderPostalAddress(admin.StackedInline):
 class PurchaseOrderPhoneAddress(admin.TabularInline):
    model = PhoneAddressForPurchaseOrder
    extra = 1
-   classes = ('collapse-open',)
+   classes = ['collapse']
    fieldsets = (
       ('Basics', {
          'fields': ('phone', 'purpose',)
@@ -76,7 +76,7 @@ class PurchaseOrderPhoneAddress(admin.TabularInline):
 class PurchaseOrderEmailAddress(admin.TabularInline):
    model = EmailAddressForPurchaseOrder
    extra = 1
-   classes = ('collapse-open',)
+   classes = ['collapse']
    fieldsets = (
       ('Basics', {
          'fields': ('email', 'purpose',)
@@ -87,7 +87,7 @@ class PurchaseOrderEmailAddress(admin.TabularInline):
 class SalesContractPostalAddress(admin.StackedInline):
    model = PostalAddressForSalesContract
    extra = 1
-   classes = ('collapse-open',)
+   classes = ['collapse']
    fieldsets = (
       ('Basics', {
          'fields': ('prefix', 'prename', 'name', 'addressline1', 'addressline2', 'addressline3', 'addressline4', 'zipcode', 'town', 'state', 'country', 'purpose')
@@ -98,7 +98,7 @@ class SalesContractPostalAddress(admin.StackedInline):
 class SalesContractPhoneAddress(admin.TabularInline):
    model = PhoneAddressForSalesContract
    extra = 1
-   classes = ('collapse-open',)
+   classes = ['collapse']
    fieldsets = (
       ('Basics', {
          'fields': ('phone', 'purpose',)
@@ -109,7 +109,7 @@ class SalesContractPhoneAddress(admin.TabularInline):
 class SalesContractEmailAddress(admin.TabularInline):
    model = EmailAddressForSalesContract
    extra = 1
-   classes = ('collapse-open',)
+   classes = ['collapse']
    fieldsets = (
       ('Basics', {
          'fields': ('email', 'purpose',)
@@ -120,7 +120,7 @@ class SalesContractEmailAddress(admin.TabularInline):
 class SalesContractInlinePosition(admin.TabularInline):
     model = SalesContractPosition
     extra = 1
-    classes = ('collapse-open',)
+    classes = ['collapse']
     fieldsets = (
         ('', {
             'fields': ('positionNumber', 'quantity', 'unit', 'product', 'description', 'discount', 'overwriteProductPrice', 'positionPricePerUnit', 'sentOn', 'supplier')
@@ -131,7 +131,9 @@ class SalesContractInlinePosition(admin.TabularInline):
 
 class InlineQuote(admin.TabularInline):
    model = Quote
-   classes = ('collapse-open')
+   classes = ['collapse']
+   show_change_link = True
+   can_delete = True
    extra = 1
    readonly_fields = ('description', 'contract', 'customer', 'validuntil', 'status', 'lastPricingDate', 'lastCalculatedPrice', 'lastCalculatedTax', )
    fieldsets = (
@@ -147,7 +149,9 @@ class InlineQuote(admin.TabularInline):
    
 class InlineInvoice(admin.TabularInline):
    model = Invoice
-   classes = ('collapse-open')
+   classes = ['collapse']
+   show_change_link = True
+   can_delete = True
    extra = 1
    readonly_fields = ('lastPricingDate', 'lastCalculatedPrice', 'lastCalculatedTax', 'description', 'contract', 'customer', 'payableuntil', 'status' )
    fieldsets = (
@@ -164,7 +168,9 @@ class InlineInvoice(admin.TabularInline):
    
 class InlinePurchaseOrder(admin.TabularInline):
    model = PurchaseOrder
-   classes = ('collapse-open')
+   classes = ['collapse']
+   show_change_link = True
+   can_delete = True
    extra = 1
    readonly_fields = ('description', 'contract', 'supplier', 'externalReference', 'status', 'lastPricingDate', 'lastCalculatedPrice' )
    fieldsets = (
@@ -233,7 +239,7 @@ class OptionContract(admin.ModelAdmin):
 class PurchaseOrderInlinePosition(admin.TabularInline):
     model = PurchaseOrderPosition
     extra = 1
-    classes = ('collapse-open',)
+    classes = ['collapse']
     fieldsets = (
         ('', {
             'fields': ('positionNumber', 'quantity', 'unit', 'product', 'description', 'discount', 'overwriteProductPrice', 'positionPricePerUnit', 'sentOn', 'supplier')
@@ -244,7 +250,7 @@ class PurchaseOrderInlinePosition(admin.TabularInline):
 class InlineBookings(admin.TabularInline):
    model = Booking
    extra = 1
-   classes = ('collapse-open',)
+   classes = ['collapse']
    fieldsets = (
       ('Basics', {
          'fields': ('fromAccount', 'toAccount', 'description', 'amount', 'bookingDate', 'staff', 'bookingReference',)
@@ -267,6 +273,7 @@ class OptionInvoice(admin.ModelAdmin):
    inlines = [SalesContractInlinePosition, SalesContractPostalAddress, SalesContractPhoneAddress, SalesContractEmailAddress, InlineBookings]
    pluginProcessor = PluginProcessor()
    inlines.extend(pluginProcessor.getPluginAdditions("invoiceInlines"))
+
   
    class PaymentForm(forms.Form):
         paymentAmount = forms.DecimalField()
@@ -473,7 +480,7 @@ class OptionPurchaseOrder(admin.ModelAdmin):
 class ProductPrice(admin.TabularInline):
    model = Price
    extra = 1
-   classes = ('collapse-open',)
+   classes = ['collapse']
    fieldsets = (
       ('', {
          'fields': ('price', 'validfrom', 'validuntil', 'unit', 'customerGroup', 'currency')
@@ -484,7 +491,7 @@ class ProductPrice(admin.TabularInline):
 class ProductUnitTransform(admin.TabularInline):
    model = UnitTransform
    extra = 1
-   classes = ('collapse-open',)
+   classes = ['collapse']
    fieldsets = (
       ('', {
          'fields': ('fromUnit', 'toUnit', 'factor', )
@@ -504,7 +511,7 @@ class OptionProduct(admin.ModelAdmin):
 class ContactPostalAddress(admin.StackedInline):
    model = PostalAddressForContact
    extra = 1
-   classes = ('collapse-open',)
+   classes = ['collapse']
    fieldsets = (
       ('Basics', {
          'fields': ('prefix', 'prename', 'name', 'addressline1', 'addressline2', 'addressline3', 'addressline4', 'zipcode', 'town', 'state', 'country', 'purpose')
@@ -515,7 +522,7 @@ class ContactPostalAddress(admin.StackedInline):
 class ContactPhoneAddress(admin.TabularInline):
    model = PhoneAddressForContact
    extra = 1
-   classes = ('collapse-open',)
+   classes = ['collapse']
    fieldsets = (
       ('Basics', {
          'fields': ('phone', 'purpose',)
@@ -526,7 +533,7 @@ class ContactPhoneAddress(admin.TabularInline):
 class ContactEmailAddress(admin.TabularInline):
    model = EmailAddressForContact
    extra = 1
-   classes = ('collapse-open',)
+   classes = ['collapse']
    fieldsets = (
       ('Basics', {
          'fields': ('email', 'purpose',)
