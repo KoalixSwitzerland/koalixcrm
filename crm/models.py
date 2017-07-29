@@ -19,6 +19,7 @@ import accounting
 import koalixcrm.settings
 import copy
 import djangoUserExtension
+from koalixcrm.globalSupportFunctions import xstr
 
 class Currency (models.Model):
   description = models.CharField(verbose_name = _("Description"), max_length=100)
@@ -807,7 +808,7 @@ class PostalAddressForContact(PostalAddress):
       verbose_name_plural = _('Postal Address For Contact')
 
    def __str__(self):
-      return self.prename + ' ' + self.name + ' ' + self.addressline1
+      return xstr(self.prename) + ' ' + xstr(self.name) + ' ' + xstr(self.addressline1)
    
 class PostalAddressForContract(PostalAddress):
    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT)
@@ -819,7 +820,7 @@ class PostalAddressForContract(PostalAddress):
       verbose_name_plural = _('Postal Address For Contracts')
 
    def __str__(self):
-      return self.prename + ' ' + self.name + ' ' + self.addressline1
+      return xstr(self.prename) + ' ' + xstr(self.name) + ' ' + xstr(self.addressline1)
    
 class PostalAddressForPurchaseOrder(PostalAddress):
    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT)
@@ -831,7 +832,7 @@ class PostalAddressForPurchaseOrder(PostalAddress):
       verbose_name_plural = _('Postal Address For Contracts')
 
    def __str__(self):
-      return self.prename + ' ' + self.name + ' ' + self.addressline1
+      return xstr(self.prename) + ' ' + xstr(self.name) + ' ' + xstr(self.addressline1)
    
 class PostalAddressForSalesContract(PostalAddress):
    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT)
@@ -843,7 +844,7 @@ class PostalAddressForSalesContract(PostalAddress):
       verbose_name_plural = _('Postal Address For Contracts')
 
    def __str__(self):
-      return self.prename + ' ' + self.name + ' ' + self.addressline1
+      return xstr(self.prename) + ' ' + xstr(self.name) + ' ' + xstr(self.addressline1)
 
 class PhoneAddressForContract(PhoneAddress):
    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT)

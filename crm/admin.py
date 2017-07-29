@@ -589,8 +589,8 @@ class OptionCustomerGroup(admin.ModelAdmin):
    allow_add = True
 
 class OptionSupplier(admin.ModelAdmin):
-   list_display = ('id', 'name')
-   fieldsets = (('', {'fields': ('name',)}),)
+   list_display = ('id', 'name', 'offersShipmentToCustomers')
+   fieldsets = (('', {'fields': ('name', 'offersShipmentToCustomers')}),)
    inlines = [ContactPostalAddress, ContactPhoneAddress, ContactEmailAddress]
    allow_add = True
    
