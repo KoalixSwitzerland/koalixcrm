@@ -1,0 +1,5 @@
+recursive-include koalixcrm/crm/*.py
+recursive-include koalixcrm/accounting/*.py
+recursive-include koalixcrm/subscriptions/*.py
+recursive-include koalixcrm/djangoUserExtensions/*.py
+
