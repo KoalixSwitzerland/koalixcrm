@@ -1,8 +1,8 @@
 from setuptools import setup, find_packages
 
 setup(name='koalixcrm',
-      version='1.11',
-      description='The funniest joke in the world',
+      version='1.11.dev1',
+      description='koalixcrm is a tiny and easy to use Customer-Relationship-Management Software (CRM) including an also tiny and easy to use Accounting Software',
       url='http://github.com/scaphilo/koalixcrm',
       author='Aaron Riedener',
       author_email='aaron.riedener@gmail.com',
