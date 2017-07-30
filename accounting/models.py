@@ -1,20 +1,20 @@
 # -*- coding: utf-8 -*-
 
 from subprocess import *
-from accounting.const.accountTypeChoices import *
-from crm.models import Contract
-from crm.exceptions import TemplateSetMissing
-from crm.exceptions import UserExtensionMissing
+from koalixcrm.accounting.const.accountTypeChoices import *
+from koalixcrm.crm.models import Contract
+from koalixcrm.crm.exceptions import TemplateSetMissing
+from koalixcrm.crm.exceptions import UserExtensionMissing
 from django.db import models
 from django.utils.translation import ugettext as _
 from django.db.models import signals
 from django.core import serializers
-from accounting.exceptions import ProgrammingError
-from accounting.exceptions import NoObjectsToBeSerialzed
+from koalixcrm.accounting.exceptions import ProgrammingError
+from koalixcrm.accounting.exceptions import NoObjectsToBeSerialzed
 from xml.dom.minidom import Document
 from datetime import *
-import koalixcrm.settings
-import djangoUserExtension
+from django.conf import settings
+import koalixcrm.djangoUserExtension
 
 
    
@@ -82,11 +82,11 @@ class AccountingPeriod(models.Model):
       xml_serializer = XMLSerializer()
       path_fullToOutputFile = " "
       if whatToCreate == "allAccount":
-        path_fullToOutputFile = koalixcrm.settings.PDF_OUTPUT_ROOT+"accounts.xml"
+        path_fullToOutputFile = settings.PDF_OUTPUT_ROOT+"accounts.xml"
         objectsToSerialize = Account.objects.all()
       else:  
         raise ProgrammingError(_("During XML Export it was not correctly specified which data that has to be exported")) 
-      out = open(koalixcrm.settings.PDF_OUTPUT_ROOT+"accounts.xml", "w")
+      out = open(settings.PDF_OUTPUT_ROOT+"accounts.xml", "w")
       if objectsToSerialize == '':
         raise NoObjectsToBeSerialzed(_("During XML Export it was not correctly specied data has to be exported")) 
       else:
@@ -103,10 +103,10 @@ class AccountingPeriod(models.Model):
       doc = Document()
       if (whatToCreate == "balanceSheet"):
         main = doc.createElement("koalixaccountingbalacesheet")
-        out = open(koalixcrm.settings.PDF_OUTPUT_ROOT+"balancesheet_"+str(self.id)+".xml", "wb")
+        out = open(settings.PDF_OUTPUT_ROOT+"balancesheet_"+str(self.id)+".xml", "wb")
       else:
         main = doc.createElement("koalixaccountingprofitlossstatement")
-        out = open(koalixcrm.settings.PDF_OUTPUT_ROOT+"profitlossstatement_"+str(self.id)+".xml", "wb")
+        out = open(settings.PDF_OUTPUT_ROOT+"profitlossstatement_"+str(self.id)+".xml", "wb")
       accountingPeriodName = doc.createElement("accountingPeriodName")
       accountingPeriodName.appendChild(doc.createTextNode(self.__str__()))
       main.appendChild(accountingPeriodName)
@@ -164,11 +164,11 @@ class AccountingPeriod(models.Model):
       out.write(doc.toprettyxml(indent=" ", newl="\n", encoding="utf-8"))
       out.close()
       if (whatToCreate == "balanceSheet"):
-        check_output(['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml', koalixcrm.settings.PDF_OUTPUT_ROOT+'balancesheet_'+str(self.id)+'.xml', '-xsl', userExtension[0].defaultTemplateSet.balancesheetXSLFile.xslfile.path_full, '-pdf', koalixcrm.settings.PDF_OUTPUT_ROOT+'balancesheet_'+str(self.id)+'.pdf'], stderr=STDOUT)
-        return koalixcrm.settings.PDF_OUTPUT_ROOT+"balancesheet_"+str(self.id)+".pdf"  
+        check_output(['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml', settings.PDF_OUTPUT_ROOT+'balancesheet_'+str(self.id)+'.xml', '-xsl', userExtension[0].defaultTemplateSet.balancesheetXSLFile.xslfile.path_full, '-pdf', settings.PDF_OUTPUT_ROOT+'balancesheet_'+str(self.id)+'.pdf'], stderr=STDOUT)
+        return settings.PDF_OUTPUT_ROOT+"balancesheet_"+str(self.id)+".pdf"  
       else:
-        check_output(['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml', koalixcrm.settings.PDF_OUTPUT_ROOT+'profitlossstatement_'+str(self.id)+'.xml', '-xsl', userExtension[0].defaultTemplateSet.profitLossStatementXSLFile.xslfile.path_full, '-pdf', koalixcrm.settings.PDF_OUTPUT_ROOT+'profitlossstatement_'+str(self.id)+'.pdf'], stderr=STDOUT)
-        return koalixcrm.settings.PDF_OUTPUT_ROOT+"profitlossstatement_"+str(self.id)+".pdf" 
+        check_output(['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml', settings.PDF_OUTPUT_ROOT+'profitlossstatement_'+str(self.id)+'.xml', '-xsl', userExtension[0].defaultTemplateSet.profitLossStatementXSLFile.xslfile.path_full, '-pdf', settings.PDF_OUTPUT_ROOT+'profitlossstatement_'+str(self.id)+'.pdf'], stderr=STDOUT)
+        return settings.PDF_OUTPUT_ROOT+"profitlossstatement_"+str(self.id)+".pdf" 
       
     
     def __str__(self):

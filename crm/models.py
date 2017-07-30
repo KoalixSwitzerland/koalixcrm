@@ -1,25 +1,25 @@
 # -*- coding: utf-8 -*-
 
 from subprocess import *
-from django.db import models
-from crm.const.country import *
-from crm.const.postaladdressprefix import *
-from crm.const.purpose import *
-from crm.const.status import *
 from datetime import *
-from django.utils.translation import ugettext as _
 from decimal import Decimal
-from django.core import serializers
-from crm.exceptions import TemplateSetMissing
-from crm.exceptions import UserExtensionMissing
-from crm.exceptions import OpenInterestAccountMissing
-from django.contrib import auth
 from lxml import etree
-import accounting 
-import koalixcrm.settings
 import copy
-import djangoUserExtension
+from django.db import models
+from django.utils.translation import ugettext as _
+from django.core import serializers
+from django.contrib import auth
+from django.conf import settings
+import koalixcrm.accounting 
+import koalixcrm.djangoUserExtension
 from koalixcrm.globalSupportFunctions import xstr
+from koalixcrm.crm.const.country import *
+from koalixcrm.crm.const.postaladdressprefix import *
+from koalixcrm.crm.const.purpose import *
+from koalixcrm.crm.exceptions import TemplateSetMissing
+from koalixcrm.crm.exceptions import UserExtensionMissing
+from koalixcrm.crm.exceptions import OpenInterestAccountMissing
+from koalixcrm.crm.const.status import *
 
 class Currency (models.Model):
   description = models.CharField(verbose_name = _("Description"), max_length=100)
@@ -254,7 +254,7 @@ class PurchaseOrder(models.Model):
   def createPDF(self, whatToExport):
     XMLSerializer = serializers.get_serializer("xml")
     xml_serializer = XMLSerializer()
-    out = open(koalixcrm.settings.PDF_OUTPUT_ROOT+"purchaseorder_"+str(self.id)+".xml", "wb")
+    out = open(settings.PDF_OUTPUT_ROOT+"purchaseorder_"+str(self.id)+".xml", "wb")
     objectsToSerialize = list(PurchaseOrder.objects.filter(id=self.id)) 
     objectsToSerialize += list(Contact.objects.filter(id=self.supplier.id))
     objectsToSerialize += list(Currency.objects.filter(id=self.currency.id))
@@ -280,8 +280,8 @@ class PurchaseOrder(models.Model):
         objectsToSerialize += list(PostalAddress.objects.filter(id=address.id))
     xml_serializer.serialize(objectsToSerialize, stream=out, indent=3)
     out.close()
-    check_output(['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml', koalixcrm.settings.PDF_OUTPUT_ROOT+'purchaseorder_'+str(self.id)+'.xml', '-xsl', userExtension[0].defaultTemplateSet.purchaseorderXSLFile.xslfile.path_full, '-pdf', koalixcrm.settings.PDF_OUTPUT_ROOT+'purchaseorder_'+str(self.id)+'.pdf'], stderr=STDOUT)
-    return koalixcrm.settings.PDF_OUTPUT_ROOT+"purchaseorder_"+str(self.id)+".pdf"   
+    check_output(['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml', settings.PDF_OUTPUT_ROOT+'purchaseorder_'+str(self.id)+'.xml', '-xsl', userExtension[0].defaultTemplateSet.purchaseorderXSLFile.xslfile.path_full, '-pdf', settings.PDF_OUTPUT_ROOT+'purchaseorder_'+str(self.id)+'.pdf'], stderr=STDOUT)
+    return settings.PDF_OUTPUT_ROOT+"purchaseorder_"+str(self.id)+".pdf"   
 
   class Meta:
     app_label = "crm"
@@ -388,7 +388,7 @@ class Quote(SalesContract):
    def createPDF(self, whatToExport):
      XMLSerializer = serializers.get_serializer("xml")
      xml_serializer = XMLSerializer()
-     out = open(koalixcrm.settings.PDF_OUTPUT_ROOT+"quote_"+str(self.id)+".xml", "wb")
+     out = open(settings.PDF_OUTPUT_ROOT+"quote_"+str(self.id)+".xml", "wb")
      objectsToSerialize = list(Quote.objects.filter(id=self.id)) 
      objectsToSerialize += list(SalesContract.objects.filter(id=self.id)) 
      objectsToSerialize += list(Contact.objects.filter(id=self.customer.id))
@@ -415,17 +415,17 @@ class Quote(SalesContract):
          objectsToSerialize += list(PostalAddress.objects.filter(id=address.id))
      xml_serializer.serialize(objectsToSerialize, stream=out, indent=3)
      out.close()
-     xml = etree.parse(koalixcrm.settings.PDF_OUTPUT_ROOT+"quote_"+str(self.id)+".xml")
+     xml = etree.parse(settings.PDF_OUTPUT_ROOT+"quote_"+str(self.id)+".xml")
      rootelement = xml.getroot()
      filebrowserdirectory = etree.SubElement(rootelement, "filebrowserdirectory")
-     filebrowserdirectory.text = koalixcrm.settings.FILEBROWSER_DIRECTORY
-     xml.write(koalixcrm.settings.PDF_OUTPUT_ROOT+"quote_"+str(self.id)+".xml")
+     filebrowserdirectory.text = settings.FILEBROWSER_DIRECTORY
+     xml.write(settings.PDF_OUTPUT_ROOT+"quote_"+str(self.id)+".xml")
      if (whatToExport == "quote"):
-        check_output(['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml', koalixcrm.settings.PDF_OUTPUT_ROOT+'quote_'+str(self.id)+'.xml', '-xsl', userExtension[0].defaultTemplateSet.quoteXSLFile.xslfile.path_full, '-pdf', koalixcrm.settings.PDF_OUTPUT_ROOT+'quote_'+str(self.id)+'.pdf'], stderr=STDOUT)
-        return koalixcrm.settings.PDF_OUTPUT_ROOT+"quote_"+str(self.id)+".pdf"
+        check_output(['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml', settings.PDF_OUTPUT_ROOT+'quote_'+str(self.id)+'.xml', '-xsl', userExtension[0].defaultTemplateSet.quoteXSLFile.xslfile.path_full, '-pdf', settings.PDF_OUTPUT_ROOT+'quote_'+str(self.id)+'.pdf'], stderr=STDOUT)
+        return settings.PDF_OUTPUT_ROOT+"quote_"+str(self.id)+".pdf"
      else:
-        check_output(['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml', koalixcrm.settings.PDF_OUTPUT_ROOT+'quote_'+str(self.id)+'.xml', '-xsl', userExtension[0].defaultTemplateSet.purchaseconfirmationXSLFile.xslfile.path_full, '-pdf', koalixcrm.settings.PDF_OUTPUT_ROOT+'purchaseconfirmation_'+str(self.id)+'.pdf'], stderr=STDOUT)
-        return koalixcrm.settings.PDF_OUTPUT_ROOT+"purchaseconfirmation_"+str(self.id)+".pdf"  
+        check_output(['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml', settings.PDF_OUTPUT_ROOT+'quote_'+str(self.id)+'.xml', '-xsl', userExtension[0].defaultTemplateSet.purchaseconfirmationXSLFile.xslfile.path_full, '-pdf', settings.PDF_OUTPUT_ROOT+'purchaseconfirmation_'+str(self.id)+'.pdf'], stderr=STDOUT)
+        return settings.PDF_OUTPUT_ROOT+"purchaseconfirmation_"+str(self.id)+".pdf"  
      
    def __str__(self):
       return _("Quote")+ ": " + str(self.id) + " "+_("from Contract")+": " + str(self.contract.id) 
@@ -486,7 +486,7 @@ class Invoice(SalesContract):
    def createPDF(self, whatToExport):
      XMLSerializer = serializers.get_serializer("xml")
      xml_serializer = XMLSerializer()
-     out = open(koalixcrm.settings.PDF_OUTPUT_ROOT+"invoice_"+str(self.id)+".xml", "wb")
+     out = open(settings.PDF_OUTPUT_ROOT+"invoice_"+str(self.id)+".xml", "wb")
      objectsToSerialize = list(Invoice.objects.filter(id=self.id)) 
      objectsToSerialize += list(SalesContract.objects.filter(id=self.id)) 
      objectsToSerialize += list(Contact.objects.filter(id=self.customer.id))
@@ -513,17 +513,17 @@ class Invoice(SalesContract):
          objectsToSerialize += list(PostalAddress.objects.filter(id=address.id))
      xml_serializer.serialize(objectsToSerialize, stream=out, indent=3)
      out.close()
-     xml = etree.parse(koalixcrm.settings.PDF_OUTPUT_ROOT+"invoice_"+str(self.id)+".xml")
+     xml = etree.parse(settings.PDF_OUTPUT_ROOT+"invoice_"+str(self.id)+".xml")
      rootelement = xml.getroot()
      filebrowserdirectory = etree.SubElement(rootelement, "filebrowserdirectory")
-     filebrowserdirectory.text = koalixcrm.settings.FILEBROWSER_DIRECTORY
-     xml.write(koalixcrm.settings.PDF_OUTPUT_ROOT+"invoice_"+str(self.id)+".xml")
+     filebrowserdirectory.text = settings.FILEBROWSER_DIRECTORY
+     xml.write(settings.PDF_OUTPUT_ROOT+"invoice_"+str(self.id)+".xml")
      if (whatToExport == "invoice"):
-        check_output(['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml', koalixcrm.settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.xml', '-xsl', userExtension[0].defaultTemplateSet.invoiceXSLFile.xslfile.path_full, '-pdf', koalixcrm.settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.pdf'], stderr=STDOUT)
-        return koalixcrm.settings.PDF_OUTPUT_ROOT+"invoice_"+str(self.id)+".pdf"
+        check_output(['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml', settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.xml', '-xsl', userExtension[0].defaultTemplateSet.invoiceXSLFile.xslfile.path_full, '-pdf', settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.pdf'], stderr=STDOUT)
+        return settings.PDF_OUTPUT_ROOT+"invoice_"+str(self.id)+".pdf"
      else:
-        check_output(['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml', koalixcrm.settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.xml', '-xsl', userExtension[0].defaultTemplateSet.deilveryorderXSLFile.xslfile.path_full, '-pdf', koalixcrm.settings.PDF_OUTPUT_ROOT+'deliveryorder_'+str(self.id)+'.pdf'], stderr=STDOUT)
-        return koalixcrm.settings.PDF_OUTPUT_ROOT+"deliveryorder_"+str(self.id)+".pdf"  
+        check_output(['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml', settings.PDF_OUTPUT_ROOT+'invoice_'+str(self.id)+'.xml', '-xsl', userExtension[0].defaultTemplateSet.deilveryorderXSLFile.xslfile.path_full, '-pdf', settings.PDF_OUTPUT_ROOT+'deliveryorder_'+str(self.id)+'.pdf'], stderr=STDOUT)
+        return settings.PDF_OUTPUT_ROOT+"deliveryorder_"+str(self.id)+".pdf"  
 
 #  TODO: def registerPayment(self, amount, registerpaymentinaccounting):
    def __str__(self):

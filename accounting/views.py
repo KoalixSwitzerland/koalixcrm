@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from os import path
-from accounting.models import *
+from koalixcrm.accounting.models import *
 from django.http import HttpResponse
 from wsgiref.util import FileWrapper
 from django.http import Http404

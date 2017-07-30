@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from django import forms
 from django.core.urlresolvers import reverse
-from crm.models import *
-from accounting.models import *
-from accounting.views import *
+from koalixcrm.crm.models import *
+from koalixcrm.accounting.models import *
+from koalixcrm.accounting.views import *
 from django.utils.translation import ugettext as _
 from django.contrib import admin
 from django.http import HttpResponse

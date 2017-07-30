@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from os import path
 from django.http import Http404
-from crm.models import *
+from koalixcrm.crm.models import *
 from django.http import HttpResponse
-from crm.exceptions import TemplateSetMissing
-from crm.exceptions import UserExtensionMissing
+from koalixcrm.crm.exceptions import TemplateSetMissing
+from koalixcrm.crm.exceptions import UserExtensionMissing
 from wsgiref.util import FileWrapper
 from django.http import Http404
 from django.http import HttpResponse

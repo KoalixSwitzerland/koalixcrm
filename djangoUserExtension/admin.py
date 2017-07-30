@@ -2,7 +2,7 @@
 
 from django.utils.translation import ugettext as _
 from django.contrib import admin
-from djangoUserExtension.models import *
+from koalixcrm.djangoUserExtension.models import *
 
 class InlineUserExtensionPostalAddress(admin.StackedInline):
    model = UserExtensionPostalAddress

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
-from koalixcrm.settings import *
+from django.conf import settings
 
 class PluginProcessor(object):
     def converttorelativestring(self, pluginmodule, nameofinline):
@@ -14,7 +14,7 @@ class PluginProcessor(object):
     
     def getAllPlugins(self):
         allpluginmodules = []
-        for plugin in KOALIXCRM_PLUGINS:
+        for plugin in settings.KOALIXCRM_PLUGINS:
             temp = __import__(plugin+".admin")
             allpluginmodules.append(sys.modules[plugin+".admin"]);
         return allpluginmodules

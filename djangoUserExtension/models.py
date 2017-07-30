@@ -3,8 +3,8 @@
 from django.utils.translation import ugettext as _
 from django.db import models
 from filebrowser.fields import FileBrowseField
-from djangoUserExtension.const.purpose import *
-from crm import models as crmmodels
+from koalixcrm.djangoUserExtension.const.purpose import *
+from koalixcrm.crm import models as crmmodels
    
 class XSLFile(models.Model):
    title = models.CharField(verbose_name = _("Title"), max_length=100, blank=True, null=True)

@@ -1,9 +1,9 @@
 from django.db import models
 from django.utils.translation import ugettext as _
 from filebrowser.fields import FileBrowseField
-from subscriptions.const.events import *
+from koalixcrm.subscriptions.const.events import *
 from datetime import *
-from crm import models as crmmodels
+from koalixcrm.crm import models as crmmodels
 
 class Subscription(models.Model):
   contract = models.ForeignKey(crmmodels.Contract, verbose_name=_('Subscription Type'))

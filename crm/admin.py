@@ -5,11 +5,11 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.template.context_processors import csrf
 from datetime import date
-from crm.models import *
-from crm.views import *
-from accounting.models import Booking
-from accounting.models import Account
-from plugin import *
+from koalixcrm.crm.models import *
+from koalixcrm.crm.views import *
+from koalixcrm.accounting.models import Booking
+from koalixcrm.accounting.models import Account
+from koalixcrm.plugin import *
 from django.utils.translation import ugettext as _
 from django.contrib import admin
 from django.http import HttpResponse
