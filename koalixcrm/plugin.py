@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-import os
 import sys
+
 from django.conf import settings
+
 
 class PluginProcessor(object):
     def converttorelativestring(self, pluginmodule, nameofinline):
@@ -11,14 +12,14 @@ class PluginProcessor(object):
             return output
         else:
             return []
-    
+
     def getAllPlugins(self):
         allpluginmodules = []
         for plugin in settings.KOALIXCRM_PLUGINS:
-            temp = __import__(plugin+".admin")
-            allpluginmodules.append(sys.modules[plugin+".admin"]);
+            temp = __import__(plugin + ".admin")
+            allpluginmodules.append(sys.modules[plugin + ".admin"]);
         return allpluginmodules
-        
+
     def getPluginAdditions(self, additionname):
         listofAdditions = []
         allpluginmodules = self.getAllPlugins()
@@ -28,8 +29,8 @@ class PluginProcessor(object):
             except AttributeError:
                 continue
         return listofAdditions
-        
-    def resolve_name(self,name, package, level):
+
+    def resolve_name(self, name, package, level):
         """Return the absolute name of the module to be imported."""
         if not hasattr(package, 'rindex'):
             raise ValueError("'package' not set to a string")
@@ -39,7 +40,7 @@ class PluginProcessor(object):
                 dot = package.rindex('.', 0, dot)
             except ValueError:
                 raise ValueError("attempted relative import beyond top-level "
-                                "package")
+                                 "package")
         return "%s.%s" % (package[:dot], name)
 
     def import_module(self, name, package=None):
@@ -64,7 +65,7 @@ class PluginProcessor(object):
 
     def load_plugins(self):
         for plugin_name in settings.KOALIXCRM_PLUGINS:
-            if plugin_name :
+            if plugin_name:
                 continue
             self.load_app(app_name, True)
         if name.startswith('.'):

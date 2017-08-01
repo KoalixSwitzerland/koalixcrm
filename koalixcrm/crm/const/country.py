@@ -88,7 +88,7 @@ COUNTRIES = (
     ('GI', 'GIB', '292', _('Gibraltar')),
     ('GR', 'GRC', '300', _('Greece')),
     ('GL', 'GRL', '304', _('Greenland')),
-    ('GD', 'GRD', '308', _('Grenada')), 
+    ('GD', 'GRD', '308', _('Grenada')),
     ('GP', 'GLP', '312', _('Guadeloupe')),
     ('GU', 'GUM', '316', _('Guam')),
     ('GT', 'GTM', '320', _('Guatemala')),
