@@ -17,6 +17,8 @@ from koalixcrm.crm.exceptions import OpenInterestAccountMissing
 from koalixcrm.crm.exceptions import TemplateSetMissing
 from koalixcrm.crm.exceptions import UserExtensionMissing
 from koalixcrm.globalSupportFunctions import xstr
+from koalixcrm import accounting
+from koalixcrm import djangoUserExtension
 from lxml import etree
 
 
@@ -294,14 +296,14 @@ class PurchaseOrder(models.Model):
             objectsToSerialize += list(Unit.objects.filter(id=position.unit.id))
         objectsToSerialize += list(auth.models.User.objects.filter(id=self.staff.id))
         userExtension = djangoUserExtension.models.UserExtension.objects.filter(user=self.staff.id)
-        if (len(userExtension) == 0):
+        if len(userExtension) == 0:
             raise UserExtensionMissing(_("During PurchaseOrder PDF Export"))
         phoneAddress = djangoUserExtension.models.UserExtensionPhoneAddress.objects.filter(
             userExtension=userExtension[0].id)
         objectsToSerialize += list(userExtension)
         objectsToSerialize += list(phoneAddress)
         templateset = djangoUserExtension.models.TemplateSet.objects.filter(id=userExtension[0].defaultTemplateSet.id)
-        if (len(templateset) == 0):
+        if len(templateset) == 0:
             raise TemplateSetMissing(_("During PurchaseOrder PDF Export"))
         objectsToSerialize += list(templateset)
         objectsToSerialize += list(auth.models.User.objects.filter(id=self.lastmodifiedby.id))
