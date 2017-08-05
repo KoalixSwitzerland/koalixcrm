@@ -1,0 +1,12 @@
+language: python
+python:
+- '3.4'
+install: pip install -r requirements.txt
+script: pytest
+deploy:
+  provider: heroku
+  api_key:
+    secure: xssZUYFVC6Ff3CKMMabs29DYofHtsw/lvsXRU9xAf/U8AeJ/2Blnq4bsOES99y88AXemw9q3Gz3YnH4adKfb0+p7WY3mMWVgovLPQOSqD/R2cenwh4J/Bgca5+ckneAq0W6W0MdqQAsFCnsj9MbprgXzWJnNLhrTFi6+ENyHBhIvTbkZ7TdGcKaifM+7KNvdx7M9oG7b+7rT06teBPM+Y5OWS5wnKb/br7GhAkOxscfExmvo10DT8c8rqv+S2m++71lEgEvsj7Rjk5rA4sOqLySTN8ZngBNpNxaj3mk0dhCQEFYQ+SL86KGxCklJ+FEU2SrEavycA+zek1BQI0fjsHiGy6yO9m1B9zZMQAo7oU5j6LpwxCy/nzvzvta8givwQrgYMD3Tvrw9DqSaX5wG206aVA0+rmrxtwboWJk40szA2v08pYxbSElvNZAPEx/ttspab61DT1pxzA4WMbyCrdKBGJyq9U5KhtCOvvw7DhmgVpcTjxFsWuWkiA6ADakqlFdvQ0rgEa1wXFZQZSMC01NrAFcrd0tE8z7bTqrOlGi/4/3mPdYEA9vO4VxdKwSz87F41cVmt1OdxQEzZygMp+/cP9oKd1o8acS6vNBjxDz3KvorlkihWqk8JlfmavqvG9uxtaKLk/LT8de5I9vdlk0YAYf1i387CTFFHIYht1g=
+  app: koalixcrm
+  on:
+    repo: scaphilo/koalixcrm
