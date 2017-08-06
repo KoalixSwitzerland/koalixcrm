@@ -1,1 +1,1 @@
-web: gunicorn koalix-crm.wsgi --log-file -
+web: sh -c 'cd sandbox && gunicorn koalixcrm.wsgi'
