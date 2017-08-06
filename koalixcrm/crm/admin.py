@@ -8,6 +8,7 @@ from django.template.context_processors import csrf
 from django.utils.translation import ugettext as _
 from koalixcrm.accounting.models import Account
 from koalixcrm.accounting.models import Booking
+from django.contrib import messages
 from koalixcrm.crm.views import *
 from koalixcrm.plugin import *
 
@@ -322,7 +323,7 @@ class OptionInvoice(admin.ModelAdmin):
             obj.recalculatePrices(date.today())
             self.message_user(request, "Successfully calculated Prices")
         except Product.NoPriceFound as e:
-            self.message_user(request, "Unsuccessfull in updating the Prices " + e.__str__())
+            self.message_user(request, "Unsuccessfull in updating the Prices " + e.__str__(), level=messages.ERROR)
         return obj
 
     def save_model(self, request, obj, form, change):
@@ -339,7 +340,7 @@ class OptionInvoice(admin.ModelAdmin):
                 obj.recalculatePrices(date.today())
             self.message_user(request, "Successfully recalculated Prices")
         except Product.NoPriceFound as e:
-            self.message_user(request, "Unsuccessfull in updating the Prices " + e.__str__())
+            self.message_user(request, "Unsuccessfull in updating the Prices " + e.__str__(), level=messages.ERROR)
             return;
 
     recalculatePrices.short_description = _("Recalculate Prices")

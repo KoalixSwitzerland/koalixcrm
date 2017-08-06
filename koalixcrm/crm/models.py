@@ -682,7 +682,7 @@ class Product(models.Model):
                     lowestprice = price
             return lowestprice
         else:
-            raise Product.NoPriceFound(customer, unit, date, self)
+            raise Product.NoPriceFound(customer, unit, date, currency, self)
 
     def getTaxRate(self):
         return self.tax.getTaxRate();
@@ -696,17 +696,18 @@ class Product(models.Model):
         verbose_name_plural = _('Products')
 
     class NoPriceFound(Exception):
-        def __init__(self, customer, unit, date, product):
+        def __init__(self, customer, unit, date, currency, product):
             self.customer = customer
             self.unit = unit
             self.date = date
             self.product = product
+            self.currency = currency
             return
 
         def __str__(self):
             return _("There is no Price for this product") + ": " + self.product.__str__() + _(
                 "that matches the date") + ": " + self.date.__str__() + " ," + _(
-                "customer") + ": " + self.customer.__str__() + _(" and unit") + ":" + self.unit.__str__()
+                "customer") + ": " + self.customer.__str__() + " ," + _("currency")+ ": "+ self.currency.__str__()+ _(" and unit") + ":" + self.unit.__str__()
 
 
 class UnitTransform(models.Model):
