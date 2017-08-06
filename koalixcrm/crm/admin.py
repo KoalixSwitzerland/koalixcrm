@@ -360,9 +360,14 @@ class OptionInvoice(admin.ModelAdmin):
     createDeliveryOrderPDF.short_description = _("Create PDF of Delivery Order")
 
     def registerInvoiceInAccounting(self, request, queryset):
-        for obj in queryset:
-            obj.registerinvoiceinaccounting(request)
+        try:
+            for obj in queryset:
+                obj.registerinvoiceinaccounting(request)
             self.message_user(request, _("Successfully registered Invoice in the Accounting"))
+            return;
+        except OpenInterestAccountMissing as e:
+            self.message_user(request, "Did not register Invoice in Accounting: " + e.__str__(), level=messages.ERROR)
+            return;
 
     registerInvoiceInAccounting.short_description = _("Register Invoice in Accounting")
 
@@ -376,7 +381,7 @@ class OptionInvoice(admin.ModelAdmin):
         form = None
         if request.POST.get('post'):
             if 'cancel' in request.POST:
-                self.message_user(request, _("Canceled registeration of payment in the accounting"))
+                self.message_user(request, _("Canceled registeration of payment in the accounting"), level=messages.ERROR)
                 return
             elif 'register' in request.POST:
                 form = self.PaymentForm(request.POST)
@@ -388,10 +393,12 @@ class OptionInvoice(admin.ModelAdmin):
                     self.message_user(request, _("Successfully registered Payment in the Accounting"))
                     return HttpResponseRedirect(request.get_full_path())
         else:
-            form = self.PaymentForm
-            c = {'action_checkbox_name': helpers.ACTION_CHECKBOX_NAME, 'queryset': queryset, 'form': form}
-            c.update(csrf(request))
-            return render(request, 'crm/admin/registerPayment.html', c)
+            try:
+                form = self.PaymentForm
+                c = {'action_checkbox_name': helpers.ACTION_CHECKBOX_NAME, 'queryset': queryset, 'form': form}
+                c.update(csrf(request))
+                return render(request, 'crm/admin/registerPayment.html', c)
+
 
     registerPaymentInAccounting.short_description = _("Register Payment in Accounting")
 
