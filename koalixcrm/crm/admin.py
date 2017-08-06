@@ -396,11 +396,10 @@ class OptionInvoice(admin.ModelAdmin):
                     self.message_user(request, _("Successfully registered Payment in the Accounting"))
                     return HttpResponseRedirect(request.get_full_path())
         else:
-            try:
-                form = self.PaymentForm
-                c = {'action_checkbox_name': helpers.ACTION_CHECKBOX_NAME, 'queryset': queryset, 'form': form}
-                c.update(csrf(request))
-                return render(request, 'crm/admin/registerPayment.html', c)
+            form = self.PaymentForm
+            c = {'action_checkbox_name': helpers.ACTION_CHECKBOX_NAME, 'queryset': queryset, 'form': form}
+            c.update(csrf(request))
+            return render(request, 'crm/admin/registerPayment.html', c)
 
 
     registerPaymentInAccounting.short_description = _("Register Payment in Accounting")
