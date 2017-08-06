@@ -1,0 +1,1 @@
+web: gunicorn koalix-crm.wsgi --log-file -

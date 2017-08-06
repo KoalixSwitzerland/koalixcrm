@@ -1,12 +1,18 @@
 language: python
 python:
 - '3.4'
+
 install: pip install -r requirements.txt
+
 script: pytest
+
+# Deployment
 deploy:
   provider: heroku
   api_key:
     secure: $HEROKU_API_KEY
+
   app: koalix-crm
   on:
     repo: scaphilo/koalixcrm
+
