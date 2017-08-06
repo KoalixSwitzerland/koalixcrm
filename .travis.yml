@@ -6,7 +6,7 @@ script: pytest
 deploy:
   provider: heroku
   api_key:
-    secure: vnfE0Lm325UOcPXSSn1kq0ZHq4va5C9+eXIvviuFikIPMhzfEIzmaE3fnjA2+MCON0cUoBAqHv7AvAyk2G9yQ68Hb2cE9+fI7xyhTVFhxdgbzOK+T9KaW6v1z25XaF3pJYB00DgeKEKH7aIPttt5asmYwUvIT5BSHRAMLkJJVHWOsorTbbS16G1A47CLEH7X6iofQb/jErgY7ouAG4yE4RfzVEqNqhXuqFCg7P1ZwYu3ptVAQLJpPmW5z+etGvLx4+Qt8zeLPE3z3JyykaA9oHo9d/jSOQvzwzM/+rqO/3GIdXtp5oX0UIFE3Hhomav4jzWEIJfM6WrMQdv7KkdXEP0IpZA999He/6gpnwvcN9xb6mUNnhKyDdvmP99Sd3n3zlIaluZ339kXcwb/ptbSs8v/VJIe/KHfFFulfoaOmCxjFSvJOOUje5uQyVFM034r4QiDBaRGDx8J5gPzAl0icXxea7j7yfywg5NSKmaYVbiRLWLYl/F7DsU87LoTodfjjrh5QmKOnkJDqIDkLF0JNbqQ9VV3Jk/ezlYg7lT0lfrfQ/pB+mApaSmmeMzgpEVmsXCDD8gDkCmDro7Us0rfyc67xA3DxOWOffeW4WfuAN4BvzeDrZZq66ZqN/v2Pn6rqWjpzpuoDFGhhPvpcEZFbezDOfODw5jkch25WJLI01c=
+    secure: $HEROKU_API_KEY
   app: koalix-crm
   on:
     repo: scaphilo/koalixcrm
