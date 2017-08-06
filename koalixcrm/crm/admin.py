@@ -368,6 +368,9 @@ class OptionInvoice(admin.ModelAdmin):
         except OpenInterestAccountMissing as e:
             self.message_user(request, "Did not register Invoice in Accounting: " + e.__str__(), level=messages.ERROR)
             return;
+        except IncompleteInvoice as e:
+            self.message_user(request, "Did not register Invoice in Accounting: " + e.__str__(), level=messages.ERROR)
+            return;
 
     registerInvoiceInAccounting.short_description = _("Register Invoice in Accounting")
 
