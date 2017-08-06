@@ -500,10 +500,10 @@ class Invoice(SalesContract):
         was not completed or the price calculation was not performed, the method
         returns false"""
 
-        if self.lastPricingDate. == "0":
-            return false
+        if self.lastPricingDate and self.lastCalculatedPrice:
+            return True
         else:
-            return true
+            return False
 
     def registerinvoiceinaccounting(self, request):
         dictprices = dict()

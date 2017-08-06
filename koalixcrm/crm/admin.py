@@ -11,6 +11,7 @@ from koalixcrm.accounting.models import Booking
 from django.contrib import messages
 from koalixcrm.crm.views import *
 from koalixcrm.plugin import *
+from koalixcrm.crm.exceptions import *
 
 
 class ContractPostalAddress(admin.StackedInline):
