@@ -19,5 +19,8 @@ You can find the documentation of koalixcrm here: [doc](http://readthedocs.org/d
 ## Installation
 Some information about the installation of koalixcrm: [installation](https://github.com/scaphilo/koalixcrm/wiki/Installation)
 
+## Development environment setup
+Information about the development environment setup for this and similar projects can be found here: [Development environment setup](https://github.com/scaphilo/koalixcrm/wiki/Development-Environment-Setup)
+
 ## Update from version 1.3 to 1.11
 Some information about the update procedure from Version 1.3 to Version 1.11: [update](https://github.com/scaphilo/koalixcrm/wiki/Update)
