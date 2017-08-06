@@ -11,6 +11,7 @@ from koalixcrm.accounting.models import Booking
 from django.contrib import messages
 from koalixcrm.crm.views import *
 from koalixcrm.plugin import *
+from koalixcrm.crm.exceptions import *
 
 
 class ContractPostalAddress(admin.StackedInline):
@@ -366,6 +367,9 @@ class OptionInvoice(admin.ModelAdmin):
             self.message_user(request, _("Successfully registered Invoice in the Accounting"))
             return;
         except OpenInterestAccountMissing as e:
+            self.message_user(request, "Did not register Invoice in Accounting: " + e.__str__(), level=messages.ERROR)
+            return;
+        except IncompleteInvoice as e:
             self.message_user(request, "Did not register Invoice in Accounting: " + e.__str__(), level=messages.ERROR)
             return;
 
