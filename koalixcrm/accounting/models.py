@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from datetime import *
-from subprocess import *
+from subprocess import check_output
 from xml.dom.minidom import Document
 
 from django.conf import settings
@@ -15,6 +15,9 @@ from koalixcrm.crm.exceptions import UserExtensionMissing
 
 
 class AccountingPeriod(models.Model):
+    """Accounting period repesents the equivalent of the business logic element of a fiscal year
+    the accounting period is refered in the booking and is used as a supporting object to generate
+    balance sheets and profit/loss statements"""
     title = models.CharField(max_length=200, verbose_name=_("Title"))  # For example "Year 2009", "1st Quarter 2009"
     begin = models.DateField(verbose_name=_("Begin"))
     end = models.DateField(verbose_name=_("End"))
@@ -61,7 +64,8 @@ class AccountingPeriod(models.Model):
             raise NoPriorAccountingPeriodFound()
         return accountingPeriods
 
-    def createXML(self, raisedbyuser, whatToCreate):
+    @staticmethod
+    def createXML(whatToCreate):
         """This method serialize requestd objects into a XML file which is located in the PDF_OUTPUT_ROOT folder.
 
           Args:
@@ -197,20 +201,20 @@ class Account(models.Model):
     isACustomerPaymentAccount = models.BooleanField(verbose_name=_("Is a Customer Payment Account"))
 
     def sumOfAllBookings(self):
-        sum = self.allBookings(fromAccount=False) - self.allBookings(fromAccount=True)
+        calculated_sum = self.allBookings(fromAccount=False) - self.allBookings(fromAccount=True)
         if (self.accountType == 'S' or self.accountType == 'L'):
-            sum = 0 - sum
-        return sum
+            calculated_sum = 0 - calculated_sum
+        return calculated_sum
 
     sumOfAllBookings.short_description = _("Value");
 
     def sumOfAllBookingsWithinAccountingPeriod(self, accountingPeriod):
-        sum = self.allBookingsInAccountingPeriod(fromAccount=False,
+        calculated_sum = self.allBookingsInAccountingPeriod(fromAccount=False,
                                                  accountingPeriod=accountingPeriod) - self.allBookingsInAccountingPeriod(
             fromAccount=True, accountingPeriod=accountingPeriod)
         if (self.accountType == 'S' or self.accountType == 'L'):
-            sum = 0 - sum
-        return sum
+            calculated_sum = 0 - calculated_sum
+        return calculated_sum
 
     def sumOfAllBookingsBeforeAccountingPeriod(self, currentAccountingPeriod):
         accountingPeriods = AccountingPeriod.getAllPriorAccountingPeriods(currentAccountingPeriod)
