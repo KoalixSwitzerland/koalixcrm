@@ -311,13 +311,13 @@ class OptionInvoice(admin.ModelAdmin):
         _selected_action = forms.CharField(widget=forms.MultipleHiddenInput)
         paymentAccount = forms.ModelChoiceField(Account.objects.filter(accountType="A"))
 
-    def response_add(self, request, new_object):
-        obj = self.after_saving_model_and_related_inlines(request, new_object)
-        return super(OptionInvoice, self).response_add(request, obj)
+    def response_add(self, request, obj, post_url_continue=None):
+        new_obj = self.after_saving_model_and_related_inlines(request, obj)
+        return super(OptionInvoice, self).response_add(request, new_obj)
 
-    def response_change(self, request, new_object):
-        obj = self.after_saving_model_and_related_inlines(request, new_object)
-        return super(OptionInvoice, self).response_add(request, obj)
+    def response_change(self, request, obj):
+        new_obj = self.after_saving_model_and_related_inlines(request, obj)
+        return super(OptionInvoice, self).response_add(request, new_obj)
 
     def after_saving_model_and_related_inlines(self, request, obj):
         try:
@@ -617,7 +617,8 @@ class OptionCustomer(admin.ModelAdmin):
     pluginProcessor = PluginProcessor()
     inlines.extend(pluginProcessor.getPluginAdditions("customerInline"))
 
-    def createContract(self, request, queryset):
+    @staticmethod
+    def createContract(request, queryset):
         for obj in queryset:
             contract = obj.createContract(request)
             response = HttpResponseRedirect('/admin/crm/contract/' + str(contract.id))
@@ -625,7 +626,8 @@ class OptionCustomer(admin.ModelAdmin):
 
     createContract.short_description = _("Create Contract")
 
-    def createQuote(self, request, queryset):
+    @staticmethod
+    def createQuote(queryset):
         for obj in queryset:
             quote = obj.createQuote()
             response = HttpResponseRedirect('/admin/crm/quote/' + str(quote.id))
@@ -633,7 +635,8 @@ class OptionCustomer(admin.ModelAdmin):
 
     createQuote.short_description = _("Create Quote")
 
-    def createInvoice(self, request, queryset):
+    @staticmethod
+    def createInvoice(queryset):
         for obj in queryset:
             invoice = obj.createInvoice()
             response = HttpResponseRedirect('/admin/crm/invoice/' + str(invoice.id))

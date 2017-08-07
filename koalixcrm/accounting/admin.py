@@ -34,7 +34,7 @@ class OptionBooking(admin.ModelAdmin):
 
 
 class AccountForm(forms.ModelForm):
-    """ AccountForm is used to overwrite the clean method of the 
+    """AccountForm is used to overwrite the clean method of the
     original form and to add an additional checks to the model"""
 
     class Meta:
@@ -79,7 +79,7 @@ class OptionAccount(admin.ModelAdmin):
 
 
 class AccountingPeriodForm(forms.ModelForm):
-    """ AccountingPeriodForm is used to overwrite the clean method of the 
+    """AccountingPeriodForm is used to overwrite the clean method of the
     original form and to add an additional check to the model"""
 
     class Meta:

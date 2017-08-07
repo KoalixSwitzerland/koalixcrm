@@ -22,7 +22,7 @@ class Command(BaseCommand):
     args = '[]'
     label = 'application name'
 
-    def handle(self, **options):
+    def handle(self, *args, **options):
         invoicetemplate = 'invoice.xsl'
         quotetemplate = 'quote.xsl'
         deliveryordertemplate = 'deliveryorder.xsl'

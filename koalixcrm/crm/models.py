@@ -2,7 +2,7 @@
 
 from datetime import *
 from decimal import Decimal
-from subprocess import *
+from subprocess import check_output
 
 from django.conf import settings
 from django.contrib import auth
@@ -247,8 +247,8 @@ class PurchaseOrder(models.Model):
         tax = 0
         try:
             positions = PurchaseOrderPosition.objects.filter(contract=self.id)
-            if type(positions) == PurchaseOrderPosition:
-                if type(self.discount) == Decimal:
+            if isinstance(positions, PurchaseOrderPosition):
+                if isinstance(self.discount, Decimal):
                     price = int(positions.recalculatePrices(pricingDate, self.customer, self.currency) * (
                     1 - self.discount / 100) / self.currency.rounding) * self.currency.rounding
                     tax = int(positions.recalculateTax(self.currency) * (
@@ -258,7 +258,7 @@ class PurchaseOrder(models.Model):
                     tax = positions.recalculateTax(self.currency)
             else:
                 for position in positions:
-                    if type(self.discount) == Decimal:
+                    if isinstance(self.discount, Decimal):
                         price += int(position.recalculatePrices(pricingDate, self.customer, self.currency) * (
                         1 - self.discount / 100) / self.currency.rounding) * self.currency.rounding
                         tax += int(position.recalculateTax(self.currency) * (
@@ -350,8 +350,8 @@ class SalesContract(models.Model):
         tax = 0
         try:
             positions = SalesContractPosition.objects.filter(contract=self.id)
-            if type(positions) == SalesContractPosition:
-                if type(self.discount) == Decimal:
+            if isinstance(positions,  SalesContractPosition):
+                if isinstance(self.discount,  Decimal):
                     price = int(positions.recalculatePrices(pricingDate, self.customer, selof.currency) * (
                     1 - self.discount / 100) / self.currency.rounding) * self.currency.rounding
                     tax = int(positions.recalculateTax(self.currency) * (
@@ -363,7 +363,7 @@ class SalesContract(models.Model):
                 for position in positions:
                     price += position.recalculatePrices(pricingDate, self.customer, self.currency)
                     tax += position.recalculateTax(self.currency)
-                if type(self.discount) == Decimal:
+                if isinstance(self.discount, Decimal):
                     price = int(price * (1 - self.discount / 100) / self.currency.rounding) * self.currency.rounding
                     tax = int(tax * (1 - self.discount / 100) / self.currency.rounding) * self.currency.rounding
 
@@ -835,7 +835,7 @@ class Position(models.Model):
     def recalculatePrices(self, pricingDate, customer, currency):
         if self.overwriteProductPrice == False:
             self.positionPricePerUnit = self.product.getPrice(pricingDate, self.unit, customer, currency)
-        if type(self.discount) == Decimal:
+        if isinstance(self.discount, Decimal):
             self.lastCalculatedPrice = int(self.positionPricePerUnit * self.quantity * (
             1 - self.discount / 100) / currency.rounding) * currency.rounding
         else:
@@ -845,7 +845,7 @@ class Position(models.Model):
         return self.lastCalculatedPrice
 
     def recalculateTax(self, currency):
-        if type(self.discount) == Decimal:
+        if isinstance(self.discount, Decimal):
             self.lastCalculatedTax = int(self.product.getTaxRate() / 100 * self.positionPricePerUnit * self.quantity * (
             1 - self.discount / 100) / currency.rounding) * currency.rounding
         else:
