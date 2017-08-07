@@ -17,4 +17,8 @@ deploy:
   app: koalix-crm
   on:
     repo: scaphilo/koalixcrm
-
+  run:
+  - "python sandbox/manage.py collectstatic"
+  - "python sandbox/manage.py makemigrations"
+  - "python sandbox/manage.py migrate"
+  - "echo \"from django.contrib.auth.models import User; User.objects.create_superuser('Admin002', 'admin002@koalixcrm.com', 'admin002');\" | python sandbox/manage.py shell"
