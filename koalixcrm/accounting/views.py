@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from os import path
-from subprocess import *
 from wsgiref.util import FileWrapper
 
 from django.http import Http404
