@@ -12,7 +12,7 @@ Contents:
    accounting
    crm
    djangoUserExtention
-   developer
+   customisation
    faq
 
 Indices and tables

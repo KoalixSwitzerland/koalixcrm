@@ -1,10 +1,14 @@
 .. highlight:: rst
 
-koalixcrm For Translators and Modders
-=====================================
+Customising koalixcrm
+=====================
 
-With this part ot the documentation i address two major groups of developers. First there are the translator - which are not really developer but are a very urgent part of every open source program.
-With the second group of developer i mean the real python / django / js Developer.
+There are several ways in which to customise koalixcrm, depending on your requirements.
+
+In all cases contributions can be submitted back to koalixcrm by opening an
+issue in `GitHub <https://github.com/scaphilo/koalixcrm>`_ - see our
+repositories CONTRIBUTING.md file for more information.
+
 
 Translators
 -----------
@@ -40,13 +44,26 @@ After this you ware able to use your translation. Sometimes its needed to set yo
 Go on with your translation for accounting and for djangouserextention folder.
 As soon as you finished this part you will be able to work with koalixcrm in your own language. But there is still something missing the templatefiles for pdf creation have to be translated as well.
 
-The templatefiles for PDF creation
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Custom template files for PDF creation
+--------------------------------------
+
+For translators or localisers
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 To translate the templatefiles for PDF creation you will have to adjust the templatefiles in the /var/www/koalixcrm/templatefiles folder. There you find a folder for every language code that was already 
 translated by the koalixcrm comunity or me. To add your own language type the following:
 cp -R en yourlanguage
 now open yourlanguage folder and adjust the content of every xml file.
+
+Site specific customisation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+As with customisations for translators, the focus for site specific
+customisation is koalixcrm's install path/templatefiles/yourlanguage. Entries
+in the yourlanguage folder can be edited as you wish, to produce documents with
+your letterhead, contact details or other modifications.
+
 
 
 Modders
