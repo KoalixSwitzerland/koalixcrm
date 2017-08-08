@@ -1,0 +1,24 @@
+language: python
+python:
+- '3.4'
+
+install:
+  - python setup.py install
+  - pip install -r requirements.txt
+
+script: pytest
+
+# Deployment
+deploy:
+  provider: heroku
+  api_key:
+    secure: $HEROKU_API_KEY
+
+  app: koalix-crm
+  on:
+    repo: scaphilo/koalixcrm
+  run:
+  - "python sandbox/manage.py collectstatic"
+  - "python sandbox/manage.py makemigrations"
+  - "python sandbox/manage.py migrate"
+  - "echo \"from django.contrib.auth.models import User; User.objects.create_superuser('Admin002', 'admin002@koalixcrm.com', 'admin002');\" | python sandbox/manage.py shell"

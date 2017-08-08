@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
 from os import path
-from subprocess import *
 from wsgiref.util import FileWrapper
 
 from django.http import Http404
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext as _
-from koalixcrm.crm.exceptions import TemplateSetMissing
-from koalixcrm.crm.exceptions import UserExtensionMissing
 from koalixcrm.crm.models import *
 
 
@@ -23,8 +20,8 @@ def exportPDF(callingModelAdmin, request, whereToCreateFrom, whatToCreate, redir
           redirectTo (str): String that describes to where the method sould redirect in case of an error
 
         Returns:
-              HTTpResponse with a PDF when successful
-              HTTpResponseRedirect when not successful
+          HTTpResponse with a PDF when successful
+          HTTpResponseRedirect when not successful
 
         Raises:
           raises Http404 exception if anything goes wrong"""
@@ -33,13 +30,13 @@ def exportPDF(callingModelAdmin, request, whereToCreateFrom, whatToCreate, redir
         response = HttpResponse(FileWrapper(open(pdf, 'rb')), content_type='application/pdf')
         response['Content-Length'] = path.getsize(pdf)
     except (TemplateSetMissing, UserExtensionMissing, CalledProcessError) as e:
-        if type(e) == UserExtensionMissing:
+        if isinstance(e, UserExtensionMissing):
             response = HttpResponseRedirect(redirectTo)
             callingModelAdmin.message_user(request, _("User Extension Missing"))
-        elif type(e) == TemplateSetMissing:
+        elif isinstance(e, TemplateSetMissing):
             response = HttpResponseRedirect(redirectTo)
             callingModelAdmin.message_user(request, _("Templateset Missing"))
-        elif type(e) == CalledProcessError:
+        elif isinstance(e, CalledProcessError):
             response = HttpResponseRedirect(redirectTo)
             callingModelAdmin.message_user(request, e.output)
         else:

@@ -21,3 +21,6 @@ pip-log.txt
 .tox
 *~
 
+# IntelliJ
+*.iml
+/.idea/
