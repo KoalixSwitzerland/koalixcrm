@@ -6,51 +6,57 @@ Accounting
 Accouting Periods
 -------------------------
 
-An Accounting Period is a Timeframe in which you make your ProfitLoss Calculation. Its often called Fiscal Year or Quarter or Busniess Year. What ever you like.
-Accounting Periods have nothing to do with the Accounts but with the Bookings. When you open an existing Accounting Period you find a list of all Bookings during this Accounting below
-as inline table on the formular. Feel free to add here your bookings. Be carefull when you set up a new Accounting Period. koalixcrm does not check if you do bookings that are outside the 
-possible Accounting Period range nor does it check if there were two accounting periods for the same time set. This is up to the user to check that.
+An Accounting Period is the timeframe over which you make your Profit and Loss calculation. Its often called Fiscal Year,
+Business Year or Business Quarter. What ever you like.
+Accounting Periods have nothing to do with the Accounts but with the Bookings. When you open an existing Accounting Period you find a list of all Bookings during the period below
+as an inline table on the page. Feel free to add your bookings here. Be careful when you set up a new Accounting Period -  koalixcrm does not check if you create bookings that are outside the 
+possible Accounting Period range nor does it check if there are two accounting periods for the same time period. It is up to the user to check that.
 
 
-Account
--------
+Account section
+---------------
 
 Is a Customer Payment Account
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-These were the possible customer payment accounts you ware able to select when you choose "register payment" in your invoice detail view
+
+These are the accounts you are able to select when you choose "register payment" in your invoice detail view as destinations for Customers to pay in to
 
 Is the Open Liabilities Account
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-This is not implemented yet because the link between Accounting and CRM is not yet finised for the purchase order site (where you were buying not selling)
-This is anyway most often not used by companies because its to much effort to copy all the invoices you get from your suppliers into your system. Normaly you will only book this manualy and
-store the invoce you got form your supplier phsyicaly in a filer in your office. If you do so think about using a good description so that you find the invoice in case of a tax control (in fact 
-i never had a tax control in my company but i think they are really intrested in such things :-) )
+This is not implemented yet because the link between Accounting and CRM is not yet finised for the purchase order side
+(where you were buying not selling).
+This is usually not used by companies because its to much effort to copy all the invoices they receive from suppliers into
+your system. Normally you will only book this manually and store the invoce you got from your supplier physically in a filer
+in your office. If you do so think about using a good description so that you find the invoice in case of a tax audit
+(I have never had a tax audit in my company but I think they are really interested in such things :-) ).
 
 Is the Open Intrest Account
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-There is only one open intrest Account in your Accounting and its used to book invoiced contract amounts. You will have to set this open intrest account. If this si not set on at least one account
-the link between Accounting and CRM will now work correctly
+There should only be one Open Intrest Account in your Accounting and it is used to book invoiced contract amounts. You
+will have to set this open intrest account. If this is not set on at least one account
+the link between Accounting and CRM will not work correctly.
 
 Is a Product Inventory Account
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-You may already choose this option but it has no effect yet because Product inventory is not yet implemented.
+You may choose this option but it has no effect yet because Product inventory is not yet implemented.
 
 
 Bookings
 --------
 
-A booking is a common part of every accounting. Link to wikipage.
+A booking is a common part of all accounting. Link to wikipage.
 
 Product Categories
 ------------------
 
-Product Categories are needed for the Interface between the CRM and the Accounting. You can introduce different product Categories for different kind of companies. When i should make an example to 
-explain i make this with a "it support company". A IT Support company usualy provides Support and Hardware. Support can be for on-site support or in-house support. Its possible that the 
-support must be bought from an other company because you were not able to do everything yourself. Then the Hardware, you normaly dont produce hardware on your own, you buy them from a supplier.
-Now lets fix that to the following products you may offer to your customers.
+Product Categories are needed for the interface between the CRM and Accounting. You can introduce different product Categories
+for different kinds of companies. In this example, we have an "IT support company". An IT Support company usually provides Support and Hardware. Support can be for on-site support or in-house support. Its possible that the 
+support must be bought from an other company because you were not able to do everything yourself. Then the Hardware, you normaly don't produce hardware on your own, you buy them from a supplier.
+
+Now lets record that as the following products you may offer to your customers.
 
 +-------------+---------------------+
 | Product Nr. |  Description        |
@@ -61,7 +67,7 @@ Now lets fix that to the following products you may offer to your customers.
 | 4           |  voip hardware      |
 +-------------+---------------------+
 
-To be able to do automatic accounting you will have to set the accounts where you want to book your income and our spendings for each product.
+To be able to do automatic accounting you will have to set the accounts where you want to book your income and spending for each product.
 
 +------------+------------------+------------------------------------+
 |Product Nr. | Earnings Acc.    | Spendings Acc.                     |
@@ -72,6 +78,7 @@ To be able to do automatic accounting you will have to set the accounts where yo
 |4.          | Income Hardware  | Spendings Hardware                 |
 +------------+------------------+------------------------------------+
 
-Now there are of cause more than four products in your inventary i hope and depending on your "love on details" you will have hundreds of them. Insted of setting the these
-Ernings and Spendings Accounts for every Prdoduct individualy koalixcrm has this useful product categories where you have to set it only once. After that you are able to 
-link the product categories when you add a product in your crm. Its also possible to leave this blank if you dont like to make the link between CRM and Accounting
+Of course, there are more than four products in your inventary - I hope - and depending on your "love of details" you will
+have hundreds of them. Instead of setting the Ernings and Spendings Accounts for every Prdoduct individualy koalixcrm has
+useful product categories where you only have to set it once. After that you are able to 
+link the product categories when you add a product in your CRM. Its also possible to leave this blank if you dont want to make the link between CRM and Accounting
