@@ -20,7 +20,7 @@ the software under Windows I simply do not have the nerves to play around with t
   cd /var/www/koalixcrm/crm
   django-admin makemessages -l yourlanguage
 
-this creates a new directory in the folder called /var/www/koalixcrm/crm/locale/yourlanguage/LC_MESSAGES/
+this creates a new directory in the folder called ``/var/www/koalixcrm/crm/locale/yourlanguage/LC_MESSAGES/``
 in this directory you will find one file called django.po -  edit this file in the following way:
 
 Lets say you want to translate koalixcrm to French. Find all msgid's in django.po and look at the english text.
@@ -40,7 +40,7 @@ After you finised translating the whole file test your translation by compiling 
 
   django-admin compilemessages 
 
-After this you are able to use your translation. Sometimes seting your language in /var/www/koalixcrm/settings.py is required.
+After this you are able to use your translation. Sometimes seting your language in ``/var/www/koalixcrm/settings.py`` is required.
 Go on with your translation for accounting and for djangouserextention folders.
 As soon as you finish this part you will be able to work with koalixcrm in your own language. But there is still something missing: the templatefiles for pdf creation have to be translated as well.
 
@@ -48,7 +48,7 @@ As soon as you finish this part you will be able to work with koalixcrm in your 
 The templatefiles for PDF creation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-To translate the templatefiles for PDF creation you will have to adjust the templatefiles in the /var/www/koalixcrm/templatefiles folder. There you will find a folder for every language code that is already 
+To translate the templatefiles for PDF creation you will have to adjust the templatefiles in the ``/var/www/koalixcrm/templatefiles`` folder. There you will find a folder for every language code that is already 
 translated by the koalixcrm comunity or me. To add your own language type the following::
 
   cp -R en yourlanguage
