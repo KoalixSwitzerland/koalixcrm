@@ -346,34 +346,35 @@ class SalesContract(models.Model):
                                        blank="True")
 
     def recalculatePrices(self, pricingDate):
+        """Performs a price recalculation on the SalesContract.
+        The calculated price is stored in the lastCalculatedPrice and lastCalculatedTax.
+        The date when the price was calculated is stored in lastPricingDate
+
+        Args:
+            no arguments
+
+        Returns:
+            1 (Boolean) when passed
+            0 (Boolean) when failed
+
+        Raises:
+            Can trow Product.NoPriceFound when Product Price could not be found"""
+
         price = 0
         tax = 0
-        try:
-            positions = SalesContractPosition.objects.filter(contract=self.id)
-            if isinstance(positions,  SalesContractPosition):
-                if isinstance(self.discount,  Decimal):
-                    price = int(positions.recalculatePrices(pricingDate, self.customer, selof.currency) * (
-                    1 - self.discount / 100) / self.currency.rounding) * self.currency.rounding
-                    tax = int(positions.recalculateTax(self.currency) * (
-                    1 - self.discount / 100) / self.currency.rounding) * self.currency.rounding
-                else:
-                    price = positions.recalculatePrices(pricingDate, self.customer, self.currency)
-                    tax = positions.recalculateTax(self.currency)
-            else:
-                for position in positions:
-                    price += position.recalculatePrices(pricingDate, self.customer, self.currency)
-                    tax += position.recalculateTax(self.currency)
-                if isinstance(self.discount, Decimal):
-                    price = int(price * (1 - self.discount / 100) / self.currency.rounding) * self.currency.rounding
-                    tax = int(tax * (1 - self.discount / 100) / self.currency.rounding) * self.currency.rounding
-
-            self.lastCalculatedPrice = price
-            self.lastCalculatedTax = tax
-            self.lastPricingDate = pricingDate
-            self.save()
-            return 1
-        except Quote.DoesNotExist:
-            return 0
+        positions = SalesContractPosition.objects.filter(contract=self.id)
+        if positions.exists():
+            for position in positions:
+                price += position.recalculatePrices(pricingDate, self.customer, self.currency)
+                tax += position.recalculateTax(self.currency)
+            if isinstance(self.discount, Decimal):
+                price = int(price * (1 - self.discount / 100) / self.currency.rounding) * self.currency.rounding
+                tax = int(tax * (1 - self.discount / 100) / self.currency.rounding) * self.currency.rounding
+        self.lastCalculatedPrice = price
+        self.lastCalculatedTax = tax
+        self.lastPricingDate = pricingDate
+        self.save()
+        return 1
 
     class Meta:
         app_label = "crm"

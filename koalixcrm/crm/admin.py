@@ -297,7 +297,7 @@ class OptionInvoice(admin.ModelAdmin):
     search_fields = ('contract__id', 'customer__name', 'currency__description')
     fieldsets = (
         (_('Basics'), {
-            'fields': ('contract', 'description', 'customer', 'currency', 'payableuntil', 'status')
+            'fields': ('contract', 'description', 'customer', 'currency', 'discount',  'payableuntil', 'status')
         }),
     )
     save_as = True
@@ -422,7 +422,7 @@ class OptionQuote(admin.ModelAdmin):
 
     fieldsets = (
         (_('Basics'), {
-            'fields': ('contract', 'description', 'customer', 'currency', 'validuntil', 'staff', 'status')
+            'fields': ('contract', 'description', 'customer', 'currency', 'discount', 'validuntil', 'staff', 'status')
         }),
     )
     save_as = True
@@ -444,7 +444,7 @@ class OptionQuote(admin.ModelAdmin):
             obj.recalculatePrices(date.today())
             self.message_user(request, "Successfully calculated Prices")
         except Product.NoPriceFound as e:
-            self.message_user(request, "Unsuccessfull in updating the Prices " + e.__str__())
+            self.message_user(request, "Unsuccessfull in updating the Prices " + e.__str__(), level=messages.ERROR)
         return obj
 
     def save_model(self, request, obj, form, change):
@@ -456,13 +456,9 @@ class OptionQuote(admin.ModelAdmin):
         obj.save()
 
     def recalculatePrices(self, request, queryset):
-        try:
-            for obj in queryset:
-                obj.recalculatePrices(date.today())
-                self.message_user(request, _("Successfully recalculated Prices"))
-        except Product.NoPriceFound as e:
-            self.message_user(request, _("Unsuccessfull in updating the Prices ") + e.__str__())
-            return;
+        for obj in queryset:
+            self.after_saving_model_and_related_inlines(request, obj)
+        return;
 
     recalculatePrices.short_description = _("Recalculate Prices")
 
@@ -505,7 +501,7 @@ class OptionPurchaseOrder(admin.ModelAdmin):
 
     fieldsets = (
         (_('Basics'), {
-            'fields': ('contract', 'description', 'supplier', 'currency', 'status')
+            'fields': ('contract', 'description', 'supplier', 'currency', 'discount', 'status')
         }),
     )
 
