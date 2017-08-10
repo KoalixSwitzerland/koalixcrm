@@ -13,9 +13,23 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url
+
+from django.conf.urls.static import *
+from django.contrib.staticfiles.urls import static
 from django.contrib import admin
+from filebrowser.sites import FileBrowserSite
+from django.core.files.storage import DefaultStorage
+
+site = FileBrowserSite(name="filebrowser", storage=DefaultStorage())
+customsite = FileBrowserSite(name='custom_filebrowser', storage=DefaultStorage())
+customsite.directory = "uploads/"
+
+
+admin.autodiscover()
 
 urlpatterns = [
+    url(r'^admin/filebrowser/', customsite.urls),
     url(r'^admin/', admin.site.urls),
 ]
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
