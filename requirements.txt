@@ -7,3 +7,4 @@ psycopg2==2.7.3
 pytz==2017.2
 gunicorn==19.7.1
 dj-database-url==0.4.2
+pytest-cov==2.5.1

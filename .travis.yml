@@ -2,11 +2,16 @@ language: python
 python:
 - '3.4'
 
+before_install:
+  - sudo apt-get install jq
+  - wget -O ~/codacy-coverage-reporter-assembly-latest.jar $(curl https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r .assets[0].browser_download_url)
+
+
 install:
   - python setup.py install
   - pip install -r requirements.txt
 
-script: pytest
+script: pytest --cov=koalixcrm  --cov-report xml
 
 # Deployment
 deploy:
@@ -22,3 +27,6 @@ deploy:
   - "python sandbox/manage.py makemigrations"
   - "python sandbox/manage.py migrate"
   - "echo \"from django.contrib.auth.models import User; User.objects.create_superuser('Admin002', 'admin002@koalixcrm.com', 'admin002');\" | python sandbox/manage.py shell"
+
+after_success:
+  - java -cp ~/codacy-coverage-reporter-assembly-latest.jar com.codacy.CodacyCoverageReporter -l Java -r coverage.xml
