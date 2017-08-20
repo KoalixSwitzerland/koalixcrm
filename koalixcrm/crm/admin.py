@@ -8,8 +8,10 @@ from django.template.context_processors import csrf
 from django.utils.translation import ugettext as _
 from koalixcrm.accounting.models import Account
 from koalixcrm.accounting.models import Booking
+from django.contrib import messages
 from koalixcrm.crm.views import *
 from koalixcrm.plugin import *
+from koalixcrm.crm.exceptions import *
 
 
 class ContractPostalAddress(admin.StackedInline):
@@ -295,7 +297,7 @@ class OptionInvoice(admin.ModelAdmin):
     search_fields = ('contract__id', 'customer__name', 'currency__description')
     fieldsets = (
         (_('Basics'), {
-            'fields': ('contract', 'description', 'customer', 'currency', 'payableuntil', 'status')
+            'fields': ('contract', 'description', 'customer', 'currency', 'discount',  'payableuntil', 'status')
         }),
     )
     save_as = True
@@ -309,20 +311,20 @@ class OptionInvoice(admin.ModelAdmin):
         _selected_action = forms.CharField(widget=forms.MultipleHiddenInput)
         paymentAccount = forms.ModelChoiceField(Account.objects.filter(accountType="A"))
 
-    def response_add(self, request, new_object):
-        obj = self.after_saving_model_and_related_inlines(request, new_object)
-        return super(OptionInvoice, self).response_add(request, obj)
+    def response_add(self, request, obj, post_url_continue=None):
+        new_obj = self.after_saving_model_and_related_inlines(request, obj)
+        return super(OptionInvoice, self).response_add(request, new_obj)
 
-    def response_change(self, request, new_object):
-        obj = self.after_saving_model_and_related_inlines(request, new_object)
-        return super(OptionInvoice, self).response_add(request, obj)
+    def response_change(self, request, obj):
+        new_obj = self.after_saving_model_and_related_inlines(request, obj)
+        return super(OptionInvoice, self).response_add(request, new_obj)
 
     def after_saving_model_and_related_inlines(self, request, obj):
         try:
             obj.recalculatePrices(date.today())
             self.message_user(request, "Successfully calculated Prices")
         except Product.NoPriceFound as e:
-            self.message_user(request, "Unsuccessfull in updating the Prices " + e.__str__())
+            self.message_user(request, "Unsuccessfull in updating the Prices " + e.__str__(), level=messages.ERROR)
         return obj
 
     def save_model(self, request, obj, form, change):
@@ -339,7 +341,7 @@ class OptionInvoice(admin.ModelAdmin):
                 obj.recalculatePrices(date.today())
             self.message_user(request, "Successfully recalculated Prices")
         except Product.NoPriceFound as e:
-            self.message_user(request, "Unsuccessfull in updating the Prices " + e.__str__())
+            self.message_user(request, "Unsuccessfull in updating the Prices " + e.__str__(), level=messages.ERROR)
             return;
 
     recalculatePrices.short_description = _("Recalculate Prices")
@@ -359,9 +361,17 @@ class OptionInvoice(admin.ModelAdmin):
     createDeliveryOrderPDF.short_description = _("Create PDF of Delivery Order")
 
     def registerInvoiceInAccounting(self, request, queryset):
-        for obj in queryset:
-            obj.registerinvoiceinaccounting(request)
+        try:
+            for obj in queryset:
+                obj.registerinvoiceinaccounting(request)
             self.message_user(request, _("Successfully registered Invoice in the Accounting"))
+            return;
+        except OpenInterestAccountMissing as e:
+            self.message_user(request, "Did not register Invoice in Accounting: " + e.__str__(), level=messages.ERROR)
+            return;
+        except IncompleteInvoice as e:
+            self.message_user(request, "Did not register Invoice in Accounting: " + e.__str__(), level=messages.ERROR)
+            return;
 
     registerInvoiceInAccounting.short_description = _("Register Invoice in Accounting")
 
@@ -375,7 +385,7 @@ class OptionInvoice(admin.ModelAdmin):
         form = None
         if request.POST.get('post'):
             if 'cancel' in request.POST:
-                self.message_user(request, _("Canceled registeration of payment in the accounting"))
+                self.message_user(request, _("Canceled registeration of payment in the accounting"), level=messages.ERROR)
                 return
             elif 'register' in request.POST:
                 form = self.PaymentForm(request.POST)
@@ -391,6 +401,7 @@ class OptionInvoice(admin.ModelAdmin):
             c = {'action_checkbox_name': helpers.ACTION_CHECKBOX_NAME, 'queryset': queryset, 'form': form}
             c.update(csrf(request))
             return render(request, 'crm/admin/registerPayment.html', c)
+
 
     registerPaymentInAccounting.short_description = _("Register Payment in Accounting")
 
@@ -411,7 +422,7 @@ class OptionQuote(admin.ModelAdmin):
 
     fieldsets = (
         (_('Basics'), {
-            'fields': ('contract', 'description', 'customer', 'currency', 'validuntil', 'staff', 'status')
+            'fields': ('contract', 'description', 'customer', 'currency', 'discount', 'validuntil', 'staff', 'status')
         }),
     )
     save_as = True
@@ -433,7 +444,7 @@ class OptionQuote(admin.ModelAdmin):
             obj.recalculatePrices(date.today())
             self.message_user(request, "Successfully calculated Prices")
         except Product.NoPriceFound as e:
-            self.message_user(request, "Unsuccessfull in updating the Prices " + e.__str__())
+            self.message_user(request, "Unsuccessfull in updating the Prices " + e.__str__(), level=messages.ERROR)
         return obj
 
     def save_model(self, request, obj, form, change):
@@ -445,13 +456,9 @@ class OptionQuote(admin.ModelAdmin):
         obj.save()
 
     def recalculatePrices(self, request, queryset):
-        try:
-            for obj in queryset:
-                obj.recalculatePrices(date.today())
-                self.message_user(request, _("Successfully recalculated Prices"))
-        except Product.NoPriceFound as e:
-            self.message_user(request, _("Unsuccessfull in updating the Prices ") + e.__str__())
-            return;
+        for obj in queryset:
+            self.after_saving_model_and_related_inlines(request, obj)
+        return;
 
     recalculatePrices.short_description = _("Recalculate Prices")
 
@@ -494,7 +501,7 @@ class OptionPurchaseOrder(admin.ModelAdmin):
 
     fieldsets = (
         (_('Basics'), {
-            'fields': ('contract', 'description', 'supplier', 'currency', 'status')
+            'fields': ('contract', 'description', 'supplier', 'currency', 'discount', 'status')
         }),
     )
 
@@ -606,7 +613,8 @@ class OptionCustomer(admin.ModelAdmin):
     pluginProcessor = PluginProcessor()
     inlines.extend(pluginProcessor.getPluginAdditions("customerInline"))
 
-    def createContract(self, request, queryset):
+    @staticmethod
+    def createContract(request, queryset):
         for obj in queryset:
             contract = obj.createContract(request)
             response = HttpResponseRedirect('/admin/crm/contract/' + str(contract.id))
@@ -614,7 +622,8 @@ class OptionCustomer(admin.ModelAdmin):
 
     createContract.short_description = _("Create Contract")
 
-    def createQuote(self, request, queryset):
+    @staticmethod
+    def createQuote(queryset):
         for obj in queryset:
             quote = obj.createQuote()
             response = HttpResponseRedirect('/admin/crm/quote/' + str(quote.id))
@@ -622,7 +631,8 @@ class OptionCustomer(admin.ModelAdmin):
 
     createQuote.short_description = _("Create Quote")
 
-    def createInvoice(self, request, queryset):
+    @staticmethod
+    def createInvoice(queryset):
         for obj in queryset:
             invoice = obj.createInvoice()
             response = HttpResponseRedirect('/admin/crm/invoice/' + str(invoice.id))

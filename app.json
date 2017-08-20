@@ -1,0 +1,10 @@
+
+{
+	"name": "koalixcrm",
+	"description": "koalixcrm is an Open Source Python CRM and ERP based on django",
+	"repository": "https://github.com/scaphilo/koalixcrm.git",
+	"scripts": {
+		"postdeploy": "python sandbox/manage.py collectstatic && python sandbox/manage.py makemigrations && python sandbox/manage.py migrate && echo \"from django.contrib.auth.models import User; User.objects.create_superuser('Admin001', 'admin001@koalixcrm.com', 'admin001')\" | python sandbox/manage.py shell"
+	},
+	"env": {}
+}
