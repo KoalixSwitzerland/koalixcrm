@@ -2,7 +2,6 @@
 <xsl:stylesheet
      xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
      xmlns:fo="http://www.w3.org/1999/XSL/Format">
-<xsl:output method="xml" version="1.0" indent="yes" encoding="UTF-8"/>
 <xsl:decimal-format name="european" decimal-separator="," grouping-separator="."/>
 <xsl:template match ="django-objects">
   <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
@@ -45,7 +44,7 @@
         <fo:table-column column-width="8cm"/>
         <fo:table-body font-size="7pt"
                        font-family="BitstreamVeraSans">
-   <fo:table-row >
+	<fo:table-row >
           <fo:table-cell>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
@@ -53,19 +52,19 @@
               font-weight="bold">Created at:</fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
-              text-align="left"><xsl:text> </xsl:text> </fo:block>
+              text-align="left"><fo:leader leader-pattern="space"/></fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
-              text-align="left">Customer Nr:</fo:block>
+              text-align="left">Customer No:</fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
-              text-align="left">Contract Nr:</fo:block>
+              text-align="left">Contract No:</fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
-              text-align="left"><xsl:text> </xsl:text> </fo:block>
+              text-align="left"><fo:leader leader-pattern="space"/></fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
-              text-align="left">Tax Ref Nr:</fo:block>
+              text-align="left">Tax Reference No:</fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
               text-align="left">IBAN:</fo:block>
@@ -74,10 +73,10 @@
               text-align="left">Payable until:</fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
-              text-align="left"><xsl:text> </xsl:text> </fo:block>
+              text-align="left"><fo:leader leader-pattern="space"/></fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
-              text-align="left">Responsible Person:</fo:block>
+              text-align="left">Responisble:</fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
               text-align="left">Phone direkt:</fo:block>
@@ -137,8 +136,8 @@
           <fo:table-cell>
             <fo:block font-size="6pt"
               font-family="BitstreamVeraSans"
-	      text-decoration="underline"
-              text-align="start"
+              text-align="left"
+              text-decoration="underline"
 	      margin-bottom="0.5cm"><xsl:value-of select="object[@model='djangoUserExtention.templateset']/field[@name='addresser']"/></fo:block>
             <xsl:choose>
               <xsl:when  test="object[@model='crm.postaladdressforcontact']/field[@name='purpose']">
@@ -192,7 +191,7 @@
          </xsl:choose>
         </fo:table-cell>
        </fo:table-row>
-   </fo:table-body>
+	</fo:table-body>
        </fo:table>
         <fo:block font-size="15pt"
               font-family="BitstreamVeraSans"

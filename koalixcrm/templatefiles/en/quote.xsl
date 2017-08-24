@@ -55,16 +55,16 @@
               text-align="left"><fo:leader leader-pattern="space"/></fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
-              text-align="left">Customer Nr:</fo:block>
+              text-align="left">Customer No:</fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
-              text-align="left">Contract Nr:</fo:block>
+              text-align="left">Contract No:</fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
               text-align="left"><fo:leader leader-pattern="space"/></fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
-              text-align="left">Tax Reference Nr:</fo:block>
+              text-align="left">Tax Reference No:</fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
               text-align="left">IBAN:</fo:block>
