@@ -3,6 +3,7 @@
 from datetime import *
 from decimal import Decimal
 from subprocess import check_output
+from subprocess import STDOUT
 
 from django.conf import settings
 from django.contrib import auth
@@ -310,7 +311,7 @@ class PurchaseOrder(models.Model):
             objectsToSerialize += list(PostalAddress.objects.filter(id=address.id))
         xml_serializer.serialize(objectsToSerialize, stream=out, indent=3)
         out.close()
-        check_output(['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml',
+        check_output([settings.FOP_EXECUTABLE, '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml',
                       settings.PDF_OUTPUT_ROOT + 'purchaseorder_' + str(self.id) + '.xml', '-xsl',
                       userExtension[0].defaultTemplateSet.purchaseorderXSLFile.xslfile.path_full, '-pdf',
                       settings.PDF_OUTPUT_ROOT + 'purchaseorder_' + str(self.id) + '.pdf'], stderr=STDOUT)
@@ -467,14 +468,14 @@ class Quote(SalesContract):
         xml.write(settings.PDF_OUTPUT_ROOT + "quote_" + str(self.id) + ".xml")
         if (whatToExport == "quote"):
             check_output(
-                ['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml',
+                [settings.FOP_EXECUTABLE, '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml',
                  settings.PDF_OUTPUT_ROOT + 'quote_' + str(self.id) + '.xml', '-xsl',
                  userExtension[0].defaultTemplateSet.quoteXSLFile.xslfile.path_full, '-pdf',
                  settings.PDF_OUTPUT_ROOT + 'quote_' + str(self.id) + '.pdf'], stderr=STDOUT)
             return settings.PDF_OUTPUT_ROOT + "quote_" + str(self.id) + ".pdf"
         else:
             check_output(
-                ['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml',
+                [settings.FOP_EXECUTABLE, '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml',
                  settings.PDF_OUTPUT_ROOT + 'quote_' + str(self.id) + '.xml', '-xsl',
                  userExtension[0].defaultTemplateSet.purchaseconfirmationXSLFile.xslfile.path_full, '-pdf',
                  settings.PDF_OUTPUT_ROOT + 'purchaseconfirmation_' + str(self.id) + '.pdf'], stderr=STDOUT)
@@ -588,14 +589,14 @@ class Invoice(SalesContract):
         xml.write(settings.PDF_OUTPUT_ROOT + "invoice_" + str(self.id) + ".xml")
         if (whatToExport == "invoice"):
             check_output(
-                ['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml',
+                [settings.FOP_EXECUTABLE, '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml',
                  settings.PDF_OUTPUT_ROOT + 'invoice_' + str(self.id) + '.xml', '-xsl',
                  userExtension[0].defaultTemplateSet.invoiceXSLFile.xslfile.path_full, '-pdf',
                  settings.PDF_OUTPUT_ROOT + 'invoice_' + str(self.id) + '.pdf'], stderr=STDOUT)
             return settings.PDF_OUTPUT_ROOT + "invoice_" + str(self.id) + ".pdf"
         else:
             check_output(
-                ['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml',
+                [settings.FOP_EXECUTABLE, '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml',
                  settings.PDF_OUTPUT_ROOT + 'invoice_' + str(self.id) + '.xml', '-xsl',
                  userExtension[0].defaultTemplateSet.deilveryorderXSLFile.xslfile.path_full, '-pdf',
                  settings.PDF_OUTPUT_ROOT + 'deliveryorder_' + str(self.id) + '.pdf'], stderr=STDOUT)
