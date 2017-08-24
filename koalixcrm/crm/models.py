@@ -311,6 +311,10 @@ class PurchaseOrder(models.Model):
             objectsToSerialize += list(PostalAddress.objects.filter(id=address.id))
         xml_serializer.serialize(objectsToSerialize, stream=out, indent=3)
         out.close()
+        rootelement = xml.getroot()
+        filebrowserdirectory = etree.SubElement(rootelement, "filebrowserdirectory")
+        filebrowserdirectory.text = settings.MEDIA_ROOT
+        xml = etree.parse(settings.PDF_OUTPUT_ROOT + "purchaseorder_" + str(self.id) + ".xml")
         check_output([settings.FOP_EXECUTABLE, '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml',
                       settings.PDF_OUTPUT_ROOT + 'purchaseorder_' + str(self.id) + '.xml', '-xsl',
                       userExtension[0].defaultTemplateSet.purchaseorderXSLFile.xslfile.path_full, '-pdf',
@@ -464,7 +468,7 @@ class Quote(SalesContract):
         xml = etree.parse(settings.PDF_OUTPUT_ROOT + "quote_" + str(self.id) + ".xml")
         rootelement = xml.getroot()
         filebrowserdirectory = etree.SubElement(rootelement, "filebrowserdirectory")
-        filebrowserdirectory.text = settings.FILEBROWSER_DIRECTORY
+        filebrowserdirectory.text = settings.MEDIA_ROOT
         xml.write(settings.PDF_OUTPUT_ROOT + "quote_" + str(self.id) + ".xml")
         if (whatToExport == "quote"):
             check_output(
@@ -585,7 +589,7 @@ class Invoice(SalesContract):
         xml = etree.parse(settings.PDF_OUTPUT_ROOT + "invoice_" + str(self.id) + ".xml")
         rootelement = xml.getroot()
         filebrowserdirectory = etree.SubElement(rootelement, "filebrowserdirectory")
-        filebrowserdirectory.text = settings.FILEBROWSER_DIRECTORY
+        filebrowserdirectory.text = settings.MEDIA_ROOT
         xml.write(settings.PDF_OUTPUT_ROOT + "invoice_" + str(self.id) + ".xml")
         if (whatToExport == "invoice"):
             check_output(
