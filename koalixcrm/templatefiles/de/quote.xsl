@@ -49,34 +49,34 @@
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
               text-align="left"
-              font-weight="bold">Created at:</fo:block>
+              font-weight="bold">Erstellt am:</fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
               text-align="left"><fo:leader leader-pattern="space"/></fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
-              text-align="left">Customer Nr:</fo:block>
+              text-align="left">Kunden Nr:</fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
-              text-align="left">Contract Nr:</fo:block>
+              text-align="left">Auftrag Nr:</fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
               text-align="left"><fo:leader leader-pattern="space"/></fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
-              text-align="left">Tax Reference Nr:</fo:block>
+              text-align="left">MWST Nr:</fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
               text-align="left">IBAN:</fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
-              text-align="left">Valid until:</fo:block>
+              text-align="left">Gueltig bis:</fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
               text-align="left"><fo:leader leader-pattern="space"/></fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
-              text-align="left">Responisble:</fo:block>
+              text-align="left">Verantwortlich:</fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
               text-align="left">Phone direkt:</fo:block>
@@ -199,7 +199,7 @@
               text-align="left"
               font-weight="bold"
               margin-top="1cm">
-        Quote QU-<xsl:value-of select="object[@model='crm.salescontract']/@pk"/>
+        Offerte OF-<xsl:value-of select="object[@model='crm.salescontract']/@pk"/>
        </fo:block>
         <fo:block font-size="9pt"
               font-family="BitstreamVeraSans"
@@ -267,27 +267,27 @@
                 </fo:table-cell>
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="start" >
-                      Description
+                      Beschreibung
                    </fo:block>
                 </fo:table-cell>
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="end" >
-                      Quantity
+                      Anzahl
                    </fo:block>
                 </fo:table-cell>
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="end" >
-                      Price per Unit
+                      Einzelpreis
                    </fo:block>
                 </fo:table-cell>
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="end" >
-                      Discount
+                      Rabatt
                    </fo:block>
                 </fo:table-cell>
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="end" >
-                      Amount
+                      Preis
                    </fo:block>
                 </fo:table-cell>
              </fo:table-header>
