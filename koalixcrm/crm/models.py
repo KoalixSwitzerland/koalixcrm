@@ -3,6 +3,7 @@
 from datetime import *
 from decimal import Decimal
 from subprocess import check_output
+from subprocess import STDOUT
 
 from django.conf import settings
 from django.contrib import auth

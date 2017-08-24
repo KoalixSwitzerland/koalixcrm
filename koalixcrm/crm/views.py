@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 from os import path
 from wsgiref.util import FileWrapper
+from subprocess import CalledProcessError
 
 from django.http import Http404
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext as _
 from koalixcrm.crm.models import *
+from koalixcrm.crm.exceptions import TemplateSetMissing
 
 
 def exportPDF(callingModelAdmin, request, whereToCreateFrom, whatToCreate, redirectTo):
@@ -36,7 +38,7 @@ def exportPDF(callingModelAdmin, request, whereToCreateFrom, whatToCreate, redir
         elif isinstance(e, TemplateSetMissing):
             response = HttpResponseRedirect(redirectTo)
             callingModelAdmin.message_user(request, _("Templateset Missing"))
-        elif isinstance(e, CalledProcessError):
+        elif type(e) == CalledProcessError:
             response = HttpResponseRedirect(redirectTo)
             callingModelAdmin.message_user(request, e.output)
         else:

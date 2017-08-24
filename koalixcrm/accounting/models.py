@@ -2,6 +2,7 @@
 
 from datetime import *
 from subprocess import check_output
+from subprocess import STDOUT
 from xml.dom.minidom import Document
 
 from django.conf import settings
