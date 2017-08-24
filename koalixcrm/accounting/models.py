@@ -166,14 +166,14 @@ class AccountingPeriod(models.Model):
         out.close()
         if (whatToCreate == "balanceSheet"):
             check_output(
-                ['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml',
+                [settings.FOP_EXECUTABLE, '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml',
                  settings.PDF_OUTPUT_ROOT + 'balancesheet_' + str(self.id) + '.xml', '-xsl',
                  userExtension[0].defaultTemplateSet.balancesheetXSLFile.xslfile.path_full, '-pdf',
                  settings.PDF_OUTPUT_ROOT + 'balancesheet_' + str(self.id) + '.pdf'], stderr=STDOUT)
             return settings.PDF_OUTPUT_ROOT + "balancesheet_" + str(self.id) + ".pdf"
         else:
             check_output(
-                ['/usr/bin/fop', '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml',
+                [settings.FOP_EXECUTABLE, '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml',
                  settings.PDF_OUTPUT_ROOT + 'profitlossstatement_' + str(self.id) + '.xml', '-xsl',
                  userExtension[0].defaultTemplateSet.profitLossStatementXSLFile.xslfile.path_full, '-pdf',
                  settings.PDF_OUTPUT_ROOT + 'profitlossstatement_' + str(self.id) + '.pdf'], stderr=STDOUT)
