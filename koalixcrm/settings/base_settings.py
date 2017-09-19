@@ -116,10 +116,16 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-PDF_OUTPUT_ROOT = "/var/www/koalixcrm/static/pdf/"
-FILEBROWSER_DIRECTORY = "/var/www/koalixcrm/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+
 MEDIA_URL = "/media/"
-PROJECT_ROOT = '/var/www/koalixcrm/'
-PDF_OUTPUT_ROOT = '/var/www/koalixcrm/static/pdf/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+PROJECT_ROOT = BASE_DIR
+
+# Settings specific for koalixcrm
+PDF_OUTPUT_ROOT = os.path.join(STATIC_ROOT, 'pdf/')
+FOP_EXECUTABLE = "/usr/bin/fop"
+
+# Settings specific for filebrowser
+FILEBROWSER_DIRECTORY = 'uploads/'
