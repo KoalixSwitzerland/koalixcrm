@@ -7,8 +7,7 @@ from django.http import Http404
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext as _
-from koalixcrm.crm.models import *
-from koalixcrm.crm.exceptions import TemplateSetMissing
+from apps.crm.models import *
 
 
 def exportPDF(callingModelAdmin, request, whereToCreateFrom, whatToCreate, redirectTo):
