@@ -14,3 +14,5 @@ from .base_settings import *
 # Update database configuration with $DATABASE_URL.
 import dj_database_url
 DATABASES = { 'default': dj_database_url.config(conn_max_age=500) }
+
+ALLOWED_HOSTS = ['koalix-crm.herokuapp.com']
