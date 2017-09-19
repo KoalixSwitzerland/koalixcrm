@@ -2,16 +2,13 @@ language: python
 python:
 - '3.4'
 
-before_install:
-  - sudo apt-get install jq
-  - wget -O ~/codacy-coverage-reporter-assembly-latest.jar $(curl https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r .assets[0].browser_download_url)
-
-
 install:
   - python setup.py install
-  - pip install -r requirements.txt
+  - pip install -r requirements/heroku_requirements.txt
 
-script: pytest --cov=koalixcrm  --cov-report xml
+script:
+  - pytest --cov=koalixcrm --cov-report xml --cov-report term
+  - python-codacy-coverage -r coverage.xml
 
 # Deployment
 deploy:
@@ -22,11 +19,9 @@ deploy:
   app: koalix-crm
   on:
     repo: scaphilo/koalixcrm
+    branch: feature/refactoringProjectStructure
   run:
-  - "python sandbox/manage.py collectstatic --noinput"
-  - "python sandbox/manage.py makemigrations"
-  - "python sandbox/manage.py migrate"
-  - "echo \"from django.contrib.auth.models import User; User.objects.create_superuser('Admin002', 'admin002@koalixcrm.com', 'admin002');\" | python sandbox/manage.py shell"
-
-after_success:
-  - java -cp ~/codacy-coverage-reporter-assembly-latest.jar com.codacy.CodacyCoverageReporter -l Java -r coverage.xml
+  - "python manage.py collectstatic --settings=koalixcrm.settings.heroku_settings --noinput"
+  - "python manage.py makemigrations --settings=koalixcrm.settings.heroku_settings"
+  - "python manage.py migrate --settings=koalixcrm.settings.heroku_settings"
+  - "echo \"from django.contrib.auth.models import User; User.objects.create_superuser('Admin002', 'admin002@koalixcrm.com', 'admin002');\" | python manage.py shell"

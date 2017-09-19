@@ -1,1 +1,1 @@
-web: sh -c 'cd sandbox && gunicorn test_koalixcrm.wsgi'
+web: sh -c 'cd koalixcrm && gunicorn koalixcrm.wsgi'
