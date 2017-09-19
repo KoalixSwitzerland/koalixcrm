@@ -7,7 +7,7 @@ install:
   - pip install -r requirements/heroku_requirements.txt
 
 script:
-  - pytest --cov=koalixcrm --cov-report xml --cov-report term
+  - pytest --cov=apps --cov-report xml --cov-report term
   - python-codacy-coverage -r coverage.xml
 
 # Deployment
