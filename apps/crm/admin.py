@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 from django import forms
 from django.contrib import admin
+from django.contrib import messages
 from django.contrib.admin import helpers
-from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.template.context_processors import csrf
 from django.utils.translation import ugettext as _
-from koalixcrm.accounting.models import Account
-from koalixcrm.accounting.models import Booking
-from django.contrib import messages
-from koalixcrm.crm.views import *
 from koalixcrm.plugin import *
-from koalixcrm.crm.exceptions import *
+
+from apps.accounting.models import Account
+from apps.accounting.models import Booking
+from apps.crm.exceptions import *
+from apps.crm.views import *
 
 
 class ContractPostalAddress(admin.StackedInline):

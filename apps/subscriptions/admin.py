@@ -2,7 +2,7 @@
 from django.contrib import admin
 from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext as _
-from koalixcrm.subscriptions.models import *
+from apps.subscriptions.models import *
 
 
 class AdminSubscriptionEvent(admin.TabularInline):

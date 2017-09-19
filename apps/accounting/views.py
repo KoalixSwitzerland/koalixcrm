@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 from os import path
 from wsgiref.util import FileWrapper
-from subprocess import CalledProcessError
 
 from django.http import Http404
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
-from koalixcrm.accounting.models import *
-from koalixcrm.crm.exceptions import TemplateSetMissing
+from apps.accounting.models import *
 
 
 def exportPDF(callingModelAdmin, request, whereToCreateFrom, whatToCreate, redirectTo):

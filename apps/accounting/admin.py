@@ -2,7 +2,7 @@
 from django import forms
 from django.contrib import admin
 from django.utils.translation import ugettext as _
-from koalixcrm.accounting.views import *
+from apps.accounting.views import *
 
 
 class AccountingPeriodBooking(admin.TabularInline):
