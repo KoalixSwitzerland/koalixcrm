@@ -4,14 +4,12 @@ from os import mkdir
 from os import path
 from shutil import copy
 
-import crm
-import djangoUserExtension
+from apps import crm
+from apps import djangoUserExtension
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
 from django.utils.translation import ugettext as _
-from filebrowser.settings import DIRECTORY
-from filebrowser.settings import MEDIA_ROOT
-from settings import PROJECT_ROOT
+from django.conf import settings
 
 DEFAULT_FILE = 'dashboard.py'
 
@@ -43,24 +41,27 @@ class Command(BaseCommand):
         dejavusansfile = 'dejavusans-bold.xml'
         dejavusansboldfile = 'dejavusans.xml'
         logo = 'logo.jpg'
-        copy('templatefiles/generic/' + configfile, MEDIA_ROOT + DIRECTORY + 'templatefiles/' + configfile)
-        copy('templatefiles/generic/' + logo, MEDIA_ROOT + DIRECTORY + 'templatefiles/' + logo)
-        copy('templatefiles/generic/' + dejavusansfile, MEDIA_ROOT + DIRECTORY + 'templatefiles/' + dejavusansfile)
-        copy('templatefiles/generic/' + dejavusansboldfile,
-             MEDIA_ROOT + DIRECTORY + 'templatefiles/' + dejavusansboldfile)
         listofadditionalfiles = ('dejavusans-bold.xml', 'dejavusans.xml',)
-        if path.exists('templatefiles'):
+        if path.exists('apps/templatefiles'):
             templateset = djangoUserExtension.models.TemplateSet()
             templateset.title = 'defaultTemplateSet'
-            if (path.exists(MEDIA_ROOT + DIRECTORY + 'templatefiles') == False):
-                mkdir(MEDIA_ROOT + DIRECTORY + 'templatefiles')
+            if (path.exists(settings.MEDIA_ROOT + settings.FILEBROWSER_DIRECTORY + 'templatefiles') == False):
+                mkdir(settings.MEDIA_ROOT + settings.FILEBROWSER_DIRECTORY + 'templatefiles')
+            copy(settings.PROJECT_ROOT + '/apps/templatefiles/generic/' + configfile,
+                 settings.MEDIA_ROOT + settings.FILEBROWSER_DIRECTORY + 'templatefiles/' + configfile)
+            copy(settings.PROJECT_ROOT + '/apps/templatefiles/generic/' + logo,
+                 settings.MEDIA_ROOT + settings.FILEBROWSER_DIRECTORY + 'templatefiles/' + logo)
+            copy(settings.PROJECT_ROOT + '/apps/templatefiles/generic/' + dejavusansfile,
+                 settings.MEDIA_ROOT + settings.FILEBROWSER_DIRECTORY + 'templatefiles/' + dejavusansfile)
+            copy(settings.PROJECT_ROOT + '/apps/templatefiles/generic/' + dejavusansboldfile,
+                 settings.MEDIA_ROOT + settings.FILEBROWSER_DIRECTORY + 'templatefiles/' + dejavusansboldfile)
             for template in listoftemplatefiles:
-                if path.exists(PROJECT_ROOT + 'templatefiles/en/' + listoftemplatefiles[template]):
-                    copy('templatefiles/en/' + listoftemplatefiles[template],
-                         MEDIA_ROOT + DIRECTORY + 'templatefiles/' + listoftemplatefiles[template])
+                if path.exists(settings.PROJECT_ROOT + '/apps/templatefiles/en/' + listoftemplatefiles[template]):
+                    copy(settings.PROJECT_ROOT + '/apps/templatefiles/en/' + listoftemplatefiles[template],
+                         settings.MEDIA_ROOT + settings.FILEBROWSER_DIRECTORY + 'templatefiles/' + listoftemplatefiles[template])
                     xslfile = djangoUserExtension.models.XSLFile()
                     xslfile.title = template
-                    xslfile.xslfile = DIRECTORY + 'templatefiles/' + listoftemplatefiles[template]
+                    xslfile.xslfile = settings.FILEBROWSER_DIRECTORY + 'templatefiles/' + listoftemplatefiles[template]
                     xslfile.save()
                     if template == 'invoice':
                         templateset.invoiceXSLFile = xslfile
@@ -81,12 +82,12 @@ class Command(BaseCommand):
                     print(listoftemplatefiles)
                     print(listoftemplatefiles[template])
                     print(template)
-                    print(MEDIA_ROOT + DIRECTORY + 'templatefiles/' + listoftemplatefiles[template])
+                    print(settings.PROJECT_ROOT + 'apps/templatefiles/en/' + listoftemplatefiles[template])
                     raise FileNotFoundException
-            templateset.logo = DIRECTORY + 'templatefiles/' + logo
+            templateset.logo = settings.FILEBROWSER_DIRECTORY + 'templatefiles/' + logo
             templateset.bankingaccountref = "xx-xxxxxx-x"
             templateset.addresser = _("John Smit, Sample Company, 8976 Smallville")
-            templateset.fopConfigurationFile = DIRECTORY + 'templatefiles/' + configfile
+            templateset.fopConfigurationFile = settings.FILEBROWSER_DIRECTORY + 'templatefiles/' + configfile
             templateset.headerTextsalesorders = _(
                 "According to your wishes the contract consists of the following positions:")
             templateset.footerTextsalesorders = _("Thank you for your interest in our company \n Best regards")
@@ -126,5 +127,5 @@ class Command(BaseCommand):
             emailaddress.save()
 
             for additionalfile in listofadditionalfiles:
-                if path.exists('templatefiles' + additionalfile):
-                    shutil.copy('templatefiles' + additionalfile, DIRECTORY + 'templatefiles/')
+                if path.exists(settings.PROJECT_ROOT + '/apps/templatefiles' + additionalfile):
+                    copy(settings.PROJECT_ROOT + '/apps/templatefiles' + additionalfile, settings.FILEBROWSER_DIRECTORY + 'templatefiles/')
