@@ -613,17 +613,16 @@ class OptionCustomer(admin.ModelAdmin):
     pluginProcessor = PluginProcessor()
     inlines.extend(pluginProcessor.getPluginAdditions("customerInline"))
 
-    @staticmethod
-    def createContract(request, queryset):
+    def createContract(self, request, queryset):
         for obj in queryset:
             contract = obj.createContract(request)
             response = HttpResponseRedirect('/admin/crm/contract/' + str(contract.id))
-        return response
+            return response
 
     createContract.short_description = _("Create Contract")
 
     @staticmethod
-    def createQuote(queryset):
+    def createQuote(self, request, queryset):
         for obj in queryset:
             quote = obj.createQuote()
             response = HttpResponseRedirect('/admin/crm/quote/' + str(quote.id))
@@ -632,7 +631,7 @@ class OptionCustomer(admin.ModelAdmin):
     createQuote.short_description = _("Create Quote")
 
     @staticmethod
-    def createInvoice(queryset):
+    def createInvoice(self, request, queryset):
         for obj in queryset:
             invoice = obj.createInvoice()
             response = HttpResponseRedirect('/admin/crm/invoice/' + str(invoice.id))
