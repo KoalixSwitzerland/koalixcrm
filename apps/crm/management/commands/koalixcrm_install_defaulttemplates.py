@@ -1,17 +1,14 @@
 # -*- coding: utf-8 -*-
 
-from os import mkdir
 from os import path
-from shutil import copy
 
-import crm
-import djangoUserExtension
+from apps import crm
+from apps import djangoUserExtension
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
+from filebrowser.base import FileObject
 from django.utils.translation import ugettext as _
-from filebrowser.settings import DIRECTORY
-from filebrowser.settings import MEDIA_ROOT
-from settings import PROJECT_ROOT
+from django.conf import settings
 
 DEFAULT_FILE = 'dashboard.py'
 
@@ -22,109 +19,85 @@ class Command(BaseCommand):
     args = '[]'
     label = 'application name'
 
+    @staticmethod
+    def store_default_template_xsl_file(language, file_name):
+        file_path = Command.path_of_default_template_file(language, file_name)
+        xsl_file = Command.store_xsl_file(file_path)
+        return xsl_file
+
+    @staticmethod
+    def path_of_default_template_file(language, file_name):
+        file_path = path.join(settings.STATIC_ROOT, "default_templates", language, file_name)
+        f = None;
+        try:
+            f = open(file_path,'r')
+        except (FileNotFoundError) as e:
+            print(_("File not found:") + file_path)
+            print(_("Run collectstatic command and fix potential errors"))
+        finally:
+            if f is not None:
+                f.close()
+        return file_path
+
+    @staticmethod
+    def store_xsl_file(xsl_file_path):
+        xsl_file = djangoUserExtension.models.XSLFile()
+        xsl_file.title = path.basename(xsl_file_path)
+        xsl_file.xslfile = FileObject(xsl_file_path)
+        xsl_file.save()
+        return xsl_file
+
     def handle(self, *args, **options):
-        invoicetemplate = 'invoice.xsl'
-        quotetemplate = 'quote.xsl'
-        deliveryordertemplate = 'deliveryorder.xsl'
-        purchaseordertemplate = 'purchaseorder.xsl'
-        purchaseconfirmationtemplate = 'purchaseconfirmation.xsl'
-        balancesheettemplate = 'balancesheet.xsl'
-        profitlossstatementtemplate = 'profitlossstatement.xsl'
-        listoftemplatefiles = {'invoice': invoicetemplate,
-                               'quote': quotetemplate,
-                               'deliveryorder': deliveryordertemplate,
-                               'purchaseconfirmation': purchaseconfirmationtemplate,
-                               'purchaseorder': purchaseordertemplate,
-                               'balancesheet': balancesheettemplate,
-                               'profitlossstatement': profitlossstatementtemplate,
-                               }
+        template_set = djangoUserExtension.models.TemplateSet()
+        template_set.title = 'default_template_set'
+        template_set.invoiceXSLFile = Command.store_default_template_xsl_file("en", "invoice.xsl")
+        template_set.quoteXSLFile = Command.store_default_template_xsl_file("en", "quote.xsl")
+        template_set.purchaseconfirmationXSLFile = Command.store_default_template_xsl_file("en", "purchaseconfirmation.xsl")
+        template_set.purchaseorderXSLFile = Command.store_default_template_xsl_file("en", "purchaseorder.xsl")
+        template_set.deilveryorderXSLFile = Command.store_default_template_xsl_file("en", "deliveryorder.xsl")
 
-        configfile = 'fontconfig.xml'
-        dejavusansfile = 'dejavusans-bold.xml'
-        dejavusansboldfile = 'dejavusans.xml'
-        logo = 'logo.jpg'
-        copy('templatefiles/generic/' + configfile, MEDIA_ROOT + DIRECTORY + 'templatefiles/' + configfile)
-        copy('templatefiles/generic/' + logo, MEDIA_ROOT + DIRECTORY + 'templatefiles/' + logo)
-        copy('templatefiles/generic/' + dejavusansfile, MEDIA_ROOT + DIRECTORY + 'templatefiles/' + dejavusansfile)
-        copy('templatefiles/generic/' + dejavusansboldfile,
-             MEDIA_ROOT + DIRECTORY + 'templatefiles/' + dejavusansboldfile)
-        listofadditionalfiles = ('dejavusans-bold.xml', 'dejavusans.xml',)
-        if path.exists('templatefiles'):
-            templateset = djangoUserExtension.models.TemplateSet()
-            templateset.title = 'defaultTemplateSet'
-            if (path.exists(MEDIA_ROOT + DIRECTORY + 'templatefiles') == False):
-                mkdir(MEDIA_ROOT + DIRECTORY + 'templatefiles')
-            for template in listoftemplatefiles:
-                if path.exists(PROJECT_ROOT + 'templatefiles/en/' + listoftemplatefiles[template]):
-                    copy('templatefiles/en/' + listoftemplatefiles[template],
-                         MEDIA_ROOT + DIRECTORY + 'templatefiles/' + listoftemplatefiles[template])
-                    xslfile = djangoUserExtension.models.XSLFile()
-                    xslfile.title = template
-                    xslfile.xslfile = DIRECTORY + 'templatefiles/' + listoftemplatefiles[template]
-                    xslfile.save()
-                    if template == 'invoice':
-                        templateset.invoiceXSLFile = xslfile
-                    elif template == 'quote':
-                        templateset.quoteXSLFile = xslfile
-                    elif template == 'purchaseconfirmation':
-                        templateset.purchaseconfirmationXSLFile = xslfile
-                    elif template == 'purchaseorder':
-                        templateset.purchaseorderXSLFile = xslfile
-                    elif template == 'deliveryorder':
-                        templateset.deilveryorderXSLFile = xslfile
-                    elif template == 'profitlossstatement':
-                        templateset.profitLossStatementXSLFile = xslfile
-                    elif template == 'balancesheet':
-                        templateset.balancesheetXSLFile = xslfile
-                    print(listoftemplatefiles[template])
-                else:
-                    print(listoftemplatefiles)
-                    print(listoftemplatefiles[template])
-                    print(template)
-                    print(MEDIA_ROOT + DIRECTORY + 'templatefiles/' + listoftemplatefiles[template])
-                    raise FileNotFoundException
-            templateset.logo = DIRECTORY + 'templatefiles/' + logo
-            templateset.bankingaccountref = "xx-xxxxxx-x"
-            templateset.addresser = _("John Smit, Sample Company, 8976 Smallville")
-            templateset.fopConfigurationFile = DIRECTORY + 'templatefiles/' + configfile
-            templateset.headerTextsalesorders = _(
-                "According to your wishes the contract consists of the following positions:")
-            templateset.footerTextsalesorders = _("Thank you for your interest in our company \n Best regards")
-            templateset.headerTextpurchaseorders = _("We would like to order the following positions:")
-            templateset.footerTextpurchaseorders = _("Best regards")
-            templateset.pagefooterleft = _("Sample Company")
-            templateset.pagefootermiddle = _("Sample Address")
-            templateset.save()
-            currency = crm.models.Currency()
-            currency.description = "US Dollar"
-            currency.shortName = "USD"
-            currency.rounding = "0.10"
-            currency.save()
-            userExtension = djangoUserExtension.models.UserExtension()
-            userExtension.defaultTemplateSet = templateset
-            userExtension.defaultCurrency = currency
-            userExtension.user = User.objects.all()[0]
-            userExtension.save()
-            postaladdress = djangoUserExtension.models.UserExtensionPostalAddress()
-            postaladdress.purpose = 'H'
-            postaladdress.name = "John"
-            postaladdress.prename = "Smith"
-            postaladdress.addressline1 = "Ave 1"
-            postaladdress.zipcode = 899887
-            postaladdress.town = "Smallville"
-            postaladdress.userExtension = userExtension
-            postaladdress.save()
-            phoneaddress = djangoUserExtension.models.UserExtensionPhoneAddress()
-            phoneaddress.phone = "1293847"
-            phoneaddress.purpose = 'H'
-            phoneaddress.userExtension = userExtension
-            phoneaddress.save()
-            emailaddress = djangoUserExtension.models.UserExtensionEmailAddress()
-            emailaddress.email = "john.smith@smallville.com"
-            emailaddress.purpose = 'H'
-            emailaddress.userExtension = userExtension
-            emailaddress.save()
+        if 'apps.accounting' in settings.INSTALLED_APPS:
+            template_set.profitLossStatementXSLFile = Command.store_default_template_xsl_file("en", "profitlossstatement.xsl")
+            template_set.balancesheetXSLFile = Command.store_default_template_xsl_file("en", "balancesheet.xsl")
 
-            for additionalfile in listofadditionalfiles:
-                if path.exists('templatefiles' + additionalfile):
-                    shutil.copy('templatefiles' + additionalfile, DIRECTORY + 'templatefiles/')
+        template_set.logo = FileObject(Command.path_of_default_template_file("generic", "logo.jpg"))
+        template_set.fopConfigurationFile = FileObject(Command.path_of_default_template_file("generic", "fontconfig.xml"))
+        template_set.bankingaccountref = "xx-xxxxxx-x"
+        template_set.addresser = _("John Smit, Sample Company, 8976 Smallville")
+        template_set.headerTextsalesorders = _(
+            "According to your wishes the contract consists of the following positions:")
+        template_set.footerTextsalesorders = _("Thank you for your interest in our company \n Best regards")
+        template_set.headerTextpurchaseorders = _("We would like to order the following positions:")
+        template_set.footerTextpurchaseorders = _("Best regards")
+        template_set.pagefooterleft = _("Sample Company")
+        template_set.pagefootermiddle = _("Sample Address")
+        template_set.save()
+        currency = crm.models.Currency()
+        currency.description = "US Dollar"
+        currency.shortName = "USD"
+        currency.rounding = "0.10"
+        currency.save()
+        user_extension = djangoUserExtension.models.UserExtension()
+        user_extension.defaultTemplateSet = template_set
+        user_extension.defaultCurrency = currency
+        user_extension.user = User.objects.all()[0]
+        user_extension.save()
+        postaladdress = djangoUserExtension.models.UserExtensionPostalAddress()
+        postaladdress.purpose = 'H'
+        postaladdress.name = "John"
+        postaladdress.prename = "Smith"
+        postaladdress.addressline1 = "Ave 1"
+        postaladdress.zipcode = 899887
+        postaladdress.town = "Smallville"
+        postaladdress.userExtension = user_extension
+        postaladdress.save()
+        phoneaddress = djangoUserExtension.models.UserExtensionPhoneAddress()
+        phoneaddress.phone = "1293847"
+        phoneaddress.purpose = 'H'
+        phoneaddress.userExtension = user_extension
+        phoneaddress.save()
+        emailaddress = djangoUserExtension.models.UserExtensionEmailAddress()
+        emailaddress.email = "john.smith@smallville.com"
+        emailaddress.purpose = 'H'
+        emailaddress.userExtension = user_extension
+        emailaddress.save()
