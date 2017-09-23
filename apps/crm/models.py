@@ -789,26 +789,26 @@ class Price(models.Model):
                     if (unit == self.unit) & (self.customerGroup == customerGroup) & (self.currency == currency):
                         return 1
             elif self.customerGroup == None:
-                if ((date - self.validuntil).days < 0) & (unit == self.unit) & (self.currency == currency):
+                if ((date - self.validuntil).days <= 0) & (unit == self.unit) & (self.currency == currency):
                     return 1
             else:
-                if ((date - self.validuntil).days < 0) & (unit == self.unit) & (self.customerGroup == customerGroup) & (
+                if ((date - self.validuntil).days <= 0) & (unit == self.unit) & (self.customerGroup == customerGroup) & (
                     self.currency == currency):
                     return 1
         elif self.validuntil == None:
             if self.customerGroup == None:
-                if ((self.validfrom - date).days < 0) & (unit == self.unit) & (self.currency == currency):
+                if ((self.validfrom - date).days <= 0) & (unit == self.unit) & (self.currency == currency):
                     return 1
             else:
-                if ((self.validfrom - date).days < 0) & (unit == self.unit) & (self.customerGroup == customerGroup) & (
+                if ((self.validfrom - date).days <= 0) & (unit == self.unit) & (self.customerGroup == customerGroup) & (
                     self.currency == currency):
                     return 1
         elif self.customerGroup == None:
-            if ((self.validfrom - date).days < 0) & (self.validuntil == None) & (unit == self.unit) & (
+            if ((self.validfrom - date).days <= 0) & (self.validuntil == None) & (unit == self.unit) & (
                 self.customerGroup == None) & (self.currency == currency):
                 return 1
         else:
-            if ((self.validfrom - date).days < 0) & ((date - self.validuntil).days < 0) & (unit == self.unit) & (
+            if ((self.validfrom - date).days <= 0) & ((date - self.validuntil).days <= 0) & (unit == self.unit) & (
                 self.customerGroup == customerGroup) & (self.currency == currency):
                 return 1
 
