@@ -207,7 +207,7 @@ class InlinePurchaseOrder(admin.TabularInline):
 
 class OptionContract(admin.ModelAdmin):
     list_display = ('id', 'description', 'defaultcustomer', 'defaultSupplier', 'staff', 'defaultcurrency')
-    list_display_links = ('id', 'description', 'defaultcustomer', 'defaultSupplier', 'defaultcurrency')
+    list_display_links = ('id',)
     list_filter = ('defaultcustomer', 'defaultSupplier', 'staff', 'defaultcurrency')
     ordering = ('id', 'defaultcustomer', 'defaultcurrency')
     search_fields = ('id', 'contract', 'defaultcurrency__description')
@@ -291,7 +291,7 @@ class OptionInvoice(admin.ModelAdmin):
     list_display = (
     'id', 'description', 'contract', 'customer', 'payableuntil', 'status', 'currency', 'staff', 'lastCalculatedPrice',
     'lastPricingDate', 'lastmodification', 'lastmodifiedby')
-    list_display_links = ('id', 'contract', 'customer')
+    list_display_links = ('id', )
     list_filter = ('customer', 'contract', 'staff', 'status', 'currency', 'lastmodification')
     ordering = ('contract', 'customer', 'currency')
     search_fields = ('contract__id', 'customer__name', 'currency__description')
@@ -415,7 +415,7 @@ class OptionQuote(admin.ModelAdmin):
     list_display = (
     'id', 'description', 'contract', 'customer', 'currency', 'validuntil', 'status', 'staff', 'lastmodifiedby',
     'lastCalculatedPrice', 'lastPricingDate', 'lastmodification')
-    list_display_links = ('id', 'contract', 'customer', 'currency')
+    list_display_links = ('id',)
     list_filter = ('customer', 'contract', 'currency', 'staff', 'status', 'lastmodification')
     ordering = ('contract', 'customer', 'currency')
     search_fields = ('contract__id', 'customer__name', 'currency__description')
@@ -494,7 +494,7 @@ class OptionPurchaseOrder(admin.ModelAdmin):
     list_display = (
     'id', 'description', 'contract', 'supplier', 'status', 'currency', 'staff', 'lastmodifiedby', 'lastCalculatedPrice',
     'lastPricingDate', 'lastmodification')
-    list_display_links = ('id', 'contract', 'supplier',)
+    list_display_links = ('id',)
     list_filter = ('supplier', 'contract', 'staff', 'status', 'currency', 'lastmodification')
     ordering = ('contract', 'supplier', 'currency')
     search_fields = ('contract__id', 'supplier__name', 'currency_description')
