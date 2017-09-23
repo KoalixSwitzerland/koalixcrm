@@ -537,7 +537,7 @@ class ProductPrice(admin.TabularInline):
     classes = ['collapse']
     fieldsets = (
         ('', {
-            'fields': ('price', 'validfrom', 'validuntil', 'unit', 'customerGroup', 'currency')
+            'fields': ('price', 'currency', 'unit', 'validfrom', 'validuntil', 'customerGroup')
         }),
     )
     allow_add = True
