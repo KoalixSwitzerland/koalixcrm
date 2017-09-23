@@ -779,38 +779,51 @@ class Price(models.Model):
     validfrom = models.DateField(verbose_name=_("Valid from"), blank=True, null=True)
     validuntil = models.DateField(verbose_name=_("Valid until"), blank=True, null=True)
 
-    def matchesDateUnitCustomerGroupCurrency(self, date, unit, customerGroup, currency):
+    def is_valid_from_criteria_fulfilled(self, date):
         if self.validfrom == None:
-            if self.validuntil == None:
-                if self.customerGroup == None:
-                    if (unit == self.unit) & (self.currency == currency):
-                        return 1
-                else:
-                    if (unit == self.unit) & (self.customerGroup == customerGroup) & (self.currency == currency):
-                        return 1
-            elif self.customerGroup == None:
-                if ((date - self.validuntil).days <= 0) & (unit == self.unit) & (self.currency == currency):
-                    return 1
-            else:
-                if ((date - self.validuntil).days <= 0) & (unit == self.unit) & (self.customerGroup == customerGroup) & (
-                    self.currency == currency):
-                    return 1
-        elif self.validuntil == None:
-            if self.customerGroup == None:
-                if ((self.validfrom - date).days <= 0) & (unit == self.unit) & (self.currency == currency):
-                    return 1
-            else:
-                if ((self.validfrom - date).days <= 0) & (unit == self.unit) & (self.customerGroup == customerGroup) & (
-                    self.currency == currency):
-                    return 1
-        elif self.customerGroup == None:
-            if ((self.validfrom - date).days <= 0) & (self.validuntil == None) & (unit == self.unit) & (
-                self.customerGroup == None) & (self.currency == currency):
-                return 1
+            return True;
+        elif (self.validfrom - date).days <= 0:
+            return True;
         else:
-            if ((self.validfrom - date).days <= 0) & ((date - self.validuntil).days <= 0) & (unit == self.unit) & (
-                self.customerGroup == customerGroup) & (self.currency == currency):
-                return 1
+            return False;
+
+    def is_valid_until_criteria_fulfilled(self, date):
+        if self.validuntil == None:
+            return True
+        elif (date - self.validuntil).days <= 0:
+            return True
+        else:
+            return False
+
+    def is_customer_group_criteria_fulfilled(self, customerGroup):
+        if self.customerGroup == None:
+            return True
+        elif self.customerGroup == customerGroup:
+            return True
+        else:
+            return False
+
+    def is_currency_criteria_fulfilled(self, currency):
+        if self.currency == currency:
+            return True
+        else:
+            return False
+
+    def is_unit_criteria_fulfilled(self, unit):
+        if self.unit == unit:
+            return True
+        else:
+            return False
+
+    def matchesDateUnitCustomerGroupCurrency(self, date, unit, customerGroup, currency):
+        if (self.is_unit_criteria_fulfilled(unit) &
+                self.is_currency_criteria_fulfilled(currency) &
+                self.is_customer_group_criteria_fulfilled(customerGroup) &
+                self.is_valid_from_criteria_fulfilled(date) &
+                self.is_valid_until_criteria_fulfilled(date)):
+            return 1
+        else:
+            return 0
 
     class Meta:
         app_label = "crm"
