@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from apps.accounting.models import Account
+from koalixcrm.accounting.models import Account
 
 
 class AccountingModelTest(TestCase):

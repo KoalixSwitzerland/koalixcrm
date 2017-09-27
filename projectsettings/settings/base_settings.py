@@ -36,16 +36,16 @@ PREREQUISITE_APPS = [
 ]
 
 PROJECT_APPS = [
-    'apps.crm',
-    'apps.accounting',
-    'apps.djangoUserExtension',
-    'apps.subscriptions',
+    'koalixcrm.crm',
+    'koalixcrm.accounting',
+    'koalixcrm.djangoUserExtension',
+    'koalixcrm.subscriptions',
 ]
 
 INSTALLED_APPS = PREREQUISITE_APPS + PROJECT_APPS
 
 KOALIXCRM_PLUGINS = (
-    'apps.subscriptions',
+    'koalixcrm.subscriptions',
 )
 
 MIDDLEWARE = [
@@ -58,7 +58,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'koalixcrm.urls'
+ROOT_URLCONF = 'projectsettings.urls'
 
 TEMPLATES = [
     {
@@ -76,7 +76,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'koalixcrm.wsgi.application'
+WSGI_APPLICATION = 'projectsettings.wsgi.application'
 
 
 # Password validation
@@ -116,15 +116,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 PROJECT_ROOT = BASE_DIR
 
 # Settings specific for koalixcrm
-PDF_OUTPUT_ROOT = os.path.join(STATIC_ROOT, 'pdf/')
+PDF_OUTPUT_ROOT = os.path.join(STATIC_ROOT, 'pdf')
 FOP_EXECUTABLE = "/usr/bin/fop"
 
 # Settings specific for filebrowser

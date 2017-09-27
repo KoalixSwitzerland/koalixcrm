@@ -3,8 +3,8 @@
 from django.db import models
 from django.utils.translation import ugettext as _
 from filebrowser.fields import FileBrowseField
-from apps.crm import models as crmmodels
-from apps.djangoUserExtension.const.purpose import *
+from koalixcrm.crm import models as crmmodels
+from koalixcrm.djangoUserExtension.const.purpose import *
 
 
 class XSLFile(models.Model):
