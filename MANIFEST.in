@@ -1,5 +1,11 @@
-recursive-include koalixcrm/crm/ *
-recursive-include koalixcrm/accounting/ *
-recursive-include koalixcrm/subscriptions/ *
-recursive-include koalixcrm/djangoUserExtensions/ *
+recursive-include koalixcrm/crm/static *
+recursive-include koalixcrm/crm/locale *
+recursive-include koalixcrm/crm/templates *
+recursive-include koalixcrm/accounting/static *
+recursive-include koalixcrm/accounting/locale *
+recursive-include koalixcrm/accounting/templates *
+recursive-include koalixcrm/subscriptions/static *
+recursive-include koalixcrm/subscriptions/locale *
+recursive-include koalixcrm/djangoUserExtensions/static *
+recursive-include koalixcrm/djangoUserExtensions/locale *
 
