@@ -10,14 +10,14 @@ from django.contrib import auth
 from django.core import serializers
 from django.db import models
 from django.utils.translation import ugettext as _
-from apps.crm.const.country import *
-from apps.crm.const.postaladdressprefix import *
-from apps.crm.const.purpose import *
-from apps.crm.const.status import *
-from apps.crm.exceptions import *
+from koalixcrm.crm.const.country import *
+from koalixcrm.crm.const.postaladdressprefix import *
+from koalixcrm.crm.const.purpose import *
+from koalixcrm.crm.const.status import *
+from koalixcrm.crm.exceptions import *
 from koalixcrm.globalSupportFunctions import xstr
-from apps import accounting
-from apps import djangoUserExtension
+from koalixcrm import accounting
+from koalixcrm import djangoUserExtension
 from lxml import etree
 
 

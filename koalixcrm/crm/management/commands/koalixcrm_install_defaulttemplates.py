@@ -2,8 +2,8 @@
 
 from os import path
 
-from apps import crm
-from apps import djangoUserExtension
+from koalixcrm import crm
+from koalixcrm import djangoUserExtension
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
 from filebrowser.base import FileObject
@@ -56,7 +56,7 @@ class Command(BaseCommand):
         template_set.purchaseorderXSLFile = Command.store_default_template_xsl_file("en", "purchaseorder.xsl")
         template_set.deilveryorderXSLFile = Command.store_default_template_xsl_file("en", "deliveryorder.xsl")
 
-        if 'apps.accounting' in settings.INSTALLED_APPS:
+        if 'koalixcrm.accounting' in settings.INSTALLED_APPS:
             template_set.profitLossStatementXSLFile = Command.store_default_template_xsl_file("en", "profitlossstatement.xsl")
             template_set.balancesheetXSLFile = Command.store_default_template_xsl_file("en", "balancesheet.xsl")
 

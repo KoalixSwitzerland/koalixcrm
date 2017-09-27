@@ -8,10 +8,10 @@ from django.template.context_processors import csrf
 from django.utils.translation import ugettext as _
 from koalixcrm.plugin import *
 
-from apps.accounting.models import Account
-from apps.accounting.models import Booking
-from apps.crm.exceptions import *
-from apps.crm.views import *
+from koalixcrm.accounting.models import Account
+from koalixcrm.accounting.models import Booking
+from koalixcrm.crm.exceptions import *
+from koalixcrm.crm.views import *
 
 
 class ContractPostalAddress(admin.StackedInline):
