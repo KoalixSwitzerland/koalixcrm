@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import os
 from datetime import *
 from subprocess import check_output
 from subprocess import STDOUT
@@ -9,6 +10,7 @@ from django.conf import settings
 from django.core import serializers
 from django.db import models
 from django.utils.translation import ugettext as _
+from koalixcrm import djangoUserExtension
 from koalixcrm.crm.exceptions import UserExtensionMissing
 from koalixcrm.accounting.const.accountTypeChoices import *
 from koalixcrm.accounting.exceptions import NoObjectsToBeSerialzed
@@ -81,14 +83,13 @@ class AccountingPeriod(models.Model):
 
         XMLSerializer = serializers.get_serializer("xml")
         xml_serializer = XMLSerializer()
-        path_fullToOutputFile = " "
         if whatToCreate == "allAccount":
-            path_fullToOutputFile = settings.PDF_OUTPUT_ROOT + "accounts.xml"
+            path_fullToOutputFile = os.path.join(settings.PDF_OUTPUT_ROOT, "accounts.xml")
             objectsToSerialize = Account.objects.all()
         else:
             raise ProgrammingError(
                 _("During XML Export it was not correctly specified which data that has to be exported"))
-        out = open(settings.PDF_OUTPUT_ROOT + "accounts.xml", "w")
+        out = open(os.path.join(settings.PDF_OUTPUT_ROOT, "accounts.xml"), "w")
         if objectsToSerialize == '':
             raise NoObjectsToBeSerialzed(_("During XML Export it was not correctly specied data has to be exported"))
         else:
@@ -103,12 +104,12 @@ class AccountingPeriod(models.Model):
         if (len(userExtension) == 0):
             raise UserExtensionMissing(_("During BalanceSheet PDF Export"))
         doc = Document()
-        if (whatToCreate == "balanceSheet"):
+        if whatToCreate == "balanceSheet":
             main = doc.createElement("koalixaccountingbalacesheet")
-            out = open(settings.PDF_OUTPUT_ROOT + "balancesheet_" + str(self.id) + ".xml", "wb")
+            out = open(os.path.join(settings.PDF_OUTPUT_ROOT, "balancesheet_" + str(self.id) + ".xml"), "wb")
         else:
             main = doc.createElement("koalixaccountingprofitlossstatement")
-            out = open(settings.PDF_OUTPUT_ROOT + "profitlossstatement_" + str(self.id) + ".xml", "wb")
+            out = open(os.path.join(settings.PDF_OUTPUT_ROOT, "profitlossstatement_" + str(self.id) + ".xml"), "wb")
         accountingPeriodName = doc.createElement("accountingPeriodName")
         accountingPeriodName.appendChild(doc.createTextNode(self.__str__()))
         main.appendChild(accountingPeriodName)
@@ -124,7 +125,6 @@ class AccountingPeriod(models.Model):
         headerPicture = doc.createElement("headerpicture")
         headerPicture.appendChild(doc.createTextNode(userExtension[0].defaultTemplateSet.logo.path_full))
         main.appendChild(headerPicture)
-        accountNumber = doc.createElement("AccountNumber")
         accounts = Account.objects.all()
         overallValueBalance = 0
         overallValueProfitLoss = 0
@@ -168,17 +168,17 @@ class AccountingPeriod(models.Model):
         if (whatToCreate == "balanceSheet"):
             check_output(
                 [settings.FOP_EXECUTABLE, '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml',
-                 settings.PDF_OUTPUT_ROOT + 'balancesheet_' + str(self.id) + '.xml', '-xsl',
+                 os.path.join(settings.PDF_OUTPUT_ROOT, 'balancesheet_' + str(self.id) + '.xml'), '-xsl',
                  userExtension[0].defaultTemplateSet.balancesheetXSLFile.xslfile.path_full, '-pdf',
-                 settings.PDF_OUTPUT_ROOT + 'balancesheet_' + str(self.id) + '.pdf'], stderr=STDOUT)
-            return settings.PDF_OUTPUT_ROOT + "balancesheet_" + str(self.id) + ".pdf"
+                 os.path.join(settings.PDF_OUTPUT_ROOT, 'balancesheet_' + str(self.id) + '.pdf')], stderr=STDOUT)
+            return os.path.join(settings.PDF_OUTPUT_ROOT, "balancesheet_" + str(self.id) + ".pdf")
         else:
             check_output(
                 [settings.FOP_EXECUTABLE, '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml',
-                 settings.PDF_OUTPUT_ROOT + 'profitlossstatement_' + str(self.id) + '.xml', '-xsl',
+                 os.path.join(settings.PDF_OUTPUT_ROOT, 'profitlossstatement_' + str(self.id) + '.xml'), '-xsl',
                  userExtension[0].defaultTemplateSet.profitLossStatementXSLFile.xslfile.path_full, '-pdf',
-                 settings.PDF_OUTPUT_ROOT + 'profitlossstatement_' + str(self.id) + '.pdf'], stderr=STDOUT)
-            return settings.PDF_OUTPUT_ROOT + "profitlossstatement_" + str(self.id) + ".pdf"
+                 os.path.join(settings.PDF_OUTPUT_ROOT, 'profitlossstatement_' + str(self.id) + '.pdf')], stderr=STDOUT)
+            return os.path.join(settings.PDF_OUTPUT_ROOT, "profitlossstatement_" + str(self.id) + ".pdf")
 
     def __str__(self):
         return self.title
