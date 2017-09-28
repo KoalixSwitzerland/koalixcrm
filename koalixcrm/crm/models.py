@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import os
 from datetime import *
 from decimal import Decimal
 from subprocess import check_output
@@ -284,7 +285,7 @@ class PurchaseOrder(models.Model):
     def createPDF(self, whatToExport):
         XMLSerializer = serializers.get_serializer("xml")
         xml_serializer = XMLSerializer()
-        out = open(settings.PDF_OUTPUT_ROOT + "purchaseorder_" + str(self.id) + ".xml", "wb")
+        out = open(os.path.join(settings.PDF_OUTPUT_ROOT,("purchaseorder_" + str(self.id) + ".xml")), "wb")
         objectsToSerialize = list(PurchaseOrder.objects.filter(id=self.id))
         objectsToSerialize += list(Contact.objects.filter(id=self.supplier.id))
         objectsToSerialize += list(Currency.objects.filter(id=self.currency.id))
@@ -314,12 +315,12 @@ class PurchaseOrder(models.Model):
         rootelement = xml.getroot()
         filebrowserdirectory = etree.SubElement(rootelement, "filebrowserdirectory")
         filebrowserdirectory.text = settings.MEDIA_ROOT
-        xml = etree.parse(settings.PDF_OUTPUT_ROOT + "purchaseorder_" + str(self.id) + ".xml")
+        xml = etree.parse(os.path.join(settings.PDF_OUTPUT_ROOT, ("purchaseorder_" + str(self.id) + ".xml")))
         check_output([settings.FOP_EXECUTABLE, '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml',
-                      settings.PDF_OUTPUT_ROOT + 'purchaseorder_' + str(self.id) + '.xml', '-xsl',
+                      os.path.join(settings.PDF_OUTPUT_ROOT, ('purchaseorder_' + str(self.id) + '.xml')), '-xsl',
                       userExtension[0].defaultTemplateSet.purchaseorderXSLFile.xslfile.path_full, '-pdf',
-                      settings.PDF_OUTPUT_ROOT + 'purchaseorder_' + str(self.id) + '.pdf'], stderr=STDOUT)
-        return settings.PDF_OUTPUT_ROOT + "purchaseorder_" + str(self.id) + ".pdf"
+                      os.path.join(settings.PDF_OUTPUT_ROOT, ('purchaseorder_' + str(self.id) + '.pdf'))], stderr=STDOUT)
+        return os.path.join(settings.PDF_OUTPUT_ROOT, ("purchaseorder_" + str(self.id) + ".pdf"))
 
     class Meta:
         app_label = "crm"
@@ -335,10 +336,10 @@ class SalesContract(models.Model):
     externalReference = models.CharField(verbose_name=_("External Reference"), max_length=100, blank=True)
     discount = models.DecimalField(max_digits=5, decimal_places=2, verbose_name=_("Discount"), blank=True, null=True)
     description = models.CharField(verbose_name=_("Description"), max_length=100, blank=True, null=True)
-    lastPricingDate = models.DateField(verbose_name=_("Last Pricing Date"), blank=True, null=True)
+    lastPricingDate = models.DateField(verbose_name=_("Pricing Date"), blank=True, null=True)
     lastCalculatedPrice = models.DecimalField(max_digits=17, decimal_places=2,
-                                              verbose_name=_("Last Calculated Price With Tax"), blank=True, null=True)
-    lastCalculatedTax = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Tax"),
+                                              verbose_name=_("Price without Tax "), blank=True, null=True)
+    lastCalculatedTax = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Tax"),
                                             blank=True, null=True)
     customer = models.ForeignKey(Customer, verbose_name=_("Customer"))
     staff = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True, verbose_name=_("Staff"),
@@ -437,7 +438,7 @@ class Quote(SalesContract):
     def createPDF(self, whatToExport):
         XMLSerializer = serializers.get_serializer("xml")
         xml_serializer = XMLSerializer()
-        out = open(settings.PDF_OUTPUT_ROOT + "quote_" + str(self.id) + ".xml", "wb")
+        out = open(os.path.join(settings.PDF_OUTPUT_ROOT, ("quote_" + str(self.id) + ".xml")), "wb")
         objectsToSerialize = list(Quote.objects.filter(id=self.id))
         objectsToSerialize += list(SalesContract.objects.filter(id=self.id))
         objectsToSerialize += list(Contact.objects.filter(id=self.customer.id))
@@ -465,25 +466,25 @@ class Quote(SalesContract):
             objectsToSerialize += list(PostalAddress.objects.filter(id=address.id))
         xml_serializer.serialize(objectsToSerialize, stream=out, indent=3)
         out.close()
-        xml = etree.parse(settings.PDF_OUTPUT_ROOT + "quote_" + str(self.id) + ".xml")
+        xml = etree.parse(os.path.join(settings.PDF_OUTPUT_ROOT, ("quote_" + str(self.id) + ".xml")))
         rootelement = xml.getroot()
         filebrowserdirectory = etree.SubElement(rootelement, "filebrowserdirectory")
         filebrowserdirectory.text = settings.MEDIA_ROOT
-        xml.write(settings.PDF_OUTPUT_ROOT + "quote_" + str(self.id) + ".xml")
+        xml.write(os.path.join(settings.PDF_OUTPUT_ROOT , ("quote_" + str(self.id) + ".xml")))
         if (whatToExport == "quote"):
             check_output(
                 [settings.FOP_EXECUTABLE, '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml',
-                 settings.PDF_OUTPUT_ROOT + 'quote_' + str(self.id) + '.xml', '-xsl',
+                 os.path.join(settings.PDF_OUTPUT_ROOT, ('quote_' + str(self.id) + '.xml')), '-xsl',
                  userExtension[0].defaultTemplateSet.quoteXSLFile.xslfile.path_full, '-pdf',
-                 settings.PDF_OUTPUT_ROOT + 'quote_' + str(self.id) + '.pdf'], stderr=STDOUT)
-            return settings.PDF_OUTPUT_ROOT + "quote_" + str(self.id) + ".pdf"
+                 os.path.join(settings.PDF_OUTPUT_ROOT, ('quote_' + str(self.id) + '.pdf'))], stderr=STDOUT)
+            return os.path.join(settings.PDF_OUTPUT_ROOT, ("quote_" + str(self.id) + ".pdf"))
         else:
             check_output(
                 [settings.FOP_EXECUTABLE, '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml',
-                 settings.PDF_OUTPUT_ROOT + 'quote_' + str(self.id) + '.xml', '-xsl',
+                 os.path.join(settings.PDF_OUTPUT_ROOT, ('quote_' + str(self.id) + '.xml')), '-xsl',
                  userExtension[0].defaultTemplateSet.purchaseconfirmationXSLFile.xslfile.path_full, '-pdf',
-                 settings.PDF_OUTPUT_ROOT + 'purchaseconfirmation_' + str(self.id) + '.pdf'], stderr=STDOUT)
-            return settings.PDF_OUTPUT_ROOT + "purchaseconfirmation_" + str(self.id) + ".pdf"
+                 os.path.join(settings.PDF_OUTPUT_ROOT, ('purchaseconfirmation_' + str(self.id) + '.pdf'))], stderr=STDOUT)
+            return os.path.join(settings.PDF_OUTPUT_ROOT, ("purchaseconfirmation_" + str(self.id) + ".pdf"))
 
     def __str__(self):
         return _("Quote") + ": " + str(self.id) + " " + _("from Contract") + ": " + str(self.contract.id)
@@ -558,7 +559,7 @@ class Invoice(SalesContract):
     def createPDF(self, whatToExport):
         XMLSerializer = serializers.get_serializer("xml")
         xml_serializer = XMLSerializer()
-        out = open(settings.PDF_OUTPUT_ROOT + "invoice_" + str(self.id) + ".xml", "wb")
+        out = open(os.path.join(settings.PDF_OUTPUT_ROOT, "invoice_" + str(self.id) + ".xml"), "wb")
         objectsToSerialize = list(Invoice.objects.filter(id=self.id))
         objectsToSerialize += list(SalesContract.objects.filter(id=self.id))
         objectsToSerialize += list(Contact.objects.filter(id=self.customer.id))
@@ -586,25 +587,25 @@ class Invoice(SalesContract):
             objectsToSerialize += list(PostalAddress.objects.filter(id=address.id))
         xml_serializer.serialize(objectsToSerialize, stream=out, indent=3)
         out.close()
-        xml = etree.parse(settings.PDF_OUTPUT_ROOT + "invoice_" + str(self.id) + ".xml")
+        xml = etree.parse(os.path.join(settings.PDF_OUTPUT_ROOT, ("invoice_" + str(self.id) + ".xml")))
         rootelement = xml.getroot()
         filebrowserdirectory = etree.SubElement(rootelement, "filebrowserdirectory")
         filebrowserdirectory.text = settings.MEDIA_ROOT
-        xml.write(settings.PDF_OUTPUT_ROOT + "invoice_" + str(self.id) + ".xml")
+        xml.write(os.path.join(settings.PDF_OUTPUT_ROOT, ("invoice_" + str(self.id) + ".xml")))
         if (whatToExport == "invoice"):
             check_output(
                 [settings.FOP_EXECUTABLE, '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml',
-                 settings.PDF_OUTPUT_ROOT + 'invoice_' + str(self.id) + '.xml', '-xsl',
+                 os.path.join(settings.PDF_OUTPUT_ROOT, ('invoice_' + str(self.id) + '.xml')), '-xsl',
                  userExtension[0].defaultTemplateSet.invoiceXSLFile.xslfile.path_full, '-pdf',
-                 settings.PDF_OUTPUT_ROOT + 'invoice_' + str(self.id) + '.pdf'], stderr=STDOUT)
-            return settings.PDF_OUTPUT_ROOT + "invoice_" + str(self.id) + ".pdf"
+                 os.path.join(settings.PDF_OUTPUT_ROOT, ('invoice_' + str(self.id) + '.pdf'))], stderr=STDOUT)
+            return os.path.join(settings.PDF_OUTPUT_ROOT, ("invoice_" + str(self.id) + ".pdf"))
         else:
             check_output(
                 [settings.FOP_EXECUTABLE, '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml',
-                 settings.PDF_OUTPUT_ROOT + 'invoice_' + str(self.id) + '.xml', '-xsl',
+                 os.path.join(settings.PDF_OUTPUT_ROOT, ('invoice_' + str(self.id) + '.xml')), '-xsl',
                  userExtension[0].defaultTemplateSet.deilveryorderXSLFile.xslfile.path_full, '-pdf',
-                 settings.PDF_OUTPUT_ROOT + 'deliveryorder_' + str(self.id) + '.pdf'], stderr=STDOUT)
-            return settings.PDF_OUTPUT_ROOT + "deliveryorder_" + str(self.id) + ".pdf"
+                 os.path.join(settings.PDF_OUTPUT_ROOT, ('deliveryorder_' + str(self.id) + '.pdf'))], stderr=STDOUT)
+            return os.path.join(settings.PDF_OUTPUT_ROOT, ("deliveryorder_" + str(self.id) + ".pdf"))
 
         #  TODO: def registerPayment(self, amount, registerpaymentinaccounting):
 
