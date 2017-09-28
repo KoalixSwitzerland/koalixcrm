@@ -3,8 +3,9 @@
 from django.db import models
 from django.utils.translation import ugettext as _
 from filebrowser.fields import FileBrowseField
-from koalixcrm.crm import models as crmmodels
+from koalixcrm import crm
 from koalixcrm.djangoUserExtension.const.purpose import *
+from koalixcrm.globalSupportFunctions import xstr
 
 
 class XSLFile(models.Model):
@@ -17,7 +18,7 @@ class XSLFile(models.Model):
         verbose_name_plural = _('XSL Files')
 
     def __str__(self):
-        return str(self.id) + ' ' + self.title
+        return xstr(self.id) + ' ' + xstr(self.title)
 
 
 class UserExtension(models.Model):
@@ -31,7 +32,7 @@ class UserExtension(models.Model):
         verbose_name_plural = _('User Extentions')
 
     def __str__(self):
-        return str(self.id) + ' ' + self.user.__str__()
+        return xstr(self.id) + ' ' + xstr(self.user.__str__())
 
 
 class TemplateSet(models.Model):
@@ -69,15 +70,15 @@ class TemplateSet(models.Model):
         verbose_name_plural = _('Templatesets')
 
     def __str__(self):
-        return str(self.id) + ' ' + self.title
+        return xstr(self.id) + ' ' + xstr(self.title)
 
 
-class UserExtensionPostalAddress(crmmodels.PostalAddress):
+class UserExtensionPostalAddress(crm.models.PostalAddress):
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINUSEREXTENTION)
     userExtension = models.ForeignKey(UserExtension)
 
     def __str__(self):
-        return self.name + ' ' + self.prename
+        return xstr(self.name) + ' ' + xstr(self.prename)
 
     class Meta:
         app_label = "djangoUserExtension"
@@ -86,12 +87,12 @@ class UserExtensionPostalAddress(crmmodels.PostalAddress):
         verbose_name_plural = _('Postal Address for User Extention')
 
 
-class UserExtensionPhoneAddress(crmmodels.PhoneAddress):
+class UserExtensionPhoneAddress(crm.models.PhoneAddress):
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINUSEREXTENTION)
     userExtension = models.ForeignKey(UserExtension)
 
     def __str__(self):
-        return self.phone
+        return xstr(self.phone)
 
     class Meta:
         app_label = "djangoUserExtension"
@@ -100,12 +101,12 @@ class UserExtensionPhoneAddress(crmmodels.PhoneAddress):
         verbose_name_plural = _('Phonenumber for User Extention')
 
 
-class UserExtensionEmailAddress(crmmodels.EmailAddress):
+class UserExtensionEmailAddress(crm.models.EmailAddress):
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINUSEREXTENTION)
     userExtension = models.ForeignKey(UserExtension)
 
     def __str__(self):
-        return self.email
+        return xstr(self.email)
 
     class Meta:
         app_label = "djangoUserExtension"

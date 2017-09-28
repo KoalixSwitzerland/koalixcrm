@@ -165,7 +165,7 @@ class AccountingPeriod(models.Model):
         doc.appendChild(main)
         out.write(doc.toprettyxml(indent=" ", newl="\n", encoding="utf-8"))
         out.close()
-        if (whatToCreate == "balanceSheet"):
+        if whatToCreate == "balanceSheet":
             check_output(
                 [settings.FOP_EXECUTABLE, '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml',
                  os.path.join(settings.PDF_OUTPUT_ROOT, 'balancesheet_' + str(self.id) + '.xml'), '-xsl',
@@ -203,7 +203,7 @@ class Account(models.Model):
 
     def sumOfAllBookings(self):
         calculated_sum = self.allBookings(fromAccount=False) - self.allBookings(fromAccount=True)
-        if (self.accountType == 'S' or self.accountType == 'L'):
+        if self.accountType == 'S' or self.accountType == 'L':
             calculated_sum = 0 - calculated_sum
         return calculated_sum
 
@@ -213,7 +213,7 @@ class Account(models.Model):
         calculated_sum = self.allBookingsInAccountingPeriod(fromAccount=False,
                                                  accountingPeriod=accountingPeriod) - self.allBookingsInAccountingPeriod(
             fromAccount=True, accountingPeriod=accountingPeriod)
-        if (self.accountType == 'S' or self.accountType == 'L'):
+        if self.accountType == 'S' or self.accountType == 'L':
             calculated_sum = 0 - calculated_sum
         return calculated_sum
 
@@ -224,13 +224,13 @@ class Account(models.Model):
             sum = sum + self.allBookingsInAccountingPeriod(fromAccount=False,
                                                            accountingPeriod=accountingPeriod) - self.allBookingsInAccountingPeriod(
                 fromAccount=True, accountingPeriod=accountingPeriod)
-        if (self.accountType == 'S' or self.accountType == 'L'):
+        if self.accountType == 'S' or self.accountType == 'L':
             sum = 0 - sum
         return sum
 
     def allBookings(self, fromAccount):
         sum = 0
-        if (fromAccount == True):
+        if fromAccount == True:
             bookings = Booking.objects.filter(fromAccount=self.id)
         else:
             bookings = Booking.objects.filter(toAccount=self.id)
