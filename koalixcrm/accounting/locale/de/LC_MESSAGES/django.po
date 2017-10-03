@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-23 10:02+0100\n"
+"POT-Creation-Date: 2017-10-03 19:50+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,159 +17,224 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: admin.py:24 admin.py:38
+#: koalixcrm/accounting/admin.py:22 koalixcrm/accounting/admin.py:73
 msgid "Basic"
 msgstr "Grundlagen"
 
-#: admin.py:45 admin.py:80
+#: koalixcrm/accounting/admin.py:50
+msgid "The open liabilites account must be a liabities account"
+msgstr "Das Konto 'Offene Verbindlichkeiten' muss vom Typ 'Verbindlichkeiten' sein"
+
+#: koalixcrm/accounting/admin.py:52
+msgid "There may only be one open liablities account in the system"
+msgstr "Es darf nur ein einziges 'Offene Verbindlichkeiten' konnto geben"
+
+#: koalixcrm/accounting/admin.py:56
+msgid "The open intrests account must be an asset account"
+msgstr ""
+
+#: koalixcrm/accounting/admin.py:58
+msgid "There may only be one open intrests account in the system"
+msgstr ""
+
+#: koalixcrm/accounting/admin.py:61
+msgid "A customer payment account must be an asset account"
+msgstr ""
+
+#: koalixcrm/accounting/admin.py:64
+msgid "A product inventory account must be an asset account"
+msgstr ""
+
+#: koalixcrm/accounting/admin.py:94
+msgid "The begin date cannot be later than the end date."
+msgstr ""
+
+#: koalixcrm/accounting/admin.py:96
+msgid "The begin and the end date may not be empty"
+msgstr ""
+
+#: koalixcrm/accounting/admin.py:106 koalixcrm/accounting/admin.py:153
 msgid "Basics"
 msgstr "Grundlagen"
 
-#: admin.py:66
+#: koalixcrm/accounting/admin.py:130
 msgid "Create PDF of Balance Sheet"
 msgstr "Erzeuge ein PDF der Bilanz"
 
-#: admin.py:72
+#: koalixcrm/accounting/admin.py:137
 msgid "Create PDF of Profit Loss Statement Sheet"
 msgstr "Erzeuge ein PDF der Erfolgsrechnung"
 
-#: models.py:17
-msgid "Title"
-msgstr "Titel"
+#: koalixcrm/accounting/admin.py:144
+msgid "Create XML of all Accounts"
+msgstr ""
 
-#: models.py:18
-msgid "Begin"
-msgstr "Anfang"
-
-#: models.py:19
-msgid "End"
-msgstr "Ende"
-
-#: models.py:137
-msgid "Accounting Period"
-msgstr "Abrechnungszeitraum"
-
-#: models.py:138
-msgid "Accounting Periods"
-msgstr "Abrechnungszeiträume"
-
-#: models.py:141
-msgid "Account Number"
-msgstr "Kontonummer"
-
-#: models.py:142
-msgid "Account Title"
-msgstr "Kontobezeichnung"
-
-#: models.py:143
-msgid "Account Type"
-msgstr "Kontotyp"
-
-#: models.py:144
-msgid "Is The Open Liabilities Account"
-msgstr "Konto für offene Rechungen"
-
-#: models.py:146
-msgid "Is The Open Interests Account"
-msgstr "Konto für offene Forderungen"
-
-#: models.py:148
-msgid "Is a Product Inventory Account"
-msgstr "Konto für Lager"
-
-#: models.py:150
-msgid "Is a Customer Payment Account"
-msgstr "Konto für Kundeneinzahlungen"
-
-#: models.py:193 models.py:194
-msgid "Account"
-msgstr "Konto"
-
-#: models.py:198
-msgid "Product Categorie Title"
-msgstr "Produktekategorie"
-
-#: models.py:199
-msgid "Profit Account"
-msgstr "Ertrag Konto"
-
-#: models.py:200
-msgid "Loss Account"
-msgstr "Aufwand Konto"
-
-#: models.py:205
-msgid "Product Categorie"
-msgstr "Produktekategorie"
-
-#: models.py:206
-msgid "Product Categories"
-msgstr "Produktekategorien"
-
-#: models.py:211
-msgid "From Account"
-msgstr "Vom Konto (Soll)"
-
-#: models.py:212
-msgid "To Account"
-msgstr "Zu Konto (Haben)"
-
-#: models.py:213
-msgid "Amount"
-msgstr "Betrag"
-
-#: models.py:214
-msgid "Description"
-msgstr "Beschreibung"
-
-#: models.py:215
-msgid "Booking Reference"
-msgstr "Buchungsreferenz"
-
-#: models.py:216
-msgid "Booking at"
-msgstr "Buchung am"
-
-#: models.py:217
-msgid "AccountingPeriod"
-msgstr "Abrechnungszeitraum"
-
-#: models.py:218
-msgid "Reference Staff"
-msgstr "Zuständiger Mitarbeiter"
-
-#: models.py:219
-msgid "Created at"
-msgstr "Erstellt am"
-
-#: models.py:220
-msgid "Last modified"
-msgstr "Zuletzt verändert"
-
-#: models.py:221
-msgid "Last modified by"
-msgstr "Zuletzt verändert von"
-
-#: models.py:229
-msgid "Booking"
-msgstr "Buchung"
-
-#: models.py:230
-msgid "Bookings"
-msgstr "Buchungen"
-
-#: const/accountTypeChoices.py:6
+#: koalixcrm/accounting/const/accountTypeChoices.py:6
 msgid "Earnings"
 msgstr "Ertrag (Einnahmen)"
 
-#: const/accountTypeChoices.py:7
+#: koalixcrm/accounting/const/accountTypeChoices.py:7
 msgid "Spendings"
 msgstr "Aufwand (Ausgaben)"
 
-#: const/accountTypeChoices.py:8
+#: koalixcrm/accounting/const/accountTypeChoices.py:8
 msgid "Liabilities"
 msgstr "Passiva (Schulden)"
 
-#: const/accountTypeChoices.py:9
+#: koalixcrm/accounting/const/accountTypeChoices.py:9
 msgid "Assets"
 msgstr "Aktiva (Vermögen)"
 
+#: koalixcrm/accounting/models.py:24
+msgid "Title"
+msgstr "Titel"
+
+#: koalixcrm/accounting/models.py:25
+msgid "Begin"
+msgstr "Anfang"
+
+#: koalixcrm/accounting/models.py:26
+msgid "End"
+msgstr "Ende"
+
+#: koalixcrm/accounting/models.py:91
+msgid ""
+"During XML Export it was not correctly specified which data that has to be "
+"exported"
+msgstr ""
+
+#: koalixcrm/accounting/models.py:94
+msgid "During XML Export it was not correctly specied data has to be exported"
+msgstr ""
+
+#: koalixcrm/accounting/models.py:105
+msgid "During BalanceSheet PDF Export"
+msgstr ""
+
+#: koalixcrm/accounting/models.py:190
+msgid "Accounting Period"
+msgstr "Abrechnungszeitraum"
+
+#: koalixcrm/accounting/models.py:191
+msgid "Accounting Periods"
+msgstr "Abrechnungszeiträume"
+
+#: koalixcrm/accounting/models.py:195
+msgid "Account Number"
+msgstr "Kontonummer"
+
+#: koalixcrm/accounting/models.py:196
+msgid "Account Title"
+msgstr "Kontobezeichnung"
+
+#: koalixcrm/accounting/models.py:197
+msgid "Account Type"
+msgstr "Kontotyp"
+
+#: koalixcrm/accounting/models.py:198 koalixcrm/accounting/models.py:285
+msgid "Description"
+msgstr "Beschreibung"
+
+#: koalixcrm/accounting/models.py:199
+msgid "Is The Open Liabilities Account"
+msgstr "Konto für offene Rechungen"
+
+#: koalixcrm/accounting/models.py:200
+msgid "Is The Open Interests Account"
+msgstr "Konto für offene Forderungen"
+
+#: koalixcrm/accounting/models.py:201
+msgid "Is a Product Inventory Account"
+msgstr "Konto für Lager"
+
+#: koalixcrm/accounting/models.py:202
+msgid "Is a Customer Payment Account"
+msgstr "Konto für Kundeneinzahlungen"
+
+#: koalixcrm/accounting/models.py:210
+msgid "Value"
+msgstr "Wert"
+
+#: koalixcrm/accounting/models.py:260 koalixcrm/accounting/models.py:261
+msgid "Account"
+msgstr "Konto"
+
+#: koalixcrm/accounting/models.py:266
+msgid "Product Categorie Title"
+msgstr "Produktekategorie"
+
+#: koalixcrm/accounting/models.py:267
+msgid "Profit Account"
+msgstr "Ertrag Konto"
+
+#: koalixcrm/accounting/models.py:269
+msgid "Loss Account"
+msgstr "Aufwand Konto"
+
+#: koalixcrm/accounting/models.py:274
+msgid "Product Categorie"
+msgstr "Produktekategorie"
+
+#: koalixcrm/accounting/models.py:275
+msgid "Product Categories"
+msgstr "Produktekategorien"
+
+#: koalixcrm/accounting/models.py:282
+msgid "From Account"
+msgstr "Vom Konto (Soll)"
+
+#: koalixcrm/accounting/models.py:283
+msgid "To Account"
+msgstr "Zu Konto (Haben)"
+
+#: koalixcrm/accounting/models.py:284
+msgid "Amount"
+msgstr "Betrag"
+
+#: koalixcrm/accounting/models.py:286
+msgid "Booking Reference"
+msgstr "Buchungsreferenz"
+
+#: koalixcrm/accounting/models.py:287
+msgid "Booking at"
+msgstr "Buchung am"
+
+#: koalixcrm/accounting/models.py:288
+msgid "AccountingPeriod"
+msgstr "Abrechnungszeitraum"
+
+#: koalixcrm/accounting/models.py:290
+msgid "Reference Staff"
+msgstr "Zuständiger Mitarbeiter"
+
+#: koalixcrm/accounting/models.py:291
+msgid "Created at"
+msgstr "Erstellt am"
+
+#: koalixcrm/accounting/models.py:292
+msgid "Last modified"
+msgstr "Zuletzt verändert"
+
+#: koalixcrm/accounting/models.py:294
+msgid "Last modified by"
+msgstr "Zuletzt verändert von"
+
+#: koalixcrm/accounting/models.py:299
+msgid "Date"
+msgstr "Datum"
+
+#: koalixcrm/accounting/models.py:306
+msgid "Booking"
+msgstr "Buchung"
+
+#: koalixcrm/accounting/models.py:307
+msgid "Bookings"
+msgstr "Buchungen"
+
+#: koalixcrm/accounting/views.py:34 koalixcrm/accounting/views.py:69
+msgid "User Extension Missing"
+msgstr ""
+
+#: koalixcrm/accounting/views.py:37 koalixcrm/accounting/views.py:72
+msgid "Templateset Missing"
+msgstr ""

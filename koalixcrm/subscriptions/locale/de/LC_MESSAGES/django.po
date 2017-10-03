@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-10-13 22:58+0200\n"
+"POT-Creation-Date: 2017-10-03 19:50+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,86 +18,92 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
-#: admin.py:33 admin.py:64
+#: koalixcrm/subscriptions/admin.py:26 koalixcrm/subscriptions/admin.py:38
+#: koalixcrm/subscriptions/admin.py:78
 msgid "Basics"
 msgstr "Grundlagen"
 
-#: admin.py:52
+#: koalixcrm/subscriptions/admin.py:66
 msgid "Create Invoice"
 msgstr "Erzeuge Rechnung"
 
-#: models.py:8 models.py:48
-msgid "Subscription Type"
-msgstr "Abonnement Typ"
-
-#: models.py:9
-msgid "Start Date"
-msgstr "Startdatum"
-
-#: models.py:10
-msgid "Canceling Date"
-msgstr "Kündigungsdatum"
-
-#: models.py:19 models.py:23
-msgid "Subscription"
+#: koalixcrm/subscriptions/admin.py:94
+#, fuzzy
+#| msgid "Subscription"
+msgid "Create Subscription"
 msgstr "Abonnement"
 
-#: models.py:20
-msgid "Subscriptions"
-msgstr "Abonnemente"
-
-#: models.py:24
-msgid "Event Date"
-msgstr "Ereignis Datum"
-
-#: models.py:25
-msgid "Event"
-msgstr "Ereignis"
-
-#: models.py:33
-msgid "Subscription Event"
-msgstr "Abonnement Ereignis"
-
-#: models.py:34
-msgid "Subscription Events"
-msgstr "Abonnement Ereignisse"
-
-#: models.py:38
-msgid "Cancelation Period (months)"
-msgstr "Kündigungsfirst in Monaten"
-
-#: models.py:39
-msgid "Automatic Contract Extension (months)"
-msgstr "Automatische Vertragsverlängerung in Monaten"
-
-#: models.py:40
-msgid "Automatic Contract Extensoin Reminder (days)"
-msgstr "Automatische Vertragsverlängerung Erinnerung in Tagen"
-
-#: models.py:41
-msgid "Minimum Contract Duration"
-msgstr "Minimale Vertragsdauer"
-
-#: models.py:42
-msgid "Payment Intervall (days)"
-msgstr "Zahlungsintervall"
-
-#: models.py:43
-msgid "Contract Documents"
-msgstr "Vertragsdokumente"
-
-#: models.py:49
-msgid "Subscription Types"
-msgstr "Abonnement Typen"
-
-#: const/events.py:6
+#: koalixcrm/subscriptions/const/events.py:6
 msgid "Offered"
 msgstr "Offeriert"
 
-#: const/events.py:7
+#: koalixcrm/subscriptions/const/events.py:7
 msgid "Canceled"
 msgstr "Aufgelöst"
 
-#: const/events.py:8
+#: koalixcrm/subscriptions/const/events.py:8
 msgid "Signed"
 msgstr "Unterschrieben"
+
+#: koalixcrm/subscriptions/models.py:11 koalixcrm/subscriptions/models.py:12
+#: koalixcrm/subscriptions/models.py:81
+msgid "Subscription Type"
+msgstr "Abonnement Typ"
+
+#: koalixcrm/subscriptions/models.py:49 koalixcrm/subscriptions/models.py:54
+msgid "Subscription"
+msgstr "Abonnement"
+
+#: koalixcrm/subscriptions/models.py:50
+msgid "Subscriptions"
+msgstr "Abonnemente"
+
+#: koalixcrm/subscriptions/models.py:55
+msgid "Event Date"
+msgstr "Ereignis Datum"
+
+#: koalixcrm/subscriptions/models.py:56
+msgid "Event"
+msgstr "Ereignis"
+
+#: koalixcrm/subscriptions/models.py:64
+msgid "Subscription Event"
+msgstr "Abonnement Ereignis"
+
+#: koalixcrm/subscriptions/models.py:65
+msgid "Subscription Events"
+msgstr "Abonnement Ereignisse"
+
+#: koalixcrm/subscriptions/models.py:69
+msgid "Cancelation Period (months)"
+msgstr "Kündigungsfirst in Monaten"
+
+#: koalixcrm/subscriptions/models.py:70
+msgid "Automatic Contract Extension (months)"
+msgstr "Automatische Vertragsverlängerung in Monaten"
+
+#: koalixcrm/subscriptions/models.py:73
+msgid "Automatic Contract Extensoin Reminder (days)"
+msgstr "Automatische Vertragsverlängerung Erinnerung in Tagen"
+
+#: koalixcrm/subscriptions/models.py:74
+msgid "Minimum Contract Duration"
+msgstr "Minimale Vertragsdauer"
+
+#: koalixcrm/subscriptions/models.py:75
+msgid "Payment Intervall (days)"
+msgstr "Zahlungsintervall"
+
+#: koalixcrm/subscriptions/models.py:76
+msgid "Contract Documents"
+msgstr "Vertragsdokumente"
+
+#: koalixcrm/subscriptions/models.py:82
+msgid "Subscription Types"
+msgstr "Abonnement Typen"
+
+#~ msgid "Start Date"
+#~ msgstr "Startdatum"
+
+#~ msgid "Canceling Date"
+#~ msgstr "Kündigungsdatum"

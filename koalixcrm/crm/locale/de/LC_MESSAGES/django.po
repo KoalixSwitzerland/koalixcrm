@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-26 21:45+0100\n"
+"POT-Creation-Date: 2017-10-03 19:50+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <aaron.riedener@koalix.ch>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,1636 +17,1182 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: admin.py:133 admin.py:149 admin.py:166 admin.py:183 admin.py:247
-#: admin.py:317 admin.py:376 admin.py:426
+#: koalixcrm/crm/admin.py:155 koalixcrm/crm/admin.py:176
+#: koalixcrm/crm/admin.py:197 koalixcrm/crm/admin.py:215
+#: koalixcrm/crm/admin.py:299 koalixcrm/crm/admin.py:424
+#: koalixcrm/crm/admin.py:503 koalixcrm/crm/admin.py:562
 msgid "Basics"
 msgstr "Standard"
 
-#: admin.py:136 admin.py:152 admin.py:169
+#: koalixcrm/crm/admin.py:158 koalixcrm/crm/admin.py:179
+#: koalixcrm/crm/admin.py:200
 msgid "Advanced (not editable)"
 msgstr "Zusatzinformationen (nicht veränderbar)"
 
-#: admin.py:194
+#: koalixcrm/crm/admin.py:227
 msgid "PurchaseOrder created"
 msgstr "Bestellung erstellt"
 
-#: admin.py:197
+#: koalixcrm/crm/admin.py:231
 msgid "Create Purchaseorder"
 msgstr "Bestellung erstellen"
 
-#: admin.py:202 const/status.py:17
+#: koalixcrm/crm/admin.py:236 koalixcrm/crm/const/status.py:17
 msgid "Quote created"
 msgstr "Offerte erstellt"
 
-#: admin.py:205 admin.py:486
+#: koalixcrm/crm/admin.py:240 koalixcrm/crm/admin.py:631
 msgid "Create Quote"
 msgstr "Offerte erstellen"
 
-#: admin.py:210 admin.py:347 views.py:67 const/status.py:7
+#: koalixcrm/crm/admin.py:245 koalixcrm/crm/admin.py:468
+#: koalixcrm/crm/const/status.py:7
 msgid "Invoice created"
 msgstr "Rechnung erstellt"
 
-#: admin.py:213 admin.py:350 admin.py:493
+#: koalixcrm/crm/admin.py:249 koalixcrm/crm/admin.py:472
+#: koalixcrm/crm/admin.py:640
 msgid "Create Invoice"
 msgstr "Rechnung erstellen"
 
-#: admin.py:272 admin.py:342
+#: koalixcrm/crm/admin.py:347 koalixcrm/crm/admin.py:463
 msgid "Recalculate Prices"
 msgstr "Berechne Preis neu"
 
-#: admin.py:278
+#: koalixcrm/crm/admin.py:354
 msgid "Create PDF of Invoice"
 msgstr "Erzeuge ein PDF der Rechnung"
 
-#: admin.py:284
+#: koalixcrm/crm/admin.py:361
 msgid "Create PDF of Delivery Order"
 msgstr "Erzeuge ein PDF des Lieferscheins"
 
-#: admin.py:289
+#: koalixcrm/crm/admin.py:367
 msgid "Successfully registered Invoice in the Accounting"
-msgstr "Die Rechnung ist erflogreich in der Buchhaltung registriert worden"
+msgstr "Die Rechnung ist erfolgreich in der Buchhaltung registriert worden"
 
-#: admin.py:290
+#: koalixcrm/crm/admin.py:376
 msgid "Register Invoice in Accounting"
 msgstr "Registriere Rechnung in Buchhaltung"
 
-#: admin.py:295
-msgid "Successfully unregistered Invoice in the Accounting"
-msgstr "Die Rechnung wurde erflogreich aus der Buchhaltung entfernt"
+#: koalixcrm/crm/admin.py:388
+msgid "Canceled registeration of payment in the accounting"
+msgstr "Die Zahlungsregistrierung wurde abgebrochen"
 
-#: admin.py:296
-msgid "Unregister Invoice in Accounting"
-msgstr "Entferne Rechnung aus der Buchhaltung"
-
-#: admin.py:301
+#: koalixcrm/crm/admin.py:397
 msgid "Successfully registered Payment in the Accounting"
 msgstr "Die Zahlung wurde erfolgreich eingebucht"
 
-#: admin.py:302
+#: koalixcrm/crm/admin.py:406
 msgid "Register Payment in Accounting"
 msgstr "Buche Zahlung des Kunden in der Buchhaltung"
 
-#: admin.py:338
-msgid "Successfully recalculated Prices"
-msgstr "Preisberechnung erfolgreich"
-
-#: admin.py:340
-msgid "Unsuccessfull in updating the Prices "
-msgstr "Preisberechnung fehlgeschlagen"
-
-#: admin.py:356
+#: koalixcrm/crm/admin.py:479
 msgid "Create PDF of Quote"
 msgstr "Erzeuge ein PDF der Offerte"
 
-#: admin.py:362
+#: koalixcrm/crm/admin.py:486
 msgid "Create PDF of Purchase Confirmation"
-msgstr "Erzeuge ein PDF der Verkaufsbestätigung"
+msgstr "Erzeuge ein PDF der Auftragsbestätigung"
 
-#: admin.py:389
+#: koalixcrm/crm/admin.py:521
 msgid "Create PDF of Purchase Order"
 msgstr "Erzeuge ein PDF der Bestellung"
 
-#: admin.py:479
+#: koalixcrm/crm/admin.py:622
 msgid "Create Contract"
 msgstr "Erzeuge Auftrag"
 
-#: models.py:24 models.py:161 models.py:221 models.py:308 models.py:574
-#: models.py:608 models.py:756
-msgid "Description"
-msgstr "Beschreibung"
-
-#: models.py:25
-msgid "Displayed Name After Price In The Position"
-msgstr "Angezeigt nach dem Preis in der Position"
-
-#: models.py:26
-msgid "Rounding"
-msgstr "Rundung"
-
-#: models.py:34 models.py:35 models.py:227 models.py:314
-msgid "Currency"
-msgstr "Währung"
-
-#: models.py:38
-msgid "Prefix"
-msgstr "Anrede"
-
-#: models.py:39 models.py:75 models.py:87
-msgid "Name"
-msgstr "Name"
-
-#: models.py:40
-msgid "Prename"
-msgstr "Vorname"
-
-#: models.py:41
-msgid "Addressline 1"
-msgstr "Adresslinie 1"
-
-#: models.py:42
-msgid "Addressline 2"
-msgstr "Adresslinie 2"
-
-#: models.py:43
-msgid "Addressline 3"
-msgstr "Adresslinie 3"
-
-#: models.py:44
-msgid "Addressline 4"
-msgstr "Adresslinie 4"
-
-#: models.py:45
-msgid "Zipcode"
-msgstr "PLZ"
-
-#: models.py:46
-msgid "City"
-msgstr "Ortschaft"
-
-#: models.py:47
-msgid "State"
-msgstr "Bundestaat/Kanton"
-
-#: models.py:48
-msgid "Country"
-msgstr "Land"
-
-#: models.py:53 models.py:54
-msgid "Postal Address"
-msgstr "Postadresse"
-
-#: models.py:57
-msgid "Phone Number"
-msgstr "Telefonnummer"
-
-#: models.py:62 models.py:63
-msgid "Phone Address"
-msgstr "Telefonnummer"
-
-#: models.py:66 models.py:71 models.py:72
-msgid "Email Address"
-msgstr "Email Adresse"
-
-#: models.py:76 models.py:165 models.py:228 models.py:315 models.py:612
-msgid "Created at"
-msgstr "Erstelldatum"
-
-#: models.py:77 models.py:166 models.py:229 models.py:316 models.py:613
-msgid "Last modified"
-msgstr "Zuletzt geändert"
-
-#: models.py:78 models.py:167 models.py:230 models.py:317 models.py:614
-msgid "Last modified by"
-msgstr "Zuletzt geändert durch"
-
-#: models.py:83 models.py:84
-msgid "Contact"
-msgstr "Kontakt"
-
-#: models.py:88
-msgid "Days To Payment Date"
-msgstr "Tage bis zur Fälligkeit"
-
-#: models.py:92 models.py:93
-msgid "Customer Billing Cycle"
-msgstr "Zahlungsbedingungen"
-
-#: models.py:107 models.py:713
-msgid "Customer Group"
-msgstr "Kundengruppe"
-
-#: models.py:108
-msgid "Customer Groups"
-msgstr "Kundengruppen"
-
-#: models.py:111
-msgid "Default Billing Cycle"
-msgstr "Standard Zahlungsbedingung"
-
-#: models.py:112
-msgid "Is member of"
-msgstr "Ist Mitglied von"
-
-#: models.py:142 models.py:312
-msgid "Customer"
-msgstr "Kunde"
-
-#: models.py:143
-msgid "Customers"
-msgstr "Kunden"
-
-#: models.py:149
-msgid "Offers Shipment to Customer"
-msgstr ""
-
-#: models.py:153 models.py:154 models.py:220
-msgid "Supplier"
-msgstr "Lieferant"
-
-#: models.py:160 models.py:226 models.py:313
-msgid "Staff"
-msgstr "Mitarbeiter"
-
-#: models.py:162
-msgid "Default Customer"
-msgstr "Standard Kunde"
-
-#: models.py:163
-msgid "Default Supplier"
-msgstr "Standard Lieferant"
-
-#: models.py:164
-msgid "Default Currency"
-msgstr "Standard Währung"
-
-#: models.py:172 models.py:215 models.py:218 models.py:305 models.py:798
-#: models.py:811
-msgid "Contract"
-msgstr "Auftrag"
-
-#: models.py:173
-msgid "Contracts"
-msgstr "Aufträge"
-
-#: models.py:219 models.py:306
-msgid "External Reference"
-msgstr "Externe Referenz"
-
-#: models.py:222 models.py:309 models.py:765
-msgid "Last Pricing Date"
-msgstr "Datum der letze Preisberechnung"
-
-#: models.py:223 models.py:310
-msgid "Last Calculted Price With Tax"
-msgstr "Zuletzt berechneter Preis mit Steuer"
-
-#: models.py:224 models.py:311 models.py:767
-msgid "Last Calculted Tax"
-msgstr "Zuletzt berechnete Steuer"
-
-#: models.py:278 models.py:284
-msgid "During PurchaseOrder PDF Export"
-msgstr "Bestellung erstellt"
-
-#: models.py:298 models.py:299 models.py:302
-msgid "Purchase Order"
-msgstr "Bestellung"
-
-#: models.py:302 models.py:354 models.py:449 models.py:565
-msgid "from Contract"
-msgstr "vom Auftrag"
-
-#: models.py:307 models.py:757
-msgid "Discount"
-msgstr "Rabatt"
-
-#: models.py:350 models.py:354
-msgid "Sales Contract"
-msgstr "Verkaufsauftrag"
-
-#: models.py:351
-msgid "Sales Contracts"
-msgstr "Verkaufsaufträge"
-
-#: models.py:357 models.py:716
-msgid "Valid until"
-msgstr "Gültig bis"
-
-#: models.py:358
-msgid "Status"
-msgstr "Status"
-
-#: models.py:416 models.py:422
-msgid "During Quote PDF Export"
-msgstr ""
-
-#: models.py:449 models.py:454
-msgid "Quote"
-msgstr "Offerte"
-
-#: models.py:455
-msgid "Quotes"
-msgstr "Offerten"
-
-#: models.py:458
-msgid "To pay until"
-msgstr "Zahlbar bis"
-
-#: models.py:460
-msgid "Payment Bank Reference"
-msgstr "Zahlungsreferenz der Bank"
-
-#: models.py:531 models.py:537
-msgid "During Invoice PDF Export"
-msgstr ""
-
-#: models.py:565 models.py:570
-msgid "Invoice"
-msgstr "Rechnung"
-
-#: models.py:571
-msgid "Invoices"
-msgstr "Rechnungen"
-
-#: models.py:575
-msgid "Displayed Name After Quantity In The Position"
-msgstr "Angezeigt nach der Anzahl in der Position"
-
-#: models.py:576
-msgid "Is A Fraction Of"
-msgstr "Ist eine Untereinheit von"
-
-#: models.py:577
-msgid "Factor Between This And Next Higher Unit"
-msgstr "Multiplikator zwischen dieser und der nächst höheren Einheit"
-
-#: models.py:585 models.py:611 models.py:711 models.py:759
-msgid "Unit"
-msgstr "Masseinheit"
-
-#: models.py:586
-msgid "Units"
-msgstr "Masseinheiten"
-
-#: models.py:589
-msgid "Taxrate in Percentage"
-msgstr "Steuersatz in Prozent"
-
-#: models.py:590
-msgid "Taxname"
-msgstr "Name der Steuer"
-
-#: models.py:591
-msgid "Activa Account"
-msgstr "Aktiv Konto"
-
-#: models.py:592
-msgid "Passiva Account"
-msgstr "Passiv Konto"
-
-#: models.py:603
-msgid "Tax"
-msgstr "Steuer"
-
-#: models.py:604
-msgid "Taxes"
-msgstr "Steuern"
-
-#: models.py:609
-msgid "Title"
-msgstr "Titel"
-
-#: models.py:610
-msgid "Product Number"
-msgstr "Produktnummer"
-
-#: models.py:616
-msgid "Accounting Product Categorie"
-msgstr "Buchhaltung Produktkategorie"
-
-#: models.py:653 models.py:670 models.py:691 models.py:710 models.py:758
-msgid "Product"
-msgstr "Produkt"
-
-#: models.py:654
-msgid "Products"
-msgstr "Produkte"
-
-#: models.py:664
-msgid "There is no Price for this product"
-msgstr "Es existiert kein Preis für dieses Produkt"
-
-#: models.py:664
-msgid "that matches the date"
-msgstr "welches übereinstimmt mit Datum"
-
-#: models.py:664
-msgid "customer"
-msgstr "Kunde"
-
-#: models.py:664
-msgid " and unit"
-msgstr "und Einheit"
-
-#: models.py:668 models.py:689
-msgid "From Unit"
-msgstr "Von Masseinheit"
-
-#: models.py:669 models.py:690
-msgid "To Unit"
-msgstr "Zu Masseinheit"
-
-#: models.py:671
-msgid "Factor between From and To Unit"
-msgstr "Multiplikator zwischen der einen und der anderen Einheit"
-
-#: models.py:685
-msgid "Unit Transfrom"
-msgstr "Einheiten Umrechnung"
-
-#: models.py:686
-msgid "Unit Transfroms"
-msgstr "Einheiten Umrechnungen"
-
-#: models.py:692
-msgid "Factor between From and To Customer Group"
-msgstr "Prismultiplikator zwischen der einen und der anderen Kundengruppe"
-
-#: models.py:706
-msgid "Customer Group Price Transfrom"
-msgstr "Kundengruppe Preisumrechnung"
-
-#: models.py:707
-msgid "Customer Group Price Transfroms"
-msgstr "Kundengruppen Preisumrechnungen"
-
-#: models.py:714 models.py:764
-msgid "Price Per Unit"
-msgstr "Preis pro Einheit"
-
-#: models.py:715
-msgid "Valid from"
-msgstr "Gültig vom"
-
-#: models.py:750
-msgid "Price"
-msgstr "Preis"
-
-#: models.py:751
-msgid "Prices"
-msgstr "Preise"
-
-#: models.py:754
-msgid "Position Number"
-msgstr "Positionsnummer"
-
-#: models.py:755
-msgid "Quantity"
-msgstr "Anzahl"
-
-#: models.py:760
-msgid "Shipment on"
-msgstr "Verschickt am"
-
-#: models.py:761
-msgid "Shipment Supplier"
-msgstr "Versandunternehmen"
-
-#: models.py:762
-msgid "Shipment ID"
-msgstr "Lieferungs ID"
-
-#: models.py:763
-msgid "Overwrite Product Price"
-msgstr "Überschreie Produkt Preis"
-
-#: models.py:766
-msgid "Last Calculted Price"
-msgstr "Zuletzt berechneter Preis"
-
-#: models.py:789 models.py:794
-msgid "Position"
-msgstr "Position"
-
-#: models.py:795
-msgid "Positions"
-msgstr "Positionen"
-
-#: models.py:803 models.py:807
-msgid "Salescontract Position"
-msgstr "Verkaufsaufträg Position"
-
-#: models.py:804
-msgid "Salescontract Positions"
-msgstr "Verkaufsaufträge Positionen"
-
-#: models.py:816 models.py:820
-msgid "Purchaseorder Position"
-msgstr "Bestellung Position"
-
-#: models.py:817
-msgid "Purchaseorder Positions"
-msgstr "Bestellung Positionen"
-
-#: models.py:823 models.py:836 models.py:849 models.py:862 models.py:875
-#: models.py:888 models.py:901 models.py:914 models.py:927 models.py:940
-#: models.py:953 models.py:966
-msgid "Purpose"
-msgstr "Verwendungszweck"
-
-#: models.py:829 models.py:830
-msgid "Phone Address For Contact"
-msgstr "Telefonnummer für Kontakte"
-
-#: models.py:842 models.py:843
-msgid "Email Address For Contact"
-msgstr "Email Adresse für Kontakte"
-
-#: models.py:855 models.py:856
-msgid "Postal Address For Contact"
-msgstr "Postadresse für Kontakte"
-
-#: models.py:868 models.py:869 models.py:881 models.py:882 models.py:894
-#: models.py:895
-msgid "Postal Address For Contracts"
-msgstr "Postadresse für Aufträge"
-
-#: models.py:907 models.py:908 models.py:920 models.py:921 models.py:933
-#: models.py:934
-msgid "Phone Address For Contracts"
-msgstr "Telefonnummer für Aufträge"
-
-#: models.py:946 models.py:947 models.py:959 models.py:960 models.py:972
-#: models.py:973
-msgid "Email Address For Contracts"
-msgstr "Email Adresse für Aufträge"
-
-#: views.py:70
-msgid "Test"
-msgstr "Test"
-
-#: const/country.py:4
+#: koalixcrm/crm/const/country.py:6
 msgid "Afghanistan"
 msgstr "Afghanistan"
 
-#: const/country.py:5
+#: koalixcrm/crm/const/country.py:7
 msgid "Aland Islands"
 msgstr ""
 
-#: const/country.py:6
+#: koalixcrm/crm/const/country.py:8
 msgid "Albania"
 msgstr "Albanien"
 
-#: const/country.py:7
+#: koalixcrm/crm/const/country.py:9
 msgid "Algeria"
 msgstr "Algerien"
 
-#: const/country.py:8
+#: koalixcrm/crm/const/country.py:10
 msgid "American Samoa"
 msgstr "Amerikanisch-Samoa"
 
-#: const/country.py:9
+#: koalixcrm/crm/const/country.py:11
 msgid "Andorra"
 msgstr "Andorra"
 
-#: const/country.py:10
+#: koalixcrm/crm/const/country.py:12
 msgid "Angola"
 msgstr "Angola"
 
-#: const/country.py:11
+#: koalixcrm/crm/const/country.py:13
 msgid "Anguilla"
 msgstr "Anguilla"
 
-#: const/country.py:12
+#: koalixcrm/crm/const/country.py:14
 msgid "Antarctica"
 msgstr "Antarktis"
 
-#: const/country.py:13
+#: koalixcrm/crm/const/country.py:15
 msgid "Antigua and Barbuda"
 msgstr "Antigua und Barbuda"
 
-#: const/country.py:14
+#: koalixcrm/crm/const/country.py:16
 msgid "Argentina"
 msgstr "Argentinien"
 
-#: const/country.py:15
+#: koalixcrm/crm/const/country.py:17
 msgid "Armenia"
 msgstr "Armenien"
 
-#: const/country.py:16
+#: koalixcrm/crm/const/country.py:18
 msgid "Aruba"
 msgstr "Aruba"
 
-#: const/country.py:17
+#: koalixcrm/crm/const/country.py:19
 msgid "Australia"
 msgstr "Australien"
 
-#: const/country.py:18
+#: koalixcrm/crm/const/country.py:20
 msgid "Austria"
 msgstr "Österreich"
 
-#: const/country.py:19
+#: koalixcrm/crm/const/country.py:21
 msgid "Azerbaijan"
 msgstr "Aserbaidschan"
 
-#: const/country.py:20
+#: koalixcrm/crm/const/country.py:22
 msgid "the Bahamas"
 msgstr "Bahamas"
 
-#: const/country.py:21
+#: koalixcrm/crm/const/country.py:23
 msgid "Bahrain"
 msgstr "Bahrain\t"
 
-#: const/country.py:22
+#: koalixcrm/crm/const/country.py:24
 msgid "Bangladesh"
 msgstr "Bangladesch"
 
-#: const/country.py:23
+#: koalixcrm/crm/const/country.py:25
 msgid "Barbados"
 msgstr "Barbados"
 
-#: const/country.py:24
+#: koalixcrm/crm/const/country.py:26
 msgid "Belarus"
 msgstr "Belarus, (Weißrußland)"
 
-#: const/country.py:25
+#: koalixcrm/crm/const/country.py:27
 msgid "Belgium"
 msgstr "Belgien"
 
-#: const/country.py:26
+#: koalixcrm/crm/const/country.py:28
 msgid "Belize"
 msgstr "Belize"
 
-#: const/country.py:27
+#: koalixcrm/crm/const/country.py:29
 msgid "Benin"
 msgstr "Benin"
 
-#: const/country.py:28
+#: koalixcrm/crm/const/country.py:30
 msgid "Bermuda"
 msgstr "Bermuda"
 
-#: const/country.py:29
+#: koalixcrm/crm/const/country.py:31
 msgid "Bhutan"
 msgstr "Bhutan"
 
-#: const/country.py:30
+#: koalixcrm/crm/const/country.py:32
 msgid "Bolivia"
 msgstr "Bolivien"
 
-#: const/country.py:31
+#: koalixcrm/crm/const/country.py:33
 msgid "Bosnia and Herzegovina"
 msgstr "Bosnien und Herzegovina"
 
-#: const/country.py:32
+#: koalixcrm/crm/const/country.py:34
 msgid "Botswana"
 msgstr "Botsuana"
 
-#: const/country.py:33
+#: koalixcrm/crm/const/country.py:35
 msgid "Bouvet Island"
 msgstr "Bouvetinsel"
 
-#: const/country.py:34
+#: koalixcrm/crm/const/country.py:36
 msgid "Brazil"
 msgstr "Brasilien"
 
-#: const/country.py:35
+#: koalixcrm/crm/const/country.py:37
 msgid "British Indian Ocean Territory"
 msgstr "Britisches Territorium im Indischen Ozean"
 
-#: const/country.py:36
+#: koalixcrm/crm/const/country.py:38
 msgid "Brunei Darussalam"
 msgstr "Brunei Darussalam"
 
-#: const/country.py:37
+#: koalixcrm/crm/const/country.py:39
 msgid "Bulgaria"
 msgstr "Bulgarien"
 
-#: const/country.py:38
+#: koalixcrm/crm/const/country.py:40
 msgid "Burkina Faso"
 msgstr "Burkina Faso (Obervolta - 1984)"
 
-#: const/country.py:39
+#: koalixcrm/crm/const/country.py:41
 msgid "Burundi"
 msgstr "Burundi"
 
-#: const/country.py:40
+#: koalixcrm/crm/const/country.py:42
 msgid "Cambodia"
 msgstr "Kambodscha"
 
-#: const/country.py:41
+#: koalixcrm/crm/const/country.py:43
 msgid "Cameroon"
 msgstr "Kamerun"
 
-#: const/country.py:42
+#: koalixcrm/crm/const/country.py:44
 msgid "Canada"
 msgstr "Kanada"
 
-#: const/country.py:43
+#: koalixcrm/crm/const/country.py:45
 msgid "Cape Verde"
 msgstr "Kap Verde"
 
-#: const/country.py:44
+#: koalixcrm/crm/const/country.py:46
 msgid "Cayman Islands"
 msgstr "Kaimaninseln"
 
-#: const/country.py:45
+#: koalixcrm/crm/const/country.py:47
 msgid "Central African Republic"
 msgstr "Zentralafrikanische Republik"
 
-#: const/country.py:46
+#: koalixcrm/crm/const/country.py:48
 msgid "Chad"
 msgstr "Tschad"
 
-#: const/country.py:47
+#: koalixcrm/crm/const/country.py:49
 msgid "Chile"
 msgstr "Chile"
 
-#: const/country.py:48
+#: koalixcrm/crm/const/country.py:50
 msgid "China"
 msgstr "China"
 
-#: const/country.py:49
+#: koalixcrm/crm/const/country.py:51
 msgid "Christmas Island"
 msgstr "Weihnachtsinsel"
 
-#: const/country.py:50
+#: koalixcrm/crm/const/country.py:52
 msgid "Cocos (Keeling) Islands"
 msgstr "Kokosinseln (Keeling)"
 
-#: const/country.py:51
+#: koalixcrm/crm/const/country.py:53
 msgid "Colombia"
 msgstr "Kolumbien"
 
-#: const/country.py:52
+#: koalixcrm/crm/const/country.py:54
 msgid "Comoros"
 msgstr "Komoren"
 
-#: const/country.py:53
+#: koalixcrm/crm/const/country.py:55
 msgid "Congo"
 msgstr "Kongo"
 
-#: const/country.py:54
+#: koalixcrm/crm/const/country.py:56
 msgid "Democratic Republic of the Congo"
 msgstr "Kongo, Demokratische Republik"
 
-#: const/country.py:55
+#: koalixcrm/crm/const/country.py:57
 msgid "Cook Islands"
 msgstr "Cookinseln"
 
-#: const/country.py:56
+#: koalixcrm/crm/const/country.py:58
 msgid "Costa Rica"
 msgstr "Costa Rica"
 
-#: const/country.py:57
+#: koalixcrm/crm/const/country.py:59
 msgid "Cote d'Ivoire"
 msgstr "Elfenbeinküste"
 
-#: const/country.py:58
+#: koalixcrm/crm/const/country.py:60
 msgid "Croatia"
 msgstr "Kroatien"
 
-#: const/country.py:59
+#: koalixcrm/crm/const/country.py:61
 msgid "Cuba"
 msgstr "Kuba"
 
-#: const/country.py:60
+#: koalixcrm/crm/const/country.py:62
 msgid "Cyprus"
 msgstr "Zypern"
 
-#: const/country.py:61
+#: koalixcrm/crm/const/country.py:63
 msgid "Czech Republic"
 msgstr "Tschechische Republik"
 
-#: const/country.py:62
+#: koalixcrm/crm/const/country.py:64
 msgid "Denmark"
 msgstr "Dänemark"
 
-#: const/country.py:63
+#: koalixcrm/crm/const/country.py:65
 msgid "Djibouti"
 msgstr "Dschibuti"
 
-#: const/country.py:64
+#: koalixcrm/crm/const/country.py:66
 msgid "Dominica"
 msgstr "Dominica"
 
-#: const/country.py:65
+#: koalixcrm/crm/const/country.py:67
 msgid "Dominican Republic"
 msgstr "Dominikanische Republik (Dom Rep)"
 
-#: const/country.py:66
+#: koalixcrm/crm/const/country.py:68
 msgid "Ecuador"
 msgstr "Ecuador"
 
-#: const/country.py:67
+#: koalixcrm/crm/const/country.py:69
 msgid "Egypt"
 msgstr "Ägypten"
 
-#: const/country.py:68
+#: koalixcrm/crm/const/country.py:70
 msgid "El Salvador"
 msgstr "El Salvador"
 
-#: const/country.py:69
+#: koalixcrm/crm/const/country.py:71
 msgid "Equatorial Guinea"
 msgstr "Äquatorialguinea"
 
-#: const/country.py:70
+#: koalixcrm/crm/const/country.py:72
 msgid "Eritrea"
 msgstr "Eritrea"
 
-#: const/country.py:71
+#: koalixcrm/crm/const/country.py:73
 msgid "Estonia"
 msgstr "Estland"
 
-#: const/country.py:72
+#: koalixcrm/crm/const/country.py:74
 msgid "Ethiopia"
 msgstr "Äthiopien"
 
-#: const/country.py:73
+#: koalixcrm/crm/const/country.py:75
 msgid "Falkland Islands (Malvinas)"
 msgstr "Falklandinseln (Malvinen)"
 
-#: const/country.py:74
+#: koalixcrm/crm/const/country.py:76
 msgid "Faroe Islands"
 msgstr "Färöer"
 
-#: const/country.py:75
+#: koalixcrm/crm/const/country.py:77
 msgid "Fiji"
 msgstr "Fidschi"
 
-#: const/country.py:76
+#: koalixcrm/crm/const/country.py:78
 msgid "Finland"
 msgstr "Finnland"
 
-#: const/country.py:77
+#: koalixcrm/crm/const/country.py:79
 msgid "France"
 msgstr "Frankreich"
 
-#: const/country.py:78
+#: koalixcrm/crm/const/country.py:80
 msgid "French Guiana"
 msgstr "Französisch-Guayana"
 
-#: const/country.py:79
+#: koalixcrm/crm/const/country.py:81
 msgid "French Polynesia"
 msgstr "Französisch-Polynesien"
 
-#: const/country.py:80
+#: koalixcrm/crm/const/country.py:82
 msgid "French Southern and Antarctic Lands"
 msgstr "Französische Süd- und Antarktisgebiete"
 
-#: const/country.py:81
+#: koalixcrm/crm/const/country.py:83
 msgid "Gabon"
 msgstr "Gabun"
 
-#: const/country.py:82
+#: koalixcrm/crm/const/country.py:84
 msgid "Gambia"
 msgstr "Gambia"
 
-#: const/country.py:83
+#: koalixcrm/crm/const/country.py:85
 msgid "Georgia"
 msgstr "Georgien"
 
-#: const/country.py:84
+#: koalixcrm/crm/const/country.py:86
 msgid "Germany"
 msgstr "Deutschland"
 
-#: const/country.py:85
+#: koalixcrm/crm/const/country.py:87
 msgid "Ghana"
 msgstr "Ghana"
 
-#: const/country.py:86
+#: koalixcrm/crm/const/country.py:88
 msgid "Gibraltar"
 msgstr "Gibraltar"
 
-#: const/country.py:87
+#: koalixcrm/crm/const/country.py:89
 msgid "Greece"
 msgstr "Griechenland"
 
-#: const/country.py:88
+#: koalixcrm/crm/const/country.py:90
 msgid "Greenland"
 msgstr "Grönland"
 
-#: const/country.py:89
+#: koalixcrm/crm/const/country.py:91
 msgid "Grenada"
 msgstr "Grenada"
 
-#: const/country.py:90
+#: koalixcrm/crm/const/country.py:92
 msgid "Guadeloupe"
 msgstr "Guadeloupe"
 
-#: const/country.py:91
+#: koalixcrm/crm/const/country.py:93
 msgid "Guam"
 msgstr "Guam"
 
-#: const/country.py:92
+#: koalixcrm/crm/const/country.py:94
 msgid "Guatemala"
 msgstr "Guatemala"
 
-#: const/country.py:93
+#: koalixcrm/crm/const/country.py:95
 msgid "Guernsey"
 msgstr "Guernsey"
 
-#: const/country.py:94
+#: koalixcrm/crm/const/country.py:96
 msgid "Guinea"
 msgstr "Guinea"
 
-#: const/country.py:95
+#: koalixcrm/crm/const/country.py:97
 msgid "Guinea-Bissau"
 msgstr "Guinea-Bissau"
 
-#: const/country.py:96
+#: koalixcrm/crm/const/country.py:98
 msgid "Guyana"
 msgstr "Guyana"
 
-#: const/country.py:97
+#: koalixcrm/crm/const/country.py:99
 msgid "Haiti"
 msgstr "Haiti"
 
-#: const/country.py:98
+#: koalixcrm/crm/const/country.py:100
 msgid "Heard Island and McDonald Islands"
 msgstr "Heard und die Mcdonaldinseln"
 
-#: const/country.py:99
+#: koalixcrm/crm/const/country.py:101
 msgid "Vatican City Holy See"
 msgstr "Heiliger Stuhl (Vatikanstadt)"
 
-#: const/country.py:100
+#: koalixcrm/crm/const/country.py:102
 msgid "Honduras"
 msgstr "Honduras"
 
-#: const/country.py:101
+#: koalixcrm/crm/const/country.py:103
 msgid "Hong Kong"
 msgstr "Hongkong"
 
-#: const/country.py:102
+#: koalixcrm/crm/const/country.py:104
 msgid "Hungary"
 msgstr "Ungarn"
 
-#: const/country.py:103
+#: koalixcrm/crm/const/country.py:105
 msgid "Iceland"
 msgstr "Island"
 
-#: const/country.py:104
+#: koalixcrm/crm/const/country.py:106
 msgid "India"
 msgstr "Indien"
 
-#: const/country.py:105
+#: koalixcrm/crm/const/country.py:107
 msgid "Indonesia"
 msgstr "Indonesien"
 
-#: const/country.py:106
+#: koalixcrm/crm/const/country.py:108
 msgid "Iran"
 msgstr "Iran, Islamische Republik"
 
-#: const/country.py:107
+#: koalixcrm/crm/const/country.py:109
 msgid "Iraq"
 msgstr "Irak"
 
-#: const/country.py:108
+#: koalixcrm/crm/const/country.py:110
 msgid "Ireland"
 msgstr "Irland"
 
-#: const/country.py:109
+#: koalixcrm/crm/const/country.py:111
 msgid "Isle of Man"
 msgstr "Insel Man"
 
-#: const/country.py:110
+#: koalixcrm/crm/const/country.py:112
 msgid "Israel"
 msgstr "Israel"
 
-#: const/country.py:111
+#: koalixcrm/crm/const/country.py:113
 msgid "Italy"
 msgstr "Italien"
 
-#: const/country.py:112
+#: koalixcrm/crm/const/country.py:114
 msgid "Jamaica"
 msgstr "Jamaika"
 
-#: const/country.py:113
+#: koalixcrm/crm/const/country.py:115
 msgid "Japan"
 msgstr "Japan"
 
-#: const/country.py:114
+#: koalixcrm/crm/const/country.py:116
 msgid "Jersey"
 msgstr "Jersey"
 
-#: const/country.py:115
+#: koalixcrm/crm/const/country.py:117
 msgid "Jordan"
 msgstr "Jordanien"
 
-#: const/country.py:116
+#: koalixcrm/crm/const/country.py:118
 msgid "Kazakhstan"
 msgstr "Kasachstan"
 
-#: const/country.py:117
+#: koalixcrm/crm/const/country.py:119
 msgid "Kenya"
 msgstr "Kenya"
 
-#: const/country.py:118
+#: koalixcrm/crm/const/country.py:120
 msgid "Kiribati"
 msgstr "Kiribati"
 
-#: const/country.py:119
+#: koalixcrm/crm/const/country.py:121
 msgid "North Korea"
 msgstr "Korea, Demokratische Volksrepublik (Nord Korea)"
 
-#: const/country.py:120
+#: koalixcrm/crm/const/country.py:122
 msgid "South Korea"
 msgstr "Korea, Republik (Süd Korea)"
 
-#: const/country.py:121
+#: koalixcrm/crm/const/country.py:123
 msgid "Kuwait"
 msgstr "Kuwait"
 
-#: const/country.py:122
+#: koalixcrm/crm/const/country.py:124
 msgid "Kyrgyzstan"
 msgstr "Kirgisistan"
 
-#: const/country.py:123
+#: koalixcrm/crm/const/country.py:125
 msgid "Laos Lao"
 msgstr "Laos, Demokratische Volksrepublik"
 
-#: const/country.py:124
+#: koalixcrm/crm/const/country.py:126
 msgid "Latvia"
 msgstr "Lettland"
 
-#: const/country.py:125
+#: koalixcrm/crm/const/country.py:127
 msgid "Lebanon"
 msgstr "Libanon"
 
-#: const/country.py:126
+#: koalixcrm/crm/const/country.py:128
 msgid "Lesotho"
 msgstr "Lesotho"
 
-#: const/country.py:127
+#: koalixcrm/crm/const/country.py:129
 msgid "Liberia"
 msgstr "Liberia"
 
-#: const/country.py:128
+#: koalixcrm/crm/const/country.py:130
 msgid "Libya Libyan Arab Jamahiriya"
 msgstr "Libyen, Libysch-Arabische Dschamahirija"
 
-#: const/country.py:129
+#: koalixcrm/crm/const/country.py:131
 msgid "Liechtenstein"
 msgstr "Liechtenstein"
 
-#: const/country.py:130
+#: koalixcrm/crm/const/country.py:132
 msgid "Lithuania"
 msgstr "Litauen"
 
-#: const/country.py:131
+#: koalixcrm/crm/const/country.py:133
 msgid "Luxembourg"
 msgstr "Luxemburg"
 
-#: const/country.py:132
+#: koalixcrm/crm/const/country.py:134
 msgid "Macau Macao"
 msgstr "Macau"
 
-#: const/country.py:133
+#: koalixcrm/crm/const/country.py:135
 msgid "Macedonia"
 msgstr "Mazedonien"
 
-#: const/country.py:134
+#: koalixcrm/crm/const/country.py:136
 msgid "Madagascar"
 msgstr "Madagaskar"
 
-#: const/country.py:135
+#: koalixcrm/crm/const/country.py:137
 msgid "Malawi"
 msgstr "Malawi"
 
-#: const/country.py:136
+#: koalixcrm/crm/const/country.py:138
 msgid "Malaysia"
 msgstr "Malaysia"
 
-#: const/country.py:137
+#: koalixcrm/crm/const/country.py:139
 msgid "Maldives"
 msgstr "Malediven"
 
-#: const/country.py:138
+#: koalixcrm/crm/const/country.py:140
 msgid "Mali"
 msgstr "Mali"
 
-#: const/country.py:139
+#: koalixcrm/crm/const/country.py:141
 msgid "Malta"
 msgstr "Malta"
 
-#: const/country.py:140
+#: koalixcrm/crm/const/country.py:142
 msgid "Marshall Islands"
 msgstr "Marshallinseln"
 
-#: const/country.py:141
+#: koalixcrm/crm/const/country.py:143
 msgid "Martinique"
 msgstr "Martinique"
 
-#: const/country.py:142
+#: koalixcrm/crm/const/country.py:144
 msgid "Mauritania"
 msgstr "Mauretanien"
 
-#: const/country.py:143
+#: koalixcrm/crm/const/country.py:145
 msgid "Mauritius"
 msgstr "Mauritius"
 
-#: const/country.py:144
+#: koalixcrm/crm/const/country.py:146
 msgid "Mayotte"
 msgstr "Mayotte"
 
-#: const/country.py:145
+#: koalixcrm/crm/const/country.py:147
 msgid "Mexico"
 msgstr "Mexiko"
 
-#: const/country.py:146
+#: koalixcrm/crm/const/country.py:148
 msgid "Micronesia"
 msgstr "Mikronesien, Föderierte Staaten von"
 
-#: const/country.py:147
+#: koalixcrm/crm/const/country.py:149
 msgid "Moldova"
 msgstr "Moldau, Republik"
 
-#: const/country.py:148
+#: koalixcrm/crm/const/country.py:150
 msgid "Monaco"
 msgstr "Monaco"
 
-#: const/country.py:149
+#: koalixcrm/crm/const/country.py:151
 msgid "Mongolia"
 msgstr "Mongolei"
 
-#: const/country.py:150
+#: koalixcrm/crm/const/country.py:152
 msgid "Montenegro"
 msgstr "Montenegro"
 
-#: const/country.py:151
+#: koalixcrm/crm/const/country.py:153
 msgid "Montserrat"
 msgstr "Montenegro"
 
-#: const/country.py:152
+#: koalixcrm/crm/const/country.py:154
 msgid "Morocco"
 msgstr "Marokko"
 
-#: const/country.py:153
+#: koalixcrm/crm/const/country.py:155
 msgid "Mozambique"
 msgstr "Mosambik"
 
-#: const/country.py:154
+#: koalixcrm/crm/const/country.py:156
 msgid "Myanmar"
 msgstr "Myanmar, Birma"
 
-#: const/country.py:155
+#: koalixcrm/crm/const/country.py:157
 msgid "Namibia"
 msgstr "Namibia"
 
-#: const/country.py:156
+#: koalixcrm/crm/const/country.py:158
 msgid "Nauru"
 msgstr "Nauru"
 
-#: const/country.py:157
+#: koalixcrm/crm/const/country.py:159
 msgid "Nepal"
 msgstr "Nepal"
 
-#: const/country.py:158
+#: koalixcrm/crm/const/country.py:160
 msgid "Netherlands"
 msgstr "Niederlande"
 
-#: const/country.py:159
+#: koalixcrm/crm/const/country.py:161
 msgid "Netherlands Antilles"
 msgstr "Niederländische Antillen"
 
-#: const/country.py:160
+#: koalixcrm/crm/const/country.py:162
 msgid "New Caledonia"
 msgstr "Neukaledonien"
 
-#: const/country.py:161
+#: koalixcrm/crm/const/country.py:163
 msgid "New Zealand"
 msgstr "Neuseeland"
 
-#: const/country.py:162
+#: koalixcrm/crm/const/country.py:164
 msgid "Nicaragua"
 msgstr "Nicaragua"
 
-#: const/country.py:163
+#: koalixcrm/crm/const/country.py:165
 msgid "Niger"
 msgstr "Niger"
 
-#: const/country.py:164
+#: koalixcrm/crm/const/country.py:166
 msgid "Nigeria"
 msgstr "Nigeria"
 
-#: const/country.py:165
+#: koalixcrm/crm/const/country.py:167
 msgid "Niue"
 msgstr "Niue"
 
-#: const/country.py:166
+#: koalixcrm/crm/const/country.py:168
 msgid "Norfolk Island Norfolk Island"
 msgstr "Norfolkinsel"
 
-#: const/country.py:167
+#: koalixcrm/crm/const/country.py:169
 msgid "Northern Mariana Islands"
 msgstr "Marianen, Nördliche"
 
-#: const/country.py:168
+#: koalixcrm/crm/const/country.py:170
 msgid "Norway"
 msgstr "Norwegen"
 
-#: const/country.py:169
+#: koalixcrm/crm/const/country.py:171
 msgid "Oman"
 msgstr "Oman"
 
-#: const/country.py:170
+#: koalixcrm/crm/const/country.py:172
 msgid "Pakistan"
 msgstr "Pakistan"
 
-#: const/country.py:171
+#: koalixcrm/crm/const/country.py:173
 msgid "Palau"
 msgstr "Palau"
 
-#: const/country.py:172
+#: koalixcrm/crm/const/country.py:174
 msgid "Palestinian Territory"
 msgstr "Palästinensische Autonomiegebiete"
 
-#: const/country.py:173
+#: koalixcrm/crm/const/country.py:175
 msgid "Panama"
 msgstr "Panama"
 
-#: const/country.py:174
+#: koalixcrm/crm/const/country.py:176
 msgid "Papua New Guinea"
 msgstr "Papua-Neuguinea"
 
-#: const/country.py:175
+#: koalixcrm/crm/const/country.py:177
 msgid "Paraguay"
 msgstr "Paraguay"
 
-#: const/country.py:176
+#: koalixcrm/crm/const/country.py:178
 msgid "Peru"
 msgstr "Peru"
 
-#: const/country.py:177
+#: koalixcrm/crm/const/country.py:179
 msgid "Philippines"
 msgstr "Philippinen"
 
-#: const/country.py:178
+#: koalixcrm/crm/const/country.py:180
 msgid "Pitcairn Islands"
 msgstr "Pitcairninseln"
 
-#: const/country.py:179
+#: koalixcrm/crm/const/country.py:181
 msgid "Poland"
 msgstr "Polen"
 
-#: const/country.py:180
+#: koalixcrm/crm/const/country.py:182
 msgid "Portugal"
 msgstr "Portugal"
 
-#: const/country.py:181
+#: koalixcrm/crm/const/country.py:183
 msgid "Puerto Rico"
 msgstr "Puerto Rico"
 
-#: const/country.py:182
+#: koalixcrm/crm/const/country.py:184
 msgid "Qatar"
 msgstr "Katar"
 
-#: const/country.py:183
+#: koalixcrm/crm/const/country.py:185
 msgid "Reunion"
 msgstr "Reunion"
 
-#: const/country.py:184
+#: koalixcrm/crm/const/country.py:186
 msgid "Romania"
 msgstr "Rumänien"
 
-#: const/country.py:185
+#: koalixcrm/crm/const/country.py:187
 msgid "Russia"
 msgstr "Russische Föderation (Russland)"
 
-#: const/country.py:186
+#: koalixcrm/crm/const/country.py:188
 msgid "Rwanda"
 msgstr "Ruanda"
 
-#: const/country.py:187
+#: koalixcrm/crm/const/country.py:189
 msgid "Saint Helena"
 msgstr "St. Helena"
 
-#: const/country.py:188
+#: koalixcrm/crm/const/country.py:190
 msgid "Saint Kitts and Nevis"
 msgstr "St. Kitts und Nevis"
 
-#: const/country.py:189
+#: koalixcrm/crm/const/country.py:191
 msgid "Saint Lucia"
 msgstr "St. Lucia"
 
-#: const/country.py:190
+#: koalixcrm/crm/const/country.py:192
 msgid "Saint Pierre and Miquelon"
 msgstr "St. Pierre und Miquelon"
 
-#: const/country.py:191
+#: koalixcrm/crm/const/country.py:193
 msgid "Saint Vincent and the Grenadines"
 msgstr "St. Vincent und die Grenadinen"
 
-#: const/country.py:192
+#: koalixcrm/crm/const/country.py:194
 msgid "Samoa"
 msgstr "Samoa"
 
-#: const/country.py:193
+#: koalixcrm/crm/const/country.py:195
 msgid "San Marino"
 msgstr "San Marino"
 
-#: const/country.py:194
+#: koalixcrm/crm/const/country.py:196
 msgid "Sao Tome and Principe"
 msgstr "São Tomé und Príncipe"
 
-#: const/country.py:195
+#: koalixcrm/crm/const/country.py:197
 msgid "Saudi Arabia"
 msgstr "Saudi-Arabien"
 
-#: const/country.py:196
+#: koalixcrm/crm/const/country.py:198
 msgid "Senegal"
 msgstr "Senegal"
 
-#: const/country.py:197
+#: koalixcrm/crm/const/country.py:199
 msgid "Serbia"
 msgstr "Serbien"
 
-#: const/country.py:198
+#: koalixcrm/crm/const/country.py:200
 msgid "Seychelles"
 msgstr "Seychellen"
 
-#: const/country.py:199
+#: koalixcrm/crm/const/country.py:201
 msgid "Sierra Leone"
 msgstr "Sierra Leone"
 
-#: const/country.py:200
+#: koalixcrm/crm/const/country.py:202
 msgid "Singapore"
 msgstr "Singapur"
 
-#: const/country.py:201
+#: koalixcrm/crm/const/country.py:203
 msgid "Slovakia"
 msgstr "Slowakei"
 
-#: const/country.py:202
+#: koalixcrm/crm/const/country.py:204
 msgid "Slovenia"
 msgstr "Slowenien"
 
-#: const/country.py:203
+#: koalixcrm/crm/const/country.py:205
 msgid "Solomon Islands"
 msgstr "Salomonen"
 
-#: const/country.py:204
+#: koalixcrm/crm/const/country.py:206
 msgid "Somalia"
 msgstr "Somalia"
 
-#: const/country.py:205
+#: koalixcrm/crm/const/country.py:207
 msgid "South Africa"
 msgstr "Südafrika"
 
-#: const/country.py:206
+#: koalixcrm/crm/const/country.py:208
 msgid "South Georgia and the South Sandwich Islands"
 msgstr "Südgeorgien und die südlichen Sandwichinseln"
 
-#: const/country.py:207
+#: koalixcrm/crm/const/country.py:209
 msgid "Spain"
 msgstr "Spanien"
 
-#: const/country.py:208
+#: koalixcrm/crm/const/country.py:210
 msgid "Sri Lanka"
 msgstr "Sri Lanka"
 
-#: const/country.py:209
+#: koalixcrm/crm/const/country.py:211
 msgid "Sudan"
 msgstr "Sudan"
 
-#: const/country.py:210
+#: koalixcrm/crm/const/country.py:212
 msgid "Suriname"
 msgstr "Suriname"
 
-#: const/country.py:211
+#: koalixcrm/crm/const/country.py:213
 msgid "Svalbard and Jan Mayen"
 msgstr "Svalbard und Jan Mayen"
 
-#: const/country.py:212
+#: koalixcrm/crm/const/country.py:214
 msgid "Swaziland"
 msgstr "Swasiland"
 
-#: const/country.py:213
+#: koalixcrm/crm/const/country.py:215
 msgid "Sweden"
 msgstr "Schweden"
 
-#: const/country.py:214
+#: koalixcrm/crm/const/country.py:216
 msgid "Switzerland"
 msgstr "Schweiz"
 
-#: const/country.py:215
+#: koalixcrm/crm/const/country.py:217
 msgid "Syria"
 msgstr "Syrien, Arabische Republik"
 
-#: const/country.py:216
+#: koalixcrm/crm/const/country.py:218
 msgid "Taiwan"
 msgstr "Taiwan"
 
-#: const/country.py:217
+#: koalixcrm/crm/const/country.py:219
 msgid "Tajikistan"
 msgstr "Tadschikistan"
 
-#: const/country.py:218
+#: koalixcrm/crm/const/country.py:220
 msgid "Tanzania"
 msgstr "Tansania, Vereinigte Republik"
 
-#: const/country.py:219
+#: koalixcrm/crm/const/country.py:221
 msgid "Thailand"
 msgstr "Thailand"
 
-#: const/country.py:220
+#: koalixcrm/crm/const/country.py:222
 msgid "East Timor"
 msgstr "Timor-Leste (Osttimor)"
 
-#: const/country.py:221
+#: koalixcrm/crm/const/country.py:223
 msgid "Togo"
 msgstr "Togo"
 
-#: const/country.py:222
+#: koalixcrm/crm/const/country.py:224
 msgid "Tokelau"
 msgstr "Tokelau"
 
-#: const/country.py:223
+#: koalixcrm/crm/const/country.py:225
 msgid "Tonga"
 msgstr "Tonga"
 
-#: const/country.py:224
+#: koalixcrm/crm/const/country.py:226
 msgid "Trinidad and Tobago"
 msgstr "Trinidad und Tobago"
 
-#: const/country.py:225
+#: koalixcrm/crm/const/country.py:227
 msgid "Tunisia"
 msgstr "Tunesien"
 
-#: const/country.py:226
+#: koalixcrm/crm/const/country.py:228
 msgid "Turkey"
 msgstr "Türkei"
 
-#: const/country.py:227
+#: koalixcrm/crm/const/country.py:229
 msgid "Turkmenistan"
 msgstr "Turkmenistan"
 
-#: const/country.py:228
+#: koalixcrm/crm/const/country.py:230
 msgid "Turks and Caicos Islands"
 msgstr "Turks- und Caicosinseln"
 
-#: const/country.py:229
+#: koalixcrm/crm/const/country.py:231
 msgid "Tuvalu"
 msgstr "Tuvalu"
 
-#: const/country.py:230
+#: koalixcrm/crm/const/country.py:232
 msgid "Uganda"
 msgstr "Uganda"
 
-#: const/country.py:231
+#: koalixcrm/crm/const/country.py:233
 msgid "Ukraine"
 msgstr "Ukraine"
 
-#: const/country.py:232
+#: koalixcrm/crm/const/country.py:234
 msgid "United Arab Emirates"
 msgstr "Vereinigte Arabische Emirate"
 
-#: const/country.py:233
+#: koalixcrm/crm/const/country.py:235
 msgid "United Kingdom"
 msgstr "Vereinigtes Königreich"
 
-#: const/country.py:234
+#: koalixcrm/crm/const/country.py:236
 msgid "United States"
 msgstr "Vereinigte Staaten"
 
-#: const/country.py:235
+#: koalixcrm/crm/const/country.py:237
 msgid "United States Minor Outlying Islands"
 msgstr "Amerikanische Überseeinseln, Kleinere"
 
-#: const/country.py:236
+#: koalixcrm/crm/const/country.py:238
 msgid "Uruguay"
 msgstr "Uruguay"
 
-#: const/country.py:237
+#: koalixcrm/crm/const/country.py:239
 msgid "Uzbekistan"
 msgstr "Usbekistan"
 
-#: const/country.py:238
+#: koalixcrm/crm/const/country.py:240
 msgid "Vanuatu"
 msgstr "Vanuatu"
 
-#: const/country.py:239
+#: koalixcrm/crm/const/country.py:241
 msgid "Venezuela"
 msgstr "Venezuela"
 
-#: const/country.py:240
+#: koalixcrm/crm/const/country.py:242
 msgid "Vietnam Viet Nam"
 msgstr "Vietnam"
 
-#: const/country.py:241
+#: koalixcrm/crm/const/country.py:243
 msgid "British Virgin Islands"
 msgstr "Britische Jungferninseln"
 
-#: const/country.py:242
+#: koalixcrm/crm/const/country.py:244
 msgid "United States Virgin Islands"
 msgstr "Amerikanische Jungferninseln"
 
-#: const/country.py:243
+#: koalixcrm/crm/const/country.py:245
 msgid "Wallis and Futuna"
 msgstr "Wallis und Futuna"
 
-#: const/country.py:244
+#: koalixcrm/crm/const/country.py:246
 msgid "Western Sahara"
 msgstr "Westsahara"
 
-#: const/country.py:245
+#: koalixcrm/crm/const/country.py:247
 msgid "Yemen"
 msgstr "Jemen"
 
-#: const/country.py:246
+#: koalixcrm/crm/const/country.py:248
 msgid "Zambia"
 msgstr "Sambia"
 
-#: const/country.py:247
+#: koalixcrm/crm/const/country.py:249
 msgid "Zimbabwe"
 msgstr "Simbabwe"
 
-#: const/postaladdressprefix.py:6
+#: koalixcrm/crm/const/postaladdressprefix.py:6
 msgid "Company"
 msgstr "Firma"
 
-#: const/postaladdressprefix.py:7
+#: koalixcrm/crm/const/postaladdressprefix.py:7
 msgid "Mrs"
 msgstr "Frau"
 
-#: const/postaladdressprefix.py:8
+#: koalixcrm/crm/const/postaladdressprefix.py:8
 msgid "Mr"
 msgstr "Herr"
 
-#: const/postaladdressprefix.py:9
+#: koalixcrm/crm/const/postaladdressprefix.py:9
 msgid "Ms"
 msgstr "Frau"
 
-#: const/purpose.py:6
+#: koalixcrm/crm/const/purpose.py:6
 msgid "Delivery Address"
 msgstr "Versand Addresse"
 
-#: const/purpose.py:7
+#: koalixcrm/crm/const/purpose.py:7
 msgid "Billing Address"
 msgstr "Rechnungs Adresse"
 
-#: const/purpose.py:8
+#: koalixcrm/crm/const/purpose.py:8
 msgid "Contact Address"
 msgstr "Kontakt Adresse"
 
-#: const/purpose.py:12
+#: koalixcrm/crm/const/purpose.py:12
 msgid "Private"
 msgstr "Privat"
 
-#: const/purpose.py:13
+#: koalixcrm/crm/const/purpose.py:13
 msgid "Business"
 msgstr "Geschäftlich"
 
-#: const/purpose.py:14
+#: koalixcrm/crm/const/purpose.py:14
 msgid "Mobile Private"
 msgstr "Mobil Privat"
 
-#: const/purpose.py:15
+#: koalixcrm/crm/const/purpose.py:15
 msgid "Mobile Business"
 msgstr "Mobil Geschäftlich"
 
-#: const/status.py:6
+#: koalixcrm/crm/const/status.py:6
 msgid "Payed"
 msgstr "Bezahlt"
 
-#: const/status.py:8
+#: koalixcrm/crm/const/status.py:8
 msgid "Invoice sent"
 msgstr "Rechung geschickt"
 
-#: const/status.py:9 const/status.py:19
+#: koalixcrm/crm/const/status.py:9 koalixcrm/crm/const/status.py:19
 msgid "First reminder sent"
 msgstr "Erste Erinnerung geschickt"
 
-#: const/status.py:10 const/status.py:20
+#: koalixcrm/crm/const/status.py:10 koalixcrm/crm/const/status.py:20
 msgid "Second reminder sent"
 msgstr "Zweite Erinnerung geschickt"
 
-#: const/status.py:11
+#: koalixcrm/crm/const/status.py:11
 msgid "Customer cant pay"
 msgstr "Kunde kann nicht zahlen"
 
-#: const/status.py:12 const/status.py:21
+#: koalixcrm/crm/const/status.py:12 koalixcrm/crm/const/status.py:21
 msgid "Deleted"
 msgstr "Gelöscht"
 
-#: const/status.py:16
+#: koalixcrm/crm/const/status.py:16
 msgid "Success"
 msgstr "Erfolg"
 
-#: const/status.py:18
+#: koalixcrm/crm/const/status.py:18
 msgid "Quote sent"
 msgstr "Offerte verschickt"
 
-#: const/status.py:25
+#: koalixcrm/crm/const/status.py:25
 msgid "Ordered"
 msgstr "Bestellt"
 
-#: const/status.py:26
+#: koalixcrm/crm/const/status.py:26
 msgid "Delayed"
 msgstr "Verspätet"
 
-#: const/status.py:27
+#: koalixcrm/crm/const/status.py:27
 msgid "Delivered"
 msgstr "Ausgeliefert"
 
-#: const/status.py:28
+#: koalixcrm/crm/const/status.py:28
 msgid "Invoice registered"
 msgstr "Rechnung registriert"
 
-#: const/status.py:29
+#: koalixcrm/crm/const/status.py:29
 msgid "Invoice payed"
 msgstr "Rechnung bezahlt"
 
-#: management/commands/koalixcrm_install_defaulttemplates.py:81
+#: koalixcrm/crm/management/commands/koalixcrm_install_defaulttemplates.py:35
+msgid "File not found:"
+msgstr ""
+
+#: koalixcrm/crm/management/commands/koalixcrm_install_defaulttemplates.py:36
+msgid "Run collectstatic command and fix potential errors"
+msgstr ""
+
+#: koalixcrm/crm/management/commands/koalixcrm_install_defaulttemplates.py:66
 msgid "John Smit, Sample Company, 8976 Smallville"
 msgstr ""
 
-#: management/commands/koalixcrm_install_defaulttemplates.py:83
+#: koalixcrm/crm/management/commands/koalixcrm_install_defaulttemplates.py:68
 msgid ""
 "According to your wishes the contract consists of the following positions:"
 msgstr "Gemäss ihren Wünschen besteht der Auftrag aus folgenden Positionen"
 
-#: management/commands/koalixcrm_install_defaulttemplates.py:84
+#: koalixcrm/crm/management/commands/koalixcrm_install_defaulttemplates.py:69
 msgid ""
 "Thank you for your interest in our company \n"
 " Best regards"
@@ -1654,18 +1200,535 @@ msgstr ""
 "Vielen Dank für das Interesse an unserem Unternehmen \n"
 "Freundliche Grüsse"
 
-#: management/commands/koalixcrm_install_defaulttemplates.py:85
+#: koalixcrm/crm/management/commands/koalixcrm_install_defaulttemplates.py:70
 msgid "We would like to order the following positions:"
 msgstr "Wir möchten gerne folgende Positionen bestellen"
 
-#: management/commands/koalixcrm_install_defaulttemplates.py:86
+#: koalixcrm/crm/management/commands/koalixcrm_install_defaulttemplates.py:71
 msgid "Best regards"
 msgstr "Freundliche Grüsse"
 
-#: management/commands/koalixcrm_install_defaulttemplates.py:87
+#: koalixcrm/crm/management/commands/koalixcrm_install_defaulttemplates.py:72
 msgid "Sample Company"
 msgstr "Beispiel Firma"
 
-#: management/commands/koalixcrm_install_defaulttemplates.py:88
+#: koalixcrm/crm/management/commands/koalixcrm_install_defaulttemplates.py:73
 msgid "Sample Address"
 msgstr "Beispiel Adresse"
+
+#: koalixcrm/crm/models.py:26 koalixcrm/crm/models.py:170
+#: koalixcrm/crm/models.py:232 koalixcrm/crm/models.py:338
+#: koalixcrm/crm/models.py:622 koalixcrm/crm/models.py:658
+#: koalixcrm/crm/models.py:838
+msgid "Description"
+msgstr "Beschreibung"
+
+#: koalixcrm/crm/models.py:27
+msgid "Displayed Name After Price In The Position"
+msgstr "Angezeigt nach dem Preis in der Position"
+
+#: koalixcrm/crm/models.py:28
+msgid "Rounding"
+msgstr "Rundung"
+
+#: koalixcrm/crm/models.py:35 koalixcrm/crm/models.py:36
+#: koalixcrm/crm/models.py:241 koalixcrm/crm/models.py:347
+msgid "Currency"
+msgstr "Währung"
+
+#: koalixcrm/crm/models.py:40
+msgid "Prefix"
+msgstr "Anrede"
+
+#: koalixcrm/crm/models.py:42 koalixcrm/crm/models.py:79
+#: koalixcrm/crm/models.py:92
+msgid "Name"
+msgstr "Name"
+
+#: koalixcrm/crm/models.py:43
+msgid "Prename"
+msgstr "Vorname"
+
+#: koalixcrm/crm/models.py:44
+msgid "Addressline 1"
+msgstr "Adresslinie 1"
+
+#: koalixcrm/crm/models.py:45
+msgid "Addressline 2"
+msgstr "Adresslinie 2"
+
+#: koalixcrm/crm/models.py:46
+msgid "Addressline 3"
+msgstr "Adresslinie 3"
+
+#: koalixcrm/crm/models.py:47
+msgid "Addressline 4"
+msgstr "Adresslinie 4"
+
+#: koalixcrm/crm/models.py:48
+msgid "Zipcode"
+msgstr "PLZ"
+
+#: koalixcrm/crm/models.py:49
+msgid "City"
+msgstr "Ortschaft"
+
+#: koalixcrm/crm/models.py:50
+msgid "State"
+msgstr "Bundestaat/Kanton"
+
+#: koalixcrm/crm/models.py:51
+msgid "Country"
+msgstr "Land"
+
+#: koalixcrm/crm/models.py:56 koalixcrm/crm/models.py:57
+msgid "Postal Address"
+msgstr "Postadresse"
+
+#: koalixcrm/crm/models.py:61
+msgid "Phone Number"
+msgstr "Telefonnummer"
+
+#: koalixcrm/crm/models.py:65 koalixcrm/crm/models.py:66
+msgid "Phone Address"
+msgstr "Telefonnummer"
+
+#: koalixcrm/crm/models.py:70 koalixcrm/crm/models.py:74
+#: koalixcrm/crm/models.py:75
+msgid "Email Address"
+msgstr "Email Adresse"
+
+#: koalixcrm/crm/models.py:80 koalixcrm/crm/models.py:174
+#: koalixcrm/crm/models.py:242 koalixcrm/crm/models.py:348
+#: koalixcrm/crm/models.py:662
+msgid "Created at"
+msgstr "Erstelldatum"
+
+#: koalixcrm/crm/models.py:81 koalixcrm/crm/models.py:175
+#: koalixcrm/crm/models.py:243 koalixcrm/crm/models.py:349
+#: koalixcrm/crm/models.py:663
+msgid "Last modified"
+msgstr "Zuletzt geändert"
+
+#: koalixcrm/crm/models.py:83 koalixcrm/crm/models.py:177
+#: koalixcrm/crm/models.py:245 koalixcrm/crm/models.py:351
+#: koalixcrm/crm/models.py:665
+msgid "Last modified by"
+msgstr "Zuletzt geändert durch"
+
+#: koalixcrm/crm/models.py:87 koalixcrm/crm/models.py:88
+msgid "Contact"
+msgstr "Kontakt"
+
+#: koalixcrm/crm/models.py:93
+msgid "Days To Payment Date"
+msgstr "Tage bis zur Fälligkeit"
+
+#: koalixcrm/crm/models.py:97 koalixcrm/crm/models.py:98
+msgid "Customer Billing Cycle"
+msgstr "Zahlungsbedingungen"
+
+#: koalixcrm/crm/models.py:112 koalixcrm/crm/models.py:778
+msgid "Customer Group"
+msgstr "Kundengruppe"
+
+#: koalixcrm/crm/models.py:113
+msgid "Customer Groups"
+msgstr "Kundengruppen"
+
+#: koalixcrm/crm/models.py:117
+msgid "Default Billing Cycle"
+msgstr "Standard Zahlungsbedingung"
+
+#: koalixcrm/crm/models.py:118
+msgid "Is member of"
+msgstr "Ist Mitglied von"
+
+#: koalixcrm/crm/models.py:148 koalixcrm/crm/models.py:344
+msgid "Customer"
+msgstr "Kunde"
+
+#: koalixcrm/crm/models.py:149
+msgid "Customers"
+msgstr "Kunden"
+
+#: koalixcrm/crm/models.py:156
+msgid "Offers Shipment to Customer"
+msgstr ""
+
+#: koalixcrm/crm/models.py:160 koalixcrm/crm/models.py:161
+#: koalixcrm/crm/models.py:231
+msgid "Supplier"
+msgstr "Lieferant"
+
+#: koalixcrm/crm/models.py:168 koalixcrm/crm/models.py:239
+#: koalixcrm/crm/models.py:345
+msgid "Staff"
+msgstr "Mitarbeiter"
+
+#: koalixcrm/crm/models.py:171
+msgid "Default Customer"
+msgstr "Standard Kunde"
+
+#: koalixcrm/crm/models.py:172
+msgid "Default Supplier"
+msgstr "Standard Lieferant"
+
+#: koalixcrm/crm/models.py:173
+msgid "Default Currency"
+msgstr "Standard Währung"
+
+#: koalixcrm/crm/models.py:181 koalixcrm/crm/models.py:225
+#: koalixcrm/crm/models.py:229 koalixcrm/crm/models.py:335
+#: koalixcrm/crm/models.py:886 koalixcrm/crm/models.py:898
+msgid "Contract"
+msgstr "Auftrag"
+
+#: koalixcrm/crm/models.py:182
+msgid "Contracts"
+msgstr "Aufträge"
+
+#: koalixcrm/crm/models.py:230 koalixcrm/crm/models.py:336
+msgid "External Reference"
+msgstr "Externe Referenz"
+
+#: koalixcrm/crm/models.py:233 koalixcrm/crm/models.py:849
+msgid "Last Pricing Date"
+msgstr "Datum der letze Preisberechnung"
+
+#: koalixcrm/crm/models.py:235
+msgid "Last Calculted Price With Tax"
+msgstr "Zuletzt berechneter Preis mit Steuer"
+
+#: koalixcrm/crm/models.py:236 koalixcrm/crm/models.py:852
+msgid "Last Calculted Tax"
+msgstr "Zuletzt berechnete Steuer"
+
+#: koalixcrm/crm/models.py:300 koalixcrm/crm/models.py:307
+msgid "During PurchaseOrder PDF Export"
+msgstr "Bestellung erstellt"
+
+#: koalixcrm/crm/models.py:327 koalixcrm/crm/models.py:328
+#: koalixcrm/crm/models.py:331
+msgid "Purchase Order"
+msgstr "Bestellung"
+
+#: koalixcrm/crm/models.py:331 koalixcrm/crm/models.py:391
+#: koalixcrm/crm/models.py:490 koalixcrm/crm/models.py:613
+msgid "from Contract"
+msgstr "vom Auftrag"
+
+#: koalixcrm/crm/models.py:337 koalixcrm/crm/models.py:839
+msgid "Discount"
+msgstr "Rabatt"
+
+#: koalixcrm/crm/models.py:339
+#| msgid "Last Pricing Date"
+msgid "Pricing Date"
+msgstr "Letzte Preisberechnung"
+
+#: koalixcrm/crm/models.py:341
+msgid "Price without Tax "
+msgstr "Preis ohne Steuer"
+
+#: koalixcrm/crm/models.py:342 koalixcrm/crm/models.py:653
+msgid "Tax"
+msgstr "Steuer"
+
+#: koalixcrm/crm/models.py:387 koalixcrm/crm/models.py:391
+msgid "Sales Contract"
+msgstr "Verkaufsauftrag"
+
+#: koalixcrm/crm/models.py:388
+msgid "Sales Contracts"
+msgstr "Verkaufsaufträge"
+
+#: koalixcrm/crm/models.py:395 koalixcrm/crm/models.py:781
+msgid "Valid until"
+msgstr "Gültig bis"
+
+#: koalixcrm/crm/models.py:396
+msgid "Status"
+msgstr "Status"
+
+#: koalixcrm/crm/models.py:454 koalixcrm/crm/models.py:461
+msgid "During Quote PDF Export"
+msgstr "während des PDF Export der Offerte"
+
+#: koalixcrm/crm/models.py:490 koalixcrm/crm/models.py:494
+msgid "Quote"
+msgstr "Offerte"
+
+#: koalixcrm/crm/models.py:495
+msgid "Quotes"
+msgstr "Offerten"
+
+#: koalixcrm/crm/models.py:499
+msgid "To pay until"
+msgstr "Zahlbar bis"
+
+#: koalixcrm/crm/models.py:501
+msgid "Payment Bank Reference"
+msgstr "Zahlungsreferenz der Bank"
+
+#: koalixcrm/crm/models.py:522
+msgid "Complete invoice and run price recalculation. Price may not be Zero"
+msgstr ""
+
+#: koalixcrm/crm/models.py:575 koalixcrm/crm/models.py:582
+msgid "During Invoice PDF Export"
+msgstr "während des PDF Export der Rechnung"
+
+#: koalixcrm/crm/models.py:613 koalixcrm/crm/models.py:617
+msgid "Invoice"
+msgstr "Rechnung"
+
+#: koalixcrm/crm/models.py:618
+msgid "Invoices"
+msgstr "Rechnungen"
+
+#: koalixcrm/crm/models.py:623
+msgid "Displayed Name After Quantity In The Position"
+msgstr "Angezeigt nach der Anzahl in der Position"
+
+#: koalixcrm/crm/models.py:624
+msgid "Is A Fraction Of"
+msgstr "Ist eine Untereinheit von"
+
+#: koalixcrm/crm/models.py:625
+msgid "Factor Between This And Next Higher Unit"
+msgstr "Multiplikator zwischen dieser und der nächst höheren Einheit"
+
+#: koalixcrm/crm/models.py:633 koalixcrm/crm/models.py:661
+#: koalixcrm/crm/models.py:776 koalixcrm/crm/models.py:841
+msgid "Unit"
+msgstr "Masseinheit"
+
+#: koalixcrm/crm/models.py:634
+msgid "Units"
+msgstr "Masseinheiten"
+
+#: koalixcrm/crm/models.py:638
+msgid "Taxrate in Percentage"
+msgstr "Steuersatz in Prozent"
+
+#: koalixcrm/crm/models.py:639
+msgid "Taxname"
+msgstr "Name der Steuer"
+
+#: koalixcrm/crm/models.py:640
+msgid "Activa Account"
+msgstr "Aktiv Konto"
+
+#: koalixcrm/crm/models.py:642
+msgid "Passiva Account"
+msgstr "Passiv Konto"
+
+#: koalixcrm/crm/models.py:654
+msgid "Taxes"
+msgstr "Steuern"
+
+#: koalixcrm/crm/models.py:659
+msgid "Title"
+msgstr "Titel"
+
+#: koalixcrm/crm/models.py:660
+msgid "Product Number"
+msgstr "Produktnummer"
+
+#: koalixcrm/crm/models.py:668
+msgid "Accounting Product Categorie"
+msgstr "Buchhaltung Produktkategorie"
+
+#: koalixcrm/crm/models.py:712 koalixcrm/crm/models.py:733
+#: koalixcrm/crm/models.py:756 koalixcrm/crm/models.py:775
+#: koalixcrm/crm/models.py:840
+msgid "Product"
+msgstr "Produkt"
+
+#: koalixcrm/crm/models.py:713
+msgid "Products"
+msgstr "Produkte"
+
+#: koalixcrm/crm/models.py:725
+msgid "There is no Price for this product"
+msgstr "Es existiert kein Preis für dieses Produkt"
+
+#: koalixcrm/crm/models.py:726
+msgid "that matches the date"
+msgstr "welches übereinstimmt mit Datum"
+
+#: koalixcrm/crm/models.py:727
+msgid "customer"
+msgstr "Kunde"
+
+#: koalixcrm/crm/models.py:727
+#| msgid "Currency"
+msgid "currency"
+msgstr "Währung"
+
+#: koalixcrm/crm/models.py:727
+msgid " and unit"
+msgstr "und Einheit"
+
+#: koalixcrm/crm/models.py:731 koalixcrm/crm/models.py:752
+msgid "From Unit"
+msgstr "Von Masseinheit"
+
+#: koalixcrm/crm/models.py:732 koalixcrm/crm/models.py:754
+msgid "To Unit"
+msgstr "Zu Masseinheit"
+
+#: koalixcrm/crm/models.py:734
+msgid "Factor between From and To Unit"
+msgstr "Multiplikator zwischen der einen und der anderen Einheit"
+
+#: koalixcrm/crm/models.py:747
+msgid "Unit Transfrom"
+msgstr "Einheiten Umrechnung"
+
+#: koalixcrm/crm/models.py:748
+msgid "Unit Transfroms"
+msgstr "Einheiten Umrechnungen"
+
+#: koalixcrm/crm/models.py:757
+msgid "Factor between From and To Customer Group"
+msgstr "Prismultiplikator zwischen der einen und der anderen Kundengruppe"
+
+#: koalixcrm/crm/models.py:770
+msgid "Customer Group Price Transfrom"
+msgstr "Kundengruppe Preisumrechnung"
+
+#: koalixcrm/crm/models.py:771
+msgid "Customer Group Price Transfroms"
+msgstr "Kundengruppen Preisumrechnungen"
+
+#: koalixcrm/crm/models.py:779 koalixcrm/crm/models.py:847
+msgid "Price Per Unit"
+msgstr "Preis pro Einheit"
+
+#: koalixcrm/crm/models.py:780
+msgid "Valid from"
+msgstr "Gültig vom"
+
+#: koalixcrm/crm/models.py:831
+msgid "Price"
+msgstr "Preis"
+
+#: koalixcrm/crm/models.py:832
+msgid "Prices"
+msgstr "Preise"
+
+#: koalixcrm/crm/models.py:836
+msgid "Position Number"
+msgstr "Positionsnummer"
+
+#: koalixcrm/crm/models.py:837
+msgid "Quantity"
+msgstr "Anzahl"
+
+#: koalixcrm/crm/models.py:842
+msgid "Shipment on"
+msgstr "Verschickt am"
+
+#: koalixcrm/crm/models.py:843
+msgid "Shipment Supplier"
+msgstr "Versandunternehmen"
+
+#: koalixcrm/crm/models.py:845
+msgid "Shipment ID"
+msgstr "Lieferungs ID"
+
+#: koalixcrm/crm/models.py:846
+msgid "Overwrite Product Price"
+msgstr "Überschreie Produkt Preis"
+
+#: koalixcrm/crm/models.py:850
+msgid "Last Calculted Price"
+msgstr "Zuletzt berechneter Preis"
+
+#: koalixcrm/crm/models.py:877 koalixcrm/crm/models.py:881
+msgid "Position"
+msgstr "Position"
+
+#: koalixcrm/crm/models.py:882
+msgid "Positions"
+msgstr "Positionen"
+
+#: koalixcrm/crm/models.py:890 koalixcrm/crm/models.py:894
+msgid "Salescontract Position"
+msgstr "Verkaufsaufträg Position"
+
+#: koalixcrm/crm/models.py:891
+msgid "Salescontract Positions"
+msgstr "Verkaufsaufträge Positionen"
+
+#: koalixcrm/crm/models.py:902 koalixcrm/crm/models.py:906
+msgid "Purchaseorder Position"
+msgstr "Bestellung Position"
+
+#: koalixcrm/crm/models.py:903
+msgid "Purchaseorder Positions"
+msgstr "Bestellung Positionen"
+
+#: koalixcrm/crm/models.py:910 koalixcrm/crm/models.py:923
+#: koalixcrm/crm/models.py:936 koalixcrm/crm/models.py:949
+#: koalixcrm/crm/models.py:962 koalixcrm/crm/models.py:975
+#: koalixcrm/crm/models.py:988 koalixcrm/crm/models.py:1001
+#: koalixcrm/crm/models.py:1014 koalixcrm/crm/models.py:1027
+#: koalixcrm/crm/models.py:1040 koalixcrm/crm/models.py:1053
+msgid "Purpose"
+msgstr "Verwendungszweck"
+
+#: koalixcrm/crm/models.py:915 koalixcrm/crm/models.py:916
+msgid "Phone Address For Contact"
+msgstr "Telefonnummer für Kontakte"
+
+#: koalixcrm/crm/models.py:928 koalixcrm/crm/models.py:929
+msgid "Email Address For Contact"
+msgstr "Email Adresse für Kontakte"
+
+#: koalixcrm/crm/models.py:941 koalixcrm/crm/models.py:942
+msgid "Postal Address For Contact"
+msgstr "Postadresse für Kontakte"
+
+#: koalixcrm/crm/models.py:954 koalixcrm/crm/models.py:955
+#: koalixcrm/crm/models.py:967 koalixcrm/crm/models.py:968
+#: koalixcrm/crm/models.py:980 koalixcrm/crm/models.py:981
+msgid "Postal Address For Contracts"
+msgstr "Postadresse für Aufträge"
+
+#: koalixcrm/crm/models.py:993 koalixcrm/crm/models.py:994
+#: koalixcrm/crm/models.py:1006 koalixcrm/crm/models.py:1007
+#: koalixcrm/crm/models.py:1019 koalixcrm/crm/models.py:1020
+msgid "Phone Address For Contracts"
+msgstr "Telefonnummer für Aufträge"
+
+#: koalixcrm/crm/models.py:1032 koalixcrm/crm/models.py:1033
+#: koalixcrm/crm/models.py:1045 koalixcrm/crm/models.py:1046
+#: koalixcrm/crm/models.py:1058 koalixcrm/crm/models.py:1059
+msgid "Email Address For Contracts"
+msgstr "Email Adresse für Aufträge"
+
+#: koalixcrm/crm/views.py:36
+msgid "User Extension Missing"
+msgstr "Benutzererweiterung fehlt"
+
+#: koalixcrm/crm/views.py:39
+msgid "Templateset Missing"
+msgstr "Templateset fehlt"
+
+#~ msgid "Successfully unregistered Invoice in the Accounting"
+#~ msgstr "Die Rechnung wurde erflogreich aus der Buchhaltung entfernt"
+
+#~ msgid "Unregister Invoice in Accounting"
+#~ msgstr "Entferne Rechnung aus der Buchhaltung"
+
+#~ msgid "Successfully recalculated Prices"
+#~ msgstr "Preisberechnung erfolgreich"
+
+#~ msgid "Unsuccessfull in updating the Prices "
+#~ msgstr "Preisberechnung fehlgeschlagen"
+
+#~ msgid "Test"
+#~ msgstr "Test"
