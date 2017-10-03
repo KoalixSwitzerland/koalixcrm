@@ -206,7 +206,8 @@
               font-family="BitstreamVeraSans"
               color="black"
               text-align="left"
-              margin-top="1cm">
+              margin-top="1cm"
+              linefeed-treatment="preserve">
        <xsl:value-of select="object[@model='djangoUserExtension.templateset']/field[@name='headerTextsalesorders']"/>
        </fo:block>
       </fo:static-content>

@@ -128,4 +128,8 @@ PDF_OUTPUT_ROOT = os.path.join(STATIC_ROOT, 'pdf')
 FOP_EXECUTABLE = "/usr/bin/fop"
 
 # Settings specific for filebrowser
-FILEBROWSER_DIRECTORY = 'uploads/'
+FILEBROWSER_DIRECTORY = 'media/uploads/'
+FILEBROWSER_EXTENSIONS = {
+    'XML': ['.xml'],
+    'XSL': ['.xsl'],
+}

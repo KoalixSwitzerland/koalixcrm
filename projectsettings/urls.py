@@ -22,7 +22,7 @@ from django.core.files.storage import DefaultStorage
 
 site = FileBrowserSite(name="filebrowser", storage=DefaultStorage())
 customsite = FileBrowserSite(name='custom_filebrowser', storage=DefaultStorage())
-customsite.directory = "uploads/"
+customsite.directory = "media/uploads/"
 
 
 admin.autodiscover()
