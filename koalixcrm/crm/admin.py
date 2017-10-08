@@ -297,7 +297,7 @@ class OptionInvoice(admin.ModelAdmin):
     search_fields = ('contract__id', 'customer__name', 'currency__description')
     fieldsets = (
         (_('Basics'), {
-            'fields': ('contract', 'description', 'customer', 'currency', 'discount',  'payableuntil', 'status')
+            'fields': ('contract', 'description', 'customer', 'currency', 'discount',  'payableuntil', 'status', 'paymentBankReference')
         }),
     )
     save_as = True
