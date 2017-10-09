@@ -878,7 +878,8 @@ class Position(models.Model):
             self.lastCalculatedTax = int(self.product.getTaxRate() / 100 * self.positionPricePerUnit * self.quantity * (
             1 - self.discount / 100) / currency.rounding) * currency.rounding
         else:
-            self.lastCalculatedTax = self.product.getTaxRate() / 100 * self.positionPricePerUnit * self.quantity
+            self.lastCalculatedTax = int(self.product.getTaxRate() / 100 * self.positionPricePerUnit * self.quantity /
+            currency.rounding) * currency.rounding
         self.save()
         return self.lastCalculatedTax
 
