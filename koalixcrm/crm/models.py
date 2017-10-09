@@ -77,8 +77,8 @@ class EmailAddress(models.Model):
 
 class Contact(models.Model):
     name = models.CharField(max_length=300, verbose_name=_("Name"))
-    dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now=True)
-    lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now_add=True)
+    dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now_add=True)
+    lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now=True)
     lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True,
                                        verbose_name=_("Last modified by"), editable=True)
 
@@ -171,8 +171,8 @@ class Contract(models.Model):
     defaultcustomer = models.ForeignKey(Customer, verbose_name=_("Default Customer"), null=True, blank=True)
     defaultSupplier = models.ForeignKey(Supplier, verbose_name=_("Default Supplier"), null=True, blank=True)
     defaultcurrency = models.ForeignKey(Currency, verbose_name=_("Default Currency"), blank=False, null=False)
-    dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now=True)
-    lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now_add=True)
+    dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now_add=True)
+    lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now=True)
     lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True},
                                        verbose_name=_("Last modified by"), related_name="db_contractlstmodified")
 
@@ -239,10 +239,11 @@ class PurchaseOrder(models.Model):
     staff = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True, verbose_name=_("Staff"),
                               related_name="db_relpostaff", null=True)
     currency = models.ForeignKey(Currency, verbose_name=_("Currency"), blank=False, null=False)
-    dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now=True)
-    lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now_add=True)
+    dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now_add=True)
+    lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now=True)
     lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True},
                                        verbose_name=_("Last modified by"), related_name="db_polstmodified")
+    last_print_date = models.DateTimeField(verbose_name=_("Last printed"), blank=True, null=True)
 
     def recalculatePrices(self, pricingDate):
         price = 0
@@ -285,36 +286,45 @@ class PurchaseOrder(models.Model):
     def createPDF(self, whatToExport):
         XMLSerializer = serializers.get_serializer("xml")
         xml_serializer = XMLSerializer()
+        self.last_print_date = datetime.now()
+        self.save()
         out = open(os.path.join(settings.PDF_OUTPUT_ROOT,("purchaseorder_" + str(self.id) + ".xml")), "wb")
-        objectsToSerialize = list(PurchaseOrder.objects.filter(id=self.id))
-        objectsToSerialize += list(Contact.objects.filter(id=self.supplier.id))
-        objectsToSerialize += list(Currency.objects.filter(id=self.currency.id))
-        objectsToSerialize += list(PurchaseOrderPosition.objects.filter(contract=self.id))
+        objects_to_serialize = list(PurchaseOrder.objects.filter(id=self.id))
+        objects_to_serialize += list(Contact.objects.filter(id=self.supplier.id))
+        objects_to_serialize += list(Currency.objects.filter(id=self.currency.id))
+        objects_to_serialize += list(PurchaseOrderPosition.objects.filter(contract=self.id))
         for position in list(PurchaseOrderPosition.objects.filter(contract=self.id)):
-            objectsToSerialize += list(Position.objects.filter(id=position.id))
-            objectsToSerialize += list(Product.objects.filter(id=position.product.id))
-            objectsToSerialize += list(Unit.objects.filter(id=position.unit.id))
-        objectsToSerialize += list(auth.models.User.objects.filter(id=self.staff.id))
+            objects_to_serialize += list(Position.objects.filter(id=position.id))
+            objects_to_serialize += list(Product.objects.filter(id=position.product.id))
+            objects_to_serialize += list(Unit.objects.filter(id=position.unit.id))
+        objects_to_serialize += list(auth.models.User.objects.filter(id=self.staff.id))
         userExtension = djangoUserExtension.models.UserExtension.objects.filter(user=self.staff.id)
         if len(userExtension) == 0:
             raise UserExtensionMissing(_("During PurchaseOrder PDF Export"))
-        phoneAddress = djangoUserExtension.models.UserExtensionPhoneAddress.objects.filter(
+        phone_address = djangoUserExtension.models.UserExtensionPhoneAddress.objects.filter(
             userExtension=userExtension[0].id)
-        objectsToSerialize += list(userExtension)
-        objectsToSerialize += list(phoneAddress)
-        templateset = djangoUserExtension.models.TemplateSet.objects.filter(id=userExtension[0].defaultTemplateSet.id)
-        if len(templateset) == 0:
+        if len(phone_address) == 0:
+            raise UserExtensionPhoneAddressMissing(_("During PurchaseOrder PDF Export"))
+        email_address = djangoUserExtension.models.UserExtensionEmailAddress.objects.filter(
+            userExtension=userExtension[0].id)
+        if len(email_address) == 0:
+            raise UserExtensionEmailAddressMissing(_("During PurchaseOrder PDF Export"))
+        objects_to_serialize += list(userExtension)
+        objects_to_serialize += list(EmailAddress.objects.filter(id=email_address[0].id))
+        objects_to_serialize += list(PhoneAddress.objects.filter(id=phone_address[0].id))
+        template_set = djangoUserExtension.models.TemplateSet.objects.filter(id=userExtension[0].defaultTemplateSet.id)
+        if len(template_set) == 0:
             raise TemplateSetMissing(_("During PurchaseOrder PDF Export"))
-        objectsToSerialize += list(templateset)
-        objectsToSerialize += list(auth.models.User.objects.filter(id=self.lastmodifiedby.id))
-        objectsToSerialize += list(PostalAddressForContact.objects.filter(person=self.supplier.id))
+        objects_to_serialize += list(template_set)
+        objects_to_serialize += list(auth.models.User.objects.filter(id=self.lastmodifiedby.id))
+        objects_to_serialize += list(PostalAddressForContact.objects.filter(person=self.supplier.id))
         for address in list(PostalAddressForContact.objects.filter(person=self.supplier.id)):
-            objectsToSerialize += list(PostalAddress.objects.filter(id=address.id))
-        xml_serializer.serialize(objectsToSerialize, stream=out, indent=3)
+            objects_to_serialize += list(PostalAddress.objects.filter(id=address.id))
+        xml_serializer.serialize(objects_to_serialize, stream=out, indent=3)
         out.close()
-        rootelement = xml.getroot()
-        filebrowserdirectory = etree.SubElement(rootelement, "filebrowserdirectory")
-        filebrowserdirectory.text = settings.MEDIA_ROOT
+        root_element = xml.getroot()
+        file_browser_directory = etree.SubElement(root_element, "filebrowserdirectory")
+        file_browser_directory.text = settings.MEDIA_ROOT
         xml = etree.parse(os.path.join(settings.PDF_OUTPUT_ROOT, ("purchaseorder_" + str(self.id) + ".xml")))
         check_output([settings.FOP_EXECUTABLE, '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml',
                       os.path.join(settings.PDF_OUTPUT_ROOT, ('purchaseorder_' + str(self.id) + '.xml')), '-xsl',
@@ -345,11 +355,13 @@ class SalesContract(models.Model):
     staff = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True, verbose_name=_("Staff"),
                               related_name="db_relscstaff", null=True)
     currency = models.ForeignKey(Currency, verbose_name=_("Currency"), blank=False, null=False)
-    dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now=True)
-    lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now_add=True)
+    dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now_add=True)
+    lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now=True)
     lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True},
                                        verbose_name=_("Last modified by"), related_name="db_lstscmodified", null=True,
                                        blank="True")
+    last_print_date = models.DateTimeField(verbose_name=_("Last printed"), blank=True, null=True)
+
 
     def recalculatePrices(self, pricingDate):
         """Performs a price recalculation on the SalesContract.
@@ -438,6 +450,8 @@ class Quote(SalesContract):
     def createPDF(self, whatToExport):
         XMLSerializer = serializers.get_serializer("xml")
         xml_serializer = XMLSerializer()
+        self.last_print_date = datetime.now()
+        self.save()
         out = open(os.path.join(settings.PDF_OUTPUT_ROOT, ("quote_" + str(self.id) + ".xml")), "wb")
         objectsToSerialize = list(Quote.objects.filter(id=self.id))
         objectsToSerialize += list(SalesContract.objects.filter(id=self.id))
@@ -454,7 +468,14 @@ class Quote(SalesContract):
             raise UserExtensionMissing(_("During Quote PDF Export"))
         phoneAddress = djangoUserExtension.models.UserExtensionPhoneAddress.objects.filter(
             userExtension=userExtension[0].id)
+        if len(phoneAddress) == 0:
+            raise UserExtensionPhoneAddressMissing(_("During Quote PDF Export"))
+        email_address = djangoUserExtension.models.UserExtensionEmailAddress.objects.filter(
+            userExtension=userExtension[0].id)
+        if len(email_address) == 0:
+            raise UserExtensionEmailAddressMissing(_("During Quote PDF Export"))
         objectsToSerialize += list(userExtension)
+        objectsToSerialize += list(EmailAddress.objects.filter(id=email_address[0].id))
         objectsToSerialize += list(PhoneAddress.objects.filter(id=phoneAddress[0].id))
         templateset = djangoUserExtension.models.TemplateSet.objects.filter(id=userExtension[0].defaultTemplateSet.id)
         if (len(templateset) == 0):
@@ -559,6 +580,8 @@ class Invoice(SalesContract):
     def createPDF(self, whatToExport):
         XMLSerializer = serializers.get_serializer("xml")
         xml_serializer = XMLSerializer()
+        self.last_print_date = datetime.now()
+        self.save()
         out = open(os.path.join(settings.PDF_OUTPUT_ROOT, "invoice_" + str(self.id) + ".xml"), "wb")
         objectsToSerialize = list(Invoice.objects.filter(id=self.id))
         objectsToSerialize += list(SalesContract.objects.filter(id=self.id))
@@ -575,8 +598,15 @@ class Invoice(SalesContract):
             raise UserExtensionMissing(_("During Invoice PDF Export"))
         phoneAddress = djangoUserExtension.models.UserExtensionPhoneAddress.objects.filter(
             userExtension=userExtension[0].id)
+        if len(phoneAddress) == 0:
+            raise UserExtensionPhoneAddressMissing(_("During Quote PDF Export"))
+        email_address = djangoUserExtension.models.UserExtensionEmailAddress.objects.filter(
+            userExtension=userExtension[0].id)
+        if len(email_address) == 0:
+            raise UserExtensionEmailAddressMissing(_("During Quote PDF Export"))
         objectsToSerialize += list(userExtension)
         objectsToSerialize += list(PhoneAddress.objects.filter(id=phoneAddress[0].id))
+        objectsToSerialize += list(EmailAddress.objects.filter(id=email_address[0].id))
         templateset = djangoUserExtension.models.TemplateSet.objects.filter(id=userExtension[0].defaultTemplateSet.id)
         if (len(templateset) == 0):
             raise TemplateSetMissing(_("During Invoice PDF Export"))
@@ -659,8 +689,8 @@ class Product(models.Model):
     title = models.CharField(verbose_name=_("Title"), max_length=200)
     productNumber = models.IntegerField(verbose_name=_("Product Number"))
     defaultunit = models.ForeignKey(Unit, verbose_name=_("Unit"))
-    dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now=True)
-    lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now_add=True)
+    dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now_add=True)
+    lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now=True)
     lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True},
                                        verbose_name=_("Last modified by"), null=True, blank="True")
     tax = models.ForeignKey(Tax, blank=False)
@@ -869,7 +899,8 @@ class Position(models.Model):
             self.lastCalculatedTax = int(self.product.getTaxRate() / 100 * self.positionPricePerUnit * self.quantity * (
             1 - self.discount / 100) / currency.rounding) * currency.rounding
         else:
-            self.lastCalculatedTax = self.product.getTaxRate() / 100 * self.positionPricePerUnit * self.quantity
+            self.lastCalculatedTax = int(self.product.getTaxRate() / 100 * self.positionPricePerUnit * self.quantity /
+            currency.rounding) * currency.rounding
         self.save()
         return self.lastCalculatedTax
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-03 19:50+0000\n"
+"POT-Creation-Date: 2017-10-09 20:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <aaron.riedener@koalix.ch>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1217,9 +1217,9 @@ msgid "Sample Address"
 msgstr "Beispiel Adresse"
 
 #: koalixcrm/crm/models.py:26 koalixcrm/crm/models.py:170
-#: koalixcrm/crm/models.py:232 koalixcrm/crm/models.py:338
-#: koalixcrm/crm/models.py:622 koalixcrm/crm/models.py:658
-#: koalixcrm/crm/models.py:838
+#: koalixcrm/crm/models.py:232 koalixcrm/crm/models.py:341
+#: koalixcrm/crm/models.py:631 koalixcrm/crm/models.py:667
+#: koalixcrm/crm/models.py:847
 msgid "Description"
 msgstr "Beschreibung"
 
@@ -1232,7 +1232,7 @@ msgid "Rounding"
 msgstr "Rundung"
 
 #: koalixcrm/crm/models.py:35 koalixcrm/crm/models.py:36
-#: koalixcrm/crm/models.py:241 koalixcrm/crm/models.py:347
+#: koalixcrm/crm/models.py:241 koalixcrm/crm/models.py:350
 msgid "Currency"
 msgstr "Währung"
 
@@ -1299,20 +1299,20 @@ msgid "Email Address"
 msgstr "Email Adresse"
 
 #: koalixcrm/crm/models.py:80 koalixcrm/crm/models.py:174
-#: koalixcrm/crm/models.py:242 koalixcrm/crm/models.py:348
-#: koalixcrm/crm/models.py:662
+#: koalixcrm/crm/models.py:242 koalixcrm/crm/models.py:351
+#: koalixcrm/crm/models.py:671
 msgid "Created at"
 msgstr "Erstelldatum"
 
 #: koalixcrm/crm/models.py:81 koalixcrm/crm/models.py:175
-#: koalixcrm/crm/models.py:243 koalixcrm/crm/models.py:349
-#: koalixcrm/crm/models.py:663
+#: koalixcrm/crm/models.py:243 koalixcrm/crm/models.py:352
+#: koalixcrm/crm/models.py:672
 msgid "Last modified"
 msgstr "Zuletzt geändert"
 
 #: koalixcrm/crm/models.py:83 koalixcrm/crm/models.py:177
-#: koalixcrm/crm/models.py:245 koalixcrm/crm/models.py:351
-#: koalixcrm/crm/models.py:665
+#: koalixcrm/crm/models.py:245 koalixcrm/crm/models.py:354
+#: koalixcrm/crm/models.py:674
 msgid "Last modified by"
 msgstr "Zuletzt geändert durch"
 
@@ -1328,7 +1328,7 @@ msgstr "Tage bis zur Fälligkeit"
 msgid "Customer Billing Cycle"
 msgstr "Zahlungsbedingungen"
 
-#: koalixcrm/crm/models.py:112 koalixcrm/crm/models.py:778
+#: koalixcrm/crm/models.py:112 koalixcrm/crm/models.py:787
 msgid "Customer Group"
 msgstr "Kundengruppe"
 
@@ -1344,7 +1344,7 @@ msgstr "Standard Zahlungsbedingung"
 msgid "Is member of"
 msgstr "Ist Mitglied von"
 
-#: koalixcrm/crm/models.py:148 koalixcrm/crm/models.py:344
+#: koalixcrm/crm/models.py:148 koalixcrm/crm/models.py:347
 msgid "Customer"
 msgstr "Kunde"
 
@@ -1362,7 +1362,7 @@ msgid "Supplier"
 msgstr "Lieferant"
 
 #: koalixcrm/crm/models.py:168 koalixcrm/crm/models.py:239
-#: koalixcrm/crm/models.py:345
+#: koalixcrm/crm/models.py:348
 msgid "Staff"
 msgstr "Mitarbeiter"
 
@@ -1379,8 +1379,8 @@ msgid "Default Currency"
 msgstr "Standard Währung"
 
 #: koalixcrm/crm/models.py:181 koalixcrm/crm/models.py:225
-#: koalixcrm/crm/models.py:229 koalixcrm/crm/models.py:335
-#: koalixcrm/crm/models.py:886 koalixcrm/crm/models.py:898
+#: koalixcrm/crm/models.py:229 koalixcrm/crm/models.py:338
+#: koalixcrm/crm/models.py:895 koalixcrm/crm/models.py:907
 msgid "Contract"
 msgstr "Auftrag"
 
@@ -1388,11 +1388,11 @@ msgstr "Auftrag"
 msgid "Contracts"
 msgstr "Aufträge"
 
-#: koalixcrm/crm/models.py:230 koalixcrm/crm/models.py:336
+#: koalixcrm/crm/models.py:230 koalixcrm/crm/models.py:339
 msgid "External Reference"
 msgstr "Externe Referenz"
 
-#: koalixcrm/crm/models.py:233 koalixcrm/crm/models.py:849
+#: koalixcrm/crm/models.py:233 koalixcrm/crm/models.py:858
 msgid "Last Pricing Date"
 msgstr "Datum der letze Preisberechnung"
 
@@ -1400,313 +1400,322 @@ msgstr "Datum der letze Preisberechnung"
 msgid "Last Calculted Price With Tax"
 msgstr "Zuletzt berechneter Preis mit Steuer"
 
-#: koalixcrm/crm/models.py:236 koalixcrm/crm/models.py:852
+#: koalixcrm/crm/models.py:236 koalixcrm/crm/models.py:861
 msgid "Last Calculted Tax"
 msgstr "Zuletzt berechnete Steuer"
 
-#: koalixcrm/crm/models.py:300 koalixcrm/crm/models.py:307
+#: koalixcrm/crm/models.py:246 koalixcrm/crm/models.py:356
+#| msgid "Last Pricing Date"
+msgid "Last printed"
+msgstr "Zuletzt gedruckt"
+
+#: koalixcrm/crm/models.py:303 koalixcrm/crm/models.py:310
 msgid "During PurchaseOrder PDF Export"
 msgstr "Bestellung erstellt"
 
-#: koalixcrm/crm/models.py:327 koalixcrm/crm/models.py:328
-#: koalixcrm/crm/models.py:331
+#: koalixcrm/crm/models.py:330 koalixcrm/crm/models.py:331
+#: koalixcrm/crm/models.py:334
 msgid "Purchase Order"
 msgstr "Bestellung"
 
-#: koalixcrm/crm/models.py:331 koalixcrm/crm/models.py:391
-#: koalixcrm/crm/models.py:490 koalixcrm/crm/models.py:613
+#: koalixcrm/crm/models.py:334 koalixcrm/crm/models.py:396
+#: koalixcrm/crm/models.py:497 koalixcrm/crm/models.py:622
 msgid "from Contract"
 msgstr "vom Auftrag"
 
-#: koalixcrm/crm/models.py:337 koalixcrm/crm/models.py:839
+#: koalixcrm/crm/models.py:340 koalixcrm/crm/models.py:848
 msgid "Discount"
 msgstr "Rabatt"
 
-#: koalixcrm/crm/models.py:339
-#| msgid "Last Pricing Date"
+#: koalixcrm/crm/models.py:342
 msgid "Pricing Date"
 msgstr "Letzte Preisberechnung"
 
-#: koalixcrm/crm/models.py:341
+#: koalixcrm/crm/models.py:344
 msgid "Price without Tax "
 msgstr "Preis ohne Steuer"
 
-#: koalixcrm/crm/models.py:342 koalixcrm/crm/models.py:653
+#: koalixcrm/crm/models.py:345 koalixcrm/crm/models.py:662
 msgid "Tax"
 msgstr "Steuer"
 
-#: koalixcrm/crm/models.py:387 koalixcrm/crm/models.py:391
+#: koalixcrm/crm/models.py:392 koalixcrm/crm/models.py:396
 msgid "Sales Contract"
 msgstr "Verkaufsauftrag"
 
-#: koalixcrm/crm/models.py:388
+#: koalixcrm/crm/models.py:393
 msgid "Sales Contracts"
 msgstr "Verkaufsaufträge"
 
-#: koalixcrm/crm/models.py:395 koalixcrm/crm/models.py:781
+#: koalixcrm/crm/models.py:400 koalixcrm/crm/models.py:790
 msgid "Valid until"
 msgstr "Gültig bis"
 
-#: koalixcrm/crm/models.py:396
+#: koalixcrm/crm/models.py:401
 msgid "Status"
 msgstr "Status"
 
-#: koalixcrm/crm/models.py:454 koalixcrm/crm/models.py:461
+#: koalixcrm/crm/models.py:461 koalixcrm/crm/models.py:468
 msgid "During Quote PDF Export"
 msgstr "während des PDF Export der Offerte"
 
-#: koalixcrm/crm/models.py:490 koalixcrm/crm/models.py:494
+#: koalixcrm/crm/models.py:497 koalixcrm/crm/models.py:501
 msgid "Quote"
 msgstr "Offerte"
 
-#: koalixcrm/crm/models.py:495
+#: koalixcrm/crm/models.py:502
 msgid "Quotes"
 msgstr "Offerten"
 
-#: koalixcrm/crm/models.py:499
+#: koalixcrm/crm/models.py:506
 msgid "To pay until"
 msgstr "Zahlbar bis"
 
-#: koalixcrm/crm/models.py:501
+#: koalixcrm/crm/models.py:508
 msgid "Payment Bank Reference"
 msgstr "Zahlungsreferenz der Bank"
 
-#: koalixcrm/crm/models.py:522
+#: koalixcrm/crm/models.py:529
 msgid "Complete invoice and run price recalculation. Price may not be Zero"
 msgstr ""
 
-#: koalixcrm/crm/models.py:575 koalixcrm/crm/models.py:582
+#: koalixcrm/crm/models.py:531
+#, fuzzy
+#| msgid "Successfully registered Payment in the Accounting"
+msgid "Please specify one open intrest account in the accounting"
+msgstr "Die Zahlung wurde erfolgreich eingebucht"
+
+#: koalixcrm/crm/models.py:584 koalixcrm/crm/models.py:591
 msgid "During Invoice PDF Export"
 msgstr "während des PDF Export der Rechnung"
 
-#: koalixcrm/crm/models.py:613 koalixcrm/crm/models.py:617
+#: koalixcrm/crm/models.py:622 koalixcrm/crm/models.py:626
 msgid "Invoice"
 msgstr "Rechnung"
 
-#: koalixcrm/crm/models.py:618
+#: koalixcrm/crm/models.py:627
 msgid "Invoices"
 msgstr "Rechnungen"
 
-#: koalixcrm/crm/models.py:623
+#: koalixcrm/crm/models.py:632
 msgid "Displayed Name After Quantity In The Position"
 msgstr "Angezeigt nach der Anzahl in der Position"
 
-#: koalixcrm/crm/models.py:624
+#: koalixcrm/crm/models.py:633
 msgid "Is A Fraction Of"
 msgstr "Ist eine Untereinheit von"
 
-#: koalixcrm/crm/models.py:625
+#: koalixcrm/crm/models.py:634
 msgid "Factor Between This And Next Higher Unit"
 msgstr "Multiplikator zwischen dieser und der nächst höheren Einheit"
 
-#: koalixcrm/crm/models.py:633 koalixcrm/crm/models.py:661
-#: koalixcrm/crm/models.py:776 koalixcrm/crm/models.py:841
+#: koalixcrm/crm/models.py:642 koalixcrm/crm/models.py:670
+#: koalixcrm/crm/models.py:785 koalixcrm/crm/models.py:850
 msgid "Unit"
 msgstr "Masseinheit"
 
-#: koalixcrm/crm/models.py:634
+#: koalixcrm/crm/models.py:643
 msgid "Units"
 msgstr "Masseinheiten"
 
-#: koalixcrm/crm/models.py:638
+#: koalixcrm/crm/models.py:647
 msgid "Taxrate in Percentage"
 msgstr "Steuersatz in Prozent"
 
-#: koalixcrm/crm/models.py:639
+#: koalixcrm/crm/models.py:648
 msgid "Taxname"
 msgstr "Name der Steuer"
 
-#: koalixcrm/crm/models.py:640
+#: koalixcrm/crm/models.py:649
 msgid "Activa Account"
 msgstr "Aktiv Konto"
 
-#: koalixcrm/crm/models.py:642
+#: koalixcrm/crm/models.py:651
 msgid "Passiva Account"
 msgstr "Passiv Konto"
 
-#: koalixcrm/crm/models.py:654
+#: koalixcrm/crm/models.py:663
 msgid "Taxes"
 msgstr "Steuern"
 
-#: koalixcrm/crm/models.py:659
+#: koalixcrm/crm/models.py:668
 msgid "Title"
 msgstr "Titel"
 
-#: koalixcrm/crm/models.py:660
+#: koalixcrm/crm/models.py:669
 msgid "Product Number"
 msgstr "Produktnummer"
 
-#: koalixcrm/crm/models.py:668
+#: koalixcrm/crm/models.py:677
 msgid "Accounting Product Categorie"
 msgstr "Buchhaltung Produktkategorie"
 
-#: koalixcrm/crm/models.py:712 koalixcrm/crm/models.py:733
-#: koalixcrm/crm/models.py:756 koalixcrm/crm/models.py:775
-#: koalixcrm/crm/models.py:840
+#: koalixcrm/crm/models.py:721 koalixcrm/crm/models.py:742
+#: koalixcrm/crm/models.py:765 koalixcrm/crm/models.py:784
+#: koalixcrm/crm/models.py:849
 msgid "Product"
 msgstr "Produkt"
 
-#: koalixcrm/crm/models.py:713
+#: koalixcrm/crm/models.py:722
 msgid "Products"
 msgstr "Produkte"
 
-#: koalixcrm/crm/models.py:725
+#: koalixcrm/crm/models.py:734
 msgid "There is no Price for this product"
 msgstr "Es existiert kein Preis für dieses Produkt"
 
-#: koalixcrm/crm/models.py:726
+#: koalixcrm/crm/models.py:735
 msgid "that matches the date"
 msgstr "welches übereinstimmt mit Datum"
 
-#: koalixcrm/crm/models.py:727
+#: koalixcrm/crm/models.py:736
 msgid "customer"
 msgstr "Kunde"
 
-#: koalixcrm/crm/models.py:727
-#| msgid "Currency"
+#: koalixcrm/crm/models.py:736
 msgid "currency"
 msgstr "Währung"
 
-#: koalixcrm/crm/models.py:727
+#: koalixcrm/crm/models.py:736
 msgid " and unit"
 msgstr "und Einheit"
 
-#: koalixcrm/crm/models.py:731 koalixcrm/crm/models.py:752
+#: koalixcrm/crm/models.py:740 koalixcrm/crm/models.py:761
 msgid "From Unit"
 msgstr "Von Masseinheit"
 
-#: koalixcrm/crm/models.py:732 koalixcrm/crm/models.py:754
+#: koalixcrm/crm/models.py:741 koalixcrm/crm/models.py:763
 msgid "To Unit"
 msgstr "Zu Masseinheit"
 
-#: koalixcrm/crm/models.py:734
+#: koalixcrm/crm/models.py:743
 msgid "Factor between From and To Unit"
 msgstr "Multiplikator zwischen der einen und der anderen Einheit"
 
-#: koalixcrm/crm/models.py:747
+#: koalixcrm/crm/models.py:756
 msgid "Unit Transfrom"
 msgstr "Einheiten Umrechnung"
 
-#: koalixcrm/crm/models.py:748
+#: koalixcrm/crm/models.py:757
 msgid "Unit Transfroms"
 msgstr "Einheiten Umrechnungen"
 
-#: koalixcrm/crm/models.py:757
+#: koalixcrm/crm/models.py:766
 msgid "Factor between From and To Customer Group"
 msgstr "Prismultiplikator zwischen der einen und der anderen Kundengruppe"
 
-#: koalixcrm/crm/models.py:770
+#: koalixcrm/crm/models.py:779
 msgid "Customer Group Price Transfrom"
 msgstr "Kundengruppe Preisumrechnung"
 
-#: koalixcrm/crm/models.py:771
+#: koalixcrm/crm/models.py:780
 msgid "Customer Group Price Transfroms"
 msgstr "Kundengruppen Preisumrechnungen"
 
-#: koalixcrm/crm/models.py:779 koalixcrm/crm/models.py:847
+#: koalixcrm/crm/models.py:788 koalixcrm/crm/models.py:856
 msgid "Price Per Unit"
 msgstr "Preis pro Einheit"
 
-#: koalixcrm/crm/models.py:780
+#: koalixcrm/crm/models.py:789
 msgid "Valid from"
 msgstr "Gültig vom"
 
-#: koalixcrm/crm/models.py:831
+#: koalixcrm/crm/models.py:840
 msgid "Price"
 msgstr "Preis"
 
-#: koalixcrm/crm/models.py:832
+#: koalixcrm/crm/models.py:841
 msgid "Prices"
 msgstr "Preise"
 
-#: koalixcrm/crm/models.py:836
+#: koalixcrm/crm/models.py:845
 msgid "Position Number"
 msgstr "Positionsnummer"
 
-#: koalixcrm/crm/models.py:837
+#: koalixcrm/crm/models.py:846
 msgid "Quantity"
 msgstr "Anzahl"
 
-#: koalixcrm/crm/models.py:842
+#: koalixcrm/crm/models.py:851
 msgid "Shipment on"
 msgstr "Verschickt am"
 
-#: koalixcrm/crm/models.py:843
+#: koalixcrm/crm/models.py:852
 msgid "Shipment Supplier"
 msgstr "Versandunternehmen"
 
-#: koalixcrm/crm/models.py:845
+#: koalixcrm/crm/models.py:854
 msgid "Shipment ID"
 msgstr "Lieferungs ID"
 
-#: koalixcrm/crm/models.py:846
+#: koalixcrm/crm/models.py:855
 msgid "Overwrite Product Price"
 msgstr "Überschreie Produkt Preis"
 
-#: koalixcrm/crm/models.py:850
+#: koalixcrm/crm/models.py:859
 msgid "Last Calculted Price"
 msgstr "Zuletzt berechneter Preis"
 
-#: koalixcrm/crm/models.py:877 koalixcrm/crm/models.py:881
+#: koalixcrm/crm/models.py:886 koalixcrm/crm/models.py:890
 msgid "Position"
 msgstr "Position"
 
-#: koalixcrm/crm/models.py:882
+#: koalixcrm/crm/models.py:891
 msgid "Positions"
 msgstr "Positionen"
 
-#: koalixcrm/crm/models.py:890 koalixcrm/crm/models.py:894
+#: koalixcrm/crm/models.py:899 koalixcrm/crm/models.py:903
 msgid "Salescontract Position"
 msgstr "Verkaufsaufträg Position"
 
-#: koalixcrm/crm/models.py:891
+#: koalixcrm/crm/models.py:900
 msgid "Salescontract Positions"
 msgstr "Verkaufsaufträge Positionen"
 
-#: koalixcrm/crm/models.py:902 koalixcrm/crm/models.py:906
+#: koalixcrm/crm/models.py:911 koalixcrm/crm/models.py:915
 msgid "Purchaseorder Position"
 msgstr "Bestellung Position"
 
-#: koalixcrm/crm/models.py:903
+#: koalixcrm/crm/models.py:912
 msgid "Purchaseorder Positions"
 msgstr "Bestellung Positionen"
 
-#: koalixcrm/crm/models.py:910 koalixcrm/crm/models.py:923
-#: koalixcrm/crm/models.py:936 koalixcrm/crm/models.py:949
-#: koalixcrm/crm/models.py:962 koalixcrm/crm/models.py:975
-#: koalixcrm/crm/models.py:988 koalixcrm/crm/models.py:1001
-#: koalixcrm/crm/models.py:1014 koalixcrm/crm/models.py:1027
-#: koalixcrm/crm/models.py:1040 koalixcrm/crm/models.py:1053
+#: koalixcrm/crm/models.py:919 koalixcrm/crm/models.py:932
+#: koalixcrm/crm/models.py:945 koalixcrm/crm/models.py:958
+#: koalixcrm/crm/models.py:971 koalixcrm/crm/models.py:984
+#: koalixcrm/crm/models.py:997 koalixcrm/crm/models.py:1010
+#: koalixcrm/crm/models.py:1023 koalixcrm/crm/models.py:1036
+#: koalixcrm/crm/models.py:1049 koalixcrm/crm/models.py:1062
 msgid "Purpose"
 msgstr "Verwendungszweck"
 
-#: koalixcrm/crm/models.py:915 koalixcrm/crm/models.py:916
+#: koalixcrm/crm/models.py:924 koalixcrm/crm/models.py:925
 msgid "Phone Address For Contact"
 msgstr "Telefonnummer für Kontakte"
 
-#: koalixcrm/crm/models.py:928 koalixcrm/crm/models.py:929
+#: koalixcrm/crm/models.py:937 koalixcrm/crm/models.py:938
 msgid "Email Address For Contact"
 msgstr "Email Adresse für Kontakte"
 
-#: koalixcrm/crm/models.py:941 koalixcrm/crm/models.py:942
+#: koalixcrm/crm/models.py:950 koalixcrm/crm/models.py:951
 msgid "Postal Address For Contact"
 msgstr "Postadresse für Kontakte"
 
-#: koalixcrm/crm/models.py:954 koalixcrm/crm/models.py:955
-#: koalixcrm/crm/models.py:967 koalixcrm/crm/models.py:968
-#: koalixcrm/crm/models.py:980 koalixcrm/crm/models.py:981
+#: koalixcrm/crm/models.py:963 koalixcrm/crm/models.py:964
+#: koalixcrm/crm/models.py:976 koalixcrm/crm/models.py:977
+#: koalixcrm/crm/models.py:989 koalixcrm/crm/models.py:990
 msgid "Postal Address For Contracts"
 msgstr "Postadresse für Aufträge"
 
-#: koalixcrm/crm/models.py:993 koalixcrm/crm/models.py:994
-#: koalixcrm/crm/models.py:1006 koalixcrm/crm/models.py:1007
-#: koalixcrm/crm/models.py:1019 koalixcrm/crm/models.py:1020
+#: koalixcrm/crm/models.py:1002 koalixcrm/crm/models.py:1003
+#: koalixcrm/crm/models.py:1015 koalixcrm/crm/models.py:1016
+#: koalixcrm/crm/models.py:1028 koalixcrm/crm/models.py:1029
 msgid "Phone Address For Contracts"
 msgstr "Telefonnummer für Aufträge"
 
-#: koalixcrm/crm/models.py:1032 koalixcrm/crm/models.py:1033
-#: koalixcrm/crm/models.py:1045 koalixcrm/crm/models.py:1046
-#: koalixcrm/crm/models.py:1058 koalixcrm/crm/models.py:1059
+#: koalixcrm/crm/models.py:1041 koalixcrm/crm/models.py:1042
+#: koalixcrm/crm/models.py:1054 koalixcrm/crm/models.py:1055
+#: koalixcrm/crm/models.py:1067 koalixcrm/crm/models.py:1068
 msgid "Email Address For Contracts"
 msgstr "Email Adresse für Aufträge"
 

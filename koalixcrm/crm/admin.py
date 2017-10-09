@@ -268,7 +268,7 @@ class PurchaseOrderInlinePosition(admin.TabularInline):
     fieldsets = (
         ('', {
             'fields': (
-            'positionNumber', 'quantity', 'unit', 'product', 'description', 'discount', 'overwriteProductPrice',
+            'positionNumber', 'quantity', 'unit', 'product', 'description', 'overwriteProductPrice',
             'positionPricePerUnit', 'sentOn', 'supplier')
         }),
     )
@@ -290,14 +290,14 @@ class InlineBookings(admin.TabularInline):
 class OptionInvoice(admin.ModelAdmin):
     list_display = (
     'id', 'description', 'contract', 'customer', 'payableuntil', 'status', 'currency', 'staff',
-    'lastCalculatedPrice', 'lastCalculatedTax', 'lastPricingDate', 'lastmodification', 'lastmodifiedby')
+    'lastCalculatedPrice', 'lastCalculatedTax', 'lastPricingDate', 'lastmodification', 'lastmodifiedby', 'last_print_date')
     list_display_links = ('id', )
     list_filter = ('customer', 'contract', 'staff', 'status', 'currency', 'lastmodification')
     ordering = ('contract', 'customer', 'currency')
     search_fields = ('contract__id', 'customer__name', 'currency__description')
     fieldsets = (
         (_('Basics'), {
-            'fields': ('contract', 'description', 'customer', 'currency', 'discount',  'payableuntil', 'status', 'paymentBankReference')
+            'fields': ('contract', 'description', 'customer', 'currency', 'discount',  'payableuntil', 'status', 'externalReference')
         }),
     )
     save_as = True
@@ -414,7 +414,7 @@ class OptionInvoice(admin.ModelAdmin):
 class OptionQuote(admin.ModelAdmin):
     list_display = (
     'id', 'description', 'contract', 'customer', 'currency', 'validuntil', 'status', 'staff', 'lastmodifiedby',
-    'lastCalculatedPrice', 'lastCalculatedTax', 'lastPricingDate', 'lastmodification')
+    'lastCalculatedPrice', 'lastCalculatedTax', 'lastPricingDate', 'lastmodification', 'last_print_date')
     list_display_links = ('id',)
     list_filter = ('customer', 'contract', 'currency', 'staff', 'status', 'lastmodification')
     ordering = ('contract', 'customer', 'currency')
@@ -422,7 +422,7 @@ class OptionQuote(admin.ModelAdmin):
 
     fieldsets = (
         (_('Basics'), {
-            'fields': ('contract', 'description', 'customer', 'currency', 'discount', 'validuntil', 'staff', 'status')
+            'fields': ('contract', 'description', 'customer', 'currency', 'discount', 'validuntil', 'staff', 'status', 'externalReference')
         }),
     )
     save_as = True
@@ -493,7 +493,7 @@ class OptionQuote(admin.ModelAdmin):
 class OptionPurchaseOrder(admin.ModelAdmin):
     list_display = (
     'id', 'description', 'contract', 'supplier', 'status', 'currency', 'staff', 'lastmodifiedby',
-    'lastCalculatedPrice', 'lastCalculatedTax', 'lastPricingDate', 'lastmodification')
+    'lastCalculatedPrice', 'lastCalculatedTax', 'lastPricingDate', 'lastmodification', 'last_print_date')
     list_display_links = ('id',)
     list_filter = ('supplier', 'contract', 'staff', 'status', 'currency', 'lastmodification')
     ordering = ('contract', 'supplier', 'currency')
@@ -501,7 +501,7 @@ class OptionPurchaseOrder(admin.ModelAdmin):
 
     fieldsets = (
         (_('Basics'), {
-            'fields': ('contract', 'description', 'supplier', 'currency', 'discount', 'status')
+            'fields': ('contract', 'description', 'supplier', 'currency', 'status', 'externalReference')
         }),
     )
 
