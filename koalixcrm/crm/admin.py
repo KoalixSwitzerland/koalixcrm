@@ -290,7 +290,7 @@ class InlineBookings(admin.TabularInline):
 class OptionInvoice(admin.ModelAdmin):
     list_display = (
     'id', 'description', 'contract', 'customer', 'payableuntil', 'status', 'currency', 'staff',
-    'lastCalculatedPrice', 'lastCalculatedTax', 'lastPricingDate', 'lastmodification', 'lastmodifiedby')
+    'lastCalculatedPrice', 'lastCalculatedTax', 'lastPricingDate', 'lastmodification', 'lastmodifiedby', 'last_print_date')
     list_display_links = ('id', )
     list_filter = ('customer', 'contract', 'staff', 'status', 'currency', 'lastmodification')
     ordering = ('contract', 'customer', 'currency')
@@ -414,7 +414,7 @@ class OptionInvoice(admin.ModelAdmin):
 class OptionQuote(admin.ModelAdmin):
     list_display = (
     'id', 'description', 'contract', 'customer', 'currency', 'validuntil', 'status', 'staff', 'lastmodifiedby',
-    'lastCalculatedPrice', 'lastCalculatedTax', 'lastPricingDate', 'lastmodification')
+    'lastCalculatedPrice', 'lastCalculatedTax', 'lastPricingDate', 'lastmodification', 'last_print_date')
     list_display_links = ('id',)
     list_filter = ('customer', 'contract', 'currency', 'staff', 'status', 'lastmodification')
     ordering = ('contract', 'customer', 'currency')
@@ -493,7 +493,7 @@ class OptionQuote(admin.ModelAdmin):
 class OptionPurchaseOrder(admin.ModelAdmin):
     list_display = (
     'id', 'description', 'contract', 'supplier', 'status', 'currency', 'staff', 'lastmodifiedby',
-    'lastCalculatedPrice', 'lastCalculatedTax', 'lastPricingDate', 'lastmodification')
+    'lastCalculatedPrice', 'lastCalculatedTax', 'lastPricingDate', 'lastmodification', 'last_print_date')
     list_display_links = ('id',)
     list_filter = ('supplier', 'contract', 'staff', 'status', 'currency', 'lastmodification')
     ordering = ('contract', 'supplier', 'currency')

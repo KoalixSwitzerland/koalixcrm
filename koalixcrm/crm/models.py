@@ -77,8 +77,8 @@ class EmailAddress(models.Model):
 
 class Contact(models.Model):
     name = models.CharField(max_length=300, verbose_name=_("Name"))
-    dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now=True)
-    lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now_add=True)
+    dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now_add=True)
+    lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now=True)
     lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True,
                                        verbose_name=_("Last modified by"), editable=True)
 
@@ -171,8 +171,8 @@ class Contract(models.Model):
     defaultcustomer = models.ForeignKey(Customer, verbose_name=_("Default Customer"), null=True, blank=True)
     defaultSupplier = models.ForeignKey(Supplier, verbose_name=_("Default Supplier"), null=True, blank=True)
     defaultcurrency = models.ForeignKey(Currency, verbose_name=_("Default Currency"), blank=False, null=False)
-    dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now=True)
-    lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now_add=True)
+    dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now_add=True)
+    lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now=True)
     lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True},
                                        verbose_name=_("Last modified by"), related_name="db_contractlstmodified")
 
@@ -239,8 +239,8 @@ class PurchaseOrder(models.Model):
     staff = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True, verbose_name=_("Staff"),
                               related_name="db_relpostaff", null=True)
     currency = models.ForeignKey(Currency, verbose_name=_("Currency"), blank=False, null=False)
-    dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now=True)
-    lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now_add=True)
+    dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now_add=True)
+    lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now=True)
     lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True},
                                        verbose_name=_("Last modified by"), related_name="db_polstmodified")
     last_print_date = models.DateTimeField(verbose_name=_("Last printed"), blank=True, null=True)
@@ -286,7 +286,7 @@ class PurchaseOrder(models.Model):
     def createPDF(self, whatToExport):
         XMLSerializer = serializers.get_serializer("xml")
         xml_serializer = XMLSerializer()
-        self.last_print_date = date.today()
+        self.last_print_date = datetime.now()
         self.save()
         out = open(os.path.join(settings.PDF_OUTPUT_ROOT,("purchaseorder_" + str(self.id) + ".xml")), "wb")
         objectsToSerialize = list(PurchaseOrder.objects.filter(id=self.id))
@@ -348,8 +348,8 @@ class SalesContract(models.Model):
     staff = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True, verbose_name=_("Staff"),
                               related_name="db_relscstaff", null=True)
     currency = models.ForeignKey(Currency, verbose_name=_("Currency"), blank=False, null=False)
-    dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now=True)
-    lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now_add=True)
+    dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now_add=True)
+    lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now=True)
     lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True},
                                        verbose_name=_("Last modified by"), related_name="db_lstscmodified", null=True,
                                        blank="True")
@@ -443,7 +443,7 @@ class Quote(SalesContract):
     def createPDF(self, whatToExport):
         XMLSerializer = serializers.get_serializer("xml")
         xml_serializer = XMLSerializer()
-        self.last_print_date = date.today()
+        self.last_print_date = datetime.now()
         self.save()
         out = open(os.path.join(settings.PDF_OUTPUT_ROOT, ("quote_" + str(self.id) + ".xml")), "wb")
         objectsToSerialize = list(Quote.objects.filter(id=self.id))
@@ -566,7 +566,7 @@ class Invoice(SalesContract):
     def createPDF(self, whatToExport):
         XMLSerializer = serializers.get_serializer("xml")
         xml_serializer = XMLSerializer()
-        self.last_print_date = date.today()
+        self.last_print_date = datetime.now()
         self.save()
         out = open(os.path.join(settings.PDF_OUTPUT_ROOT, "invoice_" + str(self.id) + ".xml"), "wb")
         objectsToSerialize = list(Invoice.objects.filter(id=self.id))
@@ -668,8 +668,8 @@ class Product(models.Model):
     title = models.CharField(verbose_name=_("Title"), max_length=200)
     productNumber = models.IntegerField(verbose_name=_("Product Number"))
     defaultunit = models.ForeignKey(Unit, verbose_name=_("Unit"))
-    dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now=True)
-    lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now_add=True)
+    dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now_add=True)
+    lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now=True)
     lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True},
                                        verbose_name=_("Last modified by"), null=True, blank="True")
     tax = models.ForeignKey(Tax, blank=False)
