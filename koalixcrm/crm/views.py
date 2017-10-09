@@ -30,10 +30,16 @@ def exportPDF(callingModelAdmin, request, whereToCreateFrom, whatToCreate, redir
         pdf = whereToCreateFrom.createPDF(whatToCreate)
         response = HttpResponse(FileWrapper(open(pdf, 'rb')), content_type='application/pdf')
         response['Content-Length'] = path.getsize(pdf)
-    except (TemplateSetMissing, UserExtensionMissing, CalledProcessError) as e:
+    except (TemplateSetMissing, UserExtensionMissing, CalledProcessError, UserExtensionEmailAddressMissing, UserExtensionPhoneAddressMissing) as e:
         if isinstance(e, UserExtensionMissing):
             response = HttpResponseRedirect(redirectTo)
             callingModelAdmin.message_user(request, _("User Extension Missing"))
+        elif isinstance(e, UserExtensionEmailAddressMissing):
+            response = HttpResponseRedirect(redirectTo)
+            callingModelAdmin.message_user(request, _("User Extension Email Missing"))
+        elif isinstance(e, UserExtensionPhoneAddressMissing):
+            response = HttpResponseRedirect(redirectTo)
+            callingModelAdmin.message_user(request, _("User Extension Phone Missing"))
         elif isinstance(e, TemplateSetMissing):
             response = HttpResponseRedirect(redirectTo)
             callingModelAdmin.message_user(request, _("Templateset Missing"))

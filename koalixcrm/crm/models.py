@@ -310,8 +310,8 @@ class PurchaseOrder(models.Model):
         if len(email_address) == 0:
             raise UserExtensionEmailAddressMissing(_("During PurchaseOrder PDF Export"))
         objects_to_serialize += list(userExtension)
-        objects_to_serialize += list(email_address)
-        objects_to_serialize += list(phone_address)
+        objects_to_serialize += list(EmailAddress.objects.filter(id=email_address[0].id))
+        objects_to_serialize += list(PhoneAddress.objects.filter(id=phone_address[0].id))
         template_set = djangoUserExtension.models.TemplateSet.objects.filter(id=userExtension[0].defaultTemplateSet.id)
         if len(template_set) == 0:
             raise TemplateSetMissing(_("During PurchaseOrder PDF Export"))
@@ -475,6 +475,7 @@ class Quote(SalesContract):
         if len(email_address) == 0:
             raise UserExtensionEmailAddressMissing(_("During Quote PDF Export"))
         objectsToSerialize += list(userExtension)
+        objectsToSerialize += list(EmailAddress.objects.filter(id=email_address[0].id))
         objectsToSerialize += list(PhoneAddress.objects.filter(id=phoneAddress[0].id))
         templateset = djangoUserExtension.models.TemplateSet.objects.filter(id=userExtension[0].defaultTemplateSet.id)
         if (len(templateset) == 0):
@@ -603,9 +604,9 @@ class Invoice(SalesContract):
             userExtension=userExtension[0].id)
         if len(email_address) == 0:
             raise UserExtensionEmailAddressMissing(_("During Quote PDF Export"))
-
         objectsToSerialize += list(userExtension)
         objectsToSerialize += list(PhoneAddress.objects.filter(id=phoneAddress[0].id))
+        objectsToSerialize += list(EmailAddress.objects.filter(id=email_address[0].id))
         templateset = djangoUserExtension.models.TemplateSet.objects.filter(id=userExtension[0].defaultTemplateSet.id)
         if (len(templateset) == 0):
             raise TemplateSetMissing(_("During Invoice PDF Export"))
