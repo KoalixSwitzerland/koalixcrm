@@ -422,7 +422,7 @@ class OptionQuote(admin.ModelAdmin):
 
     fieldsets = (
         (_('Basics'), {
-            'fields': ('contract', 'description', 'customer', 'currency', 'discount', 'validuntil', 'staff', 'status')
+            'fields': ('contract', 'description', 'customer', 'currency', 'discount', 'validuntil', 'staff', 'status', 'externalReference')
         }),
     )
     save_as = True
