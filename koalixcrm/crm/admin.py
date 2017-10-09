@@ -268,7 +268,7 @@ class PurchaseOrderInlinePosition(admin.TabularInline):
     fieldsets = (
         ('', {
             'fields': (
-            'positionNumber', 'quantity', 'unit', 'product', 'description', 'discount', 'overwriteProductPrice',
+            'positionNumber', 'quantity', 'unit', 'product', 'description', 'overwriteProductPrice',
             'positionPricePerUnit', 'sentOn', 'supplier')
         }),
     )
@@ -501,7 +501,7 @@ class OptionPurchaseOrder(admin.ModelAdmin):
 
     fieldsets = (
         (_('Basics'), {
-            'fields': ('contract', 'description', 'supplier', 'currency', 'discount', 'status')
+            'fields': ('contract', 'description', 'supplier', 'currency', 'status')
         }),
     )
 
