@@ -243,6 +243,7 @@ class PurchaseOrder(models.Model):
     lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now_add=True)
     lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True},
                                        verbose_name=_("Last modified by"), related_name="db_polstmodified")
+    last_print_date = models.DateTimeField(verbose_name=_("Last printed"), blank=True, null=True)
 
     def recalculatePrices(self, pricingDate):
         price = 0
@@ -285,6 +286,8 @@ class PurchaseOrder(models.Model):
     def createPDF(self, whatToExport):
         XMLSerializer = serializers.get_serializer("xml")
         xml_serializer = XMLSerializer()
+        self.last_print_date = date.today()
+        self.save()
         out = open(os.path.join(settings.PDF_OUTPUT_ROOT,("purchaseorder_" + str(self.id) + ".xml")), "wb")
         objectsToSerialize = list(PurchaseOrder.objects.filter(id=self.id))
         objectsToSerialize += list(Contact.objects.filter(id=self.supplier.id))
@@ -350,6 +353,8 @@ class SalesContract(models.Model):
     lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True},
                                        verbose_name=_("Last modified by"), related_name="db_lstscmodified", null=True,
                                        blank="True")
+    last_print_date = models.DateTimeField(verbose_name=_("Last printed"), blank=True, null=True)
+
 
     def recalculatePrices(self, pricingDate):
         """Performs a price recalculation on the SalesContract.
@@ -438,6 +443,8 @@ class Quote(SalesContract):
     def createPDF(self, whatToExport):
         XMLSerializer = serializers.get_serializer("xml")
         xml_serializer = XMLSerializer()
+        self.last_print_date = date.today()
+        self.save()
         out = open(os.path.join(settings.PDF_OUTPUT_ROOT, ("quote_" + str(self.id) + ".xml")), "wb")
         objectsToSerialize = list(Quote.objects.filter(id=self.id))
         objectsToSerialize += list(SalesContract.objects.filter(id=self.id))
@@ -559,6 +566,8 @@ class Invoice(SalesContract):
     def createPDF(self, whatToExport):
         XMLSerializer = serializers.get_serializer("xml")
         xml_serializer = XMLSerializer()
+        self.last_print_date = date.today()
+        self.save()
         out = open(os.path.join(settings.PDF_OUTPUT_ROOT, "invoice_" + str(self.id) + ".xml"), "wb")
         objectsToSerialize = list(Invoice.objects.filter(id=self.id))
         objectsToSerialize += list(SalesContract.objects.filter(id=self.id))
