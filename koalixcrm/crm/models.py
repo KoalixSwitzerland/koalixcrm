@@ -289,35 +289,42 @@ class PurchaseOrder(models.Model):
         self.last_print_date = datetime.now()
         self.save()
         out = open(os.path.join(settings.PDF_OUTPUT_ROOT,("purchaseorder_" + str(self.id) + ".xml")), "wb")
-        objectsToSerialize = list(PurchaseOrder.objects.filter(id=self.id))
-        objectsToSerialize += list(Contact.objects.filter(id=self.supplier.id))
-        objectsToSerialize += list(Currency.objects.filter(id=self.currency.id))
-        objectsToSerialize += list(PurchaseOrderPosition.objects.filter(contract=self.id))
+        objects_to_serialize = list(PurchaseOrder.objects.filter(id=self.id))
+        objects_to_serialize += list(Contact.objects.filter(id=self.supplier.id))
+        objects_to_serialize += list(Currency.objects.filter(id=self.currency.id))
+        objects_to_serialize += list(PurchaseOrderPosition.objects.filter(contract=self.id))
         for position in list(PurchaseOrderPosition.objects.filter(contract=self.id)):
-            objectsToSerialize += list(Position.objects.filter(id=position.id))
-            objectsToSerialize += list(Product.objects.filter(id=position.product.id))
-            objectsToSerialize += list(Unit.objects.filter(id=position.unit.id))
-        objectsToSerialize += list(auth.models.User.objects.filter(id=self.staff.id))
+            objects_to_serialize += list(Position.objects.filter(id=position.id))
+            objects_to_serialize += list(Product.objects.filter(id=position.product.id))
+            objects_to_serialize += list(Unit.objects.filter(id=position.unit.id))
+        objects_to_serialize += list(auth.models.User.objects.filter(id=self.staff.id))
         userExtension = djangoUserExtension.models.UserExtension.objects.filter(user=self.staff.id)
         if len(userExtension) == 0:
             raise UserExtensionMissing(_("During PurchaseOrder PDF Export"))
-        phoneAddress = djangoUserExtension.models.UserExtensionPhoneAddress.objects.filter(
+        phone_address = djangoUserExtension.models.UserExtensionPhoneAddress.objects.filter(
             userExtension=userExtension[0].id)
-        objectsToSerialize += list(userExtension)
-        objectsToSerialize += list(phoneAddress)
-        templateset = djangoUserExtension.models.TemplateSet.objects.filter(id=userExtension[0].defaultTemplateSet.id)
-        if len(templateset) == 0:
+        if len(phone_address) == 0:
+            raise UserExtensionPhoneAddressMissing(_("During PurchaseOrder PDF Export"))
+        email_address = djangoUserExtension.models.UserExtensionEmailAddress.objects.filter(
+            userExtension=userExtension[0].id)
+        if len(email_address) == 0:
+            raise UserExtensionEmailAddressMissing(_("During PurchaseOrder PDF Export"))
+        objects_to_serialize += list(userExtension)
+        objects_to_serialize += list(email_address)
+        objects_to_serialize += list(phone_address)
+        template_set = djangoUserExtension.models.TemplateSet.objects.filter(id=userExtension[0].defaultTemplateSet.id)
+        if len(template_set) == 0:
             raise TemplateSetMissing(_("During PurchaseOrder PDF Export"))
-        objectsToSerialize += list(templateset)
-        objectsToSerialize += list(auth.models.User.objects.filter(id=self.lastmodifiedby.id))
-        objectsToSerialize += list(PostalAddressForContact.objects.filter(person=self.supplier.id))
+        objects_to_serialize += list(template_set)
+        objects_to_serialize += list(auth.models.User.objects.filter(id=self.lastmodifiedby.id))
+        objects_to_serialize += list(PostalAddressForContact.objects.filter(person=self.supplier.id))
         for address in list(PostalAddressForContact.objects.filter(person=self.supplier.id)):
-            objectsToSerialize += list(PostalAddress.objects.filter(id=address.id))
-        xml_serializer.serialize(objectsToSerialize, stream=out, indent=3)
+            objects_to_serialize += list(PostalAddress.objects.filter(id=address.id))
+        xml_serializer.serialize(objects_to_serialize, stream=out, indent=3)
         out.close()
-        rootelement = xml.getroot()
-        filebrowserdirectory = etree.SubElement(rootelement, "filebrowserdirectory")
-        filebrowserdirectory.text = settings.MEDIA_ROOT
+        root_element = xml.getroot()
+        file_browser_directory = etree.SubElement(root_element, "filebrowserdirectory")
+        file_browser_directory.text = settings.MEDIA_ROOT
         xml = etree.parse(os.path.join(settings.PDF_OUTPUT_ROOT, ("purchaseorder_" + str(self.id) + ".xml")))
         check_output([settings.FOP_EXECUTABLE, '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml',
                       os.path.join(settings.PDF_OUTPUT_ROOT, ('purchaseorder_' + str(self.id) + '.xml')), '-xsl',
@@ -461,6 +468,12 @@ class Quote(SalesContract):
             raise UserExtensionMissing(_("During Quote PDF Export"))
         phoneAddress = djangoUserExtension.models.UserExtensionPhoneAddress.objects.filter(
             userExtension=userExtension[0].id)
+        if len(phoneAddress) == 0:
+            raise UserExtensionPhoneAddressMissing(_("During Quote PDF Export"))
+        email_address = djangoUserExtension.models.UserExtensionEmailAddress.objects.filter(
+            userExtension=userExtension[0].id)
+        if len(email_address) == 0:
+            raise UserExtensionEmailAddressMissing(_("During Quote PDF Export"))
         objectsToSerialize += list(userExtension)
         objectsToSerialize += list(PhoneAddress.objects.filter(id=phoneAddress[0].id))
         templateset = djangoUserExtension.models.TemplateSet.objects.filter(id=userExtension[0].defaultTemplateSet.id)
@@ -584,6 +597,13 @@ class Invoice(SalesContract):
             raise UserExtensionMissing(_("During Invoice PDF Export"))
         phoneAddress = djangoUserExtension.models.UserExtensionPhoneAddress.objects.filter(
             userExtension=userExtension[0].id)
+        if len(phoneAddress) == 0:
+            raise UserExtensionPhoneAddressMissing(_("During Quote PDF Export"))
+        email_address = djangoUserExtension.models.UserExtensionEmailAddress.objects.filter(
+            userExtension=userExtension[0].id)
+        if len(email_address) == 0:
+            raise UserExtensionEmailAddressMissing(_("During Quote PDF Export"))
+
         objectsToSerialize += list(userExtension)
         objectsToSerialize += list(PhoneAddress.objects.filter(id=phoneAddress[0].id))
         templateset = djangoUserExtension.models.TemplateSet.objects.filter(id=userExtension[0].defaultTemplateSet.id)
