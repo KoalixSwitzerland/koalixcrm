@@ -3,6 +3,7 @@
 koalixcrm For Translators and Modders
 =====================================
 
+
 With this part of the documentation I address two major groups of contributors. First there are the translators - a very
 important part of every open source project.
 The second group are any and all of Python / Django / JS developers.

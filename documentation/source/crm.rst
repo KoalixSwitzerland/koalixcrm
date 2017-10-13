@@ -27,6 +27,6 @@ Customer
 Distributors
 ^^^^^^^^^^^^
 
-Deliverycompanies
-^^^^^^^^^^^^^^^^^
+Suppliers
+^^^^^^^^^
 

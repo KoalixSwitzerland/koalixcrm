@@ -86,7 +86,7 @@ The keywords you enter in this searchbox will be searched in
 the objects name, id, description and so on.
 All objects that include your selected keywords will be displayed in the list.
 
-..image:: /images/searchbox.png
+.. image:: /images/searchbox.png
 
 object_modify_view
 ------------------
@@ -94,7 +94,7 @@ Lets say you logged into the system as a moderator with enough
 privileges to modify a customer. You first access the
 customer objects list. You will find your exiting list of customers on the screen
 
-..image:: /images/customer_object_list.png
+.. image:: /images/customer_object_list.png
 
 As soon as you press on the button "ADD CUSTOMER", the browser will load a new screen: The
 "object modify view". In the modify view you will find several fields to fill out.
@@ -105,15 +105,15 @@ application.
 The fields which have a bold title are "must"-fields - they have to be filled out before
 saving the customer.
 
-..image:: /images/customer_modify_view_collapsed.png
+.. image:: /images/customer_modify_view_collapsed.png
 
 In case you have entered something wrong or invalid, the application will
 complain and ask you to correct the invalid data.
 
---image:: /images/customer_modify_view_error.png
+.. image:: /images/customer_modify_view_error.png
 
-Some of the optional fields are hidden (collpsed) by default.
+Some of the optional fields are hidden (collapsed) by default.
 By pressing the "SHOW" button beside "POSTAL ADDRESS FOR CONTACT" you can expand these
 fields.
 
-..image:: /images/customer_modify_view_expand.png
+.. image:: /images/customer_modify_view_expand.png
