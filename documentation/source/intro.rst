@@ -99,7 +99,7 @@ customer objects list. You will find your exiting list of customers on the scree
 As soon as you press on the button "ADD CUSTOMER", the browser will load a new screen: The
 "object modify view". In the modify view you will find several fields to fill out.
 As soon as the fields have been filled out you can press the "SAVE" button at the
-bottom of the page. The field entires are then transmit and validated by the
+bottom of the page. The field entries are then transmit and validated by the
 application.
 
 The fields which have a bold title are "must"-fields - they have to be filled out before
