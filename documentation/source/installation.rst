@@ -1,38 +1,121 @@
 .. highlight:: rst
 
-Installation
-============
+koalixcrm Installation
+======================
+on Windows 10 Version 1703
+---------------------------
+Install Python 3.6.2
+^^^^^^^^^^^^^^^^^^^^
+    Download from https://www.python.org/downloads/
+    Install python with the defaults
 
-External requirements
+Install FOP 2.2
+^^^^^^^^^^^^^^^
+    Download and install java from oracle website
+    Download fop2.2 from apache fop website and install
+
+Install koalixcrm app
 ^^^^^^^^^^^^^^^^^^^^^
+    Run command
+    C:\Users\YourUser\AppData\Local\Programs\Python\Python36-32\Scripts\pip.exe install koalix-crm
 
-koalixcrm requires Apache Fop to print its documents. Macports, Debian
-derivatives and likely others have 'fop' packages which can be installed.
+Setup django project
+^^^^^^^^^^^^^^^^^^^^
+    Run command
+    C:\Users\YourUser\AppData\Local\Programs\Python\Python36-32\Scripts\django-admin.exe startproject test_koalixcrm
+    mkdir test_koalixcrm\media
+    mkdir test_koalixcrm\media\uploads
 
-Be aware that ``/usr/bin/fop`` is hard coded in multiple places throughout
-koalixcrm and if your install of Fop is elseware you will need to symlink it in
-to place.
+on ubuntu 17.04
+---------------
+Install required programs on your ubuntu
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    sudo bash
+    apt-get install fop virtualenv python3.5
+    exit
+
+Create a virtual python environment for the koalixcrm project
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    mkdir ~/test_koalixcrm_env
+    virtualenv --no-site-package --python=/usr/bin/python3.5 ~/test_koalixcrm_env
+    source /test_koalixcrm_env/bin/activate
+    pip install koalix-crm
+
+Create a generic django project
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    cd ~
+    django-admin startproject test_koalixcrm
+
+Common on all Operating Systems
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Import koalixcrm to your project
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Open the file  called settings.py
+
+    Search in the file the variable definition "INSTALLED_APPS"
+    Add following lines to the at the end of INSTALLED_APPS:
+    'koalixcrm.crm',
+    'koalixcrm.accounting',
+    'koalixcrm.djangoUserExtension',
+    'koalixcrm.subscriptions',
+    'filebrowser'
+
+    Create a new variable defintion "KOALIXCRM_PLUGIN"
+    KOALIXCRM_PLUGINS = (
+        'koalixcrm.subscriptions',
+    )
+
+    At the very end of the seetings.py file add the following lines:
+    STATIC_URL = '/static/'
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+
+    MEDIA_URL = "/media/"
+    MEDIA_ROOT = os.path.join(BASE_DIR, '')
+
+    PROJECT_ROOT = BASE_DIR
+
+    # Settings specific for koalixcrm
+    PDF_OUTPUT_ROOT = os.path.join(STATIC_ROOT, 'pdf/')
+    FOP_
+
+    # Settings specific for filebrowser
+    FILEBROWSER_DIRECTORY = 'uploads/'
+
+Enable the customized additional view for filebrowser
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Open the file  called urls.py
+Completely rewrite the file with following content
+
+    from django.conf.urls.static import *
+    from django.contrib.staticfiles.urls import static
+    from django.contrib import admin
+    from filebrowser.sites import FileBrowserSite
+    from django.core.files.storage import DefaultStorage
+
+    site = FileBrowserSite(name="filebrowser", storage=DefaultStorage())
+    customsite = FileBrowserSite(name='custom_filebrowser', storage=DefaultStorage())
+    customsite.directory = "uploads/"
 
 
-koalixcrm
-^^^^^^^^^
+    admin.autodiscover()
 
-koalixcrm's Python requirements are installed by setup.py, so if you are
-installing via that mechanism all that is required is::
+    urlpatterns = [
+        url(r'^admin/filebrowser/', customsite.urls),
+        url(r'^admin/', admin.site.urls),
+    ]
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
-  python setup.py
+Afterwards start the django application
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-from the koalixcrm source root.
+    cd ~/test_koalixcrm
+    python manage.py makemigrations
+    python manage.py migrate
+    python manage.py createsuperuser
+    python manage.py runserver 127.0.0.1:8000
 
+Log in to the admin website
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Manual install
-==============
-
-If you are performing a manual install, the depenencies can be installed with::
-
-  pip install -r requirements.txt
-
-From the base of the koalixcrm source tree. Note that these may be out of sync
-with those specified in setup.py and it is good to check before installing
-them.
+What you want to do next is of cause the test the software. Visit your http://127.0.0.1:8000/admin, log in and start testing.
 
