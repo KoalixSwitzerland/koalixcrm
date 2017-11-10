@@ -322,10 +322,11 @@ class PurchaseOrder(models.Model):
             objects_to_serialize += list(PostalAddress.objects.filter(id=address.id))
         xml_serializer.serialize(objects_to_serialize, stream=out, indent=3)
         out.close()
-        root_element = xml.getroot()
-        file_browser_directory = etree.SubElement(root_element, "filebrowserdirectory")
-        file_browser_directory.text = settings.MEDIA_ROOT
         xml = etree.parse(os.path.join(settings.PDF_OUTPUT_ROOT, ("purchaseorder_" + str(self.id) + ".xml")))
+        rootelement = xml.getroot()
+        filebrowserdirectory = etree.SubElement(rootelement, "filebrowserdirectory")
+        filebrowserdirectory.text = settings.MEDIA_ROOT
+        xml.write(os.path.join(settings.PDF_OUTPUT_ROOT, ("purchaseorder_" + str(self.id) + ".xml")))
         check_output([settings.FOP_EXECUTABLE, '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml',
                       os.path.join(settings.PDF_OUTPUT_ROOT, ('purchaseorder_' + str(self.id) + '.xml')), '-xsl',
                       userExtension[0].defaultTemplateSet.purchaseorderXSLFile.xslfile.path_full, '-pdf',
