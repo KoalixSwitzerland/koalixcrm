@@ -629,6 +629,20 @@ class Invoice(SalesContract):
                  userExtension[0].defaultTemplateSet.invoiceXSLFile.xslfile.path_full, '-pdf',
                  os.path.join(settings.PDF_OUTPUT_ROOT, ('invoice_' + str(self.id) + '.pdf'))], stderr=STDOUT)
             return os.path.join(settings.PDF_OUTPUT_ROOT, ("invoice_" + str(self.id) + ".pdf"))
+        elif (whatToExport == "reminder1"):
+            check_output(
+                [settings.FOP_EXECUTABLE, '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml',
+                 os.path.join(settings.PDF_OUTPUT_ROOT, ('invoice_' + str(self.id) + '.xml')), '-xsl',
+                 userExtension[0].defaultTemplateSet.reminder1XSLFile.xslfile.path_full, '-pdf',
+                 os.path.join(settings.PDF_OUTPUT_ROOT, ('reminder1_' + str(self.id) + '.pdf'))], stderr=STDOUT)
+            return os.path.join(settings.PDF_OUTPUT_ROOT, ("reminder1_" + str(self.id) + ".pdf"))
+        elif (whatToExport == "reminder2"):
+            check_output(
+                [settings.FOP_EXECUTABLE, '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml',
+                 os.path.join(settings.PDF_OUTPUT_ROOT, ('invoice_' + str(self.id) + '.xml')), '-xsl',
+                 userExtension[0].defaultTemplateSet.reminder2XSLFile.xslfile.path_full, '-pdf',
+                 os.path.join(settings.PDF_OUTPUT_ROOT, ('reminder2_' + str(self.id) + '.pdf'))], stderr=STDOUT)
+            return os.path.join(settings.PDF_OUTPUT_ROOT, ("reminder2_" + str(self.id) + ".pdf"))
         else:
             check_output(
                 [settings.FOP_EXECUTABLE, '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml',

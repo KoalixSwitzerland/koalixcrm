@@ -131,7 +131,7 @@ class SalesContractEmailAddress(admin.TabularInline):
 class SalesContractInlinePosition(admin.TabularInline):
     model = SalesContractPosition
     extra = 1
-    classes = ['collapse']
+    classes = ['expand']
     fieldsets = (
         ('', {
             'fields': (
@@ -209,7 +209,7 @@ class OptionContract(admin.ModelAdmin):
     list_display = ('id', 'description', 'defaultcustomer', 'defaultSupplier', 'staff', 'defaultcurrency')
     list_display_links = ('id',)
     list_filter = ('defaultcustomer', 'defaultSupplier', 'staff', 'defaultcurrency')
-    ordering = ('id', 'defaultcustomer', 'defaultcurrency')
+    ordering = ('id', )
     search_fields = ('id', 'contract', 'defaultcurrency__description')
     fieldsets = (
         (_('Basics'), {
@@ -293,7 +293,7 @@ class OptionInvoice(admin.ModelAdmin):
     'lastCalculatedPrice', 'lastCalculatedTax', 'lastPricingDate', 'lastmodification', 'lastmodifiedby', 'last_print_date')
     list_display_links = ('id', )
     list_filter = ('customer', 'contract', 'staff', 'status', 'currency', 'lastmodification')
-    ordering = ('contract', 'customer', 'currency')
+    ordering = ('id',)
     search_fields = ('contract__id', 'customer__name', 'currency__description')
     fieldsets = (
         (_('Basics'), {
@@ -353,6 +353,20 @@ class OptionInvoice(admin.ModelAdmin):
 
     createInvoicePDF.short_description = _("Create PDF of Invoice")
 
+    def createPaymentReminder1PDF(self, request, queryset):
+        for obj in queryset:
+            response = exportPDF(self, request, obj, "reminder1", "/admin/crm/invoice/")
+            return response
+
+    createPaymentReminder1PDF.short_description = _("Create PDF of Payment Reminder 1")
+
+    def createPaymentReminder2PDF(self, request, queryset):
+        for obj in queryset:
+            response = exportPDF(self, request, obj, "reminder2", "/admin/crm/invoice/")
+            return response
+
+    createPaymentReminder2PDF.short_description = _("Create PDF of Payment Reminder 2")
+
     def createDeliveryOrderPDF(self, request, queryset):
         for obj in queryset:
             response = exportPDF(self, request, obj, "deliveryorder", "/admin/crm/invoice/")
@@ -406,7 +420,7 @@ class OptionInvoice(admin.ModelAdmin):
     registerPaymentInAccounting.short_description = _("Register Payment in Accounting")
 
     actions = ['recalculatePrices', 'createDeliveryOrderPDF', 'createInvoicePDF', 'registerInvoiceInAccounting',
-               'unregisterInvoiceInAccounting', 'registerPaymentInAccounting']
+               'unregisterInvoiceInAccounting', 'registerPaymentInAccounting', 'createPaymentReminder1PDF', 'createPaymentReminder2PDF']
     pluginProcessor = PluginProcessor()
     actions.extend(pluginProcessor.getPluginAdditions("invoiceActions"))
 
@@ -417,7 +431,7 @@ class OptionQuote(admin.ModelAdmin):
     'lastCalculatedPrice', 'lastCalculatedTax', 'lastPricingDate', 'lastmodification', 'last_print_date')
     list_display_links = ('id',)
     list_filter = ('customer', 'contract', 'currency', 'staff', 'status', 'lastmodification')
-    ordering = ('contract', 'customer', 'currency')
+    ordering = ('id',)
     search_fields = ('contract__id', 'customer__name', 'currency__description')
 
     fieldsets = (
@@ -496,7 +510,7 @@ class OptionPurchaseOrder(admin.ModelAdmin):
     'lastCalculatedPrice', 'lastCalculatedTax', 'lastPricingDate', 'lastmodification', 'last_print_date')
     list_display_links = ('id',)
     list_filter = ('supplier', 'contract', 'staff', 'status', 'currency', 'lastmodification')
-    ordering = ('contract', 'supplier', 'currency')
+    ordering = ('id',)
     search_fields = ('contract__id', 'supplier__name', 'currency_description')
 
     fieldsets = (
@@ -607,7 +621,7 @@ class OptionCustomer(admin.ModelAdmin):
     list_display = ('id', 'name', 'defaultCustomerBillingCycle',)
     fieldsets = (('', {'fields': ('name', 'defaultCustomerBillingCycle', 'ismemberof',)}),)
     allow_add = True
-    ordering = ('id', 'name')
+    ordering = ('id',)
     search_fields = ('id', 'name')
     inlines = [ContactPostalAddress, ContactPhoneAddress, ContactEmailAddress]
     pluginProcessor = PluginProcessor()

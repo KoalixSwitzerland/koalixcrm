@@ -45,6 +45,10 @@ class TemplateSet(models.Model):
                                              related_name="db_reltemplatepurchaseorder")
     purchaseconfirmationXSLFile = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Purchase Confirmation"),
                                                     related_name="db_reltemplatepurchaseconfirmation")
+    reminder1XSLFile = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Payment Reminder 1"),
+                                                    related_name="db_reltemplatepaymentreminder1", blank=True, null=True)
+    reminder2XSLFile = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Payment Reminder 2"),
+                                                    related_name="db_reltemplatepaymentreminder2", blank=True, null=True)
     deilveryorderXSLFile = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Deilvery Order"),
                                              related_name="db_reltemplatedeliveryorder")
     profitLossStatementXSLFile = models.ForeignKey(XSLFile, verbose_name=_("XSL File for Profit Loss Statement"),

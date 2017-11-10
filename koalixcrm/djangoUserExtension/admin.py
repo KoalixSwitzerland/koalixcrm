@@ -73,8 +73,8 @@ class OptionTemplateSet(admin.ModelAdmin):
         (_('Basics'), {
             'fields': ('title', 'organisationname', 'invoiceXSLFile', 'quoteXSLFile', 'purchaseconfirmationXSLFile',
                        'deilveryorderXSLFile', 'profitLossStatementXSLFile', 'balancesheetXSLFile',
-                       'purchaseorderXSLFile',
-                       'logo', 'fopConfigurationFile', 'footerTextsalesorders', 'headerTextsalesorders',
+                       'purchaseorderXSLFile', 'reminder1XSLFile', 'reminder2XSLFile',
+                       'logo', 'fopConfigurationFile', 'headerTextsalesorders', 'footerTextsalesorders',
                        'headerTextpurchaseorders', 'footerTextpurchaseorders', 'pagefooterleft', 'pagefootermiddle',
                        'bankingaccountref', 'addresser')
         }),
