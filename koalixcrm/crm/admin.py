@@ -321,7 +321,7 @@ class OptionInvoice(admin.ModelAdmin):
 
     def after_saving_model_and_related_inlines(self, request, obj):
         try:
-            obj.recalculatePrices(date.today())
+            obj.recalculate_prices(date.today())
             self.message_user(request, "Successfully calculated Prices")
         except Product.NoPriceFound as e:
             self.message_user(request, "Unsuccessfull in updating the Prices " + e.__str__(), level=messages.ERROR)
@@ -338,7 +338,7 @@ class OptionInvoice(admin.ModelAdmin):
     def recalculatePrices(self, request, queryset):
         try:
             for obj in queryset:
-                obj.recalculatePrices(date.today())
+                obj.recalculate_prices(date.today())
             self.message_user(request, "Successfully recalculated Prices")
         except Product.NoPriceFound as e:
             self.message_user(request, "Unsuccessfull in updating the Prices " + e.__str__(), level=messages.ERROR)
@@ -455,7 +455,7 @@ class OptionQuote(admin.ModelAdmin):
 
     def after_saving_model_and_related_inlines(self, request, obj):
         try:
-            obj.recalculatePrices(date.today())
+            obj.recalculate_prices(date.today())
             self.message_user(request, "Successfully calculated Prices")
         except Product.NoPriceFound as e:
             self.message_user(request, "Unsuccessfull in updating the Prices " + e.__str__(), level=messages.ERROR)
@@ -529,7 +529,7 @@ class OptionPurchaseOrder(admin.ModelAdmin):
 
     def createPurchseOrderPDF(self, request, queryset):
         for obj in queryset:
-            response = exportPDF(self, request, obj, "purchaseorder", "/admin/crm/purchaseorder/")
+            response = exportPDF(self, request, obj, "/admin/crm/purchaseorder/")
             return response
 
     createPurchseOrderPDF.short_description = _("Create PDF of Purchase Order")
