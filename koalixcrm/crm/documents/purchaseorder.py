@@ -11,9 +11,9 @@ from koalixcrm.crm.contact.emailaddress import EmailAddress
 from koalixcrm.crm.contact.postaladdress import PostalAddress
 from koalixcrm.crm.documents.quote import Quote
 from koalixcrm.crm.documents.salescontractposition import Position
-from koalixcrm.globalSupportFunctions import xstr
 from koalixcrm.crm.const.purpose import *
 from koalixcrm.crm.documents.pdfexport import PDFExport
+from koalixcrm.globalSupportFunctions import xstr
 
 
 class PurchaseOrder(models.Model):
