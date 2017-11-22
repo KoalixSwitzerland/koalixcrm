@@ -9,11 +9,11 @@ from koalixcrm.crm.const.status import *
 from koalixcrm.crm.contact.phoneaddress import PhoneAddress
 from koalixcrm.crm.contact.emailaddress import EmailAddress
 from koalixcrm.crm.contact.postaladdress import PostalAddress
-from koalixcrm.crm.documents.quote import Quote
 from koalixcrm.crm.documents.salescontractposition import Position
 from koalixcrm.crm.const.purpose import *
-from koalixcrm.crm.documents.pdfexport import PDFExport
 from koalixcrm.globalSupportFunctions import xstr
+
+import koalixcrm.crm.documents.pdfexport
 
 
 class PurchaseOrder(models.Model):
@@ -65,7 +65,7 @@ class PurchaseOrder(models.Model):
             self.lastPricingDate = pricingDate
             self.save()
             return 1
-        except Quote.DoesNotExist as e:
+        except PurchaseOrder.DoesNotExist as e:
             print("ERROR " + e.__str__())
             print("Der Fehler trat beim File: " + self.sourcefile + " / Cell: " + listOfLines[0][
                                                                                   listOfLines[0].find("cell ") + 4:
@@ -77,7 +77,7 @@ class PurchaseOrder(models.Model):
     def createPDF(self):
         self.last_print_date = datetime.now()
         self.save()
-        return PDFExport.createPDF(self)
+        return koalixcrm.crm.documents.pdfexport.PDFExport.createPDF(self)
 
 
     class Meta:

@@ -5,13 +5,12 @@ from django.db import models
 from django.utils.translation import ugettext as _
 from koalixcrm.crm.const.status import *
 from koalixcrm.crm.documents.salescontract import SalesContract
-
 import koalixcrm.crm.documents.pdfexport
 
 
-class PurchaseConfirmation(SalesContract):
-    validuntil = models.DateField(verbose_name=_("Valid until"))
-    status = models.CharField(max_length=1, choices=QUOTESTATUS, verbose_name=_('Status'))
+class DeliveryNote(SalesContract):
+    derived_from_invoice = models.ForeignKey("Invoice", blank=True, null=True)
+    status = models.CharField(max_length=1, choices=DELIVERYNOTESTATUS)
 
     def createPDF(self):
         self.last_print_date = datetime.now()
@@ -19,9 +18,9 @@ class PurchaseConfirmation(SalesContract):
         return koalixcrm.crm.documents.pdfexport.PDFExport.createPDF(self)
 
     def __str__(self):
-        return _("Purchase Confirmation") + ": " + str(self.id) + " " + _("from Contract") + ": " + str(self.contract.id)
+        return _("Delivery Note") + ": " + str(self.id) + " " + _("from Contract") + ": " + str(self.contract.id)
 
     class Meta:
         app_label = "crm"
-        verbose_name = _('Purchase Confirmation')
-        verbose_name_plural = _('Purchase Confirmations')
+        verbose_name = _('Delivery Note')
+        verbose_name_plural = _('Delivery Notes')

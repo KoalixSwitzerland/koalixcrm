@@ -10,7 +10,6 @@ from koalixcrm.plugin import *
 
 from koalixcrm.accounting.models import Account
 from koalixcrm.accounting.models import Booking
-from koalixcrm.crm.exceptions import *
 from koalixcrm.crm.views import *
 
 

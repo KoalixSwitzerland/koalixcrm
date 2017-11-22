@@ -18,14 +18,26 @@ from koalixcrm.crm.contact.postaladdress import PostalAddress
 from koalixcrm.crm.product.currency import Currency
 from koalixcrm.crm.product.unit import Unit
 from koalixcrm.crm.product.product import Product
-from koalixcrm.crm.documents.quote import Quote
-from koalixcrm.crm.documents.invoice import Invoice
 from lxml import etree
+
 import koalixcrm.crm.documents.salescontractposition
 import koalixcrm.crm.documents.purchaseorder
+import koalixcrm.crm.documents.quote
+import koalixcrm.crm.documents.purchaseconfirmation
+import koalixcrm.crm.documents.invoice
+import koalixcrm.crm.documents.deliverynote
+import koalixcrm.crm.documents.paymentreminder
 
 
 class PDFExport:
+
+    @staticmethod
+    def extend_xml_with_root_element(file_with_serialized_xml):
+        xml = etree.parse(file_with_serialized_xml)
+        root_element = xml.getroot()
+        filebrowser_directory = etree.SubElement(root_element, "filebrowser_directory")
+        filebrowser_directory.text = settings.MEDIA_ROOT
+        xml.write(file_with_serialized_xml)
 
     @staticmethod
     def add_positions(objects_to_serialize, position_class, object_to_create_pdf):
@@ -37,7 +49,20 @@ class PDFExport:
         return objects_to_serialize
 
     @staticmethod
-    def create_listof_objects_to_serialize(object_to_create_pdf, position_class, export_supplier, export_customer):
+    def create_list_of_objects_to_serialize(object_to_create_pdf):
+
+        # define options for the serialization (options depend on which main object need to be serialized)
+        if (type(object_to_create_pdf) == koalixcrm.crm.documents.quote.Quote) or \
+                (type(object_to_create_pdf) == koalixcrm.crm.documents.invoice.Invoice) or \
+                (type(object_to_create_pdf) == koalixcrm.crm.documents.paymentreminder.PaymentReminder):
+            position_class = koalixcrm.crm.documents.salescontractposition.SalesContractPosition
+            export_customer = True
+            export_supplier = False
+        else:
+            position_class = koalixcrm.crm.documents.purchaseorder.PurchaseOrderPosition
+            export_customer = False
+            export_supplier = True
+
         objects_to_serialize = list(type(object_to_create_pdf).objects.filter(id=object_to_create_pdf.id))
         if export_supplier:
             objects_to_serialize += list(Contact.objects.filter(id=object_to_create_pdf.supplier.id))
@@ -78,36 +103,36 @@ class PDFExport:
     def write_xml_file(objects_to_serialize, file_with_serialized_xml):
         XMLSerializer = serializers.get_serializer("xml")
         xml_serializer = XMLSerializer()
-        out = open(os.path.join(settings.PDF_OUTPUT_ROOT, file_with_serialized_xml), "wb")
+        out = open(file_with_serialized_xml, "wb")
         xml_serializer.serialize(objects_to_serialize, stream=out, indent=3)
         out.close()
-        xml = etree.parse(os.path.join(settings.PDF_OUTPUT_ROOT, file_with_serialized_xml))
-        rootelement = xml.getroot()
-        filebrowserdirectory = etree.SubElement(rootelement, "filebrowserdirectory")
-        filebrowserdirectory.text = settings.MEDIA_ROOT
-        xml.write(os.path.join(settings.PDF_OUTPUT_ROOT, file_with_serialized_xml))
+
+    @staticmethod
+    def performXSLTransformation(file_with_serialized_xml, xsl_file, fop_config_file, file_output_pdf):
+        check_output([settings.FOP_EXECUTABLE,
+                      '-c', fop_config_file,
+                      '-xml', os.path.join(settings.PDF_OUTPUT_ROOT, file_with_serialized_xml),
+                      '-xsl', xsl_file,
+                      '-pdf', file_output_pdf], stderr=STDOUT)
 
     @staticmethod
     def createPDF(object_to_create_pdf):
-        if (type(object_to_create_pdf) == Quote) or (type(object_to_create_pdf) == Invoice):
-            position_class = koalixcrm.crm.documents.salescontractposition.SalesContractPosition
-            export_customer = True
-            export_supplier = False
-        else:
-            position_class = koalixcrm.crm.documents.purchaseorder.PurchaseOrderPosition
-            export_customer = False
-            export_supplier = True
+        # define the files which are involved in pdf creation process
+        fop_config_file = object_to_create_pdf.get_fop_config_file()
+        xsl_file = object_to_create_pdf.get_xsl_file()
+        file_with_serialized_xml = os.path.join(settings.PDF_OUTPUT_ROOT, (str(object_to_create_pdf) + ".xml"))
+        file_output_pdf = os.path.join(settings.PDF_OUTPUT_ROOT, (str(object_to_create_pdf) + ".pdf"))
 
-        file_with_serialized_xml = str(object_to_create_pdf) + ".xml"
-        file_output_pdf = str(object_to_create_pdf) + ".pdf"
+        # list the sub-objects which to be serialized
+        objects_to_serialize = PDFExport.create_list_of_objects_to_serialize(type(object_to_create_pdf))
 
-        objects_to_serialize = PDFExport.create_listof_objects_to_serialize(object_to_create_pdf, position_class,
-                                                                            export_supplier, export_customer)
+        # serialize the objects to xml-file
         PDFExport.write_xml_file(objects_to_serialize, file_with_serialized_xml)
-        check_output(
-            [settings.FOP_EXECUTABLE, '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full,
-             '-xml',
-             os.path.join(settings.PDF_OUTPUT_ROOT, file_with_serialized_xml), '-xsl',
-             userExtension[0].defaultTemplateSet.purchaseorderXSLFile.xslfile.path_full, '-pdf',
-             os.path.join(settings.PDF_OUTPUT_ROOT, file_output_pdf)], stderr=STDOUT)
-        return os.path.join(settings.PDF_OUTPUT_ROOT, file_output_pdf)
+
+        # extend the xml-file with required basic settings
+        PDFExport.extend_xml_with_root_element(file_with_serialized_xml)
+
+        # perform xsl transformation
+        PDFExport.performXSLTransformation(file_with_serialized_xml, xsl_file, fop_config_file, file_output_pdf)
+
+        return file_output_pdf
