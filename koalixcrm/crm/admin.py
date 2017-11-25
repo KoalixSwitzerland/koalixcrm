@@ -11,6 +11,7 @@ from koalixcrm.plugin import *
 from koalixcrm.accounting.models import Account
 from koalixcrm.accounting.models import Booking
 from koalixcrm.crm.views import *
+from koalixcrm.crm.documents.calculations import *
 
 
 class ContractPostalAddress(admin.StackedInline):
@@ -268,7 +269,7 @@ class PurchaseOrderInlinePosition(admin.TabularInline):
         ('', {
             'fields': (
             'positionNumber', 'quantity', 'unit', 'product', 'description', 'overwriteProductPrice',
-            'positionPricePerUnit', 'sentOn', 'supplier')
+            'positionPricePerUnit', 'sentOn')
         }),
     )
     allow_add = True
@@ -320,7 +321,7 @@ class OptionInvoice(admin.ModelAdmin):
 
     def after_saving_model_and_related_inlines(self, request, obj):
         try:
-            obj.recalculate_prices(date.today())
+            Calculations.calculate_document_price(obj, date.today())
             self.message_user(request, "Successfully calculated Prices")
         except Product.NoPriceFound as e:
             self.message_user(request, "Unsuccessfull in updating the Prices " + e.__str__(), level=messages.ERROR)
@@ -347,28 +348,28 @@ class OptionInvoice(admin.ModelAdmin):
 
     def createInvoicePDF(self, request, queryset):
         for obj in queryset:
-            response = exportPDF(self, request, obj, "invoice", "/admin/crm/invoice/")
+            response = export_pdf(self, request, obj, "/admin/crm/invoice/")
             return response
 
     createInvoicePDF.short_description = _("Create PDF of Invoice")
 
     def createPaymentReminder1PDF(self, request, queryset):
         for obj in queryset:
-            response = exportPDF(self, request, obj, "reminder1", "/admin/crm/invoice/")
+            response = export_pdf(self, request, obj, "/admin/crm/invoice/")
             return response
 
     createPaymentReminder1PDF.short_description = _("Create PDF of Payment Reminder 1")
 
     def createPaymentReminder2PDF(self, request, queryset):
         for obj in queryset:
-            response = exportPDF(self, request, obj, "reminder2", "/admin/crm/invoice/")
+            response = export_pdf(self, request, obj, "/admin/crm/invoice/")
             return response
 
     createPaymentReminder2PDF.short_description = _("Create PDF of Payment Reminder 2")
 
     def createDeliveryOrderPDF(self, request, queryset):
         for obj in queryset:
-            response = exportPDF(self, request, obj, "deliveryorder", "/admin/crm/invoice/")
+            response = export_pdf(self, request, obj, "/admin/crm/invoice/")
             return response
 
     createDeliveryOrderPDF.short_description = _("Create PDF of Delivery Order")
@@ -454,7 +455,7 @@ class OptionQuote(admin.ModelAdmin):
 
     def after_saving_model_and_related_inlines(self, request, obj):
         try:
-            obj.recalculate_prices(date.today())
+            Calculations.calculate_document_price(obj, date.today())
             self.message_user(request, "Successfully calculated Prices")
         except Product.NoPriceFound as e:
             self.message_user(request, "Unsuccessfull in updating the Prices " + e.__str__(), level=messages.ERROR)
@@ -486,14 +487,14 @@ class OptionQuote(admin.ModelAdmin):
 
     def createQuotePDF(self, request, queryset):
         for obj in queryset:
-            response = exportPDF(self, request, obj, "quote", "/admin/crm/quote/")
+            response = export_pdf(self, request, obj, "/admin/crm/quote/")
             return response
 
     createQuotePDF.short_description = _("Create PDF of Quote")
 
     def createPurchaseConfirmationPDF(self, request, queryset):
         for obj in queryset:
-            response = exportPDF(self, request, obj, "purchaseconfirmation", "/admin/crm/quote/")
+            response = export_pdf(self, request, obj, "/admin/crm/quote/")
             return response
 
     createPurchaseConfirmationPDF.short_description = _("Create PDF of Purchase Confirmation")
@@ -518,6 +519,22 @@ class OptionPurchaseOrder(admin.ModelAdmin):
         }),
     )
 
+    def response_add(self, request, new_object):
+        obj = self.after_saving_model_and_related_inlines(request, new_object)
+        return super(OptionPurchaseOrder, self).response_add(request, obj)
+
+    def response_change(self, request, new_object):
+        obj = self.after_saving_model_and_related_inlines(request, new_object)
+        return super(OptionPurchaseOrder, self).response_change(request, obj)
+
+    def after_saving_model_and_related_inlines(self, request, obj):
+        try:
+            Calculations.calculate_document_price(obj, date.today())
+            self.message_user(request, "Successfully calculated Prices")
+        except Product.NoPriceFound as e:
+            self.message_user(request, "Unsuccessfull in updating the Prices " + e.__str__(), level=messages.ERROR)
+        return obj
+
     def save_model(self, request, obj, form, change):
         if (change == True):
             obj.lastmodifiedby = request.user
@@ -526,9 +543,16 @@ class OptionPurchaseOrder(admin.ModelAdmin):
             obj.staff = request.user
         obj.save()
 
+    def recalculatePrices(self, request, queryset):
+        for obj in queryset:
+            self.after_saving_model_and_related_inlines(request, obj)
+        return;
+
+    recalculatePrices.short_description = _("Recalculate Prices")
+
     def createPurchseOrderPDF(self, request, queryset):
         for obj in queryset:
-            response = exportPDF(self, request, obj, "/admin/crm/purchaseorder/")
+            response = export_pdf(self, request, obj, "/admin/crm/purchaseorder/")
             return response
 
     createPurchseOrderPDF.short_description = _("Create PDF of Purchase Order")

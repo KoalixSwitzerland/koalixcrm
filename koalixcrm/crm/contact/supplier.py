@@ -11,7 +11,7 @@ class Supplier(Contact):
     class Meta:
         app_label = "crm"
         verbose_name = _('Supplier')
-        verbose_name_plural = _('Supplier')
+        verbose_name_plural = _('Suppliers')
 
     def __str__(self):
         return str(self.id) + ' ' + self.name
