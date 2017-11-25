@@ -89,6 +89,16 @@ class PurchaseOrderEmailAddress(admin.TabularInline):
     )
     allow_add = True
 
+class SalesContractTextParagraph(admin.StackedInline):
+    model = TextParagraphInSalesContract
+    extra = 1
+    classes = ['collapse']
+    fieldsets = (
+        ('Basics', {
+            'fields': ('text', )
+        }),
+    )
+    allow_add = True
 
 class SalesContractPostalAddress(admin.StackedInline):
     model = PostalAddressForSalesContract
@@ -440,7 +450,7 @@ class OptionQuote(admin.ModelAdmin):
         }),
     )
     save_as = True
-    inlines = [SalesContractInlinePosition, SalesContractPostalAddress, SalesContractPhoneAddress,
+    inlines = [SalesContractTextParagraph, SalesContractInlinePosition, SalesContractPostalAddress, SalesContractPhoneAddress,
                SalesContractEmailAddress]
     pluginProcessor = PluginProcessor()
     inlines.extend(pluginProcessor.getPluginAdditions("quoteInlines"))
