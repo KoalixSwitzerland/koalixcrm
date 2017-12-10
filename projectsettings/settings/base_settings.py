@@ -132,4 +132,8 @@ FILEBROWSER_DIRECTORY = 'media/uploads/'
 FILEBROWSER_EXTENSIONS = {
     'XML': ['.xml'],
     'XSL': ['.xsl'],
+    'JPG': ['.jpg'],
+    'PNG': ['.png'],
+    'GIF': ['.gif'],
+    'TTF': ['.ttf'],
 }

@@ -95,7 +95,7 @@ class SalesContractTextParagraph(admin.StackedInline):
     classes = ['collapse']
     fieldsets = (
         ('Basics', {
-            'fields': ('text', )
+            'fields': ('text_paragraph', 'purpose', )
         }),
     )
     allow_add = True
@@ -146,7 +146,7 @@ class SalesContractInlinePosition(admin.TabularInline):
         ('', {
             'fields': (
             'positionNumber', 'quantity', 'unit', 'product', 'description', 'discount', 'overwriteProductPrice',
-            'positionPricePerUnit', 'sentOn', 'supplier')
+            'positionPricePerUnit', 'sentOn')
         }),
     )
     allow_add = True
@@ -311,7 +311,7 @@ class OptionInvoice(admin.ModelAdmin):
         }),
     )
     save_as = True
-    inlines = [SalesContractInlinePosition, SalesContractPostalAddress, SalesContractPhoneAddress,
+    inlines = [SalesContractInlinePosition, SalesContractTextParagraph, SalesContractPostalAddress, SalesContractPhoneAddress,
                SalesContractEmailAddress, InlineBookings]
     pluginProcessor = PluginProcessor()
     inlines.extend(pluginProcessor.getPluginAdditions("invoiceInlines"))
@@ -450,7 +450,7 @@ class OptionQuote(admin.ModelAdmin):
         }),
     )
     save_as = True
-    inlines = [SalesContractTextParagraph, SalesContractInlinePosition, SalesContractPostalAddress, SalesContractPhoneAddress,
+    inlines = [SalesContractInlinePosition, SalesContractTextParagraph, SalesContractPostalAddress, SalesContractPhoneAddress,
                SalesContractEmailAddress]
     pluginProcessor = PluginProcessor()
     inlines.extend(pluginProcessor.getPluginAdditions("quoteInlines"))

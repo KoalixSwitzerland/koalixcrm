@@ -12,7 +12,8 @@ class InlineUserExtensionPostalAddress(admin.StackedInline):
     fieldsets = (
         (_('Basics'), {
             'fields': (
-            'prefix', 'prename', 'name', 'addressline1', 'addressline2', 'addressline3', 'addressline4', 'zipcode',
+            'prefix', 'prename', 'name', 'addressline1', 'addressline2',
+            'addressline3', 'addressline4', 'zipcode',
             'town', 'state', 'country', 'purpose')
         }),
     )
@@ -43,6 +44,18 @@ class InlineUserExtensionEmailAddress(admin.StackedInline):
     allow_add = True
 
 
+class InlineTextParagraph(admin.TabularInline):
+    model = TextParagraphInDocumentTemplate
+    extra = 1
+    classes = ('collapse-open',)
+    fieldsets = (
+        (_('Basics'), {
+            'fields': ('purpose', 'text_paragraph',)
+        }),
+    )
+    allow_add = True
+
+
 class OptionUserExtension(admin.ModelAdmin):
     list_display = ('id', 'user', 'defaultTemplateSet', 'defaultCurrency')
     list_display_links = ('id', 'user')
@@ -62,37 +75,128 @@ class OptionTemplateSet(admin.ModelAdmin):
     list_display = ('id', 'title')
     list_display_links = ('id', 'title')
     ordering = ('id',)
-    search_fields = ('id', 'title', 'organisationname', 'invoiceXSLFile', 'quoteXSLFile', 'purchaseconfirmationXSLFile',
-                     'deilveryorderXSLFile', 'profitLossStatementXSLFile', 'balancesheetXSLFile',
-                     'purchaseorderXSLFile',
-                     'logo', 'footerTextsalesorders', 'headerTextsalesorders',
-                     'headerTextpurchaseorders', 'footerTextpurchaseorders', 'pagefooterleft', 'pagefootermiddle',
-                     'bankingaccountref', 'addresser'
-                     )
+    search_fields = ('id', 'title')
     fieldsets = (
         (_('Basics'), {
-            'fields': ('title', 'organisationname', 'invoiceXSLFile', 'quoteXSLFile', 'purchaseconfirmationXSLFile',
-                       'deilveryorderXSLFile', 'profitLossStatementXSLFile', 'balancesheetXSLFile',
-                       'purchaseorderXSLFile', 'reminder1XSLFile', 'reminder2XSLFile',
-                       'logo', 'fopConfigurationFile', 'headerTextsalesorders', 'footerTextsalesorders',
-                       'headerTextpurchaseorders', 'footerTextpurchaseorders', 'pagefooterleft', 'pagefootermiddle',
-                       'bankingaccountref', 'addresser')
+            'fields': ('title', 'invoice_template', 'quote_template',
+                     'delivery_note_template', 'payment_reminder_template',
+                     'purchase_confirmation_template', 'purchase_order_template',
+                     'profit_loss_statement_template', 'balance_sheet_statement_template' )
         }),
     )
 
 
-class OptionXSLFile(admin.ModelAdmin):
+class OptionInvoiceTemplate(admin.ModelAdmin):
     list_display = ('id', 'title')
     list_display_links = ('id', 'title')
     ordering = ('id',)
+    search_fields = ('id', 'title')
     fieldsets = (
         (_('Basics'), {
-            'fields': ('title', 'xslfile',)
+            'fields': ('title', 'xsl_file', 'fop_config_file', 'logo')
         }),
     )
-    allow_add = True
+    inlines = [InlineTextParagraph]
+
+
+class OptionQuoteTemplate(admin.ModelAdmin):
+    list_display = ('id', 'title')
+    list_display_links = ('id', 'title')
+    ordering = ('id',)
+    search_fields = ('id', 'title')
+    fieldsets = (
+        (_('Basics'), {
+            'fields': ('title', 'xsl_file', 'fop_config_file', 'logo')
+        }),
+    )
+    inlines = [InlineTextParagraph]
+
+
+class OptionDeliveryNoteTemplate(admin.ModelAdmin):
+    list_display = ('id', 'title')
+    list_display_links = ('id', 'title')
+    ordering = ('id',)
+    search_fields = ('id', 'title')
+    fieldsets = (
+        (_('Basics'), {
+            'fields': ('title', 'xsl_file', 'fop_config_file', 'logo')
+        }),
+    )
+    inlines = [InlineTextParagraph]
+
+
+class OptionPaymentReminderTemplate(admin.ModelAdmin):
+    list_display = ('id', 'title')
+    list_display_links = ('id', 'title')
+    ordering = ('id',)
+    search_fields = ('id', 'title')
+    fieldsets = (
+        (_('Basics'), {
+            'fields': ('title', 'xsl_file', 'fop_config_file', 'logo')
+        }),
+    )
+    inlines = [InlineTextParagraph]
+
+
+class OptionPurchaseOrderTemplate(admin.ModelAdmin):
+    list_display = ('id', 'title')
+    list_display_links = ('id', 'title')
+    ordering = ('id',)
+    search_fields = ('id', 'title')
+    fieldsets = (
+        (_('Basics'), {
+            'fields': ('title', 'xsl_file', 'fop_config_file', 'logo')
+        }),
+    )
+    inlines = [InlineTextParagraph]
+
+
+class OptionPurchaseConfirmationTemplate(admin.ModelAdmin):
+    list_display = ('id', 'title')
+    list_display_links = ('id', 'title')
+    ordering = ('id',)
+    search_fields = ('id', 'title')
+    fieldsets = (
+        (_('Basics'), {
+            'fields': ('title', 'xsl_file', 'fop_config_file', 'logo')
+        }),
+    )
+    inlines = [InlineTextParagraph]
+
+
+class OptionProfitLossStatementTemplate(admin.ModelAdmin):
+    list_display = ('id', 'title')
+    list_display_links = ('id', 'title')
+    ordering = ('id',)
+    search_fields = ('id', 'title')
+    fieldsets = (
+        (_('Basics'), {
+            'fields': ('title', 'xsl_file', 'fop_config_file', 'logo')
+        }),
+    )
+    inlines = [InlineTextParagraph]
+
+
+class OptionBalanceSheetTemplate(admin.ModelAdmin):
+    list_display = ('id', 'title')
+    list_display_links = ('id', 'title')
+    ordering = ('id',)
+    search_fields = ('id', 'title')
+    fieldsets = (
+        (_('Basics'), {
+            'fields': ('title', 'xsl_file', 'fop_config_file', 'logo')
+        }),
+    )
+    inlines = [InlineTextParagraph]
 
 
 admin.site.register(UserExtension, OptionUserExtension)
 admin.site.register(TemplateSet, OptionTemplateSet)
-admin.site.register(XSLFile, OptionXSLFile)
+admin.site.register(InvoiceTemplate, OptionInvoiceTemplate)
+admin.site.register(QuoteTemplate, OptionQuoteTemplate)
+admin.site.register(DeliveryNoteTemplate, OptionDeliveryNoteTemplate)
+admin.site.register(PaymentReminderTemplate, OptionPaymentReminderTemplate)
+admin.site.register(PurchaseOrderTemplate, OptionPurchaseOrderTemplate)
+admin.site.register(PurchaseConfirmationTemplate, OptionPurchaseConfirmationTemplate)
+admin.site.register(ProfitLossStatementTemplate, OptionProfitLossStatementTemplate)
+admin.site.register(BalanceSheetTemplate, OptionBalanceSheetTemplate)

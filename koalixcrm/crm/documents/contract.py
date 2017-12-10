@@ -19,6 +19,7 @@ class Contract(models.Model):
     defaultcustomer = models.ForeignKey("Customer", verbose_name=_("Default Customer"), null=True, blank=True)
     defaultSupplier = models.ForeignKey("Supplier", verbose_name=_("Default Supplier"), null=True, blank=True)
     defaultcurrency = models.ForeignKey("Currency", verbose_name=_("Default Currency"), blank=False, null=False)
+    default_template_set = models.ForeignKey("djangoUserExtension.TemplateSet", verbose_name=_("Default Template Set"), null=False, blank=False)
     dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now_add=True)
     lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now=True)
     lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True},
@@ -29,31 +30,14 @@ class Contract(models.Model):
         verbose_name = _('Contract')
         verbose_name_plural = _('Contracts')
 
-    def createInvoice(self):
+    def create_invoice(self):
         invoice = Invoice()
-        invoice.contract = self
-        invoice.discount = 0
-        invoice.staff = self.staff
-        invoice.customer = self.defaultcustomer
-        invoice.status = 'C'
-        invoice.currency = self.defaultcurrency
-        invoice.payableuntil = date.today() + timedelta(
-            days=self.defaultcustomer.defaultCustomerBillingCycle.timeToPaymentDate)
-        invoice.dateofcreation = date.today().__str__()
-        invoice.save()
+        invoice.create_invoice(self)
         return invoice
 
-    def createQuote(self):
+    def create_quote(self):
         quote = Quote()
-        quote.contract = self
-        quote.discount = 0
-        quote.staff = self.staff
-        quote.customer = self.defaultcustomer
-        quote.status = 'C'
-        quote.currency = self.defaultcurrency
-        quote.validuntil = date.today().__str__()
-        quote.dateofcreation = date.today().__str__()
-        quote.save()
+        quote.create_quote(self)
         return quote
 
     def createPurchaseOrder(self):

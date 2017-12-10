@@ -18,7 +18,45 @@ class Invoice(SalesContract):
                                             null=True)
     status = models.CharField(max_length=1, choices=INVOICESTATUS)
 
-    def isComplete(self):
+    def create_invoice(self, calling_model):
+        """Checks which model was calling the function. Depending on the calling
+        model, the function sets up an invoice. On success, the invoice is saved.
+        At the moment only the koalixcrm.crm.documents.contract.Contract and
+        koalixcrm.crm.documents.quote.Quote are allowed to call this function"""
+
+        self.staff = calling_model.staff
+        if type(calling_model) == koalixcrm.crm.documents.contract.Contract:
+            self.contract = calling_model
+            self.customer = calling_model.defaultcustomer
+            self.currency = calling_model.defaultcurrency
+            self.description = calling_model.description
+            self.discount = 0
+        elif type(calling_model) == koalixcrm.crm.documents.quote.Quote:
+            self.contract = calling_model.contract
+            self.derivatedFromQuote = calling_model
+            self.customer = calling_model.customer
+            self.currency = calling_model.currency
+            self.discount = calling_model.discount
+            self.description = calling_model.description
+
+        self.status = 'C'
+        self.payableuntil = date.today() + \
+                            timedelta(days=self.customer.defaultCustomerBillingCycle.timeToPaymentDate)
+        self.dateofcreation = date.today().__str__()
+        self.save()
+
+        if type(calling_model) == koalixcrm.crm.documents.contract.Contract:
+            invoice_template_id = calling_model.default_template_set.invoice_template.id
+            paragraphs = TextParagraphInDocumentTemplate.objects.filter(document_template=invoice_template_id)
+            for paragraph in list(paragraphs):
+                self.copy_and_attach(paragraph)
+        if type(calling_model) == koalixcrm.crm.documents.quote.Quote:
+            quote_positions = SalesContractPosition.objects.filter(contract=calling_model.id)
+            for quote_position in list(quote_positions):
+                invoice_position = SalesContractPosition()
+                invoice_position.create_position(quote_position, self)
+
+    def is_complete_with_price(self):
         """ Checks whether the Invoice is completed with a price, in case the invoice
         was not completed or the price calculation was not performed, the method
         returns false"""
@@ -33,7 +71,7 @@ class Invoice(SalesContract):
         dicttax = dict()
         currentValidAccountingPeriod = accounting.models.AccountingPeriod.getCurrentValidAccountingPeriod()
         activaaccount = accounting.models.Account.objects.filter(isopeninterestaccount=True)
-        if not self.isComplete():
+        if not self.is_complete_with_price():
             raise IncompleteInvoice(_("Complete invoice and run price recalculation. Price may not be Zero"))
         if len(activaaccount) == 0:
             raise OpenInterestAccountMissing(_("Please specify one open intrest account in the accounting"))

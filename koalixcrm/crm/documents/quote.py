@@ -15,43 +15,19 @@ class Quote(SalesContract):
 
     def createInvoice(self):
         invoice = koalixcrm.crm.documents.invoice.Invoice()
-        invoice.contract = self.contract
-        invoice.description = self.description
-        invoice.discount = self.discount
-        invoice.customer = self.customer
-        invoice.staff = self.staff
-        invoice.status = 'C'
-        invoice.derivatedFromQuote = self
-        invoice.currency = self.currency
-        invoice.payableuntil = date.today() + timedelta(
-            days=self.customer.defaultCustomerBillingCycle.timeToPaymentDate)
-        invoice.dateofcreation = date.today().__str__()
-        invoice.customerBillingCycle = self.customer.defaultCustomerBillingCycle
-        invoice.save()
-        try:
-            quotePositions = SalesContractPosition.objects.filter(contract=self.id)
-            for quotePosition in list(quotePositions):
-                invoicePosition = SalesContractPosition()
-                invoicePosition.product = quotePosition.product
-                invoicePosition.positionNumber = quotePosition.positionNumber
-                invoicePosition.quantity = quotePosition.quantity
-                invoicePosition.description = quotePosition.description
-                invoicePosition.discount = quotePosition.discount
-                invoicePosition.product = quotePosition.product
-                invoicePosition.unit = quotePosition.unit
-                invoicePosition.sentOn = quotePosition.sentOn
-                invoicePosition.supplier = quotePosition.supplier
-                invoicePosition.shipmentID = quotePosition.shipmentID
-                invoicePosition.overwriteProductPrice = quotePosition.overwriteProductPrice
-                invoicePosition.positionPricePerUnit = quotePosition.positionPricePerUnit
-                invoicePosition.lastPricingDate = quotePosition.lastPricingDate
-                invoicePosition.lastCalculatedPrice = quotePosition.lastCalculatedPrice
-                invoicePosition.lastCalculatedTax = quotePosition.lastCalculatedTax
-                invoicePosition.contract = invoice
-                invoicePosition.save()
-            return invoice
-        except Quote.DoesNotExist:
-            return
+        invoice.create_invoice(self)
+        return invoice
+
+    def create_quote(self, calling_model):
+        self.contract = calling_model
+        self.discount = 0
+        self.staff = calling_model.staff
+        self.customer = calling_model.defaultcustomer
+        self.status = 'C'
+        self.currency = calling_model.defaultcurrency
+        self.validuntil = date.today().__str__()
+        self.dateofcreation = date.today().__str__()
+        self.save()
 
     def createPDF(self):
         self.last_print_date = datetime.now()

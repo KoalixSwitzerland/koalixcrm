@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from decimal import Decimal
+
 from django.db import models
 from django.utils.translation import ugettext as _
 from koalixcrm.crm.const.purpose import *
 from koalixcrm.globalSupportFunctions import xstr
-from koalixcrm.crm.documents.salescontractposition import SalesContractPosition
 from koalixcrm.crm.contact.phoneaddress import PhoneAddress
 from koalixcrm.crm.contact.emailaddress import EmailAddress
 from koalixcrm.crm.contact.postaladdress import PostalAddress
@@ -30,7 +29,7 @@ class SalesContract(models.Model):
     lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True},
                                        verbose_name=_("Last modified by"), related_name="db_lstscmodified", null=True,
                                        blank="True")
-    template_set = models.ForeignKey("djangoUserExtension.TemplateSet", verbose_name=_("Default Supplier"), null=True,
+    template_set = models.ForeignKey("djangoUserExtension.TemplateSet", verbose_name=_("Referred Template Set"), null=True,
                                      blank=True)
 
     last_print_date = models.DateTimeField(verbose_name=_("Last printed"), blank=True, null=True)
@@ -85,8 +84,8 @@ class PhoneAddressForSalesContract(PhoneAddress):
 
 class TextParagraphInSalesContract(models.Model):
     SalesContract = models.ForeignKey("SalesContract")
-    Purpose =
-    TextParagraph = models.TextField(verbose_name=_("Text"), blank=False, null=False)
+    purpose = models.CharField(verbose_name=_("Purpose"), max_length=2, choices=PURPOSESTEXTPARAGRAPHINDOCUMENTS)
+    text_paragraph = models.TextField(verbose_name=_("Text"), blank=False, null=False)
 
     class Meta:
         app_label = "crm"
