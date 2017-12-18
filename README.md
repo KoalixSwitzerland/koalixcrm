@@ -5,8 +5,8 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Coverage/4f0acae8f6d04c2b81c0c4a4b2b48e09)](https://www.codacy.com/app/simon.riedener/koalixcrm?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=scaphilo/koalixcrm&amp;utm_campaign=Badge_Coverage)
 
 ## Demos
-You can find a demo of the koalixcrm here: [demo](http://demokoalixcrm.koalix.org/admin/).
-You can find a german demo of the koalixcrm here: [demo](http://germandemokoalixcrm.koalix.org/admin/).
+You can find an english demo of the koalixcrm here: [demo](http://koalixcrmdemoenglish.koalix.org/admin/).
+You can find a german demo of the koalixcrm here: [demo](http://koalixcrmdemogerman.koalix.org/admin/).
 
 To be able to log in use the following
 
