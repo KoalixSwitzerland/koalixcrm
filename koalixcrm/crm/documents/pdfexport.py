@@ -79,7 +79,7 @@ class PDFExport:
         objects_to_serialize += list(auth.models.User.objects.filter(id=object_to_create_pdf.staff.id))
         userExtension = djangoUserExtension.models.UserExtension.objects.filter(user=object_to_create_pdf.staff.id)
         if len(userExtension) == 0:
-            raise UserExtensionMissing(_("During "+type(object_to_create_pdf)+" PDF Export"))
+            raise UserExtensionMissing(_("During "+str(object_to_create_pdf)+" PDF Export"))
         phone_address = djangoUserExtension.models.UserExtensionPhoneAddress.objects.filter(
             userExtension=userExtension[0].id)
         if len(phone_address) == 0:
@@ -96,7 +96,7 @@ class PDFExport:
         if len(template_set) == 0:
             raise TemplateSetMissing(_("During "+type(object_to_create_pdf)+" PDF Export"))
         objects_to_serialize += list(template_set)
-        objects_to_serialize += list(auth.models.User.objects.filter(id=object_to_create_pdf.lastmodifiedby.id))
+        objects_to_serialize += list(auth.models.User.objects.filter(id=object_to_create_pdf.last_modified_by.id))
         return objects_to_serialize
 
     @staticmethod
@@ -110,9 +110,9 @@ class PDFExport:
     @staticmethod
     def performXSLTransformation(file_with_serialized_xml, xsl_file, fop_config_file, file_output_pdf):
         check_output([settings.FOP_EXECUTABLE,
-                      '-c', fop_config_file,
+                      '-c', fop_config_file.path_full,
                       '-xml', os.path.join(settings.PDF_OUTPUT_ROOT, file_with_serialized_xml),
-                      '-xsl', xsl_file,
+                      '-xsl', xsl_file.path_full,
                       '-pdf', file_output_pdf], stderr=STDOUT)
 
     @staticmethod
@@ -124,7 +124,7 @@ class PDFExport:
         file_output_pdf = os.path.join(settings.PDF_OUTPUT_ROOT, (str(object_to_create_pdf) + ".pdf"))
 
         # list the sub-objects which to be serialized
-        objects_to_serialize = PDFExport.create_list_of_objects_to_serialize(type(object_to_create_pdf))
+        objects_to_serialize = PDFExport.create_list_of_objects_to_serialize(object_to_create_pdf)
 
         # serialize the objects to xml-file
         PDFExport.write_xml_file(objects_to_serialize, file_with_serialized_xml)

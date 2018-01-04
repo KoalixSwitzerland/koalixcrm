@@ -18,22 +18,22 @@ import koalixcrm.crm.documents.pdfexport
 
 class PurchaseOrder(models.Model):
     contract = models.ForeignKey("Contract", verbose_name=_("Contract"))
-    externalReference = models.CharField(verbose_name=_("External Reference"), max_length=100, blank=True, null=True)
+    external_reference = models.CharField(verbose_name=_("External Reference"), max_length=100, blank=True, null=True)
     supplier = models.ForeignKey("Supplier", verbose_name=_("Supplier"))
     description = models.CharField(verbose_name=_("Description"), max_length=100, blank=True, null=True)
-    lastPricingDate = models.DateField(verbose_name=_("Last Pricing Date"), blank=True, null=True)
-    lastCalculatedPrice = models.DecimalField(max_digits=17, decimal_places=2,
-                                              verbose_name=_("Last Calculted Price With Tax"), blank=True, null=True)
-    lastCalculatedTax = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Tax"),
-                                            blank=True, null=True)
+    last_pricing_date = models.DateField(verbose_name=_("Last Pricing Date"), blank=True, null=True)
+    last_calculated_price = models.DecimalField(max_digits=17, decimal_places=2,
+                                                verbose_name=_("Last Calculted Price With Tax"), blank=True, null=True)
+    last_calculated_tax = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Tax"),
+                                              blank=True, null=True)
     status = models.CharField(max_length=1, choices=PURCHASEORDERSTATUS)
     staff = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True, verbose_name=_("Staff"),
                               related_name="db_relpostaff", null=True)
     currency = models.ForeignKey("Currency", verbose_name=_("Currency"), blank=False, null=False)
-    dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now_add=True)
-    lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now=True)
-    lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True},
-                                       verbose_name=_("Last modified by"), related_name="db_polstmodified")
+    date_of_creation = models.DateTimeField(verbose_name=_("Created at"), auto_now_add=True)
+    last_modification = models.DateTimeField(verbose_name=_("Last modified"), auto_now=True)
+    last_modified_by = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True},
+                                         verbose_name=_("Last modified by"), related_name="db_polstmodified")
     last_print_date = models.DateTimeField(verbose_name=_("Last printed"), blank=True, null=True)
 
     def recalculatePrices(self, pricingDate):
@@ -60,9 +60,9 @@ class PurchaseOrder(models.Model):
                     else:
                         price += position.recalculate_prices(pricingDate, self.customer, self.currency)
                         tax += position.recalculateTax(self.currency)
-            self.lastCalculatedPrice = price
-            self.lastCalculatedTax = tax
-            self.lastPricingDate = pricingDate
+            self.last_calculated_price = price
+            self.last_calculated_tax = tax
+            self.last_pricing_date = pricingDate
             self.save()
             return 1
         except PurchaseOrder.DoesNotExist as e:

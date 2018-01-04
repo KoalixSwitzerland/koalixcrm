@@ -13,10 +13,10 @@ class Customer(Contact):
 
     def createContract(self, request):
         contract = koalixcrm.crm.documents.contract.Contract()
-        contract.defaultcustomer = self
-        contract.defaultcurrency = djangoUserExtension.models.UserExtension.objects.filter(user=request.user.id)[
+        contract.default_customer = self
+        contract.default_currency = djangoUserExtension.models.UserExtension.objects.filter(user=request.user.id)[
             0].defaultCurrency
-        contract.lastmodifiedby = request.user
+        contract.last_modified_by = request.user
         contract.staff = request.user
         contract.save()
         return contract

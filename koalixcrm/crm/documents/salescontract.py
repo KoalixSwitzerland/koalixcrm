@@ -12,23 +12,23 @@ from koalixcrm.crm.contact.postaladdress import PostalAddress
 
 class SalesContract(models.Model):
     contract = models.ForeignKey("Contract", verbose_name=_('Contract'))
-    externalReference = models.CharField(verbose_name=_("External Reference"), max_length=100, blank=True)
+    external_reference = models.CharField(verbose_name=_("External Reference"), max_length=100, blank=True)
     discount = models.DecimalField(max_digits=5, decimal_places=2, verbose_name=_("Discount"), blank=True, null=True)
     description = models.CharField(verbose_name=_("Description"), max_length=100, blank=True, null=True)
-    lastPricingDate = models.DateField(verbose_name=_("Pricing Date"), blank=True, null=True)
-    lastCalculatedPrice = models.DecimalField(max_digits=17, decimal_places=2,
-                                              verbose_name=_("Price without Tax "), blank=True, null=True)
-    lastCalculatedTax = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Tax"),
+    last_pricing_date = models.DateField(verbose_name=_("Pricing Date"), blank=True, null=True)
+    last_calculated_price = models.DecimalField(max_digits=17, decimal_places=2,
+                                                verbose_name=_("Price without Tax "), blank=True, null=True)
+    last_calculated_tax = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Tax"),
                                             blank=True, null=True)
     customer = models.ForeignKey("Customer", verbose_name=_("Customer"))
     staff = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True, verbose_name=_("Staff"),
                               related_name="db_relscstaff", null=True)
     currency = models.ForeignKey("Currency", verbose_name=_("Currency"), blank=False, null=False)
-    dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now_add=True)
-    lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now=True)
-    lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True},
-                                       verbose_name=_("Last modified by"), related_name="db_lstscmodified", null=True,
-                                       blank="True")
+    date_of_creation = models.DateTimeField(verbose_name=_("Created at"), auto_now_add=True)
+    last_modification = models.DateTimeField(verbose_name=_("Last modified"), auto_now=True)
+    last_modified_by = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True},
+                                         verbose_name=_("Last modified by"), related_name="db_lstscmodified", null=True,
+                                         blank="True")
     template_set = models.ForeignKey("djangoUserExtension.TemplateSet", verbose_name=_("Referred Template Set"), null=True,
                                      blank=True)
 

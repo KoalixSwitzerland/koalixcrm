@@ -10,7 +10,7 @@ import koalixcrm.crm.documents.pdfexport
 
 
 class PurchaseConfirmation(SalesContract):
-    validuntil = models.DateField(verbose_name=_("Valid until"))
+    valid_until = models.DateField(verbose_name=_("Valid until"))
     status = models.CharField(max_length=1, choices=QUOTESTATUS, verbose_name=_('Status'))
 
     def createPDF(self):

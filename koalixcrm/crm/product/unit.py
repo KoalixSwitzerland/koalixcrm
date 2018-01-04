@@ -6,13 +6,13 @@ from django.utils.translation import ugettext as _
 
 class Unit(models.Model):
     description = models.CharField(verbose_name=_("Description"), max_length=100)
-    shortName = models.CharField(verbose_name=_("Displayed Name After Quantity In The Position"), max_length=3)
-    isAFractionOf = models.ForeignKey('self', blank=True, null=True, verbose_name=_("Is A Fraction Of"))
-    fractionFactorToNextHigherUnit = models.IntegerField(verbose_name=_("Factor Between This And Next Higher Unit"),
-                                                         blank=True, null=True)
+    short_name = models.CharField(verbose_name=_("Displayed Name After Quantity In The Position"), max_length=3)
+    is_a_fraction_of = models.ForeignKey('self', blank=True, null=True, verbose_name=_("Is A Fraction Of"))
+    fraction_factor_to_next_higher_unit = models.IntegerField(verbose_name=_("Factor Between This And Next Higher Unit"),
+                                                              blank=True, null=True)
 
     def __str__(self):
-        return self.shortName
+        return self.short_name
 
     class Meta:
         app_label = "crm"
@@ -21,19 +21,19 @@ class Unit(models.Model):
 
 
 class UnitTransform(models.Model):
-    fromUnit = models.ForeignKey('Unit', verbose_name=_("From Unit"), related_name="db_reltransfromfromunit")
-    toUnit = models.ForeignKey('Unit', verbose_name=_("To Unit"), related_name="db_reltransfromtounit")
+    from_unit = models.ForeignKey('Unit', verbose_name=_("From Unit"), related_name="db_reltransfromfromunit")
+    to_unit = models.ForeignKey('Unit', verbose_name=_("To Unit"), related_name="db_reltransfromtounit")
     product = models.ForeignKey('Product', verbose_name=_("Product"))
     factor = models.IntegerField(verbose_name=_("Factor between From and To Unit"), blank=True, null=True)
 
     def transform(self, unit):
-        if (self.fromUnit == unit):
-            return self.toUnit
+        if (self.from_unit == unit):
+            return self.to_unit
         else:
             return unit
 
     def __str__(self):
-        return "From " + self.fromUnit.shortName + " to " + self.toUnit.shortName
+        return "From " + self.from_unit.short_name + " to " + self.to_unit.short_name
 
     class Meta:
         app_label = "crm"

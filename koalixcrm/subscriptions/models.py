@@ -37,7 +37,7 @@ class Subscription(models.Model):
         invoice.customer = self.contract.defaultcustomer
         invoice.status = 'C'
         invoice.currency = self.contract.defaultcurrency
-        invoice.payableuntil = date.today() + timedelta(
+        invoice.payable_until = date.today() + timedelta(
             days=self.contract.defaultcustomer.defaultCustomerBillingCycle.timeToPaymentDate)
         invoice.dateofcreation = date.today().__str__()
         invoice.save()

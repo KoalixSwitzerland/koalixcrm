@@ -100,6 +100,7 @@ class SalesContractTextParagraph(admin.StackedInline):
     )
     allow_add = True
 
+
 class SalesContractPostalAddress(admin.StackedInline):
     model = PostalAddressForSalesContract
     extra = 1
@@ -145,8 +146,8 @@ class SalesContractInlinePosition(admin.TabularInline):
     fieldsets = (
         ('', {
             'fields': (
-            'positionNumber', 'quantity', 'unit', 'product', 'description', 'discount', 'overwriteProductPrice',
-            'positionPricePerUnit', 'sentOn')
+            'position_number', 'quantity', 'unit', 'product', 'description', 'discount', 'overwrite_product_price',
+            'position_price_per_unit', 'sent_on')
         }),
     )
     allow_add = True
@@ -159,15 +160,15 @@ class InlineQuote(admin.TabularInline):
     can_delete = True
     extra = 1
     readonly_fields = (
-    'description', 'contract', 'customer', 'validuntil', 'status', 'lastPricingDate', 'lastCalculatedPrice',
-    'lastCalculatedTax',)
+    'description', 'contract', 'customer', 'valid_until', 'status', 'last_pricing_date', 'last_calculated_price',
+    'last_calculated_tax',)
     fieldsets = (
         (_('Basics'), {
-            'fields': ('description', 'contract', 'customer', 'validuntil', 'status')
+            'fields': ('description', 'contract', 'customer', 'valid_until', 'status')
         }),
         (_('Advanced (not editable)'), {
             'classes': ('collapse',),
-            'fields': ('lastPricingDate', 'lastCalculatedPrice', 'lastCalculatedTax',)
+            'fields': ('last_pricing_date', 'last_calculated_price', 'last_calculated_tax',)
         }),
     )
     allow_add = False
@@ -180,15 +181,15 @@ class InlineInvoice(admin.TabularInline):
     can_delete = True
     extra = 1
     readonly_fields = (
-    'lastPricingDate', 'lastCalculatedPrice', 'lastCalculatedTax', 'description', 'contract', 'customer',
-    'payableuntil', 'status')
+    'last_pricing_date', 'last_calculated_price', 'last_calculated_tax', 'description', 'contract', 'customer',
+    'payable_until', 'status')
     fieldsets = (
         (_('Basics'), {
-            'fields': ('description', 'contract', 'customer', 'payableuntil', 'status'),
+            'fields': ('description', 'contract', 'customer', 'payable_until', 'status'),
         }),
         (_('Advanced (not editable)'), {
             'classes': ('collapse',),
-            'fields': ('lastPricingDate', 'lastCalculatedPrice', 'lastCalculatedTax',)
+            'fields': ('last_pricing_date', 'last_calculated_price', 'last_calculated_tax',)
         }),
     )
 
@@ -202,28 +203,28 @@ class InlinePurchaseOrder(admin.TabularInline):
     can_delete = True
     extra = 1
     readonly_fields = (
-    'description', 'contract', 'supplier', 'externalReference', 'status', 'lastPricingDate', 'lastCalculatedPrice')
+    'description', 'contract', 'supplier', 'external_reference', 'status', 'last_pricing_date', 'last_calculated_price')
     fieldsets = (
         (_('Basics'), {
-            'fields': ('description', 'contract', 'supplier', 'externalReference', 'status')
+            'fields': ('description', 'contract', 'supplier', 'external_reference', 'status')
         }),
         (_('Advanced (not editable)'), {
             'classes': ('collapse',),
-            'fields': ('lastPricingDate', 'lastCalculatedPrice')
+            'fields': ('last_pricing_date', 'last_calculated_price')
         }),
     )
     allow_add = False
 
 
 class OptionContract(admin.ModelAdmin):
-    list_display = ('id', 'description', 'defaultcustomer', 'defaultSupplier', 'staff', 'defaultcurrency')
+    list_display = ('id', 'description', 'default_customer', 'default_supplier', 'staff', 'default_currency')
     list_display_links = ('id',)
-    list_filter = ('defaultcustomer', 'defaultSupplier', 'staff', 'defaultcurrency')
+    list_filter = ('default_customer', 'default_supplier', 'staff', 'default_currency')
     ordering = ('id', )
-    search_fields = ('id', 'contract', 'defaultcurrency__description')
+    search_fields = ('id', 'contract')
     fieldsets = (
         (_('Basics'), {
-            'fields': ('description', 'defaultcustomer', 'staff', 'defaultSupplier', 'defaultcurrency')
+            'fields': ('description', 'default_customer', 'staff', 'default_supplier', 'default_currency', 'default_template_set')
         }),
     )
     inlines = [ContractPostalAddress, ContractPhoneAddress, ContractEmailAddress, InlineQuote, InlineInvoice,
@@ -231,42 +232,42 @@ class OptionContract(admin.ModelAdmin):
     pluginProcessor = PluginProcessor()
     inlines.extend(pluginProcessor.getPluginAdditions("contractInlines"))
 
-    def createPurchaseOrder(self, request, queryset):
+    def create_purchase_order(self, request, queryset):
         for obj in queryset:
-            purchaseorder = obj.createPurchaseOrder()
+            purchase_order = obj.create_purchase_order()
             self.message_user(request, _("PurchaseOrder created"))
-            response = HttpResponseRedirect('/admin/crm/purchaseorder/' + str(purchaseorder.id))
+            response = HttpResponseRedirect('/admin/crm/purchaseorder/' + str(purchase_order.id))
         return response
 
-    createPurchaseOrder.short_description = _("Create Purchaseorder")
+        create_purchase_order.short_description = _("Create Purchaseorder")
 
-    def createQuote(self, request, queryset):
+    def create_quote(self, request, queryset):
         for obj in queryset:
-            quote = obj.createQuote()
+            quote = obj.create_quote()
             self.message_user(request, _("Quote created"))
             response = HttpResponseRedirect('/admin/crm/quote/' + str(quote.id))
         return response
 
-    createQuote.short_description = _("Create Quote")
+    create_quote.short_description = _("Create Quote")
 
-    def createInvoice(self, request, queryset):
+    def create_invoice(self, request, queryset):
         for obj in queryset:
-            invoice = obj.createInvoice()
+            invoice = obj.create_invoice()
             self.message_user(request, _("Invoice created"))
             response = HttpResponseRedirect('/admin/crm/invoice/' + str(invoice.id))
         return response
 
-    createInvoice.short_description = _("Create Invoice")
+    create_invoice.short_description = _("Create Invoice")
 
     def save_model(self, request, obj, form, change):
         if (change == True):
-            obj.lastmodifiedby = request.user
+            obj.last_modified_by = request.user
         else:
-            obj.lastmodifiedby = request.user
+            obj.last_modified_by = request.user
             obj.staff = request.user
         obj.save()
 
-    actions = ['createQuote', 'createInvoice', 'createPurchaseOrder']
+    actions = ['create_quote', 'create_invoice', 'create_purchase_order']
     pluginProcessor = PluginProcessor()
     actions.extend(pluginProcessor.getPluginAdditions("contractActions"))
 
@@ -278,8 +279,8 @@ class PurchaseOrderInlinePosition(admin.TabularInline):
     fieldsets = (
         ('', {
             'fields': (
-            'positionNumber', 'quantity', 'unit', 'product', 'description', 'overwriteProductPrice',
-            'positionPricePerUnit', 'sentOn')
+            'position_number', 'quantity', 'unit', 'product', 'description', 'overwrite_product_price',
+            'position_price_per_unit', 'sent_on')
         }),
     )
     allow_add = True
@@ -299,15 +300,15 @@ class InlineBookings(admin.TabularInline):
 
 class OptionInvoice(admin.ModelAdmin):
     list_display = (
-    'id', 'description', 'contract', 'customer', 'payableuntil', 'status', 'currency', 'staff',
-    'lastCalculatedPrice', 'lastCalculatedTax', 'lastPricingDate', 'lastmodification', 'lastmodifiedby', 'last_print_date')
+    'id', 'description', 'contract', 'customer', 'payable_until', 'status', 'currency', 'staff',
+    'last_calculated_price', 'last_calculated_tax', 'last_pricing_date', 'last_modification', 'last_modified_by', 'last_print_date')
     list_display_links = ('id', )
-    list_filter = ('customer', 'contract', 'staff', 'status', 'currency', 'lastmodification')
+    list_filter = ('customer', 'contract', 'staff', 'status', 'currency', 'last_modification')
     ordering = ('id',)
     search_fields = ('contract__id', 'customer__name', 'currency__description')
     fieldsets = (
         (_('Basics'), {
-            'fields': ('contract', 'description', 'customer', 'currency', 'discount',  'payableuntil', 'status', 'externalReference')
+            'fields': ('contract', 'description', 'customer', 'currency', 'discount',  'payable_until', 'status', 'external_reference', 'template_set' )
         }),
     )
     save_as = True
@@ -339,9 +340,9 @@ class OptionInvoice(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         if (change == True):
-            obj.lastmodifiedby = request.user
+            obj.last_modified_by = request.user
         else:
-            obj.lastmodifiedby = request.user
+            obj.last_modified_by = request.user
             obj.staff = request.user
         obj.save()
 
@@ -356,33 +357,12 @@ class OptionInvoice(admin.ModelAdmin):
 
     recalculatePrices.short_description = _("Recalculate Prices")
 
-    def createInvoicePDF(self, request, queryset):
+    def create_pdf(self, request, queryset):
         for obj in queryset:
             response = export_pdf(self, request, obj, "/admin/crm/invoice/")
             return response
 
-    createInvoicePDF.short_description = _("Create PDF of Invoice")
-
-    def createPaymentReminder1PDF(self, request, queryset):
-        for obj in queryset:
-            response = export_pdf(self, request, obj, "/admin/crm/invoice/")
-            return response
-
-    createPaymentReminder1PDF.short_description = _("Create PDF of Payment Reminder 1")
-
-    def createPaymentReminder2PDF(self, request, queryset):
-        for obj in queryset:
-            response = export_pdf(self, request, obj, "/admin/crm/invoice/")
-            return response
-
-    createPaymentReminder2PDF.short_description = _("Create PDF of Payment Reminder 2")
-
-    def createDeliveryOrderPDF(self, request, queryset):
-        for obj in queryset:
-            response = export_pdf(self, request, obj, "/admin/crm/invoice/")
-            return response
-
-    createDeliveryOrderPDF.short_description = _("Create PDF of Delivery Order")
+    create_pdf.short_description = _("Create PDF of Invoice")
 
     def registerInvoiceInAccounting(self, request, queryset):
         try:
@@ -429,24 +409,24 @@ class OptionInvoice(admin.ModelAdmin):
 
     registerPaymentInAccounting.short_description = _("Register Payment in Accounting")
 
-    actions = ['recalculatePrices', 'createDeliveryOrderPDF', 'createInvoicePDF', 'registerInvoiceInAccounting',
-               'unregisterInvoiceInAccounting', 'registerPaymentInAccounting', 'createPaymentReminder1PDF', 'createPaymentReminder2PDF']
+    actions = ['recalculatePrices', 'create_pdf', 'registerInvoiceInAccounting',
+               'unregisterInvoiceInAccounting', 'registerPaymentInAccounting',]
     pluginProcessor = PluginProcessor()
     actions.extend(pluginProcessor.getPluginAdditions("invoiceActions"))
 
 
 class OptionQuote(admin.ModelAdmin):
     list_display = (
-    'id', 'description', 'contract', 'customer', 'currency', 'validuntil', 'status', 'staff', 'lastmodifiedby',
-    'lastCalculatedPrice', 'lastCalculatedTax', 'lastPricingDate', 'lastmodification', 'last_print_date')
+    'id', 'description', 'contract', 'customer', 'currency', 'valid_until', 'status', 'staff', 'last_modified_by',
+    'last_calculated_price', 'last_calculated_tax', 'last_pricing_date', 'last_modification', 'last_print_date')
     list_display_links = ('id',)
-    list_filter = ('customer', 'contract', 'currency', 'staff', 'status', 'lastmodification')
+    list_filter = ('customer', 'contract', 'currency', 'staff', 'status', 'last_modification')
     ordering = ('id',)
     search_fields = ('contract__id', 'customer__name', 'currency__description')
 
     fieldsets = (
         (_('Basics'), {
-            'fields': ('contract', 'description', 'customer', 'currency', 'discount', 'validuntil', 'staff', 'status', 'externalReference')
+            'fields': ('contract', 'description', 'customer', 'currency', 'discount', 'valid_until', 'staff', 'status', 'external_reference')
         }),
     )
     save_as = True
@@ -468,64 +448,57 @@ class OptionQuote(admin.ModelAdmin):
             Calculations.calculate_document_price(obj, date.today())
             self.message_user(request, "Successfully calculated Prices")
         except Product.NoPriceFound as e:
-            self.message_user(request, "Unsuccessfull in updating the Prices " + e.__str__(), level=messages.ERROR)
+            self.message_user(request, "Unsuccessful in updating the Prices " + e.__str__(), level=messages.ERROR)
         return obj
 
     def save_model(self, request, obj, form, change):
         if (change == True):
-            obj.lastmodifiedby = request.user
+            obj.last_modified_by = request.user
         else:
-            obj.lastmodifiedby = request.user
+            obj.last_modified_by = request.user
             obj.staff = request.user
         obj.save()
 
-    def recalculatePrices(self, request, queryset):
+    def recalculate_prices(self, request, queryset):
         for obj in queryset:
             self.after_saving_model_and_related_inlines(request, obj)
         return;
 
-    recalculatePrices.short_description = _("Recalculate Prices")
+    recalculate_prices.short_description = _("Recalculate Prices")
 
-    def createInvoice(self, request, queryset):
+    def create_invoice(self, request, queryset):
         for obj in queryset:
-            invoice = obj.createInvoice()
+            invoice = obj.create_invoice()
             self.message_user(request, _("Invoice created"))
             response = HttpResponseRedirect('/admin/crm/invoice/' + str(invoice.id))
         return response
 
-    createInvoice.short_description = _("Create Invoice")
+    create_invoice.short_description = _("Create Invoice")
 
-    def createQuotePDF(self, request, queryset):
+    def create_pdf(self, request, queryset):
         for obj in queryset:
             response = export_pdf(self, request, obj, "/admin/crm/quote/")
             return response
 
-    createQuotePDF.short_description = _("Create PDF of Quote")
+    create_pdf.short_description = _("Create PDF of Quote")
 
-    def createPurchaseConfirmationPDF(self, request, queryset):
-        for obj in queryset:
-            response = export_pdf(self, request, obj, "/admin/crm/quote/")
-            return response
-
-    createPurchaseConfirmationPDF.short_description = _("Create PDF of Purchase Confirmation")
-
-    actions = ['recalculatePrices', 'createInvoice', 'createQuotePDF', 'createPurchaseConfirmationPDF']
+    actions = ['recalculate_prices', 'create_invoice', 'create_pdf']
     pluginProcessor = PluginProcessor()
     inlines.extend(pluginProcessor.getPluginAdditions("quoteActions"))
 
 
 class OptionPurchaseOrder(admin.ModelAdmin):
     list_display = (
-    'id', 'description', 'contract', 'supplier', 'status', 'currency', 'staff', 'lastmodifiedby',
-    'lastCalculatedPrice', 'lastCalculatedTax', 'lastPricingDate', 'lastmodification', 'last_print_date')
+    'id', 'description', 'contract', 'supplier', 'status', 'currency', 'staff', 'last_modified_by',
+    'last_calculated_price', 'last_calculated_tax', 'last_pricing_date', 'last_modification', 'last_print_date')
     list_display_links = ('id',)
-    list_filter = ('supplier', 'contract', 'staff', 'status', 'currency', 'lastmodification')
+    list_filter = ('supplier', 'contract', 'staff', 'status', 'currency', 'last_modification')
     ordering = ('id',)
     search_fields = ('contract__id', 'supplier__name', 'currency_description')
 
     fieldsets = (
         (_('Basics'), {
-            'fields': ('contract', 'description', 'supplier', 'currency', 'status', 'externalReference')
+            'fields': ('contract', 'description', 'supplier', 'currency', 'status', 'external_reference')
         }),
     )
 
@@ -542,14 +515,14 @@ class OptionPurchaseOrder(admin.ModelAdmin):
             Calculations.calculate_document_price(obj, date.today())
             self.message_user(request, "Successfully calculated Prices")
         except Product.NoPriceFound as e:
-            self.message_user(request, "Unsuccessfull in updating the Prices " + e.__str__(), level=messages.ERROR)
+            self.message_user(request, "Unsuccessful in updating the Prices " + e.__str__(), level=messages.ERROR)
         return obj
 
     def save_model(self, request, obj, form, change):
         if (change == True):
-            obj.lastmodifiedby = request.user
+            obj.last_modified_by = request.user
         else:
-            obj.lastmodifiedby = request.user
+            obj.last_modified_by = request.user
             obj.staff = request.user
         obj.save()
 
@@ -584,7 +557,7 @@ class ProductPrice(admin.TabularInline):
     classes = ['collapse']
     fieldsets = (
         ('', {
-            'fields': ('price', 'currency', 'unit', 'validfrom', 'validuntil', 'customerGroup')
+            'fields': ('price', 'currency', 'unit', 'valid_from', 'valid_until', 'customer_group')
         }),
     )
     allow_add = True
@@ -596,18 +569,18 @@ class ProductUnitTransform(admin.TabularInline):
     classes = ['collapse']
     fieldsets = (
         ('', {
-            'fields': ('fromUnit', 'toUnit', 'factor',)
+            'fields': ('from_unit', 'to_unit', 'factor',)
         }),
     )
     allow_add = True
 
 
 class OptionProduct(admin.ModelAdmin):
-    list_display = ('productNumber', 'title', 'defaultunit', 'tax', 'accoutingProductCategorie')
-    list_display_links = ('productNumber',)
+    list_display = ('product_number', 'title', 'default_unit', 'tax', 'accounting_product_categorie')
+    list_display_links = ('product_number',)
     fieldsets = (
         (_('Basics'), {
-            'fields': ('productNumber', 'title', 'description', 'defaultunit', 'tax', 'accoutingProductCategorie')
+            'fields': ('product_number', 'title', 'description', 'default_unit', 'tax', 'accounting_product_categorie')
         }),)
     inlines = [ProductPrice, ProductUnitTransform]
 
@@ -721,20 +694,20 @@ class OptionSupplier(admin.ModelAdmin):
 
 
 class OptionUnit(admin.ModelAdmin):
-    list_display = ('id', 'description', 'shortName', 'isAFractionOf', 'fractionFactorToNextHigherUnit')
-    fieldsets = (('', {'fields': ('description', 'shortName', 'isAFractionOf', 'fractionFactorToNextHigherUnit')}),)
+    list_display = ('id', 'description', 'short_name', 'is_a_fraction_of', 'fraction_factor_to_next_higher_unit')
+    fieldsets = (('', {'fields': ('description', 'short_name', 'is_a_fraction_of', 'fraction_factor_to_next_higher_unit')}),)
     allow_add = True
 
 
 class OptionCurrency(admin.ModelAdmin):
-    list_display = ('id', 'description', 'shortName', 'rounding')
-    fieldsets = (('', {'fields': ('description', 'shortName', 'rounding')}),)
+    list_display = ('id', 'description', 'short_name', 'rounding')
+    fieldsets = (('', {'fields': ('description', 'short_name', 'rounding')}),)
     allow_add = True
 
 
 class OptionTax(admin.ModelAdmin):
-    list_display = ('id', 'taxrate', 'name', 'accountActiva', 'accountPassiva')
-    fieldsets = (('', {'fields': ('taxrate', 'name', 'accountActiva', 'accountPassiva')}),)
+    list_display = ('id', 'tax_rate', 'name', 'account_activa', 'account_passiva')
+    fieldsets = (('', {'fields': ('tax_rate', 'name', 'account_activa', 'account_passiva')}),)
     allow_add = True
 
 

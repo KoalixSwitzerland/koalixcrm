@@ -14,10 +14,10 @@ import koalixcrm.crm.documents.pdfexport
 
 
 class Invoice(SalesContract):
-    payableuntil = models.DateField(verbose_name=_("To pay until"))
-    derivatedFromQuote = models.ForeignKey("Quote", blank=True, null=True)
-    paymentBankReference = models.CharField(verbose_name=_("Payment Bank Reference"), max_length=100, blank=True,
-                                            null=True)
+    payable_until = models.DateField(verbose_name=_("To pay until"))
+    derived_from_quote = models.ForeignKey("Quote", blank=True, null=True)
+    payment_bank_reference = models.CharField(verbose_name=_("Payment Bank Reference"), max_length=100, blank=True,
+                                              null=True)
     status = models.CharField(max_length=1, choices=INVOICESTATUS)
 
     def create_invoice(self, calling_model):
@@ -29,27 +29,28 @@ class Invoice(SalesContract):
         self.staff = calling_model.staff
         if type(calling_model) == koalixcrm.crm.documents.contract.Contract:
             self.contract = calling_model
-            self.customer = calling_model.defaultcustomer
-            self.currency = calling_model.defaultcurrency
+            self.customer = calling_model.default_customer
+            self.currency = calling_model.default_currency
             self.description = calling_model.description
+            self.template_set = calling_model.default_template_set
             self.discount = 0
         elif type(calling_model) == koalixcrm.crm.documents.quote.Quote:
             self.contract = calling_model.contract
-            self.derivatedFromQuote = calling_model
+            self.derived_from_quote = calling_model
             self.customer = calling_model.customer
             self.currency = calling_model.currency
             self.discount = calling_model.discount
             self.description = calling_model.description
 
         self.status = 'C'
-        self.payableuntil = date.today() + \
-                            timedelta(days=self.customer.defaultCustomerBillingCycle.timeToPaymentDate)
-        self.dateofcreation = date.today().__str__()
+        self.payable_until = date.today() + \
+                             timedelta(days=self.customer.defaultCustomerBillingCycle.timeToPaymentDate)
+        self.date_of_creation = date.today().__str__()
         self.save()
 
         if type(calling_model) == koalixcrm.crm.documents.contract.Contract:
-            invoice_template_id = calling_model.default_template_set.invoice_template.id
-            default_paragraphs = TextParagraphInDocumentTemplate.objects.filter(document_template=invoice_template_id)
+            invoice_template = calling_model.default_template_set.invoice_template
+            default_paragraphs = TextParagraphInDocumentTemplate.objects.filter(document_template=invoice_template)
             for default_paragraph in list(default_paragraphs):
                 invoice_paragraph = TextParagraphInSalesContract()
                 invoice_paragraph.create_paragraph(default_paragraph, self)
@@ -64,19 +65,25 @@ class Invoice(SalesContract):
                 invoice_paragraph = TextParagraphInSalesContract()
                 invoice_paragraph.create_paragraph(quote_paragraph, self)
 
+    def get_fop_config_file(self):
+        return self.template_set.invoice_template.fop_config_file
+
+    def get_xsl_file(self):
+        return self.template_set.invoice_template.xsl_file
+
     def is_complete_with_price(self):
         """ Checks whether the Invoice is completed with a price, in case the invoice
         was not completed or the price calculation was not performed, the method
         returns false"""
 
-        if self.lastPricingDate and self.lastCalculatedPrice:
+        if self.last_pricing_date and self.last_calculated_price:
             return True
         else:
             return False
 
     def registerinvoiceinaccounting(self, request):
-        dictprices = dict()
-        dicttax = dict()
+        dict_prices = dict()
+        dict_tax = dict()
         currentValidAccountingPeriod = accounting.models.AccountingPeriod.getCurrentValidAccountingPeriod()
         activaaccount = accounting.models.Account.objects.filter(isopeninterestaccount=True)
         if not self.is_complete_with_price():
@@ -85,13 +92,13 @@ class Invoice(SalesContract):
             raise OpenInterestAccountMissing(_("Please specify one open intrest account in the accounting"))
         for position in list(SalesContractPosition.objects.filter(contract=self.id)):
             profitaccount = position.product.accoutingProductCategorie.profitAccount
-            dictprices[profitaccount] = position.lastCalculatedPrice
-            dicttax[profitaccount] = position.lastCalculatedTax
+            dict_prices[profitaccount] = position.lastCalculatedPrice
+            dict_tax[profitaccount] = position.lastCalculatedTax
 
         for booking in accounting.models.Booking.objects.filter(accountingPeriod=currentValidAccountingPeriod):
             if booking.bookingReference == self:
                 raise InvoiceAlreadyRegistered()
-        for profitaccount, amount in iter(dictprices.items()):
+        for profitaccount, amount in iter(dict_prices.items()):
             booking = accounting.models.Booking()
             booking.toAccount = activaaccount[0]
             booking.fromAccount = profitaccount
@@ -112,7 +119,7 @@ class Invoice(SalesContract):
         booking.bookingDate = date.today().__str__()
         booking.bookingReference = self
         booking.accountingPeriod = currentValidAccountingPeriod
-        booking.amount = self.lastCalculatedPrice
+        booking.amount = self.last_calculated_price
         booking.staff = request.user
         booking.lastmodifiedby = request.user
         booking.save()
