@@ -114,7 +114,7 @@ class TemplateSet(models.Model):
         return xstr(self.id) + ' ' + xstr(self.title)
 
 
-class UserExtensionPostalAddress(crm.models.PostalAddress):
+class UserExtensionPostalAddress(crm.contact.postaladdress.PostalAddress):
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINUSEREXTENTION)
     userExtension = models.ForeignKey(UserExtension)
 
@@ -127,7 +127,7 @@ class UserExtensionPostalAddress(crm.models.PostalAddress):
         verbose_name_plural = _('Postal Address for User Extention')
 
 
-class UserExtensionPhoneAddress(crm.models.PhoneAddress):
+class UserExtensionPhoneAddress(crm.contact.phoneaddress.PhoneAddress):
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINUSEREXTENTION)
     userExtension = models.ForeignKey(UserExtension)
 
@@ -140,7 +140,7 @@ class UserExtensionPhoneAddress(crm.models.PhoneAddress):
         verbose_name_plural = _('Phonenumber for User Extention')
 
 
-class UserExtensionEmailAddress(crm.models.EmailAddress):
+class UserExtensionEmailAddress(crm.contact.emailaddress.EmailAddress):
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINUSEREXTENTION)
     userExtension = models.ForeignKey(UserExtension)
 

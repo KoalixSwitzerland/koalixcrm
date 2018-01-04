@@ -83,7 +83,7 @@ class PhoneAddressForSalesContract(PhoneAddress):
 
 
 class TextParagraphInSalesContract(models.Model):
-    SalesContract = models.ForeignKey("SalesContract")
+    sales_contract = models.ForeignKey("SalesContract")
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=2, choices=PURPOSESTEXTPARAGRAPHINDOCUMENTS)
     text_paragraph = models.TextField(verbose_name=_("Text"), blank=False, null=False)
 

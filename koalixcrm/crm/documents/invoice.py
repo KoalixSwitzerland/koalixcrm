@@ -7,7 +7,9 @@ from koalixcrm.crm.const.status import *
 from koalixcrm.crm.exceptions import *
 from koalixcrm import accounting
 from koalixcrm.crm.documents.salescontract import SalesContract
+from koalixcrm.crm.documents.salescontract import TextParagraphInSalesContract
 from koalixcrm.crm.documents.salescontractposition import SalesContractPosition
+from koalixcrm.djangoUserExtension.models import TextParagraphInDocumentTemplate
 import koalixcrm.crm.documents.pdfexport
 
 
@@ -47,14 +49,20 @@ class Invoice(SalesContract):
 
         if type(calling_model) == koalixcrm.crm.documents.contract.Contract:
             invoice_template_id = calling_model.default_template_set.invoice_template.id
-            paragraphs = TextParagraphInDocumentTemplate.objects.filter(document_template=invoice_template_id)
-            for paragraph in list(paragraphs):
-                self.copy_and_attach(paragraph)
+            default_paragraphs = TextParagraphInDocumentTemplate.objects.filter(document_template=invoice_template_id)
+            for default_paragraph in list(default_paragraphs):
+                invoice_paragraph = TextParagraphInSalesContract()
+                invoice_paragraph.create_paragraph(default_paragraph, self)
+
         if type(calling_model) == koalixcrm.crm.documents.quote.Quote:
             quote_positions = SalesContractPosition.objects.filter(contract=calling_model.id)
             for quote_position in list(quote_positions):
                 invoice_position = SalesContractPosition()
                 invoice_position.create_position(quote_position, self)
+            quote_paragraphs = TextParagraphInSalesContract.objects.filter(sales_contract=calling_model.id)
+            for quote_paragraph in list(quote_paragraphs):
+                invoice_paragraph = TextParagraphInSalesContract()
+                invoice_paragraph.create_paragraph(quote_paragraph, self)
 
     def is_complete_with_price(self):
         """ Checks whether the Invoice is completed with a price, in case the invoice
