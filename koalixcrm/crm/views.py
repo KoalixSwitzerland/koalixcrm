@@ -26,7 +26,7 @@ def export_pdf(calling_model_admin, request, document, redirect_to):
         Raises:
           raises Http404 exception if anything goes wrong"""
     try:
-        pdf = document.createPDF()
+        pdf = document.create_pdf()
         response = HttpResponse(FileWrapper(open(pdf, 'rb')), content_type='application/pdf')
         response['Content-Length'] = path.getsize(pdf)
     except (TemplateSetMissing, UserExtensionMissing, CalledProcessError, UserExtensionEmailAddressMissing, UserExtensionPhoneAddressMissing) as e:

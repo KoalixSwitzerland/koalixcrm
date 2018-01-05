@@ -15,10 +15,10 @@ class PaymentReminder(SalesContract):
                                            validators=[MinValueValidator(1), MaxValueValidator(3)])
     status = models.CharField(max_length=1, choices=INVOICESTATUS)
 
-    def createPDF(self):
+    def create_pdf(self):
         self.last_print_date = datetime.now()
         self.save()
-        return koalixcrm.crm.documents.pdfexport.PDFExport.createPDF(self)
+        return koalixcrm.crm.documents.pdfexport.PDFExport.create_pdf(self)
 
     def __str__(self):
         return _("Payment Reminder") + ": " + str(self.id) + " " + _("from Contract") + ": " + str(self.contract.id)

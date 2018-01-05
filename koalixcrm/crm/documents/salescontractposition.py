@@ -1,6 +1,7 @@
 from decimal import Decimal
 
 from django.db import models
+from django.contrib import admin
 from django.utils.translation import ugettext as _
 
 
@@ -65,4 +66,17 @@ class SalesContractPosition(Position):
     def __str__(self):
         return _("Salescontract Position") + ": " + str(self.id)
 
+
+class SalesContractInlinePosition(admin.TabularInline):
+    model = SalesContractPosition
+    extra = 1
+    classes = ['expand']
+    fieldsets = (
+        ('', {
+            'fields': (
+            'position_number', 'quantity', 'unit', 'product', 'description', 'discount', 'overwrite_product_price',
+            'position_price_per_unit', 'sent_on')
+        }),
+    )
+    allow_add = True
 

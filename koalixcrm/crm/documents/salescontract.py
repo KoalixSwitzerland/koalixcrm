@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-
 from django.db import models
+from django.contrib import admin
 from django.utils.translation import ugettext as _
 from koalixcrm.crm.const.purpose import *
 from koalixcrm.globalSupportFunctions import xstr
@@ -29,7 +29,7 @@ class SalesContract(models.Model):
     last_modified_by = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True},
                                          verbose_name=_("Last modified by"), related_name="db_lstscmodified", null=True,
                                          blank="True")
-    template_set = models.ForeignKey("djangoUserExtension.TemplateSet", verbose_name=_("Referred Template Set"), null=True,
+    template_set = models.ForeignKey("djangoUserExtension.DocumentTemplate", verbose_name=_("Referred Template"), null=True,
                                      blank=True)
 
     last_print_date = models.DateTimeField(verbose_name=_("Last printed"), blank=True, null=True)
@@ -38,6 +38,19 @@ class SalesContract(models.Model):
         app_label = "crm"
         verbose_name = _('Sales Contract')
         verbose_name_plural = _('Sales Contracts')
+
+    def get_fop_config_file(self):
+        return self.template_set.fop_config_file
+
+    def get_xsl_file(self):
+        return self.template_set.xsl_file
+
+    def copy_sales_contract(self, to_be_copied):
+        self.contract = to_be_copied.contract
+        self.customer = to_be_copied.customer
+        self.currency = to_be_copied.currency
+        self.discount = to_be_copied.discount
+        self.description = to_be_copied.description
 
     def __str__(self):
         return _("Sales Contract") + ": " + str(self.id) + " " + _("from Contract") + ": " + str(self.contract.id)
@@ -94,3 +107,54 @@ class TextParagraphInSalesContract(models.Model):
 
     def __str__(self):
         return str(self.id)
+
+
+class SalesContractTextParagraph(admin.StackedInline):
+    model = TextParagraphInSalesContract
+    extra = 1
+    classes = ['collapse']
+    fieldsets = (
+        ('Basics', {
+            'fields': ('text_paragraph', 'purpose', )
+        }),
+    )
+    allow_add = True
+
+
+class SalesContractPostalAddress(admin.StackedInline):
+    model = PostalAddressForSalesContract
+    extra = 1
+    classes = ['collapse']
+    fieldsets = (
+        ('Basics', {
+            'fields': (
+            'prefix', 'prename', 'name', 'addressline1', 'addressline2', 'addressline3', 'addressline4', 'zipcode',
+            'town', 'state', 'country', 'purpose')
+        }),
+    )
+    allow_add = True
+
+
+class SalesContractPhoneAddress(admin.TabularInline):
+    model = PhoneAddressForSalesContract
+    extra = 1
+    classes = ['collapse']
+    fieldsets = (
+        ('Basics', {
+            'fields': ('phone', 'purpose',)
+        }),
+    )
+    allow_add = True
+
+
+class SalesContractEmailAddress(admin.TabularInline):
+    model = EmailAddressForSalesContract
+    extra = 1
+    classes = ['collapse']
+    fieldsets = (
+        ('Basics', {
+            'fields': ('email', 'purpose',)
+        }),
+    )
+    allow_add = True
+

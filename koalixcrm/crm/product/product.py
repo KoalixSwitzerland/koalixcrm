@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.contrib import admin
 from django.utils.translation import ugettext as _
 from koalixcrm.crm.product.unit import UnitTransform
 from koalixcrm.crm.contact.customergroup import CustomerGroup
-
-import koalixcrm.crm.product.price
+from koalixcrm.crm.product.unit import ProductUnitTransform
+from koalixcrm.crm.product.price import ProductPrice
 
 
 class Product(models.Model):
@@ -80,3 +81,12 @@ class Product(models.Model):
                 "that matches the date") + ": " + self.date.__str__() + " ," + _(
                 "customer") + ": " + self.customer.__str__() + " ," + _("currency")+ ": "+ self.currency.__str__()+ _(" and unit") + ":" + self.unit.__str__()
 
+
+class OptionProduct(admin.ModelAdmin):
+    list_display = ('product_number', 'title', 'default_unit', 'tax', 'accounting_product_categorie')
+    list_display_links = ('product_number',)
+    fieldsets = (
+        (_('Basics'), {
+            'fields': ('product_number', 'title', 'description', 'default_unit', 'tax', 'accounting_product_categorie')
+        }),)
+    inlines = [ProductPrice, ProductUnitTransform]

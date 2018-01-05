@@ -1,8 +1,13 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.contrib import admin
 from django.utils.translation import ugettext as _
 from koalixcrm.crm.contact.contact import Contact
+from koalixcrm.crm.contact.contact import ContactPostalAddress
+from koalixcrm.crm.contact.contact import ContactPhoneAddress
+from koalixcrm.crm.contact.contact import ContactEmailAddress
+
 
 
 class Supplier(Contact):
@@ -16,3 +21,17 @@ class Supplier(Contact):
     def __str__(self):
         return str(self.id) + ' ' + self.name
 
+
+class OptionSupplier(admin.ModelAdmin):
+    list_display = ('id', 'name', 'offersShipmentToCustomers')
+    fieldsets = (('', {'fields': ('name', 'offersShipmentToCustomers')}),)
+    inlines = [ContactPostalAddress, ContactPhoneAddress, ContactEmailAddress]
+    allow_add = True
+
+    def save_model(self, request, obj, form, change):
+        if (change == True):
+            obj.lastmodifiedby = request.user
+        else:
+            obj.lastmodifiedby = request.user
+            obj.staff = request.user
+        obj.save()

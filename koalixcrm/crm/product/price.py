@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.contrib import admin
 from django.utils.translation import ugettext as _
 from koalixcrm.crm.product.currency import Currency
 from koalixcrm.crm.product.unit import Unit
 from koalixcrm.crm.contact.customergroup import CustomerGroup
-
-import koalixcrm.crm.product.product
 
 
 class CustomerGroupTransform(models.Model):
@@ -92,3 +91,14 @@ class Price(models.Model):
         verbose_name = _('Price')
         verbose_name_plural = _('Prices')
 
+
+class ProductPrice(admin.TabularInline):
+    model = Price
+    extra = 1
+    classes = ['collapse']
+    fieldsets = (
+        ('', {
+            'fields': ('price', 'currency', 'unit', 'valid_from', 'valid_until', 'customer_group')
+        }),
+    )
+    allow_add = True

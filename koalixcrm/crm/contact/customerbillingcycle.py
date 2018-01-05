@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.contrib import admin
 from django.utils.translation import ugettext as _
 
 
@@ -15,3 +16,9 @@ class CustomerBillingCycle(models.Model):
 
     def __str__(self):
         return str(self.id) + ' ' + self.name
+
+
+class OptionCustomerBillingCycle(admin.ModelAdmin):
+    list_display = ('id', 'timeToPaymentDate', 'name')
+    fieldsets = (('', {'fields': ('timeToPaymentDate', 'name',)}),)
+    allow_add = True

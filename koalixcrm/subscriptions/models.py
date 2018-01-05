@@ -5,10 +5,11 @@ from django.utils.translation import ugettext as _
 from filebrowser.fields import FileBrowseField
 from koalixcrm.crm import models as crmmodels
 from koalixcrm.subscriptions.const.events import *
+from koalixcrm.crm.product.product import Product
 
 
 class Subscription(models.Model):
-    contract = models.ForeignKey(crmmodels.Contract, verbose_name=_('Subscription Type'))
+    contract = models.ForeignKey('crm.Contract', verbose_name=_('Subscription Type'))
     subscriptiontype = models.ForeignKey('SubscriptionType', verbose_name=_('Subscription Type'), null=True)
 
     def createSubscriptionFromContract(self, contract):
@@ -16,7 +17,7 @@ class Subscription(models.Model):
         self.save()
         return self
 
-    def createQuote(self):
+    def create_quote(self):
         quote = Quote()
         quote.contract = self.contract
         quote.discount = 0
@@ -29,14 +30,14 @@ class Subscription(models.Model):
         quote.save()
         return quote
 
-    def createInvoice(self):
+    def create_invoice(self):
         invoice = crmmodels.Invoice()
         invoice.contract = self.contract
         invoice.discount = 0
         invoice.staff = self.contract.staff
-        invoice.customer = self.contract.defaultcustomer
+        invoice.customer = self.contract.default_customer
         invoice.status = 'C'
-        invoice.currency = self.contract.defaultcurrency
+        invoice.currency = self.contract.default_currency
         invoice.payable_until = date.today() + timedelta(
             days=self.contract.defaultcustomer.defaultCustomerBillingCycle.timeToPaymentDate)
         invoice.dateofcreation = date.today().__str__()
@@ -65,7 +66,7 @@ class SubscriptionEvent(models.Model):
         verbose_name_plural = _('Subscription Events')
 
 
-class SubscriptionType(crmmodels.Product):
+class SubscriptionType(Product):
     cancelationPeriod = models.IntegerField(verbose_name=_("Cancelation Period (months)"), blank=True, null=True)
     automaticContractExtension = models.IntegerField(verbose_name=_("Automatic Contract Extension (months)"),
                                                      blank=True, null=True)

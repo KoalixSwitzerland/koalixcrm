@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.contrib import admin
 from django.utils.translation import ugettext as _
 from koalixcrm.crm.contact.phoneaddress import PhoneAddress
 from koalixcrm.crm.contact.emailaddress import EmailAddress
@@ -47,6 +48,7 @@ class EmailAddressForContact(EmailAddress):
     def __str__(self):
         return str(self.email)
 
+
 class PostalAddressForContact(PostalAddress):
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCUSTOMER)
     person = models.ForeignKey(Contact)
@@ -58,3 +60,40 @@ class PostalAddressForContact(PostalAddress):
 
     def __str__(self):
         return xstr(self.prename) + ' ' + xstr(self.name) + ' ' + xstr(self.addressline1)
+
+class ContactPostalAddress(admin.StackedInline):
+    model = PostalAddressForContact
+    extra = 1
+    classes = ['collapse']
+    fieldsets = (
+        ('Basics', {
+            'fields': (
+            'prefix', 'prename', 'name', 'addressline1', 'addressline2', 'addressline3', 'addressline4', 'zipcode',
+            'town', 'state', 'country', 'purpose')
+        }),
+    )
+    allow_add = True
+
+
+class ContactPhoneAddress(admin.TabularInline):
+    model = PhoneAddressForContact
+    extra = 1
+    classes = ['collapse']
+    fieldsets = (
+        ('Basics', {
+            'fields': ('phone', 'purpose',)
+        }),
+    )
+    allow_add = True
+
+
+class ContactEmailAddress(admin.TabularInline):
+    model = EmailAddressForContact
+    extra = 1
+    classes = ['collapse']
+    fieldsets = (
+        ('Basics', {
+            'fields': ('email', 'purpose',)
+        }),
+    )
+    allow_add = True

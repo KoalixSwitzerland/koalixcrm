@@ -108,7 +108,7 @@ class PDFExport:
         out.close()
 
     @staticmethod
-    def performXSLTransformation(file_with_serialized_xml, xsl_file, fop_config_file, file_output_pdf):
+    def perform_xsl_transformation(file_with_serialized_xml, xsl_file, fop_config_file, file_output_pdf):
         check_output([settings.FOP_EXECUTABLE,
                       '-c', fop_config_file.path_full,
                       '-xml', os.path.join(settings.PDF_OUTPUT_ROOT, file_with_serialized_xml),
@@ -116,7 +116,7 @@ class PDFExport:
                       '-pdf', file_output_pdf], stderr=STDOUT)
 
     @staticmethod
-    def createPDF(object_to_create_pdf):
+    def create_pdf(object_to_create_pdf):
         # define the files which are involved in pdf creation process
         fop_config_file = object_to_create_pdf.get_fop_config_file()
         xsl_file = object_to_create_pdf.get_xsl_file()
@@ -133,6 +133,6 @@ class PDFExport:
         PDFExport.extend_xml_with_root_element(file_with_serialized_xml)
 
         # perform xsl transformation
-        PDFExport.performXSLTransformation(file_with_serialized_xml, xsl_file, fop_config_file, file_output_pdf)
+        PDFExport.perform_xsl_transformation(file_with_serialized_xml, xsl_file, fop_config_file, file_output_pdf)
 
         return file_output_pdf
