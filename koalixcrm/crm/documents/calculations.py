@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from decimal import Decimal
-import koalixcrm.crm.documents.salescontractposition
+from koalixcrm.crm.documents.salescontractposition import SalesContractPosition
 import koalixcrm.crm.documents.purchaseorder
 import koalixcrm.crm.documents.quote
 import koalixcrm.crm.documents.invoice
@@ -30,7 +30,7 @@ class Calculations:
         tax = 0
         if (type(document) == koalixcrm.crm.documents.quote.Quote) or \
                 (type(document) == koalixcrm.crm.documents.invoice.Invoice):
-            positions = koalixcrm.crm.documents.salescontractposition.SalesContractPosition.objects.filter(contract=document.id)
+            positions = SalesContractPosition.objects.filter(contract=document.id)
             contact_for_price_calculation = document.customer
             calculate_with_document_discount = True
         else:

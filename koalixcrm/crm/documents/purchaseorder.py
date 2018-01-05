@@ -1,18 +1,19 @@
 # -*- coding: utf-8 -*-
 
 from datetime import *
-from decimal import Decimal
 
 from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext as _
 
 from koalixcrm.plugin import *
+from koalixcrm.crm.views import export_pdf
 from koalixcrm.crm.const.status import *
 from koalixcrm.crm.contact.phoneaddress import PhoneAddress
 from koalixcrm.crm.contact.emailaddress import EmailAddress
 from koalixcrm.crm.contact.postaladdress import PostalAddress
 from koalixcrm.crm.documents.salescontractposition import Position
+from koalixcrm.crm.documents.calculations import Calculations
 from koalixcrm.crm.const.purpose import *
 from koalixcrm.globalSupportFunctions import xstr
 import koalixcrm.crm.documents.pdfexport
@@ -140,59 +141,22 @@ class PurchaseOrder(models.Model):
     last_modified_by = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True},
                                          verbose_name=_("Last modified by"), related_name="db_polstmodified")
     last_print_date = models.DateTimeField(verbose_name=_("Last printed"), blank=True, null=True)
+    template_set = models.ForeignKey("djangoUserExtension.DocumentTemplate", verbose_name=_("Referred Template"), null=True,
+                                     blank=True)
 
-    def recalculatePrices(self, pricingDate):
-        price = 0
-        tax = 0
-        try:
-            positions = PurchaseOrderPosition.objects.filter(contract=self.id)
-            if isinstance(positions, PurchaseOrderPosition):
-                if isinstance(self.discount, Decimal):
-                    price = int(positions.recalculatePrices(pricingDate, self.customer, self.currency) * (
-                    1 - self.discount / 100) / self.currency.rounding) * self.currency.rounding
-                    tax = int(positions.recalculateTax(self.currency) * (
-                    1 - self.discount / 100) / self.currency.rounding) * self.currency.rounding
-                else:
-                    price = positions.recalculatePrices(pricingDate, self.customer, self.currency)
-                    tax = positions.recalculateTax(self.currency)
-            else:
-                for position in positions:
-                    if isinstance(self.discount, Decimal):
-                        price += int(position.recalculate_prices(pricingDate, self.customer, self.currency) * (
-                        1 - self.discount / 100) / self.currency.rounding) * self.currency.rounding
-                        tax += int(position.recalculateTax(self.currency) * (
-                        1 - self.discount / 100) / self.currency.rounding) * self.currency.rounding
-                    else:
-                        price += position.recalculate_prices(pricingDate, self.customer, self.currency)
-                        tax += position.recalculateTax(self.currency)
-            self.last_calculated_price = price
-            self.last_calculated_tax = tax
-            self.last_pricing_date = pricingDate
-            self.save()
-            return 1
-        except PurchaseOrder.DoesNotExist as e:
-            print("ERROR " + e.__str__())
-            print("Der Fehler trat beim File: " + self.sourcefile + " / Cell: " + listOfLines[0][
-                                                                                  listOfLines[0].find("cell ") + 4:
-                                                                                  listOfLines[0].find(
-                                                                                      "(cellType ") - 1] + " auf!")
-            exit()
-            return 0
-
-    def createPDF(self):
+    def create_pdf(self):
         self.last_print_date = datetime.now()
         self.save()
-        return koalixcrm.crm.documents.pdfexport.PDFExport.createPDF(self)
+        return koalixcrm.crm.documents.pdfexport.PDFExport.create_pdf(self)
+
+    def __str__(self):
+        return _("Purchase Order") + ": " + str(self.id) + " " + _("from Contract") + ": " + str(self.contract.id)
 
 
     class Meta:
         app_label = "crm"
         verbose_name = _('Purchase Order')
         verbose_name_plural = _('Purchase Order')
-
-    def __str__(self):
-        return _("Purchase Order") + ": " + str(self.id) + " " + _("from Contract") + ": " + str(self.contract.id)
-
 
 
 class OptionPurchaseOrder(admin.ModelAdmin):
@@ -241,14 +205,14 @@ class OptionPurchaseOrder(admin.ModelAdmin):
 
     recalculatePrices.short_description = _("Recalculate Prices")
 
-    def createPurchseOrderPDF(self, request, queryset):
+    def createPurchaseOrderPDF(self, request, queryset):
         for obj in queryset:
             response = export_pdf(self, request, obj, "/admin/crm/purchaseorder/")
             return response
 
-    createPurchseOrderPDF.short_description = _("Create PDF of Purchase Order")
+    createPurchaseOrderPDF.short_description = _("Create PDF of Purchase Order")
 
-    actions = ['createPurchseOrderPDF']
+    actions = ['createPurchaseOrderPDF']
     pluginProcessor = PluginProcessor()
     actions.extend(pluginProcessor.getPluginAdditions("purchaseOrderActions"))
 

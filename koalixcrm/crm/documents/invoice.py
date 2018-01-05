@@ -4,6 +4,7 @@ from datetime import *
 from django import forms
 from django.db import models
 from django.contrib import admin
+from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext as _
 from koalixcrm.crm.const.status import *
 from koalixcrm.crm.exceptions import *
@@ -12,8 +13,9 @@ from koalixcrm.crm.documents.salescontract import SalesContract
 from koalixcrm.crm.documents.salescontract import TextParagraphInSalesContract
 from koalixcrm.crm.documents.salescontractposition import SalesContractPosition
 from koalixcrm.djangoUserExtension.models import TextParagraphInDocumentTemplate
-import koalixcrm.crm.documents.pdfexport
+from koalixcrm.crm.documents.pdfexport import PDFExport
 from koalixcrm.plugin import *
+from koalixcrm.crm.views import export_pdf
 from koalixcrm.crm.documents.salescontract import SalesContractTextParagraph
 from koalixcrm.crm.documents.salescontract import SalesContractPostalAddress
 from koalixcrm.crm.documents.salescontract import SalesContractPhoneAddress
@@ -21,6 +23,8 @@ from koalixcrm.crm.documents.salescontract import SalesContractEmailAddress
 from koalixcrm.crm.documents.salescontractposition import SalesContractInlinePosition
 from koalixcrm.accounting.admin import InlineBookings
 from koalixcrm.accounting.models import Account
+import koalixcrm.crm.documents.contract
+import koalixcrm.crm.documents.quote
 
 
 class Invoice(SalesContract):
@@ -127,7 +131,7 @@ class Invoice(SalesContract):
     def create_pdf(self):
         self.last_print_date = datetime.now()
         self.save()
-        return koalixcrm.crm.documents.pdfexport.PDFExport.create_pdf(self)
+        return PDFExport.create_pdf(self)
 
     def __str__(self):
         return _("Invoice") + ": " + str(self.id) + " " + _("from Contract") + ": " + str(self.contract.id)
@@ -186,16 +190,12 @@ class OptionInvoice(admin.ModelAdmin):
             obj.staff = request.user
         obj.save()
 
-    def recalculatePrices(self, request, queryset):
-        try:
-            for obj in queryset:
-                obj.recalculate_prices(date.today())
-            self.message_user(request, "Successfully recalculated Prices")
-        except Product.NoPriceFound as e:
-            self.message_user(request, "Unsuccessfull in updating the Prices " + e.__str__(), level=messages.ERROR)
-            return;
+    def recalculate_prices(self, request, queryset):
+        for obj in queryset:
+            self.after_saving_model_and_related_inlines(request, obj)
+        return;
 
-    recalculatePrices.short_description = _("Recalculate Prices")
+    recalculate_prices.short_description = _("Recalculate Prices")
 
     def create_pdf(self, request, queryset):
         for obj in queryset:
@@ -249,7 +249,7 @@ class OptionInvoice(admin.ModelAdmin):
 
     registerPaymentInAccounting.short_description = _("Register Payment in Accounting")
 
-    actions = ['recalculatePrices', 'create_pdf', 'registerInvoiceInAccounting',
+    actions = ['recalculate_prices', 'create_pdf', 'registerInvoiceInAccounting',
                'unregisterInvoiceInAccounting', 'registerPaymentInAccounting',]
     pluginProcessor = PluginProcessor()
     actions.extend(pluginProcessor.getPluginAdditions("invoiceActions"))

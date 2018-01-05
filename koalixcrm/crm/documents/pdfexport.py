@@ -43,7 +43,7 @@ class PDFExport:
     def add_positions(objects_to_serialize, position_class, object_to_create_pdf):
         objects_to_serialize += list(position_class.objects.filter(contract=object_to_create_pdf.id))
         for position in list(position_class.objects.filter(contract=object_to_create_pdf.id)):
-            objects_to_serialize += list(koalixcrm.crm.documents.salescontractposition.Position.objects.filter(id=position.id))
+            objects_to_serialize += list(Position.objects.filter(id=position.id))
             objects_to_serialize += list(Product.objects.filter(id=position.product.id))
             objects_to_serialize += list(Unit.objects.filter(id=position.unit.id))
         return objects_to_serialize

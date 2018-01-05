@@ -53,8 +53,6 @@ class SalesContractPosition(Position):
         self.product = calling_model.product
         self.unit = calling_model.unit
         self.sent_on = calling_model.sent_on
-        self.supplier = calling_model.supplier
-        self.shipmentID = calling_model.shipmentID
         self.overwrite_product_price = calling_model.overwrite_product_price
         self.position_price_per_unit = calling_model.position_price_per_unit
         self.last_pricing_date = calling_model.last_pricing_date
