@@ -10,6 +10,7 @@ from django.core import serializers
 from django.utils.translation import ugettext as _
 from koalixcrm.crm.exceptions import *
 from koalixcrm import djangoUserExtension
+from koalixcrm import crm
 from koalixcrm.crm.contact.contact import Contact
 from koalixcrm.crm.contact.contact import PostalAddressForContact
 from koalixcrm.crm.contact.phoneaddress import PhoneAddress
@@ -20,13 +21,14 @@ from koalixcrm.crm.product.unit import Unit
 from koalixcrm.crm.product.product import Product
 from lxml import etree
 
-import koalixcrm.crm.documents.salescontractposition
+from koalixcrm.crm.documents.salescontractposition import Position
 import koalixcrm.crm.documents.purchaseorder
 import koalixcrm.crm.documents.quote
 import koalixcrm.crm.documents.purchaseconfirmation
 import koalixcrm.crm.documents.invoice
 import koalixcrm.crm.documents.deliverynote
 import koalixcrm.crm.documents.paymentreminder
+import koalixcrm.crm.documents.salescontract
 
 
 class PDFExport:
@@ -70,10 +72,12 @@ class PDFExport:
             for address in list(PostalAddressForContact.objects.filter(person=object_to_create_pdf.supplier.id)):
                 objects_to_serialize += list(PostalAddress.objects.filter(id=address.id))
         if export_customer:
+            objects_to_serialize = list(koalixcrm.crm.documents.salescontract.SalesContract.objects.filter(id=object_to_create_pdf.id))
             objects_to_serialize += list(Contact.objects.filter(id=object_to_create_pdf.customer.id))
             objects_to_serialize += list(PostalAddressForContact.objects.filter(person=object_to_create_pdf.customer.id))
             for address in list(PostalAddressForContact.objects.filter(person=object_to_create_pdf.customer.id)):
                 objects_to_serialize += list(PostalAddress.objects.filter(id=address.id))
+            objects_to_serialize += list(koalixcrm.crm.documents.salescontract.TextParagraphInSalesContract.objects.filter(sales_contract=object_to_create_pdf.id))
         objects_to_serialize += list(Currency.objects.filter(id=object_to_create_pdf.currency.id))
         objects_to_serialize = PDFExport.add_positions(objects_to_serialize, position_class, object_to_create_pdf)
         objects_to_serialize += list(auth.models.User.objects.filter(id=object_to_create_pdf.staff.id))
@@ -91,12 +95,11 @@ class PDFExport:
         objects_to_serialize += list(userExtension)
         objects_to_serialize += list(EmailAddress.objects.filter(id=email_address[0].id))
         objects_to_serialize += list(PhoneAddress.objects.filter(id=phone_address[0].id))
-        template_set = djangoUserExtension.models.TemplateSet.objects.filter(
-            id=userExtension[0].defaultTemplateSet.id)
+        template_set = djangoUserExtension.models.DocumentTemplate.objects.filter(
+            id=object_to_create_pdf.template_set.id)
         if len(template_set) == 0:
             raise TemplateSetMissing(_("During "+type(object_to_create_pdf)+" PDF Export"))
         objects_to_serialize += list(template_set)
-        objects_to_serialize += list(auth.models.User.objects.filter(id=object_to_create_pdf.last_modified_by.id))
         return objects_to_serialize
 
     @staticmethod

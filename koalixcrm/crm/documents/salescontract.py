@@ -100,6 +100,13 @@ class TextParagraphInSalesContract(models.Model):
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=2, choices=PURPOSESTEXTPARAGRAPHINDOCUMENTS)
     text_paragraph = models.TextField(verbose_name=_("Text"), blank=False, null=False)
 
+    def create_paragraph(self, default_paragraph, sales_contract):
+        self.sales_contract = sales_contract
+        self.purpose = default_paragraph.purpose
+        self.text_paragraph = default_paragraph.text_paragraph
+        self.save()
+        return
+
     class Meta:
         app_label = "crm"
         verbose_name = _('TextParagraphInSalesContract')

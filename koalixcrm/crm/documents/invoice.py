@@ -23,8 +23,10 @@ from koalixcrm.crm.documents.salescontract import SalesContractEmailAddress
 from koalixcrm.crm.documents.salescontractposition import SalesContractInlinePosition
 from koalixcrm.accounting.admin import InlineBookings
 from koalixcrm.accounting.models import Account
+from koalixcrm.crm.product.product import Product
 import koalixcrm.crm.documents.contract
 import koalixcrm.crm.documents.quote
+import koalixcrm.crm.documents.calculations
 
 
 class Invoice(SalesContract):
@@ -176,7 +178,7 @@ class OptionInvoice(admin.ModelAdmin):
 
     def after_saving_model_and_related_inlines(self, request, obj):
         try:
-            Calculations.calculate_document_price(obj, date.today())
+            koalixcrm.crm.documents.calculations.Calculations.calculate_document_price(obj, date.today())
             self.message_user(request, "Successfully calculated Prices")
         except Product.NoPriceFound as e:
             self.message_user(request, "Unsuccessfull in updating the Prices " + e.__str__(), level=messages.ERROR)

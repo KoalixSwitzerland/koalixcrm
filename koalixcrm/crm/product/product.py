@@ -7,6 +7,7 @@ from koalixcrm.crm.product.unit import UnitTransform
 from koalixcrm.crm.contact.customergroup import CustomerGroup
 from koalixcrm.crm.product.unit import ProductUnitTransform
 from koalixcrm.crm.product.price import ProductPrice
+import koalixcrm.crm.product.price
 
 
 class Product(models.Model):
