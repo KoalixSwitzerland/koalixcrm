@@ -91,23 +91,23 @@ class Invoice(SalesContract):
         dict_prices = dict()
         dict_tax = dict()
         currentValidAccountingPeriod = accounting.models.AccountingPeriod.getCurrentValidAccountingPeriod()
-        activaaccount = accounting.models.Account.objects.filter(isopeninterestaccount=True)
+        activa_account = accounting.models.Account.objects.filter(isopeninterestaccount=True)
         if not self.is_complete_with_price():
             raise IncompleteInvoice(_("Complete invoice and run price recalculation. Price may not be Zero"))
-        if len(activaaccount) == 0:
+        if len(activa_account) == 0:
             raise OpenInterestAccountMissing(_("Please specify one open intrest account in the accounting"))
         for position in list(SalesContractPosition.objects.filter(contract=self.id)):
-            profitaccount = position.product.accoutingProductCategorie.profitAccount
-            dict_prices[profitaccount] = position.lastCalculatedPrice
-            dict_tax[profitaccount] = position.lastCalculatedTax
+            profit_account = position.product.accoutingProductCategorie.profitAccount
+            dict_prices[profit_account] = position.lastCalculatedPrice
+            dict_tax[profit_account] = position.lastCalculatedTax
 
         for booking in accounting.models.Booking.objects.filter(accountingPeriod=currentValidAccountingPeriod):
             if booking.bookingReference == self:
                 raise InvoiceAlreadyRegistered()
-        for profitaccount, amount in iter(dict_prices.items()):
+        for profit_account, amount in iter(dict_prices.items()):
             booking = accounting.models.Booking()
-            booking.toAccount = activaaccount[0]
-            booking.fromAccount = profitaccount
+            booking.toAccount = activa_account[0]
+            booking.fromAccount = profit_account
             booking.bookingReference = self
             booking.accountingPeriod = currentValidAccountingPeriod
             booking.bookingDate = date.today().__str__()
@@ -118,10 +118,10 @@ class Invoice(SalesContract):
 
     def registerpaymentinaccounting(self, request, amount, paymentaccount):
         currentValidAccountingPeriod = accounting.models.AccountingPeriod.getCurrentValidAccountingPeriod()
-        activaaccount = accounting.models.Account.objects.filter(isopeninterestaccount=True)
+        activa_account = accounting.models.Account.objects.filter(isopeninterestaccount=True)
         booking = accounting.models.Booking()
         booking.toAccount = paymentaccount
-        booking.fromAccount = activaaccount[0]
+        booking.fromAccount = activa_account[0]
         booking.bookingDate = date.today().__str__()
         booking.bookingReference = self
         booking.accountingPeriod = currentValidAccountingPeriod

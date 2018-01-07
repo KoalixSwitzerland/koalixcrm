@@ -16,6 +16,7 @@ from koalixcrm.crm.documents.salescontractposition import Position
 from koalixcrm.crm.documents.calculations import Calculations
 from koalixcrm.crm.const.purpose import *
 from koalixcrm.globalSupportFunctions import xstr
+from koalixcrm.crm.product.product import Product
 import koalixcrm.crm.documents.pdfexport
 
 
@@ -198,21 +199,14 @@ class OptionPurchaseOrder(admin.ModelAdmin):
             obj.staff = request.user
         obj.save()
 
-    def recalculatePrices(self, request, queryset):
-        for obj in queryset:
-            self.after_saving_model_and_related_inlines(request, obj)
-        return;
-
-    recalculatePrices.short_description = _("Recalculate Prices")
-
-    def createPurchaseOrderPDF(self, request, queryset):
+    def create_pdf(self, request, queryset):
         for obj in queryset:
             response = export_pdf(self, request, obj, "/admin/crm/purchaseorder/")
             return response
 
-    createPurchaseOrderPDF.short_description = _("Create PDF of Purchase Order")
+    create_pdf.short_description = _("Create PDF of Purchase Order")
 
-    actions = ['createPurchaseOrderPDF']
+    actions = ['create_pdf']
     pluginProcessor = PluginProcessor()
     actions.extend(pluginProcessor.getPluginAdditions("purchaseOrderActions"))
 

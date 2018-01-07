@@ -10,6 +10,7 @@ from koalixcrm.crm.documents.salescontract import SalesContractPhoneAddress
 from koalixcrm.crm.documents.salescontract import SalesContractEmailAddress
 from koalixcrm.crm.documents.salescontractposition import SalesContractInlinePosition
 from koalixcrm.crm.documents.salescontract import SalesContract
+from koalixcrm.crm.product.product import Product
 from koalixcrm.crm.views import export_pdf
 
 import koalixcrm.crm.documents.pdfexport
@@ -40,7 +41,6 @@ class PurchaseConfirmation(SalesContract):
 
         self.date_of_creation = date.today().__str__()
         self.save()
-
 
     def create_pdf(self):
         self.last_print_date = datetime.now()
@@ -100,13 +100,6 @@ class OptionPurchaseConfirmation(admin.ModelAdmin):
             obj.staff = request.user
         obj.save()
 
-    def recalculate_prices(self, request, queryset):
-        for obj in queryset:
-            self.after_saving_model_and_related_inlines(request, obj)
-        return;
-
-    recalculate_prices.short_description = _("Recalculate Prices")
-
     def create_pdf(self, request, queryset):
         for obj in queryset:
             response = export_pdf(self, request, obj, "/admin/crm/purchaseconfirmation/")
@@ -114,4 +107,4 @@ class OptionPurchaseConfirmation(admin.ModelAdmin):
 
     create_pdf.short_description = _("Create PDF of Purchase Confirmation")
 
-    actions = ['recalculate_prices', 'create_pdf']
+    actions = ['create_pdf']

@@ -15,6 +15,7 @@ from koalixcrm.crm.documents.salescontract import SalesContractPostalAddress
 from koalixcrm.crm.documents.salescontract import SalesContractPhoneAddress
 from koalixcrm.crm.documents.salescontract import SalesContractEmailAddress
 from koalixcrm.crm.documents.salescontractposition import SalesContractInlinePosition
+from koalixcrm.crm.product.product import Product
 import koalixcrm.crm.documents.calculations
 import koalixcrm.crm.documents.invoice
 import koalixcrm.crm.documents.pdfexport
@@ -111,13 +112,6 @@ class OptionQuote(admin.ModelAdmin):
             obj.staff = request.user
         obj.save()
 
-    def recalculate_prices(self, request, queryset):
-        for obj in queryset:
-            self.after_saving_model_and_related_inlines(request, obj)
-        return;
-
-    recalculate_prices.short_description = _("Recalculate Prices")
-
     def create_invoice(self, request, queryset):
         for obj in queryset:
             invoice = obj.create_invoice()
@@ -129,18 +123,18 @@ class OptionQuote(admin.ModelAdmin):
 
     def create_purchase_confirmation(self, request, queryset):
         for obj in queryset:
-            invoice = obj.create_purchase_confirmation()
+            purchase_confirmation = obj.create_purchase_confirmation()
             self.message_user(request, _("Purchase confirmation created"))
-            response = HttpResponseRedirect('/admin/crm/purchaseconfirmation/' + str(invoice.id))
+            response = HttpResponseRedirect('/admin/crm/purchaseconfirmation/' + str(purchase_confirmation.id))
         return response
 
         create_purchase_confirmation.short_description = _("Create Purchase confirmation")
 
     def create_delivery_note(self, request, queryset):
         for obj in queryset:
-            invoice = obj.create_delivery_note()
+            delivery_note = obj.create_delivery_note()
             self.message_user(request, _("Delivery note created"))
-            response = HttpResponseRedirect('/admin/crm/deliverynote/' + str(invoice.id))
+            response = HttpResponseRedirect('/admin/crm/deliverynote/' + str(delivery_note.id))
         return response
 
     create_delivery_note.short_description = _("Create Delivery note")
@@ -152,7 +146,7 @@ class OptionQuote(admin.ModelAdmin):
 
     create_pdf.short_description = _("Create PDF of Quote")
 
-    actions = ['recalculate_prices', 'create_purchase_confirmation','create_invoice',
+    actions = ['create_purchase_confirmation','create_invoice',
                'create_delivery_note', 'create_pdf']
     pluginProcessor = PluginProcessor()
     inlines.extend(pluginProcessor.getPluginAdditions("quoteActions"))

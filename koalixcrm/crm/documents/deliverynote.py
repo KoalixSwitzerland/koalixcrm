@@ -11,6 +11,7 @@ from koalixcrm.crm.documents.salescontract import SalesContractPhoneAddress
 from koalixcrm.crm.documents.salescontract import SalesContractEmailAddress
 from koalixcrm.crm.documents.salescontractposition import SalesContractInlinePosition
 from koalixcrm.crm.documents.salescontract import SalesContract
+from koalixcrm.crm.product.product import Product
 from koalixcrm.crm.views import export_pdf
 
 import koalixcrm.crm.documents.pdfexport
@@ -104,13 +105,6 @@ class OptionDeliveryNote(admin.ModelAdmin):
             obj.staff = request.user
         obj.save()
 
-    def recalculate_prices(self, request, queryset):
-        for obj in queryset:
-            self.after_saving_model_and_related_inlines(request, obj)
-        return;
-
-    recalculate_prices.short_description = _("Recalculate Prices")
-
     def create_pdf(self, request, queryset):
         for obj in queryset:
             response = export_pdf(self, request, obj, "/admin/crm/deliverynote/")
@@ -118,4 +112,4 @@ class OptionDeliveryNote(admin.ModelAdmin):
 
     create_pdf.short_description = _("Create PDF of Delivery Note")
 
-    actions = ['recalculate_prices', 'create_pdf']
+    actions = ['create_pdf']
