@@ -27,6 +27,9 @@ from koalixcrm.crm.product.product import Product
 import koalixcrm.crm.documents.contract
 import koalixcrm.crm.documents.quote
 import koalixcrm.crm.documents.calculations
+from django.contrib.admin import helpers
+from django.shortcuts import render
+from django.template.context_processors import csrf
 
 
 class Invoice(SalesContract):
@@ -77,6 +80,16 @@ class Invoice(SalesContract):
                 invoice_paragraph = TextParagraphInSalesContract()
                 invoice_paragraph.create_paragraph(quote_paragraph, self)
 
+    def create_delivery_note(self):
+        delivery_note = koalixcrm.crm.documents.deliverynote.DeliveryNote()
+        delivery_note.create_delivery_note(self)
+        return delivery_note
+
+    def create_payment_reminder(self):
+        payment_reminder = koalixcrm.crm.documents.paymentreminder.PaymentReminder()
+        payment_reminder.create_payment_reminder(self)
+        return payment_reminder
+
     def is_complete_with_price(self):
         """ Checks whether the Invoice is completed with a price, in case the invoice
         was not completed or the price calculation was not performed, the method
@@ -87,10 +100,10 @@ class Invoice(SalesContract):
         else:
             return False
 
-    def registerinvoiceinaccounting(self, request):
+    def register_invoice_in_accounting(self, request):
         dict_prices = dict()
         dict_tax = dict()
-        currentValidAccountingPeriod = accounting.models.AccountingPeriod.getCurrentValidAccountingPeriod()
+        current_valid_accounting_period = accounting.models.AccountingPeriod.getCurrentValidAccountingPeriod()
         activa_account = accounting.models.Account.objects.filter(isopeninterestaccount=True)
         if not self.is_complete_with_price():
             raise IncompleteInvoice(_("Complete invoice and run price recalculation. Price may not be Zero"))
@@ -109,22 +122,22 @@ class Invoice(SalesContract):
             booking.toAccount = activa_account[0]
             booking.fromAccount = profit_account
             booking.bookingReference = self
-            booking.accountingPeriod = currentValidAccountingPeriod
+            booking.accountingPeriod = current_valid_accounting_period
             booking.bookingDate = date.today().__str__()
             booking.staff = request.user
             booking.amount = amount
             booking.lastmodifiedby = request.user
             booking.save()
 
-    def registerpaymentinaccounting(self, request, amount, paymentaccount):
-        currentValidAccountingPeriod = accounting.models.AccountingPeriod.getCurrentValidAccountingPeriod()
+    def register_payment_in_accounting(self, request, amount, paymentaccount):
+        current_valid_accounting_period = accounting.models.AccountingPeriod.getCurrentValidAccountingPeriod()
         activa_account = accounting.models.Account.objects.filter(isopeninterestaccount=True)
         booking = accounting.models.Booking()
         booking.toAccount = paymentaccount
         booking.fromAccount = activa_account[0]
         booking.bookingDate = date.today().__str__()
         booking.bookingReference = self
-        booking.accountingPeriod = currentValidAccountingPeriod
+        booking.accountingPeriod = current_valid_accounting_period
         booking.amount = self.last_calculated_price
         booking.staff = request.user
         booking.lastmodifiedby = request.user
@@ -192,13 +205,6 @@ class OptionInvoice(admin.ModelAdmin):
             obj.staff = request.user
         obj.save()
 
-    def recalculate_prices(self, request, queryset):
-        for obj in queryset:
-            self.after_saving_model_and_related_inlines(request, obj)
-        return;
-
-    recalculate_prices.short_description = _("Recalculate Prices")
-
     def create_pdf(self, request, queryset):
         for obj in queryset:
             response = export_pdf(self, request, obj, "/admin/crm/invoice/")
@@ -206,10 +212,28 @@ class OptionInvoice(admin.ModelAdmin):
 
     create_pdf.short_description = _("Create PDF of Invoice")
 
-    def registerInvoiceInAccounting(self, request, queryset):
+    def create_delivery_note(self, request, queryset):
+        for obj in queryset:
+            delivery_note = obj.create_delivery_note()
+            self.message_user(request, _("Delivery note created"))
+            response = HttpResponseRedirect('/admin/crm/deliverynote/' + str(delivery_note.id))
+        return response
+
+    create_delivery_note.short_description = _("Create Delivery note")
+
+    def create_payment_reminder(self, request, queryset):
+        for obj in queryset:
+            payment_reminder = obj.create_payment_reminder()
+            self.message_user(request, _("Payment Reminder created"))
+            response = HttpResponseRedirect('/admin/crm/paymentreminder/' + str(payment_reminder.id))
+        return response
+
+    create_payment_reminder.short_description = _("Create Payment Reminder")
+
+    def register_invoice_in_accounting(self, request, queryset):
         try:
             for obj in queryset:
-                obj.registerinvoiceinaccounting(request)
+                obj.register_invoice_in_accounting(request)
             self.message_user(request, _("Successfully registered Invoice in the Accounting"))
             return;
         except OpenInterestAccountMissing as e:
@@ -219,7 +243,7 @@ class OptionInvoice(admin.ModelAdmin):
             self.message_user(request, "Did not register Invoice in Accounting: " + e.__str__(), level=messages.ERROR)
             return;
 
-    registerInvoiceInAccounting.short_description = _("Register Invoice in Accounting")
+    register_invoice_in_accounting.short_description = _("Register Invoice in Accounting")
 
     # def unregisterInvoiceInAccounting(self, request, queryset):
     # for obj in queryset:
@@ -227,7 +251,7 @@ class OptionInvoice(admin.ModelAdmin):
     # self.message_user(request, _("Successfully unregistered Invoice in the Accounting"))
     # unregisterInvoiceInAccounting.short_description = _("Unregister Invoice in Accounting")
 
-    def registerPaymentInAccounting(self, request, queryset):
+    def register_payment_in_accounting(self, request, queryset):
         form = None
         if request.POST.get('post'):
             if 'cancel' in request.POST:
@@ -236,10 +260,10 @@ class OptionInvoice(admin.ModelAdmin):
             elif 'register' in request.POST:
                 form = self.PaymentForm(request.POST)
                 if form.is_valid():
-                    paymentAmount = form.cleaned_data['paymentAmount']
-                    paymentAccount = form.cleaned_data['paymentAccount']
+                    payment_amount = form.cleaned_data['paymentAmount']
+                    payment_account = form.cleaned_data['paymentAccount']
                     for obj in queryset:
-                        obj.registerpaymentinaccounting(request, paymentAmount, paymentAccount)
+                        obj.register_payment_in_accounting(request, payment_amount, payment_account)
                     self.message_user(request, _("Successfully registered Payment in the Accounting"))
                     return HttpResponseRedirect(request.get_full_path())
         else:
@@ -248,11 +272,10 @@ class OptionInvoice(admin.ModelAdmin):
             c.update(csrf(request))
             return render(request, 'crm/admin/registerPayment.html', c)
 
+    register_payment_in_accounting.short_description = _("Register Payment in Accounting")
 
-    registerPaymentInAccounting.short_description = _("Register Payment in Accounting")
-
-    actions = ['recalculate_prices', 'create_pdf', 'registerInvoiceInAccounting',
-               'unregisterInvoiceInAccounting', 'registerPaymentInAccounting',]
+    actions = ['create_pdf', 'register_invoice_in_accounting', 'register_payment_in_accounting',
+               'create_payment_reminder', 'create_delivery_note']
     pluginProcessor = PluginProcessor()
     actions.extend(pluginProcessor.getPluginAdditions("invoiceActions"))
 

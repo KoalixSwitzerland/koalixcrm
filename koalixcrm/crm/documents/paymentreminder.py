@@ -48,7 +48,7 @@ class PaymentReminder(SalesContract):
             self.description = calling_model.description
             self.template_set = calling_model.default_template_set.purchase_confirmation_template
             self.discount = 0
-        elif type(calling_model) == koalixcrm.crm.documents.quote.Invoice:
+        elif type(calling_model) == koalixcrm.crm.documents.invoice.Invoice:
             self.derived_from_invoice = calling_model
             self.copy_sales_contract(calling_model)
 

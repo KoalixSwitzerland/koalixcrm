@@ -3,6 +3,7 @@
 from decimal import Decimal
 from koalixcrm.crm.documents.salescontractposition import SalesContractPosition
 import koalixcrm.crm.documents.purchaseorder
+import koalixcrm.crm.documents.salescontract
 import koalixcrm.crm.documents.quote
 import koalixcrm.crm.documents.invoice
 
@@ -28,8 +29,7 @@ class Calculations:
 
         price = 0
         tax = 0
-        if (type(document) == koalixcrm.crm.documents.quote.Quote) or \
-                (type(document) == koalixcrm.crm.documents.invoice.Invoice):
+        if isinstance(document, koalixcrm.crm.documents.salescontract.SalesContract):
             positions = SalesContractPosition.objects.filter(contract=document.id)
             contact_for_price_calculation = document.customer
             calculate_with_document_discount = True

@@ -54,9 +54,7 @@ class PDFExport:
     def create_list_of_objects_to_serialize(object_to_create_pdf):
 
         # define options for the serialization (options depend on which main object need to be serialized)
-        if (type(object_to_create_pdf) == koalixcrm.crm.documents.quote.Quote) or \
-                (type(object_to_create_pdf) == koalixcrm.crm.documents.invoice.Invoice) or \
-                (type(object_to_create_pdf) == koalixcrm.crm.documents.paymentreminder.PaymentReminder):
+        if isinstance(object_to_create_pdf, koalixcrm.crm.documents.salescontract.SalesContract):
             position_class = koalixcrm.crm.documents.salescontractposition.SalesContractPosition
             export_customer = True
             export_supplier = False
