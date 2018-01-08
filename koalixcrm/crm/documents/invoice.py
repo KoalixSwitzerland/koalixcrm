@@ -43,8 +43,10 @@ class Invoice(SalesContract):
                              timedelta(days=self.customer.defaultCustomerBillingCycle.timeToPaymentDate)
         self.date_of_creation = date.today().__str__()
 
+        self.template_set = self.contract.default_template_set.invoice_template
         self.save()
-        self.attach_text_paragraphs(calling_model)
+        self.attach_sales_contract_positions(calling_model)
+        self.attach_text_paragraphs()
 
     def register_invoice_in_accounting(self, request):
         dict_prices = dict()

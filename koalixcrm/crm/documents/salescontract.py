@@ -86,34 +86,27 @@ class SalesContract(models.Model):
             self.customer = calling_model.default_customer
             self.currency = calling_model.default_currency
             self.description = calling_model.description
-            self.template_set = calling_model.default_template_set.invoice_template
             self.discount = 0
         elif isinstance(calling_model, SalesContract):
             self.derived_from_sales_contract = calling_model
             self.contract = calling_model.contract
             self.customer = calling_model.customer
             self.currency = calling_model.currency
-            self.discount = calling_model.discount
             self.description = calling_model.description
+            self.discount = calling_model.discount
 
-    def attach_text_paragraphs(self, calling_model):
-        if isinstance(calling_model, koalixcrm.crm.documents.contract.Contract):
-            invoice_template = calling_model.default_template_set.invoice_template
-            default_paragraphs = TextParagraphInDocumentTemplate.objects.filter(document_template=invoice_template)
-            for default_paragraph in list(default_paragraphs):
-                invoice_paragraph = TextParagraphInSalesContract()
-                invoice_paragraph.create_paragraph(default_paragraph, self)
-        elif isinstance(calling_model, SalesContract):
+    def attach_text_paragraphs(self):
+        default_paragraphs = TextParagraphInDocumentTemplate.objects.filter(document_template=self.template_set)
+        for default_paragraph in list(default_paragraphs):
+            invoice_paragraph = TextParagraphInSalesContract()
+            invoice_paragraph.create_paragraph(default_paragraph, self)
+
+    def attach_sales_contract_positions(self, calling_model):
+        if isinstance(calling_model, SalesContract):
             sales_contract_positions = SalesContractPosition.objects.filter(contract=calling_model.id)
             for sales_contract_position in list(sales_contract_positions):
                 new_position = SalesContractPosition()
                 new_position.create_position(sales_contract_position, self)
-            contract = koalixcrm.crm.documents.contract.Contract.objects.filter(id=calling_model.contract.id)
-            invoice_template = contract[0].default_template_set.invoice_template
-            default_paragraphs = TextParagraphInDocumentTemplate.objects.filter(document_template=invoice_template)
-            for default_paragraph in list(default_paragraphs):
-                invoice_paragraph = TextParagraphInSalesContract()
-                invoice_paragraph.create_paragraph(default_paragraph, self)
 
     def create_quote(self):
         quote = koalixcrm.crm.documents.quote.Quote()
@@ -289,6 +282,15 @@ class OptionSalesContract(admin.ModelAdmin):
             obj.staff = request.user
         obj.save()
 
+    def create_quote(self, request, queryset):
+        for obj in queryset:
+            quote = obj.create_quote()
+            self.message_user(request, _("Quote created"))
+            response = HttpResponseRedirect('/admin/crm/quote/' + str(quote.id))
+        return response
+
+    create_quote.short_description = _("Create Quote")
+
     def create_invoice(self, request, queryset):
         for obj in queryset:
             invoice = obj.create_invoice()
@@ -305,7 +307,7 @@ class OptionSalesContract(admin.ModelAdmin):
             response = HttpResponseRedirect('/admin/crm/purchaseconfirmation/' + str(purchase_confirmation.id))
         return response
 
-        create_purchase_confirmation.short_description = _("Create Purchase confirmation")
+    create_purchase_confirmation.short_description = _("Create Purchase Confirmation")
 
     def create_delivery_note(self, request, queryset):
         for obj in queryset:
@@ -323,7 +325,6 @@ class OptionSalesContract(admin.ModelAdmin):
 
     create_pdf.short_description = _("Create PDF")
 
-    actions = ['create_purchase_confirmation','create_invoice',
+    actions = ['create_purchase_confirmation', 'create_invoice', 'create_quote',
                'create_delivery_note', 'create_pdf']
-    pluginProcessor = PluginProcessor()
-    inlines.extend(pluginProcessor.getPluginAdditions("quoteActions"))
+
