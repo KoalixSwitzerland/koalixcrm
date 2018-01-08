@@ -4,8 +4,6 @@ from decimal import Decimal
 from koalixcrm.crm.documents.salescontractposition import SalesContractPosition
 import koalixcrm.crm.documents.purchaseorder
 import koalixcrm.crm.documents.salescontract
-import koalixcrm.crm.documents.quote
-import koalixcrm.crm.documents.invoice
 
 
 class Calculations:

@@ -10,7 +10,6 @@ from django.core import serializers
 from django.utils.translation import ugettext as _
 from koalixcrm.crm.exceptions import *
 from koalixcrm import djangoUserExtension
-from koalixcrm import crm
 from koalixcrm.crm.contact.contact import Contact
 from koalixcrm.crm.contact.contact import PostalAddressForContact
 from koalixcrm.crm.contact.phoneaddress import PhoneAddress
@@ -23,11 +22,6 @@ from lxml import etree
 
 from koalixcrm.crm.documents.salescontractposition import Position
 import koalixcrm.crm.documents.purchaseorder
-import koalixcrm.crm.documents.quote
-import koalixcrm.crm.documents.purchaseconfirmation
-import koalixcrm.crm.documents.invoice
-import koalixcrm.crm.documents.deliverynote
-import koalixcrm.crm.documents.paymentreminder
 import koalixcrm.crm.documents.salescontract
 
 

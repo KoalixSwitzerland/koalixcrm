@@ -13,7 +13,7 @@ from koalixcrm.crm.contact.phoneaddress import PhoneAddress
 from koalixcrm.crm.contact.emailaddress import EmailAddress
 from koalixcrm.crm.contact.postaladdress import PostalAddress
 from koalixcrm.crm.documents.salescontractposition import Position
-from koalixcrm.crm.documents.calculations import Calculations
+import koalixcrm.crm.documents.calculations
 from koalixcrm.crm.const.purpose import *
 from koalixcrm.globalSupportFunctions import xstr
 from koalixcrm.crm.product.product import Product
@@ -185,7 +185,7 @@ class OptionPurchaseOrder(admin.ModelAdmin):
 
     def after_saving_model_and_related_inlines(self, request, obj):
         try:
-            Calculations.calculate_document_price(obj, date.today())
+            koalixcrm.crm.documents.calculations.Calculations.calculate_document_price(obj, date.today())
             self.message_user(request, "Successfully calculated Prices")
         except Product.NoPriceFound as e:
             self.message_user(request, "Unsuccessful in updating the Prices " + e.__str__(), level=messages.ERROR)

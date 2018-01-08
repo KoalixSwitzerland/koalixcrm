@@ -10,18 +10,10 @@ from koalixcrm.crm.const.status import *
 from koalixcrm.crm.exceptions import *
 from koalixcrm import accounting
 from koalixcrm.crm.documents.salescontract import SalesContract
-from koalixcrm.crm.documents.salescontract import TextParagraphInSalesContract
+from koalixcrm.crm.documents.salescontract import OptionSalesContract
 from koalixcrm.crm.documents.salescontractposition import SalesContractPosition
-from koalixcrm.djangoUserExtension.models import TextParagraphInDocumentTemplate
-from koalixcrm.crm.documents.pdfexport import PDFExport
 from koalixcrm.plugin import *
 from koalixcrm.crm.views import export_pdf
-from koalixcrm.crm.documents.salescontract import SalesContractTextParagraph
-from koalixcrm.crm.documents.salescontract import SalesContractPostalAddress
-from koalixcrm.crm.documents.salescontract import SalesContractPhoneAddress
-from koalixcrm.crm.documents.salescontract import SalesContractEmailAddress
-from koalixcrm.crm.documents.salescontractposition import SalesContractInlinePosition
-from koalixcrm.accounting.admin import InlineBookings
 from koalixcrm.accounting.models import Account
 from koalixcrm.crm.product.product import Product
 import koalixcrm.crm.documents.contract
@@ -34,7 +26,6 @@ from django.template.context_processors import csrf
 
 class Invoice(SalesContract):
     payable_until = models.DateField(verbose_name=_("To pay until"))
-    derived_from_quote = models.ForeignKey("Quote", blank=True, null=True)
     payment_bank_reference = models.CharField(verbose_name=_("Payment Bank Reference"), max_length=100, blank=True,
                                               null=True)
     status = models.CharField(max_length=1, choices=INVOICESTATUS)
@@ -45,60 +36,15 @@ class Invoice(SalesContract):
         At the moment only the koalixcrm.crm.documents.contract.Contract and
         koalixcrm.crm.documents.quote.Quote are allowed to call this function"""
 
-        self.staff = calling_model.staff
-        if type(calling_model) == koalixcrm.crm.documents.contract.Contract:
-            self.contract = calling_model
-            self.customer = calling_model.default_customer
-            self.currency = calling_model.default_currency
-            self.description = calling_model.description
-            self.template_set = calling_model.default_template_set.invoice_template
-            self.discount = 0
-        elif type(calling_model) == koalixcrm.crm.documents.quote.Quote:
-            self.derived_from_quote = calling_model
-            self.copy_sales_contract(calling_model)
+        self.create_sales_contract(calling_model)
 
         self.status = 'C'
         self.payable_until = date.today() + \
                              timedelta(days=self.customer.defaultCustomerBillingCycle.timeToPaymentDate)
         self.date_of_creation = date.today().__str__()
+
         self.save()
-
-        if type(calling_model) == koalixcrm.crm.documents.contract.Contract:
-            invoice_template = calling_model.default_template_set.invoice_template
-            default_paragraphs = TextParagraphInDocumentTemplate.objects.filter(document_template=invoice_template)
-            for default_paragraph in list(default_paragraphs):
-                invoice_paragraph = TextParagraphInSalesContract()
-                invoice_paragraph.create_paragraph(default_paragraph, self)
-
-        if type(calling_model) == koalixcrm.crm.documents.quote.Quote:
-            quote_positions = SalesContractPosition.objects.filter(contract=calling_model.id)
-            for quote_position in list(quote_positions):
-                invoice_position = SalesContractPosition()
-                invoice_position.create_position(quote_position, self)
-            quote_paragraphs = TextParagraphInSalesContract.objects.filter(sales_contract=calling_model.id)
-            for quote_paragraph in list(quote_paragraphs):
-                invoice_paragraph = TextParagraphInSalesContract()
-                invoice_paragraph.create_paragraph(quote_paragraph, self)
-
-    def create_delivery_note(self):
-        delivery_note = koalixcrm.crm.documents.deliverynote.DeliveryNote()
-        delivery_note.create_delivery_note(self)
-        return delivery_note
-
-    def create_payment_reminder(self):
-        payment_reminder = koalixcrm.crm.documents.paymentreminder.PaymentReminder()
-        payment_reminder.create_payment_reminder(self)
-        return payment_reminder
-
-    def is_complete_with_price(self):
-        """ Checks whether the Invoice is completed with a price, in case the invoice
-        was not completed or the price calculation was not performed, the method
-        returns false"""
-
-        if self.last_pricing_date and self.last_calculated_price:
-            return True
-        else:
-            return False
+        self.attach_text_paragraphs(calling_model)
 
     def register_invoice_in_accounting(self, request):
         dict_prices = dict()
@@ -143,11 +89,6 @@ class Invoice(SalesContract):
         booking.lastmodifiedby = request.user
         booking.save()
 
-    def create_pdf(self):
-        self.last_print_date = datetime.now()
-        self.save()
-        return PDFExport.create_pdf(self)
-
     def __str__(self):
         return _("Invoice") + ": " + str(self.id) + " " + _("from Contract") + ": " + str(self.contract.id)
 
@@ -157,22 +98,20 @@ class Invoice(SalesContract):
         verbose_name_plural = _('Invoices')
 
 
-class OptionInvoice(admin.ModelAdmin):
-    list_display = (
-    'id', 'description', 'contract', 'customer', 'payable_until', 'status', 'currency', 'staff',
-    'last_calculated_price', 'last_calculated_tax', 'last_pricing_date', 'last_modification', 'last_modified_by', 'last_print_date')
-    list_display_links = ('id', )
-    list_filter = ('customer', 'contract', 'staff', 'status', 'currency', 'last_modification')
-    ordering = ('id',)
-    search_fields = ('contract__id', 'customer__name', 'currency__description')
-    fieldsets = (
-        (_('Basics'), {
-            'fields': ('contract', 'description', 'customer', 'currency', 'discount',  'payable_until', 'status', 'external_reference', 'template_set' )
+class OptionInvoice(OptionSalesContract):
+    list_display = OptionSalesContract.list_display + ('payable_until', 'status',)
+    list_filter = OptionSalesContract.list_filter + ('status',)
+    ordering = OptionSalesContract.ordering
+    search_fields = OptionSalesContract.search_fields
+    fieldsets = OptionSalesContract.fieldsets + (
+        (_('Invoice specific'), {
+            'fields': ( 'payable_until', 'status', 'payment_bank_reference' )
         }),
     )
-    save_as = True
-    inlines = [SalesContractInlinePosition, SalesContractTextParagraph, SalesContractPostalAddress, SalesContractPhoneAddress,
-               SalesContractEmailAddress, InlineBookings]
+
+    save_as = OptionSalesContract.save_as
+    inlines = OptionSalesContract.inlines
+
     pluginProcessor = PluginProcessor()
     inlines.extend(pluginProcessor.getPluginAdditions("invoiceInlines"))
 
