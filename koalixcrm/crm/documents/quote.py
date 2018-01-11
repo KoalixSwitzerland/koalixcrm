@@ -14,16 +14,16 @@ class Quote(SalesDocument):
     status = models.CharField(max_length=1, choices=QUOTESTATUS, verbose_name=_('Status'))
 
     def create_quote(self, calling_model):
-        self.discount = 0
-        self.contract = calling_model
-        self.staff = calling_model.staff
-        self.customer = calling_model.default_customer
-        self.currency = calling_model.default_currency
-        self.template_set = calling_model.default_template_set.quote_template
+        self.create_sales_document(calling_model)
+
         self.status = 'I'
         self.valid_until = date.today().__str__()
         self.date_of_creation = date.today().__str__()
+
+        self.template_set = self.contract.default_template_set.quote_template
         self.save()
+        self.attach_sales_document_positions(calling_model)
+        self.attach_text_paragraphs()
 
     def __str__(self):
         return _("Quote") + ": " + str(self.id) + " " + _("from Contract") + ": " + str(self.contract.id)
@@ -47,6 +47,9 @@ class OptionQuote(OptionSalesDocument):
 
     save_as = OptionSalesDocument.save_as
     inlines = OptionSalesDocument.inlines
+
+    actions = ['create_purchase_confirmation', 'create_invoice',
+               'create_delivery_note', 'create_pdf',]
 
     pluginProcessor = PluginProcessor()
     inlines.extend(pluginProcessor.getPluginAdditions("quoteInlines"))

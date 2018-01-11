@@ -18,7 +18,7 @@ def export_pdf(calling_model_admin, request, document, redirect_to):
           calling_model_admin (ModelAdmin):  The calling ModelAdmin must be provided for error message response.
           request: The request User is to know where to save the error message
           document (Contract):  The model from which a PDF should be exported
-          redirect_to (str): String that describes to where the method sould redirect in case of an error
+          redirect_to (str): String that describes to where the method should redirect in case of an error
 
         Returns:
           HTTpResponse with a PDF when successful

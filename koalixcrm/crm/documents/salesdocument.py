@@ -101,7 +101,7 @@ class SalesDocument(models.Model):
 
     def attach_sales_document_positions(self, calling_model):
         if isinstance(calling_model, SalesDocument):
-            sales_document_positions = SalesDocumentPosition.objects.filter(contract=calling_model.id)
+            sales_document_positions = SalesDocumentPosition.objects.filter(sales_document=calling_model.id)
             for sales_document_position in list(sales_document_positions):
                 new_position = SalesDocumentPosition()
                 new_position.create_position(sales_document_position, self)
@@ -152,8 +152,8 @@ class PostalAddressForSalesDocument(PostalAddress):
 
     class Meta:
         app_label = "crm"
-        verbose_name = _('Postal Address For Contract')
-        verbose_name_plural = _('Postal Address For Contracts')
+        verbose_name = _('Postal Address For Sales Documents')
+        verbose_name_plural = _('Postal Address For Sales Documents')
 
     def __str__(self):
         return xstr(self.prename) + ' ' + xstr(self.name) + ' ' + xstr(self.addressline1)
@@ -165,8 +165,8 @@ class EmailAddressForSalesDocument(EmailAddress):
 
     class Meta:
         app_label = "crm"
-        verbose_name = _('Email Address For Contract')
-        verbose_name_plural = _('Email Address For Contracts')
+        verbose_name = _('Email Address For Sales Documents')
+        verbose_name_plural = _('Email Address For Sales Documents')
 
     def __str__(self):
         return str(self.email)
@@ -178,8 +178,8 @@ class PhoneAddressForSalesDocument(PhoneAddress):
 
     class Meta:
         app_label = "crm"
-        verbose_name = _('Phone Address For Sales Contract')
-        verbose_name_plural = _('Phone Address For Contracts')
+        verbose_name = _('Phone Address For Sales Documents')
+        verbose_name_plural = _('Phone Address For Sales Documents')
 
     def __str__(self):
         return str(self.phone)
@@ -316,13 +316,19 @@ class OptionSalesDocument(admin.ModelAdmin):
 
     create_delivery_note.short_description = _("Create Delivery note")
 
+    def create_payment_reminder(self, request, queryset):
+        for obj in queryset:
+            payment_reminder = obj.create_payment_reminder()
+            self.message_user(request, _("Payment Reminder created"))
+            response = HttpResponseRedirect('/admin/crm/paymentreminder/' + str(payment_reminder.id))
+        return response
+
+    create_payment_reminder.short_description = _("Create Payment Reminder")
+
     def create_pdf(self, request, queryset):
         for obj in queryset:
-            response = export_pdf(self, request, obj, "/admin/crm/quote/")
+            response = export_pdf(self, request, obj, ("/admin/crm/"+type(obj)+"/"))
             return response
 
     create_pdf.short_description = _("Create PDF")
-
-    actions = ['create_purchase_confirmation', 'create_invoice', 'create_quote',
-               'create_delivery_note', 'create_pdf']
 

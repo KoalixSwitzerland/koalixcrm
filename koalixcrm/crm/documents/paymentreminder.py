@@ -1,57 +1,37 @@
 # -*- coding: utf-8 -*-
 
-from datetime import *
 from django.db import models
-from django.contrib import admin
 from django.utils.translation import ugettext as _
 from koalixcrm.crm.const.status import *
 from django.core.validators import MaxValueValidator, MinValueValidator
-from koalixcrm.crm.documents.salesdocument import SalesDocumentTextParagraph
-from koalixcrm.crm.documents.salesdocument import SalesDocumentPostalAddress
-from koalixcrm.crm.documents.salesdocument import SalesDocumentPhoneAddress
-from koalixcrm.crm.documents.salesdocument import SalesDocumentEmailAddress
-from koalixcrm.crm.documents.salesdocumentposition import SalesDocumentInlinePosition
-from koalixcrm.crm.documents.salesdocument import SalesDocument
-from koalixcrm.crm.product.product import Product
-from koalixcrm.crm.views import export_pdf
-
-import koalixcrm.crm.documents.pdfexport
-import koalixcrm.crm.documents.calculations
+from koalixcrm.crm.documents.salesdocument import SalesDocument, OptionSalesDocument
+from koalixcrm.plugin import *
 
 
 class PaymentReminder(SalesDocument):
     payable_until = models.DateField(verbose_name=_("To pay until"))
-    derived_from_invoice = models.ForeignKey("Invoice", blank=True, null=True)
     payment_bank_reference = models.CharField(verbose_name=_("Payment Bank Reference"), max_length=100, blank=True,
                                               null=True)
     iteration_number = models.IntegerField(blank=False, null=False, verbose_name=_("Iteration Number"),
                                            validators=[MinValueValidator(1), MaxValueValidator(3)])
     status = models.CharField(max_length=1, choices=INVOICESTATUS)
 
-    def create_pdf(self):
-        self.last_print_date = datetime.now()
-        self.save()
-        return koalixcrm.crm.documents.pdfexport.PDFExport.create_pdf(self)
-
     def create_payment_reminder(self, calling_model):
         """Checks which model was calling the function. Depending on the calling
         model, the function sets up a purchase confirmation. On success, the
-        purchase confirmation is saved.
-        At the moment only the koalixcrm.crm.documents.contract.Contract and
-        koalixcrm.crm.documents.quote.Invoice are allowed to call this function"""
+        purchase confirmation is saved."""
+        self.create_sales_document(calling_model)
 
+        self.status = 'C'
+        self.iteration_number = 1
+        self.payable_until = date.today() + \
+                             timedelta(days=self.customer.defaultCustomerBillingCycle.timeToPaymentDate)
+
+        self.template_set = self.contract.default_template_set.payment_reminder_template
+        self.save()
+        self.attach_sales_document_positions(calling_model)
+        self.attach_text_paragraphs()
         self.staff = calling_model.staff
-        if type(calling_model) == koalixcrm.crm.documents.contract.Contract:
-            self.contract = calling_model
-            self.customer = calling_model.default_customer
-            self.currency = calling_model.default_currency
-            self.description = calling_model.description
-            self.template_set = calling_model.default_template_set.purchase_confirmation_template
-            self.discount = 0
-        elif type(calling_model) == koalixcrm.crm.documents.invoice.Invoice:
-            self.derived_from_invoice = calling_model
-            self.copy_sales_document(calling_model)
-
 
     def __str__(self):
         return _("Payment Reminder") + ": " + str(self.id) + " " + _("from Contract") + ": " + str(self.contract.id)
@@ -62,52 +42,22 @@ class PaymentReminder(SalesDocument):
         verbose_name_plural = _('Payment Reminders')
 
 
-class OptionPaymentReminder(admin.ModelAdmin):
-    list_display = (
-    'id', 'description', 'contract', 'customer', 'payable_until', 'status', 'currency', 'staff',
-    'last_calculated_price', 'last_calculated_tax', 'last_pricing_date', 'last_modification', 'last_modified_by', 'last_print_date')
-    list_display_links = ('id', )
-    list_filter = ('customer', 'contract', 'staff', 'status', 'currency', 'last_modification')
-    ordering = ('id',)
-    search_fields = ('contract__id', 'customer__name', 'currency__description')
-    fieldsets = (
-        (_('Basics'), {
-            'fields': ('contract', 'description', 'customer', 'currency', 'discount',  'payable_until', 'status', 'external_reference', 'template_set' )
+class OptionPaymentReminder(OptionSalesDocument):
+    list_display = OptionSalesDocument.list_display + ('payable_until', 'status', 'iteration_number')
+    list_filter = OptionSalesDocument.list_filter + ('status',)
+    ordering = OptionSalesDocument.ordering
+    search_fields = OptionSalesDocument.search_fields
+    fieldsets = OptionSalesDocument.fieldsets + (
+        (_('Quote specific'), {
+            'fields': ( 'payable_until', 'status', 'payment_bank_reference', 'iteration_number' )
         }),
     )
-    save_as = True
-    inlines = [SalesDocumentInlinePosition, SalesDocumentTextParagraph, SalesDocumentPostalAddress, SalesDocumentPhoneAddress,
-               SalesDocumentEmailAddress]
 
-    def response_add(self, request, obj, post_url_continue=None):
-        new_obj = self.after_saving_model_and_related_inlines(request, obj)
-        return super(OptionPaymentReminder, self).response_add(request, new_obj)
+    save_as = OptionSalesDocument.save_as
+    inlines = OptionSalesDocument.inlines
+    actions = ['create_purchase_confirmation', 'create_invoice', 'create_quote',
+               'create_delivery_note', 'create_pdf',
+               'register_invoice_in_accounting', 'register_payment_in_accounting',]
 
-    def response_change(self, request, obj):
-        new_obj = self.after_saving_model_and_related_inlines(request, obj)
-        return super(OptionPaymentReminder, self).response_add(request, new_obj)
-
-    def after_saving_model_and_related_inlines(self, request, obj):
-        try:
-            koalixcrm.crm.documents.calculations.Calculations.calculate_document_price(obj, date.today())
-            self.message_user(request, "Successfully calculated Prices")
-        except Product.NoPriceFound as e:
-            self.message_user(request, "Unsuccessfull in updating the Prices " + e.__str__(), level=messages.ERROR)
-        return obj
-
-    def save_model(self, request, obj, form, change):
-        if (change == True):
-            obj.last_modified_by = request.user
-        else:
-            obj.last_modified_by = request.user
-            obj.staff = request.user
-        obj.save()
-
-    def create_pdf(self, request, queryset):
-        for obj in queryset:
-            response = export_pdf(self, request, obj, "/admin/crm/paymentreminder/")
-            return response
-
-    create_pdf.short_description = _("Create PDF of Payment Reminder")
-
-    actions = ['create_pdf']
+    pluginProcessor = PluginProcessor()
+    inlines.extend(pluginProcessor.getPluginAdditions("quoteInlines"))

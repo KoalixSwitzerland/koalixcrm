@@ -28,7 +28,7 @@ class Calculations:
         price = 0
         tax = 0
         if isinstance(document, koalixcrm.crm.documents.salesdocument.SalesDocument):
-            positions = SalesDocumentPosition.objects.filter(contract=document.id)
+            positions = SalesDocumentPosition.objects.filter(sales_document=document.id)
             contact_for_price_calculation = document.customer
             calculate_with_document_discount = True
         else:

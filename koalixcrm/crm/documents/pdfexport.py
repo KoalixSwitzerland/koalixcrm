@@ -37,8 +37,8 @@ class PDFExport:
 
     @staticmethod
     def add_positions(objects_to_serialize, position_class, object_to_create_pdf):
-        objects_to_serialize += list(position_class.objects.filter(contract=object_to_create_pdf.id))
-        for position in list(position_class.objects.filter(contract=object_to_create_pdf.id)):
+        objects_to_serialize += list(position_class.objects.filter(sales_document=object_to_create_pdf.id))
+        for position in list(position_class.objects.filter(sales_document=object_to_create_pdf.id)):
             objects_to_serialize += list(Position.objects.filter(id=position.id))
             objects_to_serialize += list(Product.objects.filter(id=position.product.id))
             objects_to_serialize += list(Unit.objects.filter(id=position.unit.id))
@@ -48,8 +48,8 @@ class PDFExport:
     def create_list_of_objects_to_serialize(object_to_create_pdf):
 
         # define options for the serialization (options depend on which main object need to be serialized)
-        if isinstance(object_to_create_pdf, koalixcrm.crm.documents.salesdocument.SalesContract):
-            position_class = koalixcrm.crm.documents.salesdocumentposition.SalesContractPosition
+        if isinstance(object_to_create_pdf, koalixcrm.crm.documents.salesdocument.SalesDocument):
+            position_class = koalixcrm.crm.documents.salesdocumentposition.SalesDocumentPosition
             export_customer = True
             export_supplier = False
         else:
@@ -64,12 +64,12 @@ class PDFExport:
             for address in list(PostalAddressForContact.objects.filter(person=object_to_create_pdf.supplier.id)):
                 objects_to_serialize += list(PostalAddress.objects.filter(id=address.id))
         if export_customer:
-            objects_to_serialize = list(koalixcrm.crm.documents.salesdocument.SalesContract.objects.filter(id=object_to_create_pdf.id))
+            objects_to_serialize = list(koalixcrm.crm.documents.salesdocument.SalesDocument.objects.filter(id=object_to_create_pdf.id))
             objects_to_serialize += list(Contact.objects.filter(id=object_to_create_pdf.customer.id))
             objects_to_serialize += list(PostalAddressForContact.objects.filter(person=object_to_create_pdf.customer.id))
             for address in list(PostalAddressForContact.objects.filter(person=object_to_create_pdf.customer.id)):
                 objects_to_serialize += list(PostalAddress.objects.filter(id=address.id))
-            objects_to_serialize += list(koalixcrm.crm.documents.salesdocument.TextParagraphInSalesContract.objects.filter(sales_contract=object_to_create_pdf.id))
+            objects_to_serialize += list(koalixcrm.crm.documents.salesdocument.TextParagraphInSalesDocument.objects.filter(sales_document=object_to_create_pdf.id))
         objects_to_serialize += list(Currency.objects.filter(id=object_to_create_pdf.currency.id))
         objects_to_serialize = PDFExport.add_positions(objects_to_serialize, position_class, object_to_create_pdf)
         objects_to_serialize += list(auth.models.User.objects.filter(id=object_to_create_pdf.staff.id))

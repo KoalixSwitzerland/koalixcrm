@@ -12,12 +12,7 @@ from koalixcrm import accounting
 from koalixcrm.crm.documents.salesdocument import SalesDocument, OptionSalesDocument
 from koalixcrm.crm.documents.salesdocumentposition import SalesDocumentPosition
 from koalixcrm.plugin import *
-from koalixcrm.crm.views import export_pdf
 from koalixcrm.accounting.models import Account
-from koalixcrm.crm.product.product import Product
-import koalixcrm.crm.documents.contract
-import koalixcrm.crm.documents.quote
-import koalixcrm.crm.documents.calculations
 from django.contrib.admin import helpers
 from django.shortcuts import render
 from django.template.context_processors import csrf
@@ -110,65 +105,10 @@ class OptionInvoice(OptionSalesDocument):
         }),
     )
 
-    save_as = OptionSalesDocument.save_as
-    inlines = OptionSalesDocument.inlines
-
-    pluginProcessor = PluginProcessor()
-    inlines.extend(pluginProcessor.getPluginAdditions("invoiceInlines"))
-
     class PaymentForm(forms.Form):
         paymentAmount = forms.DecimalField()
         _selected_action = forms.CharField(widget=forms.MultipleHiddenInput)
         paymentAccount = forms.ModelChoiceField(Account.objects.filter(accountType="A"))
-
-    def response_add(self, request, obj, post_url_continue=None):
-        new_obj = self.after_saving_model_and_related_inlines(request, obj)
-        return super(OptionInvoice, self).response_add(request, new_obj)
-
-    def response_change(self, request, obj):
-        new_obj = self.after_saving_model_and_related_inlines(request, obj)
-        return super(OptionInvoice, self).response_add(request, new_obj)
-
-    def after_saving_model_and_related_inlines(self, request, obj):
-        try:
-            koalixcrm.crm.documents.calculations.Calculations.calculate_document_price(obj, date.today())
-            self.message_user(request, "Successfully calculated Prices")
-        except Product.NoPriceFound as e:
-            self.message_user(request, "Unsuccessfull in updating the Prices " + e.__str__(), level=messages.ERROR)
-        return obj
-
-    def save_model(self, request, obj, form, change):
-        if (change == True):
-            obj.last_modified_by = request.user
-        else:
-            obj.last_modified_by = request.user
-            obj.staff = request.user
-        obj.save()
-
-    def create_pdf(self, request, queryset):
-        for obj in queryset:
-            response = export_pdf(self, request, obj, "/admin/crm/invoice/")
-            return response
-
-    create_pdf.short_description = _("Create PDF of Invoice")
-
-    def create_delivery_note(self, request, queryset):
-        for obj in queryset:
-            delivery_note = obj.create_delivery_note()
-            self.message_user(request, _("Delivery note created"))
-            response = HttpResponseRedirect('/admin/crm/deliverynote/' + str(delivery_note.id))
-        return response
-
-    create_delivery_note.short_description = _("Create Delivery note")
-
-    def create_payment_reminder(self, request, queryset):
-        for obj in queryset:
-            payment_reminder = obj.create_payment_reminder()
-            self.message_user(request, _("Payment Reminder created"))
-            response = HttpResponseRedirect('/admin/crm/paymentreminder/' + str(payment_reminder.id))
-        return response
-
-    create_payment_reminder.short_description = _("Create Payment Reminder")
 
     def register_invoice_in_accounting(self, request, queryset):
         try:
@@ -214,10 +154,16 @@ class OptionInvoice(OptionSalesDocument):
 
     register_payment_in_accounting.short_description = _("Register Payment in Accounting")
 
-    actions = ['create_pdf', 'register_invoice_in_accounting', 'register_payment_in_accounting',
-               'create_payment_reminder', 'create_delivery_note']
+    save_as = OptionSalesDocument.save_as
+    inlines = OptionSalesDocument.inlines
+
+    actions = ['create_purchase_confirmation', 'create_invoice', 'create_quote',
+               'create_delivery_note', 'create_pdf', 'create_payment_reminder',
+               'register_invoice_in_accounting', 'register_payment_in_accounting',]
+
     pluginProcessor = PluginProcessor()
     actions.extend(pluginProcessor.getPluginAdditions("invoiceActions"))
+    inlines.extend(pluginProcessor.getPluginAdditions("invoiceInlines"))
 
 
 class InlineInvoice(admin.TabularInline):
