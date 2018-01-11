@@ -5,12 +5,12 @@ from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext as _
 from koalixcrm.crm.const.status import *
-from koalixcrm.crm.documents.salescontract import SalesContractTextParagraph
-from koalixcrm.crm.documents.salescontract import SalesContractPostalAddress
-from koalixcrm.crm.documents.salescontract import SalesContractPhoneAddress
-from koalixcrm.crm.documents.salescontract import SalesContractEmailAddress
-from koalixcrm.crm.documents.salescontractposition import SalesContractInlinePosition
-from koalixcrm.crm.documents.salescontract import SalesContract
+from koalixcrm.crm.documents.salesdocument import SalesDocumentTextParagraph
+from koalixcrm.crm.documents.salesdocument import SalesDocumentPostalAddress
+from koalixcrm.crm.documents.salesdocument import SalesDocumentPhoneAddress
+from koalixcrm.crm.documents.salesdocument import SalesDocumentEmailAddress
+from koalixcrm.crm.documents.salesdocumentposition import SalesDocumentInlinePosition
+from koalixcrm.crm.documents.salesdocument import SalesDocument
 from koalixcrm.crm.product.product import Product
 from koalixcrm.crm.views import export_pdf
 
@@ -18,7 +18,7 @@ import koalixcrm.crm.documents.pdfexport
 import koalixcrm.crm.documents.calculations
 
 
-class DeliveryNote(SalesContract):
+class DeliveryNote(SalesDocument):
     derived_from_quote = models.ForeignKey("Quote", blank=True, null=True)
     derived_from_invoice = models.ForeignKey("Invoice", blank=True, null=True)
     tracking_reference = models.CharField(verbose_name=_("Tracking Reference"), max_length=100, blank=True)
@@ -41,10 +41,10 @@ class DeliveryNote(SalesContract):
             self.discount = 0
         elif type(calling_model) == koalixcrm.crm.documents.quote.Quote:
             self.derived_from_quote = calling_model
-            self.copy_sales_contract(calling_model)
+            self.copy_sales_document(calling_model)
         elif type(calling_model) == koalixcrm.crm.documents.quote.Invoice:
             self.derived_from_invoice = calling_model
-            self.copy_sales_contract(calling_model)
+            self.copy_sales_document(calling_model)
 
         self.status = 'C'
         self.date_of_creation = date.today().__str__()
@@ -78,8 +78,8 @@ class OptionDeliveryNote(admin.ModelAdmin):
         }),
     )
     save_as = True
-    inlines = [SalesContractInlinePosition, SalesContractTextParagraph, SalesContractPostalAddress, SalesContractPhoneAddress,
-               SalesContractEmailAddress]
+    inlines = [SalesDocumentInlinePosition, SalesDocumentTextParagraph, SalesDocumentPostalAddress, SalesDocumentPhoneAddress,
+               SalesDocumentEmailAddress]
 
     def response_add(self, request, obj, post_url_continue=None):
         new_obj = self.after_saving_model_and_related_inlines(request, obj)

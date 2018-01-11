@@ -11,10 +11,10 @@ from koalixcrm.crm.contact.supplier import *
 
 from koalixcrm.crm.documents.contract import Contract, PostalAddressForContract
 from koalixcrm.crm.documents.contract import PhoneAddressForContract, EmailAddressForContract
-from koalixcrm.crm.documents.salescontractposition import Position, SalesContractPosition
-from koalixcrm.crm.documents.salescontract import SalesContract, PostalAddressForSalesContract
-from koalixcrm.crm.documents.salescontract import EmailAddressForSalesContract, PhoneAddressForSalesContract
-from koalixcrm.crm.documents.salescontract import TextParagraphInSalesContract
+from koalixcrm.crm.documents.salesdocumentposition import Position, SalesDocumentPosition
+from koalixcrm.crm.documents.salesdocument import SalesDocument, PostalAddressForSalesDocument
+from koalixcrm.crm.documents.salesdocument import EmailAddressForSalesDocument, PhoneAddressForSalesDocument
+from koalixcrm.crm.documents.salesdocument import TextParagraphInSalesDocument
 from koalixcrm.crm.documents.invoice import Invoice
 from koalixcrm.crm.documents.purchaseconfirmation import PurchaseConfirmation
 from koalixcrm.crm.documents.purchaseorder import PurchaseOrder, PurchaseOrderPosition

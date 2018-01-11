@@ -6,12 +6,12 @@ from django.contrib import admin
 from django.utils.translation import ugettext as _
 from koalixcrm.crm.const.status import *
 from django.core.validators import MaxValueValidator, MinValueValidator
-from koalixcrm.crm.documents.salescontract import SalesContractTextParagraph
-from koalixcrm.crm.documents.salescontract import SalesContractPostalAddress
-from koalixcrm.crm.documents.salescontract import SalesContractPhoneAddress
-from koalixcrm.crm.documents.salescontract import SalesContractEmailAddress
-from koalixcrm.crm.documents.salescontractposition import SalesContractInlinePosition
-from koalixcrm.crm.documents.salescontract import SalesContract
+from koalixcrm.crm.documents.salesdocument import SalesDocumentTextParagraph
+from koalixcrm.crm.documents.salesdocument import SalesDocumentPostalAddress
+from koalixcrm.crm.documents.salesdocument import SalesDocumentPhoneAddress
+from koalixcrm.crm.documents.salesdocument import SalesDocumentEmailAddress
+from koalixcrm.crm.documents.salesdocumentposition import SalesDocumentInlinePosition
+from koalixcrm.crm.documents.salesdocument import SalesDocument
 from koalixcrm.crm.product.product import Product
 from koalixcrm.crm.views import export_pdf
 
@@ -19,7 +19,7 @@ import koalixcrm.crm.documents.pdfexport
 import koalixcrm.crm.documents.calculations
 
 
-class PaymentReminder(SalesContract):
+class PaymentReminder(SalesDocument):
     payable_until = models.DateField(verbose_name=_("To pay until"))
     derived_from_invoice = models.ForeignKey("Invoice", blank=True, null=True)
     payment_bank_reference = models.CharField(verbose_name=_("Payment Bank Reference"), max_length=100, blank=True,
@@ -50,7 +50,7 @@ class PaymentReminder(SalesContract):
             self.discount = 0
         elif type(calling_model) == koalixcrm.crm.documents.invoice.Invoice:
             self.derived_from_invoice = calling_model
-            self.copy_sales_contract(calling_model)
+            self.copy_sales_document(calling_model)
 
 
     def __str__(self):
@@ -76,8 +76,8 @@ class OptionPaymentReminder(admin.ModelAdmin):
         }),
     )
     save_as = True
-    inlines = [SalesContractInlinePosition, SalesContractTextParagraph, SalesContractPostalAddress, SalesContractPhoneAddress,
-               SalesContractEmailAddress]
+    inlines = [SalesDocumentInlinePosition, SalesDocumentTextParagraph, SalesDocumentPostalAddress, SalesDocumentPhoneAddress,
+               SalesDocumentEmailAddress]
 
     def response_add(self, request, obj, post_url_continue=None):
         new_obj = self.after_saving_model_and_related_inlines(request, obj)

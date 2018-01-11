@@ -12,7 +12,7 @@ from koalixcrm.crm.const.status import *
 from koalixcrm.crm.contact.phoneaddress import PhoneAddress
 from koalixcrm.crm.contact.emailaddress import EmailAddress
 from koalixcrm.crm.contact.postaladdress import PostalAddress
-from koalixcrm.crm.documents.salescontractposition import Position
+from koalixcrm.crm.documents.salesdocumentposition import Position
 import koalixcrm.crm.documents.calculations
 from koalixcrm.crm.const.purpose import *
 from koalixcrm.globalSupportFunctions import xstr

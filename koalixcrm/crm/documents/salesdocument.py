@@ -1,31 +1,29 @@
 # -*- coding: utf-8 -*-
 
+from datetime import *
 from django.db import models
-from django.contrib import admin
+from django.contrib import admin, messages
+from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext as _
 from koalixcrm.crm.const.purpose import *
 from koalixcrm.globalSupportFunctions import xstr
 from koalixcrm.crm.contact.phoneaddress import PhoneAddress
 from koalixcrm.crm.contact.emailaddress import EmailAddress
 from koalixcrm.crm.contact.postaladdress import PostalAddress
-from koalixcrm.crm.documents.salescontractposition import SalesContractPosition
+from koalixcrm.crm.documents.salesdocumentposition import SalesDocumentPosition, SalesDocumentInlinePosition
 from koalixcrm.djangoUserExtension.models import TextParagraphInDocumentTemplate
-from django.http import HttpResponseRedirect
-from django.contrib import messages
-from koalixcrm.plugin import *
 from koalixcrm.crm.views import export_pdf
-from koalixcrm.crm.documents.salescontractposition import SalesContractInlinePosition
 from koalixcrm.crm.product.product import Product
 import koalixcrm.crm.documents.calculations
 
 
-class TextParagraphInSalesContract(models.Model):
-    sales_contract = models.ForeignKey("SalesContract")
+class TextParagraphInSalesDocument(models.Model):
+    sales_document = models.ForeignKey("SalesDocument")
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=2, choices=PURPOSESTEXTPARAGRAPHINDOCUMENTS)
     text_paragraph = models.TextField(verbose_name=_("Text"), blank=False, null=False)
 
-    def create_paragraph(self, default_paragraph, sales_contract):
-        self.sales_contract = sales_contract
+    def create_paragraph(self, default_paragraph, sales_document):
+        self.sales_document = sales_document
         self.purpose = default_paragraph.purpose
         self.text_paragraph = default_paragraph.text_paragraph
         self.save()
@@ -33,14 +31,14 @@ class TextParagraphInSalesContract(models.Model):
 
     class Meta:
         app_label = "crm"
-        verbose_name = _('TextParagraphInSalesContract')
-        verbose_name_plural = _('TextParagraphsInSalesContract')
+        verbose_name = _('Text Paragraph In Sales Document')
+        verbose_name_plural = _('Text Paragraphs In Sales Documents')
 
     def __str__(self):
         return str(self.id)
 
 
-class SalesContract(models.Model):
+class SalesDocument(models.Model):
     contract = models.ForeignKey("Contract", verbose_name=_('Contract'))
     external_reference = models.CharField(verbose_name=_("External Reference"), max_length=100, blank=True)
     discount = models.DecimalField(max_digits=5, decimal_places=2, verbose_name=_("Discount"), blank=True, null=True)
@@ -61,13 +59,13 @@ class SalesContract(models.Model):
                                          blank="True")
     template_set = models.ForeignKey("djangoUserExtension.DocumentTemplate", verbose_name=_("Referred Template"), null=True,
                                      blank=True)
-    derived_from_sales_contract = models.ForeignKey("SalesContract", blank=True, null=True)
+    derived_from_sales_document = models.ForeignKey("SalesDocument", blank=True, null=True)
     last_print_date = models.DateTimeField(verbose_name=_("Last printed"), blank=True, null=True)
 
     class Meta:
         app_label = "crm"
-        verbose_name = _('Sales Contract')
-        verbose_name_plural = _('Sales Contracts')
+        verbose_name = _('Sales Document')
+        verbose_name_plural = _('Sales Documents')
 
     def is_complete_with_price(self):
         """ Checks whether the SalesContract is completed with a price, in case the
@@ -79,7 +77,7 @@ class SalesContract(models.Model):
         else:
             return False
 
-    def create_sales_contract(self, calling_model):
+    def create_sales_document(self, calling_model):
         self.staff = calling_model.staff
         if isinstance(calling_model, koalixcrm.crm.documents.contract.Contract):
             self.contract = calling_model
@@ -87,8 +85,8 @@ class SalesContract(models.Model):
             self.currency = calling_model.default_currency
             self.description = calling_model.description
             self.discount = 0
-        elif isinstance(calling_model, SalesContract):
-            self.derived_from_sales_contract = calling_model
+        elif isinstance(calling_model, SalesDocument):
+            self.derived_from_sales_document = calling_model
             self.contract = calling_model.contract
             self.customer = calling_model.customer
             self.currency = calling_model.currency
@@ -98,15 +96,15 @@ class SalesContract(models.Model):
     def attach_text_paragraphs(self):
         default_paragraphs = TextParagraphInDocumentTemplate.objects.filter(document_template=self.template_set)
         for default_paragraph in list(default_paragraphs):
-            invoice_paragraph = TextParagraphInSalesContract()
+            invoice_paragraph = TextParagraphInSalesDocument()
             invoice_paragraph.create_paragraph(default_paragraph, self)
 
-    def attach_sales_contract_positions(self, calling_model):
-        if isinstance(calling_model, SalesContract):
-            sales_contract_positions = SalesContractPosition.objects.filter(contract=calling_model.id)
-            for sales_contract_position in list(sales_contract_positions):
-                new_position = SalesContractPosition()
-                new_position.create_position(sales_contract_position, self)
+    def attach_sales_document_positions(self, calling_model):
+        if isinstance(calling_model, SalesDocument):
+            sales_document_positions = SalesDocumentPosition.objects.filter(contract=calling_model.id)
+            for sales_document_position in list(sales_document_positions):
+                new_position = SalesDocumentPosition()
+                new_position.create_position(sales_document_position, self)
 
     def create_quote(self):
         quote = koalixcrm.crm.documents.quote.Quote()
@@ -148,47 +146,47 @@ class SalesContract(models.Model):
         return _("Sales Contract") + ": " + str(self.id) + " " + _("from Contract") + ": " + str(self.contract.id)
 
 
-class PostalAddressForSalesContract(PostalAddress):
+class PostalAddressForSalesDocument(PostalAddress):
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT)
-    contract = models.ForeignKey("SalesContract")
+    sales_document = models.ForeignKey("SalesDocument")
 
     class Meta:
         app_label = "crm"
-        verbose_name = _('Postal Address For Contracts')
+        verbose_name = _('Postal Address For Contract')
         verbose_name_plural = _('Postal Address For Contracts')
 
     def __str__(self):
         return xstr(self.prename) + ' ' + xstr(self.name) + ' ' + xstr(self.addressline1)
 
 
-class EmailAddressForSalesContract(EmailAddress):
+class EmailAddressForSalesDocument(EmailAddress):
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT)
-    contract = models.ForeignKey("SalesContract")
+    sales_document = models.ForeignKey("SalesDocument")
 
     class Meta:
         app_label = "crm"
-        verbose_name = _('Email Address For Contracts')
+        verbose_name = _('Email Address For Contract')
         verbose_name_plural = _('Email Address For Contracts')
 
     def __str__(self):
         return str(self.email)
 
 
-class PhoneAddressForSalesContract(PhoneAddress):
+class PhoneAddressForSalesDocument(PhoneAddress):
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT)
-    contract = models.ForeignKey("SalesContract")
+    sales_document = models.ForeignKey("SalesDocument")
 
     class Meta:
         app_label = "crm"
-        verbose_name = _('Phone Address For Contracts')
+        verbose_name = _('Phone Address For Sales Contract')
         verbose_name_plural = _('Phone Address For Contracts')
 
     def __str__(self):
         return str(self.phone)
 
 
-class SalesContractTextParagraph(admin.StackedInline):
-    model = TextParagraphInSalesContract
+class SalesDocumentTextParagraph(admin.StackedInline):
+    model = TextParagraphInSalesDocument
     extra = 1
     classes = ['collapse']
     fieldsets = (
@@ -199,8 +197,8 @@ class SalesContractTextParagraph(admin.StackedInline):
     allow_add = True
 
 
-class SalesContractPostalAddress(admin.StackedInline):
-    model = PostalAddressForSalesContract
+class SalesDocumentPostalAddress(admin.StackedInline):
+    model = PostalAddressForSalesDocument
     extra = 1
     classes = ['collapse']
     fieldsets = (
@@ -213,8 +211,8 @@ class SalesContractPostalAddress(admin.StackedInline):
     allow_add = True
 
 
-class SalesContractPhoneAddress(admin.TabularInline):
-    model = PhoneAddressForSalesContract
+class SalesDocumentPhoneAddress(admin.TabularInline):
+    model = PhoneAddressForSalesDocument
     extra = 1
     classes = ['collapse']
     fieldsets = (
@@ -225,8 +223,8 @@ class SalesContractPhoneAddress(admin.TabularInline):
     allow_add = True
 
 
-class SalesContractEmailAddress(admin.TabularInline):
-    model = EmailAddressForSalesContract
+class SalesDocumentEmailAddress(admin.TabularInline):
+    model = EmailAddressForSalesDocument
     extra = 1
     classes = ['collapse']
     fieldsets = (
@@ -237,7 +235,7 @@ class SalesContractEmailAddress(admin.TabularInline):
     allow_add = True
 
 
-class OptionSalesContract(admin.ModelAdmin):
+class OptionSalesDocument(admin.ModelAdmin):
     list_display = ('id', 'description', 'contract', 'customer', 'currency',
                     'staff', 'last_modified_by', 'last_calculated_price',
                     'last_calculated_tax', 'last_pricing_date',
@@ -254,17 +252,17 @@ class OptionSalesContract(admin.ModelAdmin):
         }),
     )
     save_as = True
-    inlines = [SalesContractInlinePosition, SalesContractTextParagraph,
-               SalesContractPostalAddress, SalesContractPhoneAddress,
-               SalesContractEmailAddress]
+    inlines = [SalesDocumentInlinePosition, SalesDocumentTextParagraph,
+               SalesDocumentPostalAddress, SalesDocumentPhoneAddress,
+               SalesDocumentEmailAddress]
 
     def response_add(self, request, new_object):
         obj = self.after_saving_model_and_related_inlines(request, new_object)
-        return super(OptionSalesContract, self).response_add(request, obj)
+        return super(OptionSalesDocument, self).response_add(request, obj)
 
     def response_change(self, request, new_object):
         obj = self.after_saving_model_and_related_inlines(request, new_object)
-        return super(OptionSalesContract, self).response_change(request, obj)
+        return super(OptionSalesDocument, self).response_change(request, obj)
 
     def after_saving_model_and_related_inlines(self, request, obj):
         try:

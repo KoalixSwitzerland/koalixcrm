@@ -4,12 +4,12 @@ from datetime import *
 from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext as _
-from koalixcrm.crm.documents.salescontract import SalesContractTextParagraph
-from koalixcrm.crm.documents.salescontract import SalesContractPostalAddress
-from koalixcrm.crm.documents.salescontract import SalesContractPhoneAddress
-from koalixcrm.crm.documents.salescontract import SalesContractEmailAddress
-from koalixcrm.crm.documents.salescontractposition import SalesContractInlinePosition
-from koalixcrm.crm.documents.salescontract import SalesContract
+from koalixcrm.crm.documents.salesdocument import SalesDocumentTextParagraph
+from koalixcrm.crm.documents.salesdocument import SalesDocumentPostalAddress
+from koalixcrm.crm.documents.salesdocument import SalesDocumentPhoneAddress
+from koalixcrm.crm.documents.salesdocument import SalesDocumentEmailAddress
+from koalixcrm.crm.documents.salesdocumentposition import SalesDocumentInlinePosition
+from koalixcrm.crm.documents.salesdocument import SalesDocument
 from koalixcrm.crm.product.product import Product
 from koalixcrm.crm.views import export_pdf
 
@@ -17,7 +17,7 @@ import koalixcrm.crm.documents.pdfexport
 import koalixcrm.crm.documents.calculations
 
 
-class PurchaseConfirmation(SalesContract):
+class PurchaseConfirmation(SalesDocument):
     derived_from_quote = models.ForeignKey("Quote", blank=True, null=True)
 
     def create_purchase_confirmation(self, calling_model):
@@ -37,7 +37,7 @@ class PurchaseConfirmation(SalesContract):
             self.discount = 0
         elif type(calling_model) == koalixcrm.crm.documents.quote.Quote:
             self.derived_from_quote = calling_model
-            self.copy_sales_contract(calling_model)
+            self.copy_sales_document(calling_model)
 
         self.date_of_creation = date.today().__str__()
         self.save()
@@ -72,9 +72,9 @@ class OptionPurchaseConfirmation(admin.ModelAdmin):
         }),
     )
     save_as = True
-    inlines = [SalesContractInlinePosition, SalesContractTextParagraph,
-               SalesContractPostalAddress, SalesContractPhoneAddress,
-               SalesContractEmailAddress]
+    inlines = [SalesDocumentInlinePosition, SalesDocumentTextParagraph,
+               SalesDocumentPostalAddress, SalesDocumentPhoneAddress,
+               SalesDocumentEmailAddress]
 
     def response_add(self, request, obj, post_url_continue=None):
         new_obj = self.after_saving_model_and_related_inlines(request, obj)

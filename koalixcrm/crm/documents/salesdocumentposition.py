@@ -1,4 +1,4 @@
-from decimal import Decimal
+# -*- coding: utf-8 -*-
 
 from django.db import models
 from django.contrib import admin
@@ -17,11 +17,10 @@ class Position(models.Model):
     position_price_per_unit = models.DecimalField(verbose_name=_("Price Per Unit"), max_digits=17, decimal_places=2,
                                                blank=True, null=True)
     last_pricing_date = models.DateField(verbose_name=_("Last Pricing Date"), blank=True, null=True)
-    last_calculated_price = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Price"),
+    last_calculated_price = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculated Price"),
                                                 blank=True, null=True)
-    last_calculated_tax = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculted Tax"),
+    last_calculated_tax = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculated Tax"),
                                               blank=True, null=True)
-
 
     def __str__(self):
         return _("Position") + ": " + str(self.id)
@@ -32,13 +31,13 @@ class Position(models.Model):
         verbose_name_plural = _('Positions')
 
 
-class SalesContractPosition(Position):
-    contract = models.ForeignKey("SalesContract", verbose_name=_("Contract"))
+class SalesDocumentPosition(Position):
+    sales_document = models.ForeignKey("SalesDocument", verbose_name=_("Contract"))
 
     class Meta:
         app_label = "crm"
-        verbose_name = _('Salescontract Position')
-        verbose_name_plural = _('Salescontract Positions')
+        verbose_name = _('Position in Sales Document')
+        verbose_name_plural = _('Positions Sales Document')
 
     def create_position(self, calling_model, attach_to_model):
         """Copies all the content of the calling model and attaches
@@ -58,15 +57,15 @@ class SalesContractPosition(Position):
         self.last_pricing_date = calling_model.last_pricing_date
         self.last_calculated_price = calling_model.last_calculated_price
         self.last_calculated_tax = calling_model.last_calculated_tax
-        self.contract = attach_to_model
+        self.sales_document = attach_to_model
         self.save()
 
     def __str__(self):
-        return _("Salescontract Position") + ": " + str(self.id)
+        return _("Sales Document Position") + ": " + str(self.id)
 
 
-class SalesContractInlinePosition(admin.TabularInline):
-    model = SalesContractPosition
+class SalesDocumentInlinePosition(admin.TabularInline):
+    model = SalesDocumentPosition
     extra = 1
     classes = ['expand']
     fieldsets = (

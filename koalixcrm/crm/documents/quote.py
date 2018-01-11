@@ -6,10 +6,10 @@ from django.contrib import admin
 from django.utils.translation import ugettext as _
 from koalixcrm.crm.const.status import *
 from koalixcrm.plugin import *
-from koalixcrm.crm.documents.salescontract import SalesContract, OptionSalesContract
+from koalixcrm.crm.documents.salesdocument import SalesDocument, OptionSalesDocument
 
 
-class Quote(SalesContract):
+class Quote(SalesDocument):
     valid_until = models.DateField(verbose_name=_("Valid until"))
     status = models.CharField(max_length=1, choices=QUOTESTATUS, verbose_name=_('Status'))
 
@@ -34,19 +34,19 @@ class Quote(SalesContract):
         verbose_name_plural = _('Quotes')
 
 
-class OptionQuote(OptionSalesContract):
-    list_display = OptionSalesContract.list_display + ('valid_until', 'status',)
-    list_filter = OptionSalesContract.list_filter + ('status',)
-    ordering = OptionSalesContract.ordering
-    search_fields = OptionSalesContract.search_fields
-    fieldsets = OptionSalesContract.fieldsets + (
+class OptionQuote(OptionSalesDocument):
+    list_display = OptionSalesDocument.list_display + ('valid_until', 'status',)
+    list_filter = OptionSalesDocument.list_filter + ('status',)
+    ordering = OptionSalesDocument.ordering
+    search_fields = OptionSalesDocument.search_fields
+    fieldsets = OptionSalesDocument.fieldsets + (
         (_('Quote specific'), {
             'fields': ( 'valid_until', 'status', )
         }),
     )
 
-    save_as = OptionSalesContract.save_as
-    inlines = OptionSalesContract.inlines
+    save_as = OptionSalesDocument.save_as
+    inlines = OptionSalesDocument.inlines
 
     pluginProcessor = PluginProcessor()
     inlines.extend(pluginProcessor.getPluginAdditions("quoteInlines"))

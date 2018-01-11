@@ -9,9 +9,8 @@ from django.utils.translation import ugettext as _
 from koalixcrm.crm.const.status import *
 from koalixcrm.crm.exceptions import *
 from koalixcrm import accounting
-from koalixcrm.crm.documents.salescontract import SalesContract
-from koalixcrm.crm.documents.salescontract import OptionSalesContract
-from koalixcrm.crm.documents.salescontractposition import SalesContractPosition
+from koalixcrm.crm.documents.salesdocument import SalesDocument, OptionSalesDocument
+from koalixcrm.crm.documents.salesdocumentposition import SalesDocumentPosition
 from koalixcrm.plugin import *
 from koalixcrm.crm.views import export_pdf
 from koalixcrm.accounting.models import Account
@@ -24,7 +23,7 @@ from django.shortcuts import render
 from django.template.context_processors import csrf
 
 
-class Invoice(SalesContract):
+class Invoice(SalesDocument):
     payable_until = models.DateField(verbose_name=_("To pay until"))
     payment_bank_reference = models.CharField(verbose_name=_("Payment Bank Reference"), max_length=100, blank=True,
                                               null=True)
@@ -36,7 +35,7 @@ class Invoice(SalesContract):
         At the moment only the koalixcrm.crm.documents.contract.Contract and
         koalixcrm.crm.documents.quote.Quote are allowed to call this function"""
 
-        self.create_sales_contract(calling_model)
+        self.create_sales_document(calling_model)
 
         self.status = 'C'
         self.payable_until = date.today() + \
@@ -45,7 +44,7 @@ class Invoice(SalesContract):
 
         self.template_set = self.contract.default_template_set.invoice_template
         self.save()
-        self.attach_sales_contract_positions(calling_model)
+        self.attach_sales_document_positions(calling_model)
         self.attach_text_paragraphs()
 
     def register_invoice_in_accounting(self, request):
@@ -57,7 +56,7 @@ class Invoice(SalesContract):
             raise IncompleteInvoice(_("Complete invoice and run price recalculation. Price may not be Zero"))
         if len(activa_account) == 0:
             raise OpenInterestAccountMissing(_("Please specify one open intrest account in the accounting"))
-        for position in list(SalesContractPosition.objects.filter(contract=self.id)):
+        for position in list(SalesDocumentPosition.objects.filter(contract=self.id)):
             profit_account = position.product.accoutingProductCategorie.profitAccount
             dict_prices[profit_account] = position.lastCalculatedPrice
             dict_tax[profit_account] = position.lastCalculatedTax
@@ -100,19 +99,19 @@ class Invoice(SalesContract):
         verbose_name_plural = _('Invoices')
 
 
-class OptionInvoice(OptionSalesContract):
-    list_display = OptionSalesContract.list_display + ('payable_until', 'status',)
-    list_filter = OptionSalesContract.list_filter + ('status',)
-    ordering = OptionSalesContract.ordering
-    search_fields = OptionSalesContract.search_fields
-    fieldsets = OptionSalesContract.fieldsets + (
+class OptionInvoice(OptionSalesDocument):
+    list_display = OptionSalesDocument.list_display + ('payable_until', 'status',)
+    list_filter = OptionSalesDocument.list_filter + ('status',)
+    ordering = OptionSalesDocument.ordering
+    search_fields = OptionSalesDocument.search_fields
+    fieldsets = OptionSalesDocument.fieldsets + (
         (_('Invoice specific'), {
             'fields': ( 'payable_until', 'status', 'payment_bank_reference' )
         }),
     )
 
-    save_as = OptionSalesContract.save_as
-    inlines = OptionSalesContract.inlines
+    save_as = OptionSalesDocument.save_as
+    inlines = OptionSalesDocument.inlines
 
     pluginProcessor = PluginProcessor()
     inlines.extend(pluginProcessor.getPluginAdditions("invoiceInlines"))
