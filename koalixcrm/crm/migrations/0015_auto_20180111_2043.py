@@ -65,7 +65,7 @@ class MigrateSalesContractToSalesDocument(Operation):
                                 changed_field.remote_field.through = new_remote_model
                     if changed_field:
                         new_model_state = model_state.clone()
-                        new_model_state.fields[index] = "salesdocument_ptr", changed_field
+                        new_model_state.fields[index] = name, changed_field
                         model_changed = True
                         if old_remote_model in model_state.bases:
                             new_bases = []

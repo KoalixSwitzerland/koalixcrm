@@ -32,35 +32,6 @@ class Migration(migrations.Migration):
             name='salesdocumentposition',
             options={'verbose_name': 'Position in Sales Document', 'verbose_name_plural': 'Positions Sales Document'},
         ),
-        migrations.AlterModelOptions(
-            name='textparagraphinsalesdocument',
-            options={'verbose_name': 'Text Paragraph In Sales Document', 'verbose_name_plural': 'Text Paragraphs In Sales Documents'},
-        ),
-        migrations.RenameField(
-            model_name='emailaddressforsalesdocument',
-            old_name='salesdocument_ptr',
-            new_name='sales_document',
-        ),
-        migrations.RenameField(
-            model_name='phoneaddressforsalesdocument',
-            old_name='salesdocument_ptr',
-            new_name='sales_document',
-        ),
-        migrations.RenameField(
-            model_name='postaladdressforsalesdocument',
-            old_name='salesdocument_ptr',
-            new_name='sales_document',
-        ),
-        migrations.RenameField(
-            model_name='salesdocumentposition',
-            old_name='salesdocument_ptr',
-            new_name='sales_document',
-        ),
-        migrations.RenameField(
-            model_name='textparagraphinsalesdocument',
-            old_name='salesdocument_ptr',
-            new_name='sales_document',
-        ),
         migrations.AlterField(
             model_name='position',
             name='last_calculated_price',
