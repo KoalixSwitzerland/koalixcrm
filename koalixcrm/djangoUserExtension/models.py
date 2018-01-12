@@ -7,6 +7,8 @@ from koalixcrm import crm
 from koalixcrm.djangoUserExtension.const.purpose import *
 from koalixcrm.crm.const.purpose import *
 from koalixcrm.globalSupportFunctions import xstr
+from koalixcrm.crm.exceptions import *
+
 
 class UserExtension(models.Model):
     user = models.ForeignKey("auth.User", blank=False, null=False)
@@ -28,6 +30,18 @@ class DocumentTemplate(models.Model):
     fop_config_file = FileBrowseField(verbose_name=_("FOP Configuration File"), blank=True, null=True,
                                            max_length=200)
     logo = FileBrowseField(verbose_name=_("Logo for the PDF generation"), blank=True, null=True, max_length=200)
+
+    def get_fop_config_file(self):
+        if self.fop_config_file:
+            return self.fop_config_file
+        else:
+            raise TemplateFOPConfigFileMissing(_("Fop Config File missing in Document Template"+str(self)))
+
+    def get_xsl_file(self):
+        if self.xsl_file:
+            return self.xsl_file
+        else:
+            raise TemplateXSLTFileMissing(_("XSL Template missing in Document Template"+str(self)))
 
     class Meta:
         app_label = "djangoUserExtension"

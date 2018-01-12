@@ -15,6 +15,7 @@ from koalixcrm.djangoUserExtension.models import TextParagraphInDocumentTemplate
 from koalixcrm.crm.views import export_pdf
 from koalixcrm.crm.product.product import Product
 import koalixcrm.crm.documents.calculations
+from koalixcrm.crm.exceptions import TemplateSetMissing
 
 
 class TextParagraphInSalesDocument(models.Model):
@@ -136,11 +137,19 @@ class SalesDocument(models.Model):
         self.save()
         return koalixcrm.crm.documents.pdfexport.PDFExport.create_pdf(self)
 
+    def get_template_set(self):
+        if self.template_set:
+            return self.template_set
+        else:
+            raise TemplateSetMissing((_("Template Set missing in Sales Document" + str(self))))
+
     def get_fop_config_file(self):
-        return self.template_set.fop_config_file
+        template_set = self.get_template_set()
+        return template_set.get_fop_config_file()
 
     def get_xsl_file(self):
-        return self.template_set.xsl_file
+        template_set = self.get_template_set()
+        return template_set.get_xsl_file()
 
     def __str__(self):
         return _("Sales Contract") + ": " + str(self.id) + " " + _("from Contract") + ": " + str(self.contract.id)
@@ -327,7 +336,7 @@ class OptionSalesDocument(admin.ModelAdmin):
 
     def create_pdf(self, request, queryset):
         for obj in queryset:
-            response = export_pdf(self, request, obj, ("/admin/crm/"+type(obj)+"/"))
+            response = export_pdf(self, request, obj, ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
             return response
 
     create_pdf.short_description = _("Create PDF")

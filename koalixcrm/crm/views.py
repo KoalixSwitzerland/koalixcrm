@@ -8,7 +8,6 @@ from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext as _
 from koalixcrm.crm.exceptions import *
-from koalixcrm.crm.models import *
 
 
 def export_pdf(calling_model_admin, request, document, redirect_to):
@@ -43,6 +42,12 @@ def export_pdf(calling_model_admin, request, document, redirect_to):
         elif isinstance(e, TemplateSetMissing):
             response = HttpResponseRedirect(redirect_to)
             calling_model_admin.message_user(request, _("Templateset Missing"))
+        elif isinstance(e, TemplateFOPConfigFileMissing):
+            response = HttpResponseRedirect(redirect_to)
+            calling_model_admin.message_user(request, _("Fop Config File Missing in TemplateSet"))
+        elif isinstance(e, TemplateXSLTFileMissing):
+            response = HttpResponseRedirect(redirect_to)
+            calling_model_admin.message_user(request, _("XSLT File Missing in TemplateSet"))
         elif type(e) == CalledProcessError:
             response = HttpResponseRedirect(redirect_to)
             calling_model_admin.message_user(request, e.output)

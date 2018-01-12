@@ -7,7 +7,8 @@ from django.utils.translation import ugettext as _
 
 class CustomerBillingCycle(models.Model):
     name = models.CharField(max_length=300, verbose_name=_("Name"))
-    timeToPaymentDate = models.IntegerField(verbose_name=_("Days To Payment Date"))
+    time_to_payment_date = models.IntegerField(verbose_name=_("Days To Payment Date"))
+    payment_reminder_time_to_payment = models.IntegerField(verbose_name=_("Payment Reminder, Days To Payment Date "))
 
     class Meta:
         app_label = "crm"
@@ -19,6 +20,6 @@ class CustomerBillingCycle(models.Model):
 
 
 class OptionCustomerBillingCycle(admin.ModelAdmin):
-    list_display = ('id', 'timeToPaymentDate', 'name')
-    fieldsets = (('', {'fields': ('timeToPaymentDate', 'name',)}),)
+    list_display = ('id', 'name', 'time_to_payment_date', 'payment_reminder_time_to_payment')
+    fieldsets = (('', {'fields': ('name', 'time_to_payment_date', 'payment_reminder_time_to_payment', )}),)
     allow_add = True

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from koalixcrm.crm.views import *
+
+from django.contrib import admin
 from koalixcrm.crm.documents.quote import Quote, OptionQuote
 from koalixcrm.crm.documents.purchaseconfirmation import PurchaseConfirmation, OptionPurchaseConfirmation
 from koalixcrm.crm.documents.deliverynote import DeliveryNote, OptionDeliveryNote

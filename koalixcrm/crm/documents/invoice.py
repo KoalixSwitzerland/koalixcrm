@@ -34,7 +34,7 @@ class Invoice(SalesDocument):
 
         self.status = 'C'
         self.payable_until = date.today() + \
-                             timedelta(days=self.customer.defaultCustomerBillingCycle.timeToPaymentDate)
+                             timedelta(days=self.customer.defaultCustomerBillingCycle.time_to_payment_date)
         self.date_of_creation = date.today().__str__()
 
         self.template_set = self.contract.default_template_set.invoice_template
@@ -157,7 +157,7 @@ class OptionInvoice(OptionSalesDocument):
     save_as = OptionSalesDocument.save_as
     inlines = OptionSalesDocument.inlines
 
-    actions = ['create_purchase_confirmation', 'create_invoice', 'create_quote',
+    actions = ['create_purchase_confirmation', 'create_quote',
                'create_delivery_note', 'create_pdf', 'create_payment_reminder',
                'register_invoice_in_accounting', 'register_payment_in_accounting',]
 

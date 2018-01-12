@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from datetime import *
 from django.db import models
 from django.utils.translation import ugettext as _
 from koalixcrm.crm.const.status import *
@@ -25,7 +26,7 @@ class PaymentReminder(SalesDocument):
         self.status = 'C'
         self.iteration_number = 1
         self.payable_until = date.today() + \
-                             timedelta(days=self.customer.defaultCustomerBillingCycle.timeToPaymentDate)
+                             timedelta(days=self.customer.defaultCustomerBillingCycle.payment_reminder_time_to_payment)
 
         self.template_set = self.contract.default_template_set.payment_reminder_template
         self.save()
