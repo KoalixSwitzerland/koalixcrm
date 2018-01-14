@@ -64,7 +64,7 @@ class PDFExport:
             for address in list(PostalAddressForContact.objects.filter(person=object_to_create_pdf.supplier.id)):
                 objects_to_serialize += list(PostalAddress.objects.filter(id=address.id))
         if export_customer:
-            objects_to_serialize = list(koalixcrm.crm.documents.salesdocument.SalesDocument.objects.filter(id=object_to_create_pdf.id))
+            objects_to_serialize += list(koalixcrm.crm.documents.salesdocument.SalesDocument.objects.filter(id=object_to_create_pdf.id))
             objects_to_serialize += list(Contact.objects.filter(id=object_to_create_pdf.customer.id))
             objects_to_serialize += list(PostalAddressForContact.objects.filter(person=object_to_create_pdf.customer.id))
             for address in list(PostalAddressForContact.objects.filter(person=object_to_create_pdf.customer.id)):
