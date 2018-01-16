@@ -17,9 +17,7 @@ from koalixcrm.crm.documents.salesdocument import EmailAddressForSalesDocument, 
 from koalixcrm.crm.documents.salesdocument import TextParagraphInSalesDocument
 from koalixcrm.crm.documents.invoice import Invoice
 from koalixcrm.crm.documents.purchaseconfirmation import PurchaseConfirmation
-from koalixcrm.crm.documents.purchaseorder import PurchaseOrder, PurchaseOrderPosition
-from koalixcrm.crm.documents.purchaseorder import PhoneAddressForPurchaseOrder, PostalAddressForPurchaseOrder
-from koalixcrm.crm.documents.purchaseorder import EmailAddressForPurchaseOrder
+from koalixcrm.crm.documents.purchaseorder import PurchaseOrder
 from koalixcrm.crm.documents.quote import Quote
 
 from koalixcrm.crm.product.currency import *

@@ -2,7 +2,6 @@
 
 from decimal import Decimal
 from koalixcrm.crm.documents.salesdocumentposition import SalesDocumentPosition
-import koalixcrm.crm.documents.purchaseorder
 import koalixcrm.crm.documents.salesdocument
 
 
@@ -27,14 +26,9 @@ class Calculations:
 
         price = 0
         tax = 0
-        if isinstance(document, koalixcrm.crm.documents.salesdocument.SalesDocument):
-            positions = SalesDocumentPosition.objects.filter(sales_document=document.id)
-            contact_for_price_calculation = document.customer
-            calculate_with_document_discount = True
-        else:
-            positions = koalixcrm.crm.documents.purchaseorder.PurchaseOrderPosition.objects.filter(contract=document.id)
-            contact_for_price_calculation = document.supplier
-            calculate_with_document_discount = False
+        positions = SalesDocumentPosition.objects.filter(sales_document=document.id)
+        contact_for_price_calculation = document.customer
+        calculate_with_document_discount = True
 
         if positions.exists():
             for position in positions:

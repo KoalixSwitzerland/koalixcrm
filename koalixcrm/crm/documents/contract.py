@@ -17,7 +17,6 @@ from koalixcrm.globalSupportFunctions import xstr
 from koalixcrm.crm.const.purpose import *
 from koalixcrm.crm.documents.invoice import InlineInvoice
 from koalixcrm.crm.documents.quote import InlineQuote
-from koalixcrm.crm.documents.purchaseorder import InlinePurchaseOrder
 
 
 class PostalAddressForContract(PostalAddress):
@@ -127,15 +126,7 @@ class Contract(models.Model):
 
     def create_purchase_order(self):
         purchase_order = PurchaseOrder()
-        purchase_order.contract = self
-        purchase_order.description = self.description
-        purchase_order.discount = 0
-        purchase_order.currency = self.default_currency
-        purchase_order.supplier = self.default_supplier
-        purchase_order.status = 'C'
-        purchase_order.date_of_creation = date.today().__str__()
-        # TODO: today is not correct it has to be replaced
-        purchase_order.save()
+        purchase_order.create_purchase_order(self)
         return purchase_order
 
     def __str__(self):
@@ -153,8 +144,7 @@ class OptionContract(admin.ModelAdmin):
             'fields': ('description', 'default_customer', 'staff', 'default_supplier', 'default_currency', 'default_template_set')
         }),
     )
-    inlines = [ContractPostalAddress, ContractPhoneAddress, ContractEmailAddress, InlineQuote, InlineInvoice,
-               InlinePurchaseOrder]
+    inlines = [ContractPostalAddress, ContractPhoneAddress, ContractEmailAddress, InlineQuote, InlineInvoice]
     pluginProcessor = PluginProcessor()
     inlines.extend(pluginProcessor.getPluginAdditions("contractInlines"))
 
