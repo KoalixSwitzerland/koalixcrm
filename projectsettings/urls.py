@@ -19,6 +19,7 @@ from django.contrib.staticfiles.urls import static
 from django.contrib import admin
 from filebrowser.sites import FileBrowserSite
 from django.core.files.storage import DefaultStorage
+from django.conf.urls import include
 
 site = FileBrowserSite(name="filebrowser", storage=DefaultStorage())
 customsite = FileBrowserSite(name='custom_filebrowser', storage=DefaultStorage())
@@ -28,6 +29,7 @@ customsite.directory = "media/uploads/"
 admin.autodiscover()
 
 urlpatterns = [
+    url(r'^grappelli/', include('grappelli.urls')), # grappelli URLS
     url(r'^admin/filebrowser/', customsite.urls),
     url(r'^admin/', admin.site.urls),
 ]
