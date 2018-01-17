@@ -11,14 +11,8 @@ class DeliveryNote(SalesDocument):
     status = models.CharField(max_length=1, choices=DELIVERYNOTESTATUS)
 
     def create_delivery_note(self, calling_model):
-        """Checks which model was calling the function. Depending on the calling
-        model, the function sets up a purchase confirmation. On success, the
-        purchase confirmation is saved."""
-
         self.create_sales_document(calling_model)
-
         self.status = 'C'
-
         self.template_set = self.contract.default_template_set.delivery_note_template
         self.save()
         self.attach_sales_document_positions(calling_model)

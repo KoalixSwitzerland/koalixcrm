@@ -15,11 +15,9 @@ class Quote(SalesDocument):
 
     def create_quote(self, calling_model):
         self.create_sales_document(calling_model)
-
         self.status = 'I'
         self.valid_until = date.today().__str__()
         self.date_of_creation = date.today().__str__()
-
         self.template_set = self.contract.default_template_set.quote_template
         self.save()
         self.attach_sales_document_positions(calling_model)

@@ -13,7 +13,6 @@ class PurchaseOrder(SalesDocument):
 
     def create_purchase_order(self, calling_model):
         self.create_sales_document(calling_model)
-
         self.status = 'O'
         self.template_set = self.contract.default_template_set.purchase_order_template
         self.save()

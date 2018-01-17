@@ -175,6 +175,24 @@ class OptionContract(admin.ModelAdmin):
 
     create_invoice.short_description = _("Create Invoice")
 
+    def create_delivery_note(self, request, queryset):
+        for obj in queryset:
+            delivery_note = obj.create_delivery_note()
+            self.message_user(request, _("Delivery Note created"))
+            response = HttpResponseRedirect('/admin/crm/deliverynote/' + str(delivery_note.id))
+        return response
+
+    create_delivery_note.short_description = _("Create Delivery Note")
+
+    def create_payment_reminder(self, request, queryset):
+        for obj in queryset:
+            payment_reminder = obj.create_delivery_note()
+            self.message_user(request, _("Payment Reminder created"))
+            response = HttpResponseRedirect('/admin/crm/paymentreminder/' + str(payment_reminder.id))
+        return response
+
+    create_payment_reminder.short_description = _("Create Payment Reminder")
+
     def save_model(self, request, obj, form, change):
         if (change == True):
             obj.last_modified_by = request.user

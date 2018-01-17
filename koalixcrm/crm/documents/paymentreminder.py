@@ -18,16 +18,11 @@ class PaymentReminder(SalesDocument):
     status = models.CharField(max_length=1, choices=INVOICESTATUS)
 
     def create_payment_reminder(self, calling_model):
-        """Checks which model was calling the function. Depending on the calling
-        model, the function sets up a purchase confirmation. On success, the
-        purchase confirmation is saved."""
         self.create_sales_document(calling_model)
-
         self.status = 'C'
         self.iteration_number = 1
         self.payable_until = date.today() + \
                              timedelta(days=self.customer.defaultCustomerBillingCycle.payment_reminder_time_to_payment)
-
         self.template_set = self.contract.default_template_set.payment_reminder_template
         self.save()
         self.attach_sales_document_positions(calling_model)

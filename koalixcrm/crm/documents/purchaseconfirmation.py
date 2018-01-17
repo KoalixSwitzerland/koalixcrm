@@ -8,11 +8,7 @@ from koalixcrm.crm.documents.salesdocument import SalesDocument, OptionSalesDocu
 class PurchaseConfirmation(SalesDocument):
 
     def create_purchase_confirmation(self, calling_model):
-        """Checks which model was calling the function. Depending on the calling
-        model, the function sets up a purchase confirmation. On success, the
-        purchase confirmation is saved."""
         self.create_sales_document(calling_model)
-
         self.template_set = self.contract.default_template_set.purchase_confirmation_template
         self.save()
         self.attach_sales_document_positions(calling_model)

@@ -25,18 +25,11 @@ class Invoice(SalesDocument):
     status = models.CharField(max_length=1, choices=INVOICESTATUS)
 
     def create_invoice(self, calling_model):
-        """Checks which model was calling the function. Depending on the calling
-        model, the function sets up an invoice. On success, the invoice is saved.
-        At the moment only the koalixcrm.crm.documents.contract.Contract and
-        koalixcrm.crm.documents.quote.Quote are allowed to call this function"""
-
         self.create_sales_document(calling_model)
-
         self.status = 'C'
         self.payable_until = date.today() + \
                              timedelta(days=self.customer.defaultCustomerBillingCycle.time_to_payment_date)
         self.date_of_creation = date.today().__str__()
-
         self.template_set = self.contract.default_template_set.invoice_template
         self.save()
         self.attach_sales_document_positions(calling_model)
