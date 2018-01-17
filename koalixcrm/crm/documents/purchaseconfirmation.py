@@ -33,4 +33,4 @@ class OptionPurchaseConfirmation(OptionSalesDocument):
     save_as = OptionSalesDocument.save_as
     inlines = OptionSalesDocument.inlines
     actions = ['create_invoice', 'create_quote',
-               'create_delivery_note', 'create_pdf']
+               'create_delivery_note', 'create_purchase_order', 'create_pdf']

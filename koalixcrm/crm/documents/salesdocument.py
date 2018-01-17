@@ -14,8 +14,9 @@ from koalixcrm.crm.documents.salesdocumentposition import SalesDocumentPosition,
 from koalixcrm.djangoUserExtension.models import TextParagraphInDocumentTemplate
 from koalixcrm.crm.views import export_pdf
 from koalixcrm.crm.product.product import Product
-import koalixcrm.crm.documents.calculations
 from koalixcrm.crm.exceptions import TemplateSetMissing
+import koalixcrm.crm.documents.calculations
+import koalixcrm.crm.documents.pdfexport
 
 
 class TextParagraphInSalesDocument(models.Model):
@@ -131,6 +132,11 @@ class SalesDocument(models.Model):
         payment_reminder = koalixcrm.crm.documents.paymentreminder.PaymentReminder()
         payment_reminder.create_payment_reminder(self)
         return payment_reminder
+
+    def create_purchase_order(self):
+        purchase_order = koalixcrm.crm.documents.purchaseorder.PurchaseOrder()
+        purchase_order.create_purchase_order(self)
+        return purchase_order
 
     def create_pdf(self):
         self.last_print_date = datetime.now()
@@ -333,6 +339,15 @@ class OptionSalesDocument(admin.ModelAdmin):
         return response
 
     create_payment_reminder.short_description = _("Create Payment Reminder")
+
+    def create_purchase_order(self, request, queryset):
+        for obj in queryset:
+            purchase_order = obj.create_purchase_order()
+            self.message_user(request, _("Purchase Order created"))
+            response = HttpResponseRedirect('/admin/crm/purchaseorder/' + str(purchase_order.id))
+        return response
+
+    create_purchase_order.short_description = _("Create Purchase Order")
 
     def create_pdf(self, request, queryset):
         for obj in queryset:

@@ -8,7 +8,7 @@ from koalixcrm.plugin import *
 
 
 class PurchaseOrder(SalesDocument):
-    supplier = models.ForeignKey("Supplier", verbose_name=_("Supplier"))
+    supplier = models.ForeignKey("Supplier", verbose_name=_("Supplier"), null=True)
     status = models.CharField(max_length=1, choices=PURCHASEORDERSTATUS)
 
     def create_purchase_order(self, calling_model):

@@ -47,7 +47,7 @@ class OptionQuote(OptionSalesDocument):
     inlines = OptionSalesDocument.inlines
 
     actions = ['create_purchase_confirmation', 'create_invoice',
-               'create_delivery_note', 'create_pdf',]
+               'create_delivery_note', 'create_purchase_order', 'create_pdf',]
 
     pluginProcessor = PluginProcessor()
     inlines.extend(pluginProcessor.getPluginAdditions("quoteInlines"))

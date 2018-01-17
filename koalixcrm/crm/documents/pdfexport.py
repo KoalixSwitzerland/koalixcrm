@@ -21,7 +21,6 @@ from koalixcrm.crm.product.product import Product
 from lxml import etree
 
 from koalixcrm.crm.documents.salesdocumentposition import Position
-import koalixcrm.crm.documents.purchaseorder
 import koalixcrm.crm.documents.salesdocument
 
 
@@ -47,25 +46,15 @@ class PDFExport:
     @staticmethod
     def create_list_of_objects_to_serialize(object_to_create_pdf):
 
-        # define options for the serialization (options depend on which main object need to be serialized)
-        if isinstance(object_to_create_pdf, koalixcrm.crm.documents.salesdocument.SalesDocument):
-            position_class = koalixcrm.crm.documents.salesdocumentposition.SalesDocumentPosition
-            export_customer = True
-            export_supplier = False
-        else:
-            position_class = koalixcrm.crm.documents.purchaseorder.PurchaseOrderPosition
-            export_customer = False
-            export_supplier = True
-
+        position_class = koalixcrm.crm.documents.salesdocumentposition.SalesDocumentPosition
         objects_to_serialize = list(type(object_to_create_pdf).objects.filter(id=object_to_create_pdf.id))
-        if export_supplier:
-            objects_to_serialize += list(Contact.objects.filter(id=object_to_create_pdf.supplier.id))
+        objects_to_serialize += list(koalixcrm.crm.documents.salesdocument.SalesDocument.objects.filter(id=object_to_create_pdf.id))
+        objects_to_serialize += list(Contact.objects.filter(id=object_to_create_pdf.customer.id))
+        if isinstance(object_to_create_pdf, koalixcrm.crm.documents.purchaseorder.PurchaseOrder):
             objects_to_serialize += list(PostalAddressForContact.objects.filter(person=object_to_create_pdf.supplier.id))
             for address in list(PostalAddressForContact.objects.filter(person=object_to_create_pdf.supplier.id)):
                 objects_to_serialize += list(PostalAddress.objects.filter(id=address.id))
-        if export_customer:
-            objects_to_serialize += list(koalixcrm.crm.documents.salesdocument.SalesDocument.objects.filter(id=object_to_create_pdf.id))
-            objects_to_serialize += list(Contact.objects.filter(id=object_to_create_pdf.customer.id))
+        else:
             objects_to_serialize += list(PostalAddressForContact.objects.filter(person=object_to_create_pdf.customer.id))
             for address in list(PostalAddressForContact.objects.filter(person=object_to_create_pdf.customer.id)):
                 objects_to_serialize += list(PostalAddress.objects.filter(id=address.id))
