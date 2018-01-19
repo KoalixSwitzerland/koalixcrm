@@ -14,3 +14,16 @@ PURPOSESADDRESSINCUSTOMER = (
     ('P', _('Mobile Private')),
     ('B', _('Mobile Business')),
 )
+
+PURPOSESTEXTPARAGRAPHINDOCUMENTS = (
+    ('BS', _('Before subject')),
+    ('AS', _('After subject')),
+    ('BT', _('Before total')),
+    ('AT', _('After total')),
+    ('BW', _('Before wishes')),
+    ('AW', _('After wishes')),
+    ('C1', _('Custom 1')),
+    ('C2', _('Custom 2')),
+    ('C3', _('Custom 3')),
+    ('C4', _('Custom 4')),
+)

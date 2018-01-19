@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-09 20:17+0000\n"
+"POT-Creation-Date: 2018-01-04 20:29+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,11 +18,19 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: koalixcrm/djangoUserExtension/admin.py:13
-#: koalixcrm/djangoUserExtension/admin.py:27
-#: koalixcrm/djangoUserExtension/admin.py:39
-#: koalixcrm/djangoUserExtension/admin.py:53
-#: koalixcrm/djangoUserExtension/admin.py:73
-#: koalixcrm/djangoUserExtension/admin.py:89
+#: koalixcrm/djangoUserExtension/admin.py:28
+#: koalixcrm/djangoUserExtension/admin.py:40
+#: koalixcrm/djangoUserExtension/admin.py:52
+#: koalixcrm/djangoUserExtension/admin.py:66
+#: koalixcrm/djangoUserExtension/admin.py:80
+#: koalixcrm/djangoUserExtension/admin.py:95
+#: koalixcrm/djangoUserExtension/admin.py:108
+#: koalixcrm/djangoUserExtension/admin.py:121
+#: koalixcrm/djangoUserExtension/admin.py:134
+#: koalixcrm/djangoUserExtension/admin.py:147
+#: koalixcrm/djangoUserExtension/admin.py:160
+#: koalixcrm/djangoUserExtension/admin.py:173
+#: koalixcrm/djangoUserExtension/admin.py:186
 msgid "Basics"
 msgstr "Gundlagen"
 
@@ -42,133 +50,201 @@ msgstr "Privat Mobiltelefon"
 msgid "Mobile Business"
 msgstr "Geschäftliches Mobiltelefon"
 
-#: koalixcrm/djangoUserExtension/models.py:12
-#: koalixcrm/djangoUserExtension/models.py:40
-msgid "Title"
-msgstr "Titel"
-
-#: koalixcrm/djangoUserExtension/models.py:13
-#: koalixcrm/djangoUserExtension/models.py:17
-msgid "XSL File"
-msgstr "XSL Datei"
-
 #: koalixcrm/djangoUserExtension/models.py:18
-msgid "XSL Files"
-msgstr "XSL Dateien"
-
-#: koalixcrm/djangoUserExtension/models.py:31
 msgid "User Extention"
 msgstr "Benutzer Erweiterung"
 
-#: koalixcrm/djangoUserExtension/models.py:32
+#: koalixcrm/djangoUserExtension/models.py:19
 msgid "User Extentions"
 msgstr "Benutzer Erweiterungen"
 
-#: koalixcrm/djangoUserExtension/models.py:39
-msgid "Name of the Organisation"
-msgstr "Name der Organisation"
+#: koalixcrm/djangoUserExtension/models.py:26
+#: koalixcrm/djangoUserExtension/models.py:98
+msgid "Title"
+msgstr "Titel"
 
-#: koalixcrm/djangoUserExtension/models.py:41
-msgid "XSL File for Invoice"
-msgstr "XSL Datei für die Rechnung"
+#: koalixcrm/djangoUserExtension/models.py:27
+msgid "XSL File"
+msgstr "XSL Datei"
 
-#: koalixcrm/djangoUserExtension/models.py:43
-msgid "XSL File for Quote"
-msgstr "XSL Datei für die Offerte"
-
-#: koalixcrm/djangoUserExtension/models.py:44
-msgid "XSL File for Purchaseorder"
-msgstr "XSL Datei für die Kaufsbestätigung"
-
-#: koalixcrm/djangoUserExtension/models.py:46
-#, fuzzy
-#| msgid "XSL File for Purchaseorder"
-msgid "XSL File for Purchase Confirmation"
-msgstr "XSL Datei für die Kaufsbestätigung"
-
-#: koalixcrm/djangoUserExtension/models.py:48
-msgid "XSL File for Deilvery Order"
-msgstr "XSL Datei für den Lieferschein"
-
-#: koalixcrm/djangoUserExtension/models.py:50
-msgid "XSL File for Profit Loss Statement"
-msgstr "XSL Datei für die Erfolgsrechung"
-
-#: koalixcrm/djangoUserExtension/models.py:52
-msgid "XSL File for Balancesheet"
-msgstr "XSL Datei für die Billanz"
-
-#: koalixcrm/djangoUserExtension/models.py:54
-msgid "Logo for the PDF generation"
-msgstr "Logo für die PDF's"
-
-#: koalixcrm/djangoUserExtension/models.py:55
-msgid "Reference to Banking Account"
-msgstr "Bankverbindung"
-
-#: koalixcrm/djangoUserExtension/models.py:57
-msgid "Addresser"
-msgstr "Absender"
-
-#: koalixcrm/djangoUserExtension/models.py:58
+#: koalixcrm/djangoUserExtension/models.py:28
 msgid "FOP Configuration File"
 msgstr "FOP Configurations Datei"
 
-#: koalixcrm/djangoUserExtension/models.py:60
-msgid "Footer Text On Salesorders"
-msgstr "Grussfromel für die Verkaufsaufträge"
+#: koalixcrm/djangoUserExtension/models.py:30
+msgid "Logo for the PDF generation"
+msgstr "Logo für die PDF's"
 
-#: koalixcrm/djangoUserExtension/models.py:61
-msgid "Header Text On Salesorders"
-msgstr "Begrüssungsfromel für die Verkaufsaufträge"
+#: koalixcrm/djangoUserExtension/models.py:34
+msgid "Document template"
+msgstr ""
 
-#: koalixcrm/djangoUserExtension/models.py:62
-msgid "Header Text On Purchaseorders"
-msgstr "Begrüssungsformel für die Kaufaufträge"
+#: koalixcrm/djangoUserExtension/models.py:35
+msgid "Document templates"
+msgstr ""
 
-#: koalixcrm/djangoUserExtension/models.py:63
-msgid "Footer Text On Purchaseorders"
-msgstr "Grussfromel für die Kaufaufträge"
+#: koalixcrm/djangoUserExtension/models.py:44
+msgid "Invoice template"
+msgstr ""
 
-#: koalixcrm/djangoUserExtension/models.py:64
-msgid "Page Footer Left"
-msgstr "Fussnote Links"
+#: koalixcrm/djangoUserExtension/models.py:45
+msgid "Invoice templates"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/models.py:51
+msgid "Quote template"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/models.py:52
+#, fuzzy
+#| msgid "Templateset"
+msgid "Quote templates"
+msgstr "Vorlagenset"
+
+#: koalixcrm/djangoUserExtension/models.py:58
+msgid "Delivery note template"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/models.py:59
+msgid "Delivery note templates"
+msgstr ""
 
 #: koalixcrm/djangoUserExtension/models.py:65
-msgid "Page Footer Middle"
-msgstr "Fussnote Mitte"
+msgid "Payment reminder template"
+msgstr ""
 
-#: koalixcrm/djangoUserExtension/models.py:69
+#: koalixcrm/djangoUserExtension/models.py:66
+msgid "Payment reminder templates"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/models.py:72
+msgid "Purchase order template"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/models.py:73
+msgid "Purchase order templates"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/models.py:79
+#, fuzzy
+#| msgid "XSL File for Purchaseorder"
+msgid "Purchase confirmation template"
+msgstr "XSL Datei für die Kaufsbestätigung"
+
+#: koalixcrm/djangoUserExtension/models.py:80
+#, fuzzy
+#| msgid "XSL File for Purchaseorder"
+msgid "Purchase confirmation templates"
+msgstr "XSL Datei für die Kaufsbestätigung"
+
+#: koalixcrm/djangoUserExtension/models.py:86
+msgid "Profit loss statement template"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/models.py:87
+msgid "Profit loss statement templates"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/models.py:93
+msgid "Balance sheet template"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/models.py:94
+msgid "Balance sheet templates"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/models.py:110
 msgid "Templateset"
 msgstr "Vorlagenset"
 
-#: koalixcrm/djangoUserExtension/models.py:70
+#: koalixcrm/djangoUserExtension/models.py:111
 msgid "Templatesets"
 msgstr "Vorlagensets"
 
-#: koalixcrm/djangoUserExtension/models.py:77
-#: koalixcrm/djangoUserExtension/models.py:91
-#: koalixcrm/djangoUserExtension/models.py:105
+#: koalixcrm/djangoUserExtension/models.py:118
+#: koalixcrm/djangoUserExtension/models.py:131
+#: koalixcrm/djangoUserExtension/models.py:144
+#: koalixcrm/djangoUserExtension/models.py:158
 msgid "Purpose"
 msgstr "Verwendungszwek"
 
-#: koalixcrm/djangoUserExtension/models.py:86
-#: koalixcrm/djangoUserExtension/models.py:87
+#: koalixcrm/djangoUserExtension/models.py:126
+#: koalixcrm/djangoUserExtension/models.py:127
 #, fuzzy
 #| msgid "Djang User Extention"
 msgid "Postal Address for User Extention"
 msgstr "Django Benutzer Erweiterung"
 
-#: koalixcrm/djangoUserExtension/models.py:100
-#: koalixcrm/djangoUserExtension/models.py:101
+#: koalixcrm/djangoUserExtension/models.py:139
+#: koalixcrm/djangoUserExtension/models.py:140
 #, fuzzy
 #| msgid "Djang User Extention"
 msgid "Phonenumber for User Extention"
 msgstr "Django Benutzer Erweiterung"
 
-#: koalixcrm/djangoUserExtension/models.py:114
-#: koalixcrm/djangoUserExtension/models.py:115
+#: koalixcrm/djangoUserExtension/models.py:152
+#: koalixcrm/djangoUserExtension/models.py:153
 #, fuzzy
 #| msgid "Djang User Extention"
 msgid "Email Address for User Extention"
 msgstr "Django Benutzer Erweiterung"
+
+#: koalixcrm/djangoUserExtension/models.py:159
+msgid "Text"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/models.py:163
+msgid "TextParagraphInDocumentTemplate"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/models.py:164
+msgid "TextParagraphInDocumentTemplates"
+msgstr ""
+
+#~ msgid "XSL Files"
+#~ msgstr "XSL Dateien"
+
+#~ msgid "Name of the Organisation"
+#~ msgstr "Name der Organisation"
+
+#~ msgid "XSL File for Invoice"
+#~ msgstr "XSL Datei für die Rechnung"
+
+#~ msgid "XSL File for Quote"
+#~ msgstr "XSL Datei für die Offerte"
+
+#~ msgid "XSL File for Purchaseorder"
+#~ msgstr "XSL Datei für die Kaufsbestätigung"
+
+#~ msgid "XSL File for Deilvery Order"
+#~ msgstr "XSL Datei für den Lieferschein"
+
+#~ msgid "XSL File for Profit Loss Statement"
+#~ msgstr "XSL Datei für die Erfolgsrechung"
+
+#~ msgid "XSL File for Balancesheet"
+#~ msgstr "XSL Datei für die Billanz"
+
+#~ msgid "Reference to Banking Account"
+#~ msgstr "Bankverbindung"
+
+#~ msgid "Addresser"
+#~ msgstr "Absender"
+
+#~ msgid "Footer Text On Salesorders"
+#~ msgstr "Grussfromel für die Verkaufsaufträge"
+
+#~ msgid "Header Text On Salesorders"
+#~ msgstr "Begrüssungsfromel für die Verkaufsaufträge"
+
+#~ msgid "Header Text On Purchaseorders"
+#~ msgstr "Begrüssungsformel für die Kaufaufträge"
+
+#~ msgid "Footer Text On Purchaseorders"
+#~ msgstr "Grussfromel für die Kaufaufträge"
+
+#~ msgid "Page Footer Left"
+#~ msgstr "Fussnote Links"
+
+#~ msgid "Page Footer Middle"
+#~ msgstr "Fussnote Mitte"

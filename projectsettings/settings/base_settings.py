@@ -25,13 +25,14 @@ DEBUG = True
 
 # Application definition
 PREREQUISITE_APPS = [
+    'django.contrib.contenttypes',
+    'grappelli.dashboard',
+    'grappelli',
     'django.contrib.admin',
     'django.contrib.auth',
-    'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     'filebrowser'
 ]
 
@@ -132,4 +133,8 @@ FILEBROWSER_DIRECTORY = 'media/uploads/'
 FILEBROWSER_EXTENSIONS = {
     'XML': ['.xml'],
     'XSL': ['.xsl'],
+    'JPG': ['.jpg'],
+    'PNG': ['.png'],
+    'GIF': ['.gif'],
+    'TTF': ['.ttf'],
 }

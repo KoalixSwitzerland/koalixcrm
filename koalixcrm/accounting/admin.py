@@ -33,6 +33,17 @@ class OptionBooking(admin.ModelAdmin):
         obj.save()
 
 
+class InlineBookings(admin.TabularInline):
+    model = Booking
+    extra = 1
+    classes = ['collapse']
+    fieldsets = (
+        ('Basics', {
+            'fields': ('fromAccount', 'toAccount', 'description', 'amount', 'bookingDate', 'staff', 'bookingReference',)
+        }),
+    )
+    allow_add = False
+
 class AccountForm(forms.ModelForm):
     """AccountForm is used to overwrite the clean method of the
     original form and to add an additional checks to the model"""

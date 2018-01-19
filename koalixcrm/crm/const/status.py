@@ -28,3 +28,10 @@ PURCHASEORDERSTATUS = (
     ('I', _('Invoice registered')),
     ('P', _('Invoice payed')),
 )
+
+DELIVERYNOTESTATUS = (
+    ('C', _('Created')),
+    ('S', _('Sent')),
+    ('R', _('Received')),
+    ('R', _('Lost')),
+)
