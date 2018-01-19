@@ -24,7 +24,7 @@ Some information about the installation of koalixcrm: [installation](https://git
 Information about the development environment setup for this and similar projects can be found here: [Development environment setup](https://github.com/scaphilo/koalixcrm/wiki/Development-Environment-Setup)
 
 ## Release Process
-
+Information about the release process: [Release Process](https://github.com/scaphilo/koalixcrm/wiki/Release-Process)
 
 ## Update from version 1.11 to 1.12
 Some information about the update procedure from Version 1.11 to Version 1.12: [update](https://github.com/scaphilo/koalixcrm/wiki/Update)
