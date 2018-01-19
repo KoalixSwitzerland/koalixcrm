@@ -5,3 +5,4 @@ olefile==0.44
 Pillow==4.2.1
 psycopg2==2.7.3
 pytz==2017.2
+django-grappelli==2.10.1
