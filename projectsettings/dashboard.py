@@ -21,42 +21,67 @@ class CustomIndexDashboard(Dashboard):
     def init_with_context(self, context):
         site_name = get_admin_site_name(context)
 
+        self.children.append(modules.Group(
+            _('Group: koalixcrm'),
+            column=1,
+            collapsible=True,
+            children = [
+                modules.ModelList(
+                    _('Projects'),
+                    column=1,
+                    css_classes=('collapse closed',),
+                    models=('koalixcrm.crm.documents.contract.Contract',
+                            'koalixcrm.crm.documents.purchaseorder.PurchaseOrder',),
+                ),
+                modules.ModelList(
+                    _('Sales Documents'),
+                    column=1,
+                    css_classes=('collapse closed',),
+                    models=('koalixcrm.crm.documents.quote.Quote',
+                            'koalixcrm.crm.documents.purchaseconfirmation.PurchaseConfirmation',
+                            'koalixcrm.crm.documents.deliverynote.DeliveryNote',
+                            'koalixcrm.crm.documents.invoice.Invoice',
+                            'koalixcrm.crm.documents.paymentreminder.PaymentReminder',),
+                ),
+                modules.ModelList(
+                    _('Products'),
+                    column=1,
+                    css_classes=('collapse closed',),
+                    models=('koalixcrm.crm.product.product.Product',),
+                ),
+                modules.ModelList(
+                    _('Contacts'),
+                    column=1,
+                    css_classes=('collapse closed',),
+                    models=('koalixcrm.crm.contact.customer.Customer',
+                            'koalixcrm.crm.contact.supplier.Supplier'),
+                ),
+            ]
+        ))
+
         # append a group for "Administration" & "Applications"
         self.children.append(modules.Group(
             _('Group: Administration & Applications'),
             column=1,
             collapsible=True,
             children = [
-                modules.AppList(
+                modules.ModelList(
                     _('Administration'),
                     column=1,
                     collapsible=False,
                     models=('django.contrib.*',),
                 ),
-                modules.AppList(
-                    _('Applications'),
+                modules.ModelList(
+                    _('koalixcrm Settings'),
                     column=1,
                     css_classes=('collapse closed',),
-                    exclude=('django.contrib.*',),
-                )
+                    models=('koalixcrm.crm.contact.customerbillingcycle.CustomerBillingCycle',
+                            'koalixcrm.crm.contact.customergroup.CustomerGroup',
+                            'koalixcrm.crm.product.tax.Tax',
+                            'koalixcrm.crm.product.unit.Unit',
+                            'koalixcrm.crm.product.currency.Currency',),
+                ),
             ]
-        ))
-
-        # append an app list module for "Applications"
-        self.children.append(modules.AppList(
-            _('AppList: Applications'),
-            collapsible=True,
-            column=1,
-            css_classes=('collapse closed',),
-            exclude=('django.contrib.*',),
-        ))
-
-        # append an app list module for "Administration"
-        self.children.append(modules.ModelList(
-            _('ModelList: Administration'),
-            column=1,
-            collapsible=False,
-            models=('django.contrib.*',),
         ))
 
         # append another link list module for "support".
@@ -77,6 +102,11 @@ class CustomIndexDashboard(Dashboard):
             _('Support'),
             column=2,
             children=[
+                {
+                    'title': _('koalixcrm on github'),
+                    'url': 'https://github.com/scaphilo/koalixcrm/',
+                    'external': True,
+                },
                 {
                     'title': _('Django Documentation'),
                     'url': 'http://docs.djangoproject.com/',
