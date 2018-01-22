@@ -4,6 +4,8 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4f0acae8f6d04c2b81c0c4a4b2b48e09)](https://www.codacy.com/app/simon.riedener/koalixcrm?utm_source=github.com&utm_medium=referral&utm_content=scaphilo/koalixcrm&utm_campaign=badger)
 [![Codacy Badge](https://api.codacy.com/project/badge/Coverage/4f0acae8f6d04c2b81c0c4a4b2b48e09)](https://www.codacy.com/app/simon.riedener/koalixcrm?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=scaphilo/koalixcrm&amp;utm_campaign=Badge_Coverage)
 
+[[https://github.com/scaphilo/koalixcrm/documentation/images/koalixcrm-V1.12dev1_dashboard.png|alt=dashboard]]
+
 ## Demos
 You can find an english demo of the koalixcrm here: [demo](http://koalixcrmdemoenglish.koalix.org/admin/).
 You can find a german demo of the koalixcrm here: [demo](http://koalixcrmdemogerman.koalix.org/admin/).
@@ -13,7 +15,7 @@ To be able to log in use the following
   **user: guest**
 
   **password: guestpassword**
-  
+
 ## Documentation
 You can find the documentation of koalixcrm here: [doc](http://readthedocs.org/docs/koalixcrm/en/master/)
 
