@@ -55,6 +55,7 @@ class SalesDocument(models.Model):
                               related_name="db_relscstaff", null=True)
     currency = models.ForeignKey("Currency", verbose_name=_("Currency"), blank=False, null=False)
     date_of_creation = models.DateTimeField(verbose_name=_("Created at"), auto_now_add=True)
+    custom_date_field = models.DateTimeField(verbose_name=_("Custom Date/Time"), blank=True, null=True)
     last_modification = models.DateTimeField(verbose_name=_("Last modified"), auto_now=True)
     last_modified_by = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True},
                                          verbose_name=_("Last modified by"), related_name="db_lstscmodified", null=True,
@@ -263,7 +264,7 @@ class OptionSalesDocument(admin.ModelAdmin):
     fieldsets = (
         (_('Sales Contract'), {
             'fields': ('contract', 'description', 'customer', 'currency', 'discount',
-                       'staff', 'external_reference', 'template_set')
+                       'staff', 'external_reference', 'template_set', 'custom_date_field')
         }),
     )
     save_as = True
@@ -273,6 +274,7 @@ class OptionSalesDocument(admin.ModelAdmin):
 
     def response_add(self, request, new_object):
         obj = self.after_saving_model_and_related_inlines(request, new_object)
+        obj.custom_date_field = date.today().__str__()
         return super(OptionSalesDocument, self).response_add(request, obj)
 
     def response_change(self, request, new_object):
