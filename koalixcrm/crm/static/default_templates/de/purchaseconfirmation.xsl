@@ -128,7 +128,7 @@
               text-align="left">Projektnummer</fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
-              text-align="left">Rechnungsnummer</fo:block>
+              text-align="left">Auftragsbestätigungsnummer</fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
               text-align="left"><fo:leader leader-pattern="space"/></fo:block>
@@ -184,7 +184,7 @@
               text-align="left">PRO-<xsl:value-of select="object[@model='crm.salesdocument']/field[@name='contract']"/></fo:block>
 			<fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
-              text-align="left">REC-<xsl:value-of select="object[@model='crm.salesdocument']/@pk"/></fo:block>
+              text-align="left">AUF-<xsl:value-of select="object[@model='crm.salesdocument']/@pk"/></fo:block>
             <fo:block font-size="7pt"
               font-family="BitstreamVeraSans"
               text-align="left"><fo:leader leader-pattern="space"/></fo:block>
@@ -317,7 +317,7 @@
                  text-align="left"
                  font-weight="bold"
                  margin-top="2cm">
-        Offerte <xsl:value-of select="object[@model='crm.paymentreminder']/field[@name='iteration_number']"/> - <xsl:value-of select="object[@model='crm.salesdocument']/field[@name='description']"/>
+        Auftragsbestätigung <xsl:value-of select="object[@model='crm.salesdocument']/field[@name='description']"/>
        </fo:block>
        <xsl:for-each select="object[@model='crm.textparagraphinsalesdocument']">
           <xsl:choose>
