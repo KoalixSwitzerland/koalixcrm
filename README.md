@@ -4,7 +4,7 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4f0acae8f6d04c2b81c0c4a4b2b48e09)](https://www.codacy.com/app/simon.riedener/koalixcrm?utm_source=github.com&utm_medium=referral&utm_content=scaphilo/koalixcrm&utm_campaign=badger)
 [![Codacy Badge](https://api.codacy.com/project/badge/Coverage/4f0acae8f6d04c2b81c0c4a4b2b48e09)](https://www.codacy.com/app/simon.riedener/koalixcrm?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=scaphilo/koalixcrm&amp;utm_campaign=Badge_Coverage)
 
-![dashboard](https://github.com/scaphilo/koalixcrm/blob/master/documentation/source/images/koalixcrm-V1.12dev1_dashboard.png)
+![dashboard](https://github.com/scaphilo/koalixcrm/master/documentation/source/images/koalixcrm-V1.12dev1_dashboard.png)
 
 ## Demos
 You can find an english demo of the koalixcrm here: [demo](http://koalixcrmdemoenglish.koalix.org/admin/).
