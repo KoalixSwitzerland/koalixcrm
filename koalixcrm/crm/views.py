@@ -54,3 +54,48 @@ def export_pdf(calling_model_admin, request, document, redirect_to):
         else:
             raise Http404
     return response
+
+def create_new_document(calling_model_admin, request, document, redirect_to):
+    """This method exports PDFs provided by different Models in the crm application
+
+        Args:
+          calling_model_admin (ModelAdmin):  The calling ModelAdmin must be provided for error message response.
+          request: The request User is to know where to save the error message
+          document (Contract):  The model from which a new document shall be created
+          redirect_to (str): String that describes to where the method should redirect in case of an error
+
+        Returns:
+          HTTpResponse with a PDF when successful
+          HTTpResponseRedirect when not successful
+
+        Raises:
+          raises Http404 exception if anything goes wrong"""
+    try:
+        pdf = document.create_pdf()
+        response = HttpResponse(FileWrapper(open(pdf, 'rb')), content_type='application/pdf')
+        response['Content-Length'] = path.getsize(pdf)
+    except (TemplateSetMissing, UserExtensionMissing, CalledProcessError, UserExtensionEmailAddressMissing, UserExtensionPhoneAddressMissing) as e:
+        if isinstance(e, UserExtensionMissing):
+            response = HttpResponseRedirect(redirect_to)
+            calling_model_admin.message_user(request, _("User Extension Missing"))
+        elif isinstance(e, UserExtensionEmailAddressMissing):
+            response = HttpResponseRedirect(redirect_to)
+            calling_model_admin.message_user(request, _("User Extension Email Missing"))
+        elif isinstance(e, UserExtensionPhoneAddressMissing):
+            response = HttpResponseRedirect(redirect_to)
+            calling_model_admin.message_user(request, _("User Extension Phone Missing"))
+        elif isinstance(e, TemplateSetMissing):
+            response = HttpResponseRedirect(redirect_to)
+            calling_model_admin.message_user(request, _("Templateset Missing"))
+        elif isinstance(e, TemplateFOPConfigFileMissing):
+            response = HttpResponseRedirect(redirect_to)
+            calling_model_admin.message_user(request, _("Fop Config File Missing in TemplateSet"))
+        elif isinstance(e, TemplateXSLTFileMissing):
+            response = HttpResponseRedirect(redirect_to)
+            calling_model_admin.message_user(request, _("XSLT File Missing in TemplateSet"))
+        elif type(e) == CalledProcessError:
+            response = HttpResponseRedirect(redirect_to)
+            calling_model_admin.message_user(request, e.output)
+        else:
+            raise Http404
+    return response

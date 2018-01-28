@@ -23,7 +23,7 @@ class PaymentReminder(SalesDocument):
         self.iteration_number = 1
         self.payable_until = date.today() + \
                              timedelta(days=self.customer.defaultCustomerBillingCycle.payment_reminder_time_to_payment)
-        self.template_set = self.contract.default_template_set.payment_reminder_template
+        self.template_set = self.contract.get_template_set(self)
         self.save()
         self.attach_sales_document_positions(calling_model)
         self.attach_text_paragraphs()

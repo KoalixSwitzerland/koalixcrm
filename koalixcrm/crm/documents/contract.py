@@ -17,6 +17,7 @@ from koalixcrm.globalSupportFunctions import xstr
 from koalixcrm.crm.const.purpose import *
 from koalixcrm.crm.documents.invoice import InlineInvoice
 from koalixcrm.crm.documents.quote import InlineQuote
+from koalixcrm.crm.exceptions import *
 
 
 class PostalAddressForContract(PostalAddress):
@@ -113,6 +114,13 @@ class Contract(models.Model):
         app_label = "crm"
         verbose_name = _('Contract')
         verbose_name_plural = _('Contracts')
+
+    def get_template_set(self, calling_model):
+        if self.default_template_set:
+            required_template_set = str(type(calling_model).__name__)
+            return self.default_template_set.get_template_set(required_template_set)
+        else:
+            raise TemplateSetMissing("The Contract has no Default Template Set selected")
 
     def create_invoice(self):
         invoice = Invoice()
