@@ -55,13 +55,15 @@ def export_pdf(calling_model_admin, request, document, redirect_to):
             raise Http404
     return response
 
-def create_new_document(calling_model_admin, request, document, redirect_to):
+
+def create_new_document(calling_model_admin, request, document, requested_document_type, redirect_to):
     """This method exports PDFs provided by different Models in the crm application
 
         Args:
           calling_model_admin (ModelAdmin):  The calling ModelAdmin must be provided for error message response.
           request: The request User is to know where to save the error message
           document (Contract):  The model from which a new document shall be created
+          requested_document_type (str): The document type name that shall be created
           redirect_to (str): String that describes to where the method should redirect in case of an error
 
         Returns:
