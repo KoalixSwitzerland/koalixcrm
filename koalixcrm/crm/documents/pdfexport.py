@@ -104,8 +104,10 @@ class PDFExport:
         # define the files which are involved in pdf creation process
         fop_config_file = object_to_create_pdf.get_fop_config_file()
         xsl_file = object_to_create_pdf.get_xsl_file()
-        file_with_serialized_xml = os.path.join(settings.PDF_OUTPUT_ROOT, (str(object_to_create_pdf) + ".xml"))
-        file_output_pdf = os.path.join(settings.PDF_OUTPUT_ROOT, (str(object_to_create_pdf) + ".pdf"))
+        file_with_serialized_xml = os.path.join(settings.PDF_OUTPUT_ROOT, (str(type(object_to_create_pdf)) +
+                                                                           "_" + str(object_to_create_pdf.id) + ".xml"))
+        file_output_pdf = os.path.join(settings.PDF_OUTPUT_ROOT, (str(type(object_to_create_pdf)) +
+                                                                  "_" + str(object_to_create_pdf.id) + ".pdf"))
 
         # list the sub-objects which to be serialized
         objects_to_serialize = PDFExport.create_list_of_objects_to_serialize(object_to_create_pdf)
