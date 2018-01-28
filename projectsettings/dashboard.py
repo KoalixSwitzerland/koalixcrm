@@ -56,6 +56,12 @@ class CustomIndexDashboard(Dashboard):
                     models=('koalixcrm.crm.contact.customer.Customer',
                             'koalixcrm.crm.contact.supplier.Supplier'),
                 ),
+                modules.ModelList(
+                    _('Accounting'),
+                    column=1,
+                    css_classes=('collapse closed',),
+                    models=('koalixcrm.accounting.*',),
+                ),
             ]
         ))
 
@@ -79,7 +85,8 @@ class CustomIndexDashboard(Dashboard):
                             'koalixcrm.crm.contact.customergroup.CustomerGroup',
                             'koalixcrm.crm.product.tax.Tax',
                             'koalixcrm.crm.product.unit.Unit',
-                            'koalixcrm.crm.product.currency.Currency',),
+                            'koalixcrm.crm.product.currency.Currency',
+                            'koalixcrm.djangoUserExtension.*'),
                 ),
             ]
         ))
