@@ -13,7 +13,7 @@ class Quote(SalesDocument):
     valid_until = models.DateField(verbose_name=_("Valid until"))
     status = models.CharField(max_length=1, choices=QUOTESTATUS, verbose_name=_('Status'))
 
-    def create_quote(self, calling_model):
+    def create_from_reference(self, calling_model):
         self.create_sales_document(calling_model)
         self.status = 'I'
         self.valid_until = date.today().__str__()

@@ -9,6 +9,7 @@ from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext as _
 from koalixcrm.crm.exceptions import *
+import koalixcrm
 
 
 def export_pdf(calling_model_admin, request, document, redirect_to):
@@ -57,13 +58,13 @@ def export_pdf(calling_model_admin, request, document, redirect_to):
     return response
 
 
-def create_new_document(calling_model_admin, request, document, requested_document_type, redirect_to):
+def create_new_document(calling_model_admin, request, calling_model, requested_document_type, redirect_to):
     """This method exports PDFs provided by different Models in the crm application
 
         Args:
           calling_model_admin (ModelAdmin):  The calling ModelAdmin must be provided for error message response.
           request: The request User is to know where to save the error message
-          document (Contract):  The model from which a new document shall be created
+          calling_model (Contract or SalesDocument):  The model from which a new document shall be created
           requested_document_type (str): The document type name that shall be created
           redirect_to (str): String that describes to where the method should redirect in case of an error
 
@@ -75,7 +76,7 @@ def create_new_document(calling_model_admin, request, document, requested_docume
           raises Http404 exception if anything goes wrong"""
     try:
         new_document = requested_document_type()
-        new_document.create_from_reference(document)
+        new_document.create_from_reference(calling_model)
         calling_model_admin.message_user(request, _(str(new_document) +
                                                     " created"))
         response = HttpResponseRedirect('/admin/crm/'+
@@ -83,14 +84,18 @@ def create_new_document(calling_model_admin, request, document, requested_docume
                                         '/'+
                                         str(new_document.id))
     except (TemplateSetMissingInContract, TemplateMissingInTemplateSet) as e:
+        if isinstance(calling_model, koalixcrm.crm.documents.contract.Contract):
+            contract = calling_model
+        else:
+            contract = calling_model.contract
         if isinstance(e, TemplateSetMissingInContract):
             response = HttpResponseRedirect('/admin/crm/contract/'+
-                                            str(document.contract.id))
+                                            str(contract.id))
             calling_model_admin.message_user(request, _("Missing Templateset "),
                                              level=messages.ERROR)
         elif isinstance(e, TemplateMissingInTemplateSet):
             response = HttpResponseRedirect('/admin/djangoUserExtension/templateset/' +
-                                            str(document.contract.default_template_set.id))
+                                            str(contract.default_template_set.id))
             calling_model_admin.message_user(request,
                                              (_("Missing template for ")+
                                               new_document.__class__.__name__),

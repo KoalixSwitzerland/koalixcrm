@@ -24,7 +24,7 @@ class Invoice(SalesDocument):
                                               null=True)
     status = models.CharField(max_length=1, choices=INVOICESTATUS)
 
-    def create_invoice(self, calling_model):
+    def create_from_reference(self, calling_model):
         self.create_sales_document(calling_model)
         self.status = 'C'
         self.payable_until = date.today() + \

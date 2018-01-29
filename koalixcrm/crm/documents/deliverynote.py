@@ -10,7 +10,7 @@ class DeliveryNote(SalesDocument):
     tracking_reference = models.CharField(verbose_name=_("Tracking Reference"), max_length=100, blank=True)
     status = models.CharField(max_length=1, choices=DELIVERYNOTESTATUS)
 
-    def create_delivery_note(self, calling_model):
+    def create_from_reference(self, calling_model):
         self.create_sales_document(calling_model)
         self.status = 'C'
         self.template_set = self.contract.get_template_set(self)
