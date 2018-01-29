@@ -7,9 +7,9 @@ from koalixcrm.crm.documents.salesdocument import SalesDocument, OptionSalesDocu
 
 class PurchaseConfirmation(SalesDocument):
 
-    def create_purchase_confirmation(self, calling_model):
+    def create_from_reference(self, calling_model):
         self.create_sales_document(calling_model)
-        self.template_set = self.contract.default_template_set.purchase_confirmation_template
+        self.template_set = self.contract.get_template_set(self)
         self.save()
         self.attach_sales_document_positions(calling_model)
         self.attach_text_paragraphs()

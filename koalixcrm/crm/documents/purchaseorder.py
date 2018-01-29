@@ -11,10 +11,10 @@ class PurchaseOrder(SalesDocument):
     supplier = models.ForeignKey("Supplier", verbose_name=_("Supplier"), null=True)
     status = models.CharField(max_length=1, choices=PURCHASEORDERSTATUS)
 
-    def create_purchase_order(self, calling_model):
+    def create_from_reference(self, calling_model):
         self.create_sales_document(calling_model)
         self.status = 'O'
-        self.template_set = self.contract.default_template_set.purchase_order_template
+        self.template_set = self.contract.get_template_set(self)
         self.save()
         self.attach_sales_document_positions(calling_model)
         self.attach_text_paragraphs()

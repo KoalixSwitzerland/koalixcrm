@@ -13,12 +13,12 @@ class Quote(SalesDocument):
     valid_until = models.DateField(verbose_name=_("Valid until"))
     status = models.CharField(max_length=1, choices=QUOTESTATUS, verbose_name=_('Status'))
 
-    def create_quote(self, calling_model):
+    def create_from_reference(self, calling_model):
         self.create_sales_document(calling_model)
         self.status = 'I'
         self.valid_until = date.today().__str__()
         self.date_of_creation = date.today().__str__()
-        self.template_set = self.contract.default_template_set.quote_template
+        self.template_set = self.contract.get_template_set(self)
         self.save()
         self.attach_sales_document_positions(calling_model)
         self.attach_text_paragraphs()

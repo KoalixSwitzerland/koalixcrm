@@ -22,7 +22,7 @@ class CustomIndexDashboard(Dashboard):
         site_name = get_admin_site_name(context)
 
         self.children.append(modules.Group(
-            _('Group: koalixcrm V1.12dev1'),
+            _('Group: koalixcrm V1.12dev2'),
             column=1,
             collapsible=True,
             children = [

@@ -17,13 +17,13 @@ class PaymentReminder(SalesDocument):
                                            validators=[MinValueValidator(1), MaxValueValidator(3)])
     status = models.CharField(max_length=1, choices=INVOICESTATUS)
 
-    def create_payment_reminder(self, calling_model):
+    def create_from_reference(self, calling_model):
         self.create_sales_document(calling_model)
         self.status = 'C'
         self.iteration_number = 1
         self.payable_until = date.today() + \
                              timedelta(days=self.customer.defaultCustomerBillingCycle.payment_reminder_time_to_payment)
-        self.template_set = self.contract.default_template_set.payment_reminder_template
+        self.template_set = self.contract.get_template_set(self)
         self.save()
         self.attach_sales_document_positions(calling_model)
         self.attach_text_paragraphs()

@@ -127,6 +127,23 @@ class TemplateSet(models.Model):
     def __str__(self):
         return xstr(self.id) + ' ' + xstr(self.title)
 
+    def get_template_set(self, required_template_set):
+        mapping_class_to_templates = {"Invoice": self.invoice_template,
+                                      "Quote": self.quote_template,
+                                      "DeliveryNote": self.delivery_note_template,
+                                      "PaymentReminder": self.payment_reminder_template,
+                                      "PurchaseConfirmation": self.purchase_confirmation_template,
+                                      "PurchaseOrder": self.purchase_order_template,
+                                      "ProfitLossStatement": self.profit_loss_statement_template,
+                                      "BalanceSheet": self.balance_sheet_statement_template}
+        try:
+            if mapping_class_to_templates[required_template_set]:
+                return mapping_class_to_templates[required_template_set]
+            else:
+                raise TemplateMissingInTemplateSet("The TemplateSet does not contain a template for " +
+                                         required_template_set)
+        except KeyError:
+            raise IncorrectUseOfAPI("")
 
 class UserExtensionPostalAddress(crm.contact.postaladdress.PostalAddress):
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINUSEREXTENTION)

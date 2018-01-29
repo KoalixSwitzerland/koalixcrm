@@ -3,7 +3,6 @@
 from datetime import *
 from django.db import models
 from django.contrib import admin, messages
-from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext as _
 from koalixcrm.crm.const.purpose import *
 from koalixcrm.globalSupportFunctions import xstr
@@ -13,8 +12,9 @@ from koalixcrm.crm.contact.postaladdress import PostalAddress
 from koalixcrm.crm.documents.salesdocumentposition import SalesDocumentPosition, SalesDocumentInlinePosition
 from koalixcrm.djangoUserExtension.models import TextParagraphInDocumentTemplate
 from koalixcrm.crm.views import export_pdf
+from koalixcrm.crm.views import create_new_document
 from koalixcrm.crm.product.product import Product
-from koalixcrm.crm.exceptions import TemplateSetMissing
+from koalixcrm.crm.exceptions import TemplateSetMissingInContract
 import koalixcrm.crm.documents.calculations
 import koalixcrm.crm.documents.pdfexport
 
@@ -109,36 +109,6 @@ class SalesDocument(models.Model):
                 new_position = SalesDocumentPosition()
                 new_position.create_position(sales_document_position, self)
 
-    def create_quote(self):
-        quote = koalixcrm.crm.documents.quote.Quote()
-        quote.create_quote(self)
-        return quote
-
-    def create_invoice(self):
-        invoice = koalixcrm.crm.documents.invoice.Invoice()
-        invoice.create_invoice(self)
-        return invoice
-
-    def create_purchase_confirmation(self):
-        purchase_confirmation = koalixcrm.crm.documents.purchaseconfirmation.PurchaseConfirmation()
-        purchase_confirmation.create_purchase_confirmation(self)
-        return purchase_confirmation
-
-    def create_delivery_note(self):
-        delivery_note = koalixcrm.crm.documents.deliverynote.DeliveryNote()
-        delivery_note.create_delivery_note(self)
-        return delivery_note
-
-    def create_payment_reminder(self):
-        payment_reminder = koalixcrm.crm.documents.paymentreminder.PaymentReminder()
-        payment_reminder.create_payment_reminder(self)
-        return payment_reminder
-
-    def create_purchase_order(self):
-        purchase_order = koalixcrm.crm.documents.purchaseorder.PurchaseOrder()
-        purchase_order.create_purchase_order(self)
-        return purchase_order
-
     def create_pdf(self):
         self.last_print_date = datetime.now()
         self.save()
@@ -148,7 +118,7 @@ class SalesDocument(models.Model):
         if self.template_set:
             return self.template_set
         else:
-            raise TemplateSetMissing((_("Template Set missing in Sales Document" + str(self))))
+            raise TemplateSetMissingInContract((_("Template Set missing in Sales Document" + str(self))))
 
     def get_fop_config_file(self):
         template_set = self.get_template_set()
@@ -299,55 +269,55 @@ class OptionSalesDocument(admin.ModelAdmin):
 
     def create_quote(self, request, queryset):
         for obj in queryset:
-            quote = obj.create_quote()
-            self.message_user(request, _("Quote created"))
-            response = HttpResponseRedirect('/admin/crm/quote/' + str(quote.id))
-        return response
+            response = create_new_document(self, request, obj,
+                                           koalixcrm.crm.documents.quote.Quote,
+                                           ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
+            return response
 
     create_quote.short_description = _("Create Quote")
 
     def create_invoice(self, request, queryset):
         for obj in queryset:
-            invoice = obj.create_invoice()
-            self.message_user(request, _("Invoice created"))
-            response = HttpResponseRedirect('/admin/crm/invoice/' + str(invoice.id))
-        return response
+            response = create_new_document(self, request, obj,
+                                           koalixcrm.crm.documents.invoice.Invoice,
+                                           ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
+            return response
 
     create_invoice.short_description = _("Create Invoice")
 
     def create_purchase_confirmation(self, request, queryset):
         for obj in queryset:
-            purchase_confirmation = obj.create_purchase_confirmation()
-            self.message_user(request, _("Purchase confirmation created"))
-            response = HttpResponseRedirect('/admin/crm/purchaseconfirmation/' + str(purchase_confirmation.id))
-        return response
+            response = create_new_document(self, request, obj,
+                                           koalixcrm.crm.documents.purchaseconfirmation.PurchaseConfirmation,
+                                           ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
+            return response
 
     create_purchase_confirmation.short_description = _("Create Purchase Confirmation")
 
     def create_delivery_note(self, request, queryset):
         for obj in queryset:
-            delivery_note = obj.create_delivery_note()
-            self.message_user(request, _("Delivery note created"))
-            response = HttpResponseRedirect('/admin/crm/deliverynote/' + str(delivery_note.id))
-        return response
+            response = create_new_document(self, request, obj,
+                                           koalixcrm.crm.documents.deliverynote.DeliveryNote,
+                                           ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
+            return response
 
     create_delivery_note.short_description = _("Create Delivery note")
 
     def create_payment_reminder(self, request, queryset):
         for obj in queryset:
-            payment_reminder = obj.create_payment_reminder()
-            self.message_user(request, _("Payment Reminder created"))
-            response = HttpResponseRedirect('/admin/crm/paymentreminder/' + str(payment_reminder.id))
-        return response
+            response = create_new_document(self, request, obj,
+                                           koalixcrm.crm.documents.paymentreminder.PaymentReminder,
+                                           ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
+            return response
 
     create_payment_reminder.short_description = _("Create Payment Reminder")
 
     def create_purchase_order(self, request, queryset):
         for obj in queryset:
-            purchase_order = obj.create_purchase_order()
-            self.message_user(request, _("Purchase Order created"))
-            response = HttpResponseRedirect('/admin/crm/purchaseorder/' + str(purchase_order.id))
-        return response
+            response = create_new_document(self, request, obj,
+                                           koalixcrm.crm.documents.purchaseorder.PurchaseOrder,
+                                           ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
+            return response
 
     create_purchase_order.short_description = _("Create Purchase Order")
 
