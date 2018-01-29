@@ -13,8 +13,9 @@ from koalixcrm.crm.contact.postaladdress import PostalAddress
 from koalixcrm.crm.documents.salesdocumentposition import SalesDocumentPosition, SalesDocumentInlinePosition
 from koalixcrm.djangoUserExtension.models import TextParagraphInDocumentTemplate
 from koalixcrm.crm.views import export_pdf
+from koalixcrm.crm.views import create_new_document
 from koalixcrm.crm.product.product import Product
-from koalixcrm.crm.exceptions import TemplateSetMissing
+from koalixcrm.crm.exceptions import TemplateSetMissingInContract
 import koalixcrm.crm.documents.calculations
 import koalixcrm.crm.documents.pdfexport
 
@@ -148,7 +149,7 @@ class SalesDocument(models.Model):
         if self.template_set:
             return self.template_set
         else:
-            raise TemplateSetMissing((_("Template Set missing in Sales Document" + str(self))))
+            raise TemplateSetMissingInContract((_("Template Set missing in Sales Document" + str(self))))
 
     def get_fop_config_file(self):
         template_set = self.get_template_set()
@@ -344,10 +345,10 @@ class OptionSalesDocument(admin.ModelAdmin):
 
     def create_purchase_order(self, request, queryset):
         for obj in queryset:
-            purchase_order = obj.create_purchase_order()
-            self.message_user(request, _("Purchase Order created"))
-            response = HttpResponseRedirect('/admin/crm/purchaseorder/' + str(purchase_order.id))
-        return response
+            response = create_new_document(self, request, obj,
+                                           koalixcrm.crm.documents.purchaseorder.PurchaseOrder,
+                                           ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
+            return response
 
     create_purchase_order.short_description = _("Create Purchase Order")
 

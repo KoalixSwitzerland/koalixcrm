@@ -120,7 +120,7 @@ class Contract(models.Model):
             required_template_set = str(type(calling_model).__name__)
             return self.default_template_set.get_template_set(required_template_set)
         else:
-            raise TemplateSetMissing("The Contract has no Default Template Set selected")
+            raise TemplateSetMissingInContract("The Contract has no Default Template Set selected")
 
     def create_invoice(self):
         invoice = Invoice()

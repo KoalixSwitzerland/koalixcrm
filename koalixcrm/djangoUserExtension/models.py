@@ -140,7 +140,7 @@ class TemplateSet(models.Model):
             if mapping_class_to_templates[required_template_set]:
                 return mapping_class_to_templates[required_template_set]
             else:
-                raise TemplateSetMissing("The TemplateSet does not contain a template for " +
+                raise TemplateMissingInTemplateSet("The TemplateSet does not contain a template for " +
                                          required_template_set)
         except KeyError:
             raise IncorrectUseOfAPI("")

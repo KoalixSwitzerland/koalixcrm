@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from os import path
 from wsgiref.util import FileWrapper
+from django.contrib import messages
 from subprocess import CalledProcessError
 
 from django.http import Http404
@@ -73,31 +74,27 @@ def create_new_document(calling_model_admin, request, document, requested_docume
         Raises:
           raises Http404 exception if anything goes wrong"""
     try:
-        pdf = document.create_pdf()
-        response = HttpResponse(FileWrapper(open(pdf, 'rb')), content_type='application/pdf')
-        response['Content-Length'] = path.getsize(pdf)
-    except (TemplateSetMissing, UserExtensionMissing, CalledProcessError, UserExtensionEmailAddressMissing, UserExtensionPhoneAddressMissing) as e:
-        if isinstance(e, UserExtensionMissing):
-            response = HttpResponseRedirect(redirect_to)
-            calling_model_admin.message_user(request, _("User Extension Missing"))
-        elif isinstance(e, UserExtensionEmailAddressMissing):
-            response = HttpResponseRedirect(redirect_to)
-            calling_model_admin.message_user(request, _("User Extension Email Missing"))
-        elif isinstance(e, UserExtensionPhoneAddressMissing):
-            response = HttpResponseRedirect(redirect_to)
-            calling_model_admin.message_user(request, _("User Extension Phone Missing"))
-        elif isinstance(e, TemplateSetMissing):
-            response = HttpResponseRedirect(redirect_to)
-            calling_model_admin.message_user(request, _("Templateset Missing"))
-        elif isinstance(e, TemplateFOPConfigFileMissing):
-            response = HttpResponseRedirect(redirect_to)
-            calling_model_admin.message_user(request, _("Fop Config File Missing in TemplateSet"))
-        elif isinstance(e, TemplateXSLTFileMissing):
-            response = HttpResponseRedirect(redirect_to)
-            calling_model_admin.message_user(request, _("XSLT File Missing in TemplateSet"))
-        elif type(e) == CalledProcessError:
-            response = HttpResponseRedirect(redirect_to)
-            calling_model_admin.message_user(request, e.output)
+        new_document = requested_document_type()
+        new_document.create_from_reference(document)
+        calling_model_admin.message_user(request, _(str(new_document) +
+                                                    " created"))
+        response = HttpResponseRedirect('/admin/crm/'+
+                                        new_document.__class__.__name__.lower()+
+                                        '/'+
+                                        str(new_document.id))
+    except (TemplateSetMissingInContract, TemplateMissingInTemplateSet) as e:
+        if isinstance(e, TemplateSetMissingInContract):
+            response = HttpResponseRedirect('/admin/crm/contract/'+
+                                            str(document.contract.id))
+            calling_model_admin.message_user(request, _("Missing Templateset "),
+                                             level=messages.ERROR)
+        elif isinstance(e, TemplateMissingInTemplateSet):
+            response = HttpResponseRedirect('/admin/djangoUserExtension/templateset/' +
+                                            str(document.contract.default_template_set.id))
+            calling_model_admin.message_user(request,
+                                             (_("Missing template for ")+
+                                              new_document.__class__.__name__),
+                                             level=messages.ERROR)
         else:
             raise Http404
     return response
