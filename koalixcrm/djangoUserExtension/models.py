@@ -145,6 +145,7 @@ class TemplateSet(models.Model):
         except KeyError:
             raise IncorrectUseOfAPI("")
 
+
 class UserExtensionPostalAddress(crm.contact.postaladdress.PostalAddress):
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINUSEREXTENTION)
     userExtension = models.ForeignKey(UserExtension)

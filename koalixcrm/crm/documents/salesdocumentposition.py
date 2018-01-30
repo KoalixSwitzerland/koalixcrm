@@ -2,11 +2,13 @@
 
 from django.db import models
 from django.contrib import admin
+from django.core.validators import MinValueValidator
 from django.utils.translation import ugettext as _
 
 
 class Position(models.Model):
-    position_number = models.PositiveIntegerField(verbose_name=_("Position Number"))
+    position_number = models.PositiveIntegerField(verbose_name=_("Position Number"),
+                                                  validators=[MinValueValidator(1)])
     quantity = models.DecimalField(verbose_name=_("Quantity"), decimal_places=3, max_digits=10)
     description = models.TextField(verbose_name=_("Description"), blank=True, null=True)
     discount = models.DecimalField(max_digits=5, decimal_places=2, verbose_name=_("Discount"), blank=True, null=True)
@@ -76,6 +78,5 @@ class SalesDocumentInlinePosition(admin.TabularInline):
             'position_price_per_unit', 'sent_on')
         }),
     )
-    sortable_field_name = "position_number"
     allow_add = True
 

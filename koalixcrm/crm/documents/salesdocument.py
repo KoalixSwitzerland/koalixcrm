@@ -228,7 +228,7 @@ class OptionSalesDocument(admin.ModelAdmin):
                     'last_modification', 'last_print_date')
     list_display_links = ('id',)
     list_filter = ('customer', 'contract', 'currency', 'staff', 'last_modification')
-    ordering = ('id',)
+    ordering = ('-id',)
     search_fields = ('contract__id', 'customer__name', 'currency__description')
 
     fieldsets = (
