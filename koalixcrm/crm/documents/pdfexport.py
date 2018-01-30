@@ -49,16 +49,17 @@ class PDFExport:
         position_class = koalixcrm.crm.documents.salesdocumentposition.SalesDocumentPosition
         objects_to_serialize = list(type(object_to_create_pdf).objects.filter(id=object_to_create_pdf.id))
         objects_to_serialize += list(koalixcrm.crm.documents.salesdocument.SalesDocument.objects.filter(id=object_to_create_pdf.id))
-        objects_to_serialize += list(Contact.objects.filter(id=object_to_create_pdf.customer.id))
         if isinstance(object_to_create_pdf, koalixcrm.crm.documents.purchaseorder.PurchaseOrder):
+            objects_to_serialize += list(Contact.objects.filter(id=object_to_create_pdf.supplier.id))
             objects_to_serialize += list(PostalAddressForContact.objects.filter(person=object_to_create_pdf.supplier.id))
             for address in list(PostalAddressForContact.objects.filter(person=object_to_create_pdf.supplier.id)):
                 objects_to_serialize += list(PostalAddress.objects.filter(id=address.id))
         else:
+            objects_to_serialize += list(Contact.objects.filter(id=object_to_create_pdf.customer.id))
             objects_to_serialize += list(PostalAddressForContact.objects.filter(person=object_to_create_pdf.customer.id))
             for address in list(PostalAddressForContact.objects.filter(person=object_to_create_pdf.customer.id)):
                 objects_to_serialize += list(PostalAddress.objects.filter(id=address.id))
-            objects_to_serialize += list(koalixcrm.crm.documents.salesdocument.TextParagraphInSalesDocument.objects.filter(sales_document=object_to_create_pdf.id))
+        objects_to_serialize += list(koalixcrm.crm.documents.salesdocument.TextParagraphInSalesDocument.objects.filter(sales_document=object_to_create_pdf.id))
         objects_to_serialize += list(Currency.objects.filter(id=object_to_create_pdf.currency.id))
         objects_to_serialize = PDFExport.add_positions(objects_to_serialize, position_class, object_to_create_pdf)
         objects_to_serialize += list(auth.models.User.objects.filter(id=object_to_create_pdf.staff.id))
