@@ -9,7 +9,8 @@ from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext as _
 from koalixcrm.crm.exceptions import *
-import koalixcrm
+from rest_framework import viewsets
+from koalixcrm.crm.documents.salesdocumentposition import SalesDocumentPosition, SalesContractPositionJSONSerializer
 
 
 def export_pdf(calling_model_admin, request, document, redirect_to):
@@ -103,3 +104,11 @@ def create_new_document(calling_model_admin, request, calling_model, requested_d
         else:
             raise Http404
     return response
+
+
+class SalesContractPositionAsJSON(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint that allows users to be viewed.
+    """
+    queryset = SalesDocumentPosition.objects.all()
+    serializer_class = SalesContractPositionJSONSerializer
