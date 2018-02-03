@@ -45,7 +45,6 @@ class PDFExport:
 
     @staticmethod
     def create_list_of_objects_to_serialize(object_to_create_pdf):
-
         position_class = koalixcrm.crm.documents.salesdocumentposition.SalesDocumentPosition
         objects_to_serialize = list(type(object_to_create_pdf).objects.filter(id=object_to_create_pdf.id))
         objects_to_serialize += list(koalixcrm.crm.documents.salesdocument.SalesDocument.objects.filter(id=object_to_create_pdf.id))
