@@ -7,7 +7,7 @@ import koalixcrm
 
 class Task(models.Model):
     planned_duration = models.TimeField(verbose_name=_("Planned Duration"))
-    start_date =models.DateField(verbose_name=_("Planned Start Date"), blank=False, null=False)
+    start_date = models.DateField(verbose_name=_("Planned Start Date"), blank=False, null=False)
     planned_end_date = models.DateField(verbose_name=_("Planned End Date"), blank=False, null=False)
     project = models.ForeignKey("Contract", verbose_name=_('Contract'), blank=False, null=False)
     description = models.TextField(verbose_name=_("Text"), blank=True, null=True)
@@ -25,11 +25,15 @@ class Task(models.Model):
     def effective_effort(self):
         koalixcrm.crm.reporting.Work.get_sum_of_effort(self)
 
-
     def __str__(self):
-        return _("Work") + ": " + str(self.id) + " " + _("from Person") + ": " + str(self.employee.id)
+        return _("Task") + ": " + str(self.id) + " " + _("from Project") + ": " + str(self.project.id)
 
     class Meta:
         app_label = "crm"
-        verbose_name = _('Work')
-        verbose_name_plural = _('Work')
+        verbose_name = _('Task')
+        verbose_name_plural = _('Tasks')
+
+
+class GenericLinkToTask(models.Model):
+    task =
+    generic_crm_object = GenericForeignKey()
