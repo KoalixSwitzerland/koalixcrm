@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from datetime import *
 from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext as _
@@ -20,6 +19,7 @@ from koalixcrm.crm.exceptions import *
 from koalixcrm.crm.views import create_new_document
 import koalixcrm.crm.documents.calculations
 import koalixcrm.crm.documents.pdfexport
+
 
 class PostalAddressForContract(PostalAddress):
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT)
