@@ -34,6 +34,3 @@ class Task(models.Model):
         verbose_name_plural = _('Tasks')
 
 
-class GenericLinkToTask(models.Model):
-    task =
-    generic_crm_object = GenericForeignKey()
