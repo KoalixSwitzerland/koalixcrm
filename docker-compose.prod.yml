@@ -6,7 +6,7 @@ services:
   koalixcrm:
     image: koalixswitzerland/koalixcrm:1.11.0
     environment:
-      - DJANGO_SETTINGS_MODULE=projectsettings.settings.base_settings
+      - DJANGO_SETTINGS_MODULE=projectsettings.settings.production_settings
     ports:
       - "8000:8000"
     depends_on:
