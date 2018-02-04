@@ -1,6 +1,6 @@
 #!/bin/bash
 
-pip install -r development_requirements.txt
+pip install -r base_requirements.txt
 
 python manage.py collectstatic --noinput
 python manage.py makemigrations

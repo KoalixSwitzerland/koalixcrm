@@ -1,0 +1,13 @@
+version: '2.0'
+
+services:
+  db:
+    image: postgres
+  koalixcrm:
+    image: koalixswitzerland/koalixcrm:1.11.0
+    environment:
+      - DJANGO_SETTINGS_MODULE=projectsettings.settings.base_settings
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
