@@ -15,6 +15,7 @@ from koalixcrm.plugin import *
 from koalixcrm.accounting.models import Account
 from django.contrib.admin import helpers
 from django.shortcuts import render
+from django.contrib import messages
 from django.template.context_processors import csrf
 
 
@@ -44,12 +45,12 @@ class Invoice(SalesDocument):
             raise IncompleteInvoice(_("Complete invoice and run price recalculation. Price may not be Zero"))
         if len(activa_account) == 0:
             raise OpenInterestAccountMissing(_("Please specify one open intrest account in the accounting"))
-        for position in list(SalesDocumentPosition.objects.filter(contract=self.id)):
-            profit_account = position.product.accoutingProductCategorie.profitAccount
-            dict_prices[profit_account] = position.lastCalculatedPrice
-            dict_tax[profit_account] = position.lastCalculatedTax
+        for position in list(SalesDocumentPosition.objects.filter(sales_document=self.id)):
+            profit_account = position.product.accounting_product_categorie.profitAccount
+            dict_prices[profit_account] = position.last_calculated_price
+            dict_tax[profit_account] = position.last_calculated_tax
 
-        for booking in accounting.models.Booking.objects.filter(accountingPeriod=currentValidAccountingPeriod):
+        for booking in accounting.models.Booking.objects.filter(accountingPeriod=current_valid_accounting_period):
             if booking.bookingReference == self:
                 raise InvoiceAlreadyRegistered()
         for profit_account, amount in iter(dict_prices.items()):
@@ -64,16 +65,16 @@ class Invoice(SalesDocument):
             booking.lastmodifiedby = request.user
             booking.save()
 
-    def register_payment_in_accounting(self, request, amount, paymentaccount):
+    def register_payment_in_accounting(self, request, amount, payment_account):
         current_valid_accounting_period = accounting.models.AccountingPeriod.getCurrentValidAccountingPeriod()
         activa_account = accounting.models.Account.objects.filter(isopeninterestaccount=True)
         booking = accounting.models.Booking()
-        booking.toAccount = paymentaccount
+        booking.toAccount = payment_account
         booking.fromAccount = activa_account[0]
         booking.bookingDate = date.today().__str__()
         booking.bookingReference = self
         booking.accountingPeriod = current_valid_accounting_period
-        booking.amount = self.last_calculated_price
+        booking.amount = amount
         booking.staff = request.user
         booking.lastmodifiedby = request.user
         booking.save()
@@ -99,9 +100,9 @@ class OptionInvoice(OptionSalesDocument):
     )
 
     class PaymentForm(forms.Form):
-        paymentAmount = forms.DecimalField()
+        payment_amount = forms.DecimalField()
         _selected_action = forms.CharField(widget=forms.MultipleHiddenInput)
-        paymentAccount = forms.ModelChoiceField(Account.objects.filter(accountType="A"))
+        payment_account = forms.ModelChoiceField(Account.objects.filter(accountType="A"))
 
     def register_invoice_in_accounting(self, request, queryset):
         try:
@@ -128,13 +129,13 @@ class OptionInvoice(OptionSalesDocument):
         form = None
         if request.POST.get('post'):
             if 'cancel' in request.POST:
-                self.message_user(request, _("Canceled registeration of payment in the accounting"), level=messages.ERROR)
+                self.message_user(request, _("Canceled registration of payment in the accounting"), level=messages.ERROR)
                 return
             elif 'register' in request.POST:
                 form = self.PaymentForm(request.POST)
                 if form.is_valid():
-                    payment_amount = form.cleaned_data['paymentAmount']
-                    payment_account = form.cleaned_data['paymentAccount']
+                    payment_amount = form.cleaned_data['payment_amount']
+                    payment_account = form.cleaned_data['payment_account']
                     for obj in queryset:
                         obj.register_payment_in_accounting(request, payment_amount, payment_account)
                     self.message_user(request, _("Successfully registered Payment in the Accounting"))
@@ -143,7 +144,7 @@ class OptionInvoice(OptionSalesDocument):
             form = self.PaymentForm
             c = {'action_checkbox_name': helpers.ACTION_CHECKBOX_NAME, 'queryset': queryset, 'form': form}
             c.update(csrf(request))
-            return render(request, 'crm/admin/registerPayment.html', c)
+            return render(request, 'crm/admin/register_payment.html', c)
 
     register_payment_in_accounting.short_description = _("Register Payment in Accounting")
 
