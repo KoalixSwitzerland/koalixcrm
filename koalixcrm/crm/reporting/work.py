@@ -13,7 +13,6 @@ class Work(models.Model):
     short_description = models.CharField(verbose_name=_("Short Description"), max_length=300, blank=False, null=False)
     description = models.TextField(verbose_name=_("Text"), blank=True, null=True)
     task = models.ForeignKey("Task", verbose_name=_('Task'), blank=False, null=False)
-    work_category = models.ForeignKey("WorkCategory", verbose_name=_('Work Category'), blank=False, null=False)
 
     @staticmethod
     def get_sum_effort(task):

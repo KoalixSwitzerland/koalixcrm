@@ -6,6 +6,7 @@ import koalixcrm
 
 
 class Task(models.Model):
+    short_description = models.CharField(verbose_name=_("Description"), max_length=100, blank=True, null=True)
     planned_duration = models.TimeField(verbose_name=_("Planned Duration"))
     start_date = models.DateField(verbose_name=_("Planned Start Date"), blank=False, null=False)
     planned_end_date = models.DateField(verbose_name=_("Planned End Date"), blank=False, null=False)

@@ -12,3 +12,6 @@ class TaskLinkType(models.Model):
         app_label = "crm"
         verbose_name = _('Task Link Type')
         verbose_name_plural = _('Task Link Type')
+
+    def __str__(self):
+        return _("Task Link Type") + " ID: " + str(self.id) + " title: " + str(self.title)
