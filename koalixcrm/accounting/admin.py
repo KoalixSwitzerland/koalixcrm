@@ -5,23 +5,20 @@ from django.utils.translation import ugettext as _
 from koalixcrm.accounting.views import *
 
 
-class AccountingPeriodBooking(admin.TabularInline):
-    model = Booking
-    extra = 1
-    show_change_link = True
-    can_delete = True
-    classes = ['collapse']
-    fields = ('fromAccount', 'toAccount', 'description', 'amount', 'bookingDateOnly', 'staff', 'bookingReference',)
-    readonly_fields = (
-    'fromAccount', 'toAccount', 'description', 'amount', 'bookingDateOnly', 'staff', 'bookingReference',)
-    allow_add = True
-
-
 class OptionBooking(admin.ModelAdmin):
-    list_display = ('fromAccount', 'toAccount', 'amount', 'bookingDateOnly', 'staff')
-    fieldsets = ((_('Basic'), {'fields': (
-    'fromAccount', 'toAccount', 'amount', 'bookingDate', 'staff', 'description', 'bookingReference',
-    'accountingPeriod')}),)
+    list_display = ('fromAccount',
+                    'toAccount',
+                    'amount',
+                    'bookingDateOnly',
+                    'staff')
+    fieldsets = ((_('Basic'), {'fields': ('fromAccount',
+                                          'toAccount',
+                                          'amount',
+                                          'bookingDate',
+                                          'staff',
+                                          'description',
+                                          'bookingReference',
+                                          'accountingPeriod')}),)
     save_as = True
 
     def save_model(self, request, obj, form, change):
@@ -39,7 +36,13 @@ class InlineBookings(admin.TabularInline):
     classes = ['collapse']
     fieldsets = (
         ('Basics', {
-            'fields': ('fromAccount', 'toAccount', 'description', 'amount', 'bookingDate', 'staff', 'bookingReference',)
+            'fields': ('fromAccount',
+                       'toAccount',
+                       'description',
+                       'amount',
+                       'bookingDate',
+                       'staff',
+                       'bookingReference',)
         }),
     )
     allow_add = False
@@ -118,7 +121,7 @@ class OptionAccountingPeriod(admin.ModelAdmin):
             'fields': ('title', 'begin', 'end')
         }),
     )
-    inlines = [AccountingPeriodBooking, ]
+    inlines = [InlineBookings, ]
     save_as = True
 
     form = AccountingPeriodForm
