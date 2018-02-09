@@ -33,3 +33,14 @@ class Work(models.Model):
         verbose_name_plural = _('Work')
 
 
+
+class Work_AdminInline(admin.TabularInline):
+    model = Price
+    extra = 1
+    classes = ['collapse']
+    fieldsets = (
+        ('', {
+            'fields': ('date', 'currency', 'unit', 'valid_from', 'valid_until', 'customer_group')
+        }),
+    )
+    allow_add = True
