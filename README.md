@@ -1,8 +1,7 @@
 # Welcome to the koalixcrm 
-
-[![Build Status](https://travis-ci.org/scaphilo/koalixcrm.svg?branch=master)](https://travis-ci.org/scaphilo/koalixcrm)<br><br>
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4f0acae8f6d04c2b81c0c4a4b2b48e09)](https://www.codacy.com/app/simon.riedener/koalixcrm?utm_source=github.com&utm_medium=referral&utm_content=scaphilo/koalixcrm&utm_campaign=badger)
-[![Codacy Badge](https://api.codacy.com/project/badge/Coverage/4f0acae8f6d04c2b81c0c4a4b2b48e09)](https://www.codacy.com/app/simon.riedener/koalixcrm?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=scaphilo/koalixcrm&amp;utm_campaign=Badge_Coverage)
+#### Project build: [![Build Status](https://travis-ci.org/scaphilo/koalixcrm.svg?branch=master)](https://travis-ci.org/scaphilo/koalixcrm)
+#### Codacy results: [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4f0acae8f6d04c2b81c0c4a4b2b48e09)](https://www.codacy.com/app/simon.riedener/koalixcrm?utm_source=github.com&utm_medium=referral&utm_content=scaphilo/koalixcrm&utm_campaign=badger) [![Codacy Badge](https://api.codacy.com/project/badge/Coverage/4f0acae8f6d04c2b81c0c4a4b2b48e09)](https://www.codacy.com/app/simon.riedener/koalixcrm?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=scaphilo/koalixcrm&amp;utm_campaign=Badge_Coverage)
+#### Docker: [![Docker Automated build](https://img.shields.io/docker/automated/koalixswitzerland/koalixcrm.svg)]() [![Docker Build Status](https://img.shields.io/docker/build/koalixswitzerland/koalixcrm.svg)]() [![Docker Stars](https://img.shields.io/docker/stars/koalixswitzerland/koalixcrm.svg)]() [![Docker Pulls](https://img.shields.io/docker/pulls/koalixswitzerland/koalixcrm.svg)]()
 
 ![dashboard](https://github.com/scaphilo/koalixcrm/blob/master/documentation/source/images/koalixcrm-V1.12dev2_dashboard.png)
 
