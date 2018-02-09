@@ -1,5 +1,5 @@
 Django>=1.9.x,<=1.11.x
-django-filebrowser-no-grappelli==3.7.2
+django-filebrowser==3.9.1
 lxml==3.8.0
 olefile==0.44
 Pillow==4.2.1
