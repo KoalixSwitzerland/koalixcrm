@@ -4,10 +4,10 @@
 pip install -r development_requirements.txt
 
 # Install FOP 2.2
-wget https://archive.apache.org/dist/xmlgraphics/fop/source/fop-2.2-src.tar.gz
-tar -xzf fop-2.2-src.tar.gz -C ../usr/bin
-rm -rf fop-2.2-src.tar.gz
-chmod 755 ../usr/bin/fop-2.2/fop/fop
+wget http://archive.apache.org/dist/xmlgraphics/fop/binaries/fop-2.2-bin.tar.gz
+tar -xzf fop-2.2-bin.tar.gz -C ../usr/bin
+rm -rf fop-2.2-bin.tar.gz
+chmod 755 ../usr/bin/fop-2.2/fop
 
 # Install Java 8
 wget --no-check-certificate -c --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u162-b12/0da788060d494f5095bf8624735fa2f1/jdk-8u162-linux-x64.tar.gz
@@ -18,6 +18,9 @@ rm -rf jdk-8u162-linux-x64.tar.gz
 mkdir -p projectsettings/media/uploads
 chmod -R 755 projectsettings/media
 
+# Create /static/pdf for FOP PDF export
+mkdir -p projectsettings/static/pdf
+chmod -R 755 projectsettings/static/pdf
 
 # Execute startup scripts
 python manage.py collectstatic --noinput
