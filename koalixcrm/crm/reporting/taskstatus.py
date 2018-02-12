@@ -8,6 +8,7 @@ from django.contrib import admin, messages
 class TaskStatus(models.Model):
     title = models.CharField(verbose_name=_("Title"), max_length=250, blank=False, null=False)
     description = models.TextField(verbose_name=_("Text"), blank=True, null=True)
+    is_done = models.BooleanField(verbose_name=_("Status represents task done"),)
 
     class Meta:
         app_label = "crm"
@@ -21,12 +22,14 @@ class TaskStatus(models.Model):
 class OptionTaskStatus(admin.ModelAdmin):
     list_display = ('id',
                     'title',
-                    'description',)
+                    'description',
+                    'is_done')
 
     fieldsets = (
         (_('Work'), {
             'fields': ('title',
-                       'description',)
+                       'description',
+                       'is_done')
         }),
     )
     save_as = True

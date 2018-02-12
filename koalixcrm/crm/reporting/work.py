@@ -8,8 +8,8 @@ from django.contrib import admin, messages
 class Work(models.Model):
     employee = models.ForeignKey("djangoUserExtension.UserExtension")
     date = models.DateField(verbose_name=_("Date"), blank=False, null=False)
-    start_time = models.TimeField(verbose_name=_("Start Time"), blank=False, null=False)
-    stop_time = models.TimeField(verbose_name=_("Stop Time"), blank=False, null=False)
+    start_time = models.DateTimeField(verbose_name=_("Start Time"), blank=False, null=False)
+    stop_time = models.DateTimeField(verbose_name=_("Stop Time"), blank=False, null=False)
     short_description = models.CharField(verbose_name=_("Short Description"), max_length=300, blank=False, null=False)
     description = models.TextField(verbose_name=_("Text"), blank=True, null=True)
     task = models.ForeignKey("Task", verbose_name=_('Task'), blank=False, null=False)

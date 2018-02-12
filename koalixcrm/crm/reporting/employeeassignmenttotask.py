@@ -8,7 +8,7 @@ import koalixcrm
 
 class EmployeeAssignmentToTask(models.Model):
     employee = models.ForeignKey("djangoUserExtension.UserExtension")
-    planned_effort = models.TimeField(verbose_name=_("Effort"))
+    planned_effort = models.DecimalField(verbose_name=_("Effort"), max_digits=10, decimal_places=2)
     task = models.ForeignKey("Task", verbose_name=_('Task'), blank=False, null=False)
 
     def __str__(self):
@@ -28,3 +28,4 @@ class InlineEmployeeAssignmentToTask(admin.TabularInline):
                        'planned_effort',)
         }),
     )
+    extra = 1
