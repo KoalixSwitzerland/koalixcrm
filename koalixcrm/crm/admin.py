@@ -16,6 +16,11 @@ from koalixcrm.crm.contact.customer import Customer, OptionCustomer
 from koalixcrm.crm.contact.supplier import Supplier, OptionSupplier
 from koalixcrm.crm.contact.customergroup import CustomerGroup, OptionCustomerGroup
 from koalixcrm.crm.contact.customerbillingcycle import CustomerBillingCycle, OptionCustomerBillingCycle
+from koalixcrm.crm.reporting.task import Task, OptionTask
+from koalixcrm.crm.reporting.tasklinktype import TaskLinkType, OptionTaskLinkType
+from koalixcrm.crm.reporting.taskstatus import TaskStatus, OptionTaskStatus
+from koalixcrm.crm.reporting.work import Work, OptionWork
+
 
 admin.site.register(Customer, OptionCustomer)
 admin.site.register(CustomerGroup, OptionCustomerGroup)
@@ -34,3 +39,8 @@ admin.site.register(Unit, OptionUnit)
 admin.site.register(Currency, OptionCurrency)
 admin.site.register(Tax, OptionTax)
 admin.site.register(Product, OptionProduct)
+
+admin.site.register(Task, OptionTask)
+admin.site.register(TaskLinkType, OptionTaskLinkType)
+admin.site.register(TaskStatus, OptionTaskStatus)
+admin.site.register(Work, OptionWork)

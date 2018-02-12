@@ -2,18 +2,29 @@
 
 from django.db import models
 from django.utils.translation import ugettext as _
+from django.contrib import admin, messages
+import koalixcrm
 
 
 class EmployeeAssignmentToTask(models.Model):
-    employee = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True, verbose_name=_("Staff"),
-                              related_name="db_relscstaff", null=True)
+    employee = models.ForeignKey("djangoUserExtension.UserExtension")
     planned_effort = models.TimeField(verbose_name=_("Effort"))
     task = models.ForeignKey("Task", verbose_name=_('Task'), blank=False, null=False)
 
     def __str__(self):
-        return _("Employee Assignment") + ": " + str(self.employee.first_name)
+        return _("Employee Assignment") + ": " + str(self.employee.user.first_name)
 
     class Meta:
         app_label = "crm"
         verbose_name = _('Employee Assignment')
         verbose_name_plural = _('Employee Assignments')
+
+
+class InlineEmployeeAssignmentToTask(admin.TabularInline):
+    model = EmployeeAssignmentToTask
+    fieldsets = (
+        (_('Work'), {
+            'fields': ('employee',
+                       'planned_effort',)
+        }),
+    )

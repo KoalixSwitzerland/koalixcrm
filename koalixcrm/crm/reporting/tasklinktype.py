@@ -2,6 +2,7 @@
 
 from django.db import models
 from django.utils.translation import ugettext as _
+from django.contrib import admin, messages
 
 
 class TaskLinkType(models.Model):
@@ -15,3 +16,17 @@ class TaskLinkType(models.Model):
 
     def __str__(self):
         return _("Task Link Type") + " ID: " + str(self.id) + " title: " + str(self.title)
+
+
+class OptionTaskLinkType(admin.ModelAdmin):
+    list_display = ('id',
+                    'title',
+                    'description')
+
+    fieldsets = (
+        (_('TaskLinkType'), {
+            'fields': ('title',
+                       'description')
+        }),
+    )
+    save_as = True

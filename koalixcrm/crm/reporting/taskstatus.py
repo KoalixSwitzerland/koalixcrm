@@ -2,6 +2,7 @@
 
 from django.db import models
 from django.utils.translation import ugettext as _
+from django.contrib import admin, messages
 
 
 class TaskStatus(models.Model):
@@ -15,3 +16,17 @@ class TaskStatus(models.Model):
 
     def __str__(self):
         return _("Task Status") + " ID: " + str(self.id) + " title: " + str(self.title)
+
+
+class OptionTaskStatus(admin.ModelAdmin):
+    list_display = ('id',
+                    'title',
+                    'description',)
+
+    fieldsets = (
+        (_('Work'), {
+            'fields': ('title',
+                       'description',)
+        }),
+    )
+    save_as = True

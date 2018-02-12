@@ -1,16 +1,23 @@
 # -*- coding: utf-8 -*-
 from os import path
 from wsgiref.util import FileWrapper
-from django.contrib import messages
+from django import forms
+from django.contrib import auth
+from django.forms import inlineformset_factory
 from subprocess import CalledProcessError
 
 from django.http import Http404
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
+from django.contrib.admin import helpers
+from django.shortcuts import render
+from django.contrib import messages
+from django.template.context_processors import csrf
 from django.utils.translation import ugettext as _
 from koalixcrm.crm.exceptions import *
 from rest_framework import viewsets
 from koalixcrm.crm.documents.salesdocumentposition import SalesDocumentPosition, SalesContractPositionJSONSerializer
+import koalixcrm
 
 
 def export_pdf(calling_model_admin, request, document, redirect_to):
@@ -104,6 +111,46 @@ def create_new_document(calling_model_admin, request, calling_model, requested_d
         else:
             raise Http404
     return response
+
+
+class WorkReporting():
+    class MonthlyReportingForm(forms.Form):
+        tasks = []
+        projects = []
+
+        def pre_load_data(self, request):
+            self.tasks = koalixcrm.crm.reporting.task.Task.objects.filter(employee=request.user)
+            project_list = []
+            for task in self.tasks:
+                if not(task.project in project_list):
+                    project_list.append(task.project)
+                projects = forms.ModelChoiceField(
+                    koalixcrm.crm.documents.contract.Contract.objects.filter(id=project_list)
+                )
+            _selected_action = forms.CharField(widget=forms.MultipleHiddenInput)
+            inlineformset_factory(auth.User, koalixcrm.crm.reporting.Work)
+
+    def work_report(self, request, queryset):
+        form = None
+        if request.POST.get('post'):
+            if 'cancel' in request.POST:
+                self.message_user(request, _("Canceled registration of payment in the accounting"), level=messages.ERROR)
+                return
+            elif 'register' in request.POST:
+                form = self.WorkReportingForm(request.POST)
+                if form.is_valid():
+                    payment_amount = form.cleaned_data['payment_amount']
+                    payment_account = form.cleaned_data['payment_account']
+                    for obj in queryset:
+                        obj.register_payment_in_accounting(request, payment_amount, payment_account)
+                    self.message_user(request, _("Successfully registered Payment in the Accounting"))
+                    return HttpResponseRedirect(request.get_full_path())
+        else:
+            form = self.WorkReportingForm()
+            form.pre_load_data(request)
+            c = {'action_checkbox_name': helpers.ACTION_CHECKBOX_NAME, 'queryset': queryset, 'form': form}
+            c.update(csrf(request))
+            return render(request, 'crm/admin/time_reporting.html', c)
 
 
 class SalesContractPositionAsJSON(viewsets.ReadOnlyModelViewSet):

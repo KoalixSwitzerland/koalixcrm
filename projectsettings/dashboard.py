@@ -62,6 +62,12 @@ class CustomIndexDashboard(Dashboard):
                     css_classes=('collapse closed',),
                     models=('koalixcrm.accounting.*',),
                 ),
+                modules.ModelList(
+                    _('Reporting'),
+                    column=1,
+                    css_classes=('collapse closed',),
+                    models=('koalixcrm.crm.reporting.*',),
+                ),
             ]
         ))
 

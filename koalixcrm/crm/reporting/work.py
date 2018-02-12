@@ -2,11 +2,11 @@
 
 from django.db import models
 from django.utils.translation import ugettext as _
+from django.contrib import admin, messages
 
 
 class Work(models.Model):
-    employee = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True, verbose_name=_("Staff"),
-                              related_name="db_relscstaff", null=True)
+    employee = models.ForeignKey("djangoUserExtension.UserExtension")
     date = models.DateField(verbose_name=_("Date"), blank=False, null=False)
     start_time = models.TimeField(verbose_name=_("Start Time"), blank=False, null=False)
     stop_time = models.TimeField(verbose_name=_("Stop Time"), blank=False, null=False)
@@ -33,14 +33,28 @@ class Work(models.Model):
         verbose_name_plural = _('Work')
 
 
+class OptionWork(admin.ModelAdmin):
+    list_display = ('id',
+                    'employee',
+                    'date',
+                    'start_time',
+                    'stop_time',
+                    'short_description',
+                    'description',
+                    'task')
+    list_display_links = ('id',)
+    list_filter = ('task',)
+    ordering = ('-id',)
 
-class Work_AdminInline(admin.TabularInline):
-    model = Price
-    extra = 1
-    classes = ['collapse']
     fieldsets = (
-        ('', {
-            'fields': ('date', 'currency', 'unit', 'valid_from', 'valid_until', 'customer_group')
+        (_('Work'), {
+            'fields': ('employee',
+                       'date',
+                       'start_time',
+                       'stop_time',
+                       'short_description',
+                       'description',
+                       'task')
         }),
     )
-    allow_add = True
+    save_as = True
