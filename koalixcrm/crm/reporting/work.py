@@ -15,14 +15,22 @@ class Work(models.Model):
     task = models.ForeignKey("Task", verbose_name=_('Task'), blank=False, null=False)
 
     @staticmethod
-    def get_sum_effort(task):
+    def get_sum_effort_in_hours(task):
         work_objects = Work.objects.filter(task=task.id)
         sum_effort = 0
         for work_object in work_objects:
             if work_object.start_time > work_object.stop_time:
                 sum_effort += 0
             else:
-                sum_effort += work_object.stop_time-work_object.start_time
+                sum_effort += work_object.effort()
+        sum_effort_in_hours = sum_effort/3600
+        return sum_effort_in_hours
+
+    def effort(self):
+        return (self.stop_time - self.start_time).total_seconds()
+
+    def effort_as_string(self):
+        return str(self.effort()/3600) + " h"
 
     def __str__(self):
         return _("Work") + ": " + str(self.id) + " " + _("from Person") + ": " + str(self.employee.id)
@@ -34,15 +42,14 @@ class Work(models.Model):
 
 
 class OptionWork(admin.ModelAdmin):
-    list_display = ('id',
-                    'employee',
+    list_display = ('employee',
+                    'task',
+                    'short_description',
                     'date',
                     'start_time',
                     'stop_time',
-                    'short_description',
-                    'description',
-                    'task')
-    list_display_links = ('id',)
+                    'effort_as_string',)
+    list_display_links = ('short_description',)
     list_filter = ('task',)
     ordering = ('-id',)
 
@@ -58,3 +65,28 @@ class OptionWork(admin.ModelAdmin):
         }),
     )
     save_as = True
+
+
+class InlineWork(admin.TabularInline):
+    model = Work
+    readonly_fields = ('employee',
+                       'short_description',
+                       'date',
+                       'start_time',
+                       'stop_time',)
+    fieldsets = (
+        (_('Work'), {
+            'fields': ('employee',
+                       'short_description',
+                       'date',
+                       'start_time',
+                       'stop_time',)
+        }),
+    )
+    extra = 0
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
