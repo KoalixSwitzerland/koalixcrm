@@ -42,15 +42,17 @@ class Work(models.Model):
 
 
 class OptionWork(admin.ModelAdmin):
-    list_display = ('employee',
+    list_display = ('id',
+                    'employee',
                     'task',
                     'short_description',
                     'date',
                     'start_time',
                     'stop_time',
                     'effort_as_string',)
-    list_display_links = ('short_description',)
-    list_filter = ('task',)
+
+    list_display_links = ('id',)
+    list_filter = ('task', 'date')
     ordering = ('-id',)
 
     fieldsets = (
