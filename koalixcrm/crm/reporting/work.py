@@ -3,6 +3,7 @@
 from django.db import models
 from django.utils.translation import ugettext as _
 from django.contrib import admin, messages
+import koalixcrm
 
 
 class Work(models.Model):
@@ -67,6 +68,8 @@ class OptionWork(admin.ModelAdmin):
         }),
     )
     save_as = True
+
+    actions = [koalixcrm.crm.views.WorkReporting.work_report,]
 
 
 class InlineWork(admin.TabularInline):

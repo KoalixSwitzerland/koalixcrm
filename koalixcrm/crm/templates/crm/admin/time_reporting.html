@@ -4,22 +4,28 @@ Reporting
 {% endblock %}
 
 {% block content %}
+ <script charset="utf-8" type="text/javascript">
+  $(function(){
+    $("select#id_project").change(function(){
+      $.getJSON("/tasks/project/",{id: $(this).val(), view: 'json'}, function(j) {
+        var options = '<option value="">--------&nbsp;</option>';
+        for (var i = 0; i < j.length; i++) {
+          options += '<option value="' + j[i].id + '">' + j[i].short_description + '</option>';
+        }
+        $("#id_task").html(options);
+        $("#id_task option:first").attr('selected', 'selected');
+      })
+      $("#id_project").attr('selected', 'selected');
+    })
+  })
+</script>
 
 <form action="" method="post">{% csrf_token %}
 <table>
 {% for obj in queryset %}
   <tr>
     <td>
-      Amount to Register:
-    </td>
-    <td>
-      {{ form }}
-    </td>
-    <td>
-      Amount on Invoice:
-    </td>
-    <td>
-      {{ obj.lastCalculatedPrice }}
+      {{ form.as_p }}
     </td>
   </tr>
   <input type="hidden" name="{{ action_checkbox_name }}" value="{{ obj.pk }}" />

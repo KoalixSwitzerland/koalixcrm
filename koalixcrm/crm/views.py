@@ -115,42 +115,50 @@ def create_new_document(calling_model_admin, request, calling_model, requested_d
 
 class WorkReporting():
     class MonthlyReportingForm(forms.Form):
-        tasks = []
+        tasks = forms.ModelChoiceField(koalixcrm.crm.)
         projects = []
+        date = forms.DateField()
+        start_time = forms.DateTimeField()
+        stop_time = forms.DateTimeField()
+        short_description = forms.CharField()
+        description = forms.Textarea()
 
         def pre_load_data(self, request):
-            self.tasks = koalixcrm.crm.reporting.task.Task.objects.filter(employee=request.user)
+            task_list = koalixcrm.crm.reporting.task.Task.objects.all()
+            self.tasks = forms.ModelChoiceField(task_list)
             project_list = []
-            for task in self.tasks:
+            for task in task_list:
                 if not(task.project in project_list):
                     project_list.append(task.project)
-                projects = forms.ModelChoiceField(
-                    koalixcrm.crm.documents.contract.Contract.objects.filter(id=project_list)
-                )
+            self.projects = forms.ModelChoiceField(
+                koalixcrm.crm.documents.contract.Contract.objects.all())
             _selected_action = forms.CharField(widget=forms.MultipleHiddenInput)
-            inlineformset_factory(auth.User, koalixcrm.crm.reporting.Work)
 
     def work_report(self, request, queryset):
-        form = None
         if request.POST.get('post'):
             if 'cancel' in request.POST:
                 self.message_user(request, _("Canceled registration of payment in the accounting"), level=messages.ERROR)
                 return
             elif 'register' in request.POST:
-                form = self.WorkReportingForm(request.POST)
+                form = koalixcrm.crm.views.WorkReporting.MonthlyReportingForm(request.POST)
                 if form.is_valid():
-                    payment_amount = form.cleaned_data['payment_amount']
-                    payment_account = form.cleaned_data['payment_account']
-                    for obj in queryset:
-                        obj.register_payment_in_accounting(request, payment_amount, payment_account)
-                    self.message_user(request, _("Successfully registered Payment in the Accounting"))
+                    new_work = Work()
+                    new_work.employee = request.user
+                    new_work.date = form.cleaned_data['date']
+                    new_work.start_time = form.cleaned_data['start_time']
+                    new_work.stop_time = form.cleaned_data['stop_time']
+                    new_work.short_description = form.cleaned_data['short_description']
+                    new_work.description = form.cleaned_data['description']
+                    self.message_user(request, _("Successfully registered Work"))
                     return HttpResponseRedirect(request.get_full_path())
         else:
-            form = self.WorkReportingForm()
+            form = koalixcrm.crm.views.WorkReporting.MonthlyReportingForm()
             form.pre_load_data(request)
             c = {'action_checkbox_name': helpers.ACTION_CHECKBOX_NAME, 'queryset': queryset, 'form': form}
             c.update(csrf(request))
             return render(request, 'crm/admin/time_reporting.html', c)
+
+    work_report.short_description = _("Create Timesheet")
 
 
 class SalesContractPositionAsJSON(viewsets.ReadOnlyModelViewSet):
