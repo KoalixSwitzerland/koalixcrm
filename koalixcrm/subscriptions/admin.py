@@ -103,6 +103,8 @@ class KoalixcrmPluginInterface(object):
     quoteActions = []
     customerInlines = []
     customerActions = []
+    personInline = []
+    personActions = []
 
 
 admin.site.register(Subscription, OptionSubscription)

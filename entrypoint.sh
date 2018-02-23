@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Install dependencies
-pip install -r development_requirements.txt
+#pip install -r development_requirements.txt
 
 # Install FOP 2.2
 wget http://archive.apache.org/dist/xmlgraphics/fop/binaries/fop-2.2-bin.tar.gz
@@ -24,5 +24,7 @@ chmod -R 755 projectsettings/static/pdf
 
 # Execute startup scripts
 python manage.py collectstatic --noinput
+python manage.py makemigrations
 python manage.py migrate
+python manage.py initadmin --username admin --password admin --noinput --email 'admin@example.com'
 python manage.py runserver 0.0.0.0:8000

@@ -3,11 +3,18 @@
 from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext as _
+from koalixcrm.crm.const.country import *
+from koalixcrm.crm.const.postaladdressprefix import *
 from koalixcrm.crm.contact.phoneaddress import PhoneAddress
 from koalixcrm.crm.contact.emailaddress import EmailAddress
 from koalixcrm.crm.contact.postaladdress import PostalAddress
+from koalixcrm.crm.documents.call import Call, CallOverdueFilter
+from koalixcrm.crm.contact.person import *
 from koalixcrm.crm.const.purpose import *
 from koalixcrm.globalSupportFunctions import xstr
+from koalixcrm.crm.inlinemixin import LimitedAdminInlineMixin
+
+from django.utils import timezone
 
 
 class Contact(models.Model):
@@ -16,6 +23,18 @@ class Contact(models.Model):
     lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now=True)
     lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True,
                                        verbose_name=_("Last modified by"), editable=True)
+    addressline1 = models.CharField(max_length=200, verbose_name=_("Addressline 1"), blank=True, null=True)
+    addressline2 = models.CharField(max_length=200, verbose_name=_("Addressline 2"), blank=True, null=True)
+    zipcode = models.IntegerField(verbose_name=_("Zipcode"), blank=True, null=True)
+    town = models.CharField(max_length=100, verbose_name=_("City"), blank=True, null=True)
+    state = models.CharField(max_length=100, verbose_name=_("State"), blank=True, null=True)
+    country = models.CharField(max_length=2, choices=[(x[0], x[3]) for x in COUNTRIES], verbose_name=_("Country"),
+                               blank=True, null=True)
+    
+    people = models.ManyToManyField("Person", through='ContactPersonAssociation', verbose_name=_('Has contact'), blank=True)
+    
+    def __str__(self):
+        return self.name
 
     class Meta:
         app_label = "crm"
@@ -25,7 +44,7 @@ class Contact(models.Model):
 
 class PhoneAddressForContact(PhoneAddress):
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCUSTOMER)
-    person = models.ForeignKey(Contact)
+    company = models.ForeignKey(Contact)
 
     class Meta:
         app_label = "crm"
@@ -38,7 +57,7 @@ class PhoneAddressForContact(PhoneAddress):
 
 class EmailAddressForContact(EmailAddress):
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCUSTOMER)
-    person = models.ForeignKey(Contact)
+    company = models.ForeignKey(Contact)
 
     class Meta:
         app_label = "crm"
@@ -51,7 +70,7 @@ class EmailAddressForContact(EmailAddress):
 
 class PostalAddressForContact(PostalAddress):
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCUSTOMER)
-    person = models.ForeignKey(Contact)
+    company = models.ForeignKey(Contact)
 
     class Meta:
         app_label = "crm"
@@ -97,3 +116,82 @@ class ContactEmailAddress(admin.TabularInline):
         }),
     )
     allow_add = True
+
+class CallForContact(Call):
+    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSECALLINCUSTOMER)
+    company = models.ForeignKey(Contact)
+    cperson = models.ForeignKey(Person, verbose_name=_("Person"), blank=True, null=True)
+    
+    class Meta:
+        app_label = "crm"
+        verbose_name = _('Calls')
+        verbose_name_plural = _('Calls')
+
+    def __str__(self):
+        return xstr(self.description) + ' ' + xstr(self.date_due)
+
+class ContactCall(LimitedAdminInlineMixin, admin.StackedInline):
+    model = CallForContact
+    extra = 0
+    classes = ['collapse']
+    fieldsets = (
+        ('Basics', {
+            'fields': (
+            'description', 'date_due', 'purpose', 'status', 'cperson',)
+        }),
+    )
+    allow_add = True
+
+    def get_filters(self, request, obj):
+        return getattr(self, 'filters', ()) if obj is None else (('cperson', dict(companies=obj.id)),)
+
+class OptionCall(admin.ModelAdmin):
+    list_display = ('id','description','date_due','purpose','get_contactname', 'is_call_overdue',)
+    list_filter = [CallOverdueFilter]
+
+    def get_contactname(self, obj):
+        return obj.company.name
+
+    def is_call_overdue(self, obj):
+        return obj.date_due < timezone.now()
+
+class ContactPersonAssociation(models.Model):
+    contact = models.ForeignKey(Contact, related_name='person_association', blank=True, null=True)
+    person = models.ForeignKey(Person, related_name='contact_association', blank=True, null=True)
+
+    class Meta:
+        app_label = "crm"
+        verbose_name = _('Contacts')
+        verbose_name_plural = _('Contacts')
+
+    def __str__(self):
+        return ''
+
+class PeopleInlineAdmin(admin.TabularInline):
+    model = ContactPersonAssociation
+    extra = 0
+    show_change_link = True
+
+class CompaniesInlineAdmin(admin.TabularInline):
+    model = ContactPersonAssociation
+    extra = 0
+    show_change_link = True
+
+class OptionPerson(admin.ModelAdmin):
+    list_display = ('id', 'name', 'prename', 'email', 'role', 'get_companies',)
+    #filter_horizontal = ('companies',)
+    fieldsets = (('', {'fields': ('prefix','name','prename','role','email','phone',)}),)
+    allow_add = True
+    inlines = [CompaniesInlineAdmin]
+    pluginProcessor = PluginProcessor()
+    inlines.extend(pluginProcessor.getPluginAdditions("personInline"))
+
+    actions = []
+    pluginProcessor = PluginProcessor()
+    inlines.extend(pluginProcessor.getPluginAdditions("personActions"))
+
+    def get_companies(self, obj):
+        list = []
+        for c in obj.companies.all():
+            list.append(c.name)
+        return ','.join(list)

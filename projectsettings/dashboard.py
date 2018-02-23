@@ -22,7 +22,7 @@ class CustomIndexDashboard(Dashboard):
         site_name = get_admin_site_name(context)
 
         self.children.append(modules.Group(
-            _('Group: koalixcrm V1.12dev2'),
+            _('CRMLite (based on koalixcrm V1.12dev2)'),
             column=1,
             collapsible=True,
             children = [
@@ -44,6 +44,13 @@ class CustomIndexDashboard(Dashboard):
                             'koalixcrm.crm.documents.paymentreminder.PaymentReminder',),
                 ),
                 modules.ModelList(
+                    _('Scheduler'),
+                    column=1,
+                    css_classes=('collapse closed',),
+                    models=('koalixcrm.crm.contact.contact.CallForContact',
+                            'koalixcrm.crm.documents.visit.Visit'),
+                ),
+                modules.ModelList(
                     _('Products'),
                     column=1,
                     css_classes=('collapse closed',),
@@ -54,7 +61,8 @@ class CustomIndexDashboard(Dashboard):
                     column=1,
                     css_classes=('collapse closed',),
                     models=('koalixcrm.crm.contact.customer.Customer',
-                            'koalixcrm.crm.contact.supplier.Supplier'),
+                            'koalixcrm.crm.contact.supplier.Supplier',
+                            'koalixcrm.crm.contact.person.Person'),
                 ),
                 modules.ModelList(
                     _('Accounting'),
@@ -78,7 +86,7 @@ class CustomIndexDashboard(Dashboard):
                     models=('django.contrib.*',),
                 ),
                 modules.ModelList(
-                    _('koalixcrm Settings'),
+                    _('Settings'),
                     column=1,
                     css_classes=('collapse closed',),
                     models=('koalixcrm.crm.contact.customerbillingcycle.CustomerBillingCycle',

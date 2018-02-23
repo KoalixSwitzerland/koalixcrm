@@ -35,3 +35,11 @@ DELIVERYNOTESTATUS = (
     ('R', _('Received')),
     ('R', _('Lost')),
 )
+
+CALLSTATUS = (
+    ('P', _('Planned')),
+    ('D', _('Delayed')),
+    ('R', _('ToRecall')),
+    ('A', _('Failed')),
+    ('S', _('Success')),
+)

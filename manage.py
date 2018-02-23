@@ -2,6 +2,14 @@
 import os
 import sys
 
+'''import ptvsd
+try:
+    ptvsd.enable_attach("my_secret", address = ('0.0.0.0', 3000))
+    ptvsd.wait_for_attach()
+    ptvsd.break_into_debugger()
+except:
+    pass'''
+
 if __name__ == "__main__":
     try:
         from django.core.management import execute_from_command_line

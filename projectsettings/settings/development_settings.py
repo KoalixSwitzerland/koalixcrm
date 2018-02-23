@@ -15,3 +15,5 @@ DATABASES = {
 }
 
 GRAPPELLI_INDEX_DASHBOARD = 'projectsettings.dashboard.CustomIndexDashboard'
+
+GRAPPELLI_ADMIN_TITLE = 'JLSCom'

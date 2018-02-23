@@ -27,3 +27,13 @@ PURPOSESTEXTPARAGRAPHINDOCUMENTS = (
     ('C3', _('Custom 3')),
     ('C4', _('Custom 4')),
 )
+
+PURPOSECALLINCUSTOMER = (
+    ('F', _('First commercial call')),
+    ('S', _('Planned commercial call')),
+    ('A', _('Assistance call')),
+)
+
+SERVICETYPE = (
+    ('P', _('Phone')),
+)

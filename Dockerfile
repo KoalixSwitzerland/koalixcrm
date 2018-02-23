@@ -1,13 +1,15 @@
 FROM python:3.6
 
-WORKDIR /app
+RUN mkdir /code
+WORKDIR /code
 
 # Intall dependencies
-COPY /requirements/development_requirements.txt /app/
-COPY /requirements/base_requirements.txt /app/
+COPY /requirements/development_requirements.txt /code/
+COPY /requirements/base_requirements.txt /code/
 
-COPY . /app
+RUN pip install -r development_requirements.txt
+COPY . /code
 
-RUN chmod +x /app/entrypoint.sh
-ENTRYPOINT ["/app/entrypoint.sh"]
+RUN chmod +x /code/entrypoint.sh
+ENTRYPOINT ["/code/entrypoint.sh"]
 

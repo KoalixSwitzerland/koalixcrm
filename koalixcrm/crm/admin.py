@@ -8,6 +8,8 @@ from koalixcrm.crm.documents.invoice import Invoice, OptionInvoice
 from koalixcrm.crm.documents.paymentreminder import PaymentReminder, OptionPaymentReminder
 from koalixcrm.crm.documents.purchaseorder import PurchaseOrder, OptionPurchaseOrder
 from koalixcrm.crm.documents.contract import Contract, OptionContract
+from koalixcrm.crm.documents.call import Call
+from koalixcrm.crm.documents.visit import Visit, OptionVisit
 from koalixcrm.crm.product.tax import Tax, OptionTax
 from koalixcrm.crm.product.unit import Unit, OptionUnit
 from koalixcrm.crm.product.product import Product, OptionProduct
@@ -16,6 +18,8 @@ from koalixcrm.crm.contact.customer import Customer, OptionCustomer
 from koalixcrm.crm.contact.supplier import Supplier, OptionSupplier
 from koalixcrm.crm.contact.customergroup import CustomerGroup, OptionCustomerGroup
 from koalixcrm.crm.contact.customerbillingcycle import CustomerBillingCycle, OptionCustomerBillingCycle
+from koalixcrm.crm.contact.person import Person
+from koalixcrm.crm.contact.contact import CallForContact, OptionCall, OptionPerson
 
 admin.site.register(Customer, OptionCustomer)
 admin.site.register(CustomerGroup, OptionCustomerGroup)
@@ -34,3 +38,6 @@ admin.site.register(Unit, OptionUnit)
 admin.site.register(Currency, OptionCurrency)
 admin.site.register(Tax, OptionTax)
 admin.site.register(Product, OptionProduct)
+admin.site.register(CallForContact, OptionCall)
+admin.site.register(Visit, OptionVisit)
+admin.site.register(Person, OptionPerson)
