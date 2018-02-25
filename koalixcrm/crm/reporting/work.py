@@ -1,9 +1,15 @@
 # -*- coding: utf-8 -*-
 
+from django import forms
 from django.db import models
+from django.contrib import admin
+from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext as _
-from django.contrib import admin, messages
 import koalixcrm
+from django.contrib.admin import helpers
+from django.shortcuts import render
+from django.contrib import messages
+from django.template.context_processors import csrf
 
 
 class Work(models.Model):
@@ -69,7 +75,15 @@ class OptionWork(admin.ModelAdmin):
     )
     save_as = True
 
-    actions = [koalixcrm.crm.views.WorkReporting.work_report,]
+    def work_report(self, request, queryset):
+        from koalixcrm.crm.views.monthlyreport import MonthlyReportView
+        reportview = MonthlyReportView()
+        response = reportview.work_report(request, queryset)
+        return response
+
+    work_report.short_description = _("Work Report")
+
+    actions = ["work_report"]
 
 
 class InlineWork(admin.TabularInline):

@@ -16,7 +16,6 @@ from koalixcrm.crm.const.purpose import *
 from koalixcrm.crm.documents.invoice import InlineInvoice
 from koalixcrm.crm.documents.quote import InlineQuote
 from koalixcrm.crm.exceptions import *
-from koalixcrm.crm.views import create_new_document
 import koalixcrm.crm.documents.calculations
 import koalixcrm.crm.documents.pdfexport
 
@@ -158,6 +157,7 @@ class OptionContract(admin.ModelAdmin):
     inlines.extend(pluginProcessor.getPluginAdditions("contractInlines"))
 
     def create_quote(self, request, queryset):
+        from koalixcrm.crm.views.CreateNewDocumentView import create_new_document
         for obj in queryset:
             response = create_new_document(self, request, obj,
                                            koalixcrm.crm.documents.quote.Quote,
@@ -167,6 +167,7 @@ class OptionContract(admin.ModelAdmin):
     create_quote.short_description = _("Create Quote")
 
     def create_invoice(self, request, queryset):
+        from koalixcrm.crm.views.CreateNewDocumentView import create_new_document
         for obj in queryset:
             response = create_new_document(self, request, obj,
                                            koalixcrm.crm.documents.invoice.Invoice,
@@ -176,6 +177,7 @@ class OptionContract(admin.ModelAdmin):
     create_invoice.short_description = _("Create Invoice")
 
     def create_purchase_confirmation(self, request, queryset):
+        from koalixcrm.crm.views.CreateNewDocumentView import create_new_document
         for obj in queryset:
             response = create_new_document(self, request, obj,
                                            koalixcrm.crm.documents.purchaseconfirmation.PurchaseConfirmation,
@@ -185,6 +187,7 @@ class OptionContract(admin.ModelAdmin):
     create_purchase_confirmation.short_description = _("Create Purchase Confirmation")
 
     def create_delivery_note(self, request, queryset):
+        from koalixcrm.crm.views.CreateNewDocumentView import create_new_document
         for obj in queryset:
             response = create_new_document(self, request, obj,
                                            koalixcrm.crm.documents.deliverynote.DeliveryNote,
@@ -194,6 +197,7 @@ class OptionContract(admin.ModelAdmin):
     create_delivery_note.short_description = _("Create Delivery note")
 
     def create_payment_reminder(self, request, queryset):
+        from koalixcrm.crm.views.CreateNewDocumentView import create_new_document
         for obj in queryset:
             response = create_new_document(self, request, obj,
                                            koalixcrm.crm.documents.paymentreminder.PaymentReminder,
@@ -203,6 +207,7 @@ class OptionContract(admin.ModelAdmin):
     create_payment_reminder.short_description = _("Create Payment Reminder")
 
     def create_purchase_order(self, request, queryset):
+        from koalixcrm.crm.views.CreateNewDocumentView import create_new_document
         for obj in queryset:
             response = create_new_document(self, request, obj,
                                            koalixcrm.crm.documents.purchaseorder.PurchaseOrder,
@@ -212,7 +217,7 @@ class OptionContract(admin.ModelAdmin):
     create_purchase_order.short_description = _("Create Purchase Order")
 
     def save_model(self, request, obj, form, change):
-        if (change == True):
+        if change:
             obj.last_modified_by = request.user
         else:
             obj.last_modified_by = request.user

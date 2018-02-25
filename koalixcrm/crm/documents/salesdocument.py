@@ -11,8 +11,6 @@ from koalixcrm.crm.contact.emailaddress import EmailAddress
 from koalixcrm.crm.contact.postaladdress import PostalAddress
 from koalixcrm.crm.documents.salesdocumentposition import SalesDocumentPosition, SalesDocumentInlinePosition
 from koalixcrm.djangoUserExtension.models import TextParagraphInDocumentTemplate
-from koalixcrm.crm.views import export_pdf
-from koalixcrm.crm.views import create_new_document
 from koalixcrm.crm.product.product import Product
 from koalixcrm.crm.exceptions import TemplateSetMissingInContract
 import koalixcrm.crm.documents.calculations
@@ -286,6 +284,7 @@ class OptionSalesDocument(admin.ModelAdmin):
     create_invoice.short_description = _("Create Invoice")
 
     def create_purchase_confirmation(self, request, queryset):
+        from koalixcrm.crm.views.CreateNewDocumentView import create_new_document
         for obj in queryset:
             response = create_new_document(self, request, obj,
                                            koalixcrm.crm.documents.purchaseconfirmation.PurchaseConfirmation,
@@ -295,6 +294,7 @@ class OptionSalesDocument(admin.ModelAdmin):
     create_purchase_confirmation.short_description = _("Create Purchase Confirmation")
 
     def create_delivery_note(self, request, queryset):
+        from koalixcrm.crm.views.CreateNewDocumentView import create_new_document
         for obj in queryset:
             response = create_new_document(self, request, obj,
                                            koalixcrm.crm.documents.deliverynote.DeliveryNote,
@@ -304,6 +304,7 @@ class OptionSalesDocument(admin.ModelAdmin):
     create_delivery_note.short_description = _("Create Delivery note")
 
     def create_payment_reminder(self, request, queryset):
+        from koalixcrm.crm.views.CreateNewDocumentView import create_new_document
         for obj in queryset:
             response = create_new_document(self, request, obj,
                                            koalixcrm.crm.documents.paymentreminder.PaymentReminder,
@@ -313,6 +314,7 @@ class OptionSalesDocument(admin.ModelAdmin):
     create_payment_reminder.short_description = _("Create Payment Reminder")
 
     def create_purchase_order(self, request, queryset):
+        from koalixcrm.crm.views.CreateNewDocumentView import create_new_document
         for obj in queryset:
             response = create_new_document(self, request, obj,
                                            koalixcrm.crm.documents.purchaseorder.PurchaseOrder,
@@ -322,6 +324,7 @@ class OptionSalesDocument(admin.ModelAdmin):
     create_purchase_order.short_description = _("Create Purchase Order")
 
     def create_pdf(self, request, queryset):
+        from koalixcrm.crm.views.PDFExportView import export_pdf
         for obj in queryset:
             response = export_pdf(self, request, obj, ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
             return response
