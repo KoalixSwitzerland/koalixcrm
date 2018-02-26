@@ -23,28 +23,32 @@ class MonthlyReportView:
         stop_time = forms.DateTimeField()
         short_description = forms.CharField()
         description = forms.Textarea()
+        _selected_action = forms.CharField(widget=forms.MultipleHiddenInput)
 
     def work_report(self, request, queryset):
         from koalixcrm.crm.reporting.work import Work
+        MonthlyReportFormset = forms.formset_factory(MonthlyReportView.MonthlyReportingForm, extra=1, max_num=60)
         if request.POST.get('post'):
+            formset = MonthlyReportFormset(request.POST)
             if 'cancel' in request.POST:
                 self.message_user(request, _("Canceled creation of monthly report creation"), level=messages.ERROR)
                 return
             elif 'register' in request.POST:
-                form = self.MonthlyReportingForm(request.POST)
-                if form.is_valid():
-                    new_work = Work()
-                    new_work.employee = request.user
-                    new_work.date = form.cleaned_data['date']
-                    new_work.start_time = form.cleaned_data['start_time']
-                    new_work.stop_time = form.cleaned_data['stop_time']
-                    new_work.short_description = form.cleaned_data['short_description']
-                    new_work.description = form.cleaned_data['description']
-                    self.message_user(request, _("Successfully registered Work"))
-                    return HttpResponseRedirect(request.get_full_path())
+                if formset.is_valid():
+                    for form in formset:
+                        new_work = Work()
+                        new_work.employee = request.user
+                        new_work.date = form.cleaned_data['date']
+                        new_work.start_time = form.cleaned_data['start_time']
+                        new_work.stop_time = form.cleaned_data['stop_time']
+                        new_work.short_description = form.cleaned_data['short_description']
+                        new_work.description = form.cleaned_data['description']
+                        new_work.save()
+                        self.message_user(request, _("Successfully registered Work"))
+                        return HttpResponseRedirect(request.get_full_path())
         else:
-            form = self.MonthlyReportingForm()
-            c = {'action_checkbox_name': helpers.ACTION_CHECKBOX_NAME, 'queryset': queryset, 'form': form}
+            formset = MonthlyReportFormset()
+            c = {'action_checkbox_name': helpers.ACTION_CHECKBOX_NAME, 'queryset': queryset, 'formset': formset}
             c.update(csrf(request))
             return render(request, 'crm/admin/time_reporting.html', c)
 

@@ -15,7 +15,26 @@
                   })
                   $("#id_project").attr('selected', 'selected');
               });
+              $('#add_more').click(function() {
+                  cloneMore('#oneform:last', 'service');
+              });
           });
+          function cloneMore(selector, type) {
+              var newElement = $(selector).clone(true);
+              var total = $('#id_' + type + '-TOTAL_FORMS').val();
+              newElement.find(':input').each(function() {
+                  var name = $(this).attr('name').replace('-' + (total-1) + '-','-' + total + '-');
+                  var id = 'id_' + name;
+                  $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
+              });
+              newElement.find('label').each(function() {
+                  var newFor = $(this).attr('for').replace('-' + (total-1) + '-','-' + total + '-');
+                  $(this).attr('for', newFor);
+              });
+              total++;
+              $('#id_' + type + '-TOTAL_FORMS').val(total);
+              $(selector).after(newElement);
+          }
       })(grp.jQuery);
 </script>
 {% endblock %}
@@ -27,17 +46,32 @@ Reporting
 
 
 <form action="" method="post">{% csrf_token %}
-<table>
-{% for obj in queryset %}
-  <tr>
-    <td>
-      {{ form.as_p }}
-    </td>
-  </tr>
-  <input type="hidden" name="{{ action_checkbox_name }}" value="{{ obj.pk }}" />
-{% endfor %}
-<input type="hidden" name="action" value="registerPaymentInAccounting" />
-<input type="hidden" name="post" value="yes" />
+    {{ formset.management_form }}
+<div>
+    <table>
+    {% for form in formset %}
+    {% if forloop.first %}
+    <tr>
+        {% for field in form %}
+        <th>{{ field.label }}</th>
+        {% endfor %}
+        <th>Delete</th>
+    </tr>
+    {% endif %}<tr id='oneform'>
+            {% for field in form %}
+            <td>{{ field }}</td>
+            {% endfor %}
+        {% if formset.can_delete %}
+            <td>{{ form.DELETE }}</td>
+        {% else %}
+            <td></td>
+        {% endif %}</tr>
+    {% endfor %}
+    </table>
+</div>
+
+<input type="button" value="Add More" id="add_more">
+<input type="hidden" name="action" value="work_report" />
 <input type="submit" name="cancel" value="cancel" />
 <input type="submit" name="register" value="register" />
 </form>
