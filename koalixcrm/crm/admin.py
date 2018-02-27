@@ -8,7 +8,7 @@ from koalixcrm.crm.documents.invoice import Invoice, OptionInvoice
 from koalixcrm.crm.documents.paymentreminder import PaymentReminder, OptionPaymentReminder
 from koalixcrm.crm.documents.purchaseorder import PurchaseOrder, OptionPurchaseOrder
 from koalixcrm.crm.documents.contract import Contract, OptionContract
-from koalixcrm.crm.documents.call import Call
+from koalixcrm.crm.documents.activity import Call
 from koalixcrm.crm.documents.visit import Visit, OptionVisit
 from koalixcrm.crm.product.tax import Tax, OptionTax
 from koalixcrm.crm.product.unit import Unit, OptionUnit

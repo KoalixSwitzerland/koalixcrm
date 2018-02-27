@@ -8,7 +8,7 @@ from koalixcrm.crm.const.postaladdressprefix import *
 from koalixcrm.crm.contact.phoneaddress import PhoneAddress
 from koalixcrm.crm.contact.emailaddress import EmailAddress
 from koalixcrm.crm.contact.postaladdress import PostalAddress
-from koalixcrm.crm.documents.call import Call, CallOverdueFilter
+from koalixcrm.crm.documents.activity import Call, CallOverdueFilter
 from koalixcrm.crm.contact.person import *
 from koalixcrm.crm.const.purpose import *
 from koalixcrm.globalSupportFunctions import xstr
@@ -23,13 +23,13 @@ class Contact(models.Model):
     lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now=True)
     lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True,
                                        verbose_name=_("Last modified by"), editable=True)
-    addressline1 = models.CharField(max_length=200, verbose_name=_("Addressline 1"), blank=True, null=True)
+    '''addressline1 = models.CharField(max_length=200, verbose_name=_("Addressline 1"), blank=True, null=True)
     addressline2 = models.CharField(max_length=200, verbose_name=_("Addressline 2"), blank=True, null=True)
     zipcode = models.IntegerField(verbose_name=_("Zipcode"), blank=True, null=True)
     town = models.CharField(max_length=100, verbose_name=_("City"), blank=True, null=True)
     state = models.CharField(max_length=100, verbose_name=_("State"), blank=True, null=True)
     country = models.CharField(max_length=2, choices=[(x[0], x[3]) for x in COUNTRIES], verbose_name=_("Country"),
-                               blank=True, null=True)
+                               blank=True, null=True)'''
     
     people = models.ManyToManyField("Person", through='ContactPersonAssociation', verbose_name=_('Has contact'), blank=True)
     
@@ -124,11 +124,22 @@ class CallForContact(Call):
     
     class Meta:
         app_label = "crm"
-        verbose_name = _('Calls')
+        verbose_name = _('Call')
         verbose_name_plural = _('Calls')
 
     def __str__(self):
         return xstr(self.description) + ' ' + xstr(self.date_due)
+
+class VisitForContact(Call):
+    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSECALLINCUSTOMER)
+    company = models.ForeignKey(Contact)
+    cperson = models.ForeignKey(Person, verbose_name=_("Person"), blank=True, null=True)
+    ref_call = models.ForeignKey(CallForContact, verbose_name=_("Reference Call"), blank=True, null=True)
+    
+    class Meta:
+        app_label = "crm"
+        verbose_name = _('Visit')
+        verbose_name_plural = _('Visits')
 
 class ContactCall(LimitedAdminInlineMixin, admin.StackedInline):
     model = CallForContact
@@ -145,15 +156,38 @@ class ContactCall(LimitedAdminInlineMixin, admin.StackedInline):
     def get_filters(self, request, obj):
         return getattr(self, 'filters', ()) if obj is None else (('cperson', dict(companies=obj.id)),)
 
+class ContactVisit(LimitedAdminInlineMixin, admin.StackedInline):
+    model = VisitForContact
+    extra = 0
+    classes = ['collapse']
+    fieldsets = (
+        ('Basics', {
+            'fields': (
+            'description', 'date_due', 'purpose', 'status', 'cperson', 'ref_call',)
+        }),
+    )
+    allow_add = True
+
+    '''def get_queryset(self, request):
+        qs = super(ContactVisit, self).get_queryset(request)
+        return qs.filter(company=request.company)'''
+    
+    def get_filters(self, request, obj):
+        return getattr(self, 'filters', ()) if obj is None else (('cperson', dict(companies=obj.id)),)
+
 class OptionCall(admin.ModelAdmin):
-    list_display = ('id','description','date_due','purpose','get_contactname', 'is_call_overdue',)
+    list_display = ('id','description','date_due','purpose','get_contactname', 'status', 'is_call_overdue',)
     list_filter = [CallOverdueFilter]
 
     def get_contactname(self, obj):
         return obj.company.name
 
+    get_contactname.short_description = _("Company")
+
     def is_call_overdue(self, obj):
-        return obj.date_due < timezone.now()
+        return (obj.date_due < timezone.now() and obj.status not in ['F', 'S'])
+
+    is_call_overdue.short_description = _("Is call overdue")
 
 class ContactPersonAssociation(models.Model):
     contact = models.ForeignKey(Contact, related_name='person_association', blank=True, null=True)
@@ -195,3 +229,47 @@ class OptionPerson(admin.ModelAdmin):
         for c in obj.companies.all():
             list.append(c.name)
         return ','.join(list)
+    
+    get_companies.short_description = _("Works at")
+
+class StateFilter(admin.SimpleListFilter):
+    title = _('State')
+    parameter_name = 'state'
+
+    def lookups(self, request, model_admin):
+        list = []
+        for a in PostalAddress.objects.values('state').distinct():
+            list.append((a['state'], _(a['state'])))
+        return (
+            list
+        )
+
+    def queryset(self, request, queryset):
+        for p in PostalAddressForContact.objects.all(): 
+            if self.value() == str(p.state):
+                address_per_company = PostalAddressForContact.objects.filter(state=p.state)
+                ids = [(a.company.id) for a in address_per_company]
+                return queryset.filter(pk__in=ids)
+        return queryset
+
+class CityFilter(admin.SimpleListFilter):
+    title = _('City')
+    parameter_name = 'city'
+
+    def lookups(self, request, model_admin):
+        list = []
+        state = request.GET.get('state', None)
+        adjusted_queryset = PostalAddress.objects.all() if state is None else PostalAddress.objects.filter(state=state)
+        for a in adjusted_queryset.values('town').distinct():
+            list.append((a['town'], _(a['town'])))
+        return (
+            list
+        )
+
+    def queryset(self, request, queryset):
+        for p in PostalAddressForContact.objects.all(): 
+            if self.value() == str(p.town):
+                address_per_company = PostalAddressForContact.objects.filter(town=p.town)
+                ids = [(a.company.id) for c in address_per_company]
+                return queryset.filter(pk__in=ids)
+        return queryset

@@ -5,10 +5,11 @@ from django.contrib import admin
 from django.utils.translation import ugettext as _
 from koalixcrm.plugin import *
 from koalixcrm import djangoUserExtension
-from koalixcrm.crm.contact.contact import Contact, ContactCall, PeopleInlineAdmin
+from koalixcrm.crm.contact.contact import Contact, ContactCall, ContactVisit, PeopleInlineAdmin, PostalAddressForContact, ContactPostalAddress, ContactPhoneAddress, ContactEmailAddress, CityFilter, StateFilter
 from koalixcrm.crm.contact.supplier import Supplier
 from koalixcrm.crm.product.phonesystem import PhoneSystem
 from koalixcrm.crm.contact.person import *
+from django.http import HttpResponseRedirect
 
 import koalixcrm.crm.documents.contract
 
@@ -26,8 +27,8 @@ class Customer(Contact):
         contract.save()
         return contract
 
-    def createInvoice(self):
-        contract = self.createContract()
+    def createInvoice(self, request):
+        contract = self.createContract(request)
         invoice = contract.createInvoice()
         return invoice
 
@@ -102,19 +103,33 @@ class PhoneProviderFilter(admin.SimpleListFilter):
         return queryset
 
 class OptionCustomer(admin.ModelAdmin):
-    list_display = ('id', 'name', 'state', 'defaultCustomerBillingCycle',)
-    list_filter = ('state', 'ismemberof', PhoneProviderFilter)
+    list_display = ('id', 'name', 'defaultCustomerBillingCycle', 'get_state', 'get_town', 'dateofcreation',)
+    list_filter = ('ismemberof', StateFilter, CityFilter, PhoneProviderFilter)
     #filter_horizontal = ('people',)
-    fieldsets = (('', {'fields': ('name', 'defaultCustomerBillingCycle', 'ismemberof', 'addressline1', 
-        'addressline2', 'zipcode', 'town', 'state', 'country',)}),)
+    fieldsets = (('', {'fields': ('name', 'defaultCustomerBillingCycle', 'ismemberof',)}),)
     allow_add = True
     ordering = ('id',)
     search_fields = ('id', 'name')
-    inlines = [PeopleInlineAdmin, ContactCall, CustomerPhoneSystem]
+    inlines = [ContactPostalAddress, ContactPhoneAddress, ContactEmailAddress, PeopleInlineAdmin, CustomerPhoneSystem, ContactCall, ContactVisit]
     
     pluginProcessor = PluginProcessor()
     inlines.extend(pluginProcessor.getPluginAdditions("customerInline"))
 
+    def get_postal_address(self, obj):
+        return PostalAddressForContact.objects.filter(company=obj.id).first()
+    
+    def get_state(self, obj):
+        address = self.get_postal_address(obj)
+        return address.state if address is not None else None
+
+    get_state.short_description = _("State")
+
+    def get_town(self, obj):
+        address = self.get_postal_address(obj)
+        return address.town if address is not None else None
+
+    get_town.short_description = _("City")
+    
     def createContract(self, request, queryset):
         for obj in queryset:
             contract = obj.createContract(request)

@@ -14,9 +14,6 @@ class Call(models.Model):
     staff = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True, verbose_name=_("Staff"),
                               related_name="db_relcallstaff", null=True)
     description = models.TextField(verbose_name=_("Description"))
-    #customer = models.ForeignKey("Customer", verbose_name=_("Default Customer"), null=True, blank=True)
-    #supplier = models.ForeignKey("Supplier", verbose_name=_("Default Supplier"), null=True, blank=True)
-    #template_set = models.ForeignKey("djangoUserExtension.TemplateSet", verbose_name=_("Default Template Set"), null=True, blank=True)
     date_of_creation = models.DateTimeField(verbose_name=_("Created at"), auto_now_add=True)
     date_due = models.DateTimeField(verbose_name=_("Date due"), default=datetime.now, blank=True)
     last_modification = models.DateTimeField(verbose_name=_("Last modified"), auto_now=True)
@@ -41,7 +38,7 @@ class CallOverdueFilter(admin.SimpleListFilter):
         if self.value() == 'planned':
             return queryset.filter(date_due__gt=timezone.now())
         elif self.value() == 'overdue':
-            return queryset.filter(date_due__lt=timezone.now())
+            return queryset.filter(date_due__lt=timezone.now()).exclude(status__in=['F','S'])
         else:
             return queryset
 

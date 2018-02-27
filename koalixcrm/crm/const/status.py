@@ -40,6 +40,6 @@ CALLSTATUS = (
     ('P', _('Planned')),
     ('D', _('Delayed')),
     ('R', _('ToRecall')),
-    ('A', _('Failed')),
+    ('F', _('Failed')),
     ('S', _('Success')),
 )
