@@ -1,15 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from django import forms
 from django.db import models
 from django.contrib import admin
-from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext as _
-import koalixcrm
-from django.contrib.admin import helpers
-from django.shortcuts import render
-from django.contrib import messages
-from django.template.context_processors import csrf
 
 
 class Work(models.Model):
@@ -26,7 +19,9 @@ class Work(models.Model):
         work_objects = Work.objects.filter(task=task.id)
         sum_effort = 0
         for work_object in work_objects:
-            if work_object.start_time > work_object.stop_time:
+            if (not work_object.start_time) or (not work_object.stop_time):
+                sum_effort = 0
+            elif work_object.start_time > work_object.stop_time:
                 sum_effort += 0
             else:
                 sum_effort += work_object.effort()
@@ -34,7 +29,10 @@ class Work(models.Model):
         return sum_effort_in_hours
 
     def effort(self):
-        return (self.stop_time - self.start_time).total_seconds()
+        if not self.stop_time or not self.start_time:
+            return 0
+        else:
+            return (self.stop_time - self.start_time).total_seconds()
 
     def effort_as_string(self):
         return str(self.effort()/3600) + " h"
@@ -77,8 +75,8 @@ class OptionWork(admin.ModelAdmin):
 
     def work_report(self, request, queryset):
         from koalixcrm.crm.views.monthlyreport import MonthlyReportView
-        reportview = MonthlyReportView()
-        response = reportview.work_report(request, queryset)
+        report_view = MonthlyReportView()
+        response = report_view.work_report(self, request, queryset)
         return response
 
     work_report.short_description = _("Work Report")

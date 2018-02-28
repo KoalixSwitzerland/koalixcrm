@@ -15,6 +15,14 @@ class UserExtension(models.Model):
     defaultTemplateSet = models.ForeignKey("TemplateSet")
     defaultCurrency = models.ForeignKey("crm.Currency")
 
+    @staticmethod
+    def get_user(django_user):
+        user_extensions = UserExtension.objects.filter(user=django_user)
+        if len(user_extensions) != 1:
+            raise TooManyUserExtensionsAvailable
+        for user_extension in user_extensions:
+            return user_extension
+
     class Meta:
         app_label = "djangoUserExtension"
         verbose_name = _('User Extention')

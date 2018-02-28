@@ -3,6 +3,20 @@
  <script charset="utf-8" type="text/javascript">
       (function($){
           $(document).ready(function(){
+              grappelli.initDateAndTimePicker();
+              $("#grp-content-container .grp-group").grp_collapsible_group();
+              $("#grp-content-container .grp-collapse").grp_collapsible({
+                  on_init: function(elem, options) {
+                      // open collapse (and all collapse parents) in case of errors
+                      if (elem.find("ul.errorlist").length > 0) {
+                          elem.removeClass("grp-closed")
+                              .addClass("grp-open");
+                          elem.parents(".grp-collapse")
+                              .removeClass("grp-closed")
+                              .addClass("grp-open");
+                      }
+                  }
+              });
               $("select#id_projects").change(function () {
                   alert("test");
                   $.getJSON("/tasks/project/", {id: $(this).val(), view: 'json'}, function (j) {
@@ -16,16 +30,18 @@
                   $("#id_project").attr('selected', 'selected');
               });
               $('#add_more').click(function() {
-                  cloneMore('#oneform:last', 'service');
+                  cloneMore('#oneform:last', 'form');
               });
           });
           function cloneMore(selector, type) {
               var newElement = $(selector).clone(true);
               var total = $('#id_' + type + '-TOTAL_FORMS').val();
               newElement.find(':input').each(function() {
+                  if ($(this).attr('name')) {
                   var name = $(this).attr('name').replace('-' + (total-1) + '-','-' + total + '-');
                   var id = 'id_' + name;
                   $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
+                  }
               });
               newElement.find('label').each(function() {
                   var newFor = $(this).attr('for').replace('-' + (total-1) + '-','-' + total + '-');
@@ -68,10 +84,11 @@ Reporting
         {% endif %}</tr>
     {% endfor %}
     </table>
-</div>
-
+</div>{% for obj in queryset %}
+<input type="hidden" name="{{ action_checkbox_name }}" value="{{ obj.pk }}" />{% endfor %}
 <input type="button" value="Add More" id="add_more">
 <input type="hidden" name="action" value="work_report" />
+<input type="hidden" name="post" value="yes" />
 <input type="submit" name="cancel" value="cancel" />
 <input type="submit" name="register" value="register" />
 </form>
