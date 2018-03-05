@@ -30,12 +30,14 @@
                   $("#id_project").attr('selected', 'selected');
               });
               $('#add_more').click(function() {
-                  cloneMore('#oneform:last', 'form');
+                  cloneMore('#oneform', 'form');
               });
           });
           function cloneMore(selector, type) {
-              var newElement = $(selector).clone(true);
               var total = $('#id_' + type + '-TOTAL_FORMS').val();
+              var newElement = $(selector+"[name=form-"+(total-1)+"]").clone(false);
+              var name = "form-"+total
+              newElement.attr({'name': name}).val('')
               newElement.find(':input').each(function() {
                   if ($(this).attr('name')) {
                   var name = $(this).attr('name').replace('-' + (total-1) + '-','-' + total + '-');
@@ -47,9 +49,19 @@
                   var newFor = $(this).attr('for').replace('-' + (total-1) + '-','-' + total + '-');
                   $(this).attr('for', newFor);
               });
+              newElement.find('.ui-datepicker-trigger').remove();
+              newElement.find('.vDateField').each(function() {
+                  $(this).removeClass('hasDatepicker')
+              });
+              newElement.find('.ui-timepicker-trigger').remove();
+              newElement.find('.vTimeField').each(function() {
+                  $(this).removeClass('hasTimepicker')
+                  $(this).grp_timepicker();
+              });
               total++;
               $('#id_' + type + '-TOTAL_FORMS').val(total);
               $(selector).after(newElement);
+              grappelli.initDateAndTimePicker();
           }
       })(grp.jQuery);
 </script>
@@ -73,7 +85,7 @@ Reporting
         {% endfor %}
         <th>Delete</th>
     </tr>
-    {% endif %}<tr id='oneform'>
+    {% endif %}<tr id='oneform' name="form-0">
             {% for field in form %}
             <td>{{ field }}</td>
             {% endfor %}

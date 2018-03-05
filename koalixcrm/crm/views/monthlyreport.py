@@ -12,6 +12,7 @@ import datetime
 
 
 class MonthlyReportView:
+
     class MonthlyReportingForm(forms.Form):
         from koalixcrm.crm.reporting.task import Task
         from koalixcrm.crm.documents.contract import Contract
@@ -52,9 +53,12 @@ class MonthlyReportView:
                     calling_admin.message_user(request, _("Not Successfully registered Work"))
             return HttpResponseRedirect(request.get_full_path())
         else:
-            formset = MonthlyReportFormset()
+            formset = forms.formset_factory(MonthlyReportView.MonthlyReportingForm, extra=1, max_num=60)
             c = {'action_checkbox_name': helpers.ACTION_CHECKBOX_NAME, 'queryset': queryset, 'formset': formset}
             c.update(csrf(request))
             return render(request, 'crm/admin/time_reporting.html', c)
 
     work_report.short_description = _("Create Timesheet")
+
+
+
