@@ -3,7 +3,6 @@ from django import forms
 from django.http import HttpResponseRedirect
 from django.contrib.admin import helpers
 from django.shortcuts import render
-from django.contrib import messages
 from django.template.context_processors import csrf
 from django.utils.translation import ugettext as _
 from django.contrib.admin.widgets import *
@@ -27,14 +26,27 @@ class MonthlyReportView:
         stop_time = forms.TimeField(widget=AdminTimeWidget)
         short_description = forms.CharField()
 
-    def work_report(self, calling_admin, request, queryset):
+    @staticmethod
+    def generate_initial_data(start_date, stop_date):
         from koalixcrm.crm.reporting.work import Work
-        MonthlyReportFormset = forms.formset_factory(MonthlyReportView.MonthlyReportingForm, extra=1, max_num=60)
+        list_of_work = Work.objects.filter(date__lte=stop_date).filter(date__gte=start_date)
+        initial = []
+        for work in list_of_work:
+            initial.append({'task': work.task,
+                            'projects': work.task.project,
+                            'date': work.date,
+                            'start_time': work.start_time,
+                            'stop_time': work.stop_time,
+                            'short_description': work.short_description})
+        return initial
+
+    def work_report(request):
+        from koalixcrm.crm.reporting.work import Work
+        MonthlyReportFormset = forms.formset_factory(MonthlyReportView.MonthlyReportingForm, extra=5, max_num=60, can_delete=True)
         if request.POST.get('post'):
             formset = MonthlyReportFormset(request.POST)
             if 'cancel' in request.POST:
-                calling_admin.message_user(request, _("Canceled creation of monthly report creation"), level=messages.ERROR)
-                return
+                HttpResponseRedirect('/admin/')
             elif 'register' in request.POST:
                 if formset.is_valid():
                     for form in formset:
@@ -48,17 +60,11 @@ class MonthlyReportView:
                                                               form.cleaned_data['stop_time'])
                         new_work.short_description = form.cleaned_data['short_description']
                         new_work.save()
-                    calling_admin.message_user(request, _("Successfully registered Work"))
-                else:
-                    calling_admin.message_user(request, _("Not Successfully registered Work"))
-            return HttpResponseRedirect(request.get_full_path())
+            return HttpResponseRedirect('/admin/')
         else:
-            formset = forms.formset_factory(MonthlyReportView.MonthlyReportingForm, extra=1, max_num=60)
-            c = {'action_checkbox_name': helpers.ACTION_CHECKBOX_NAME, 'queryset': queryset, 'formset': formset}
+            formset = MonthlyReportFormset(initial=MonthlyReportView.generate_initial_data(datetime.datetime.today()-datetime.timedelta(days=30),
+                                                                                   datetime.datetime.today()))
+            c = {'action_checkbox_name': helpers.ACTION_CHECKBOX_NAME, 'formset': formset}
             c.update(csrf(request))
             return render(request, 'crm/admin/time_reporting.html', c)
-
-    work_report.short_description = _("Create Timesheet")
-
-
 

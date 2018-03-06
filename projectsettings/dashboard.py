@@ -68,6 +68,14 @@ class CustomIndexDashboard(Dashboard):
                     css_classes=('collapse closed',),
                     models=('koalixcrm.crm.reporting.*',),
                 ),
+                modules.LinkList(
+                    _('Report Personaly work'),
+                    column=1,
+                    children=[{'title': _('Monthly Report'),
+                               'url': '/koalixcrm/crm/reporting/monthlyreport/',
+                               'external': False,},]
+                )
+
             ]
         ))
 

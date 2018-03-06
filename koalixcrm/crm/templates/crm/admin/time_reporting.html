@@ -83,17 +83,11 @@ Reporting
         {% for field in form %}
         <th>{{ field.label }}</th>
         {% endfor %}
-        <th>Delete</th>
     </tr>
     {% endif %}<tr id='oneform' name="form-0">
-            {% for field in form %}
-            <td>{{ field }}</td>
-            {% endfor %}
-        {% if formset.can_delete %}
-            <td>{{ form.DELETE }}</td>
-        {% else %}
-            <td></td>
-        {% endif %}</tr>
+        {% for field in form %}
+        <td>{{ field }}</td>
+        {% endfor %}</tr>
     {% endfor %}
     </table>
 </div>{% for obj in queryset %}

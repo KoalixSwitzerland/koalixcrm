@@ -35,9 +35,10 @@ admin.autodiscover()
 urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^grappelli/', include('grappelli.urls')), # grappelli URLS
+    url(r'^koalixcrm/crm/reporting/', include('koalixcrm.crm.reporting.urls')), # koalixcrm crm reporting URLS
     url(r'^admin/filebrowser/', customsite.urls),
     url(r'^admin/', admin.site.urls),
-    url(r'^api-auth/', include('rest_framework.urls'))
+    url(r'^api-auth/', include('rest_framework.urls')),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

@@ -73,16 +73,6 @@ class OptionWork(admin.ModelAdmin):
     )
     save_as = True
 
-    def work_report(self, request, queryset):
-        from koalixcrm.crm.views.monthlyreport import MonthlyReportView
-        report_view = MonthlyReportView()
-        response = report_view.work_report(self, request, queryset)
-        return response
-
-    work_report.short_description = _("Work Report")
-
-    actions = ["work_report"]
-
 
 class InlineWork(admin.TabularInline):
     model = Work
