@@ -17,7 +17,7 @@
                       }
                   }
               });
-              $("select#id_projects").change(function () {
+              $('body').on( 'change', '[id*=projects]', function() {
                   alert("test");
                   $.getJSON("/tasks/project/", {id: $(this).val(), view: 'json'}, function (j) {
                       var options = '<option value="">--------&nbsp;</option>';
@@ -60,7 +60,7 @@
               });
               total++;
               $('#id_' + type + '-TOTAL_FORMS').val(total);
-              $(selector).after(newElement);
+              $(selector+"[name=form-"+(total-2)+"]").after(newElement);
               grappelli.initDateAndTimePicker();
           }
       })(grp.jQuery);
@@ -82,9 +82,9 @@ Reporting
                 <th>{{ field.label }}</th>
                 {% endfor %}
             </tr>
-            {% endif %}<tr id='oneform' name="form-0">
+            {% endif %}<tr id='oneform' name="form-{{ forloop.counter0 }}">
             {% for field in form %}
-            <td>{{ field }}</td>
+            <td>{{ field }}<br/>{{ field.errors.as_ul }}</td>
             {% endfor %}</tr>
         {% endfor %}
         </table>
@@ -95,7 +95,7 @@ Reporting
     <input type="hidden" name="action" value="work_report" />
     <input type="hidden" name="post" value="yes" />
     <input type="submit" name="cancel" value="cancel" />
-    <input type="submit" name="register" value="register" />
+    <input type="submit" name="save" value="save" />
 </form>
 {% endblock %}
 

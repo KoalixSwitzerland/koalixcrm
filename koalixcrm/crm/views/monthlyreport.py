@@ -16,11 +16,11 @@ class MonthlyReportView:
         from koalixcrm.crm.reporting.task import Task
         from koalixcrm.crm.documents.contract import Contract
         task_list = Task.objects.all()
-        task = forms.ModelChoiceField(task_list)
         project_list = []
         for task_element in task_list:
             project_list.append(task_element.project)
         projects = forms.ModelChoiceField(Contract.objects.all())
+        task = forms.ModelChoiceField(task_list)
         date = forms.DateField(widget=AdminDateWidget)
         start_time = forms.TimeField(widget=AdminTimeWidget)
         stop_time = forms.TimeField(widget=AdminTimeWidget)
@@ -50,25 +50,31 @@ class MonthlyReportView:
             formset = monthly_report_formset(request.POST)
             if 'cancel' in request.POST:
                 HttpResponseRedirect('/admin/')
-            elif 'register' in request.POST:
+            elif 'save' in request.POST:
                 if formset.is_valid():
                     for form in formset:
-                        if form.cleaned_data['work_id']:
-                            work = Work.objects.get(id=form.cleaned_data['work_id'])
-                        else:
-                            work = Work()
-                        work.task = form.cleaned_data['task']
-                        work.employee = UserExtension.get_user(request.user)
-                        work.date = form.cleaned_data['date']
-                        work.start_time = datetime.datetime.combine(form.cleaned_data['date'],
-                                                           form.cleaned_data['start_time'])
-                        work.stop_time = datetime.datetime.combine(form.cleaned_data['date'],
-                                                          form.cleaned_data['stop_time'])
-                        work.short_description = form.cleaned_data['short_description']
-                        work.save()
+                        if form.has_changed():
+                            if form.cleaned_data['work_id']:
+                                work = Work.objects.get(id=form.cleaned_data['work_id'])
+                            else:
+                                work = Work()
+                            if form.cleaned_data['DELETE']:
+                                work.delete()
+                            else:
+                                work.task = form.cleaned_data['task']
+                                work.employee = UserExtension.get_user(request.user)
+                                work.date = form.cleaned_data['date']
+                                work.start_time = datetime.datetime.combine(form.cleaned_data['date'],
+                                                                   form.cleaned_data['start_time'])
+                                work.stop_time = datetime.datetime.combine(form.cleaned_data['date'],
+                                                                  form.cleaned_data['stop_time'])
+                                work.short_description = form.cleaned_data['short_description']
+                                work.save()
                 else:
-                    raise InvaldidForm;
-            return HttpResponseRedirect('/admin/')
+                    c = {'action_checkbox_name': helpers.ACTION_CHECKBOX_NAME, 'formset': formset}
+                    c.update(csrf(request))
+                    return render(request, 'crm/admin/time_reporting.html', c)
+            return HttpResponseRedirect('/koalixcrm/crm/reporting/monthlyreport/')
         else:
             date_now = datetime.datetime.today()
             date_30days_ago = date_now-datetime.timedelta(days=30)
