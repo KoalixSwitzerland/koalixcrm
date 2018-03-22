@@ -18,7 +18,7 @@
                   }
               });
               $('body').on( 'change', '[id*=projects]', function() {
-                  alert("test");
+                  alert($(this).attr('name'));
                   $.getJSON("/tasks/project/", {id: $(this).val(), view: 'json'}, function (j) {
                       var options = '<option value="">--------&nbsp;</option>';
                       for (var i = 0; i < j.length; i++) {
@@ -72,10 +72,14 @@ Reporting
 
 {% block content %}
 <form action="" method="post">{% csrf_token %}
-    {{ formset.management_form }}
+    {{ formset.management_form }}<br/>
+    {{ range_selection_form}}<br/><br/>
+    {{ formset.errors }}
+    {{ range_selection_form.errors.as_data }}
     <div>
         <table>
         {% for form in formset %}
+            {{ form.errors.as_data }}
             {% if forloop.first %}
             <tr>
                 {% for field in form %}

@@ -7,6 +7,7 @@ from koalixcrm.crm.reporting.employeeassignmenttotask import EmployeeAssignmentT
 from koalixcrm.crm.reporting.generictasklink import InlineGenericTaskLink
 from koalixcrm.crm.reporting.work import InlineWork
 from datetime import *
+from rest_framework import serializers
 import koalixcrm
 
 
@@ -71,7 +72,8 @@ class OptionTask(admin.ModelAdmin):
 
     fieldsets = (
         (_('Work'), {
-            'fields': ('short_description',
+            'fields': ('id',
+                       'short_description',
                        'planned_end_date',
                        'planned_start_date',
                        'project',
@@ -91,3 +93,15 @@ class OptionTask(admin.ModelAdmin):
     def response_change(self, request, new_object):
         new_object.last_status_change = date.today().__str__()
         return super(OptionTask, self).response_change(request, new_object)
+
+
+class TaskJSONSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Task
+        fields = ('id',
+                  'short_description',
+                  'planned_end_date',
+                  'planned_start_date',
+                  'project',
+                  'description',
+                  'status')

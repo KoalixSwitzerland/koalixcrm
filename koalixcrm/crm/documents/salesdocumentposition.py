@@ -4,7 +4,6 @@ from django.db import models
 from django.contrib import admin
 from django.core.validators import MinValueValidator
 from django.utils.translation import ugettext as _
-from rest_framework import serializers
 
 
 class Position(models.Model):
@@ -81,8 +80,3 @@ class SalesDocumentInlinePosition(admin.TabularInline):
     )
     allow_add = True
 
-
-class SalesContractPositionJSONSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = SalesDocumentPosition
-        fields = ('position_number', 'quantity')
