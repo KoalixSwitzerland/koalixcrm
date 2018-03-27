@@ -74,12 +74,9 @@ Reporting
 <form action="" method="post">{% csrf_token %}
     {{ formset.management_form }}<br/>
     {{ range_selection_form}}<br/><br/>
-    {{ formset.errors }}
-    {{ range_selection_form.errors.as_data }}
     <div>
         <table>
         {% for form in formset %}
-            {{ form.errors.as_data }}
             {% if forloop.first %}
             <tr>
                 {% for field in form %}
@@ -88,7 +85,7 @@ Reporting
             </tr>
             {% endif %}<tr id='oneform' name="form-{{ forloop.counter0 }}">
             {% for field in form %}
-            <td>{{ field }}<br/>{{ field.errors.as_ul }}</td>
+            <td>{{ field }}<br/>{{ field.errors }}</td>
             {% endfor %}</tr>
         {% endfor %}
         </table>
@@ -96,7 +93,6 @@ Reporting
     <br/>
     <br/>
     <input type="button" value="Add More" id="add_more">
-    <input type="hidden" name="action" value="work_report" />
     <input type="hidden" name="post" value="yes" />
     <input type="submit" name="cancel" value="cancel" />
     <input type="submit" name="save" value="save" />

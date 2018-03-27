@@ -14,13 +14,14 @@ class MonthlyReportView:
     class RangeSelectionForm(forms.Form):
         from_date = forms.DateField(widget=AdminDateWidget)
         to_date = forms.DateField(widget=AdminDateWidget)
+        original_from_date = forms.DateField(widget=forms.HiddenInput(), required=False)
+        original_to_date = forms.DateField(widget=forms.HiddenInput(), required=False)
 
     class BaseWorkEntryFormset(forms.models.BaseFormSet):
         def __init__(self,*args, **kwargs):
             super(MonthlyReportView.BaseWorkEntryFormset, self).__init__(*args, **kwargs)
 
     class WorkEntry(forms.Form):
-
         from koalixcrm.crm.reporting.task import Task
         from koalixcrm.crm.documents.contract import Contract
         task_list = Task.objects.all()
@@ -38,20 +39,22 @@ class MonthlyReportView:
         def __init__(self, *args, **kwargs ):
             self.from_date = kwargs.pop('from_date')
             self.to_date = kwargs.pop('to_date')
+            self.original_from_date = self.from_date
+            self.original_to_date = self.to_date
             super(MonthlyReportView.WorkEntry, self).__init__(*args, **kwargs)
 
-        def cleanby(self):
-            cleaned_data = super(MonthlyReportView.WorkEntry, self).clean()
-            if (cleaned_data['date'] < self.from_date):
-                raise forms.ValidationError('You have selected a date which is not within the define limits')
-            elif (self.to_date < cleaned_data['date']):
-                raise forms.ValidationError('You have selected a date which is not within the define limits')
-            return cleaned_data
+        def clean_date(self):
+            date = self.cleaned_data['date']
+            if (date < self.from_date):
+                raise forms.ValidationError('date is not within the selected range', code='invalid')
+            elif (self.to_date < date):
+                raise forms.ValidationError('date is not within the selected range', code='invalid')
+            return date
 
     @staticmethod
-    def generate_initial_data(start_date, stop_date):
+    def generate_initial_data(start_date, stop_date, employee):
         from koalixcrm.crm.reporting.work import Work
-        list_of_work = Work.objects.filter(date__lte=stop_date).filter(date__gte=start_date).order_by("date")
+        list_of_work = Work.objects.filter(employee=employee).filter(date__lte=stop_date).filter(date__gte=start_date).order_by("date")
         initial = []
         for work in list_of_work:
             initial.append({'work_id': work.id,
@@ -63,59 +66,134 @@ class MonthlyReportView:
                             'short_description': work.short_description})
         return initial
 
-    def work_report(request):
-        from koalixcrm.crm.reporting.work import Work
+    @staticmethod
+    def evaluate_pre_check_from_date(range_selection_form):
+        original_from_date = range_selection_form.cleaned_data['original_from_date']
+        new_from_date = range_selection_form.cleaned_data['from_date']
+        if original_from_date < new_from_date:
+            from_date = original_from_date
+        else:
+            from_date = new_from_date
+        return from_date
+
+    @staticmethod
+    def evaluate_pre_check_to_date(range_selection_form):
+        original_to_date = range_selection_form.cleaned_data['original_to_date']
+        new_to_date = range_selection_form.cleaned_data['to_date']
+
+        if original_to_date > new_to_date:
+            to_date = original_to_date
+        else:
+            to_date = new_to_date
+        return to_date
+
+    @staticmethod
+    def load_formset(range_selection_form, request):
         WorkEntryFormSet = forms.formset_factory(MonthlyReportView.WorkEntry,
                                                    extra=1,
                                                    max_num=60,
                                                    can_delete=True,
                                                    formset=MonthlyReportView.BaseWorkEntryFormset)
+        from_date = MonthlyReportView.evaluate_pre_check_from_date(range_selection_form)
+        to_date = MonthlyReportView.evaluate_pre_check_to_date(range_selection_form)
+        form_kwargs = MonthlyReportView.compose_form_kwargs(from_date, to_date)
+        pre_check_formset = WorkEntryFormSet(request.POST,
+                                             form_kwargs=form_kwargs)
+        return pre_check_formset
+
+    @staticmethod
+    def compose_form_kwargs(from_date, to_date):
+        form_kwargs = {'from_date': from_date, 'to_date': to_date}
+        return form_kwargs
+
+    @staticmethod
+    def create_updated_formset(range_selection_form, request):
+        WorkEntryFormSet = forms.formset_factory(MonthlyReportView.WorkEntry,
+                                                   extra=1,
+                                                   max_num=60,
+                                                   can_delete=True,
+                                                   formset=MonthlyReportView.BaseWorkEntryFormset)
+        employee = UserExtension.get_user(request.user)
+        from_date = range_selection_form.cleaned_data['from_date']
+        to_date = range_selection_form.cleaned_data['to_date']
+        initial_formset_data = MonthlyReportView.generate_initial_data(from_date,
+                                                                       to_date,
+                                                                       employee)
+        form_kwargs = MonthlyReportView.compose_form_kwargs(from_date, to_date)
+        formset = WorkEntryFormSet(initial=initial_formset_data,
+                                   form_kwargs=form_kwargs)
+        return formset
+
+    @staticmethod
+    def create_new_formset(from_date, to_date, request):
+        WorkEntryFormSet = forms.formset_factory(MonthlyReportView.WorkEntry,
+                                                   extra=1,
+                                                   max_num=60,
+                                                   can_delete=True,
+                                                   formset=MonthlyReportView.BaseWorkEntryFormset)
+        employee = UserExtension.get_user(request.user)
+        initial_formset_data = MonthlyReportView.generate_initial_data(from_date,
+                                                                       to_date,
+                                                                       employee)
+        form_kwargs = MonthlyReportView.compose_form_kwargs(from_date, to_date)
+        formset = WorkEntryFormSet(initial=initial_formset_data,
+                                   form_kwargs=form_kwargs)
+        return formset
+
+    @staticmethod
+    def update_work(form, request):
+        from koalixcrm.crm.reporting.work import Work
+        if form.has_changed():
+            if form.cleaned_data['work_id']:
+                work = Work.objects.get(id=form.cleaned_data['work_id'])
+            else:
+                work = Work()
+            if form.cleaned_data['DELETE']:
+                work.delete()
+            else:
+                work.task = form.cleaned_data['task']
+                work.employee = UserExtension.get_user(request.user)
+                work.date = form.cleaned_data['date']
+                work.start_time = datetime.datetime.combine(form.cleaned_data['date'],
+                                                            form.cleaned_data['start_time'])
+                work.stop_time = datetime.datetime.combine(form.cleaned_data['date'],
+                                                           form.cleaned_data['stop_time'])
+                work.short_description = form.cleaned_data['short_description']
+                work.save()
+
+    def work_report(request):
         if request.POST.get('post'):
-            formset = WorkEntryFormSet(request.POST,
-                                       form_kwargs={'from_date': datetime.date.today(),
-                                                    'to_date': datetime.date.today()})
-            range_selection_form = MonthlyReportView.RangeSelectionForm(request.POST)
             if 'cancel' in request.POST:
                 HttpResponseRedirect('/admin/')
             elif 'save' in request.POST:
+                range_selection_form = MonthlyReportView.RangeSelectionForm(request.POST)
                 if range_selection_form.is_valid():
-                    if formset.is_valid():
+                    formset = MonthlyReportView.load_formset(range_selection_form,
+                                                             request)
+                    if not formset.is_valid():
+                        c = {'range_selection_form': range_selection_form,
+                             'formset': formset}
+                        c.update(csrf(request))
+                        return render(request, 'crm/admin/time_reporting.html', c)
+                    else:
                         for form in formset:
-                            if form.has_changed():
-                                if form.cleaned_data['work_id']:
-                                    work = Work.objects.get(id=form.cleaned_data['work_id'])
-                                else:
-                                    work = Work()
-                                if form.cleaned_data['DELETE']:
-                                    work.delete()
-                                else:
-                                    work.task = form.cleaned_data['task']
-                                    work.employee = UserExtension.get_user(request.user)
-                                    work.date = form.cleaned_data['date']
-                                    work.start_time = datetime.datetime.combine(form.cleaned_data['date'],
-                                                                       form.cleaned_data['start_time'])
-                                    work.stop_time = datetime.datetime.combine(form.cleaned_data['date'],
-                                                                      form.cleaned_data['stop_time'])
-                                    work.short_description = form.cleaned_data['short_description']
-                                    work.save()
-                else:
-                    c = {'action_checkbox_name': helpers.ACTION_CHECKBOX_NAME,
-                         'range_selection_form': range_selection_form,
-                         'formset': formset}
-                    c.update(csrf(request))
-                    return render(request, 'crm/admin/time_reporting.html', c)
-            return HttpResponseRedirect('/koalixcrm/crm/reporting/monthlyreport/')
+                            MonthlyReportView.update_work(form,request)
+            formset = MonthlyReportView.create_updated_formset(range_selection_form, request)
+            c = {'range_selection_form': range_selection_form,
+                 'formset': formset}
+            c.update(csrf(request))
+            return render(request, 'crm/admin/time_reporting.html', c)
         else:
             date_now = datetime.datetime.today()
             date_30days_ago = date_now-datetime.timedelta(days=30)
-            initial_formset_data = MonthlyReportView.generate_initial_data(date_30days_ago, date_now)
-            formset = WorkEntryFormSet(initial=initial_formset_data,
-                                       form_kwargs={'from_date': datetime.date.today(),
-                                                    'to_date': datetime.date.today()})
-            initial_form_data = {'from_date': date_30days_ago, 'to_date': date_now}
+            initial_form_data = {'from_date': date_30days_ago,
+                                 'to_date': date_now,
+                                 'original_from_date': date_30days_ago,
+                                 'original_to_date': date_now}
             range_selection_form = MonthlyReportView.RangeSelectionForm(initial=initial_form_data)
-            c = {'action_checkbox_name': helpers.ACTION_CHECKBOX_NAME,
-                 'formset': formset,
+            formset = MonthlyReportView.create_new_formset(date_30days_ago, date_now, request)
+
+            c = {'formset': formset,
                  'range_selection_form': range_selection_form}
             c.update(csrf(request))
             return render(request, 'crm/admin/time_reporting.html', c)
