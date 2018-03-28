@@ -95,7 +95,7 @@ class OptionTask(admin.ModelAdmin):
         return super(OptionTask, self).response_change(request, new_object)
 
 
-class TaskJSONSerializer(serializers.ModelSerializer):
+class TaskJSONSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Task
         fields = ('id',

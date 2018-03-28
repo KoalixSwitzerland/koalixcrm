@@ -18,6 +18,7 @@ from koalixcrm.crm.documents.quote import InlineQuote
 from koalixcrm.crm.exceptions import *
 import koalixcrm.crm.documents.calculations
 import koalixcrm.crm.documents.pdfexport
+from rest_framework import serializers
 
 
 class PostalAddressForContract(PostalAddress):
@@ -228,3 +229,9 @@ class OptionContract(admin.ModelAdmin):
     pluginProcessor = PluginProcessor()
     actions.extend(pluginProcessor.getPluginAdditions("contractActions"))
 
+
+class ContractJSONSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Contract
+        fields = ('id',
+                  'description',)

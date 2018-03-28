@@ -2,7 +2,8 @@
 
 from django.db import models
 from django.utils.translation import ugettext as _
-from django.contrib import admin, messages
+from django.contrib import admin
+from rest_framework import serializers
 
 
 class TaskStatus(models.Model):
@@ -33,3 +34,11 @@ class OptionTaskStatus(admin.ModelAdmin):
         }),
     )
     save_as = True
+
+
+class TaskStatusJSONSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = TaskStatus
+        fields = ('id',
+                  'title',
+                  'description',)

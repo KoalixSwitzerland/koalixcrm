@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-from django import forms
 from django.http import HttpResponseRedirect
-from django.contrib.admin import helpers
 from django.shortcuts import render
 from django.template.context_processors import csrf
 from django.contrib.admin.widgets import *
@@ -161,6 +159,26 @@ class MonthlyReportView:
                 work.short_description = form.cleaned_data['short_description']
                 work.save()
 
+    @staticmethod
+    def create_range_selection_form(from_date, to_date):
+        initial_form_data = {'from_date': from_date,
+                             'to_date': to_date,
+                             'original_from_date': from_date,
+                             'original_to_date': to_date}
+        range_selection_form = MonthlyReportView.RangeSelectionForm(initial=initial_form_data)
+        return range_selection_form
+
+    @staticmethod
+    def update_range_selection_form(old_range_selection_form):
+        from_date = old_range_selection_form.cleaned_data['from_date']
+        to_date = old_range_selection_form.cleaned_data['to_date']
+        initial_form_data = {'from_date': from_date,
+                             'to_date': to_date,
+                             'original_from_date': from_date,
+                             'original_to_date': to_date}
+        range_selection_form = MonthlyReportView.RangeSelectionForm(initial=initial_form_data)
+        return range_selection_form
+
     def work_report(request):
         if request.POST.get('post'):
             if 'cancel' in request.POST:
@@ -178,21 +196,19 @@ class MonthlyReportView:
                     else:
                         for form in formset:
                             MonthlyReportView.update_work(form,request)
-            formset = MonthlyReportView.create_updated_formset(range_selection_form, request)
-            c = {'range_selection_form': range_selection_form,
-                 'formset': formset}
-            c.update(csrf(request))
-            return render(request, 'crm/admin/time_reporting.html', c)
+                formset = MonthlyReportView.create_updated_formset(range_selection_form, request)
+                range_selection_form = MonthlyReportView.update_range_selection_form(range_selection_form)
+                c = {'range_selection_form': range_selection_form,
+                     'formset': formset}
+                c.update(csrf(request))
+                return render(request, 'crm/admin/time_reporting.html', c)
+            HttpResponseRedirect('/admin/')
         else:
-            date_now = datetime.datetime.today()
-            date_30days_ago = date_now-datetime.timedelta(days=30)
-            initial_form_data = {'from_date': date_30days_ago,
-                                 'to_date': date_now,
-                                 'original_from_date': date_30days_ago,
-                                 'original_to_date': date_now}
-            range_selection_form = MonthlyReportView.RangeSelectionForm(initial=initial_form_data)
-            formset = MonthlyReportView.create_new_formset(date_30days_ago, date_now, request)
-
+            datetime_now = datetime.datetime.today()
+            from_date = (datetime_now - datetime.timedelta(days=30)).date()
+            to_date = datetime_now.date()
+            range_selection_form = MonthlyReportView.create_range_selection_form(from_date, to_date)
+            formset = MonthlyReportView.create_new_formset(from_date, to_date, request)
             c = {'formset': formset,
                  'range_selection_form': range_selection_form}
             c.update(csrf(request))
