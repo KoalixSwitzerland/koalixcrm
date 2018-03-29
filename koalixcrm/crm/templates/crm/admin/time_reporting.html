@@ -19,13 +19,13 @@
               });
               $('body').on( 'change', '[id*=projects]', function() {
                   alert($(this).attr('name'));
-                  $.getJSON("/tasks/project/", {id: $(this).val(), view: 'json'}, function (j) {
+                  $.getJSON("/tasks/?format=json", {project: $(this).val()}, function (j) {
                       var options = '<option value="">--------&nbsp;</option>';
                       for (var i = 0; i < j.length; i++) {
                           options += '<option value="' + j[i].id + '">' + j[i].short_description + '</option>';
                       }
-                      $("#id_tasks").html(options);
-                      $("#id_tasks option:first").attr('selected', 'selected');
+                      $("#id_form-0-task").html(options);
+                      $("#id_form-0-task option:first").attr('selected', 'selected');
                   })
                   $("#id_project").attr('selected', 'selected');
               });

@@ -34,6 +34,7 @@ PREREQUISITE_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'django_filters',
     'filebrowser'
 ]
 
@@ -138,4 +139,8 @@ FILEBROWSER_EXTENSIONS = {
     'PNG': ['.png'],
     'GIF': ['.gif'],
     'TTF': ['.ttf'],
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',)
 }
