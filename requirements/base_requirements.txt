@@ -6,3 +6,6 @@ Pillow==4.2.1
 psycopg2==2.7.3
 pytz==2017.2
 django-grappelli==2.10.1
+djangorestframework==3.7.7
+markdown==2.6.11
+django-filter==1.1.0
