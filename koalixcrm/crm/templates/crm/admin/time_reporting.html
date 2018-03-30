@@ -18,19 +18,20 @@
                   }
               });
               $('body').on( 'change', '[id*=projects]', function() {
-                  alert($(this).attr('name'));
+                  var project_id = $(this).attr('name')
+                  var form_number = project_id.slice(5,-9)
                   $.getJSON("/tasks/?format=json", {project: $(this).val()}, function (j) {
                       var options = '<option value="">--------&nbsp;</option>';
                       for (var i = 0; i < j.length; i++) {
                           options += '<option value="' + j[i].id + '">' + j[i].short_description + '</option>';
                       }
-                      $("#id_form-0-task").html(options);
-                      $("#id_form-0-task option:first").attr('selected', 'selected');
+                      $("#id_form-"+form_number+"-task").html(options);
+                      $("#id_form-"+form_number+"-task option:first").attr('selected', 'selected');
                   })
                   $("#id_project").attr('selected', 'selected');
               });
               $('#add_more').click(function() {
-                  cloneMore('#oneform', 'form');
+                  cloneMore('#single_form', 'form');
               });
           });
           function cloneMore(selector, type) {
@@ -79,13 +80,15 @@ Reporting
         {% for form in formset %}
             {% if forloop.first %}
             <tr>
-                {% for field in form %}
-                <th>{{ field.label }}</th>
+                {% for field in form.visible_fields %}
+                    <th>{{ field.label }}</th>
                 {% endfor %}
             </tr>
-            {% endif %}<tr id='oneform' name="form-{{ forloop.counter0 }}">
-            {% for field in form %}
+            {% endif %}<tr id='single_form' name="form-{{ forloop.counter0 }}">
+            {% for field in form.visible_fields %}
             <td>{{ field }}<br/>{{ field.errors }}</td>
+            {% endfor %}
+            {% for field in form.hidden_fields %}{{ field }}
             {% endfor %}</tr>
         {% endfor %}
         </table>
