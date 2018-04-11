@@ -1,14 +1,54 @@
-from unittest import TestCase
-
+from django.test import TestCase
 from koalixcrm.accounting.models import Account
+from koalixcrm.accounting.models import AccountingPeriod
+from koalixcrm.accounting.models import Booking
+from django.contrib.auth.models import User
+import datetime
 
 
 class AccountingModelTest(TestCase):
+    def setUp(self):
+        user = User.objects.create(username='Username',
+                                   password="Userone")
+        cash = Account.objects.create(accountNumber="1000",
+                                      title="Cash",
+                                      accountType="A",
+                                      description="Highest liquid asset",
+                                      isopeninterestaccount=False,
+                                      isopenreliabilitiesaccount=False,
+                                      isProductInventoryActiva=False,
+                                      isACustomerPaymentAccount=True)
+        spendings = Account.objects.create(accountNumber="3000",
+                                           title="Spendings",
+                                           accountType="S",
+                                           description="Purchase spendings",
+                                           isopeninterestaccount=False,
+                                           isopenreliabilitiesaccount=False,
+                                           isProductInventoryActiva=False,
+                                           isACustomerPaymentAccount=False)
+        earnings = Account.objects.create(accountNumber="4000",
+                                          title="Earnings",
+                                          accountType="E",
+                                          description="Sales account",
+                                          isopeninterestaccount=False,
+                                          isopenreliabilitiesaccount=False,
+                                          isProductInventoryActiva=False,
+                                          isACustomerPaymentAccount=False)
+        datetime_now = datetime.datetime.today()
+        from_date = (datetime_now - datetime.timedelta(days=30)).date()
+        to_date = datetime_now.date()
+        accounting_period = AccountingPeriod.objects.create(title="Fiscal year 2025",
+                                                            begin=from_date,
+                                                            end=to_date)
+        Booking.objects.create(fromAccount=cash,
+                               toAccount=spendings,
+                               amount="1000",
+                               description="This is the first booking",
+                               bookingDate=datetime.date.today(),
+                               accountingPeriod=accounting_period,
+                               staff=user,
+                               lastmodifiedby=user)
 
     def test_sumOfAllBookings(self):
-        account = Account(
-            accountNumber=1234,
-            title="Account1234")
-
-        assert account.accountNumber == 1234
-        assert account.title == "Account1234"
+        test_account = Account.objects.get(title="Cash")
+        self.assertEqual(test_account.description, "Highest liquid asset")
