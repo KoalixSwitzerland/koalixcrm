@@ -34,18 +34,28 @@ class AccountingModelTest(TestCase):
                                           isopenreliabilitiesaccount=False,
                                           isProductInventoryActiva=False,
                                           isACustomerPaymentAccount=False)
-        datetime_now = datetime.datetime.today()
-        from_date = (datetime_now - datetime.timedelta(days=30)).date()
-        to_date = datetime_now.date()
-        accounting_period = AccountingPeriod.objects.create(title="Fiscal year 2025",
-                                                            begin=from_date,
-                                                            end=to_date)
+        datetime_now = datetime.datetime(2024, 1, 1, 0, 00)
+        from_date = datetime_now.date()
+        to_date = (datetime_now + datetime.timedelta(days=365)).date()
+        accounting_period_2024 = AccountingPeriod.objects.create(title="Fiscal year 2024",
+                                                                 begin=from_date,
+                                                                 end=to_date)
+        from_date = to_date
+        to_date = (datetime_now + datetime.timedelta(days=(365*2))).date()
+        accounting_period_2025 = AccountingPeriod.objects.create(title="Fiscal year 2025",
+                                                                 begin=from_date,
+                                                                 end=to_date)
+        from_date = to_date
+        to_date = (datetime_now + datetime.timedelta(days=(365*3))).date()
+        accounting_period_2026 = AccountingPeriod.objects.create(title="Fiscal year 2026",
+                                                                 begin=from_date,
+                                                                 end=to_date)
         Booking.objects.create(fromAccount=cash,
                                toAccount=spendings,
                                amount="1000",
                                description="This is the first booking",
                                bookingDate=datetime.date.today(),
-                               accountingPeriod=accounting_period,
+                               accountingPeriod=accounting_period_2024,
                                staff=user,
                                lastmodifiedby=user)
 
@@ -54,7 +64,7 @@ class AccountingModelTest(TestCase):
                                amount="500",
                                description="This is the first booking",
                                bookingDate=datetime.date.today(),
-                               accountingPeriod=accounting_period,
+                               accountingPeriod=accounting_period_2024,
                                staff=user,
                                lastmodifiedby=user)
 
@@ -65,3 +75,21 @@ class AccountingModelTest(TestCase):
         self.assertEqual((cash_account.sumOfAllBookings()).__str__(), "-500.00")
         self.assertEqual((spendings_account.sumOfAllBookings()).__str__(), "1000.00")
         self.assertEqual((earnings_account.sumOfAllBookings()).__str__(), "500.00")
+
+    def test_sumOfAllBookingsBeforeAccountPeriod(self):
+        cash_account = Account.objects.get(title="Cash")
+        spendings_account = Account.objects.get(title="Spendings")
+        earnings_account = Account.objects.get(title="Earnings")
+        accounting_period_2026 = AccountingPeriod.objects.get(title="Fiscal year 2026")
+        self.assertEqual((cash_account.sumOfAllBookingsBeforeAccountingPeriod(accounting_period_2026)).__str__(), "-500.00")
+        self.assertEqual((spendings_account.sumOfAllBookingsBeforeAccountingPeriod(accounting_period_2026)).__str__(), "1000.00")
+        self.assertEqual((earnings_account.sumOfAllBookingsBeforeAccountingPeriod(accounting_period_2026)).__str__(), "500.00")
+
+    def test_sumOfAllBookingsWithinAccountgPeriod(self):
+        cash_account = Account.objects.get(title="Cash")
+        spendings_account = Account.objects.get(title="Spendings")
+        earnings_account = Account.objects.get(title="Earnings")
+        accounting_period_2025 = AccountingPeriod.objects.get(title="Fiscal year 2025")
+        self.assertEqual((cash_account.sumOfAllBookingsWithinAccountingPeriod(accounting_period_2025)).__str__(), "0")
+        self.assertEqual((spendings_account.sumOfAllBookingsWithinAccountingPeriod(accounting_period_2025)).__str__(), "0")
+        self.assertEqual((earnings_account.sumOfAllBookingsWithinAccountingPeriod(accounting_period_2025)).__str__(), "0")
