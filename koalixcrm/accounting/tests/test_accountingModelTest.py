@@ -49,6 +49,19 @@ class AccountingModelTest(TestCase):
                                staff=user,
                                lastmodifiedby=user)
 
+        Booking.objects.create(fromAccount=earnings,
+                               toAccount=cash,
+                               amount="500",
+                               description="This is the first booking",
+                               bookingDate=datetime.date.today(),
+                               accountingPeriod=accounting_period,
+                               staff=user,
+                               lastmodifiedby=user)
+
     def test_sumOfAllBookings(self):
-        test_account = Account.objects.get(title="Cash")
-        self.assertEqual(test_account.description, "Highest liquid asset")
+        cash_account = Account.objects.get(title="Cash")
+        spendings_account = Account.objects.get(title="Spendings")
+        earnings_account = Account.objects.get(title="Earnings")
+        self.assertEqual((cash_account.sumOfAllBookings()).__str__(), "-500.00")
+        self.assertEqual((spendings_account.sumOfAllBookings()).__str__(), "1000.00")
+        self.assertEqual((earnings_account.sumOfAllBookings()).__str__(), "500.00")
