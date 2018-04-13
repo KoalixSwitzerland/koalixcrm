@@ -203,7 +203,7 @@ class Account(models.Model):
 
     def sumOfAllBookings(self):
         calculated_sum = self.allBookings(fromAccount=False) - self.allBookings(fromAccount=True)
-        if self.accountType == 'S' or self.accountType == 'L':
+        if self.accountType == 'E' or self.accountType == 'L':
             calculated_sum = 0 - calculated_sum
         return calculated_sum
 
@@ -213,7 +213,7 @@ class Account(models.Model):
         calculated_sum = self.allBookingsInAccountingPeriod(fromAccount=False,
                                                  accountingPeriod=accountingPeriod) - self.allBookingsInAccountingPeriod(
             fromAccount=True, accountingPeriod=accountingPeriod)
-        if self.accountType == 'S' or self.accountType == 'L':
+        if self.accountType == 'E' or self.accountType == 'L':
             calculated_sum = 0 - calculated_sum
         return calculated_sum
 
@@ -224,7 +224,7 @@ class Account(models.Model):
             sum = sum + self.allBookingsInAccountingPeriod(fromAccount=False,
                                                            accountingPeriod=accountingPeriod) - self.allBookingsInAccountingPeriod(
                 fromAccount=True, accountingPeriod=accountingPeriod)
-        if self.accountType == 'S' or self.accountType == 'L':
+        if self.accountType == 'E' or self.accountType == 'L':
             sum = 0 - sum
         return sum
 
