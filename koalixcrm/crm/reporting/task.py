@@ -72,8 +72,7 @@ class OptionTask(admin.ModelAdmin):
 
     fieldsets = (
         (_('Work'), {
-            'fields': ('id',
-                       'short_description',
+            'fields': ('short_description',
                        'planned_end_date',
                        'planned_start_date',
                        'project',
