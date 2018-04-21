@@ -85,13 +85,9 @@ class OptionTask(admin.ModelAdmin):
                InlineGenericTaskLink,
                InlineWork]
 
-    def response_add(self, request, new_object):
-        new_object.last_status_change = date.today().__str__()
-        return super(OptionTask, self).response_add(request, new_object)
-
-    def response_change(self, request, new_object):
-        new_object.last_status_change = date.today().__str__()
-        return super(OptionTask, self).response_change(request, new_object)
+    def save_model(self, request, obj, form, change):
+        obj.last_status_change = date.today().__str__()
+        obj.save()
 
 
 class TaskJSONSerializer(serializers.HyperlinkedModelSerializer):
