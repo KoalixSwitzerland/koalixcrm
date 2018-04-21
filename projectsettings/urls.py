@@ -29,7 +29,7 @@ customsite.directory = "media/uploads/"
 
 router = routers.DefaultRouter()
 router.register(r'tasks', TaskAsJSON)
-router.register(r'contract', ContractAsJSON)
+router.register(r'contracts', ContractAsJSON)
 router.register(r'taskstatus', TaskStatusAsJSON)
 
 admin.autodiscover()
