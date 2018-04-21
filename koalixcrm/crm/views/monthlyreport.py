@@ -4,8 +4,6 @@ from django.shortcuts import render
 from django.template.context_processors import csrf
 from django.contrib.admin.widgets import *
 from koalixcrm.djangoUserExtension.models import UserExtension
-from koalixcrm.crm.reporting.task import Task
-from koalixcrm.crm.documents.contract import Contract
 import datetime
 
 
@@ -22,6 +20,8 @@ class MonthlyReportView:
             super(MonthlyReportView.BaseWorkEntryFormset, self).__init__(*args, **kwargs)
 
     class WorkEntry(forms.Form):
+        from koalixcrm.crm.reporting.task import Task
+        from koalixcrm.crm.documents.contract import Contract
         task_list = Task.objects.all()
         project_list = []
         for task_element in task_list:
