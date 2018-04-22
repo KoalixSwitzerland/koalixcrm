@@ -15,18 +15,41 @@ from koalixcrm.crm.exceptions import UserExtensionMissing
 from koalixcrm.accounting.const.accountTypeChoices import *
 from koalixcrm.accounting.exceptions import NoObjectsToBeSerialzed
 from koalixcrm.accounting.exceptions import ProgrammingError
+from koalixcrm.accounting.exceptions import AccountingPeriodNotFound
 
 
 class AccountingPeriod(models.Model):
-    """Accounting period repesents the equivalent of the business logic element of a fiscal year
-    the accounting period is refered in the booking and is used as a supporting object to generate
+    """Accounting period represents the equivalent of the business logic element of a fiscal year
+    the accounting period is referred in the booking and is used as a supporting object to generate
     balance sheets and profit/loss statements"""
     title = models.CharField(max_length=200, verbose_name=_("Title"))  # For example "Year 2009", "1st Quarter 2009"
     begin = models.DateField(verbose_name=_("Begin"))
     end = models.DateField(verbose_name=_("End"))
+    template_set = models.ForeignKey("djangoUserExtension.DocumentTemplate", verbose_name=_("Referred Template"), null=True,
+                                     blank=True)
 
     @staticmethod
-    def getCurrentValidAccountingPeriod():
+    def get_current_valid_accounting_period():
+        """Returns the accounting period that is currently valid. Valid is an accounting_period when the current date
+          lies between begin and end of the accounting_period
+
+        Args:
+          no arguments
+
+        Returns:
+          accounting_period (AccoutingPeriod)
+
+        Raises:
+          AccountingPeriodNotFound when there is no valid accounting Period"""
+        current_valid_accounting_period = None
+        for accounting_period in AccountingPeriod.objects.all():
+            if accounting_period.begin < date.today() and accounting_period.end > date.today():
+                return accounting_period
+        if not current_valid_accounting_period:
+            raise AccountingPeriodNotFound()
+
+    @staticmethod
+    def get_all_prior_accounting_periods(target_accounting_period):
         """Returns the accounting period that is currently valid. Valid is an accountingPeriod when the current date
           lies between begin and end of the accountingPeriod
 
@@ -34,38 +57,17 @@ class AccountingPeriod(models.Model):
           no arguments
 
         Returns:
-          accoutingPeriod (AccoutingPeriod)
+          accounting_period (List of AccoutingPeriod)
 
         Raises:
-          NoFeasableAccountingPeriodFound when there is no valid accounting Period"""
-        currentValidAccountingPeriod = None
-        for accountingPeriod in AccountingPeriod.objects.all():
-            if accountingPeriod.begin < date.today() and accountingPeriod.end > date.today():
-                return accountingPeriod
-        if currentValidAccountingPeriod == None:
-            raise NoFeasableAccountingPeriodFound()
-
-    @staticmethod
-    def getAllPriorAccountingPeriods(targetAccountingPeriod):
-        """Returns the accounting period that is currently valid. Valid is an accountingPeriod when the current date
-          lies between begin and end of the accountingPeriod
-
-        Args:
-          no arguments
-
-        Returns:
-          accoutingPeriods (List of AccoutingPeriod)
-
-        Raises:
-          NoPriorAccountingPeriodFound when there is no valid accounting Period"""
-        currentValidAccountingPeriod = None
-        accountingPeriods = []
-        for accountingPeriod in AccountingPeriod.objects.all():
-            if accountingPeriod.end < targetAccountingPeriod.begin:
-                accountingPeriods.append(accountingPeriod)
-        if accountingPeriods == []:
-            raise NoPriorAccountingPeriodFound()
-        return accountingPeriods
+          AccountingPeriodNotFound when there is no valid accounting Period"""
+        accounting_periods = []
+        for accounting_period in AccountingPeriod.objects.all():
+            if accounting_period.end < target_accounting_period.begin:
+                accounting_periods.append(accounting_period)
+        if accounting_periods == []:
+            raise AccountingPeriodNotFound()
+        return accounting_periods
 
     @staticmethod
     def createXML(whatToCreate):
@@ -129,8 +131,8 @@ class AccountingPeriod(models.Model):
         overallValueBalance = 0
         overallValueProfitLoss = 0
         for account in list(accounts):
-            withinAccountingPeriod = account.sumOfAllBookingsWithinAccountingPeriod(self)
-            beforeAccountingPeriod = account.sumOfAllBookingsBeforeAccountingPeriod(self)
+            withinAccountingPeriod = account.sum_of_all_bookings_within_accounting_period(self)
+            beforeAccountingPeriod = account.sum_of_all_bookings_before_accounting_period(self)
             currentValue = withinAccountingPeriod + beforeAccountingPeriod
             if (currentValue != 0):
                 currentAccountElement = doc.createElement("Account")
@@ -192,81 +194,82 @@ class AccountingPeriod(models.Model):
 
 
 class Account(models.Model):
-    accountNumber = models.IntegerField(verbose_name=_("Account Number"))
+    account_number = models.IntegerField(verbose_name=_("Account Number"))
     title = models.CharField(verbose_name=_("Account Title"), max_length=50)
-    accountType = models.CharField(verbose_name=_("Account Type"), max_length=1, choices=ACCOUNTTYPECHOICES)
+    account_type = models.CharField(verbose_name=_("Account Type"), max_length=1, choices=ACCOUNTTYPECHOICES)
     description = models.TextField(verbose_name=_("Description"), null=True, blank=True)
-    isopenreliabilitiesaccount = models.BooleanField(verbose_name=_("Is The Open Liabilities Account"))
-    isopeninterestaccount = models.BooleanField(verbose_name=_("Is The Open Interests Account"))
-    isProductInventoryActiva = models.BooleanField(verbose_name=_("Is a Product Inventory Account"))
-    isACustomerPaymentAccount = models.BooleanField(verbose_name=_("Is a Customer Payment Account"))
+    is_open_reliabilities_account = models.BooleanField(verbose_name=_("Is The Open Liabilities Account"))
+    is_open_interest_account = models.BooleanField(verbose_name=_("Is The Open Interests Account"))
+    is_product_inventory_activa = models.BooleanField(verbose_name=_("Is a Product Inventory Account"))
+    is_a_customer_payment_account = models.BooleanField(verbose_name=_("Is a Customer Payment Account"))
 
-    def sumOfAllBookings(self):
-        calculated_sum = self.allBookings(fromAccount=False) - self.allBookings(fromAccount=True)
-        if self.accountType == 'E' or self.accountType == 'L':
+    def sum_of_all_bookings(self):
+        calculated_sum = self.all_bookings(from_account=False) - self.all_bookings(from_account=True)
+        if self.account_type == 'E' or self.account_type == 'L':
             calculated_sum = 0 - calculated_sum
         return calculated_sum
 
-    sumOfAllBookings.short_description = _("Value");
+    sum_of_all_bookings.short_description = _("Value");
 
-    def sumOfAllBookingsWithinAccountingPeriod(self, accountingPeriod):
-        calculated_sum = self.allBookingsInAccountingPeriod(fromAccount=False,
-                                                 accountingPeriod=accountingPeriod) - self.allBookingsInAccountingPeriod(
-            fromAccount=True, accountingPeriod=accountingPeriod)
+    def sum_of_all_bookings_within_accounting_period(self, accounting_period):
+        calculated_sum = self.all_bookings_within_accounting_period(from_account=False,
+                                                                    accounting_period=accounting_period) - \
+                         self.all_bookings_within_accounting_period(from_account=True,
+                                                                    accounting_period=accounting_period)
         if self.accountType == 'E' or self.accountType == 'L':
-            calculated_sum = 0 - calculated_sum
+            calculated_sum = -calculated_sum
         return calculated_sum
 
-    def sumOfAllBookingsBeforeAccountingPeriod(self, currentAccountingPeriod):
-        accountingPeriods = AccountingPeriod.getAllPriorAccountingPeriods(currentAccountingPeriod)
+    def sum_of_all_bookings_before_accounting_period(self, current_accounting_period):
+        accounting_periods = AccountingPeriod.get_all_prior_accounting_periods(current_accounting_period)
         sum = 0
-        for accountingPeriod in accountingPeriods:
-            sum = sum + self.allBookingsInAccountingPeriod(fromAccount=False,
-                                                           accountingPeriod=accountingPeriod) - self.allBookingsInAccountingPeriod(
-                fromAccount=True, accountingPeriod=accountingPeriod)
-        if self.accountType == 'E' or self.accountType == 'L':
-            sum = 0 - sum
+        for accounting_period in accounting_periods:
+            sum += self.all_bookings_within_accounting_period(from_account=False,
+                                                              accounting_period=accounting_period) - self.all_bookings_within_accounting_period(
+                from_account=True, accounting_period=accounting_period)
+        if self.account_type == 'E' or self.account_type == 'L':
+            sum = -sum
         return sum
 
-    def allBookings(self, fromAccount):
+    def all_bookings(self, from_account):
         sum = 0
-        if fromAccount == True:
-            bookings = Booking.objects.filter(fromAccount=self.id)
+        if from_account:
+            bookings = Booking.objects.filter(from_account=self.id)
         else:
-            bookings = Booking.objects.filter(toAccount=self.id)
+            bookings = Booking.objects.filter(to_account=self.id)
 
         for booking in list(bookings):
-            sum = sum + booking.amount
+            sum += booking.amount
 
         return sum
 
-    def allBookingsInAccountingPeriod(self, fromAccount, accountingPeriod):
+    def all_bookings_within_accounting_period(self, from_account, accounting_period):
         sum = 0
-        if (fromAccount == True):
-            bookings = Booking.objects.filter(fromAccount=self.id, accountingPeriod=accountingPeriod.id)
+        if from_account:
+            bookings = Booking.objects.filter(from_account=self.id, accounting_period=accounting_period.id)
         else:
-            bookings = Booking.objects.filter(toAccount=self.id, accountingPeriod=accountingPeriod.id)
+            bookings = Booking.objects.filter(to_account=self.id, accounting_period=accounting_period.id)
 
         for booking in list(bookings):
-            sum = sum + booking.amount
+            sum += booking.amount
 
         return sum
 
     def __str__(self):
-        return self.accountNumber.__str__() + " " + self.title
+        return self.account_number.__str__() + " " + self.title
 
     class Meta:
         app_label = "accounting"
         verbose_name = _('Account')
         verbose_name_plural = _('Account')
-        ordering = ['accountNumber']
+        ordering = ['account_number']
 
 
 class ProductCategorie(models.Model):
     title = models.CharField(verbose_name=_("Product Categorie Title"), max_length=50)
-    profitAccount = models.ForeignKey(Account, verbose_name=_("Profit Account"), limit_choices_to={"accountType": "E"},
+    profit_account = models.ForeignKey(Account, verbose_name=_("Profit Account"), limit_choices_to={"accountType": "E"},
                                       related_name="db_profit_account")
-    lossAccount = models.ForeignKey(Account, verbose_name=_("Loss Account"), limit_choices_to={"accountType": "S"},
+    loss_account = models.ForeignKey(Account, verbose_name=_("Loss Account"), limit_choices_to={"accountType": "S"},
                                     related_name="db_loss_account")
 
     class Meta:
@@ -279,27 +282,27 @@ class ProductCategorie(models.Model):
 
 
 class Booking(models.Model):
-    fromAccount = models.ForeignKey(Account, verbose_name=_("From Account"), related_name="db_booking_fromaccount")
-    toAccount = models.ForeignKey(Account, verbose_name=_("To Account"), related_name="db_booking_toaccount")
+    from_account = models.ForeignKey(Account, verbose_name=_("From Account"), related_name="db_booking_fromaccount")
+    to_account = models.ForeignKey(Account, verbose_name=_("To Account"), related_name="db_booking_toaccount")
     amount = models.DecimalField(max_digits=20, decimal_places=2, verbose_name=_("Amount"))
     description = models.CharField(verbose_name=_("Description"), max_length=120, null=True, blank=True)
-    bookingReference = models.ForeignKey('crm.Invoice', verbose_name=_("Booking Reference"), null=True, blank=True)
-    bookingDate = models.DateTimeField(verbose_name=_("Booking at"))
-    accountingPeriod = models.ForeignKey(AccountingPeriod, verbose_name=_("AccountingPeriod"))
+    booking_reference = models.ForeignKey('crm.Invoice', verbose_name=_("Booking Reference"), null=True, blank=True)
+    booking_date = models.DateTimeField(verbose_name=_("Booking at"))
+    accounting_period = models.ForeignKey(AccountingPeriod, verbose_name=_("AccountingPeriod"))
     staff = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True,
                               verbose_name=_("Reference Staff"), related_name="db_booking_refstaff")
-    dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now=True)
-    lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now_add=True)
-    lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True,
+    date_of_creation = models.DateTimeField(verbose_name=_("Created at"), auto_now=True)
+    last_modification = models.DateTimeField(verbose_name=_("Last modified"), auto_now_add=True)
+    last_modified_by = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True,
                                        verbose_name=_("Last modified by"), related_name="db_booking_lstmodified")
 
-    def bookingDateOnly(self):
-        return self.bookingDate.date()
+    def booking_date_only(self):
+        return self.booking_date.date()
 
-    bookingDateOnly.short_description = _("Date");
+    booking_date_only.short_description = _("Date");
 
     def __str__(self):
-        return self.fromAccount.__str__() + " " + self.toAccount.__str__() + " " + self.amount.__str__()
+        return self.from_account.__str__() + " " + self.to_account.__str__() + " " + self.amount.__str__()
 
     class Meta:
         app_label = "accounting"

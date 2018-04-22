@@ -6,26 +6,26 @@ from koalixcrm.accounting.views import *
 
 
 class OptionBooking(admin.ModelAdmin):
-    list_display = ('fromAccount',
-                    'toAccount',
+    list_display = ('from_account',
+                    'to_account',
                     'amount',
-                    'bookingDateOnly',
+                    'booking_date_only',
                     'staff')
-    fieldsets = ((_('Basic'), {'fields': ('fromAccount',
-                                          'toAccount',
+    fieldsets = ((_('Basic'), {'fields': ('from_account',
+                                          'to_account',
                                           'amount',
-                                          'bookingDate',
+                                          'booking_date',
                                           'staff',
                                           'description',
-                                          'bookingReference',
-                                          'accountingPeriod')}),)
+                                          'booking_reference',
+                                          'accounting_period')}),)
     save_as = True
 
     def save_model(self, request, obj, form, change):
-        if (change == True):
-            obj.lastmodifiedby = request.user
+        if change:
+            obj.last_modified_by = request.user
         else:
-            obj.lastmodifiedby = request.user
+            obj.last_modified_by = request.user
             obj.staff = request.user
         obj.save()
 
@@ -36,16 +36,17 @@ class InlineBookings(admin.TabularInline):
     classes = ['collapse']
     fieldsets = (
         ('Basics', {
-            'fields': ('fromAccount',
-                       'toAccount',
+            'fields': ('from_account',
+                       'to_account',
                        'description',
                        'amount',
-                       'bookingDate',
+                       'booking_date',
                        'staff',
-                       'bookingReference',)
+                       'booking_reference',)
         }),
     )
     allow_add = False
+
 
 class AccountForm(forms.ModelForm):
     """AccountForm is used to overwrite the clean method of the
@@ -58,23 +59,23 @@ class AccountForm(forms.ModelForm):
     def clean(self):
         super(AccountForm, self).clean()
         errors = []
-        if (self.cleaned_data['isopenreliabilitiesaccount']):
-            openliabilitiesaccount = Account.objects.filter(isopenreliabilitiesaccount=True)
-            if (self.cleaned_data['accountType'] != "L"):
+        if (self.cleaned_data['is_open_reliabilities_account']):
+            open_reliabilities_account = Account.objects.filter(is_open_reliabilities_account=True)
+            if (self.cleaned_data['account_type'] != "L"):
                 errors.append(_('The open liabilites account must be a liabities account'))
-            elif openliabilitiesaccount:
+            elif open_reliabilities_account:
                 errors.append(_('There may only be one open liablities account in the system'))
-        if (self.cleaned_data['isopeninterestaccount']):
-            openinterestaccounts = Account.objects.filter(isopeninterestaccount=True)
-            if (self.cleaned_data['accountType'] != "A"):
+        if (self.cleaned_data['is_open_interest_account']):
+            open_interest_account = Account.objects.filter(is_open_interest_account=True)
+            if (self.cleaned_data['account_type'] != "A"):
                 errors.append(_('The open intrests account must be an asset account'))
-            elif openinterestaccounts:
+            elif open_interest_account:
                 errors.append(_('There may only be one open intrests account in the system'))
-        if (self.cleaned_data['isACustomerPaymentAccount']):
-            if (self.cleaned_data['accountType'] != "A"):
+        if (self.cleaned_data['is_a_customer_payment_account']):
+            if (self.cleaned_data['account_type'] != "A"):
                 errors.append(_('A customer payment account must be an asset account'))
-        if (self.cleaned_data['isProductInventoryActiva']):
-            if (self.cleaned_data['accountType'] != "A"):
+        if (self.cleaned_data['is_product_inventory_activa']):
+            if (self.cleaned_data['account_type'] != "A"):
                 errors.append(_('A product inventory account must be an asset account'))
         if len(errors) > 0:
             raise forms.ValidationError(errors)
@@ -82,11 +83,23 @@ class AccountForm(forms.ModelForm):
 
 
 class OptionAccount(admin.ModelAdmin):
-    list_display = ('accountNumber', 'accountType', 'title', 'sumOfAllBookings')
-    list_display_links = ('accountNumber', 'accountType', 'title', 'sumOfAllBookings')
-    fieldsets = ((_('Basic'), {'fields': (
-    'accountNumber', 'accountType', 'title', 'description', 'isopenreliabilitiesaccount', 'isopeninterestaccount',
-    'isProductInventoryActiva', 'isACustomerPaymentAccount')}),)
+    list_display = ('account_number',
+                    'account_type',
+                    'title',
+                    'sum_of_all_bookings')
+    list_display_links = ('account_number',
+                          'account_type',
+                          'title',
+                          'sum_of_all_bookings')
+    fieldsets = ((_('Basic'),
+                  {'fields': ('account_number',
+                              'account_type',
+                              'title',
+                              'description',
+                              'is_open_reliabilities_account',
+                              'is_open_interest_account',
+                              'is_product_inventory_activa',
+                              'is_a_customer_payment_aAccount')}),)
     save_as = True
 
     form = AccountForm
@@ -129,10 +142,10 @@ class OptionAccountingPeriod(admin.ModelAdmin):
     def save_formset(self, request, form, formset, change):
         instances = formset.save(commit=False)
         for instance in instances:
-            if (change == True):
-                instance.lastmodifiedby = request.user
+            if change:
+                instance.last_modified_by = request.user
             else:
-                instance.lastmodifiedby = request.user
+                instance.last_modified_by = request.user
                 instance.staff = request.user
             instance.save()
 
@@ -161,11 +174,11 @@ class OptionAccountingPeriod(admin.ModelAdmin):
 
 
 class OptionProductCategorie(admin.ModelAdmin):
-    list_display = ('title', 'profitAccount', 'lossAccount')
-    list_display_links = ('title', 'profitAccount', 'lossAccount')
+    list_display = ('title', 'profit_account', 'loss_account')
+    list_display_links = ('title', 'profit_account', 'loss_account')
     fieldsets = (
         (_('Basics'), {
-            'fields': ('title', 'profitAccount', 'lossAccount')
+            'fields': ('title', 'profit_account', 'loss_account')
         }),
     )
     save_as = True
