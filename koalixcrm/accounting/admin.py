@@ -127,11 +127,23 @@ class AccountingPeriodForm(forms.ModelForm):
 
 
 class OptionAccountingPeriod(admin.ModelAdmin):
-    list_display = ('title', 'begin', 'end')
-    list_display_links = ('title', 'begin', 'end')
+    list_display = ('title',
+                    'begin',
+                    'end',
+                    'template_set_balance_sheet',
+                    'template_profit_loss_statement')
+    list_display_links = ('title',
+                          'begin',
+                          'end',
+                          'template_set_balance_sheet',
+                          'template_profit_loss_statement')
     fieldsets = (
         (_('Basics'), {
-            'fields': ('title', 'begin', 'end')
+            'fields': ('title',
+                       'begin',
+                       'end',
+                       'template_set_balance_sheet',
+                       'template_profit_loss_statement')
         }),
     )
     inlines = [InlineBookings, ]

@@ -25,8 +25,16 @@ class AccountingPeriod(models.Model):
     title = models.CharField(max_length=200, verbose_name=_("Title"))  # For example "Year 2009", "1st Quarter 2009"
     begin = models.DateField(verbose_name=_("Begin"))
     end = models.DateField(verbose_name=_("End"))
-    template_set = models.ForeignKey("djangoUserExtension.DocumentTemplate", verbose_name=_("Referred Template"), null=True,
-                                     blank=True)
+    template_set_balance_sheet = models.ForeignKey("djangoUserExtension.DocumentTemplate",
+                                                   verbose_name=_("Referred template for balance sheet"),
+                                                   related_name='db_balancesheet_template_set',
+                                                   null=True,
+                                                   blank=True)
+    template_profit_loss_statement = models.ForeignKey("djangoUserExtension.DocumentTemplate",
+                                                       verbose_name=_("Referred template for profit, loss statement"),
+                                                       related_name='db_profit_loss_statement_template_set',
+                                                       null=True,
+                                                       blank=True)
 
     @staticmethod
     def get_current_valid_accounting_period():
