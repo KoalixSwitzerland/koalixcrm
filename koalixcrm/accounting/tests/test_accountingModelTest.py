@@ -10,30 +10,30 @@ class AccountingModelTest(TestCase):
     def setUp(self):
         user = User.objects.create(username='Username',
                                    password="Userone")
-        cash = Account.objects.create(accountNumber="1000",
+        cash = Account.objects.create(account_number="1000",
                                       title="Cash",
-                                      accountType="A",
+                                      account_type="A",
                                       description="Highest liquid asset",
-                                      isopeninterestaccount=False,
-                                      isopenreliabilitiesaccount=False,
-                                      isProductInventoryActiva=False,
-                                      isACustomerPaymentAccount=True)
-        spendings = Account.objects.create(accountNumber="3000",
+                                      is_open_interest_account=False,
+                                      is_open_reliabilities_account=False,
+                                      is_product_inventory_activa=False,
+                                      is_a_customer_payment_account=True)
+        spendings = Account.objects.create(account_number="3000",
                                            title="Spendings",
-                                           accountType="S",
+                                           account_type="S",
                                            description="Purchase spendings",
-                                           isopeninterestaccount=False,
-                                           isopenreliabilitiesaccount=False,
-                                           isProductInventoryActiva=False,
-                                           isACustomerPaymentAccount=False)
-        earnings = Account.objects.create(accountNumber="4000",
+                                           is_open_interest_account=False,
+                                           is_open_reliabilities_account=False,
+                                           is_product_inventory_activa=False,
+                                           is_a_customer_payment_account=False)
+        earnings = Account.objects.create(account_number="4000",
                                           title="Earnings",
-                                          accountType="E",
+                                          account_type="E",
                                           description="Sales account",
-                                          isopeninterestaccount=False,
-                                          isopenreliabilitiesaccount=False,
-                                          isProductInventoryActiva=False,
-                                          isACustomerPaymentAccount=False)
+                                          is_open_interest_account=False,
+                                          is_open_reliabilities_account=False,
+                                          is_product_inventory_activa=False,
+                                          is_a_customer_payment_account=False)
         datetime_now = datetime.datetime(2024, 1, 1, 0, 00)
         from_date = datetime_now.date()
         to_date = (datetime_now + datetime.timedelta(days=365)).date()
@@ -50,23 +50,23 @@ class AccountingModelTest(TestCase):
         accounting_period_2026 = AccountingPeriod.objects.create(title="Fiscal year 2026",
                                                                  begin=from_date,
                                                                  end=to_date)
-        Booking.objects.create(fromAccount=cash,
-                               toAccount=spendings,
+        Booking.objects.create(from_account=cash,
+                               to_account=spendings,
                                amount="1000",
                                description="This is the first booking",
-                               bookingDate=datetime.date.today(),
-                               accountingPeriod=accounting_period_2024,
+                               booking_date=datetime.date.today(),
+                               accounting_period=accounting_period_2024,
                                staff=user,
-                               lastmodifiedby=user)
+                               last_modified_by=user)
 
-        Booking.objects.create(fromAccount=earnings,
-                               toAccount=cash,
+        Booking.objects.create(from_account=earnings,
+                               to_account=cash,
                                amount="500",
                                description="This is the first booking",
-                               bookingDate=datetime.date.today(),
-                               accountingPeriod=accounting_period_2024,
+                               booking_date=datetime.date.today(),
+                               accounting_period=accounting_period_2024,
                                staff=user,
-                               lastmodifiedby=user)
+                               last_modified_by=user)
 
     def test_sumOfAllBookings(self):
         cash_account = Account.objects.get(title="Cash")

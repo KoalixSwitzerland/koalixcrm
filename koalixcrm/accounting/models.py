@@ -216,7 +216,7 @@ class Account(models.Model):
                                                                     accounting_period=accounting_period) - \
                          self.all_bookings_within_accounting_period(from_account=True,
                                                                     accounting_period=accounting_period)
-        if self.accountType == 'E' or self.accountType == 'L':
+        if self.account_type == 'E' or self.account_type == 'L':
             calculated_sum = -calculated_sum
         return calculated_sum
 
