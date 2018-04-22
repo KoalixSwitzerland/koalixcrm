@@ -16,6 +16,7 @@ from koalixcrm.accounting.const.accountTypeChoices import *
 from koalixcrm.accounting.exceptions import NoObjectsToBeSerialzed
 from koalixcrm.accounting.exceptions import ProgrammingError
 from koalixcrm.accounting.exceptions import AccountingPeriodNotFound
+from koalixcrm.accounting.exceptions import TemplateSetMissingInAccountingPeriod
 
 
 class AccountingPeriod(models.Model):
@@ -35,6 +36,26 @@ class AccountingPeriod(models.Model):
                                                        related_name='db_profit_loss_statement_template_set',
                                                        null=True,
                                                        blank=True)
+
+    def get_template_set(self, document_type):
+        if document_type == 'balance_sheet':
+            if self.template_set_balance_sheet:
+                return self.template_set_balance_sheet
+            else:
+                raise TemplateSetMissingInAccountingPeriod((_("Template Set for balance sheet is missing in Accounting Period" + str(self))))
+        elif document_type == 'profit_loss_statement':
+            if self.template_profit_loss_statement:
+                return self.template_profit_loss_statement
+            else:
+                raise TemplateSetMissingInAccountingPeriod((_("Template Set for profit loss statement is missing in Accounting Period" + str(self))))
+
+    def get_fop_config_file(self, document_type):
+        template_set = self.get_template_set(document_type)
+        return template_set.get_fop_config_file()
+
+    def get_xsl_file(self, document_type):
+        template_set = self.get_template_set(document_type)
+        return template_set.get_xsl_file()
 
     @staticmethod
     def get_current_valid_accounting_period():
