@@ -49,6 +49,7 @@ class WorkEntry(forms.Form):
             raise forms.ValidationError('date is not within the selected range', code='invalid')
         return date
 
+
 def generate_initial_data(start_date, stop_date, employee):
     from koalixcrm.crm.reporting.work import Work
     list_of_work = Work.objects.filter(employee=employee).filter(date__lte=stop_date).filter(date__gte=start_date).order_by("date")

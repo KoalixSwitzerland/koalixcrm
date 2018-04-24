@@ -37,25 +37,29 @@ class AccountingPeriod(models.Model):
                                                        null=True,
                                                        blank=True)
 
-    def get_template_set(self, document_type):
-        if document_type == 'balance_sheet':
+    def get_template_set(self, template_set):
+        if template_set == self.template_set_balance_sheet:
             if self.template_set_balance_sheet:
                 return self.template_set_balance_sheet
             else:
                 raise TemplateSetMissingInAccountingPeriod((_("Template Set for balance sheet is missing in Accounting Period" + str(self))))
-        elif document_type == 'profit_loss_statement':
+        elif template_set == self.template_profit_loss_statement:
             if self.template_profit_loss_statement:
                 return self.template_profit_loss_statement
             else:
                 raise TemplateSetMissingInAccountingPeriod((_("Template Set for profit loss statement is missing in Accounting Period" + str(self))))
 
-    def get_fop_config_file(self, document_type):
-        template_set = self.get_template_set(document_type)
+    def get_fop_config_file(self, template_set):
+        template_set = self.get_template_set(template_set)
         return template_set.get_fop_config_file()
 
-    def get_xsl_file(self, document_type):
-        template_set = self.get_template_set(document_type)
+    def get_xsl_file(self, template_set):
+        template_set = self.get_template_set(template_set)
         return template_set.get_xsl_file()
+
+    def create_pdf(self, template_set):
+        import koalixcrm.crm
+        return koalixcrm.crm.documents.pdfexport.PDFExport.create_pdf(self, template_set)
 
     @staticmethod
     def get_current_valid_accounting_period():
@@ -131,31 +135,6 @@ class AccountingPeriod(models.Model):
         # TODO  def importAllAccountsXML(self):
 
     def createPDF(self, raisedbyuser, whatToCreate):
-        userExtension = djangoUserExtension.models.UserExtension.objects.filter(user=raisedbyuser.id)
-        if (len(userExtension) == 0):
-            raise UserExtensionMissing(_("During BalanceSheet PDF Export"))
-        doc = Document()
-        if whatToCreate == "balanceSheet":
-            main = doc.createElement("koalixaccountingbalacesheet")
-            out = open(os.path.join(settings.PDF_OUTPUT_ROOT, "balancesheet_" + str(self.id) + ".xml"), "wb")
-        else:
-            main = doc.createElement("koalixaccountingprofitlossstatement")
-            out = open(os.path.join(settings.PDF_OUTPUT_ROOT, "profitlossstatement_" + str(self.id) + ".xml"), "wb")
-        accountingPeriodName = doc.createElement("accountingPeriodName")
-        accountingPeriodName.appendChild(doc.createTextNode(self.__str__()))
-        main.appendChild(accountingPeriodName)
-        organisiationname = doc.createElement("organisiationname")
-        organisiationname.appendChild(doc.createTextNode(userExtension[0].defaultTemplateSet.organisationname))
-        main.appendChild(organisiationname)
-        accountingPeriodTo = doc.createElement("accountingPeriodTo")
-        accountingPeriodTo.appendChild(doc.createTextNode(self.end.year.__str__()))
-        main.appendChild(accountingPeriodTo)
-        accountingPeriodFrom = doc.createElement("accountingPeriodFrom")
-        accountingPeriodFrom.appendChild(doc.createTextNode(self.begin.year.__str__()))
-        main.appendChild(accountingPeriodFrom)
-        headerPicture = doc.createElement("headerpicture")
-        headerPicture.appendChild(doc.createTextNode(userExtension[0].defaultTemplateSet.logo.path_full))
-        main.appendChild(headerPicture)
         accounts = Account.objects.all()
         overallValueBalance = 0
         overallValueProfitLoss = 0

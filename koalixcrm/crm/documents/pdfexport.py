@@ -3,25 +3,16 @@
 import os
 from subprocess import check_output
 from subprocess import STDOUT
-
 from django.conf import settings
-from django.contrib import auth
 from django.core import serializers
 from django.utils.translation import ugettext as _
 from koalixcrm.crm.exceptions import *
 from koalixcrm import djangoUserExtension
 from koalixcrm.crm.contact.contact import Contact
-from koalixcrm.crm.contact.contact import PostalAddressForContact
-from koalixcrm.crm.contact.phoneaddress import PhoneAddress
-from koalixcrm.crm.contact.emailaddress import EmailAddress
-from koalixcrm.crm.contact.postaladdress import PostalAddress
-from koalixcrm.crm.product.currency import Currency
-from koalixcrm.crm.product.unit import Unit
-from koalixcrm.crm.product.product import Product
 from lxml import etree
-
 from koalixcrm.crm.documents.salesdocumentposition import Position
 import koalixcrm.crm.documents.salesdocument
+import koalixcrm.accounting
 
 
 class PDFExport:
@@ -35,53 +26,26 @@ class PDFExport:
         xml.write(file_with_serialized_xml)
 
     @staticmethod
-    def add_positions(objects_to_serialize, position_class, object_to_create_pdf):
-        objects_to_serialize += list(position_class.objects.filter(sales_document=object_to_create_pdf.id))
-        for position in list(position_class.objects.filter(sales_document=object_to_create_pdf.id)):
-            objects_to_serialize += list(Position.objects.filter(id=position.id))
-            objects_to_serialize += list(Product.objects.filter(id=position.product.id))
-            objects_to_serialize += list(Unit.objects.filter(id=position.unit.id))
+    def add_accounts(objects_to_serialize, object_to_create_pdf):
+        objects_to_serialize += list(koalixcrm.accounting.models.Acount.all())
         return objects_to_serialize
 
     @staticmethod
     def create_list_of_objects_to_serialize(object_to_create_pdf):
-        position_class = koalixcrm.crm.documents.salesdocumentposition.SalesDocumentPosition
-        objects_to_serialize = list(type(object_to_create_pdf).objects.filter(id=object_to_create_pdf.id))
-        objects_to_serialize += list(koalixcrm.crm.documents.salesdocument.SalesDocument.objects.filter(id=object_to_create_pdf.id))
-        if isinstance(object_to_create_pdf, koalixcrm.crm.documents.purchaseorder.PurchaseOrder):
-            objects_to_serialize += list(Contact.objects.filter(id=object_to_create_pdf.supplier.id))
-            objects_to_serialize += list(PostalAddressForContact.objects.filter(person=object_to_create_pdf.supplier.id))
-            for address in list(PostalAddressForContact.objects.filter(person=object_to_create_pdf.supplier.id)):
-                objects_to_serialize += list(PostalAddress.objects.filter(id=address.id))
+        if isinstance(object_to_create_pdf, koalixcrm.crm.documents.salesdocument.SalesDocument):
+            return koalixcrm.crm.documents.salesdocument.SalesDocument.objects_to_serialize(object_to_create_pdf)
+        elif isinstance(object_to_create_pdf, koalixcrm.accounting.models.AccoutingPeriod):
+            return PDFExport.create_list_of_objects_to_serialize_accounting_period(object_to_create_pdf)
         else:
-            objects_to_serialize += list(Contact.objects.filter(id=object_to_create_pdf.customer.id))
-            objects_to_serialize += list(PostalAddressForContact.objects.filter(person=object_to_create_pdf.customer.id))
-            for address in list(PostalAddressForContact.objects.filter(person=object_to_create_pdf.customer.id)):
-                objects_to_serialize += list(PostalAddress.objects.filter(id=address.id))
-        objects_to_serialize += list(koalixcrm.crm.documents.salesdocument.TextParagraphInSalesDocument.objects.filter(sales_document=object_to_create_pdf.id))
-        objects_to_serialize += list(Currency.objects.filter(id=object_to_create_pdf.currency.id))
-        objects_to_serialize = PDFExport.add_positions(objects_to_serialize, position_class, object_to_create_pdf)
-        objects_to_serialize += list(auth.models.User.objects.filter(id=object_to_create_pdf.staff.id))
-        userExtension = djangoUserExtension.models.UserExtension.objects.filter(user=object_to_create_pdf.staff.id)
-        if len(userExtension) == 0:
-            raise UserExtensionMissing(_("During "+str(object_to_create_pdf)+" PDF Export"))
-        phone_address = djangoUserExtension.models.UserExtensionPhoneAddress.objects.filter(
-            userExtension=userExtension[0].id)
-        if len(phone_address) == 0:
-            raise UserExtensionPhoneAddressMissing(_("During "+type(object_to_create_pdf)+" PDF Export"))
-        email_address = djangoUserExtension.models.UserExtensionEmailAddress.objects.filter(
-            userExtension=userExtension[0].id)
-        if len(email_address) == 0:
-            raise UserExtensionEmailAddressMissing(_("During "+type(object_to_create_pdf)+" PDF Export"))
-        objects_to_serialize += list(userExtension)
-        objects_to_serialize += list(EmailAddress.objects.filter(id=email_address[0].id))
-        objects_to_serialize += list(PhoneAddress.objects.filter(id=phone_address[0].id))
-        template_set = djangoUserExtension.models.DocumentTemplate.objects.filter(
-            id=object_to_create_pdf.template_set.id)
-        if len(template_set) == 0:
-            raise TemplateSetMissing(_("During "+type(object_to_create_pdf)+" PDF Export"))
-        objects_to_serialize += list(template_set)
+            raise NoSerializationPatternFound(_("During "+str(object_to_create_pdf)+" PDF Export"))
+
+    @staticmethod
+    def create_list_of_objects_to_serialize_accounting_period(object_to_create_pdf):
+        objects_to_serialize = list(type(object_to_create_pdf).objects.filter(id=object_to_create_pdf.id))
+        objects_to_serialize += koalixcrm.djangoUserExtension.models.UserExtension.objects_to_serialize(object_to_create_pdf)
+        objects_to_serialize += PDFExport.add_accounts(objects_to_serialize, object_to_create_pdf)
         return objects_to_serialize
+
 
     @staticmethod
     def write_xml_file(objects_to_serialize, file_with_serialized_xml):
@@ -100,10 +64,10 @@ class PDFExport:
                       '-pdf', file_output_pdf], stderr=STDOUT)
 
     @staticmethod
-    def create_pdf(object_to_create_pdf):
+    def create_pdf(object_to_create_pdf, template_set):
         # define the files which are involved in pdf creation process
-        fop_config_file = object_to_create_pdf.get_fop_config_file()
-        xsl_file = object_to_create_pdf.get_xsl_file()
+        fop_config_file = object_to_create_pdf.get_fop_config_file(template_set)
+        xsl_file = object_to_create_pdf.get_xsl_file(template_set)
         file_with_serialized_xml = os.path.join(settings.PDF_OUTPUT_ROOT, (str(type(object_to_create_pdf).__name__) +
                                                                            "_" + str(object_to_create_pdf.id) + ".xml"))
         file_output_pdf = os.path.join(settings.PDF_OUTPUT_ROOT, (str(type(object_to_create_pdf).__name__) +

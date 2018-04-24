@@ -161,19 +161,29 @@ class OptionAccountingPeriod(admin.ModelAdmin):
                 instance.staff = request.user
             instance.save()
 
-    def createBalanceSheet(self, request, queryset):
+    def create_pdf_of_balance_sheet(self, request, queryset):
+        from koalixcrm.crm.views.pdfexport import PDFExportView
         for obj in queryset:
-            response = exportPDF(self, request, obj, "balanceSheet", "/admin/accounting/accountingperiod/")
+            response = PDFExportView.export_pdf(self,
+                                                request,
+                                                obj,
+                                                ("/admin/accounting/"+obj.__class__.__name__.lower()+"/"),
+                                                obj.template_set_balance_sheet)
             return response
 
-    createBalanceSheet.short_description = _("Create PDF of Balance Sheet")
+    create_pdf_of_balance_sheet.short_description = _("Create PDF of Balance Sheet")
 
-    def createProfitLossStatement(self, request, queryset):
+    def create_pdf_of_profit_loss_statement(self, request, queryset):
+        from koalixcrm.crm.views.pdfexport import PDFExportView
         for obj in queryset:
-            response = exportPDF(self, request, obj, "profitLossStatement", "/admin/accounting/accountingperiod/")
+            response = PDFExportView.export_pdf(self,
+                                                request,
+                                                obj,
+                                                ("/admin/accounting/"+obj.__class__.__name__.lower()+"/"),
+                                                obj.template_profit_loss_statement)
             return response
 
-    createProfitLossStatement.short_description = _("Create PDF of Profit Loss Statement Sheet")
+    create_pdf_of_profit_loss_statement.short_description = _("Create PDF of Profit Loss Statement Sheet")
 
     def exportAllAccounts(self, request, queryset):
         for obj in queryset:
@@ -182,7 +192,7 @@ class OptionAccountingPeriod(admin.ModelAdmin):
 
     exportAllAccounts.short_description = _("Create XML of all Accounts")
 
-    actions = ['createBalanceSheet', 'createProfitLossStatement', 'exportAllAccounts', ]
+    actions = ['create_pdf_of_balance_sheet', 'create_pdf_of_profit_loss_statement', 'exportAllAccounts', ]
 
 
 class OptionProductCategorie(admin.ModelAdmin):

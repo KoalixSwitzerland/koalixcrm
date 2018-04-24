@@ -10,7 +10,7 @@ from koalixcrm.crm.contact.phoneaddress import PhoneAddress
 from koalixcrm.crm.contact.emailaddress import EmailAddress
 from koalixcrm.crm.contact.postaladdress import PostalAddress
 from koalixcrm.crm.documents.salesdocumentposition import SalesDocumentPosition, SalesDocumentInlinePosition
-from koalixcrm.djangoUserExtension.models import TextParagraphInDocumentTemplate
+from koalixcrm.djangoUserExtension.models import TextParagraphInDocumentTemplate, UserExtension
 from koalixcrm.crm.product.product import Product
 from koalixcrm.crm.exceptions import TemplateSetMissingInContract
 import koalixcrm.crm.documents.calculations
@@ -68,6 +68,33 @@ class SalesDocument(models.Model):
         verbose_name = _('Sales Document')
         verbose_name_plural = _('Sales Documents')
 
+    @staticmethod
+    def objects_to_serialize(object_to_create_pdf):
+        from koalixcrm.crm.contact.contact import PostalAddressForContact
+        from koalixcrm.crm.contact.postaladdress import PostalAddress
+        from koalixcrm.crm.product.currency import Currency
+        from koalixcrm.crm.contact.contact import Contact
+        from django.contrib import auth
+        position_class = koalixcrm.crm.documents.salesdocumentposition.SalesDocumentPosition
+        objects = list(type(object_to_create_pdf).objects.filter(id=object_to_create_pdf.id))
+        objects += list(koalixcrm.crm.documents.salesdocument.SalesDocument.objects.filter(id=object_to_create_pdf.id))
+        if isinstance(object_to_create_pdf, koalixcrm.crm.documents.purchaseorder.PurchaseOrder):
+            objects += list(Contact.objects.filter(id=object_to_create_pdf.supplier.id))
+            objects += list(PostalAddressForContact.objects.filter(person=object_to_create_pdf.supplier.id))
+            for address in list(PostalAddressForContact.objects.filter(person=object_to_create_pdf.supplier.id)):
+                objects += list(PostalAddress.objects.filter(id=address.id))
+        else:
+            objects += list(Contact.objects.filter(id=object_to_create_pdf.customer.id))
+            objects += list(PostalAddressForContact.objects.filter(person=object_to_create_pdf.customer.id))
+            for address in list(PostalAddressForContact.objects.filter(person=object_to_create_pdf.customer.id)):
+                objects += list(PostalAddress.objects.filter(id=address.id))
+        objects += list(TextParagraphInSalesDocument.objects.filter(sales_document=object_to_create_pdf.id))
+        objects += list(Currency.objects.filter(id=object_to_create_pdf.currency.id))
+        objects += SalesDocumentPosition.add_positions(position_class, object_to_create_pdf)
+        objects += list(auth.models.User.objects.filter(id=object_to_create_pdf.staff.id))
+        objects += UserExtension.objects_to_serialize(object_to_create_pdf)
+        return objects
+
     def is_complete_with_price(self):
         """ Checks whether the SalesContract is completed with a price, in case the
         SalesContract was not completed or the price calculation was not performed,
@@ -107,10 +134,10 @@ class SalesDocument(models.Model):
                 new_position = SalesDocumentPosition()
                 new_position.create_position(sales_document_position, self)
 
-    def create_pdf(self):
+    def create_pdf(self, template_set):
         self.last_print_date = datetime.now()
         self.save()
-        return koalixcrm.crm.documents.pdfexport.PDFExport.create_pdf(self)
+        return koalixcrm.crm.documents.pdfexport.PDFExport.create_pdf(self, template_set)
 
     def get_template_set(self):
         if self.template_set:
@@ -118,11 +145,11 @@ class SalesDocument(models.Model):
         else:
             raise TemplateSetMissingInContract((_("Template Set missing in Sales Document" + str(self))))
 
-    def get_fop_config_file(self):
+    def get_fop_config_file(self, template_set):
         template_set = self.get_template_set()
         return template_set.get_fop_config_file()
 
-    def get_xsl_file(self):
+    def get_xsl_file(self, template_set):
         template_set = self.get_template_set()
         return template_set.get_xsl_file()
 
@@ -328,7 +355,11 @@ class OptionSalesDocument(admin.ModelAdmin):
     def create_pdf(self, request, queryset):
         from koalixcrm.crm.views.pdfexport import PDFExportView
         for obj in queryset:
-            response = PDFExportView.export_pdf(self, request, obj, ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
+            response = PDFExportView.export_pdf(self,
+                                                request,
+                                                obj,
+                                                ("/admin/crm/"+obj.__class__.__name__.lower()+"/"),
+                                                obj.template_set)
             return response
 
     create_pdf.short_description = _("Create PDF")

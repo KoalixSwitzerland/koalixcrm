@@ -42,6 +42,17 @@ class SalesDocumentPosition(Position):
         verbose_name = _('Position in Sales Document')
         verbose_name_plural = _('Positions Sales Document')
 
+    @staticmethod
+    def add_positions(position_class, object_to_create_pdf):
+        from koalixcrm.crm.product.unit import Unit
+        from koalixcrm.crm.product.product import Product
+        objects = list(position_class.objects.filter(sales_document=object_to_create_pdf.id))
+        for position in list(position_class.objects.filter(sales_document=object_to_create_pdf.id)):
+            objects += list(Position.objects.filter(id=position.id))
+            objects += list(Product.objects.filter(id=position.product.id))
+            objects += list(Unit.objects.filter(id=position.unit.id))
+        return objects
+
     def create_position(self, calling_model, attach_to_model):
         """Copies all the content of the calling model and attaches
         links itself to the attach_to_model, this function is usually
