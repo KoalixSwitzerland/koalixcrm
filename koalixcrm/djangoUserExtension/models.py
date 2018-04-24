@@ -16,12 +16,12 @@ class UserExtension(models.Model):
     defaultCurrency = models.ForeignKey("crm.Currency")
 
     @staticmethod
-    def objects_to_serialize(object_to_create_pdf):
+    def objects_to_serialize(object_to_create_pdf, reference_user):
         from koalixcrm.crm.contact.phoneaddress import PhoneAddress
         from koalixcrm.crm.contact.emailaddress import EmailAddress
         from django.contrib import auth
-        objects = list(auth.models.User.objects.filter(id=object_to_create_pdf.staff.id))
-        user_extension = UserExtension.objects.filter(user=object_to_create_pdf.staff.id)
+        objects = list(auth.models.User.objects.filter(id=reference_user.id))
+        user_extension = UserExtension.objects.filter(user=reference_user.id)
         if len(user_extension) == 0:
             raise UserExtensionMissing(_("During "+str(object_to_create_pdf)+" PDF Export"))
         phone_address = UserExtensionPhoneAddress.objects.filter(
@@ -35,11 +35,6 @@ class UserExtension(models.Model):
         objects += list(user_extension)
         objects += list(EmailAddress.objects.filter(id=email_address[0].id))
         objects += list(PhoneAddress.objects.filter(id=phone_address[0].id))
-        template_set = DocumentTemplate.objects.filter(
-            id=object_to_create_pdf.template_set.id)
-        if len(template_set) == 0:
-            raise TemplateSetMissing(_("During "+str(object_to_create_pdf)+" PDF Export"))
-        objects += list(template_set)
         return objects
 
     @staticmethod

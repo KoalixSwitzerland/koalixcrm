@@ -30,7 +30,7 @@ class PDFExportView:
             Raises:
               raises Http404 exception if anything goes wrong"""
         try:
-            pdf = document.create_pdf(template_to_use)
+            pdf = document.create_pdf(template_to_use, request.user)
             response = HttpResponse(FileWrapper(open(pdf, 'rb')), content_type='application/pdf')
             response['Content-Length'] = path.getsize(pdf)
         except (TemplateSetMissing,

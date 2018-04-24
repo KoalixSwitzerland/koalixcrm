@@ -7,12 +7,12 @@ from django.conf import settings
 from django.core import serializers
 from django.utils.translation import ugettext as _
 from koalixcrm.crm.exceptions import *
-from koalixcrm import djangoUserExtension
 from koalixcrm.crm.contact.contact import Contact
 from lxml import etree
 from koalixcrm.crm.documents.salesdocumentposition import Position
 import koalixcrm.crm.documents.salesdocument
-import koalixcrm.accounting
+import koalixcrm.accounting.models
+import koalixcrm.djangoUserExtension.models
 
 
 class PDFExport:
@@ -26,26 +26,13 @@ class PDFExport:
         xml.write(file_with_serialized_xml)
 
     @staticmethod
-    def add_accounts(objects_to_serialize, object_to_create_pdf):
-        objects_to_serialize += list(koalixcrm.accounting.models.Acount.all())
-        return objects_to_serialize
-
-    @staticmethod
     def create_list_of_objects_to_serialize(object_to_create_pdf):
         if isinstance(object_to_create_pdf, koalixcrm.crm.documents.salesdocument.SalesDocument):
             return koalixcrm.crm.documents.salesdocument.SalesDocument.objects_to_serialize(object_to_create_pdf)
-        elif isinstance(object_to_create_pdf, koalixcrm.accounting.models.AccoutingPeriod):
-            return PDFExport.create_list_of_objects_to_serialize_accounting_period(object_to_create_pdf)
+        elif isinstance(object_to_create_pdf, koalixcrm.accounting.models.AccountingPeriod):
+            return koalixcrm.accounting.models.AccountingPeriod.objects_to_serialize(object_to_create_pdf)
         else:
             raise NoSerializationPatternFound(_("During "+str(object_to_create_pdf)+" PDF Export"))
-
-    @staticmethod
-    def create_list_of_objects_to_serialize_accounting_period(object_to_create_pdf):
-        objects_to_serialize = list(type(object_to_create_pdf).objects.filter(id=object_to_create_pdf.id))
-        objects_to_serialize += koalixcrm.djangoUserExtension.models.UserExtension.objects_to_serialize(object_to_create_pdf)
-        objects_to_serialize += PDFExport.add_accounts(objects_to_serialize, object_to_create_pdf)
-        return objects_to_serialize
-
 
     @staticmethod
     def write_xml_file(objects_to_serialize, file_with_serialized_xml):
@@ -64,7 +51,7 @@ class PDFExport:
                       '-pdf', file_output_pdf], stderr=STDOUT)
 
     @staticmethod
-    def create_pdf(object_to_create_pdf, template_set):
+    def create_pdf(object_to_create_pdf, template_set, printed_by):
         # define the files which are involved in pdf creation process
         fop_config_file = object_to_create_pdf.get_fop_config_file(template_set)
         xsl_file = object_to_create_pdf.get_xsl_file(template_set)
@@ -75,6 +62,8 @@ class PDFExport:
 
         # list the sub-objects which to be serialized
         objects_to_serialize = PDFExport.create_list_of_objects_to_serialize(object_to_create_pdf)
+        objects_to_serialize += list(koalixcrm.djangoUserExtension.models.DocumentTemplate.objects.filter(id=template_set.id))
+        objects_to_serialize += koalixcrm.djangoUserExtension.models.UserExtension.objects_to_serialize(object_to_create_pdf, printed_by)
 
         # serialize the objects to xml-file
         PDFExport.write_xml_file(objects_to_serialize, file_with_serialized_xml)

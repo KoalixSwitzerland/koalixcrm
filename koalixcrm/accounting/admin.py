@@ -180,7 +180,7 @@ class OptionAccountingPeriod(admin.ModelAdmin):
                                                 request,
                                                 obj,
                                                 ("/admin/accounting/"+obj.__class__.__name__.lower()+"/"),
-                                                obj.template_profit_loss_statement)
+                                                obj.template_profit_loss_statement,)
             return response
 
     create_pdf_of_profit_loss_statement.short_description = _("Create PDF of Profit Loss Statement Sheet")

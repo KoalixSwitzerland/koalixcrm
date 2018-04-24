@@ -57,9 +57,9 @@ class AccountingPeriod(models.Model):
         template_set = self.get_template_set(template_set)
         return template_set.get_xsl_file()
 
-    def create_pdf(self, template_set):
+    def create_pdf(self, template_set, printed_by):
         import koalixcrm.crm
-        return koalixcrm.crm.documents.pdfexport.PDFExport.create_pdf(self, template_set)
+        return koalixcrm.crm.documents.pdfexport.PDFExport.create_pdf(self, template_set, printed_by)
 
     @staticmethod
     def get_current_valid_accounting_period():
@@ -101,6 +101,12 @@ class AccountingPeriod(models.Model):
         if accounting_periods == []:
             raise AccountingPeriodNotFound()
         return accounting_periods
+
+    @staticmethod
+    def objects_to_serialize(object_to_create_pdf):
+        objects = list(type(object_to_create_pdf).objects.filter(id=object_to_create_pdf.id))
+        objects += Account.objects_to_serialize()
+        return objects
 
     @staticmethod
     def createXML(whatToCreate):
@@ -210,6 +216,11 @@ class Account(models.Model):
     is_open_interest_account = models.BooleanField(verbose_name=_("Is The Open Interests Account"))
     is_product_inventory_activa = models.BooleanField(verbose_name=_("Is a Product Inventory Account"))
     is_a_customer_payment_account = models.BooleanField(verbose_name=_("Is a Customer Payment Account"))
+
+    @staticmethod
+    def objects_to_serialize():
+        objects = list(Account.objects.all())
+        return objects
 
     def sum_of_all_bookings(self):
         calculated_sum = self.all_bookings(from_account=False) - self.all_bookings(from_account=True)

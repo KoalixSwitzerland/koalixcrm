@@ -92,7 +92,7 @@ class SalesDocument(models.Model):
         objects += list(Currency.objects.filter(id=object_to_create_pdf.currency.id))
         objects += SalesDocumentPosition.add_positions(position_class, object_to_create_pdf)
         objects += list(auth.models.User.objects.filter(id=object_to_create_pdf.staff.id))
-        objects += UserExtension.objects_to_serialize(object_to_create_pdf)
+        objects += UserExtension.objects_to_serialize(object_to_create_pdf, object_to_create_pdf.staff)
         return objects
 
     def is_complete_with_price(self):
@@ -134,10 +134,10 @@ class SalesDocument(models.Model):
                 new_position = SalesDocumentPosition()
                 new_position.create_position(sales_document_position, self)
 
-    def create_pdf(self, template_set):
+    def create_pdf(self, template_set, printed_by):
         self.last_print_date = datetime.now()
         self.save()
-        return koalixcrm.crm.documents.pdfexport.PDFExport.create_pdf(self, template_set)
+        return koalixcrm.crm.documents.pdfexport.PDFExport.create_pdf(self, template_set, printed_by)
 
     def get_template_set(self):
         if self.template_set:
