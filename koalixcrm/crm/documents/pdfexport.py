@@ -11,18 +11,17 @@ from koalixcrm.crm.contact.contact import Contact
 from lxml import etree
 from koalixcrm.crm.documents.salesdocumentposition import Position
 import koalixcrm.crm.documents.salesdocument
-import koalixcrm.accounting.models
 import koalixcrm.djangoUserExtension.models
 
 
 class PDFExport:
 
     @staticmethod
-    def extend_xml_with_root_element(xml_string):
+    def append_element_to_root(xml_string, name_of_element, value_of_element):
         parser = etree.XMLParser(encoding='utf-8')
         root_element = etree.fromstring(xml_string.encode('utf-8'), parser=parser)
-        filebrowser_directory = etree.SubElement(root_element, "filebrowser_directory")
-        filebrowser_directory.text = settings.MEDIA_ROOT
+        new_element = etree.SubElement(root_element, name_of_element)
+        new_element.text = value_of_element.__str__()
         return (etree.tostring(root_element, encoding='UTF-8', xml_declaration=True)).decode('utf-8')
 
     @staticmethod
@@ -38,9 +37,9 @@ class PDFExport:
     @staticmethod
     def create_list_of_objects_to_serialize(object_to_create_pdf):
         if isinstance(object_to_create_pdf, koalixcrm.crm.documents.salesdocument.SalesDocument):
-            return koalixcrm.crm.documents.salesdocument.SalesDocument.objects_to_serialize(object_to_create_pdf)
+            return koalixcrm.crm.documents.salesdocument.SalesDocument.serialize_to_xml(object_to_create_pdf)
         elif isinstance(object_to_create_pdf, koalixcrm.accounting.models.AccountingPeriod):
-            return koalixcrm.accounting.models.AccountingPeriod.objects_to_serialize(object_to_create_pdf)
+            return object_to_create_pdf.serialize_to_xml()
         else:
             raise NoSerializationPatternFound(_("During "+str(object_to_create_pdf)+" PDF Export"))
 
@@ -77,24 +76,21 @@ class PDFExport:
                                                                   "_" + str(object_to_create_pdf.id) + ".pdf"))
 
         # list the sub-objects which have to be serialized
-        objects_to_serialize = PDFExport.create_list_of_objects_to_serialize(object_to_create_pdf)
-        xml_string_1 = PDFExport.write_xml(objects_to_serialize)
+        xml_string = PDFExport.create_list_of_objects_to_serialize(object_to_create_pdf)
         objects_to_serialize = list(koalixcrm.djangoUserExtension.models.DocumentTemplate.objects.filter(id=template_set.id))
-        xml_string_2 = PDFExport.write_xml(objects_to_serialize)
+        xml_string_temp = PDFExport.write_xml(objects_to_serialize)
+        xml_string = PDFExport.merge_xml(xml_string, xml_string_temp)
         objects_to_serialize = koalixcrm.djangoUserExtension.models.UserExtension.objects_to_serialize(object_to_create_pdf, printed_by)
-        xml_string_3 = PDFExport.write_xml(objects_to_serialize)
-
-        xml_string = PDFExport.merge_xml(xml_string_1, xml_string_2)
-        xml_string = PDFExport.merge_xml(xml_string, xml_string_3)
+        xml_string_temp = PDFExport.write_xml(objects_to_serialize)
+        xml_string = PDFExport.merge_xml(xml_string, xml_string_temp)
 
         # extend the xml-string with required basic settings
-        xml_string = PDFExport.extend_xml_with_root_element(xml_string)
+        xml_string = PDFExport.append_element_to_root(xml_string, "filebrowser_directory", settings.MEDIA_ROOT)
 
         #  write xml-string to xml-file
         PDFExport.write_xml_file(xml_string, file_with_serialized_xml)
 
         # perform xsl transformation
         PDFExport.perform_xsl_transformation(file_with_serialized_xml, xsl_file, fop_config_file, file_output_pdf)
-
 
         return file_output_pdf

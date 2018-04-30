@@ -2,21 +2,17 @@
 
 import os
 from datetime import *
-from subprocess import check_output
-from subprocess import STDOUT
-from xml.dom.minidom import Document
 
 from django.conf import settings
 from django.core import serializers
 from django.db import models
 from django.utils.translation import ugettext as _
-from koalixcrm import djangoUserExtension
-from koalixcrm.crm.exceptions import UserExtensionMissing
 from koalixcrm.accounting.const.accountTypeChoices import *
 from koalixcrm.accounting.exceptions import NoObjectsToBeSerialzed
 from koalixcrm.accounting.exceptions import ProgrammingError
 from koalixcrm.accounting.exceptions import AccountingPeriodNotFound
 from koalixcrm.accounting.exceptions import TemplateSetMissingInAccountingPeriod
+from koalixcrm.crm.documents.pdfexport import PDFExport
 
 
 class AccountingPeriod(models.Model):
@@ -61,6 +57,51 @@ class AccountingPeriod(models.Model):
         import koalixcrm.crm
         return koalixcrm.crm.documents.pdfexport.PDFExport.create_pdf(self, template_set, printed_by)
 
+    def overall_earnings(self):
+        earnings = 0;
+        accounts = Account.objects.all()
+        for account in list(accounts):
+            if account.account_type == "E":
+                earnings += account.sum_of_all_bookings_within_accounting_period(self)
+        return earnings
+
+    def overall_spendings(self):
+        spendings = 0;
+        accounts = Account.objects.all()
+        for account in list(accounts):
+            if account.account_type == "S":
+                spendings += account.sum_of_all_bookings_within_accounting_period(self)
+        return spendings
+
+    def overall_assets(self):
+        earnings = 0;
+        accounts = Account.objects.all()
+        for account in list(accounts):
+            if account.account_type == "A":
+                earnings += account.sum_of_all_bookings_through_now(self)
+        return earnings
+
+    def overall_liabilities(self):
+        earnings = 0;
+        accounts = Account.objects.all()
+        for account in list(accounts):
+            if account.account_type == "L":
+                earnings += account.sum_of_all_bookings_through_now(self)
+        return earnings
+
+    def serialize_to_xml(self):
+        objects = [self, ]
+        main_xml = PDFExport.write_xml(objects)
+        accounts = Account.objects.all()
+        for account in accounts:
+            account_xml = account.serialize_to_xml(self)
+            main_xml = PDFExport.merge_xml(main_xml, account_xml)
+        main_xml = PDFExport.append_element_to_root(main_xml, "Overall_Earnings", self.overall_earnings())
+        main_xml = PDFExport.append_element_to_root(main_xml, "Overall_Spendings", self.overall_spendings())
+        main_xml = PDFExport.append_element_to_root(main_xml, "Overall_Assets", self.overall_assets())
+        main_xml = PDFExport.append_element_to_root(main_xml, "Overall_Liabilities", self.overall_liabilities())
+        return main_xml
+
     @staticmethod
     def get_current_valid_accounting_period():
         """Returns the accounting period that is currently valid. Valid is an accounting_period when the current date
@@ -99,14 +140,9 @@ class AccountingPeriod(models.Model):
             if accounting_period.end < target_accounting_period.begin:
                 accounting_periods.append(accounting_period)
         if accounting_periods == []:
-            raise AccountingPeriodNotFound()
+            raise AccountingPeriodNotFound("Accounting Period does not exist")
         return accounting_periods
 
-    @staticmethod
-    def objects_to_serialize(object_to_create_pdf):
-        objects = list(type(object_to_create_pdf).objects.filter(id=object_to_create_pdf.id))
-        objects += Account.objects_to_serialize()
-        return objects
 
     @staticmethod
     def createXML(whatToCreate):
@@ -140,62 +176,6 @@ class AccountingPeriod(models.Model):
 
         # TODO  def importAllAccountsXML(self):
 
-    def createPDF(self, raisedbyuser, whatToCreate):
-        accounts = Account.objects.all()
-        overallValueBalance = 0
-        overallValueProfitLoss = 0
-        for account in list(accounts):
-            withinAccountingPeriod = account.sum_of_all_bookings_within_accounting_period(self)
-            beforeAccountingPeriod = account.sum_of_all_bookings_before_accounting_period(self)
-            currentValue = withinAccountingPeriod + beforeAccountingPeriod
-            if (currentValue != 0):
-                currentAccountElement = doc.createElement("Account")
-                accountNumber = doc.createElement("AccountNumber")
-                accountNumber.appendChild(doc.createTextNode(account.accountNumber.__str__()))
-                beforeAccountingPeriodAccountElement = doc.createElement("beforeAccountingPeriod")
-                beforeAccountingPeriodAccountElement.appendChild(doc.createTextNode(beforeAccountingPeriod.__str__()))
-                currentValueElement = doc.createElement("currentValue")
-                currentValueElement.appendChild(doc.createTextNode(currentValue.__str__()))
-                accountNameElement = doc.createElement("accountName")
-                accountNameElement.appendChild(doc.createTextNode(account.title))
-                currentAccountElement.setAttribute("accountType", account.accountType.__str__())
-                currentAccountElement.appendChild(accountNumber)
-                currentAccountElement.appendChild(accountNameElement)
-                currentAccountElement.appendChild(currentValueElement)
-                currentAccountElement.appendChild(beforeAccountingPeriodAccountElement)
-                main.appendChild(currentAccountElement)
-                if account.accountType == "A":
-                    overallValueBalance = overallValueBalance + currentValue;
-                if account.accountType == "L":
-                    overallValueBalance = overallValueBalance - currentValue;
-                if account.accountType == "E":
-                    overallValueProfitLoss = overallValueProfitLoss + currentValue;
-                if account.accountType == "S":
-                    overallValueProfitLoss = overallValueProfitLoss - currentValue;
-        totalProfitLoss = doc.createElement("TotalProfitLoss")
-        totalProfitLoss.appendChild(doc.createTextNode(overallValueProfitLoss.__str__()))
-        main.appendChild(totalProfitLoss)
-        totalBalance = doc.createElement("TotalBalance")
-        totalBalance.appendChild(doc.createTextNode(overallValueBalance.__str__()))
-        main.appendChild(totalBalance)
-        doc.appendChild(main)
-        out.write(doc.toprettyxml(indent=" ", newl="\n", encoding="utf-8"))
-        out.close()
-        if whatToCreate == "balanceSheet":
-            check_output(
-                [settings.FOP_EXECUTABLE, '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml',
-                 os.path.join(settings.PDF_OUTPUT_ROOT, 'balancesheet_' + str(self.id) + '.xml'), '-xsl',
-                 userExtension[0].defaultTemplateSet.balancesheetXSLFile.xslfile.path_full, '-pdf',
-                 os.path.join(settings.PDF_OUTPUT_ROOT, 'balancesheet_' + str(self.id) + '.pdf')], stderr=STDOUT)
-            return os.path.join(settings.PDF_OUTPUT_ROOT, "balancesheet_" + str(self.id) + ".pdf")
-        else:
-            check_output(
-                [settings.FOP_EXECUTABLE, '-c', userExtension[0].defaultTemplateSet.fopConfigurationFile.path_full, '-xml',
-                 os.path.join(settings.PDF_OUTPUT_ROOT, 'profitlossstatement_' + str(self.id) + '.xml'), '-xsl',
-                 userExtension[0].defaultTemplateSet.profitLossStatementXSLFile.xslfile.path_full, '-pdf',
-                 os.path.join(settings.PDF_OUTPUT_ROOT, 'profitlossstatement_' + str(self.id) + '.pdf')], stderr=STDOUT)
-            return os.path.join(settings.PDF_OUTPUT_ROOT, "profitlossstatement_" + str(self.id) + ".pdf")
-
     def __str__(self):
         return self.title
 
@@ -217,11 +197,6 @@ class Account(models.Model):
     is_product_inventory_activa = models.BooleanField(verbose_name=_("Is a Product Inventory Account"))
     is_a_customer_payment_account = models.BooleanField(verbose_name=_("Is a Customer Payment Account"))
 
-    @staticmethod
-    def objects_to_serialize():
-        objects = list(Account.objects.all())
-        return objects
-
     def sum_of_all_bookings(self):
         calculated_sum = self.all_bookings(from_account=False) - self.all_bookings(from_account=True)
         if self.account_type == 'E' or self.account_type == 'L':
@@ -240,7 +215,10 @@ class Account(models.Model):
         return calculated_sum
 
     def sum_of_all_bookings_before_accounting_period(self, current_accounting_period):
-        accounting_periods = AccountingPeriod.get_all_prior_accounting_periods(current_accounting_period)
+        try:
+            accounting_periods = AccountingPeriod.get_all_prior_accounting_periods(current_accounting_period)
+        except AccountingPeriodNotFound as e:
+            return 0;
         sum = 0
         for accounting_period in accounting_periods:
             sum += self.all_bookings_within_accounting_period(from_account=False,
@@ -249,6 +227,12 @@ class Account(models.Model):
         if self.account_type == 'E' or self.account_type == 'L':
             sum = -sum
         return sum
+
+    def sum_of_all_bookings_through_now(self, current_accounting_period):
+        within_accounting_period = self.sum_of_all_bookings_within_accounting_period(current_accounting_period)
+        before_accounting_period = self.sum_of_all_bookings_before_accounting_period(current_accounting_period)
+        current_value = within_accounting_period + before_accounting_period
+        return current_value
 
     def all_bookings(self, from_account):
         sum = 0
@@ -273,6 +257,23 @@ class Account(models.Model):
             sum += booking.amount
 
         return sum
+
+    def serialize_to_xml(self, accounting_period):
+        objects = [self, ]
+        main_xml = PDFExport.write_xml(objects)
+        main_xml = PDFExport.append_element_to_root(main_xml,
+                                         "sum_of_all_bookings_within_accounting_period",
+                                         self.sum_of_all_bookings_within_accounting_period(accounting_period))
+        main_xml = PDFExport.append_element_to_root(main_xml,
+                                         "sum_of_all_bookings_through_now",
+                                         self.sum_of_all_bookings_through_now(accounting_period))
+        main_xml = PDFExport.append_element_to_root(main_xml,
+                                         "sum_of_all_bookings_before_accounting_period",
+                                         self.sum_of_all_bookings_before_accounting_period(accounting_period))
+        main_xml = PDFExport.append_element_to_root(main_xml,
+                                         "sum_of_all_bookings_through_now",
+                                         self.sum_of_all_bookings())
+        return main_xml
 
     def __str__(self):
         return self.account_number.__str__() + " " + self.title
