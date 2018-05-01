@@ -99,7 +99,7 @@ class OptionAccount(admin.ModelAdmin):
                               'is_open_reliabilities_account',
                               'is_open_interest_account',
                               'is_product_inventory_activa',
-                              'is_a_customer_payment_aAccount')}),)
+                              'is_a_customer_payment_account')}),)
     save_as = True
 
     form = AccountForm

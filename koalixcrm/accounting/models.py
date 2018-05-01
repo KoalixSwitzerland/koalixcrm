@@ -96,10 +96,22 @@ class AccountingPeriod(models.Model):
         for account in accounts:
             account_xml = account.serialize_to_xml(self)
             main_xml = PDFExport.merge_xml(main_xml, account_xml)
-        main_xml = PDFExport.append_element_to_root(main_xml, "Overall_Earnings", self.overall_earnings())
-        main_xml = PDFExport.append_element_to_root(main_xml, "Overall_Spendings", self.overall_spendings())
-        main_xml = PDFExport.append_element_to_root(main_xml, "Overall_Assets", self.overall_assets())
-        main_xml = PDFExport.append_element_to_root(main_xml, "Overall_Liabilities", self.overall_liabilities())
+        main_xml = PDFExport.append_element_to_pattern(main_xml,
+                                                       "object/[@model='accounting.accountingperiod']",
+                                                       "Overall_Earnings",
+                                                       self.overall_earnings())
+        main_xml = PDFExport.append_element_to_pattern(main_xml,
+                                                       "object/[@model='accounting.accountingperiod']",
+                                                       "Overall_Spendings",
+                                                       self.overall_spendings())
+        main_xml = PDFExport.append_element_to_pattern(main_xml,
+                                                       "object/[@model='accounting.accountingperiod']",
+                                                       "Overall_Assets",
+                                                       self.overall_assets())
+        main_xml = PDFExport.append_element_to_pattern(main_xml,
+                                                       "object/[@model='accounting.accountingperiod']",
+                                                       "Overall_Liabilities",
+                                                       self.overall_liabilities())
         return main_xml
 
     @staticmethod
@@ -261,18 +273,22 @@ class Account(models.Model):
     def serialize_to_xml(self, accounting_period):
         objects = [self, ]
         main_xml = PDFExport.write_xml(objects)
-        main_xml = PDFExport.append_element_to_root(main_xml,
-                                         "sum_of_all_bookings_within_accounting_period",
-                                         self.sum_of_all_bookings_within_accounting_period(accounting_period))
-        main_xml = PDFExport.append_element_to_root(main_xml,
-                                         "sum_of_all_bookings_through_now",
-                                         self.sum_of_all_bookings_through_now(accounting_period))
-        main_xml = PDFExport.append_element_to_root(main_xml,
-                                         "sum_of_all_bookings_before_accounting_period",
-                                         self.sum_of_all_bookings_before_accounting_period(accounting_period))
-        main_xml = PDFExport.append_element_to_root(main_xml,
-                                         "sum_of_all_bookings_through_now",
-                                         self.sum_of_all_bookings())
+        main_xml = PDFExport.append_element_to_pattern(main_xml,
+                                                       "object/[@model='accounting.account']",
+                                                       "sum_of_all_bookings_within_accounting_period",
+                                                       self.sum_of_all_bookings_within_accounting_period(accounting_period))
+        main_xml = PDFExport.append_element_to_pattern(main_xml,
+                                                       "object/[@model='accounting.account']",
+                                                       "sum_of_all_bookings_through_now",
+                                                       self.sum_of_all_bookings_through_now(accounting_period))
+        main_xml = PDFExport.append_element_to_pattern(main_xml,
+                                                       "object/[@model='accounting.account']",
+                                                       "sum_of_all_bookings_before_accounting_period",
+                                                       self.sum_of_all_bookings_before_accounting_period(accounting_period))
+        main_xml = PDFExport.append_element_to_pattern(main_xml,
+                                                       "object/[@model='accounting.account']",
+                                                       "sum_of_all_bookings_through_now",
+                                                       self.sum_of_all_bookings())
         return main_xml
 
     def __str__(self):
