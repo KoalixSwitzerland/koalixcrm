@@ -42,14 +42,14 @@ class AccountingModelTest(TestCase):
                                                                  end=to_date)
         from_date = to_date
         to_date = (datetime_now + datetime.timedelta(days=(365*2))).date()
-        accounting_period_2025 = AccountingPeriod.objects.create(title="Fiscal year 2025",
-                                                                 begin=from_date,
-                                                                 end=to_date)
+        AccountingPeriod.objects.create(title="Fiscal year 2025",
+                                        begin=from_date,
+                                        end=to_date)
         from_date = to_date
         to_date = (datetime_now + datetime.timedelta(days=(365*3))).date()
-        accounting_period_2026 = AccountingPeriod.objects.create(title="Fiscal year 2026",
-                                                                 begin=from_date,
-                                                                 end=to_date)
+        AccountingPeriod.objects.create(title="Fiscal year 2026",
+                                        begin=from_date,
+                                        end=to_date)
         Booking.objects.create(from_account=cash,
                                to_account=spendings,
                                amount="1000",

@@ -55,7 +55,7 @@ class PDFExport:
     @staticmethod
     def create_list_of_objects_to_serialize(object_to_create_pdf):
         if isinstance(object_to_create_pdf, koalixcrm.crm.documents.salesdocument.SalesDocument):
-            return koalixcrm.crm.documents.salesdocument.SalesDocument.serialize_to_xml(object_to_create_pdf)
+            return object_to_create_pdf.serialize_to_xml()
         elif isinstance(object_to_create_pdf, koalixcrm.accounting.models.AccountingPeriod):
             return object_to_create_pdf.serialize_to_xml()
         else:

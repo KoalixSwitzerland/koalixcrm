@@ -14,7 +14,7 @@ from koalixcrm.djangoUserExtension.models import TextParagraphInDocumentTemplate
 from koalixcrm.crm.product.product import Product
 from koalixcrm.crm.exceptions import TemplateSetMissingInContract
 import koalixcrm.crm.documents.calculations
-import koalixcrm.crm.documents.pdfexport
+from koalixcrm.crm.documents.pdfexport import PDFExport
 
 
 class TextParagraphInSalesDocument(models.Model):
@@ -68,32 +68,32 @@ class SalesDocument(models.Model):
         verbose_name = _('Sales Document')
         verbose_name_plural = _('Sales Documents')
 
-    @staticmethod
-    def objects_to_serialize(object_to_create_pdf):
+    def serialize_to_xml(self):
         from koalixcrm.crm.contact.contact import PostalAddressForContact
         from koalixcrm.crm.contact.postaladdress import PostalAddress
         from koalixcrm.crm.product.currency import Currency
         from koalixcrm.crm.contact.contact import Contact
         from django.contrib import auth
+        objects = [self, ]
         position_class = koalixcrm.crm.documents.salesdocumentposition.SalesDocumentPosition
-        objects = list(type(object_to_create_pdf).objects.filter(id=object_to_create_pdf.id))
-        objects += list(koalixcrm.crm.documents.salesdocument.SalesDocument.objects.filter(id=object_to_create_pdf.id))
-        if isinstance(object_to_create_pdf, koalixcrm.crm.documents.purchaseorder.PurchaseOrder):
-            objects += list(Contact.objects.filter(id=object_to_create_pdf.supplier.id))
-            objects += list(PostalAddressForContact.objects.filter(person=object_to_create_pdf.supplier.id))
-            for address in list(PostalAddressForContact.objects.filter(person=object_to_create_pdf.supplier.id)):
+        objects += list(koalixcrm.crm.documents.salesdocument.SalesDocument.objects.filter(id=self.id))
+        if isinstance(self, koalixcrm.crm.documents.purchaseorder.PurchaseOrder):
+            objects += list(Contact.objects.filter(id=self.supplier.id))
+            objects += list(PostalAddressForContact.objects.filter(person=self.supplier.id))
+            for address in list(PostalAddressForContact.objects.filter(person=self.supplier.id)):
                 objects += list(PostalAddress.objects.filter(id=address.id))
         else:
-            objects += list(Contact.objects.filter(id=object_to_create_pdf.customer.id))
-            objects += list(PostalAddressForContact.objects.filter(person=object_to_create_pdf.customer.id))
-            for address in list(PostalAddressForContact.objects.filter(person=object_to_create_pdf.customer.id)):
+            objects += list(Contact.objects.filter(id=self.customer.id))
+            objects += list(PostalAddressForContact.objects.filter(person=self.customer.id))
+            for address in list(PostalAddressForContact.objects.filter(person=self.customer.id)):
                 objects += list(PostalAddress.objects.filter(id=address.id))
-        objects += list(TextParagraphInSalesDocument.objects.filter(sales_document=object_to_create_pdf.id))
-        objects += list(Currency.objects.filter(id=object_to_create_pdf.currency.id))
-        objects += SalesDocumentPosition.add_positions(position_class, object_to_create_pdf)
-        objects += list(auth.models.User.objects.filter(id=object_to_create_pdf.staff.id))
-        objects += UserExtension.objects_to_serialize(object_to_create_pdf, object_to_create_pdf.staff)
-        return objects
+        objects += list(TextParagraphInSalesDocument.objects.filter(sales_document=self.id))
+        objects += list(Currency.objects.filter(id=self.currency.id))
+        objects += SalesDocumentPosition.add_positions(position_class, self)
+        objects += list(auth.models.User.objects.filter(id=self.staff.id))
+        objects += UserExtension.objects_to_serialize(self, self.staff)
+        main_xml = PDFExport.write_xml(objects)
+        return main_xml
 
     def is_complete_with_price(self):
         """ Checks whether the SalesContract is completed with a price, in case the
