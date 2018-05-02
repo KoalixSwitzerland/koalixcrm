@@ -1,15 +1,8 @@
 # -*- coding: utf-8 -*-
-
-import os
 from datetime import *
-
-from django.conf import settings
-from django.core import serializers
 from django.db import models
 from django.utils.translation import ugettext as _
 from koalixcrm.accounting.const.accountTypeChoices import *
-from koalixcrm.accounting.exceptions import NoObjectsToBeSerialzed
-from koalixcrm.accounting.exceptions import ProgrammingError
 from koalixcrm.accounting.exceptions import AccountingPeriodNotFound
 from koalixcrm.accounting.exceptions import TemplateSetMissingInAccountingPeriod
 from koalixcrm.crm.documents.pdfexport import PDFExport
@@ -74,20 +67,20 @@ class AccountingPeriod(models.Model):
         return spendings
 
     def overall_assets(self):
-        earnings = 0;
+        assets = 0;
         accounts = Account.objects.all()
         for account in list(accounts):
             if account.account_type == "A":
-                earnings += account.sum_of_all_bookings_through_now(self)
-        return earnings
+                assets += account.sum_of_all_bookings_through_now(self)
+        return assets
 
     def overall_liabilities(self):
-        earnings = 0;
+        liabilities = 0;
         accounts = Account.objects.all()
         for account in list(accounts):
             if account.account_type == "L":
-                earnings += account.sum_of_all_bookings_through_now(self)
-        return earnings
+                liabilities += account.sum_of_all_bookings_through_now(self)
+        return liabilities
 
     def serialize_to_xml(self):
         objects = [self, ]
@@ -154,39 +147,6 @@ class AccountingPeriod(models.Model):
         if accounting_periods == []:
             raise AccountingPeriodNotFound("Accounting Period does not exist")
         return accounting_periods
-
-
-    @staticmethod
-    def createXML(whatToCreate):
-        """This method serialize requestd objects into a XML file which is located in the PDF_OUTPUT_ROOT folder.
-
-          Args:
-            whatToCreate (str): Which objects that have to be serialized
-
-          Returns:
-            path_full to the location of the file
-
-          Raises:
-            ProgrammingError will be raised when incorrect objects to be serialized was selected
-            NoObjectToBeSerialized will be raised when no object can be serialized"""
-
-        XMLSerializer = serializers.get_serializer("xml")
-        xml_serializer = XMLSerializer()
-        if whatToCreate == "allAccount":
-            path_fullToOutputFile = os.path.join(settings.PDF_OUTPUT_ROOT, "accounts.xml")
-            objectsToSerialize = Account.objects.all()
-        else:
-            raise ProgrammingError(
-                _("During XML Export it was not correctly specified which data that has to be exported"))
-        out = open(os.path.join(settings.PDF_OUTPUT_ROOT, "accounts.xml"), "w")
-        if objectsToSerialize == '':
-            raise NoObjectsToBeSerialzed(_("During XML Export it was not correctly specied data has to be exported"))
-        else:
-            xml_serializer.serialize(objectsToSerialize, stream=out, indent=3)
-        out.close()
-        return path_fullToOutputFile
-
-        # TODO  def importAllAccountsXML(self):
 
     def __str__(self):
         return self.title
