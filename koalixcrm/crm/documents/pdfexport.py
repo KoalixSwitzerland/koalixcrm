@@ -17,14 +17,17 @@ import koalixcrm.djangoUserExtension.models
 class PDFExport:
 
     @staticmethod
-    def find_element_in_xml(xml_string, find_pattern):
+    def find_element_in_xml(xml_string, find_pattern, find_value):
         parser = etree.XMLParser(encoding='utf-8')
         root_element = etree.fromstring(xml_string.encode('utf-8'), parser=parser)
-        found_element = root_element.find(find_pattern)
+        found_element = root_element.findall(find_pattern)
         if found_element is None:
             return 0
         else:
-            return 1
+            for element in found_element:
+                if element.text == find_value:
+                    return 1
+            return 0
 
 
     @staticmethod
