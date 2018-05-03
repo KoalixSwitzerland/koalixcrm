@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 from rest_framework import viewsets
+
+from koalixcrm.crm.product.currency import CurrencyJSONSerializer, Currency
 from koalixcrm.crm.reporting.task import Task, TaskJSONSerializer
 from koalixcrm.crm.reporting.taskstatus import TaskStatus, TaskStatusJSONSerializer
 from koalixcrm.crm.documents.contract import Contract, ContractJSONSerializer
-
 
 
 class TaskAsJSON(viewsets.ReadOnlyModelViewSet):
@@ -29,3 +30,11 @@ class TaskStatusAsJSON(viewsets.ReadOnlyModelViewSet):
     """
     queryset = TaskStatus.objects.all()
     serializer_class = TaskStatusJSONSerializer
+
+
+class CurrencyAsJSON(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed.
+    """
+    queryset = Currency.objects.all()
+    serializer_class = CurrencyJSONSerializer
