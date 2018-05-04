@@ -12,6 +12,7 @@ from koalixcrm.crm.contact.contact import ContactEmailAddress
 
 import koalixcrm.crm.documents.contract
 
+
 class Customer(Contact):
     defaultCustomerBillingCycle = models.ForeignKey('CustomerBillingCycle', verbose_name=_('Default Billing Cycle'))
     ismemberof = models.ManyToManyField("CustomerGroup", verbose_name=_('Is member of'), blank=True)
@@ -28,12 +29,12 @@ class Customer(Contact):
 
     def createInvoice(self):
         contract = self.createContract()
-        invoice = contract.createInvoice()
+        invoice = contract.create_invoice()
         return invoice
 
     def createQuote(self):
         contract = self.createContract()
-        quote = contract.createQuote()
+        quote = contract.create_quote()
         return quote
 
     def isInGroup(self, customerGroup):
