@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from django.http import Http404
+from django.http import HttpResponseRedirect
 from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext as _
@@ -18,22 +20,23 @@ class Customer(Contact):
     is_member_of = models.ManyToManyField("CustomerGroup", verbose_name=_('Is member of'), blank=True)
 
     def create_contract(self, request):
+        user_extension = djangoUserExtension.models.UserExtension.objects.filter(user=request.user.id)[0]
         contract = koalixcrm.crm.documents.contract.Contract()
         contract.default_customer = self
-        contract.default_currency = djangoUserExtension.models.UserExtension.objects.filter(user=request.user.id)[
-            0].defaultCurrency
+        contract.default_currency = user_extension.defaultCurrency
+        contract.default_template_set = user_extension.defaultTemplateSet
         contract.last_modified_by = request.user
         contract.staff = request.user
         contract.save()
         return contract
 
-    def create_invoice(self):
-        contract = self.create_contract()
+    def create_invoice(self, request):
+        contract = self.create_contract(request)
         invoice = contract.create_invoice()
         return invoice
 
-    def create_quote(self):
-        contract = self.create_contract()
+    def create_quote(self, request):
+        contract = self.create_contract(request)
         quote = contract.create_quote()
         return quote
 
@@ -73,7 +76,7 @@ class OptionCustomer(admin.ModelAdmin):
     @staticmethod
     def create_quote(self, request, queryset):
         for obj in queryset:
-            quote = obj.create_quote()
+            quote = obj.create_quote(request)
             response = HttpResponseRedirect('/admin/crm/quote/' + str(quote.id))
         return response
 
@@ -82,7 +85,7 @@ class OptionCustomer(admin.ModelAdmin):
     @staticmethod
     def create_invoice(self, request, queryset):
         for obj in queryset:
-            invoice = obj.create_invoice()
+            invoice = obj.create_invoice(request)
             response = HttpResponseRedirect('/admin/crm/invoice/' + str(invoice.id))
         return response
 

@@ -125,17 +125,17 @@ class Contract(models.Model):
 
     def create_invoice(self):
         invoice = Invoice()
-        invoice.create_invoice(self)
+        invoice.create_from_reference(self)
         return invoice
 
     def create_quote(self):
         quote = Quote()
-        quote.create_quote(self)
+        quote.create_from_reference(self)
         return quote
 
     def create_purchase_order(self):
         purchase_order = PurchaseOrder()
-        purchase_order.create_purchase_order(self)
+        purchase_order.create_from_reference(self)
         return purchase_order
 
     def __str__(self):

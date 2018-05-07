@@ -29,7 +29,7 @@ class Invoice(SalesDocument):
         self.create_sales_document(calling_model)
         self.status = 'C'
         self.payable_until = date.today() + \
-                             timedelta(days=self.customer.defaultCustomerBillingCycle.time_to_payment_date)
+                             timedelta(days=self.customer.default_customer_billing_cycle.time_to_payment_date)
         self.date_of_creation = date.today().__str__()
         self.template_set = self.contract.get_template_set(self)
         self.save()
