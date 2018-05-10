@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+from koalixcrm.crm.product.unit import Unit, UnitJSONSerializer
+
+from koalixcrm.crm.product.tax import Tax, TaxJSONSerializer
 from rest_framework import viewsets
 
 from koalixcrm.crm.product.currency import CurrencyJSONSerializer, Currency
@@ -34,7 +37,23 @@ class TaskStatusAsJSON(viewsets.ReadOnlyModelViewSet):
 
 class CurrencyAsJSON(viewsets.ModelViewSet):
     """
-    API endpoint that allows users to be viewed.
+    API endpoint that allows currencies to be viewed.
     """
     queryset = Currency.objects.all()
     serializer_class = CurrencyJSONSerializer
+
+
+class TaxAsJSON(viewsets.ModelViewSet):
+    """
+    API endpoint that allows taxes to be viewed.
+    """
+    queryset = Tax.objects.all()
+    serializer_class = TaxJSONSerializer
+
+
+class UnitAsJSON(viewsets.ModelViewSet):
+    """
+    API endpoint that allows units to be viewed.
+    """
+    queryset = Unit.objects.all()
+    serializer_class = UnitJSONSerializer

@@ -21,7 +21,8 @@ from filebrowser.sites import FileBrowserSite
 from django.core.files.storage import DefaultStorage
 from django.conf.urls import include
 from rest_framework import routers
-from koalixcrm.crm.views.restinterface import TaskAsJSON, ContractAsJSON, TaskStatusAsJSON, CurrencyAsJSON
+from koalixcrm.crm.views.restinterface import TaskAsJSON, ContractAsJSON, TaskStatusAsJSON, CurrencyAsJSON, TaxAsJSON, \
+    UnitAsJSON
 
 site = FileBrowserSite(name="filebrowser", storage=DefaultStorage())
 customsite = FileBrowserSite(name='custom_filebrowser', storage=DefaultStorage())
@@ -32,6 +33,9 @@ router.register(r'tasks', TaskAsJSON)
 router.register(r'contracts', ContractAsJSON)
 router.register(r'taskstatus', TaskStatusAsJSON)
 router.register(r'currencies', CurrencyAsJSON)
+router.register(r'taxes', TaxAsJSON)
+router.register(r'units', UnitAsJSON)
+
 
 admin.autodiscover()
 
