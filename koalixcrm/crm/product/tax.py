@@ -3,6 +3,7 @@
 from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext as _
+from rest_framework import serializers
 
 
 class Tax(models.Model):
@@ -29,3 +30,19 @@ class OptionTax(admin.ModelAdmin):
     list_display = ('id', 'tax_rate', 'name', 'account_activa', 'account_passiva')
     fieldsets = (('', {'fields': ('tax_rate', 'name', 'account_activa', 'account_passiva')}),)
     allow_add = True
+
+
+class TaxJSONSerializer(serializers.HyperlinkedModelSerializer):
+    rate = serializers.CharField(source='tax_rate')
+    description = serializers.CharField(source='name')
+    assetAccount = serializers.CharField(source='account_activa')
+    liabilityAccount = serializers.CharField(source='account_passiva')
+
+
+    class Meta:
+        model = Tax
+        fields = ('id',
+                  'rate',
+                  'description',
+                  'assetAccount',
+                  'liabilityAccount')

@@ -3,6 +3,8 @@
 from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext as _
+from rest_framework import serializers
+from rest_framework.relations import PrimaryKeyRelatedField
 
 
 class Unit(models.Model):
@@ -58,3 +60,18 @@ class ProductUnitTransform(admin.TabularInline):
         }),
     )
     allow_add = True
+
+
+class UnitJSONSerializer(serializers.HyperlinkedModelSerializer):
+    shortName = serializers.CharField(source='short_name')
+    fractionFactor = serializers.IntegerField(source='fraction_factor_to_next_higher_unit')
+    isFractionOf = PrimaryKeyRelatedField(queryset=Unit.objects.all(), source='is_a_fraction_of')
+
+    class Meta:
+        model = Unit
+        fields = ('id',
+                  'description',
+                  'shortName',
+                  'isFractionOf',
+                  'fractionFactor')
+
