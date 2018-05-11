@@ -13,6 +13,7 @@ PURPOSESADDRESSINCUSTOMER = (
     ('O', _('Business')),
     ('P', _('Mobile Private')),
     ('B', _('Mobile Business')),
+    ('F', _('Fax')),
 )
 
 PURPOSESTEXTPARAGRAPHINDOCUMENTS = (
@@ -36,4 +37,9 @@ PURPOSECALLINCUSTOMER = (
 
 SERVICETYPE = (
     ('P', _('Phone')),
+)
+
+CONTACTTYPE = (
+    ('C', _('Customer')),
+    ('S', _('Supplier')),
 )

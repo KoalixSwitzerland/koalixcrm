@@ -2,6 +2,7 @@
 
 from django.db import models
 from django.contrib import admin
+from django import forms
 from django.utils.translation import ugettext as _
 from koalixcrm.crm.const.country import *
 from koalixcrm.crm.const.postaladdressprefix import *
@@ -13,6 +14,7 @@ from koalixcrm.crm.contact.person import *
 from koalixcrm.crm.const.purpose import *
 from koalixcrm.globalSupportFunctions import xstr
 from koalixcrm.crm.inlinemixin import LimitedAdminInlineMixin
+#from koalixcrm.crm.forms import ImportDataContactForm
 
 from django.utils import timezone
 
@@ -23,13 +25,7 @@ class Contact(models.Model):
     lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now=True)
     lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True,
                                        verbose_name=_("Last modified by"), editable=True)
-    '''addressline1 = models.CharField(max_length=200, verbose_name=_("Addressline 1"), blank=True, null=True)
-    addressline2 = models.CharField(max_length=200, verbose_name=_("Addressline 2"), blank=True, null=True)
-    zipcode = models.IntegerField(verbose_name=_("Zipcode"), blank=True, null=True)
-    town = models.CharField(max_length=100, verbose_name=_("City"), blank=True, null=True)
-    state = models.CharField(max_length=100, verbose_name=_("State"), blank=True, null=True)
-    country = models.CharField(max_length=2, choices=[(x[0], x[3]) for x in COUNTRIES], verbose_name=_("Country"),
-                               blank=True, null=True)'''
+    vatnumber = models.CharField(max_length=20, verbose_name=_("Vat Number"), blank=True) 
     
     people = models.ManyToManyField("Person", through='ContactPersonAssociation', verbose_name=_('Has contact'), blank=True)
     
@@ -141,6 +137,9 @@ class VisitForContact(Call):
         verbose_name = _('Visit')
         verbose_name_plural = _('Visits')
 
+    def __str__(self):
+        return xstr(self.description) + ' ' + xstr(self.date_due)
+
 class ContactCall(LimitedAdminInlineMixin, admin.StackedInline):
     model = CallForContact
     extra = 0
@@ -167,13 +166,9 @@ class ContactVisit(LimitedAdminInlineMixin, admin.StackedInline):
         }),
     )
     allow_add = True
-
-    '''def get_queryset(self, request):
-        qs = super(ContactVisit, self).get_queryset(request)
-        return qs.filter(company=request.company)'''
     
     def get_filters(self, request, obj):
-        return getattr(self, 'filters', ()) if obj is None else (('cperson', dict(companies=obj.id)),)
+        return getattr(self, 'filters', ()) if obj is None else (('cperson', dict(companies=obj.id)),('ref_call', dict(company=obj.id, status='S')))
 
 class OptionCall(admin.ModelAdmin):
     list_display = ('id','description','date_due','purpose','get_contactname', 'status', 'is_call_overdue',)
@@ -273,3 +268,27 @@ class CityFilter(admin.SimpleListFilter):
                 ids = [(a.company.id) for c in address_per_company]
                 return queryset.filter(pk__in=ids)
         return queryset
+
+
+#DATA IMPORT
+class ContactImportData(models.Model):
+    data_file = models.FileField(upload_to='data_files', max_length=255)
+
+    contact_type = models.CharField(verbose_name=_("Contact Type"), max_length=1, choices=CONTACTTYPE)
+
+    def file_link(self):
+        if self.data_file:
+            return "<a href='%s'>download</a>" % (self.data_file.url,)
+        else:
+            return "No attachment"
+
+    file_link.allow_tags = True
+
+    def __str__(self):
+        return '{}'.format(self.data_file.name)
+
+    class Meta:
+        """
+        """
+        verbose_name = 'Contact: Import Data from XLSX file'
+        verbose_name_plural = 'Contacts: Import Data from XLSX file'

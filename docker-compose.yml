@@ -1,23 +1,21 @@
-version: '2.0'
+version: '3'
 
-services:
+services:  
   db:
     image: postgres
     volumes:
       - pgdata:/var/lib/postgresql/data
-  koalixcrm:
-    restart: always
-    build: .
-    environment:
-      - DJANGO_SETTINGS_MODULE=projectsettings.settings.development_settings
-      - JAVA_HOME=/usr/bin/jdk1.8.0_162/jre
+  koalixcrm:    
+    build: .    
     volumes:
-      - .:/code
+      - .:/app/      
     ports:
       - "8000:8000"
     depends_on:
       - db
+    env_file:
+      - ./projectsettings/environment/development.env
 
 volumes:
-  .:
+  .:  
   pgdata:

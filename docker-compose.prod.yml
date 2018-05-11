@@ -1,14 +1,39 @@
-version: '2.0'
+version: '3'
 
-services:
+services:  
   db:
     image: postgres
-  koalixcrm:
-    image: koalixswitzerland/koalixcrm:1.12.dev20180210
-    environment:
-      - DJANGO_SETTINGS_MODULE=projectsettings.settings.production_settings
-      - JAVA_HOME=/usr/bin/jdk1.8.0_162/jre
-    ports:
-      - "8000:8000"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+  koalixcrm:    
+    build: .    
+    volumes:
+      - .:/app/
+      - static-files:/app/projectsettings/static
+      - media-files:/app/projectsettings/media
+    expose:
+      - "8000"
     depends_on:
       - db
+    env_file:
+      - ./projectsettings/environment/development.env
+  webserver:
+    build:
+      context: .
+      dockerfile: ./projectsettings/services/webserver/Dockerfile
+    volumes:         
+      - static-files:/app/projectsettings/static
+      - media-files:/app/projectsettings/media
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - koalixcrm    
+    env_file:
+      - ./projectsettings/environment/development.env 
+
+volumes:
+  .:
+  static-files:
+  media-files:
+  pgdata:

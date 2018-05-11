@@ -2,6 +2,7 @@
 
 from django.db import models
 from django.utils.translation import ugettext as _
+from koalixcrm.crm.product.product import Product
 
 class PhoneSystem(models.Model):
     system_model = models.CharField(verbose_name=_("Model"), max_length=200, blank=True, null=True)

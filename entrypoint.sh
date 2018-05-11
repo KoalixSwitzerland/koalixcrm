@@ -24,7 +24,9 @@ chmod -R 755 projectsettings/static/pdf
 
 # Execute startup scripts
 python manage.py collectstatic --noinput
-python manage.py makemigrations
+#python manage.py makemigrations
 python manage.py migrate
-python manage.py initadmin --username admin --password admin --noinput --email 'admin@example.com'
+#echo "from django.contrib.auth.models import User; User.objects.filter(email='admin@example.com').delete(); User.objects.create_superuser('admin', 'admin@example.com', 'sysadmin')" | python manage.py shell
 python manage.py runserver 0.0.0.0:8000
+
+

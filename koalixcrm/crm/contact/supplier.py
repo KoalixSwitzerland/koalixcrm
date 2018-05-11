@@ -24,6 +24,7 @@ class Supplier(Contact):
 
 class OptionSupplier(admin.ModelAdmin):
     list_display = ('id', 'name', 'offersShipmentToCustomers')
+    #ist_display_links = ('name',)
     fieldsets = (('', {'fields': ('name', 'offersShipmentToCustomers')}),)
     inlines = [ContactPostalAddress, ContactPhoneAddress, ContactEmailAddress]
     allow_add = True
