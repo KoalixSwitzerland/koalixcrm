@@ -168,6 +168,100 @@ class Command(BaseCommand):
                             group, created = CustomerGroup.objects.get_or_create(name=customer_group)
                             customer.ismemberof.add(group)
                         contact = customer
+
+                        #region products
+                        #Phone system
+                        #add phone system only if check field is true
+                        if(sheet.cell(row_num, 27).value):
+                            p_model = str(sheet.cell(row_num, 29).value) 
+                            p_unit, created = Unit.objects.get_or_create(short_name=DEFAULT_UNIT, description=DEFAULT_UNIT_DESCRIPTION)
+                            p_attribute_set, created = AttributeSet.objects.get_or_create(name=DEFAULT_PHONE_ATTRIBUTE_SET)
+                            ps = {}
+                            ps['product_number'] = p_model[:30] if not is_empty_string(p_model) else DEFAULT_PHONE_PRODUCT
+                            ps['title'] = p_model if not is_empty_string(p_model) else DEFAULT_PHONE_PRODUCT_TITLE
+                            ps['description'] = ''
+                            ps['default_unit'] = p_unit
+                            ps['tax'] = Tax.objects.get(name=DEFAULT_TAX)
+                            ps['attribute_set'] = p_attribute_set
+
+                            ps_product, created = Product.objects.update_or_create(**ps)
+
+                            p_supplier = str(sheet.cell(row_num, 30).value) if not is_empty_string(str(sheet.cell(row_num, 30).value)) else DEFAULT_EMPTY_SUPPLIER
+                            p_supplier_instance = Supplier.objects.get(name=p_supplier)
+                            try:
+                                p_expire_date = parse(str(sheet.cell(row_num, 35).value))
+                            except ValueError:
+                                p_expire_date = None
+                            ps_phonesystemforcustomer, created = PhoneSystemForCustomer.objects.get_or_create(
+                                customer=contact,
+                                product=ps_product,
+                            )
+                            to_update = PhoneSystemForCustomer.objects.filter(pk=ps_phonesystemforcustomer.pk).update(
+                                supplier=p_supplier_instance,
+                                service_type='',
+                                expire_date=p_expire_date,
+                                year=str(sheet.cell(row_num, 28).value).strip(),
+                                no_ext_lines=int(sheet.cell(row_num, 24).value) if not is_empty_string(sheet.cell(row_num, 24).value) else None,
+                                no_int_lines=int(sheet.cell(row_num, 25).value) if not is_empty_string(sheet.cell(row_num, 25).value) else None,
+                                maintainer=sheet.cell(row_num, 31).value
+                            )
+                            
+                            #with transaction.atomic():
+                                #ps_phonesystemforcustomer.save()
+
+                        #Internet provider
+                        ip = {}
+
+                        #Phone provider
+                        pp = {}
+
+                        #Mobile provider
+                        mb = {}
+
+
+                        #endregion
+                        
+                        #Set objects from inlines
+                        if pa['zipcode'] > 0:
+                            pa['purpose'] = 'O'
+                            pa['company'] = contact
+                            postal_address, created = PostalAddressForContact.objects.update_or_create(**pa)
+                            '''if created:
+                                raise NameError("indirizzo creato: address = {} - contact id = {}".format(pa.addressline1, contact.pk))
+                            else:
+                                raise NameError("indirizzo aggiornato: address = {} - contact id = {}".format(pa.addressline1, contact.pk))'''
+
+                        if not is_empty_string(pha_mobile['phone']):
+                            pha_mobile['purpose'] = 'B'
+                            pha_mobile['company'] = contact
+                            phone_address_mobile = PhoneAddressForContact.objects.update_or_create(**pha_mobile)
+
+                        if not is_empty_string(pha_1['phone']):
+                            pha_1['purpose'] = 'O'
+                            pha_1['company'] = contact
+                            phone_address_1 = PhoneAddressForContact.objects.update_or_create(**pha_1)
+
+                        if not is_empty_string(pha_2['phone']):
+                            pha_2['purpose'] = 'O'
+                            pha_2['company'] = contact
+                            phone_address_2 = PhoneAddressForContact.objects.update_or_create(**pha_2)
+
+                        if not is_empty_string(pha_fax['phone']):
+                            pha_fax['purpose'] = 'F'
+                            pha_fax['company'] = contact
+                            phone_address_fax = PhoneAddressForContact.objects.update_or_create(**pha_fax)
+
+                        if not is_empty_string(ea['email']):
+                            ea['purpose'] = 'O'
+                            ea['company'] = contact
+                            email_address = EmailAddressForContact.objects.update_or_create(**ea)
+
+                        if person:
+                            ContactPersonAssociation.objects.update_or_create(contact=contact, person=person)
+
+                        count += 1
+                        print('imported contact {}'.format(contact.name))
+
                     elif contact_type == 'S':
                         c.offersShipmentToCustomers = False
                         try:
@@ -182,98 +276,7 @@ class Command(BaseCommand):
                     else:
                         raise CommandError("Cannot determine contact type")
 
-                    #region products
-                    #Phone system
-                    #add phone system only if check field is true
-                    if(sheet.cell(row_num, 27).value):
-                        p_model = str(sheet.cell(row_num, 29).value) 
-                        p_unit, created = Unit.objects.get_or_create(short_name=DEFAULT_UNIT, description=DEFAULT_UNIT_DESCRIPTION)
-                        p_attribute_set, created = AttributeSet.objects.get_or_create(name=DEFAULT_PHONE_ATTRIBUTE_SET)
-                        ps = {}
-                        ps['product_number'] = p_model[:30] if not is_empty_string(p_model) else DEFAULT_PHONE_PRODUCT
-                        ps['title'] = p_model if not is_empty_string(p_model) else DEFAULT_PHONE_PRODUCT_TITLE
-                        ps['description'] = ''
-                        ps['default_unit'] = p_unit
-                        ps['tax'] = Tax.objects.get(name=DEFAULT_TAX)
-                        ps['attribute_set'] = p_attribute_set
-
-                        ps_product, created = Product.objects.update_or_create(**ps)
-
-                        p_supplier = str(sheet.cell(row_num, 30).value) if not is_empty_string(str(sheet.cell(row_num, 30).value)) else DEFAULT_EMPTY_SUPPLIER
-                        p_supplier_instance = Supplier.objects.get(name=p_supplier)
-                        try:
-                            p_expire_date = parse(str(sheet.cell(row_num, 35).value))
-                        except ValueError:
-                            p_expire_date = None
-                        ps_phonesystemforcustomer, created = PhoneSystemForCustomer.objects.get_or_create(
-                            customer=contact,
-                            product=ps_product,
-                        )
-                        to_update = PhoneSystemForCustomer.objects.filter(pk=ps_phonesystemforcustomer.pk).update(
-                            supplier=p_supplier_instance,
-                            service_type='',
-                            expire_date=p_expire_date,
-                            year=str(sheet.cell(row_num, 28).value).strip(),
-                            no_ext_lines=int(sheet.cell(row_num, 24).value) if not is_empty_string(sheet.cell(row_num, 24).value) else None,
-                            no_int_lines=int(sheet.cell(row_num, 25).value) if not is_empty_string(sheet.cell(row_num, 25).value) else None,
-                            maintainer=sheet.cell(row_num, 31).value
-                        )
-                        
-                        #with transaction.atomic():
-                            #ps_phonesystemforcustomer.save()
-
-                    #Internet provider
-                    ip = {}
-
-                    #Phone provider
-                    pp = {}
-
-                    #Mobile provider
-                    mb = {}
-
-
-                    #endregion
                     
-                    #Set objects from inlines
-                    if pa['zipcode'] > 0:
-                        pa['purpose'] = 'O'
-                        pa['company'] = contact
-                        postal_address, created = PostalAddressForContact.objects.update_or_create(**pa)
-                        '''if created:
-                            raise NameError("indirizzo creato: address = {} - contact id = {}".format(pa.addressline1, contact.pk))
-                        else:
-                            raise NameError("indirizzo aggiornato: address = {} - contact id = {}".format(pa.addressline1, contact.pk))'''
-
-                    if not is_empty_string(pha_mobile['phone']):
-                        pha_mobile['purpose'] = 'B'
-                        pha_mobile['company'] = contact
-                        phone_address_mobile = PhoneAddressForContact.objects.update_or_create(**pha_mobile)
-
-                    if not is_empty_string(pha_1['phone']):
-                        pha_1['purpose'] = 'O'
-                        pha_1['company'] = contact
-                        phone_address_1 = PhoneAddressForContact.objects.update_or_create(**pha_1)
-
-                    if not is_empty_string(pha_2['phone']):
-                        pha_2['purpose'] = 'O'
-                        pha_2['company'] = contact
-                        phone_address_2 = PhoneAddressForContact.objects.update_or_create(**pha_2)
-
-                    if not is_empty_string(pha_fax['phone']):
-                        pha_fax['purpose'] = 'F'
-                        pha_fax['company'] = contact
-                        phone_address_fax = PhoneAddressForContact.objects.update_or_create(**pha_fax)
-
-                    if not is_empty_string(ea['email']):
-                        ea['purpose'] = 'O'
-                        ea['company'] = contact
-                        email_address = EmailAddressForContact.objects.update_or_create(**ea)
-
-                    if person:
-                        ContactPersonAssociation.objects.update_or_create(contact=contact, person=person)
-
-                    count += 1
-                    print('imported contact {}'.format(contact.name))
                 
         return '{}'.format(count)
 
