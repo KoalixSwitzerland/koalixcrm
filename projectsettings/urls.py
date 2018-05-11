@@ -32,7 +32,6 @@ urlpatterns = [
     url(r'^grappelli/', include('grappelli.urls')), # grappelli URLS
     url(r'^admin/filebrowser/', customsite.urls),
     url(r'^admin/', admin.site.urls),
-    url(r'^_nested_admin/', include('nested_admin.urls')),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

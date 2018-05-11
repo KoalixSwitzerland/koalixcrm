@@ -33,8 +33,7 @@ PREREQUISITE_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'filebrowser',
-    'nested_admin'
+    'filebrowser'
 ]
 
 PROJECT_APPS = [
