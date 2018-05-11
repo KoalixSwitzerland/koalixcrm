@@ -2,7 +2,6 @@
 
 from django.db import models
 from django.contrib import admin
-import nested_admin
 from django.utils.translation import ugettext as _
 from koalixcrm.plugin import *
 from koalixcrm import djangoUserExtension
