@@ -82,10 +82,9 @@ class PDFExport:
 
     @staticmethod
     def write_xml_file(xml, file_path):
-        xml.encode('utf-8')
-        f = open(file_path, "w+")
+        f = open(file_path, "wb+")
         f.truncate()
-        f.write(xml)
+        f.write(xml.encode('utf-8'))
         f.close()
 
 
