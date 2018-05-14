@@ -16,6 +16,7 @@ from koalixcrm.crm.const.purpose import *
 from koalixcrm.crm.documents.invoice import InlineInvoice
 from koalixcrm.crm.documents.quote import InlineQuote
 from koalixcrm.crm.exceptions import *
+from koalixcrm.djangoUserExtension.models import UserExtension
 import koalixcrm.crm.documents.calculations
 import koalixcrm.crm.documents.pdfexport
 from rest_framework import serializers
@@ -123,6 +124,16 @@ class Contract(models.Model):
         else:
             raise TemplateSetMissingInContract("The Contract has no Default Template Set selected")
 
+    def create_from_reference(self, calling_model, staff):
+        staff_user_extension = UserExtension.get_user_extension(staff.id)
+        self.default_customer = calling_model
+        self.default_currency = staff_user_extension.defaultCurrency
+        self.default_template_set = staff_user_extension.defaultTemplateSet
+        self.last_modified_by = staff
+        self.staff = staff
+        self.save()
+        return self
+
     def create_invoice(self):
         invoice = Invoice()
         invoice.create_from_reference(self)
@@ -158,9 +169,9 @@ class OptionContract(admin.ModelAdmin):
     inlines.extend(pluginProcessor.getPluginAdditions("contractInlines"))
 
     def create_quote(self, request, queryset):
-        from koalixcrm.crm.views.CreateNewDocumentView import create_new_document
+        from koalixcrm.crm.views.newdocument import CreateNewDocumentView
         for obj in queryset:
-            response = create_new_document(self, request, obj,
+            response = CreateNewDocumentView.create_new_document(self, request, obj,
                                            koalixcrm.crm.documents.quote.Quote,
                                            ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
             return response
@@ -168,9 +179,9 @@ class OptionContract(admin.ModelAdmin):
     create_quote.short_description = _("Create Quote")
 
     def create_invoice(self, request, queryset):
-        from koalixcrm.crm.views.CreateNewDocumentView import create_new_document
+        from koalixcrm.crm.views.newdocument import CreateNewDocumentView
         for obj in queryset:
-            response = create_new_document(self, request, obj,
+            response = CreateNewDocumentView.create_new_document(self, request, obj,
                                            koalixcrm.crm.documents.invoice.Invoice,
                                            ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
             return response
@@ -178,9 +189,9 @@ class OptionContract(admin.ModelAdmin):
     create_invoice.short_description = _("Create Invoice")
 
     def create_purchase_confirmation(self, request, queryset):
-        from koalixcrm.crm.views.CreateNewDocumentView import create_new_document
+        from koalixcrm.crm.views.newdocument import CreateNewDocumentView
         for obj in queryset:
-            response = create_new_document(self, request, obj,
+            response = CreateNewDocumentView.create_new_document(self, request, obj,
                                            koalixcrm.crm.documents.purchaseconfirmation.PurchaseConfirmation,
                                            ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
             return response
@@ -188,9 +199,9 @@ class OptionContract(admin.ModelAdmin):
     create_purchase_confirmation.short_description = _("Create Purchase Confirmation")
 
     def create_delivery_note(self, request, queryset):
-        from koalixcrm.crm.views.CreateNewDocumentView import create_new_document
+        from koalixcrm.crm.views.newdocument import CreateNewDocumentView
         for obj in queryset:
-            response = create_new_document(self, request, obj,
+            response = CreateNewDocumentView.create_new_document(self, request, obj,
                                            koalixcrm.crm.documents.deliverynote.DeliveryNote,
                                            ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
             return response
@@ -198,9 +209,9 @@ class OptionContract(admin.ModelAdmin):
     create_delivery_note.short_description = _("Create Delivery note")
 
     def create_payment_reminder(self, request, queryset):
-        from koalixcrm.crm.views.CreateNewDocumentView import create_new_document
+        from koalixcrm.crm.views.newdocument import CreateNewDocumentView
         for obj in queryset:
-            response = create_new_document(self, request, obj,
+            response = CreateNewDocumentView.create_new_document(self, request, obj,
                                            koalixcrm.crm.documents.paymentreminder.PaymentReminder,
                                            ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
             return response
@@ -208,9 +219,9 @@ class OptionContract(admin.ModelAdmin):
     create_payment_reminder.short_description = _("Create Payment Reminder")
 
     def create_purchase_order(self, request, queryset):
-        from koalixcrm.crm.views.CreateNewDocumentView import create_new_document
+        from koalixcrm.crm.views.newdocument import CreateNewDocumentView
         for obj in queryset:
-            response = create_new_document(self, request, obj,
+            response = CreateNewDocumentView.create_new_document(self, request, obj,
                                            koalixcrm.crm.documents.purchaseorder.PurchaseOrder,
                                            ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
             return response

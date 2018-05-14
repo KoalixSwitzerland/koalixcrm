@@ -1,18 +1,15 @@
 # -*- coding: utf-8 -*-
 
-from django.http import Http404
 from django.http import HttpResponseRedirect
 from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext as _
 from koalixcrm.plugin import *
-from koalixcrm import djangoUserExtension
 from koalixcrm.crm.contact.contact import Contact
 from koalixcrm.crm.contact.contact import ContactPostalAddress
 from koalixcrm.crm.contact.contact import ContactPhoneAddress
 from koalixcrm.crm.contact.contact import ContactEmailAddress
-
-import koalixcrm.crm.documents.contract
+from koalixcrm.crm.documents.contract import Contract
 
 
 class Customer(Contact):
@@ -20,14 +17,8 @@ class Customer(Contact):
     is_member_of = models.ManyToManyField("CustomerGroup", verbose_name=_('Is member of'), blank=True)
 
     def create_contract(self, request):
-        user_extension = djangoUserExtension.models.UserExtension.objects.filter(user=request.user.id)[0]
-        contract = koalixcrm.crm.documents.contract.Contract()
-        contract.default_customer = self
-        contract.default_currency = user_extension.defaultCurrency
-        contract.default_template_set = user_extension.defaultTemplateSet
-        contract.last_modified_by = request.user
-        contract.staff = request.user
-        contract.save()
+        contract = Contract()
+        contract.create_from_reference(self, request.user)
         return contract
 
     def create_invoice(self, request):

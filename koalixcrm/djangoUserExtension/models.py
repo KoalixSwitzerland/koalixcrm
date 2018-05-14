@@ -38,12 +38,13 @@ class UserExtension(models.Model):
         return objects
 
     @staticmethod
-    def get_user(django_user):
+    def get_user_extension(django_user):
         user_extensions = UserExtension.objects.filter(user=django_user)
-        if len(user_extensions) != 1:
-            raise TooManyUserExtensionsAvailable
-        for user_extension in user_extensions:
-            return user_extension
+        if len(user_extensions) > 1:
+            raise TooManyUserExtensionsAvailable(_("More than one User Extension define for user ") + django_user.__str__())
+        elif len(user_extensions) == 0:
+            raise UserExtensionMissing(_("No User Extension define for user ") + django_user.__str__())
+        return user_extensions[0]
 
     class Meta:
         app_label = "djangoUserExtension"
