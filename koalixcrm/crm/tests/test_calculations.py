@@ -34,10 +34,10 @@ class CalculationsTest(TestCase):
         )
         test_customer = Customer.objects.create(
             name="John Smith",
-            lastmodifiedby=test_user,
-            defaultCustomerBillingCycle=test_billing_cycle,
+            last_modified_by=test_user,
+            default_customer_billing_cycle=test_billing_cycle,
         )
-        test_customer.ismemberof=[test_customer_group,]
+        test_customer.is_member_of=[test_customer_group,]
         test_customer.save()
         test_currency = Currency.objects.create(
             description="Swiss Francs",
