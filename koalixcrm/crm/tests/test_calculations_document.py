@@ -15,7 +15,7 @@ from koalixcrm.crm.documents.calculations import Calculations
 import datetime
 
 
-class CalculationsTest(TestCase):
+class DocumentCalculationsTest(TestCase):
     def setUp(self):
         datetime_now = datetime.datetime(2024, 1, 1, 0, 00)
         valid_from = (datetime_now - datetime.timedelta(days=30)).date()

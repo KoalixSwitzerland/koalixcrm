@@ -28,7 +28,7 @@ class WorkEntry(forms.Form):
     date = forms.DateField(widget=AdminDateWidget)
     start_time = forms.TimeField(widget=AdminTimeWidget)
     stop_time = forms.TimeField(widget=AdminTimeWidget)
-    short_description = forms.CharField(required=False)
+    description = forms.CharField(widget=AdminTextareaWidget)
     work_id = forms.IntegerField(widget=forms.HiddenInput(), required=False)
 
     def __init__(self, *args, **kwargs ):
@@ -61,7 +61,7 @@ def generate_initial_data(start_date, stop_date, employee):
                         'date': work.date,
                         'start_time': work.start_time,
                         'stop_time': work.stop_time,
-                        'short_description': work.short_description})
+                        'description': work.description})
     return initial
 
 
@@ -156,7 +156,7 @@ def update_work(form, request):
                                                         form.cleaned_data['start_time'])
             work.stop_time = datetime.datetime.combine(form.cleaned_data['date'],
                                                        form.cleaned_data['stop_time'])
-            work.short_description = form.cleaned_data['short_description']
+            work.description = form.cleaned_data['description']
             work.save()
 
 
