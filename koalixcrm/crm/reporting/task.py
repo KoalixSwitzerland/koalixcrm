@@ -26,7 +26,7 @@ class Task(models.Model):
         elif self.planned_start_date > self.planned_end_date:
             return 0
         else:
-            return self.last_status_change-self.start_date
+            return self.planned_end_date-self.planned_start_date
 
     def planned_effort(self):
         assignments_to_this_task = EmployeeAssignmentToTask.objects.filter(task=self.id)
@@ -57,8 +57,8 @@ class Task(models.Model):
 class OptionTask(admin.ModelAdmin):
     list_display = ('id',
                     'short_description',
-                    'planned_end_date',
                     'planned_start_date',
+                    'planned_end_date',
                     'project',
                     'status',
                     'last_status_change',
@@ -73,8 +73,8 @@ class OptionTask(admin.ModelAdmin):
     fieldsets = (
         (_('Work'), {
             'fields': ('short_description',
-                       'planned_end_date',
                        'planned_start_date',
+                       'planned_end_date',
                        'project',
                        'description',
                        'status')
