@@ -9,10 +9,8 @@ from koalixcrm.crm.models import Tax
 from koalixcrm.crm.models import Unit
 from koalixcrm.crm.models import Quote
 from koalixcrm.crm.models import Price
-from koalixcrm.djangoUserExtension.models import DocumentTemplate
 from koalixcrm.crm.models import SalesDocumentPosition
 from django.contrib.auth.models import User
-from filebrowser.fields import FileBrowseField
 from koalixcrm.crm.documents.calculations import Calculations
 import datetime
 
@@ -36,10 +34,10 @@ class CalculationsTest(TestCase):
         )
         test_customer = Customer.objects.create(
             name="John Smith",
-            lastmodifiedby=test_user,
-            defaultCustomerBillingCycle=test_billing_cycle,
+            last_modified_by=test_user,
+            default_customer_billing_cycle=test_billing_cycle,
         )
-        test_customer.ismemberof=[test_customer_group,]
+        test_customer.is_member_of=[test_customer_group,]
         test_customer.save()
         test_currency = Currency.objects.create(
             description="Swiss Francs",
@@ -73,9 +71,6 @@ class CalculationsTest(TestCase):
             currency = test_currency,
             date_of_creation = date_now,
             last_modified_by = test_user,)
-        test_positions = []
-        test_products = []
-        test_prices = []
         for i in range(10):
             test_product = Product.objects.create(
                 description="This is a test product " + i.__str__(),
@@ -86,7 +81,7 @@ class CalculationsTest(TestCase):
                 last_modified_by = test_user,
                 tax = test_tax,
             )
-            test_price = Price.objects.create(
+            Price.objects.create(
                 product=test_product,
                 unit = test_unit,
                 currency = test_currency,
@@ -95,7 +90,7 @@ class CalculationsTest(TestCase):
                 valid_from = valid_from,
                 valid_until = valid_until,
             )
-            test_position = SalesDocumentPosition.objects.create(
+            SalesDocumentPosition.objects.create(
                 sales_document = test_quote,
                 position_number=i*10,
                 quantity = 0.333*i,
@@ -107,8 +102,6 @@ class CalculationsTest(TestCase):
             )
     def test_calculate_document_price(self):
         datetime_now = datetime.datetime(2024, 1, 1, 0, 00)
-        valid_from = (datetime_now - datetime.timedelta(days=30)).date()
-        valid_until = (datetime_now + datetime.timedelta(days=30)).date()
         date_now = datetime_now.date()
         test_quote = Quote.objects.get(description="ThisIsATestOffer")
         Calculations.calculate_document_price(

@@ -44,14 +44,14 @@ class OptionSubscription(admin.ModelAdmin):
     @staticmethod
     def createInvoice(queryset):
         for obj in queryset:
-            invoice = obj.createInvoice()
+            invoice = obj.create_invoice()
             response = HttpResponseRedirect('/admin/crm/invoice/' + str(invoice.id))
         return response
 
     @staticmethod
     def createQuote(queryset):
         for obj in queryset:
-            invoice = obj.createInvoice()
+            invoice = obj.create_invoice()
             response = HttpResponseRedirect('/admin/crm/invoice/' + str(invoice.id))
         return response
 

@@ -12,9 +12,9 @@ from koalixcrm.globalSupportFunctions import xstr
 
 class Contact(models.Model):
     name = models.CharField(max_length=300, verbose_name=_("Name"))
-    dateofcreation = models.DateTimeField(verbose_name=_("Created at"), auto_now_add=True)
-    lastmodification = models.DateTimeField(verbose_name=_("Last modified"), auto_now=True)
-    lastmodifiedby = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True,
+    date_of_creation = models.DateTimeField(verbose_name=_("Created at"), auto_now_add=True)
+    last_modification = models.DateTimeField(verbose_name=_("Last modified"), auto_now=True)
+    last_modified_by = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True,
                                        verbose_name=_("Last modified by"), editable=True)
 
     class Meta:
