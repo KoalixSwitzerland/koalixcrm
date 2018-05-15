@@ -28,7 +28,7 @@ class WorkEntry(forms.Form):
     date = forms.DateField(widget=AdminDateWidget)
     start_time = forms.TimeField(widget=AdminTimeWidget)
     stop_time = forms.TimeField(widget=AdminTimeWidget)
-    short_description = forms.CharField(required=False)
+    description = forms.CharField(widget=AdminTextareaWidget)
     work_id = forms.IntegerField(widget=forms.HiddenInput(), required=False)
 
     def __init__(self, *args, **kwargs ):
@@ -49,6 +49,7 @@ class WorkEntry(forms.Form):
             raise forms.ValidationError('date is not within the selected range', code='invalid')
         return date
 
+
 def generate_initial_data(start_date, stop_date, employee):
     from koalixcrm.crm.reporting.work import Work
     list_of_work = Work.objects.filter(employee=employee).filter(date__lte=stop_date).filter(date__gte=start_date).order_by("date")
@@ -60,7 +61,7 @@ def generate_initial_data(start_date, stop_date, employee):
                         'date': work.date,
                         'start_time': work.start_time,
                         'stop_time': work.stop_time,
-                        'short_description': work.short_description})
+                        'description': work.description})
     return initial
 
 
@@ -110,7 +111,7 @@ def create_updated_formset(range_selection_form, request):
                                                max_num=60,
                                                can_delete=True,
                                                formset=BaseWorkEntryFormset)
-    employee = UserExtension.get_user(request.user)
+    employee = UserExtension.get_user_extension(request.user)
     from_date = range_selection_form.cleaned_data['from_date']
     to_date = range_selection_form.cleaned_data['to_date']
     initial_formset_data = generate_initial_data(from_date,
@@ -128,7 +129,7 @@ def create_new_formset(from_date, to_date, request):
                                                max_num=60,
                                                can_delete=True,
                                                formset=BaseWorkEntryFormset)
-    employee = UserExtension.get_user(request.user)
+    employee = UserExtension.get_user_extension(request.user)
     initial_formset_data = generate_initial_data(from_date,
                                                                    to_date,
                                                                    employee)
@@ -149,13 +150,13 @@ def update_work(form, request):
             work.delete()
         else:
             work.task = form.cleaned_data['task']
-            work.employee = UserExtension.get_user(request.user)
+            work.employee = UserExtension.get_user_extension(request.user)
             work.date = form.cleaned_data['date']
             work.start_time = datetime.datetime.combine(form.cleaned_data['date'],
                                                         form.cleaned_data['start_time'])
             work.stop_time = datetime.datetime.combine(form.cleaned_data['date'],
                                                        form.cleaned_data['stop_time'])
-            work.short_description = form.cleaned_data['short_description']
+            work.description = form.cleaned_data['description']
             work.save()
 
 

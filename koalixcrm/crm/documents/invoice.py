@@ -29,7 +29,7 @@ class Invoice(SalesDocument):
         self.create_sales_document(calling_model)
         self.status = 'C'
         self.payable_until = date.today() + \
-                             timedelta(days=self.customer.defaultCustomerBillingCycle.time_to_payment_date)
+                             timedelta(days=self.customer.default_customer_billing_cycle.time_to_payment_date)
         self.date_of_creation = date.today().__str__()
         self.template_set = self.contract.get_template_set(self)
         self.save()
@@ -39,7 +39,7 @@ class Invoice(SalesDocument):
     def register_invoice_in_accounting(self, request):
         dict_prices = dict()
         dict_tax = dict()
-        current_valid_accounting_period = accounting.models.AccountingPeriod.getCurrentValidAccountingPeriod()
+        current_valid_accounting_period = accounting.models.AccountingPeriod.get_current_valid_accounting_period()
         activa_account = accounting.models.Account.objects.filter(isopeninterestaccount=True)
         if not self.is_complete_with_price():
             raise IncompleteInvoice(_("Complete invoice and run price recalculation. Price may not be Zero"))
@@ -66,7 +66,7 @@ class Invoice(SalesDocument):
             booking.save()
 
     def register_payment_in_accounting(self, request, amount, payment_account):
-        current_valid_accounting_period = accounting.models.AccountingPeriod.getCurrentValidAccountingPeriod()
+        current_valid_accounting_period = accounting.models.AccountingPeriod.get_current_valid_accounting_period()
         activa_account = accounting.models.Account.objects.filter(isopeninterestaccount=True)
         booking = accounting.models.Booking()
         booking.toAccount = payment_account
@@ -102,7 +102,7 @@ class OptionInvoice(OptionSalesDocument):
     class PaymentForm(forms.Form):
         payment_amount = forms.DecimalField()
         _selected_action = forms.CharField(widget=forms.MultipleHiddenInput)
-        payment_account = forms.ModelChoiceField(Account.objects.filter(accountType="A"))
+        payment_account = forms.ModelChoiceField(Account.objects.filter(account_type="A"))
 
     def register_invoice_in_accounting(self, request, queryset):
         try:
