@@ -9,7 +9,6 @@ from koalixcrm.crm.contact.contact import ContactPhoneAddress
 from koalixcrm.crm.contact.contact import ContactEmailAddress
 
 
-
 class Supplier(Contact):
     offersShipmentToCustomers = models.BooleanField(verbose_name=_("Offers Shipment to Customer"))
 

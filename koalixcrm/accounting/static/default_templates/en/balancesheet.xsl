@@ -1,8 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet
      xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
      xmlns:fo="http://www.w3.org/1999/XSL/Format">
 <xsl:decimal-format name="european" decimal-separator="," grouping-separator="."/>
-<xsl:template match ="koalixaccountingbalacesheet">
+<xsl:template match ="django-objects">
   <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
     <!-- defines page layout -->
     <fo:layout-master-set>
@@ -10,7 +11,7 @@
                     page-height="29.7cm"
                     page-width="21cm"
                     margin-top="1.5cm"
-                    margin-bottom="0.5cm"
+                    margin-bottom="1.0cm"
                     margin-left="1.5cm"
                     margin-right="1.5cm">
         <fo:region-body margin-top="10.5cm" margin-bottom="1.5cm"/>
@@ -20,32 +21,15 @@
     </fo:layout-master-set>
     <fo:page-sequence master-reference="simple">
       <fo:static-content flow-name="xsl-region-before" >
-        <fo:table table-layout="fixed" width="100%">
-          <fo:table-column column-width="18.0cm"/>
-          <fo:table-body font-size="9pt"
-                         font-family="BitstreamVeraSans">
-          <fo:table-row height="2cm" border-bottom-color="black" border-bottom-style="solid" border-bottom-width="0.5pt">
-            <fo:table-cell padding-bottom="3pt" >
-              <fo:block text-align="left" >
-                <fo:external-graphic content-width="6.0cm">
-                  <xsl:attribute name="src">
-                     <xsl:value-of select="headerpicture"/>
-                  </xsl:attribute>
-                </fo:external-graphic>
-              </fo:block>
-            </fo:table-cell>
-          </fo:table-row>
-          </fo:table-body>
-        </fo:table>
         <fo:block font-size="13pt"
               font-family="BitstreamVeraSans"
               color="black"
               text-align="left"
               font-weight="bold">
-        Balanancesheet of  <xsl:value-of select="organisationname"/>
+        Balanancesheet of "To be set in the Template file"
        </fo:block>
       </fo:static-content>
-    <fo:static-content flow-name="xsl-region-after" >
+        <fo:static-content flow-name="xsl-region-after" >
        <fo:block font-size="8pt"
               font-family="BitstreamVeraSans"
               text-align="left">&#8201; </fo:block>
@@ -100,34 +84,44 @@
                    </fo:block>
                 </fo:table-cell>
              </fo:table-header>
-              <xsl:choose>
-                  <xsl:when test="Account[accountType='A']/None">-</xsl:when> 
-                  <xsl:otherwise>
-          <fo:table-body font-size="9pt"
+              <fo:table-body font-size="9pt"
                          font-family="BitstreamVeraSans">
-         <xsl:for-each select="Account[@accountType='A']">
-          <xsl:sort select="AccountNumber" data-type="number"/>
+         <xsl:for-each select="object[@model='accounting.account']">
+          <xsl:sort select="field[@name='account_number']" data-type="number"/>
+             <xsl:choose><xsl:when test="field[@name='account_type'] = 'A'">
              <fo:table-row keep-together="always">
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="start" >
-                      <xsl:value-of select="AccountNumber"/>
+                      <xsl:value-of select="field[@name='account_number']"/>
                    </fo:block>
                 </fo:table-cell>
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="start" >
-                      <xsl:value-of select="accountName"/>
+                      <xsl:value-of select="field[@name='title']"/>
                    </fo:block>
                 </fo:table-cell>
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="end" >
-                      <xsl:value-of select="format-number(currentValue,'#.##0,00', 'european')"/> CHF
+                      <xsl:value-of select="format-number(sum_of_all_bookings_through_now,'#.##0,00', 'european')"/> CHF
                    </fo:block>
                 </fo:table-cell>
+             </fo:table-row></xsl:when><xsl:otherwise></xsl:otherwise></xsl:choose>
+           </xsl:for-each>
+             <fo:table-row keep-together="always">
+               <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
+                  <fo:block  text-align="start" >Total assets
+                  </fo:block>
+               </fo:table-cell>
+               <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
+                  <fo:block  text-align="start" > </fo:block>
+               </fo:table-cell>
+               <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
+                  <fo:block  text-align="end" >
+                     <xsl:value-of select="format-number(object[@model='accounting.accountingperiod']/Overall_Assets,'#.##0,00', 'european')"/> CHF
+                  </fo:block>
+               </fo:table-cell>
              </fo:table-row>
-            </xsl:for-each>
           </fo:table-body>
-              </xsl:otherwise>
-          </xsl:choose>
        </fo:table>
        <fo:block font-size="9pt"
               font-family="BitstreamVeraSans"
@@ -157,26 +151,42 @@
              </fo:table-header>
           <fo:table-body font-size="9pt"
                          font-family="BitstreamVeraSans">
-         <xsl:for-each select="Account[@accountType='L']">
-          <xsl:sort select="AccountNumber" data-type="number"/>
+         <xsl:for-each select="object[@model='accounting.account']">
+          <xsl:sort select="field[@name='account_number']" data-type="number"/>
+             <xsl:choose>
+             <xsl:when test="field[@name='account_type'] = 'L'">
              <fo:table-row keep-together="always">
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="start" >
-                      <xsl:value-of select="AccountNumber"/>
+                      <xsl:value-of select="field[@name='account_number']"/>
                    </fo:block>
                 </fo:table-cell>
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="start" >
-                      <xsl:value-of select="accountName"/>
+                      <xsl:value-of select="field[@name='title']"/>
                    </fo:block>
                 </fo:table-cell>
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="end" >
-                      <xsl:value-of select="format-number(currentValue,'#.##0,00', 'european')"/> CHF
+                      <xsl:value-of select="format-number(sum_of_all_bookings_through_now,'#.##0,00', 'european')"/> CHF
                    </fo:block>
                 </fo:table-cell>
-             </fo:table-row>
+             </fo:table-row></xsl:when><xsl:otherwise></xsl:otherwise></xsl:choose>
             </xsl:for-each>
+              <fo:table-row keep-together="always">
+               <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
+                  <fo:block  text-align="start" >Total liabilities
+                  </fo:block>
+               </fo:table-cell>
+               <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
+                  <fo:block  text-align="start" > </fo:block>
+               </fo:table-cell>
+               <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
+                  <fo:block  text-align="end" >
+                     <xsl:value-of select="format-number(object[@model='accounting.accountingperiod']/Overall_Liabilities,'#.##0,00', 'european')"/> CHF
+                  </fo:block>
+               </fo:table-cell>
+             </fo:table-row>
           </fo:table-body>
        </fo:table>
        <fo:block font-size="9pt"
@@ -209,7 +219,7 @@
                 </fo:table-cell>
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="end" >
-                      <xsl:value-of select="format-number(TotalProfitLoss,'#.##0,00', 'european')"/> CHF
+                      <xsl:value-of select="format-number(object[@model='accounting.accountingperiod']/Overall_Assets-object[@model='accounting.accountingperiod']/Overall_Liabilities,'#.##0,00', 'european')"/> CHF
                    </fo:block>
                 </fo:table-cell>
              </fo:table-row>
