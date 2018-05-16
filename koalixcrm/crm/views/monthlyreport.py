@@ -206,8 +206,8 @@ def work_report(request):
         HttpResponseRedirect('/admin/')
     else:
         datetime_now = datetime.datetime.today()
-        from_date = (datetime_now - datetime.timedelta(days=30)).date()
-        to_date = datetime_now.date()
+        to_date = (datetime_now + datetime.timedelta(days=30)).date()
+        from_date = datetime_now.date()
         range_selection_form = create_range_selection_form(from_date, to_date)
         formset = create_new_formset(from_date, to_date, request)
         c = {'formset': formset,
