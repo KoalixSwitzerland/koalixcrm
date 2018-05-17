@@ -2,9 +2,9 @@
 
 from django.db import models
 from django.contrib import admin
+from django.template.base import logger
 from django.utils.translation import ugettext as _
 from rest_framework import serializers
-from rest_framework.relations import PrimaryKeyRelatedField
 
 
 class Unit(models.Model):
@@ -62,10 +62,21 @@ class ProductUnitTransform(admin.TabularInline):
     allow_add = True
 
 
+class ParentUnitJSONSerializer(serializers.HyperlinkedModelSerializer):
+    id = serializers.IntegerField()
+    shortName = serializers.CharField(source='short_name')
+
+    class Meta:
+        model = Unit
+        fields = ('id',
+                  'description',
+                  'shortName')
+
+
 class UnitJSONSerializer(serializers.HyperlinkedModelSerializer):
     shortName = serializers.CharField(source='short_name')
+    isFractionOf = ParentUnitJSONSerializer(source='is_a_fraction_of')
     fractionFactor = serializers.IntegerField(source='fraction_factor_to_next_higher_unit')
-    isFractionOf = PrimaryKeyRelatedField(queryset=Unit.objects.all(), source='is_a_fraction_of')
 
     class Meta:
         model = Unit
@@ -74,4 +85,18 @@ class UnitJSONSerializer(serializers.HyperlinkedModelSerializer):
                   'shortName',
                   'isFractionOf',
                   'fractionFactor')
+        depth = 1
+
+    def create(self, validated_data):
+        parentUnit = validated_data.pop('is_a_fraction_of')
+
+        # Create new unit       
+        unit = Unit.objects.create(description=validated_data['description'],
+                                   short_name=validated_data['short_name'],
+                                   is_a_fraction_of_id=parentUnit['id'],
+                                   fraction_factor_to_next_higher_unit=validated_data['fraction_factor_to_next_higher_unit'])
+
+        return unit
+
+
 
