@@ -98,5 +98,16 @@ class UnitJSONSerializer(serializers.HyperlinkedModelSerializer):
 
         return unit
 
+    def update(self, instance, validated_data):
+        parentUnit = validated_data.pop('is_a_fraction_of')
+
+        instance.description = validated_data.get('description', instance.description)
+        instance.short_name = validated_data.get('short_name', instance.short_name)
+        instance.is_a_fraction_of_id = parentUnit.get('id', instance.is_a_fraction_of_id)
+        instance.fraction_factor_to_next_higher_unit = validated_data.get('fraction_factor_to_next_higher_unit', instance.fraction_factor_to_next_higher_unit)
+
+        instance.save()
+
+        return instance
 
 
