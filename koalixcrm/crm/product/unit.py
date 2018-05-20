@@ -63,8 +63,9 @@ class ProductUnitTransform(admin.TabularInline):
 
 
 class ParentUnitJSONSerializer(serializers.HyperlinkedModelSerializer):
-    id = serializers.IntegerField()
-    shortName = serializers.CharField(source='short_name')
+    id = serializers.IntegerField(required=False)
+    description = serializers.CharField(read_only=True)
+    shortName = serializers.CharField(source='short_name', read_only=True)
 
     class Meta:
         model = Unit
@@ -75,8 +76,12 @@ class ParentUnitJSONSerializer(serializers.HyperlinkedModelSerializer):
 
 class UnitJSONSerializer(serializers.HyperlinkedModelSerializer):
     shortName = serializers.CharField(source='short_name')
-    isFractionOf = ParentUnitJSONSerializer(source='is_a_fraction_of')
-    fractionFactor = serializers.IntegerField(source='fraction_factor_to_next_higher_unit')
+    description = serializers.CharField()
+    isFractionOf = ParentUnitJSONSerializer(source='is_a_fraction_of',
+                                            allow_null=True)
+    fractionFactor = serializers.IntegerField(source='fraction_factor_to_next_higher_unit',
+                                              required=False,
+                                              allow_null=True)
 
     class Meta:
         model = Unit
@@ -88,24 +93,34 @@ class UnitJSONSerializer(serializers.HyperlinkedModelSerializer):
         depth = 1
 
     def create(self, validated_data):
+        unit = Unit()
+        unit.description = validated_data['description']
+        unit.short_name = validated_data['short_name']
+        if 'fraction_factor_to_next_higher_unit' in validated_data:
+            unit.fraction_factor_to_next_higher_unit=validated_data['fraction_factor_to_next_higher_unit']
+
         parentUnit = validated_data.pop('is_a_fraction_of')
-
-        # Create new unit       
-        unit = Unit.objects.create(description=validated_data['description'],
-                                   short_name=validated_data['short_name'],
-                                   is_a_fraction_of_id=parentUnit['id'],
-                                   fraction_factor_to_next_higher_unit=validated_data['fraction_factor_to_next_higher_unit'])
-
+        if parentUnit:
+            if parentUnit.get('id', None):
+                unit.is_a_fraction_of = Unit.objects.get(id=parentUnit.get('id', None))
+            else:
+                unit.is_a_fraction_of = None
+        unit.save()
         return unit
 
     def update(self, instance, validated_data):
-        parentUnit = validated_data.pop('is_a_fraction_of')
-
         instance.description = validated_data.get('description', instance.description)
         instance.short_name = validated_data.get('short_name', instance.short_name)
-        instance.is_a_fraction_of_id = parentUnit.get('id', instance.is_a_fraction_of_id)
-        instance.fraction_factor_to_next_higher_unit = validated_data.get('fraction_factor_to_next_higher_unit', instance.fraction_factor_to_next_higher_unit)
 
+        parentUnit = validated_data.pop('is_a_fraction_of')
+        if parentUnit:
+            if parentUnit.get('id', instance.is_a_fraction_of_id):
+                instance.is_a_fraction_of = Unit.objects.get(id=parentUnit.get('id', None))
+            else:
+                instance.is_a_fraction_of = instance.is_a_fraction_of_id
+        else:
+            instance.is_a_fraction_of = None
+        instance.fraction_factor_to_next_higher_unit = validated_data.get('fraction_factor_to_next_higher_unit', instance.fraction_factor_to_next_higher_unit)
         instance.save()
 
         return instance
