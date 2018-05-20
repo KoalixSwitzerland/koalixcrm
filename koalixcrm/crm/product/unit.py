@@ -99,10 +99,10 @@ class UnitJSONSerializer(serializers.HyperlinkedModelSerializer):
         if 'fraction_factor_to_next_higher_unit' in validated_data:
             unit.fraction_factor_to_next_higher_unit=validated_data['fraction_factor_to_next_higher_unit']
 
-        parentUnit = validated_data.pop('is_a_fraction_of')
-        if parentUnit:
-            if parentUnit.get('id', None):
-                unit.is_a_fraction_of = Unit.objects.get(id=parentUnit.get('id', None))
+        parent_unit = validated_data.pop('is_a_fraction_of')
+        if parent_unit:
+            if parent_unit.get('id', None):
+                unit.is_a_fraction_of = Unit.objects.get(id=parent_unit.get('id', None))
             else:
                 unit.is_a_fraction_of = None
         unit.save()
@@ -112,10 +112,10 @@ class UnitJSONSerializer(serializers.HyperlinkedModelSerializer):
         instance.description = validated_data.get('description', instance.description)
         instance.short_name = validated_data.get('short_name', instance.short_name)
 
-        parentUnit = validated_data.pop('is_a_fraction_of')
-        if parentUnit:
-            if parentUnit.get('id', instance.is_a_fraction_of_id):
-                instance.is_a_fraction_of = Unit.objects.get(id=parentUnit.get('id', None))
+        parent_unit = validated_data.pop('is_a_fraction_of')
+        if parent_unit:
+            if parent_unit.get('id', instance.is_a_fraction_of_id):
+                instance.is_a_fraction_of = Unit.objects.get(id=parent_unit.get('id', None))
             else:
                 instance.is_a_fraction_of = instance.is_a_fraction_of_id
         else:
