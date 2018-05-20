@@ -63,6 +63,9 @@ class ProductForCustomer(models.Model):
     product = models.ForeignKey(Product, verbose_name=_("Related Product"), blank=True, null=True)
     supplier = models.ForeignKey(Supplier, related_name='customer_association', blank=True, null=True)
     service_type = models.CharField(verbose_name=_("Service Type"), max_length=100, blank=True, null=True)
+    quantity = models.IntegerField(verbose_name=_("Quantity"), blank=True, null=True)
+    maintainer = models.CharField(verbose_name=_("Maintainer"), max_length=100, blank=True, null=True)
+    year = models.CharField(verbose_name=_("Year of installation"), max_length=50, blank=True, null=True)
     expire_date = models.DateTimeField(verbose_name=_("Expire Date"), blank=True, null=True)
     
     class Meta:
@@ -73,23 +76,57 @@ class ProductForCustomer(models.Model):
     def __str__(self):
         return str(self.id)
 
-class PhoneSystemForCustomer(ProductForCustomer):
-    year = models.CharField(verbose_name=_("Year of installation"), max_length=50, blank=True, null=True)
-    no_ext_lines = models.IntegerField(verbose_name=_("External lines"), blank=True, null=True)
-    no_int_lines = models.IntegerField(verbose_name=_("Internal lines"), blank=True, null=True)
-    maintainer = models.CharField(verbose_name=_("Maintainer"), max_length=100, blank=True, null=True)
-
+class SwitchboardForCustomer(ProductForCustomer):
+    internal_lines = models.IntegerField(verbose_name=_("Internal lines"), blank=True, null=True)
+    external_lines = models.IntegerField(verbose_name=_("External lines"), blank=True, null=True)
+    
     class Meta:
         app_label = "crm"
-        verbose_name = _('Phone System')
-        verbose_name_plural = _('Phone Systems')  
+        verbose_name = _('Switchboard')
+        verbose_name_plural = _('Switchboards')  
+
+    def __str__(self):
+        return str(self.id)
+
+class AnalogPhoneForCustomer(ProductForCustomer):
+    class Meta:
+        app_label = "crm"
+        verbose_name = _('Analog Phone')
+        verbose_name_plural = _('Analog Phones')  
+
+    def __str__(self):
+        return str(self.id)
+
+class DigitalPhoneForCustomer(ProductForCustomer):
+    class Meta:
+        app_label = "crm"
+        verbose_name = _('Digital Phone')
+        verbose_name_plural = _('Digital Phones')  
+
+    def __str__(self):
+        return str(self.id)
+
+class InternetForCustomer(ProductForCustomer):
+    class Meta:
+        app_label = "crm"
+        verbose_name = _('Internet Connection')
+        verbose_name_plural = _('Internet Connections')  
+
+    def __str__(self):
+        return str(self.id)
+
+class MobileForCustomer(ProductForCustomer):
+    class Meta:
+        app_label = "crm"
+        verbose_name = _('Mobile Service')
+        verbose_name_plural = _('Mobile Services')  
 
     def __str__(self):
         return str(self.id)
 
 
 class CustomerPhoneSystem(admin.StackedInline):
-    model = PhoneSystemForCustomer
+    model = SwitchboardForCustomer
     extra = 0
     classes = ['collapse']
     raw_id_fields = ("product",)
@@ -100,7 +137,83 @@ class CustomerPhoneSystem(admin.StackedInline):
         (None, {'fields': ['product']}),
         ('Additional data', {
             'fields': (
-            'service_type', 'supplier', 'expire_date', 'year', 'no_ext_lines', 'no_int_lines',)
+            'service_type', 'supplier', 'expire_date', 'year', 'external_lines', 'internal_lines',)
+        }),
+    )
+
+    def __str__(self):
+        return '{} ({})'.format(str(self.product.name), self.product.id)
+
+class CustomerAnalogPhones(admin.StackedInline):
+    model = AnalogPhoneForCustomer
+    extra = 0
+    classes = ['collapse']
+    raw_id_fields = ("product",)
+    autocomplete_lookup_fields = {
+        'fk': ['product'],
+    }
+    fieldsets = (
+        (None, {'fields': ['product']}),
+        ('Additional data', {
+            'fields': (
+            'service_type', 'supplier', 'expire_date', 'year',)
+        }),
+    )
+
+    def __str__(self):
+        return '{} ({})'.format(str(self.product.name), self.product.id)
+
+class CustomerDigitalPhones(admin.StackedInline):
+    model = DigitalPhoneForCustomer
+    extra = 0
+    classes = ['collapse']
+    raw_id_fields = ("product",)
+    autocomplete_lookup_fields = {
+        'fk': ['product'],
+    }
+    fieldsets = (
+        (None, {'fields': ['product']}),
+        ('Additional data', {
+            'fields': (
+            'service_type', 'supplier', 'expire_date', 'year',)
+        }),
+    )
+
+    def __str__(self):
+        return '{} ({})'.format(str(self.product.name), self.product.id)
+
+class CustomerMobilePhones(admin.StackedInline):
+    model = MobileForCustomer
+    extra = 0
+    classes = ['collapse']
+    raw_id_fields = ("product",)
+    autocomplete_lookup_fields = {
+        'fk': ['product'],
+    }
+    fieldsets = (
+        (None, {'fields': ['product']}),
+        ('Additional data', {
+            'fields': (
+            'service_type', 'supplier', 'expire_date', 'year',)
+        }),
+    )
+
+    def __str__(self):
+        return '{} ({})'.format(str(self.product.name), self.product.id)
+
+class CustomerInternetConnection(admin.StackedInline):
+    model = InternetForCustomer
+    extra = 0
+    classes = ['collapse']
+    raw_id_fields = ("product",)
+    autocomplete_lookup_fields = {
+        'fk': ['product'],
+    }
+    fieldsets = (
+        (None, {'fields': ['product']}),
+        ('Additional data', {
+            'fields': (
+            'service_type', 'supplier', 'expire_date', 'year',)
         }),
     )
 
@@ -135,7 +248,7 @@ class OptionCustomer(admin.ModelAdmin):
     allow_add = True
     ordering = ('id',)
     search_fields = ('id', 'name')
-    inlines = [ContactPostalAddress, ContactPhoneAddress, ContactEmailAddress, PeopleInlineAdmin, CustomerPhoneSystem, ContactCall, ContactVisit]
+    inlines = [ContactPostalAddress, ContactPhoneAddress, ContactEmailAddress, PeopleInlineAdmin, CustomerPhoneSystem, CustomerAnalogPhones, CustomerDigitalPhones, CustomerMobilePhones, CustomerInternetConnection, ContactCall, ContactVisit]
     
     pluginProcessor = PluginProcessor()
     inlines.extend(pluginProcessor.getPluginAdditions("customerInline"))
