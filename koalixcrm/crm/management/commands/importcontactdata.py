@@ -40,9 +40,14 @@ class Command(BaseCommand):
         return self.USERID
 
     def format_phone_number(self, value):
-        res = value.replace(" ", "")
+        res = str(value).replace(" ", "")
         res = re.sub(r"^[a-zA-Z]+(\d+)$", r"\1", res)
         res = re.sub(r"^(\d+)[a-zA-Z]+$", r"\1", res)
+        return res
+
+    def format_city_name(self, value):
+        res = str(value).strip()
+        res = re.sub(r"^(.*)\s?\([a-zA-Z]+\)$", r"\1", res)
         return res
 
     def prepare_product_args(self, product_type, sheet, row_num):
@@ -290,15 +295,15 @@ class Command(BaseCommand):
                     ea = {}
                     call = {}
 
+                    _pa_prename = sheet.cell(row_num, LASTNAME).value
                     pa['prefix'] = sheet.cell(row_num, PERSONPREFIX).value
                     pa['name'] = sheet.cell(row_num, NAME).value
-                    pa['prename'] = sheet.cell(row_num, LASTNAME).value
                     pa['addressline1'] = str(sheet.cell(row_num, ADDRESS).value).strip()
                     pa['addressline2'] = str(sheet.cell(row_num, ADDRESS_NO).value).strip()
                     #pa['addressline3'] = sheet.cell(row_num, 0).value
                     #pa['addressline4'] = sheet.cell(row_num, 0).value
                     pa['zipcode'] = int(sheet.cell(row_num, ZIPCODE).value) if (sheet.cell(row_num, ZIPCODE).value) else 0
-                    pa['town'] = sheet.cell(row_num, CITY).value
+                    pa['town'] = self.format_city_name(sheet.cell(row_num, CITY).value)
                     pa['state'] = sheet.cell(row_num, STATE).value
                     pa['country'] = sheet.cell(row_num, COUNTRY).value
 
@@ -377,11 +382,8 @@ class Command(BaseCommand):
                         if pa['zipcode'] > 0:
                             pa['purpose'] = 'O'
                             pa['company'] = contact
-                            postal_address, created = PostalAddressForContact.objects.update_or_create(**pa)
-                            '''if created:
-                                raise NameError("indirizzo creato: address = {} - contact id = {}".format(pa.addressline1, contact.pk))
-                            else:
-                                raise NameError("indirizzo aggiornato: address = {} - contact id = {}".format(pa.addressline1, contact.pk))'''
+                            postal_address, created = PostalAddressForContact.objects.get_or_create(company=contact, purpose='O', prename=_pa_prename)
+                            updated = PostalAddressForContact.objects.filter(pk=postal_address.pk).update(**pa)
 
                         if pha_mobile['phone']:
                             pha_mobile['purpose'] = 'B'
@@ -412,7 +414,7 @@ class Command(BaseCommand):
                         if str(sheet.cell(row_num, MEETINGNOTES).value):
                             call['description'] = str(sheet.cell(row_num, MEETINGNOTES).value)
                             call['status'] = 'D'
-                            call['purpose'] = 'O'
+                            call['purpose'] = 'S'
                             call['company'] = contact
                             call_for_contact = CallForContact.objects.update_or_create(**call)
 
