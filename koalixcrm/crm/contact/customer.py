@@ -240,9 +240,27 @@ class CustomerInternetConnection(admin.StackedInline):
                 return queryset.filter(pk__in=ids)
         return queryset'''
 
+class IsLeadFilter(admin.SimpleListFilter):
+    title = _('Is lead')
+    parameter_name = 'isLead'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('lead', _('Lead')),
+            ('customer', _('Customer')),
+        )
+
+    def queryset(self, request, queryset):
+        if self.value() == 'lead':
+            return queryset.filter(isLead=True)
+        elif self.value() == 'customer':
+            return queryset.filter(isLead=False)
+        else:
+            return queryset
+
 class OptionCustomer(admin.ModelAdmin):
-    list_display = ('id', 'name', 'defaultCustomerBillingCycle', 'get_state', 'get_town', 'dateofcreation',)
-    list_filter = ('ismemberof', StateFilter, CityFilter)
+    list_display = ('id', 'name', 'defaultCustomerBillingCycle', 'get_state', 'get_town', 'dateofcreation', 'get_is_lead',)
+    list_filter = ('ismemberof', StateFilter, CityFilter, IsLeadFilter)
     #list_display_links = ('name',)
     fieldsets = (('', {'fields': ('name', 'defaultCustomerBillingCycle', 'ismemberof',)}),)
     allow_add = True
@@ -267,6 +285,11 @@ class OptionCustomer(admin.ModelAdmin):
         return address.town if address is not None else None
 
     get_town.short_description = _("City")
+
+    def get_is_lead(self, obj):
+        return obj.isLead
+
+    get_is_lead.short_description = _("Is Lead")
     
     def createContract(self, request, queryset):
         for obj in queryset:

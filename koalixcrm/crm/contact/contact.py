@@ -243,7 +243,7 @@ class StateFilter(admin.SimpleListFilter):
         for p in PostalAddressForContact.objects.all(): 
             if self.value() == str(p.state):
                 address_per_company = PostalAddressForContact.objects.filter(state=p.state)
-                ids = [(a.company.id) for a in address_per_company]
+                ids = [(p.company.id) for a in address_per_company]
                 return queryset.filter(pk__in=ids)
         return queryset
 
@@ -265,7 +265,7 @@ class CityFilter(admin.SimpleListFilter):
         for p in PostalAddressForContact.objects.all(): 
             if self.value() == str(p.town):
                 address_per_company = PostalAddressForContact.objects.filter(town=p.town)
-                ids = [(a.company.id) for c in address_per_company]
+                ids = [(p.company.id) for c in address_per_company]
                 return queryset.filter(pk__in=ids)
         return queryset
 
