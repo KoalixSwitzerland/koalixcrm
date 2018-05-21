@@ -255,7 +255,7 @@ class CityFilter(admin.SimpleListFilter):
         list = []
         state = request.GET.get('state', None)
         adjusted_queryset = PostalAddress.objects.all() if state is None else PostalAddress.objects.filter(state=state)
-        for a in adjusted_queryset.values('town').distinct():
+        for a in adjusted_queryset.values('town').distinct().order_by('town'):
             list.append((a['town'], _(a['town'])))
         return (
             list
