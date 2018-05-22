@@ -14,7 +14,10 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
-   sodipodi:docname="pdfcreation.svg">
+   sodipodi:docname="pdfcreation.svg"
+   inkscape:export-filename="/home/aaron/PycharmProjects/koalixcrm/documentation/source/images/pdfcreation.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96">
   <defs
      id="defs4">
     <marker
@@ -39,7 +42,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.74118969"
-     inkscape:cx="372.04724"
+     inkscape:cx="-0.32707082"
      inkscape:cy="688.08296"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"

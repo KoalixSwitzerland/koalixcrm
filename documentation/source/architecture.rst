@@ -3,10 +3,9 @@
 Architecture
 ========
 
-
 Standard installation with docker, postgres
 -------------------------------------------
-.. image:: /images/koalixcrm_architecture.png
+.. image:: /images/koalixcrm_architecture_django_webserver.png
 
 Standard installation with docker, postgres and apache2
 -------------------------------------------------------
