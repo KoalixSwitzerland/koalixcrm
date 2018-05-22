@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.test import LiveServerTestCase
 from koalixcrm.crm.models import Contract
 from koalixcrm.crm.models import Customer
 from koalixcrm.crm.models import CustomerGroup
@@ -11,6 +12,8 @@ from koalixcrm.djangoUserExtension.models import TemplateSet
 from koalixcrm.crm.models import Work
 from koalixcrm.crm.models import EmployeeAssignmentToTask
 from django.contrib.auth.models import User
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 import datetime
 
 
@@ -120,3 +123,26 @@ class ReportingCalculationsTest(TestCase):
         )
         self.assertEqual(
             (test_task.effective_effort()).__str__(), "3.5 h")
+
+
+class ReportingCalculationsTest(LiveServerTestCase):
+
+    def setUp(self):
+        self.selenium = webdriver.Firefox()
+        super(ReportingCalculationsTest, self).setUp()
+
+    def tearDown(self):
+        self.selenium.quit()
+
+    def test_registration_of_work(self):
+        selenium = self.selenium
+        #Opening the link we want to test
+        selenium.get('http://127.0.0.1:8000/koalixcrm/crm/reporting/monthlyreport/')
+        #find the form element
+        project = selenium.find_element_by_xpath('//*[@id="id_form-0-projects"]')
+        task = selenium.find_element_by_xpath('//*[@id="id_form-0-task"]')
+        date = selenium.find_element_by_xpath('//*[@id="id_form-0-date"]')
+        start_time = selenium.find_element_by_xpath('//*[@id="id_form-0-start_time"]')
+        stop_time = selenium.find_element_by_xpath('//*[@id="id_form-0-stop_time"]')
+        description = selenium.find_element_by_xpath('//*[@id="id_form-0-description"]')
+        save = selenium.find_element_by_name('save')

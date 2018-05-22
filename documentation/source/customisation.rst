@@ -42,7 +42,7 @@ After you finised translating the whole file test your translation by compiling 
 
   django-admin compilemessages 
 
-After this you are able to use your translation. Sometimes seting your language in ``/var/www/koalixcrm/settings.py`` is required.
+After this you are able to use your translation. Sometimes setting your language in ``/var/www/koalixcrm/settings.py`` is required.
 Go on with your translation for accounting and for djangouserextention folders.
 As soon as you finish this part you will be able to work with koalixcrm in your own language. But there is still something missing: the templatefiles for pdf creation have to be translated as well.
 
