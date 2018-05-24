@@ -15,7 +15,6 @@ from django.contrib.auth.models import User
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import datetime
-import time
 
 
 class ReportingCalculationsTest(TestCase):
