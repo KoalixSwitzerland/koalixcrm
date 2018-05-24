@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.test import LiveServerTestCase
 from koalixcrm.crm.models import Contract
 from koalixcrm.crm.models import Customer
 from koalixcrm.crm.models import CustomerGroup
@@ -11,6 +12,12 @@ from koalixcrm.djangoUserExtension.models import TemplateSet
 from koalixcrm.crm.models import Work
 from koalixcrm.crm.models import EmployeeAssignmentToTask
 from django.contrib.auth.models import User
+from selenium import webdriver
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 import datetime
 
 
@@ -25,9 +32,10 @@ class ReportingCalculationsTest(TestCase):
             time_to_payment_date=30,
             payment_reminder_time_to_payment=10
         )
-        test_user=User.objects.create(
-            username='Username',
-            password="Userone")
+        test_user=User.objects.create_superuser(
+            username='admin',
+            password='admin',
+            email='admin@admin.com')
         test_customer_group=CustomerGroup.objects.create(
             name="Tripple A"
         )
@@ -84,7 +92,7 @@ class ReportingCalculationsTest(TestCase):
             (test_task.planned_duration()).__str__(), "60 days, 0:00:00")
         self.assertEqual(
             (test_task.planned_effort()).__str__(), "0 h")
-        test_user = User.objects.get(username="Username")
+        test_user = User.objects.get(username="admin")
         test_employee = UserExtension.objects.get(user=test_user)
         EmployeeAssignmentToTask.objects.create(
             employee=test_employee,
@@ -120,3 +128,53 @@ class ReportingCalculationsTest(TestCase):
         )
         self.assertEqual(
             (test_task.effective_effort()).__str__(), "3.5 h")
+
+
+class ReportingCalculationsUITest(LiveServerTestCase):
+
+    def setUp(self):
+        firefox_options = webdriver.firefox.options.Options()
+        firefox_options.set_headless(headless=True)
+        self.selenium = webdriver.Firefox(firefox_options=firefox_options)
+        prepare_test = ReportingCalculationsTest()
+        prepare_test.setUp()
+
+    def tearDown(self):
+        self.selenium.quit()
+
+    def test_registration_of_work(self):
+        selenium = self.selenium
+        #login
+        selenium.get('%s%s' % (self.live_server_url, '/admin/'))
+        timeout = 5
+        try:
+            element_present = EC.presence_of_element_located((By.ID, 'id_username'))
+            WebDriverWait(selenium, timeout).until(element_present)
+        except TimeoutException:
+            print("Timed out waiting for page to load")
+        username = selenium.find_element_by_xpath('//*[@id="id_username"]')
+        password = selenium.find_element_by_xpath('//*[@id="id_password"]')
+        submit_button = selenium.find_element_by_xpath('/html/body/div/article/div/div/form/div/ul/li/input')
+        username.send_keys("admin")
+        password.send_keys("admin")
+        submit_button.send_keys(Keys.RETURN)
+        try:
+            element_present = EC.presence_of_element_located((By.ID, 'module_1_7'))
+            WebDriverWait(selenium, timeout).until(element_present)
+        except TimeoutException:
+            print("Timed out waiting for page to load")
+        #Opening the link we want to test
+        selenium.get('%s%s' % (self.live_server_url, '/koalixcrm/crm/reporting/monthlyreport/'))
+        try:
+            element_present = EC.presence_of_element_located((By.ID, 'id_form-0-projects'))
+            WebDriverWait(selenium, timeout).until(element_present)
+        except TimeoutException:
+            print("Timed out waiting for page to load")
+        #find the form element
+        project = selenium.find_element_by_xpath('//*[@id="id_form-0-projects"]')
+        task = selenium.find_element_by_xpath('//*[@id="id_form-0-task"]')
+        date = selenium.find_element_by_xpath('//*[@id="id_form-0-date"]')
+        start_time = selenium.find_element_by_xpath('//*[@id="id_form-0-start_time"]')
+        stop_time = selenium.find_element_by_xpath('//*[@id="id_form-0-stop_time"]')
+        description = selenium.find_element_by_xpath('//*[@id="id_form-0-description"]')
+        save = selenium.find_element_by_name('save')
