@@ -15,6 +15,7 @@ from django.contrib.auth.models import User
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import datetime
+import time
 
 
 class ReportingCalculationsTest(TestCase):
@@ -28,9 +29,10 @@ class ReportingCalculationsTest(TestCase):
             time_to_payment_date=30,
             payment_reminder_time_to_payment=10
         )
-        test_user=User.objects.create(
-            username='Username',
-            password="Userone")
+        test_user=User.objects.create_superuser(
+            username='admin',
+            password='admin',
+            email='admin@admin.com')
         test_customer_group=CustomerGroup.objects.create(
             name="Tripple A"
         )
@@ -87,7 +89,7 @@ class ReportingCalculationsTest(TestCase):
             (test_task.planned_duration()).__str__(), "60 days, 0:00:00")
         self.assertEqual(
             (test_task.planned_effort()).__str__(), "0 h")
-        test_user = User.objects.get(username="Username")
+        test_user = User.objects.get(username="admin")
         test_employee = UserExtension.objects.get(user=test_user)
         EmployeeAssignmentToTask.objects.create(
             employee=test_employee,
@@ -125,19 +127,30 @@ class ReportingCalculationsTest(TestCase):
             (test_task.effective_effort()).__str__(), "3.5 h")
 
 
-class ReportingCalculationsTest(LiveServerTestCase):
+class ReportingCalculationsUITest(LiveServerTestCase):
 
     def setUp(self):
-        self.selenium = webdriver.Firefox()
-        super(ReportingCalculationsTest, self).setUp()
+        firefox_options = webdriver.firefox.options.Options()
+        firefox_options.set_headless(headless=True)
+        self.selenium = webdriver.Firefox(firefox_options=firefox_options)
+        prepare_test = ReportingCalculationsTest()
+        prepare_test.setUp()
 
     def tearDown(self):
         self.selenium.quit()
 
     def test_registration_of_work(self):
         selenium = self.selenium
+        #login
+        selenium.get('%s%s' % (self.live_server_url, '/admin/'))
+        username = selenium.find_element_by_xpath('//*[@id="id_username"]')
+        password = selenium.find_element_by_xpath('//*[@id="id_password"]')
+        submit_button = selenium.find_element_by_xpath('/html/body/div/article/div/div/form/div/ul/li/input')
+        username.send_keys("admin")
+        password.send_keys("admin")
+        submit_button.send_keys(Keys.RETURN)
         #Opening the link we want to test
-        selenium.get('http://127.0.0.1:8000/koalixcrm/crm/reporting/monthlyreport/')
+        selenium.get('%s%s' % (self.live_server_url, '/koalixcrm/crm/reporting/monthlyreport/'))
         #find the form element
         project = selenium.find_element_by_xpath('//*[@id="id_form-0-projects"]')
         task = selenium.find_element_by_xpath('//*[@id="id_form-0-task"]')
