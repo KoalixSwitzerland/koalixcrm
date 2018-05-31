@@ -220,10 +220,10 @@ class OptionPerson(admin.ModelAdmin):
     inlines.extend(pluginProcessor.getPluginAdditions("personActions"))
 
     def get_companies(self, obj):
-        list = []
+        items = []
         for c in obj.companies.all():
-            list.append(c.name)
-        return ','.join(list)
+            items.append(c.name)
+        return ','.join(items)
     
     get_companies.short_description = _("Works at")
 
@@ -232,18 +232,18 @@ class StateFilter(admin.SimpleListFilter):
     parameter_name = 'state'
 
     def lookups(self, request, model_admin):
-        list = []
-        for a in PostalAddress.objects.values('state').distinct():
-            list.append((a['state'], _(a['state'])))
+        items = []
+        for a in PostalAddressForContact.objects.values('state').distinct():
+            items.append((a['state'], _(a['state'])))
         return (
-            list
+            items
         )
 
     def queryset(self, request, queryset):
         for p in PostalAddressForContact.objects.all(): 
             if self.value() == str(p.state):
                 address_per_company = PostalAddressForContact.objects.filter(state=p.state)
-                ids = [(p.company.id) for a in address_per_company]
+                ids = [(a.company.id) for a in address_per_company]
                 return queryset.filter(pk__in=ids)
         return queryset
 
@@ -252,20 +252,20 @@ class CityFilter(admin.SimpleListFilter):
     parameter_name = 'city'
 
     def lookups(self, request, model_admin):
-        list = []
+        items = []
         state = request.GET.get('state', None)
-        adjusted_queryset = PostalAddress.objects.all() if state is None else PostalAddress.objects.filter(state=state)
+        adjusted_queryset = PostalAddressForContact.objects.all() if state is None else PostalAddressForContact.objects.filter(state=state)
         for a in adjusted_queryset.values('town').distinct():
-            list.append((a['town'], _(a['town'])))
+            items.append((a['town'], _(a['town'])))
         return (
-            list
+            items
         )
 
     def queryset(self, request, queryset):
         for p in PostalAddressForContact.objects.all(): 
             if self.value() == str(p.town):
                 address_per_company = PostalAddressForContact.objects.filter(town=p.town)
-                ids = [(p.company.id) for c in address_per_company]
+                ids = [(c.company.id) for c in address_per_company]
                 return queryset.filter(pk__in=ids)
         return queryset
 

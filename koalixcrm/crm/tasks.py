@@ -8,7 +8,10 @@ from koalixcrm.crm.contact.customer import Customer
 from koalixcrm.crm.contact.supplier import Supplier
 
 def import_contact_data(input_file, contact_type, current_user):
-    #_import_contact_data.delay(input_file, contact_type, current_user)
+    _import_contact_data.delay(input_file, contact_type, current_user)
+
+@shared_task
+def _import_contact_data(input_file, contact_type, current_user):
     out = io.StringIO()
     contact = None
     try:
@@ -26,32 +29,5 @@ def import_contact_data(input_file, contact_type, current_user):
             contact.set_error()
         error_message = "Sorry, the input file is not valid: {}".format(e)
         raise
-
-@shared_task
-def _import_contact_data(input_file, contact_type, current_user):
-    '''out = io.StringIO()
-    contact = None
-    try:
-        call_command('importcontactdata',
-            excel_file=input_file,
-            contact_type=contact_type,
-            current_user=str(current_user),
-            stdout=out)
-        value = out.getvalue()
-        
-        class_type = value.split('_')[0]
-        value_name = value.split('_')[1]
-        if class_type == 'S':
-            contact = Supplier.objects.get(name=str(value_name).strip())
-        elif class_type == 'C':
-            contact = Customer.objects.get(name=str(value_name).strip())
-        print('contact found: {}'.format(contact.name))
-    
-    except ValueError as e:
-        value = None
-        if contact is not None:
-            contact.set_error()
-        error_message = "Sorry, the input file is not valid: {}".format(e)
-        raise'''
    
         
