@@ -14,7 +14,6 @@ from koalixcrm.crm.contact.person import *
 from koalixcrm.crm.const.purpose import *
 from koalixcrm.globalSupportFunctions import xstr
 from koalixcrm.crm.inlinemixin import LimitedAdminInlineMixin
-#from koalixcrm.crm.forms import ImportDataContactForm
 
 from django.utils import timezone
 
@@ -240,11 +239,10 @@ class StateFilter(admin.SimpleListFilter):
         )
 
     def queryset(self, request, queryset):
-        for p in PostalAddressForContact.objects.all(): 
-            if self.value() == str(p.state):
-                address_per_company = PostalAddressForContact.objects.filter(state=p.state)
-                ids = [(a.company.id) for a in address_per_company]
-                return queryset.filter(pk__in=ids)
+        if self.value():
+            matching_addresses = PostalAddressForContact.objects.filter(state=self.value())
+            ids = [(a.company.id) for a in matching_addresses]
+            return queryset.filter(pk__in=ids)
         return queryset
 
 class CityFilter(admin.SimpleListFilter):
@@ -263,33 +261,8 @@ class CityFilter(admin.SimpleListFilter):
         )
 
     def queryset(self, request, queryset):
-        for p in PostalAddressForContact.objects.all(): 
-            if self.value() == str(p.town):
-                address_per_company = PostalAddressForContact.objects.filter(town=p.town)
-                ids = [(c.company.id) for c in address_per_company]
-                return queryset.filter(pk__in=ids)
+        if self.value():
+            matching_addresses = PostalAddressForContact.objects.filter(town=self.value())
+            ids = [(a.company.id) for a in matching_addresses]
+            return queryset.filter(pk__in=ids)
         return queryset
-
-
-#DATA IMPORT
-class ContactImportData(models.Model):
-    data_file = models.FileField(upload_to='data_files', max_length=255)
-
-    contact_type = models.CharField(verbose_name=_("Contact Type"), max_length=1, choices=CONTACTTYPE)
-
-    def file_link(self):
-        if self.data_file:
-            return "<a href='%s'>download</a>" % (self.data_file.url,)
-        else:
-            return "No attachment"
-
-    file_link.allow_tags = True
-
-    def __str__(self):
-        return '{}'.format(self.data_file.name)
-
-    class Meta:
-        """
-        """
-        verbose_name = 'Contact: Import Data from XLSX file'
-        verbose_name_plural = 'Contacts: Import Data from XLSX file'

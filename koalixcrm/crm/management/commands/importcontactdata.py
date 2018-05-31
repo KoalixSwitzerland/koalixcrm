@@ -196,16 +196,14 @@ class Command(BaseCommand):
     def add_product(self, product_type, contact, sheet, row_num):
         product_args, relation_args = self.prepare_product_args(product_type, sheet, row_num)
         if product_args is None: return
-        #with open('log.txt', 'w') as logfile:
-            #logfile.write("Value : %s" %  product_args.values())
+
         product, created = Product.objects.update_or_create(**product_args)
         if product_type == PHONE_SYSTEM_P_TYPE:
             switchboard, created = SwitchboardForCustomer.objects.get_or_create(
                 customer=contact,
                 product=product,
             )
-            #with open('log.txt', 'w') as logfile:
-                #logfile.write("Value : %s" %  relation_args.values())
+            
             updated = SwitchboardForCustomer.objects.filter(pk=switchboard.pk).update(**relation_args)
         elif product_type == ANALOG_PHONE_P_TYPE:
             analogphone, created = AnalogPhoneForCustomer.objects.get_or_create(
@@ -448,9 +446,7 @@ class Command(BaseCommand):
                             supplier.save()
                         contact = supplier
                     else:
-                        raise CommandError("Cannot determine contact type")
-
-                    
+                        raise CommandError("Cannot determine contact type")                    
                 
         return '{}'.format(count)
 

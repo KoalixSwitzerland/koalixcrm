@@ -4,7 +4,7 @@ from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 from django import forms
 from django.forms import models
-from koalixcrm.crm.contact.contact import ContactImportData
+from koalixcrm.crm.contact.data_import import ContactImportData
 from koalixcrm.crm.tasks import import_contact_data
 
 class ImportDataContactForm(models.ModelForm):
