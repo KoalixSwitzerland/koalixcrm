@@ -43,12 +43,24 @@ class Command(BaseCommand):
         res = str(value).replace(" ", "")
         res = re.sub(r"^[a-zA-Z]+(\d+)$", r"\1", res)
         res = re.sub(r"^(\d+)[a-zA-Z]+$", r"\1", res)
+        res = re.sub(r".0$", r"", res)
         return res
 
     def format_city_name(self, value):
         res = str(value).strip()
         res = re.sub(r"^(.*)\s?\([a-zA-Z]+\)$", r"\1", res)
-        return res
+        return res.title()
+
+    def format_state_name(self, value):
+        if str(value):
+            return str(value).strip().upper()
+        return value
+
+    def format_int_string(self, value):
+        if str(value):
+            res = str(value).strip()
+            res = re.sub(r".0$", r"", res)
+            return res
 
     def prepare_product_args(self, product_type, sheet, row_num):
         DEFAULT_RETURN = None, None
@@ -299,12 +311,12 @@ class Command(BaseCommand):
                     pa['prefix'] = sheet.cell(row_num, PERSONPREFIX).value
                     pa['name'] = sheet.cell(row_num, NAME).value
                     pa['addressline1'] = str(sheet.cell(row_num, ADDRESS).value).strip()
-                    pa['addressline2'] = str(sheet.cell(row_num, ADDRESS_NO).value).strip()
+                    pa['addressline2'] = self.format_int_string(sheet.cell(row_num, ADDRESS_NO).value)
                     #pa['addressline3'] = sheet.cell(row_num, 0).value
                     #pa['addressline4'] = sheet.cell(row_num, 0).value
                     pa['zipcode'] = int(sheet.cell(row_num, ZIPCODE).value) if (sheet.cell(row_num, ZIPCODE).value) else 0
                     pa['town'] = self.format_city_name(sheet.cell(row_num, CITY).value)
-                    pa['state'] = sheet.cell(row_num, STATE).value
+                    pa['state'] = self.format_state_name(sheet.cell(row_num, STATE).value)
                     pa['country'] = sheet.cell(row_num, COUNTRY).value
 
                     _mobile = str(sheet.cell(row_num, MOBILE1).value)

@@ -23,7 +23,7 @@ from django.conf.urls import include
 
 site = FileBrowserSite(name="filebrowser", storage=DefaultStorage())
 customsite = FileBrowserSite(name='custom_filebrowser', storage=DefaultStorage())
-customsite.directory = "media/uploads/"
+customsite.directory = "uploads/"
 
 
 admin.autodiscover()
