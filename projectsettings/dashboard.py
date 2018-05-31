@@ -49,7 +49,7 @@ class CustomIndexDashboard(Dashboard):
                     css_classes=('collapse closed',),
                     models=('koalixcrm.crm.contact.contact.CallForContact',
                             'koalixcrm.crm.documents.visit.Visit',
-                            'koalixcrm.crm.contact.contact.ContactImportData'),
+                            'koalixcrm.crm.contact.data_import.ContactImportData'),
                 ),
                 modules.ModelList(
                     _('Data Import'),

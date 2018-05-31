@@ -1,3 +1,7 @@
+from django.db import models
+from django.utils.translation import ugettext as _
+from koalixcrm.crm.const.purpose import *
+
 class ContactImportData(models.Model):
     data_file = models.FileField(upload_to='data_files', max_length=255)
 

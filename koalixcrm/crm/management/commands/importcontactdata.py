@@ -43,7 +43,7 @@ class Command(BaseCommand):
         res = str(value).replace(" ", "")
         res = re.sub(r"^[a-zA-Z]+(\d+)$", r"\1", res)
         res = re.sub(r"^(\d+)[a-zA-Z]+$", r"\1", res)
-        res = re.sub(r".0$", r"", res)
+        res = re.sub(r"\.0$", r"", res)
         return res
 
     def format_city_name(self, value):

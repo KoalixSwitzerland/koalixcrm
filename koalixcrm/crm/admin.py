@@ -20,7 +20,8 @@ from koalixcrm.crm.contact.supplier import Supplier, OptionSupplier
 from koalixcrm.crm.contact.customergroup import CustomerGroup, OptionCustomerGroup
 from koalixcrm.crm.contact.customerbillingcycle import CustomerBillingCycle, OptionCustomerBillingCycle
 from koalixcrm.crm.contact.person import Person
-from koalixcrm.crm.contact.contact import CallForContact, OptionCall, OptionPerson, ContactImportData
+from koalixcrm.crm.contact.contact import CallForContact, OptionCall, OptionPerson
+from koalixcrm.crm.contact.data_import import ContactImportData
 from koalixcrm.crm.forms import ImportDataContactForm
 
 class ContactImportDataAdmin(admin.ModelAdmin):
