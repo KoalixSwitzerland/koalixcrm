@@ -5,6 +5,7 @@ from django.utils.translation import ugettext as _
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.admin import GenericTabularInline
 from django.contrib.contenttypes.models import ContentType
+from django.contrib import admin
 
 
 class GenericTaskLink(models.Model):
@@ -23,6 +24,9 @@ class GenericTaskLink(models.Model):
         verbose_name_plural = _('Task Links')
 
 
-class InlineGenericTaskLink(GenericTabularInline):
+class InlineGenericTaskLink(admin.TabularInline):
     model = GenericTaskLink
+    related_lookup_fields = {
+        'generic':[['content_type', 'object_id'], ],
+        },
     extra = 1

@@ -13,11 +13,11 @@ import koalixcrm
 
 class Task(models.Model):
     short_description = models.CharField(verbose_name=_("Description"), max_length=100, blank=True, null=True)
-    planned_start_date = models.DateField(verbose_name=_("Planned Start Date"), blank=False, null=False)
-    planned_end_date = models.DateField(verbose_name=_("Planned End Date"), blank=False, null=False)
+    planned_start_date = models.DateField(verbose_name=_("Planned Start Date"), blank=True, null=True)
+    planned_end_date = models.DateField(verbose_name=_("Planned End Date"), blank=True, null=True)
     project = models.ForeignKey("Contract", verbose_name=_('Contract'), blank=False, null=False)
     description = models.TextField(verbose_name=_("Description"), blank=True, null=True)
-    status = models.ForeignKey("TaskStatus", verbose_name=_('Task Status'), blank=False, null=False)
+    status = models.ForeignKey("TaskStatus", verbose_name=_('Task Status'), blank=True, null=True)
     last_status_change = models.DateField(verbose_name=_("Last Status Change"), blank=True, null=False)
 
     def planned_duration(self):
