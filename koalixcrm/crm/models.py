@@ -26,7 +26,12 @@ from koalixcrm.crm.product.product import *
 from koalixcrm.crm.product.tax import *
 from koalixcrm.crm.product.unit import *
 
-
+from koalixcrm.crm.reporting.employeeassignmenttotask import *
+from koalixcrm.crm.reporting.generictasklink import *
+from koalixcrm.crm.reporting.task import *
+from koalixcrm.crm.reporting.tasklinktype import *
+from koalixcrm.crm.reporting.taskstatus import *
+from koalixcrm.crm.reporting.work import *
 
 
 

@@ -33,6 +33,8 @@ PREREQUISITE_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'django_filters',
     'filebrowser'
 ]
 
@@ -120,7 +122,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR)
 
 PROJECT_ROOT = BASE_DIR
 
@@ -137,4 +139,8 @@ FILEBROWSER_EXTENSIONS = {
     'PNG': ['.png'],
     'GIF': ['.gif'],
     'TTF': ['.ttf'],
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',)
 }

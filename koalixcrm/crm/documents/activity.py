@@ -7,7 +7,6 @@ from django.utils.translation import ugettext as _
 from koalixcrm.crm.const.status import *
 
 from koalixcrm.plugin import *
-
 from django.utils import timezone
 
 class Call(models.Model):
@@ -42,3 +41,24 @@ class CallOverdueFilter(admin.SimpleListFilter):
         else:
             return queryset
 
+class OptionCall(admin.ModelAdmin):
+    list_display = ('id','description','date_due','purpose','get_contactname', 'status', 'is_call_overdue',)
+    list_filter = [CallOverdueFilter]
+
+    def get_contactname(self, obj):
+        return obj.company.name
+
+    get_contactname.short_description = _("Company")
+
+    def is_call_overdue(self, obj):
+        return (obj.date_due < timezone.now() and obj.status not in ['F', 'S'])
+
+    is_call_overdue.short_description = _("Is call overdue")
+
+class OptionVisit(admin.ModelAdmin):
+    list_display = ('id','description','date_due','purpose','get_contactname', 'status', 'ref_call',)
+
+    def get_contactname(self, obj):
+        return obj.company.name
+
+    get_contactname.short_description = _("Company")

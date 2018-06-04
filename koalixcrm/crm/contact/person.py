@@ -5,7 +5,6 @@ from django.contrib import admin
 from django.utils.translation import ugettext as _
 from koalixcrm.crm.const.postaladdressprefix import *
 from koalixcrm.plugin import *
-#from koalixcrm.crm.contact.contact import ContactPersonAssociation
 
 class Person(models.Model):
     prefix = models.CharField(max_length=1, choices=POSTALADDRESSPREFIX, verbose_name=_("Prefix"), blank=True,
@@ -24,10 +23,3 @@ class Person(models.Model):
         app_label = "crm"
         verbose_name = _('Person')
         verbose_name_plural = _('People')
-
-
-
-
-
-
-

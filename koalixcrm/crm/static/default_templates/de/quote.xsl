@@ -304,20 +304,21 @@
                          font-family="BitstreamVeraSans"
                          color="black"
                          text-align="left"
-                         margin-top="2cm"
+                         margin-top="1cm"
 			 linefeed-treatment="preserve">
                    <xsl:value-of select="field[@name='text_paragraph']"/>
                 </fo:block>
              </xsl:when>
           </xsl:choose>
        </xsl:for-each>
-       <fo:block font-size="15pt"
+       <fo:block font-size="12pt"
                  font-family="BitstreamVeraSans"
                  color="black"
                  text-align="left"
                  font-weight="bold"
-                 margin-top="2cm">
-        Offerte <xsl:value-of select="object[@model='crm.salesdocument']/field[@name='description']"/>
+                 margin-top="1cm"
+                 margin-bottom="0.5cm">
+        Offerte - <xsl:value-of select="object[@model='crm.salesdocument']/field[@name='description']"/>
        </fo:block>
        <xsl:for-each select="object[@model='crm.textparagraphinsalesdocument']">
           <xsl:choose>
@@ -326,9 +327,10 @@
                           font-family="BitstreamVeraSans"
                           color="black"
                           text-align="left"
-                          margin-top="2cm"
-			  linefeed-treatment="preserve"
-			  page-break-after="always">
+                          margin-top="0.5cm"
+                          margin-bottom="0.5cm"
+                          linefeed-treatment="preserve"
+                          page-break-after="always">
                    <xsl:value-of select="field[@name='text_paragraph']"/>
                 </fo:block>
              </xsl:when>
@@ -583,6 +585,7 @@
              </xsl:when>
           </xsl:choose>
        </xsl:for-each>
+       <fo:block id="last-page"> </fo:block>
     </fo:flow>
      <xsl:apply-templates/>
   </fo:page-sequence>

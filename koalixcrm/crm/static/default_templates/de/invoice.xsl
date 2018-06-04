@@ -55,7 +55,7 @@
                         text-align="left" >emailaddress@gmail.com</fo:block>
               <fo:block font-size="7pt"
                         font-family="BitstreamVeraSans"
-                        text-align="left" >+41 79 xxx xx xx</fo:block>
+                        text-align="left" >+41 xx xxx xx xx</fo:block>
             </fo:table-cell>
           </fo:table-row>
           </fo:table-body>
@@ -304,20 +304,21 @@
                          font-family="BitstreamVeraSans"
                          color="black"
                          text-align="left"
-                         margin-top="2cm"
+                         margin-top="1cm"
 			 linefeed-treatment="preserve">
                    <xsl:value-of select="field[@name='text_paragraph']"/>
                 </fo:block>
              </xsl:when>
           </xsl:choose>
        </xsl:for-each>
-       <fo:block font-size="15pt"
+       <fo:block font-size="12pt"
                  font-family="BitstreamVeraSans"
                  color="black"
                  text-align="left"
                  font-weight="bold"
-                 margin-top="2cm">
-        Rechnung <xsl:value-of select="object[@model='crm.invoice']/field[@name='iteration_number']"/> - <xsl:value-of select="object[@model='crm.salesdocument']/field[@name='description']"/>
+                 margin-top="1cm"
+                 margin-bottom="0.5cm">
+        Rechnung - <xsl:value-of select="object[@model='crm.salesdocument']/field[@name='description']"/>
        </fo:block>
        <xsl:for-each select="object[@model='crm.textparagraphinsalesdocument']">
           <xsl:choose>
@@ -583,6 +584,7 @@
              </xsl:when>
           </xsl:choose>
        </xsl:for-each>
+       <fo:block id="last-page"> </fo:block>
     </fo:flow>
      <xsl:apply-templates/>
   </fo:page-sequence>

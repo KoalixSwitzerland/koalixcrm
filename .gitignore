@@ -21,8 +21,9 @@ pip-log.txt
 .tox
 *~
 
-# VS Code
+# IntelliJ
+*.iml
+/.idea/
+
+#VSCODE
 .vscode
-projectsettings/media/uploads
-projectsettings/media/data_files
-projectsettings/media/tmp

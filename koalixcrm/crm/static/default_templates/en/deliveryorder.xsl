@@ -583,6 +583,7 @@
              </xsl:when>
           </xsl:choose>
        </xsl:for-each>
+       <fo:block id="last-page"> </fo:block>
     </fo:flow>
      <xsl:apply-templates/>
   </fo:page-sequence>

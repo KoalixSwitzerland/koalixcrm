@@ -13,8 +13,11 @@
    height="297mm"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.0 r9654"
-   sodipodi:docname="Neues Dokument 1">
+   inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
+   sodipodi:docname="pdfcreation.svg"
+   inkscape:export-filename="/home/aaron/PycharmProjects/koalixcrm/documentation/source/images/pdfcreation.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96">
   <defs
      id="defs4">
     <marker
@@ -39,15 +42,15 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.74118969"
-     inkscape:cx="372.04724"
-     inkscape:cy="526.18109"
+     inkscape:cx="-0.32707082"
+     inkscape:cy="688.08296"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1920"
-     inkscape:window-height="1003"
-     inkscape:window-x="0"
-     inkscape:window-y="24"
+     inkscape:window-width="1853"
+     inkscape:window-height="1025"
+     inkscape:window-x="67"
+     inkscape:window-y="27"
      inkscape:window-maximized="1" />
   <metadata
      id="metadata7">
@@ -57,7 +60,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -95,60 +98,93 @@
        y="695.50348" />
     <text
        xml:space="preserve"
-       style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
        x="83.6493"
        y="114.68049"
-       id="text3041"
-       sodipodi:linespacing="125%"><tspan
+       id="text3041"><tspan
          sodipodi:role="line"
          id="tspan3043"
          x="83.6493"
-         y="114.68049">koalixcrm</tspan><tspan
+         y="114.68049"
+         style="font-size:28px;line-height:1.25">koalixcrm</tspan><tspan
+         sodipodi:role="line"
+         x="83.6493"
+         y="149.68048"
+         id="tspan3047"
+         style="font-size:28px;line-height:1.25">document-</tspan><tspan
          sodipodi:role="line"
          x="83.6493"
          y="184.68048"
-         id="tspan3047">xml-file</tspan></text>
+         style="font-size:28px;line-height:1.25"
+         id="tspan5118">xml-file</tspan><tspan
+         sodipodi:role="line"
+         x="83.6493"
+         y="219.68048"
+         style="font-size:28px;line-height:1.25"
+         id="tspan5120">&lt;xml&gt;</tspan><tspan
+         sodipodi:role="line"
+         x="83.6493"
+         y="254.68048"
+         style="font-size:28px;line-height:1.25"
+         id="tspan5122">&lt;/xml&gt;</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
        x="458.72198"
-       y="121.42641"
-       id="text3051"
-       sodipodi:linespacing="125%"><tspan
+       y="107.42641"
+       id="text3051"><tspan
          sodipodi:role="line"
          id="tspan3053"
          x="458.72198"
-         y="121.42641">Your indi-</tspan><tspan
+         y="107.42641"
+         style="font-size:28px;line-height:1.25">Your indi-</tspan><tspan
          sodipodi:role="line"
          x="458.72198"
-         y="156.42641"
-         id="tspan3057">vidual xsl-</tspan><tspan
+         y="142.42641"
+         id="tspan3057"
+         style="font-size:28px;line-height:1.25">vidual xsl-</tspan><tspan
          sodipodi:role="line"
          x="458.72198"
-         y="191.42641"
-         id="tspan3061">file</tspan></text>
+         y="177.42641"
+         id="tspan3061"
+         style="font-size:28px;line-height:1.25">template </tspan><tspan
+         sodipodi:role="line"
+         x="458.72198"
+         y="212.42641"
+         style="font-size:28px;line-height:1.25"
+         id="tspan5116">-file</tspan><tspan
+         sodipodi:role="line"
+         x="458.72198"
+         y="247.42641"
+         style="font-size:28px;line-height:1.25"
+         id="tspan5124">&lt;xml&gt;</tspan><tspan
+         sodipodi:role="line"
+         x="458.72198"
+         y="282.42639"
+         style="font-size:28px;line-height:1.25"
+         id="tspan5126">&lt;/xml&gt;</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
        x="275.23318"
        y="420.94489"
-       id="text3063"
-       sodipodi:linespacing="125%"><tspan
+       id="text3063"><tspan
          sodipodi:role="line"
          id="tspan3065"
          x="275.23318"
-         y="420.94489">fo-xml-file</tspan></text>
+         y="420.94489"
+         style="font-size:28px;line-height:1.25">fo-xml-file</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
        x="276.58237"
        y="747.44696"
-       id="text3067"
-       sodipodi:linespacing="125%"><tspan
+       id="text3067"><tspan
          sodipodi:role="line"
          id="tspan3069"
          x="276.58237"
-         y="747.44696">pdf-file</tspan></text>
+         y="747.44696"
+         style="font-size:28px;line-height:1.25">pdf-file</tspan></text>
     <path
        style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#Arrow1Lend);stroke-miterlimit:4;stroke-dasharray:none"
        d="m 261.74136,174.04451 c 0,0 77.61489,-14.71115 88.88365,71.59571 2.47541,18.95904 0,124.49961 0,124.49961"
@@ -178,23 +214,26 @@
        transform="matrix(1,0,0,0.93662968,-98.490307,-28.993324)" />
     <text
        xml:space="preserve"
-       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
-       x="480.3089"
-       y="590.94183"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+       x="-751.289"
+       y="142.36693"
        id="text4659"
-       sodipodi:linespacing="125%"><tspan
+       transform="rotate(-88.834209)"><tspan
          sodipodi:role="line"
          id="tspan4661"
-         x="480.3089"
-         y="590.94183">This part is</tspan><tspan
+         x="-751.289"
+         y="142.36693"
+         style="font-size:28px;line-height:1.25">This part is</tspan><tspan
          sodipodi:role="line"
-         x="480.3089"
-         y="610.94183"
-         id="tspan4663">completely done</tspan><tspan
+         x="-751.289"
+         y="177.36693"
+         id="tspan4663"
+         style="font-size:28px;line-height:1.25">completely done</tspan><tspan
          sodipodi:role="line"
-         x="480.3089"
-         y="630.94183"
-         id="tspan4665">by apache-fop</tspan></text>
+         x="-751.289"
+         y="212.36693"
+         id="tspan4665"
+         style="font-size:28px;line-height:1.25">by apache-fop</tspan></text>
     <rect
        style="color:#000000;fill:#ffffff;fill-opacity:0;fill-rule:nonzero;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        id="rect4673"
@@ -218,18 +257,19 @@
        y="876.96851" />
     <text
        xml:space="preserve"
-       style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
        x="277.93155"
        y="464.11871"
-       id="text4679"
-       sodipodi:linespacing="125%"><tspan
+       id="text4679"><tspan
          sodipodi:role="line"
          id="tspan4681"
          x="277.93155"
-         y="464.11871">&lt;xml&gt;</tspan><tspan
+         y="464.11871"
+         style="font-size:28px;line-height:1.25">&lt;xml&gt;</tspan><tspan
          sodipodi:role="line"
          x="277.93155"
          y="499.11871"
-         id="tspan4683">&lt;/xml&gt;</tspan></text>
+         id="tspan4683"
+         style="font-size:28px;line-height:1.25">&lt;/xml&gt;</tspan></text>
   </g>
 </svg>

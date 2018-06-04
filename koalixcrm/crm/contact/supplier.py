@@ -9,7 +9,6 @@ from koalixcrm.crm.contact.contact import ContactPhoneAddress
 from koalixcrm.crm.contact.contact import ContactEmailAddress
 
 
-
 class Supplier(Contact):
     offersShipmentToCustomers = models.BooleanField(verbose_name=_("Offers Shipment to Customer"))
 
@@ -24,7 +23,6 @@ class Supplier(Contact):
 
 class OptionSupplier(admin.ModelAdmin):
     list_display = ('id', 'name', 'offersShipmentToCustomers')
-    #ist_display_links = ('name',)
     fieldsets = (('', {'fields': ('name', 'offersShipmentToCustomers')}),)
     inlines = [ContactPostalAddress, ContactPhoneAddress, ContactEmailAddress]
     allow_add = True

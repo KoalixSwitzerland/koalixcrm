@@ -25,9 +25,4 @@ chmod -R 755 projectsettings/static/pdf
 # Execute startup scripts
 python manage.py collectstatic --noinput
 python manage.py migrate
-
-# Create django user, will own the media dir
-adduser --no-create-home --disabled-login --group --system django
-chown -R django:django /app/projectsettings/media
-
-/usr/local/bin/uwsgi --emperor /etc/uwsgi/django-uwsgi.ini
+python manage.py runserver 0.0.0.0:8000

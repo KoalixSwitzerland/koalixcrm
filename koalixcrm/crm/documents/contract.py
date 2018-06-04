@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from datetime import *
 from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext as _
@@ -17,9 +16,11 @@ from koalixcrm.crm.const.purpose import *
 from koalixcrm.crm.documents.invoice import InlineInvoice
 from koalixcrm.crm.documents.quote import InlineQuote
 from koalixcrm.crm.exceptions import *
-from koalixcrm.crm.views import create_new_document
+from koalixcrm.djangoUserExtension.models import UserExtension
 import koalixcrm.crm.documents.calculations
 import koalixcrm.crm.documents.pdfexport
+from rest_framework import serializers
+
 
 class PostalAddressForContract(PostalAddress):
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT)
@@ -123,19 +124,29 @@ class Contract(models.Model):
         else:
             raise TemplateSetMissingInContract("The Contract has no Default Template Set selected")
 
+    def create_from_reference(self, calling_model, staff):
+        staff_user_extension = UserExtension.get_user_extension(staff.id)
+        self.default_customer = calling_model
+        self.default_currency = staff_user_extension.defaultCurrency
+        self.default_template_set = staff_user_extension.defaultTemplateSet
+        self.last_modified_by = staff
+        self.staff = staff
+        self.save()
+        return self
+
     def create_invoice(self):
         invoice = Invoice()
-        invoice.create_invoice(self)
+        invoice.create_from_reference(self)
         return invoice
 
     def create_quote(self):
         quote = Quote()
-        quote.create_quote(self)
+        quote.create_from_reference(self)
         return quote
 
     def create_purchase_order(self):
         purchase_order = PurchaseOrder()
-        purchase_order.create_purchase_order(self)
+        purchase_order.create_from_reference(self)
         return purchase_order
 
     def __str__(self):
@@ -158,8 +169,9 @@ class OptionContract(admin.ModelAdmin):
     inlines.extend(pluginProcessor.getPluginAdditions("contractInlines"))
 
     def create_quote(self, request, queryset):
+        from koalixcrm.crm.views.newdocument import CreateNewDocumentView
         for obj in queryset:
-            response = create_new_document(self, request, obj,
+            response = CreateNewDocumentView.create_new_document(self, request, obj,
                                            koalixcrm.crm.documents.quote.Quote,
                                            ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
             return response
@@ -167,8 +179,9 @@ class OptionContract(admin.ModelAdmin):
     create_quote.short_description = _("Create Quote")
 
     def create_invoice(self, request, queryset):
+        from koalixcrm.crm.views.newdocument import CreateNewDocumentView
         for obj in queryset:
-            response = create_new_document(self, request, obj,
+            response = CreateNewDocumentView.create_new_document(self, request, obj,
                                            koalixcrm.crm.documents.invoice.Invoice,
                                            ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
             return response
@@ -176,8 +189,9 @@ class OptionContract(admin.ModelAdmin):
     create_invoice.short_description = _("Create Invoice")
 
     def create_purchase_confirmation(self, request, queryset):
+        from koalixcrm.crm.views.newdocument import CreateNewDocumentView
         for obj in queryset:
-            response = create_new_document(self, request, obj,
+            response = CreateNewDocumentView.create_new_document(self, request, obj,
                                            koalixcrm.crm.documents.purchaseconfirmation.PurchaseConfirmation,
                                            ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
             return response
@@ -185,8 +199,9 @@ class OptionContract(admin.ModelAdmin):
     create_purchase_confirmation.short_description = _("Create Purchase Confirmation")
 
     def create_delivery_note(self, request, queryset):
+        from koalixcrm.crm.views.newdocument import CreateNewDocumentView
         for obj in queryset:
-            response = create_new_document(self, request, obj,
+            response = CreateNewDocumentView.create_new_document(self, request, obj,
                                            koalixcrm.crm.documents.deliverynote.DeliveryNote,
                                            ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
             return response
@@ -194,8 +209,9 @@ class OptionContract(admin.ModelAdmin):
     create_delivery_note.short_description = _("Create Delivery note")
 
     def create_payment_reminder(self, request, queryset):
+        from koalixcrm.crm.views.newdocument import CreateNewDocumentView
         for obj in queryset:
-            response = create_new_document(self, request, obj,
+            response = CreateNewDocumentView.create_new_document(self, request, obj,
                                            koalixcrm.crm.documents.paymentreminder.PaymentReminder,
                                            ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
             return response
@@ -203,8 +219,9 @@ class OptionContract(admin.ModelAdmin):
     create_payment_reminder.short_description = _("Create Payment Reminder")
 
     def create_purchase_order(self, request, queryset):
+        from koalixcrm.crm.views.newdocument import CreateNewDocumentView
         for obj in queryset:
-            response = create_new_document(self, request, obj,
+            response = CreateNewDocumentView.create_new_document(self, request, obj,
                                            koalixcrm.crm.documents.purchaseorder.PurchaseOrder,
                                            ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
             return response
@@ -212,7 +229,7 @@ class OptionContract(admin.ModelAdmin):
     create_purchase_order.short_description = _("Create Purchase Order")
 
     def save_model(self, request, obj, form, change):
-        if (change == True):
+        if change:
             obj.last_modified_by = request.user
         else:
             obj.last_modified_by = request.user
@@ -223,3 +240,9 @@ class OptionContract(admin.ModelAdmin):
     pluginProcessor = PluginProcessor()
     actions.extend(pluginProcessor.getPluginAdditions("contractActions"))
 
+
+class ContractJSONSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Contract
+        fields = ('id',
+                  'description',)
