@@ -213,7 +213,8 @@ class StateFilter(admin.SimpleListFilter):
     def lookups(self, request, model_admin):
         items = []
         for a in PostalAddressForContact.objects.values('state').distinct():
-            items.append((a['state'], _(a['state'])))
+            if a['state']:
+                items.append((a['state'], _(a['state'])))
         return (
             items
         )
@@ -236,7 +237,8 @@ class CityFilter(admin.SimpleListFilter):
         unique_list = PostalAddressForContact.objects.all().order_by('town')
         adjusted_queryset = unique_list if state is None else unique_list.filter(state=state)
         for a in adjusted_queryset.values('town').distinct():
-            items.append((a['town'], _(a['town'])))
+            if a['town']:
+                items.append((a['town'], _(a['town'])))
         return (
             items
         )
