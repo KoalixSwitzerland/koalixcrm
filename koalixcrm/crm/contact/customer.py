@@ -10,8 +10,10 @@ from koalixcrm.crm.documents.contract import Contract
 
 
 class Customer(Contact):
-    default_customer_billing_cycle = models.ForeignKey('CustomerBillingCycle', verbose_name=_('Default Billing Cycle'))
-    is_member_of = models.ManyToManyField("CustomerGroup", verbose_name=_('Is member of'), blank=True)
+    default_customer_billing_cycle = models.ForeignKey('CustomerBillingCycle',
+                                                       verbose_name=_('Default Billing Cycle'))
+    is_member_of = models.ManyToManyField("CustomerGroup",
+                                          verbose_name=_('Is member of'), blank=True)
     is_lead = models.BooleanField(default=True)
 
     def create_contract(self, request):
@@ -43,6 +45,7 @@ class Customer(Contact):
     def __str__(self):
         return str(self.id) + ' ' + self.name
 
+
 class IsLeadFilter(admin.SimpleListFilter):
     title = _('Is lead')
     parameter_name = 'isLead'
@@ -61,14 +64,28 @@ class IsLeadFilter(admin.SimpleListFilter):
         else:
             return queryset
 
+
 class OptionCustomer(admin.ModelAdmin):
-    list_display = ('id', 'name', 'default_customer_billing_cycle', 'get_state', 'get_town', 'date_of_creation', 'get_is_lead',)
+    list_display = ('id',
+                    'name',
+                    'default_customer_billing_cycle',
+                    'get_state',
+                    'get_town',
+                    'date_of_creation',
+                    'get_is_lead',)
     list_filter = ('is_member_of', StateFilter, CityFilter, IsLeadFilter)
-    fieldsets = (('', {'fields': ('name', 'default_customer_billing_cycle', 'is_member_of',)}),)
+    fieldsets = (('', {'fields': ('name',
+                                  'default_customer_billing_cycle',
+                                  'is_member_of',)}),)
     allow_add = True
     ordering = ('id',)
     search_fields = ('id', 'name')
-    inlines = [ContactPostalAddress, ContactPhoneAddress, ContactEmailAddress, PeopleInlineAdmin, ContactCall, ContactVisit]
+    inlines = [ContactPostalAddress,
+               ContactPhoneAddress,
+               ContactEmailAddress,
+               PeopleInlineAdmin,
+               ContactCall,
+               ContactVisit]
     pluginProcessor = PluginProcessor()
     inlines.extend(pluginProcessor.getPluginAdditions("customerInline"))
 
