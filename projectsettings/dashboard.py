@@ -44,6 +44,13 @@ class CustomIndexDashboard(Dashboard):
                             'koalixcrm.crm.documents.paymentreminder.PaymentReminder',),
                 ),
                 modules.ModelList(
+                    _('Scheduler'),
+                    column=1,
+                    css_classes=('collapse closed',),
+                    models=('koalixcrm.crm.contact.contact.CallForContact',
+                            'koalixcrm.crm.contact.contact.VisitForContact',),
+                ),
+                modules.ModelList(
                     _('Products'),
                     column=1,
                     css_classes=('collapse closed',),
@@ -54,7 +61,8 @@ class CustomIndexDashboard(Dashboard):
                     column=1,
                     css_classes=('collapse closed',),
                     models=('koalixcrm.crm.contact.customer.Customer',
-                            'koalixcrm.crm.contact.supplier.Supplier'),
+                            'koalixcrm.crm.contact.supplier.Supplier',
+                            'koalixcrm.crm.contact.person.Person',),
                 ),
                 modules.ModelList(
                     _('Accounting'),
