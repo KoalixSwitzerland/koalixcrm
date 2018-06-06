@@ -5,7 +5,9 @@ from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext as _
 from koalixcrm.plugin import *
-from koalixcrm.crm.contact.contact import Contact, ContactCall, ContactVisit, PeopleInlineAdmin, PostalAddressForContact, ContactPostalAddress, ContactPhoneAddress, ContactEmailAddress, CityFilter, StateFilter
+from koalixcrm.crm.contact.contact import Contact, ContactCall, ContactVisit,\
+    PeopleInlineAdmin, PostalAddressForContact, ContactPostalAddress, \
+    ContactPhoneAddress, ContactEmailAddress, CityFilter, StateFilter
 from koalixcrm.crm.documents.contract import Contract
 
 
