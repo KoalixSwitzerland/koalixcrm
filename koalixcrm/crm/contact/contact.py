@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext as _
 from koalixcrm.crm.contact.phoneaddress import PhoneAddress
 from koalixcrm.crm.contact.emailaddress import EmailAddress
 from koalixcrm.crm.contact.postaladdress import PostalAddress
-from koalixcrm.crm.documents.activity import Call, CallOverdueFilter
+from koalixcrm.crm.documents.activity import Call
 from koalixcrm.crm.contact.person import *
 from koalixcrm.crm.const.purpose import *
 from koalixcrm.globalSupportFunctions import xstr
@@ -67,6 +66,7 @@ class PostalAddressForContact(PostalAddress):
     def __str__(self):
         return xstr(self.prename) + ' ' + xstr(self.name) + ' ' + xstr(self.addressline1)
 
+
 class ContactPostalAddress(admin.StackedInline):
     model = PostalAddressForContact
     extra = 1
@@ -104,6 +104,7 @@ class ContactEmailAddress(admin.TabularInline):
     )
     allow_add = True
 
+
 class ContactPersonAssociation(models.Model):
     contact = models.ForeignKey(Contact, related_name='person_association', blank=True, null=True)
     person = models.ForeignKey(Person, related_name='contact_association', blank=True, null=True)
@@ -116,28 +117,24 @@ class ContactPersonAssociation(models.Model):
     def __str__(self):
         return ''
 
+
 class PeopleInlineAdmin(admin.TabularInline):
     model = ContactPersonAssociation
     extra = 0
     show_change_link = True
+
 
 class CompaniesInlineAdmin(admin.TabularInline):
     model = ContactPersonAssociation
     extra = 0
     show_change_link = True
 
+
 class OptionPerson(admin.ModelAdmin):
     list_display = ('id', 'name', 'prename', 'email', 'role', 'get_companies',)
-    #filter_horizontal = ('companies',)
     fieldsets = (('', {'fields': ('prefix','name','prename','role','email','phone',)}),)
     allow_add = True
     inlines = [CompaniesInlineAdmin]
-    pluginProcessor = PluginProcessor()
-    inlines.extend(pluginProcessor.getPluginAdditions("personInline"))
-
-    actions = []
-    pluginProcessor = PluginProcessor()
-    inlines.extend(pluginProcessor.getPluginAdditions("personActions"))
 
     def get_companies(self, obj):
         items = []
@@ -146,6 +143,7 @@ class OptionPerson(admin.ModelAdmin):
         return ','.join(items)
     
     get_companies.short_description = _("Works at")    
+
 
 class CallForContact(Call):
     company = models.ForeignKey(Contact)
@@ -160,6 +158,7 @@ class CallForContact(Call):
     def __str__(self):
         return xstr(self.description) + ' ' + xstr(self.date_due)
 
+
 class VisitForContact(Call):
     company = models.ForeignKey(Contact)
     cperson = models.ForeignKey(Person, verbose_name=_("Person"), blank=True, null=True)
@@ -173,6 +172,7 @@ class VisitForContact(Call):
 
     def __str__(self):
         return xstr(self.description) + ' ' + xstr(self.date_due)
+
 
 class ContactCall(LimitedAdminInlineMixin, admin.StackedInline):
     model = CallForContact
@@ -189,6 +189,7 @@ class ContactCall(LimitedAdminInlineMixin, admin.StackedInline):
     def get_filters(self, request, obj):
         return getattr(self, 'filters', ()) if obj is None else (('cperson', dict(companies=obj.id)),)
 
+
 class ContactVisit(LimitedAdminInlineMixin, admin.StackedInline):
     model = VisitForContact
     extra = 0
@@ -203,6 +204,7 @@ class ContactVisit(LimitedAdminInlineMixin, admin.StackedInline):
     
     def get_filters(self, request, obj):
         return getattr(self, 'filters', ()) if obj is None else (('cperson', dict(companies=obj.id)),('ref_call', dict(company=obj.id, status='S')))
+
 
 class StateFilter(admin.SimpleListFilter):
     title = _('State')
@@ -222,6 +224,7 @@ class StateFilter(admin.SimpleListFilter):
             ids = [(a.company.id) for a in matching_addresses]
             return queryset.filter(pk__in=ids)
         return queryset
+
 
 class CityFilter(admin.SimpleListFilter):
     title = _('City')
@@ -244,3 +247,4 @@ class CityFilter(admin.SimpleListFilter):
             ids = [(a.company.id) for a in matching_addresses]
             return queryset.filter(pk__in=ids)
         return queryset
+

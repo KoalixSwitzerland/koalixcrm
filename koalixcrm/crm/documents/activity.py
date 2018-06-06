@@ -9,6 +9,7 @@ from koalixcrm.crm.const.status import *
 from koalixcrm.plugin import *
 from django.utils import timezone
 
+
 class Call(models.Model):
     staff = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True, verbose_name=_("Staff"),
                               related_name="db_relcallstaff", null=True)
@@ -22,6 +23,7 @@ class Call(models.Model):
     
     def __str__(self):
         return _("Call") + " " + str(self.id)
+
 
 class CallOverdueFilter(admin.SimpleListFilter):
     title = _('Is call overdue')
@@ -41,8 +43,10 @@ class CallOverdueFilter(admin.SimpleListFilter):
         else:
             return queryset
 
+
 class OptionCall(admin.ModelAdmin):
-    list_display = ('id','description','date_due','purpose','get_contactname', 'status', 'is_call_overdue',)
+    list_display = ('id','description', 'cperson', 'date_due','purpose', 'status', 'is_call_overdue',)
+    fieldsets = (('', {'fields': ('staff','description','date_due','purpose', 'company','cperson' ,'status')}),)
     list_filter = [CallOverdueFilter]
 
     def get_contactname(self, obj):
@@ -55,8 +59,10 @@ class OptionCall(admin.ModelAdmin):
 
     is_call_overdue.short_description = _("Is call overdue")
 
+
 class OptionVisit(admin.ModelAdmin):
-    list_display = ('id','description','date_due','purpose','get_contactname', 'status', 'ref_call',)
+    list_display = ('id','description', 'cperson' ,'date_due','purpose','get_contactname', 'status', 'ref_call',)
+    fieldsets = (('', {'fields': ('staff','description','date_due','purpose', 'company', 'cperson' ,'status')}),)
 
     def get_contactname(self, obj):
         return obj.company.name
