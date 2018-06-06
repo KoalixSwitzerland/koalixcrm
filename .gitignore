@@ -24,3 +24,6 @@ pip-log.txt
 # IntelliJ
 *.iml
 /.idea/
+
+#VSCODE
+.vscode
