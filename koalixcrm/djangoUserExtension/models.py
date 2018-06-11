@@ -139,6 +139,13 @@ class BalanceSheetTemplate(DocumentTemplate):
         verbose_name_plural = _('Balance sheet templates')
 
 
+class MonthlyProjectSummaryTemplate(DocumentTemplate):
+    class Meta:
+        app_label = "djangoUserExtension"
+        verbose_name = _('Monthly project summary template')
+        verbose_name_plural = _('Monthly project summary templates')
+
+
 class TemplateSet(models.Model):
     title = models.CharField(verbose_name=_("Title"), max_length=100)
     invoice_template = models.ForeignKey("InvoiceTemplate", blank=True, null=True)
@@ -149,6 +156,7 @@ class TemplateSet(models.Model):
     purchase_order_template = models.ForeignKey("PurchaseOrderTemplate", blank=True, null=True)
     profit_loss_statement_template = models.ForeignKey("ProfitLossStatementTemplate", blank=True, null=True)
     balance_sheet_statement_template = models.ForeignKey("BalanceSheetTemplate", blank=True, null=True)
+    monthly_project_summary_template = models.ForeignKey("MonthlyProjectSummaryTemplate", blank=True, null=True)
 
     class Meta:
         app_label = "djangoUserExtension"
@@ -166,7 +174,8 @@ class TemplateSet(models.Model):
                                       "PurchaseConfirmation": self.purchase_confirmation_template,
                                       "PurchaseOrder": self.purchase_order_template,
                                       "ProfitLossStatement": self.profit_loss_statement_template,
-                                      "BalanceSheet": self.balance_sheet_statement_template}
+                                      "BalanceSheet": self.balance_sheet_statement_template,
+                                      "MonthlyProjectSummaryTemplate": self.monthly_project_summary_template}
         try:
             if mapping_class_to_templates[required_template_set]:
                 return mapping_class_to_templates[required_template_set]
