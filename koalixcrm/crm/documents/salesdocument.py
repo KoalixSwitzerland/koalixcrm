@@ -368,10 +368,9 @@ class OptionSalesDocument(admin.ModelAdmin):
         from koalixcrm.crm.views.createtask import CreateTaskView
         for obj in queryset:
             response = CreateTaskView.create_tasks_from_document(self,
-                                                        request,
-                                                        obj,
-                                                        ("/admin/crm/"+obj.__class__.__name__.lower()+"/"),
-                                                        obj.template_set)
+                                                                 request,
+                                                                 obj,
+                                                                 ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
             return response
 
     create_tasks.short_description = _("Create Tasks")

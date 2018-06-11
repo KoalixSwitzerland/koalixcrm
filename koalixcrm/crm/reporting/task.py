@@ -12,7 +12,7 @@ import koalixcrm
 
 
 class Task(models.Model):
-    short_description = models.CharField(verbose_name=_("Description"), max_length=100, blank=True, null=True)
+    short_description = models.CharField(verbose_name=_("Short Description"), max_length=100, blank=True, null=True)
     planned_start_date = models.DateField(verbose_name=_("Planned Start Date"), blank=True, null=True)
     planned_end_date = models.DateField(verbose_name=_("Planned End Date"), blank=True, null=True)
     project = models.ForeignKey("Contract", verbose_name=_('Contract'), blank=False, null=False)
@@ -36,11 +36,13 @@ class Task(models.Model):
         return str(sum_effort)+" h"
 
     def effective_duration(self):
-        if self.status.is_done:
-            if self.planned_start_date > self.last_status_change:
-                return 0
-            else:
-                return self.last_status_change - self.planned_start_date
+        if self.status:
+            if self.status.is_done:
+                if self.planned_start_date > self.last_status_change:
+                    return 0
+                else:
+                    return self.last_status_change - self.planned_start_date
+        return "n/a"
 
     def effective_effort(self):
         return str(koalixcrm.crm.reporting.work.Work.get_sum_effort_in_hours(self))+" h"
