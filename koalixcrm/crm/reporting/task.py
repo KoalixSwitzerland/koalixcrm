@@ -15,7 +15,7 @@ class Task(models.Model):
     short_description = models.CharField(verbose_name=_("Short Description"), max_length=100, blank=True, null=True)
     planned_start_date = models.DateField(verbose_name=_("Planned Start Date"), blank=True, null=True)
     planned_end_date = models.DateField(verbose_name=_("Planned End Date"), blank=True, null=True)
-    project = models.ForeignKey("Contract", verbose_name=_('Contract'), blank=False, null=False)
+    project = models.ForeignKey("Project", verbose_name=_('Project'), blank=False, null=False)
     description = models.TextField(verbose_name=_("Description"), blank=True, null=True)
     status = models.ForeignKey("TaskStatus", verbose_name=_('Task Status'), blank=True, null=True)
     last_status_change = models.DateField(verbose_name=_("Last Status Change"), blank=True, null=False)

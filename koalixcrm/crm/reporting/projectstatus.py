@@ -18,11 +18,11 @@ class ProjectStatus(models.Model):
 
     class Meta:
         app_label = "crm"
-        verbose_name = _('Task Status')
-        verbose_name_plural = _('Task Status')
+        verbose_name = _('Project Status')
+        verbose_name_plural = _('Project Status')
 
     def __str__(self):
-        return _("Task Status") + " ID: " + str(self.id) + " title: " + str(self.title)
+        return str(self.id) + " " + str(self.title)
 
 
 class OptionProjectStatus(admin.ModelAdmin):

@@ -32,6 +32,11 @@ from koalixcrm.crm.reporting.task import *
 from koalixcrm.crm.reporting.tasklinktype import *
 from koalixcrm.crm.reporting.taskstatus import *
 from koalixcrm.crm.reporting.work import *
+from koalixcrm.crm.reporting.project import *
+from koalixcrm.crm.reporting.projectlinktype import *
+from koalixcrm.crm.reporting.generictasklink import *
+from koalixcrm.crm.reporting.projectstatus import *
+
 
 
 

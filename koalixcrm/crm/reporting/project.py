@@ -35,8 +35,14 @@ class Project(models.Model):
                                          verbose_name=_("Last modified by"),
                                          related_name="db_project_last_modified")
 
+    def get_project_name(self):
+        if self.project_name:
+            return self.project_name
+        else:
+            return "n/a"
+
     def __str__(self):
-        return str(self.id)+" "+self.project_name
+        return str(self.id)+" "+self.get_project_name()
 
     class Meta:
         app_label = "crm"
@@ -47,6 +53,7 @@ class Project(models.Model):
 class OptionProject(admin.ModelAdmin):
     list_display = ('id',
                     'project_status',
+                    'project_name',
                     'project_manager',)
 
     list_display_links = ('id',)
@@ -56,11 +63,20 @@ class OptionProject(admin.ModelAdmin):
         (_('Project'), {
             'fields': ('project_status',
                        'project_manager',
+                       'project_name',
                        'description',
                        'default_template_set')
         }),
     )
     save_as = True
+
+    def save_model(self, request, obj, form, change):
+        if change:
+            obj.last_modified_by = request.user
+        else:
+            obj.last_modified_by = request.user
+            obj.staff = request.user
+        obj.save()
 
 
 class InlineProject(admin.TabularInline):
