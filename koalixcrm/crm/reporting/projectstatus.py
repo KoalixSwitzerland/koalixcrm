@@ -6,10 +6,15 @@ from django.contrib import admin
 from rest_framework import serializers
 
 
-class TaskStatus(models.Model):
-    title = models.CharField(verbose_name=_("Title"), max_length=250, blank=False, null=False)
-    description = models.TextField(verbose_name=_("Text"), blank=True, null=True)
-    is_done = models.BooleanField(verbose_name=_("Status represents task done"),)
+class ProjectStatus(models.Model):
+    title = models.CharField(verbose_name=_("Title"),
+                             max_length=250,
+                             blank=False,
+                             null=False)
+    description = models.TextField(verbose_name=_("Text"),
+                                   blank=True,
+                                   null=True)
+    is_done = models.BooleanField(verbose_name=_("Status represents project is done"),)
 
     class Meta:
         app_label = "crm"
@@ -20,14 +25,14 @@ class TaskStatus(models.Model):
         return _("Task Status") + " ID: " + str(self.id) + " title: " + str(self.title)
 
 
-class OptionTaskStatus(admin.ModelAdmin):
+class OptionProjectStatus(admin.ModelAdmin):
     list_display = ('id',
                     'title',
                     'description',
                     'is_done')
 
     fieldsets = (
-        (_('Task Status'), {
+        (_('Project Status'), {
             'fields': ('title',
                        'description',
                        'is_done')
@@ -36,9 +41,9 @@ class OptionTaskStatus(admin.ModelAdmin):
     save_as = True
 
 
-class TaskStatusJSONSerializer(serializers.HyperlinkedModelSerializer):
+class ProjectStatusJSONSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = TaskStatus
+        model = ProjectStatus
         fields = ('id',
                   'title',
                   'description',)

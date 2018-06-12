@@ -1930,33 +1930,3 @@ msgstr "Benutzererweiterung fehlt"
 #: koalixcrm/crm/views.py:44
 msgid "Templateset Missing"
 msgstr "Templateset fehlt"
-
-#~ msgid "During PurchaseOrder PDF Export"
-#~ msgstr "Bestellung erstellt"
-
-#~ msgid "During Quote PDF Export"
-#~ msgstr "während des PDF Export der Offerte"
-
-#~ msgid "During Invoice PDF Export"
-#~ msgstr "während des PDF Export der Rechnung"
-
-#~ msgid "Shipment Supplier"
-#~ msgstr "Versandunternehmen"
-
-#~ msgid "Shipment ID"
-#~ msgstr "Lieferungs ID"
-
-#~ msgid "Successfully unregistered Invoice in the Accounting"
-#~ msgstr "Die Rechnung wurde erflogreich aus der Buchhaltung entfernt"
-
-#~ msgid "Unregister Invoice in Accounting"
-#~ msgstr "Entferne Rechnung aus der Buchhaltung"
-
-#~ msgid "Successfully recalculated Prices"
-#~ msgstr "Preisberechnung erfolgreich"
-
-#~ msgid "Unsuccessfull in updating the Prices "
-#~ msgstr "Preisberechnung fehlgeschlagen"
-
-#~ msgid "Test"
-#~ msgstr "Test"
