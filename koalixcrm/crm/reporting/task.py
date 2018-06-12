@@ -47,8 +47,14 @@ class Task(models.Model):
     def effective_effort(self):
         return str(koalixcrm.crm.reporting.work.Work.get_sum_effort_in_hours(self))+" h"
 
+    def get_short_description(self):
+        if self.short_description:
+            return self.short_description
+        else:
+            return "n/a"
+
     def __str__(self):
-        return _("Task") + ": " + str(self.id) + " " + _("from Project") + ": " + str(self.project.id)
+        return str(self.id) + " " + self.get_short_description()
 
     class Meta:
         app_label = "crm"
