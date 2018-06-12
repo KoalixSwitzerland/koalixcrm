@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.test import LiveServerTestCase
-from koalixcrm.crm.models import Contract
+from koalixcrm.crm.models import Project
 from koalixcrm.crm.models import Customer
 from koalixcrm.crm.models import CustomerGroup
 from koalixcrm.crm.models import CustomerBillingCycle
@@ -59,11 +59,9 @@ class ReportingCalculationsTest(TestCase):
             defaultTemplateSet = test_template_set,
             defaultCurrency = test_currency
         )
-        test_contract=Contract.objects.create(
-            staff=test_user,
-            description="This is a test contract",
-            default_customer=test_customer,
-            default_currency=test_currency,
+        test_project=Project.objects.create(
+            project_manager=test_user,
+            project_name="This is a test project",
             last_modification=date_now,
             last_modified_by=test_user
         )
@@ -76,7 +74,7 @@ class ReportingCalculationsTest(TestCase):
             short_description="Test Task",
             planned_start_date=start_date,
             planned_end_date=end_date,
-            project=test_contract,
+            project=test_project,
             description="This is a simple test task",
             status=test_task_status,
             last_status_change=date_now

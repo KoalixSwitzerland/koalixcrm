@@ -15,6 +15,7 @@ from koalixcrm.globalSupportFunctions import xstr
 from koalixcrm.crm.const.purpose import *
 from koalixcrm.crm.documents.invoice import InlineInvoice
 from koalixcrm.crm.documents.quote import InlineQuote
+from koalixcrm.crm.reporting.genericprojectlink import InlineGenericProjectLink
 from koalixcrm.crm.exceptions import *
 from koalixcrm.djangoUserExtension.models import UserExtension
 import koalixcrm.crm.documents.calculations
@@ -154,17 +155,36 @@ class Contract(models.Model):
 
 
 class OptionContract(admin.ModelAdmin):
-    list_display = ('id', 'description', 'default_customer', 'default_supplier', 'staff', 'default_currency')
+    list_display = ('id',
+                    'description',
+                    'default_customer',
+                    'default_supplier',
+                    'staff',
+                    'default_currency')
     list_display_links = ('id',)
-    list_filter = ('default_customer', 'default_supplier', 'staff', 'default_currency')
+    list_filter = ('default_customer',
+                   'default_supplier',
+                   'staff',
+                   'default_currency')
     ordering = ('id', )
-    search_fields = ('id', 'contract')
+    search_fields = ('id',
+                     'contract')
     fieldsets = (
         (_('Basics'), {
-            'fields': ('description', 'default_customer', 'staff', 'default_supplier', 'default_currency', 'default_template_set')
+            'fields': ('description',
+                       'default_customer',
+                       'staff',
+                       'default_supplier',
+                       'default_currency',
+                       'default_template_set')
         }),
     )
-    inlines = [ContractPostalAddress, ContractPhoneAddress, ContractEmailAddress, InlineQuote, InlineInvoice]
+    inlines = [ContractPostalAddress,
+               ContractPhoneAddress,
+               ContractEmailAddress,
+               InlineQuote,
+               InlineInvoice,
+               InlineGenericProjectLink]
     pluginProcessor = PluginProcessor()
     inlines.extend(pluginProcessor.getPluginAdditions("contractInlines"))
 
