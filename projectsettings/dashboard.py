@@ -26,18 +26,12 @@ class CustomIndexDashboard(Dashboard):
             column=1,
             collapsible=True,
             children = [
-                modules.ModelList(
-                    _('Projects'),
+                   modules.ModelList(
+                    _('Sales Documents and Contracts'),
                     column=1,
                     css_classes=('collapse closed',),
                     models=('koalixcrm.crm.documents.contract.Contract',
-                            'koalixcrm.crm.documents.purchaseorder.PurchaseOrder',),
-                ),
-                modules.ModelList(
-                    _('Sales Documents'),
-                    column=1,
-                    css_classes=('collapse closed',),
-                    models=('koalixcrm.crm.documents.quote.Quote',
+                            'koalixcrm.crm.documents.quote.Quote',
                             'koalixcrm.crm.documents.purchaseconfirmation.PurchaseConfirmation',
                             'koalixcrm.crm.documents.deliverynote.DeliveryNote',
                             'koalixcrm.crm.documents.invoice.Invoice',
@@ -71,10 +65,11 @@ class CustomIndexDashboard(Dashboard):
                     models=('koalixcrm.accounting.*',),
                 ),
                 modules.ModelList(
-                    _('Reporting'),
+                    _('Projects'),
                     column=1,
                     css_classes=('collapse closed',),
-                    models=('koalixcrm.crm.reporting.*',),
+                    models=('koalixcrm.crm.reporting.*',
+                            'koalixcrm.crm.documents.purchaseorder.PurchaseOrder',),
                 ),
                 modules.LinkList(
                     _('Report Personaly work'),
