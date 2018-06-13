@@ -4,6 +4,7 @@ from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext as _
 from koalixcrm.crm.reporting.genericprojectlink import InlineGenericLinks
+from koalixcrm.crm.reporting.task import InlineTasks
 
 
 class Project(models.Model):
@@ -70,7 +71,7 @@ class OptionProject(admin.ModelAdmin):
         }),
     )
 
-    inlines = [InlineGenericLinks,]
+    inlines = [InlineTasks, InlineGenericLinks,]
 
     def save_model(self, request, obj, form, change):
         if change:

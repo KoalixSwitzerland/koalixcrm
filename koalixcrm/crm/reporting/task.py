@@ -98,6 +98,34 @@ class OptionTask(admin.ModelAdmin):
         obj.save()
 
 
+class InlineTasks(admin.TabularInline):
+    model = Task
+    readonly_fields = ('planned_duration',
+                       'planned_effort',
+                       'effective_duration',
+                       'effective_effort')
+    fieldsets = (
+        (_('Task'), {
+            'fields': ('id',
+                       'short_description',
+                       'planned_start_date',
+                       'planned_end_date',
+                       'status',
+                       'last_status_change',
+                       'planned_duration',
+                       'planned_effort',
+                       'effective_duration',
+                       'effective_effort')
+        }),
+    )
+    extra = 0
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
 class TaskJSONSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Task
