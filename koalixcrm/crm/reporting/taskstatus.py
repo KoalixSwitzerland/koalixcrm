@@ -27,7 +27,7 @@ class OptionTaskStatus(admin.ModelAdmin):
                     'is_done')
 
     fieldsets = (
-        (_('Work'), {
+        (_('Task Status'), {
             'fields': ('title',
                        'description',
                        'is_done')

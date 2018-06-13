@@ -5,26 +5,26 @@ from django.utils.translation import ugettext as _
 from django.contrib import admin
 
 
-class TaskLinkType(models.Model):
+class ProjectLinkType(models.Model):
     title = models.CharField(verbose_name=_("Title"), max_length=300, blank=False, null=False)
     description = models.TextField(verbose_name=_("Text"), blank=True, null=True)
 
     class Meta:
         app_label = "crm"
-        verbose_name = _('Task Link Type')
-        verbose_name_plural = _('Task Link Type')
+        verbose_name = _('Project Link Type')
+        verbose_name_plural = _('Project Link Type')
 
     def __str__(self):
-        return _("Task Link Type") + " ID: " + str(self.id) + " title: " + str(self.title)
+        return _("Project Link Type") + " ID: " + str(self.id) + " title: " + str(self.title)
 
 
-class OptionTaskLinkType(admin.ModelAdmin):
+class OptionProjectLinkType(admin.ModelAdmin):
     list_display = ('id',
                     'title',
                     'description')
 
     fieldsets = (
-        (_('TaskLinkType'), {
+        (_('ProjectLinkType'), {
             'fields': ('title',
                        'description')
         }),

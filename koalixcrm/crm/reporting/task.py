@@ -12,12 +12,12 @@ import koalixcrm
 
 
 class Task(models.Model):
-    short_description = models.CharField(verbose_name=_("Description"), max_length=100, blank=True, null=True)
-    planned_start_date = models.DateField(verbose_name=_("Planned Start Date"), blank=False, null=False)
-    planned_end_date = models.DateField(verbose_name=_("Planned End Date"), blank=False, null=False)
-    project = models.ForeignKey("Contract", verbose_name=_('Contract'), blank=False, null=False)
+    short_description = models.CharField(verbose_name=_("Short Description"), max_length=100, blank=True, null=True)
+    planned_start_date = models.DateField(verbose_name=_("Planned Start Date"), blank=True, null=True)
+    planned_end_date = models.DateField(verbose_name=_("Planned End Date"), blank=True, null=True)
+    project = models.ForeignKey("Project", verbose_name=_('Project'), blank=False, null=False)
     description = models.TextField(verbose_name=_("Description"), blank=True, null=True)
-    status = models.ForeignKey("TaskStatus", verbose_name=_('Task Status'), blank=False, null=False)
+    status = models.ForeignKey("TaskStatus", verbose_name=_('Task Status'), blank=True, null=True)
     last_status_change = models.DateField(verbose_name=_("Last Status Change"), blank=True, null=False)
 
     def planned_duration(self):
@@ -36,17 +36,25 @@ class Task(models.Model):
         return str(sum_effort)+" h"
 
     def effective_duration(self):
-        if self.status.is_done:
-            if self.planned_start_date > self.last_status_change:
-                return 0
-            else:
-                return self.last_status_change - self.planned_start_date
+        if self.status:
+            if self.status.is_done:
+                if self.planned_start_date > self.last_status_change:
+                    return 0
+                else:
+                    return self.last_status_change - self.planned_start_date
+        return "n/a"
 
     def effective_effort(self):
         return str(koalixcrm.crm.reporting.work.Work.get_sum_effort_in_hours(self))+" h"
 
+    def get_short_description(self):
+        if self.short_description:
+            return self.short_description
+        else:
+            return "n/a"
+
     def __str__(self):
-        return _("Task") + ": " + str(self.id) + " " + _("from Project") + ": " + str(self.project.id)
+        return str(self.id) + " " + self.get_short_description()
 
     class Meta:
         app_label = "crm"
