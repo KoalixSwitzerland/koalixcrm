@@ -2,7 +2,7 @@
 
 from django.db import models
 from django.utils.translation import ugettext as _
-from django.contrib import admin, messages
+from django.contrib import admin
 
 
 class ProjectLinkType(models.Model):

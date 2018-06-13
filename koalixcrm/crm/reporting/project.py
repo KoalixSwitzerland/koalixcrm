@@ -93,7 +93,7 @@ class InlineProject(admin.TabularInline):
     )
     extra = 0
 
-    def has_add_permission(self, request, obj=None):
+    def has_add_permission(self, request):
         return False
 
     def has_delete_permission(self, request, obj=None):

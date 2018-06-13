@@ -46,11 +46,12 @@ class InlineGenericLinks(admin.TabularInline):
                        'last_modified_by')
     extra = 0
 
-    def has_add_permission(self, request, obj=None):
+    def has_add_permission(self, request):
         return False
 
     def has_delete_permission(self, request, obj=None):
         return False
+
 
 class InlineGenericProjectLink(GenericTabularInline):
     model = GenericProjectLink
@@ -61,7 +62,7 @@ class InlineGenericProjectLink(GenericTabularInline):
                        'last_modified_by')
     extra = 0
 
-    def has_add_permission(self, request, obj=None):
+    def has_add_permission(self, request):
         return False
 
     def has_delete_permission(self, request, obj=None):

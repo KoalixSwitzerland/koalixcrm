@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from subprocess import CalledProcessError
 from django.http import Http404
 from django.http import HttpResponseRedirect
 from django.core.exceptions import ObjectDoesNotExist
@@ -79,7 +78,6 @@ class CreateTaskView:
             response = HttpResponseRedirect(redirect_to)
         except (TemplateSetMissing,
                 UserExtensionMissing,
-                CalledProcessError,
                 UserExtensionEmailAddressMissing,
                 UserExtensionPhoneAddressMissing) as e:
             if isinstance(e, UserExtensionMissing):
