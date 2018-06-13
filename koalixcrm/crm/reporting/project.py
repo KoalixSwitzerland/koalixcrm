@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 
+from datetime import *
 from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext as _
 from koalixcrm.crm.reporting.genericprojectlink import InlineGenericLinks
 from koalixcrm.crm.reporting.task import InlineTasks
+from koalixcrm.crm.documents.pdfexport import PDFExport
+from koalixcrm.crm.exceptions import TemplateSetMissingInContract
 
 
 class Project(models.Model):
@@ -36,6 +39,35 @@ class Project(models.Model):
                                          limit_choices_to={'is_staff': True},
                                          verbose_name=_("Last modified by"),
                                          related_name="db_project_last_modified")
+
+    def create_pdf(self, template_set, printed_by):
+        self.last_print_date = datetime.now()
+        self.save()
+        return PDFExport.create_pdf(self, template_set, printed_by)
+
+    def get_template_set(self):
+        if self.default_template_set.monthly_project_summary_template:
+            return self.default_template_set.monthly_project_summary_template
+        else:
+            raise TemplateSetMissingInContract((_("Template Set missing in Project" + str(self))))
+
+    def get_fop_config_file(self, template_set):
+        template_set = self.get_template_set()
+        return template_set.get_fop_config_file()
+
+    def get_xsl_file(self, template_set):
+        template_set = self.get_template_set()
+        return template_set.get_xsl_file()
+
+    def serialize_to_xml(self):
+        from koalixcrm.crm.models import Task
+        from koalixcrm.djangoUserExtension.models import UserExtension
+        objects = [self, ]
+        for task in Task.objects.filter(id=self.id):
+            objects += task.objects_to_serialize()
+        objects += UserExtension.objects_to_serialize(self, self.project_manager)
+        main_xml = PDFExport.write_xml(objects)
+        return main_xml
 
     def get_project_name(self):
         if self.project_name:
@@ -72,6 +104,7 @@ class OptionProject(admin.ModelAdmin):
     )
 
     inlines = [InlineTasks, InlineGenericLinks,]
+    actions = ['create_report_pdf', ]
 
     def save_model(self, request, obj, form, change):
         if change:
@@ -80,6 +113,18 @@ class OptionProject(admin.ModelAdmin):
             obj.last_modified_by = request.user
             obj.staff = request.user
         obj.save()
+
+    def create_report_pdf(self, request, queryset):
+        from koalixcrm.crm.views.pdfexport import PDFExportView
+        for obj in queryset:
+            response = PDFExportView.export_pdf(self,
+                                                request,
+                                                obj,
+                                                ("/admin/crm/"+obj.__class__.__name__.lower()+"/"),
+                                                obj.default_template_set)
+            return response
+
+    create_report_pdf.short_description = _("Create Report PDF")
 
 
 class InlineProject(admin.TabularInline):
