@@ -8,6 +8,7 @@ from koalixcrm.crm.reporting.genericprojectlink import InlineGenericLinks
 from koalixcrm.crm.reporting.task import InlineTasks
 from koalixcrm.crm.documents.pdfexport import PDFExport
 from koalixcrm.crm.exceptions import TemplateSetMissingInContract
+from koalixcrm.crm.models import Task
 
 
 class Project(models.Model):
@@ -60,14 +61,48 @@ class Project(models.Model):
         return template_set.get_xsl_file()
 
     def serialize_to_xml(self):
-        from koalixcrm.crm.models import Task
         from koalixcrm.djangoUserExtension.models import UserExtension
         objects = [self, ]
-        for task in Task.objects.filter(id=self.id):
-            objects += task.objects_to_serialize()
         objects += UserExtension.objects_to_serialize(self, self.project_manager)
         main_xml = PDFExport.write_xml(objects)
+        for task in Task.objects.filter(project=self.id):
+            task_xml = task.serialize_to_xml()
+            main_xml = PDFExport.merge_xml(main_xml, task_xml)
+        main_xml = PDFExport.append_element_to_pattern(main_xml,
+                                                       "object/[@model='crm.project']",
+                                                       "Effective_Effort",
+                                                       self.effective_effort())
+        main_xml = PDFExport.append_element_to_pattern(main_xml,
+                                                       "object/[@model='crm.project']",
+                                                       "Planned_Effort",
+                                                       self.planned_effort())
+        main_xml = PDFExport.append_element_to_pattern(main_xml,
+                                                       "object/[@model='crm.project']",
+                                                       "Effective_Duration",
+                                                       self.effective_duration())
+        main_xml = PDFExport.append_element_to_pattern(main_xml,
+                                                       "object/[@model='crm.project']",
+                                                       "Planned_Duration",
+                                                       self.planned_duration())
         return main_xml
+
+    def effective_effort(self):
+        effective_effort_accumulated=0
+        for task in Task.objects.filter(project=self.id):
+            effective_effort_accumulated += task.effective_effort()
+        return effective_effort_accumulated
+
+    def planned_effort(self):
+        planned_effort_accumulated=0
+        for task in Task.objects.filter(project=self.id):
+            planned_effort_accumulated += task.planned_effort()
+        return planned_effort_accumulated
+
+    def effective_duration(self):
+        return "n/a"
+
+    def planned_duration(self):
+        return "n/a"
 
     def get_project_name(self):
         if self.project_name:
@@ -88,7 +123,11 @@ class OptionProject(admin.ModelAdmin):
     list_display = ('id',
                     'project_status',
                     'project_name',
-                    'project_manager',)
+                    'project_manager',
+                    'planned_effort',
+                    'effective_effort',
+                    'planned_duration',
+                    'effective_duration')
 
     list_display_links = ('id',)
     ordering = ('-id',)
