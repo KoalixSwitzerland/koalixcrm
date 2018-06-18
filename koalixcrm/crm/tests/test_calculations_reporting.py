@@ -89,7 +89,7 @@ class ReportingCalculationsTest(TestCase):
         self.assertEqual(
             (test_task.planned_duration()).__str__(), "60 days, 0:00:00")
         self.assertEqual(
-            (test_task.planned_effort()).__str__(), "0 h")
+            (test_task.planned_effort()).__str__(), "0")
         test_user = User.objects.get(username="admin")
         test_employee = UserExtension.objects.get(user=test_user)
         EmployeeAssignmentToTask.objects.create(
@@ -103,9 +103,9 @@ class ReportingCalculationsTest(TestCase):
             task=test_task
         )
         self.assertEqual(
-            (test_task.planned_effort()).__str__(), "3.50 h")
+            (test_task.planned_effort()).__str__(), "3.50")
         self.assertEqual(
-            (test_task.effective_effort()).__str__(), "0.0 h")
+            (test_task.effective_effort()).__str__(), "0.0")
         Work.objects.create(
             employee=test_employee,
             date=date_now,
@@ -125,7 +125,7 @@ class ReportingCalculationsTest(TestCase):
             task=test_task
         )
         self.assertEqual(
-            (test_task.effective_effort()).__str__(), "3.5 h")
+            (test_task.effective_effort()).__str__(), "3.5")
 
 
 class ReportingCalculationsUITest(LiveServerTestCase):

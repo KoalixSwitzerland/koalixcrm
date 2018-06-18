@@ -2,6 +2,7 @@
 
 from django.db import models
 from django.contrib import admin
+from koalixcrm.crm.documents.pdfexport import PDFExport
 from django.utils.translation import ugettext as _
 
 
@@ -14,19 +15,10 @@ class Work(models.Model):
     description = models.TextField(verbose_name=_("Text"), blank=True, null=True)
     task = models.ForeignKey("Task", verbose_name=_('Task'), blank=False, null=False)
 
-    @staticmethod
-    def get_sum_effort_in_hours(task):
-        work_objects = Work.objects.filter(task=task.id)
-        sum_effort = 0
-        for work_object in work_objects:
-            if (not work_object.start_time) or (not work_object.stop_time):
-                sum_effort = 0
-            elif work_object.start_time > work_object.stop_time:
-                sum_effort += 0
-            else:
-                sum_effort += work_object.effort()
-        sum_effort_in_hours = sum_effort/3600
-        return sum_effort_in_hours
+    def serialize_to_xml(self):
+        objects = [self, ]
+        main_xml = PDFExport.write_xml(objects)
+        return main_xml
 
     def effort(self):
         if not self.stop_time or not self.start_time:

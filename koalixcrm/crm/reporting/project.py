@@ -1,9 +1,14 @@
 # -*- coding: utf-8 -*-
 
+from datetime import *
 from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext as _
 from koalixcrm.crm.reporting.genericprojectlink import InlineGenericLinks
+from koalixcrm.crm.reporting.task import InlineTasks
+from koalixcrm.crm.documents.pdfexport import PDFExport
+from koalixcrm.crm.exceptions import TemplateSetMissingInContract
+from koalixcrm.crm.models import Task
 
 
 class Project(models.Model):
@@ -36,6 +41,69 @@ class Project(models.Model):
                                          verbose_name=_("Last modified by"),
                                          related_name="db_project_last_modified")
 
+    def create_pdf(self, template_set, printed_by):
+        self.last_print_date = datetime.now()
+        self.save()
+        return PDFExport.create_pdf(self, template_set, printed_by)
+
+    def get_template_set(self):
+        if self.default_template_set.monthly_project_summary_template:
+            return self.default_template_set.monthly_project_summary_template
+        else:
+            raise TemplateSetMissingInContract((_("Template Set missing in Project" + str(self))))
+
+    def get_fop_config_file(self, template_set):
+        template_set = self.get_template_set()
+        return template_set.get_fop_config_file()
+
+    def get_xsl_file(self, template_set):
+        template_set = self.get_template_set()
+        return template_set.get_xsl_file()
+
+    def serialize_to_xml(self):
+        from koalixcrm.djangoUserExtension.models import UserExtension
+        objects = [self, ]
+        objects += UserExtension.objects_to_serialize(self, self.project_manager)
+        main_xml = PDFExport.write_xml(objects)
+        for task in Task.objects.filter(project=self.id):
+            task_xml = task.serialize_to_xml()
+            main_xml = PDFExport.merge_xml(main_xml, task_xml)
+        main_xml = PDFExport.append_element_to_pattern(main_xml,
+                                                       "object/[@model='crm.project']",
+                                                       "Effective_Effort",
+                                                       self.effective_effort())
+        main_xml = PDFExport.append_element_to_pattern(main_xml,
+                                                       "object/[@model='crm.project']",
+                                                       "Planned_Effort",
+                                                       self.planned_effort())
+        main_xml = PDFExport.append_element_to_pattern(main_xml,
+                                                       "object/[@model='crm.project']",
+                                                       "Effective_Duration",
+                                                       self.effective_duration())
+        main_xml = PDFExport.append_element_to_pattern(main_xml,
+                                                       "object/[@model='crm.project']",
+                                                       "Planned_Duration",
+                                                       self.planned_duration())
+        return main_xml
+
+    def effective_effort(self):
+        effective_effort_accumulated=0
+        for task in Task.objects.filter(project=self.id):
+            effective_effort_accumulated += task.effective_effort()
+        return effective_effort_accumulated
+
+    def planned_effort(self):
+        planned_effort_accumulated=0
+        for task in Task.objects.filter(project=self.id):
+            planned_effort_accumulated += task.planned_effort()
+        return planned_effort_accumulated
+
+    def effective_duration(self):
+        return "n/a"
+
+    def planned_duration(self):
+        return "n/a"
+
     def get_project_name(self):
         if self.project_name:
             return self.project_name
@@ -55,7 +123,11 @@ class OptionProject(admin.ModelAdmin):
     list_display = ('id',
                     'project_status',
                     'project_name',
-                    'project_manager',)
+                    'project_manager',
+                    'planned_effort',
+                    'effective_effort',
+                    'planned_duration',
+                    'effective_duration')
 
     list_display_links = ('id',)
     ordering = ('-id',)
@@ -70,7 +142,8 @@ class OptionProject(admin.ModelAdmin):
         }),
     )
 
-    inlines = [InlineGenericLinks,]
+    inlines = [InlineTasks, InlineGenericLinks,]
+    actions = ['create_report_pdf', ]
 
     def save_model(self, request, obj, form, change):
         if change:
@@ -79,6 +152,18 @@ class OptionProject(admin.ModelAdmin):
             obj.last_modified_by = request.user
             obj.staff = request.user
         obj.save()
+
+    def create_report_pdf(self, request, queryset):
+        from koalixcrm.crm.views.pdfexport import PDFExportView
+        for obj in queryset:
+            response = PDFExportView.export_pdf(self,
+                                                request,
+                                                obj,
+                                                ("/admin/crm/"+obj.__class__.__name__.lower()+"/"),
+                                                obj.default_template_set.monthly_project_summary_template)
+            return response
+
+    create_report_pdf.short_description = _("Create Report PDF")
 
 
 class InlineProject(admin.TabularInline):

@@ -6,6 +6,7 @@ from django.contrib import admin
 from koalixcrm.crm.reporting.employeeassignmenttotask import EmployeeAssignmentToTask, InlineEmployeeAssignmentToTask
 from koalixcrm.crm.reporting.generictasklink import InlineGenericTaskLink
 from koalixcrm.crm.reporting.work import InlineWork
+from koalixcrm.crm.documents.pdfexport import PDFExport
 from datetime import *
 from rest_framework import serializers
 import koalixcrm
@@ -33,7 +34,7 @@ class Task(models.Model):
         sum_effort = 0
         for assignment_to_this_task in assignments_to_this_task:
             sum_effort += assignment_to_this_task.planned_effort
-        return str(sum_effort)+" h"
+        return sum_effort
 
     def effective_duration(self):
         if self.status:
@@ -44,8 +45,42 @@ class Task(models.Model):
                     return self.last_status_change - self.planned_start_date
         return "n/a"
 
+    def serialize_to_xml(self):
+        objects = [self, ]
+        main_xml = PDFExport.write_xml(objects)
+        for work in koalixcrm.crm.reporting.work.Work.objects.filter(task=self.id):
+            work_xml = work.serialize_to_xml()
+            main_xml = PDFExport.merge_xml(main_xml, work_xml)
+        main_xml = PDFExport.append_element_to_pattern(main_xml,
+                                                       "object/[@model='crm.task']",
+                                                       "Effective_Effort",
+                                                       self.effective_effort())
+        main_xml = PDFExport.append_element_to_pattern(main_xml,
+                                                       "object/[@model='crm.task']",
+                                                       "Planned_Effort",
+                                                       self.planned_effort())
+        main_xml = PDFExport.append_element_to_pattern(main_xml,
+                                                       "object/[@model='crm.task']",
+                                                       "Effective_Duration",
+                                                       self.effective_duration())
+        main_xml = PDFExport.append_element_to_pattern(main_xml,
+                                                       "object/[@model='crm.task']",
+                                                       "Planned_Duration",
+                                                       self.planned_duration())
+        return main_xml
+
     def effective_effort(self):
-        return str(koalixcrm.crm.reporting.work.Work.get_sum_effort_in_hours(self))+" h"
+        work_objects = koalixcrm.crm.reporting.work.Work.objects.filter(task=self.id)
+        sum_effort = 0
+        for work_object in work_objects:
+            if (not work_object.start_time) or (not work_object.stop_time):
+                sum_effort = 0
+            elif work_object.start_time > work_object.stop_time:
+                sum_effort += 0
+            else:
+                sum_effort += work_object.effort()
+        sum_effort_in_hours = sum_effort / 3600
+        return sum_effort_in_hours
 
     def get_short_description(self):
         if self.short_description:
@@ -96,6 +131,35 @@ class OptionTask(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         obj.last_status_change = date.today().__str__()
         obj.save()
+
+
+class InlineTasks(admin.TabularInline):
+    model = Task
+    readonly_fields = ('planned_duration',
+                       'planned_effort',
+                       'effective_duration',
+                       'effective_effort')
+    fieldsets = (
+        (_('Task'), {
+            'fields': ('id',
+                       'short_description',
+                       'planned_start_date',
+                       'planned_end_date',
+                       'status',
+                       'last_status_change',
+                       'planned_duration',
+                       'planned_effort',
+                       'effective_duration',
+                       'effective_effort')
+        }),
+    )
+    extra = 0
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
 class TaskJSONSerializer(serializers.HyperlinkedModelSerializer):

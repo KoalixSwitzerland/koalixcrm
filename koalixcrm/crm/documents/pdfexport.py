@@ -7,9 +7,7 @@ from django.conf import settings
 from django.core import serializers
 from django.utils.translation import ugettext as _
 from koalixcrm.crm.exceptions import *
-from koalixcrm.crm.contact.contact import Contact
 from lxml import etree
-from koalixcrm.crm.documents.salesdocumentposition import Position
 import koalixcrm.crm.documents.salesdocument
 import koalixcrm.djangoUserExtension.models
 
@@ -28,18 +26,6 @@ class PDFExport:
                 if element.text == find_value:
                     return 1
             return 0
-
-
-    @staticmethod
-    def append_element_to_root(xml_string, name_of_element, value_of_element):
-        parser = etree.XMLParser(encoding='utf-8')
-        root_element = etree.fromstring(xml_string.encode('utf-8'), parser=parser)
-        new_element = etree.SubElement(root_element, name_of_element)
-        new_element.text = value_of_element.__str__()
-        return (etree.tostring(root_element,
-                               encoding='UTF-8',
-                               xml_declaration=True,
-                               pretty_print=True)).decode('utf-8')
 
     @staticmethod
     def append_element_to_pattern(xml_string, find_pattern, name_of_element, value_of_element):
@@ -65,16 +51,6 @@ class PDFExport:
                                xml_declaration=True,
                                pretty_print=True)).decode('utf-8')
 
-
-    @staticmethod
-    def create_list_of_objects_to_serialize(object_to_create_pdf):
-        if isinstance(object_to_create_pdf, koalixcrm.crm.documents.salesdocument.SalesDocument):
-            return object_to_create_pdf.serialize_to_xml()
-        elif isinstance(object_to_create_pdf, koalixcrm.accounting.models.AccountingPeriod):
-            return object_to_create_pdf.serialize_to_xml()
-        else:
-            raise NoSerializationPatternFound(_("During "+str(object_to_create_pdf)+" PDF Export"))
-
     @staticmethod
     def write_xml(objects_to_serialize):
         xml = serializers.serialize("xml", objects_to_serialize, indent=3)
@@ -86,7 +62,6 @@ class PDFExport:
         f.truncate()
         f.write(xml.encode('utf-8'))
         f.close()
-
 
     @staticmethod
     def perform_xsl_transformation(file_with_serialized_xml, xsl_file, fop_config_file, file_output_pdf):
@@ -107,7 +82,7 @@ class PDFExport:
                                                                   "_" + str(object_to_create_pdf.id) + ".pdf"))
 
         # list the sub-objects which have to be serialized
-        xml_string = PDFExport.create_list_of_objects_to_serialize(object_to_create_pdf)
+        xml_string = object_to_create_pdf.serialize_to_xml()
         objects_to_serialize = list(koalixcrm.djangoUserExtension.models.DocumentTemplate.objects.filter(id=template_set.id))
         xml_string_temp = PDFExport.write_xml(objects_to_serialize)
         xml_string = PDFExport.merge_xml(xml_string, xml_string_temp)
@@ -116,7 +91,10 @@ class PDFExport:
         xml_string = PDFExport.merge_xml(xml_string, xml_string_temp)
 
         # extend the xml-string with required basic settings
-        xml_string = PDFExport.append_element_to_root(xml_string, "filebrowser_directory", settings.MEDIA_ROOT)
+        xml_string = PDFExport.append_element_to_pattern(xml_string,
+                                                         ".",
+                                                         "filebrowser_directory",
+                                                         settings.MEDIA_ROOT)
 
         #  write xml-string to xml-file
         PDFExport.write_xml_file(xml_string, file_with_serialized_xml)
