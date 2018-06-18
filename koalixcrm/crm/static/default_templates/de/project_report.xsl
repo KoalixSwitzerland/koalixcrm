@@ -59,13 +59,14 @@
     </fo:static-content>
       <fo:flow flow-name="xsl-region-body">
 
-       <fo:block font-size="9pt"
+       <fo:block font-size="13pt"
               font-family="BitstreamVeraSans"
               text-align="left"
               line-height="13pt" >Tasks</fo:block>
        <fo:table table-layout="fixed" width="100%">
           <fo:table-column column-width="3cm"/>
-          <fo:table-column column-width="11cm"/>
+          <fo:table-column column-width="8cm"/>
+          <fo:table-column column-width="3cm"/>
           <fo:table-column column-width="3cm"/>
      <fo:table-header font-size="9pt" line-height="9pt" font-weight="bold" font-family="BitstreamVeraSans">
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
@@ -83,6 +84,11 @@
                       Effective Effort
                    </fo:block>
                 </fo:table-cell>
+                <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
+                   <fo:block  text-align="end" >
+                      Planned Effort
+                   </fo:block>
+                </fo:table-cell>
              </fo:table-header>
               <fo:table-body font-size="9pt"
                          font-family="BitstreamVeraSans">
@@ -90,25 +96,37 @@
           <xsl:sort select="short_description" data-type="number"/>
              <fo:table-row keep-together="always">
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
-                   <fo:block  text-align="start" >
-                      <xsl:value-of select="short_description"/>
-                   </fo:block>
+                    <fo:block-container overflow="hidden">
+                        <fo:block  text-align="start">
+                            <xsl:value-of select="field[@name='short_description']"/>
+                        </fo:block>
+                    </fo:block-container>
                 </fo:table-cell>
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
-                   <fo:block  text-align="start" >
-                      <xsl:value-of select="field[@name='title']"/>
+                    <fo:block  text-align="start" >
+                        <xsl:value-of select="field[@name='title']"/>
+                    </fo:block>
+                    <xsl:for-each select="../object[@model='crm.work']">
+                        <fo:block  text-align="start" >
+                          <xsl:value-of select="field[@name='description']"/>
+                        </fo:block>
+                    </xsl:for-each>
+                </fo:table-cell>
+                <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
+                   <fo:block  text-align="end" >
+                      <xsl:value-of select="format-number(Effective_Effort,'#.##0,00', 'european')"/> hrs
                    </fo:block>
                 </fo:table-cell>
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="end" >
-                      <xsl:value-of select="format-number(Effective_Effort,'#.##0,00', 'european')"/> CHF
+                      <xsl:value-of select="format-number(Planned_Effort,'#.##0,00', 'european')"/> hrs
                    </fo:block>
                 </fo:table-cell>
              </fo:table-row>
            </xsl:for-each>
              <fo:table-row keep-together="always">
                <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
-                  <fo:block  text-align="start" >Total assets
+                  <fo:block  text-align="start" >All tasks
                   </fo:block>
                </fo:table-cell>
                <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
@@ -116,111 +134,14 @@
                </fo:table-cell>
                <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                   <fo:block  text-align="end" >
-                     <xsl:value-of select="format-number(object[@model='accounting.accountingperiod']/Overall_Assets,'#.##0,00', 'european')"/> CHF
+                     <xsl:value-of select="format-number(object[@model='crm.project']/Effective_Effort,'#.##0,00', 'european')"/> hrs
                   </fo:block>
-               </fo:table-cell>
-             </fo:table-row>
-          </fo:table-body>
-       </fo:table>
-       <fo:block font-size="9pt"
-              font-family="BitstreamVeraSans"
-              text-align="left"
-              line-height="13pt"
-              padding-top="0.7cm">Liabilities</fo:block>
-       <fo:table table-layout="fixed" width="100%">
-          <fo:table-column column-width="3cm"/>
-          <fo:table-column column-width="11cm"/>
-          <fo:table-column column-width="3cm"/>
-          <fo:table-header font-size="9pt" line-height="9pt" font-weight="bold" font-family="BitstreamVeraSans">
-                <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
-                   <fo:block  text-align="start" >
-                      Account Number
-                   </fo:block>
-                </fo:table-cell>
-                <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
-                   <fo:block  text-align="start" >
-                      Account
-                   </fo:block>
-                </fo:table-cell>
-                <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
-                   <fo:block  text-align="end" >
-                      Value
-                   </fo:block>
-                </fo:table-cell>
-             </fo:table-header>
-          <fo:table-body font-size="9pt"
-                         font-family="BitstreamVeraSans">
-         <xsl:for-each select="object[@model='accounting.account']">
-          <xsl:sort select="field[@name='account_number']" data-type="number"/>
-             <xsl:choose>
-             <xsl:when test="field[@name='account_type'] = 'L'">
-             <fo:table-row keep-together="always">
-                <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
-                   <fo:block  text-align="start" >
-                      <xsl:value-of select="field[@name='account_number']"/>
-                   </fo:block>
-                </fo:table-cell>
-                <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
-                   <fo:block  text-align="start" >
-                      <xsl:value-of select="field[@name='title']"/>
-                   </fo:block>
-                </fo:table-cell>
-                <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
-                   <fo:block  text-align="end" >
-                      <xsl:value-of select="format-number(sum_of_all_bookings_through_now,'#.##0,00', 'european')"/> CHF
-                   </fo:block>
-                </fo:table-cell>
-             </fo:table-row></xsl:when><xsl:otherwise></xsl:otherwise></xsl:choose>
-            </xsl:for-each>
-              <fo:table-row keep-together="always">
-               <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
-                  <fo:block  text-align="start" >Total liabilities
-                  </fo:block>
-               </fo:table-cell>
-               <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
-                  <fo:block  text-align="start" > </fo:block>
                </fo:table-cell>
                <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                   <fo:block  text-align="end" >
-                     <xsl:value-of select="format-number(object[@model='accounting.accountingperiod']/Overall_Liabilities,'#.##0,00', 'european')"/> CHF
+                     <xsl:value-of select="format-number(object[@model='crm.project']/Planned_Effort,'#.##0,00', 'european')"/> hrs
                   </fo:block>
                </fo:table-cell>
-             </fo:table-row>
-          </fo:table-body>
-       </fo:table>
-       <fo:block font-size="9pt"
-              font-family="BitstreamVeraSans"
-              text-align="left"
-              line-height="13pt"
-              padding-top="0.7cm">Profit/Loss</fo:block>
-       <fo:table table-layout="fixed" width="100%">
-          <fo:table-column column-width="3cm"/>
-          <fo:table-column column-width="11cm"/>
-          <fo:table-column column-width="3cm"/>
-          <fo:table-body font-size="9pt"
-                         font-family="BitstreamVeraSans">
-             <fo:table-row keep-together="always">
-                <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
-                   <fo:block  text-align="start" >
-                      <xsl:choose>
-                        <xsl:when test="TotalProfitLoss &gt; 0">
-                          Profit
-                        </xsl:when>
-                        <xsl:otherwise>
-                          Loss
-                        </xsl:otherwise>
-                      </xsl:choose>
-                   </fo:block>
-                </fo:table-cell>
-                <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
-                   <fo:block  text-align="start" >
-                   </fo:block>
-                </fo:table-cell>
-                <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
-                   <fo:block  text-align="end" >
-                      <xsl:value-of select="format-number(object[@model='accounting.accountingperiod']/Overall_Assets-object[@model='accounting.accountingperiod']/Overall_Liabilities,'#.##0,00', 'european')"/> CHF
-                   </fo:block>
-                </fo:table-cell>
              </fo:table-row>
           </fo:table-body>
        </fo:table>

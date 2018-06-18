@@ -160,7 +160,7 @@ class OptionProject(admin.ModelAdmin):
                                                 request,
                                                 obj,
                                                 ("/admin/crm/"+obj.__class__.__name__.lower()+"/"),
-                                                obj.default_template_set)
+                                                obj.default_template_set.monthly_project_summary_template)
             return response
 
     create_report_pdf.short_description = _("Create Report PDF")

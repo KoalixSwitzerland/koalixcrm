@@ -74,7 +74,7 @@ class CustomIndexDashboard(Dashboard):
                 modules.LinkList(
                     _('Report Personaly work'),
                     column=1,
-                    children=[{'title': _('Monthly Report'),
+                    children=[{'title': _('Time Tracking'),
                                'url': '/koalixcrm/crm/reporting/monthlyreport/',
                                'external': False,},]
                 )
