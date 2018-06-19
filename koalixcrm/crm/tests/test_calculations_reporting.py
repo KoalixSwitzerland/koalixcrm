@@ -25,7 +25,8 @@ class ReportingCalculationsTest(TestCase):
     def setUp(self):
         datetime_now=datetime.datetime(2024, 1, 1, 0, 00)
         start_date=(datetime_now - datetime.timedelta(days=30)).date()
-        end_date=(datetime_now + datetime.timedelta(days=30)).date()
+        end_date_first_task=(datetime_now + datetime.timedelta(days=30)).date()
+        end_date_second_task=(datetime_now + datetime.timedelta(days=60)).date()
         date_now=datetime_now.date()
         test_billing_cycle=CustomerBillingCycle.objects.create(
             name="30 days to pay",
@@ -71,61 +72,116 @@ class ReportingCalculationsTest(TestCase):
             is_done=False
         )
         Task.objects.create(
-            short_description="Test Task",
+            title="Test Task",
             planned_start_date=start_date,
-            planned_end_date=end_date,
+            planned_end_date=end_date_first_task,
             project=test_project,
             description="This is a simple test task",
             status=test_task_status,
             last_status_change=date_now
         )
+        Task.objects.create(
+            title="2nd Test Task",
+            planned_start_date=start_date,
+            planned_end_date=end_date_second_task,
+            project=test_project,
+            description="This is an other simple test task",
+            status=test_task_status,
+            last_status_change=date_now
+        )
 
-    def test_calculate_document_price(self):
+    def test_calculation_of_reported_hours(self):
         datetime_now = datetime.datetime(2024, 1, 1, 0, 00)
-        datetime_later = datetime.datetime(2024, 1, 1, 2, 00)
-        datetime_even_later = datetime.datetime(2024, 1, 1, 3, 30)
+        datetime_later_1 = datetime.datetime(2024, 1, 1, 2, 00)
+        datetime_later_2 = datetime.datetime(2024, 1, 1, 3, 30)
+        datetime_later_3 = datetime.datetime(2024, 1, 1, 5, 45)
+        datetime_later_4 = datetime.datetime(2024, 1, 1, 6, 15)
         date_now = datetime_now.date()
-        test_task = Task.objects.get(short_description="Test Task")
+        test_task_first = Task.objects.get(title="Test Task")
+        test_task_second = Task.objects.get(title="2nd Test Task")
+        test_project = Project.objects.get(project_name="This is a test project")
         self.assertEqual(
-            (test_task.planned_duration()).__str__(), "60 days, 0:00:00")
+            (test_task_first.planned_duration()).__str__(), "60 days, 0:00:00")
         self.assertEqual(
-            (test_task.planned_effort()).__str__(), "0")
+            (test_task_first.planned_effort()).__str__(), "0")
+        self.assertEqual(
+            (test_task_second.planned_duration()).__str__(), "90 days, 0:00:00")
+        self.assertEqual(
+            (test_task_second.planned_effort()).__str__(), "0")
         test_user = User.objects.get(username="admin")
         test_employee = UserExtension.objects.get(user=test_user)
         EmployeeAssignmentToTask.objects.create(
             employee=test_employee,
             planned_effort="2.00",
-            task=test_task
+            task=test_task_first
         )
         EmployeeAssignmentToTask.objects.create(
             employee=test_employee,
             planned_effort="1.50",
-            task=test_task
+            task=test_task_first
+        )
+        EmployeeAssignmentToTask.objects.create(
+            employee=test_employee,
+            planned_effort="4.75",
+            task=test_task_second
+        )
+        EmployeeAssignmentToTask.objects.create(
+            employee=test_employee,
+            planned_effort="3.25",
+            task=test_task_second
         )
         self.assertEqual(
-            (test_task.planned_effort()).__str__(), "3.50")
+            (test_task_first.planned_effort()).__str__(), "3.50")
         self.assertEqual(
-            (test_task.effective_effort()).__str__(), "0.0")
+            (test_task_first.effective_effort()).__str__(), "0.0")
+        self.assertEqual(
+            (test_task_second.planned_effort()).__str__(), "8.00")
+        self.assertEqual(
+            (test_task_second.effective_effort()).__str__(), "0.0")
         Work.objects.create(
             employee=test_employee,
             date=date_now,
             start_time=datetime_now,
-            stop_time=datetime_later,
+            stop_time=datetime_later_1,
             short_description="Not really relevant",
             description="Performed some hard work",
-            task=test_task
+            task=test_task_first
         )
         Work.objects.create(
             employee=test_employee,
             date=date_now,
-            start_time=datetime_later,
-            stop_time=datetime_even_later,
+            start_time=datetime_later_1,
+            stop_time=datetime_later_2,
             short_description="Not really relevant 2nd part",
             description="Performed some hard work 2nd part",
-            task=test_task
+            task=test_task_first
+        )
+        Work.objects.create(
+            employee=test_employee,
+            date=date_now,
+            start_time=datetime_now,
+            stop_time=datetime_later_3,
+            short_description="Not really relevant",
+            description="Performed some hard work",
+            task=test_task_second
+        )
+        Work.objects.create(
+            employee=test_employee,
+            date=date_now,
+            start_time=datetime_now,
+            stop_time=datetime_later_4,
+            short_description="Not really relevant 2nd part",
+            description="Performed some hard work 2nd part",
+            task=test_task_second
         )
         self.assertEqual(
-            (test_task.effective_effort()).__str__(), "3.5")
+            (test_task_first.effective_effort()).__str__(), "3.5")
+        self.assertEqual(
+            (test_task_second.effective_effort()).__str__(), "12.0")
+        self.assertEqual(
+            (test_project.effective_effort()).__str__(), "15.5")
+        self.assertEqual(
+            (test_project.planned_effort()).__str__(), "11.50")
 
 
 class ReportingCalculationsUITest(LiveServerTestCase):
