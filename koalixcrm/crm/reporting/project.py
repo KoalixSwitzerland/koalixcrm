@@ -9,6 +9,7 @@ from koalixcrm.crm.reporting.task import InlineTasks
 from koalixcrm.crm.documents.pdfexport import PDFExport
 from koalixcrm.crm.exceptions import TemplateSetMissingInContract
 from koalixcrm.crm.models import Task
+from rest_framework import serializers
 
 
 class Project(models.Model):
@@ -183,3 +184,11 @@ class InlineProject(admin.TabularInline):
 
     def has_delete_permission(self, request, obj=None):
         return False
+
+
+class ProjectJSONSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Project
+        fields = ('id',
+                  'project_manager',
+                  'project_name')
