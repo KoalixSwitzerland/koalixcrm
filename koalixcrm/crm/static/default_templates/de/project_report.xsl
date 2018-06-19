@@ -94,6 +94,7 @@
                          font-family="BitstreamVeraSans">
          <xsl:for-each select="object[@model='crm.task']">
           <xsl:sort select="short_description" data-type="number"/>
+             <xsl:variable name="current_task_id" select="current()/@pk"/>
              <fo:table-row keep-together="always">
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                     <fo:block-container overflow="hidden">
@@ -103,14 +104,25 @@
                     </fo:block-container>
                 </fo:table-cell>
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
-                    <fo:block  text-align="start" >
-                        <xsl:value-of select="field[@name='title']"/>
-                    </fo:block>
+                    <fo:list-block  text-align="start" >
                     <xsl:for-each select="../object[@model='crm.work']">
-                        <fo:block  text-align="start" >
-                          <xsl:value-of select="field[@name='description']"/>
-                        </fo:block>
+                        <xsl:choose><xsl:when test="field[@name='task'] = $current_task_id">
+                        <fo:list-item>
+                            <fo:list-item-label end-indent="label-end()">
+                                <fo:block>
+                                <fo:inline font-family="Symbol">•</fo:inline>
+                                </fo:block>
+                            </fo:list-item-label>
+                            <fo:list-item-body start-indent="body-start()">
+                                <fo:block>
+                                <xsl:value-of select="field[@name='description']"/>
+                                </fo:block>
+                            </fo:list-item-body>
+                        </fo:list-item>
+                        </xsl:when>
+                        </xsl:choose>
                     </xsl:for-each>
+                    </fo:list-block>
                 </fo:table-cell>
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="end" >
