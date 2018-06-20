@@ -13,7 +13,7 @@ import koalixcrm
 
 
 class Task(models.Model):
-    short_description = models.CharField(verbose_name=_("Short Description"), max_length=100, blank=True, null=True)
+    title = models.CharField(verbose_name=_("Title"), max_length=100, blank=True, null=True)
     planned_start_date = models.DateField(verbose_name=_("Planned Start Date"), blank=True, null=True)
     planned_end_date = models.DateField(verbose_name=_("Planned End Date"), blank=True, null=True)
     project = models.ForeignKey("Project", verbose_name=_('Project'), blank=False, null=False)
@@ -82,14 +82,14 @@ class Task(models.Model):
         sum_effort_in_hours = sum_effort / 3600
         return sum_effort_in_hours
 
-    def get_short_description(self):
-        if self.short_description:
-            return self.short_description
+    def get_title(self):
+        if self.title:
+            return self.title
         else:
             return "n/a"
 
     def __str__(self):
-        return str(self.id) + " " + self.get_short_description()
+        return str(self.id) + " " + self.get_title()
 
     class Meta:
         app_label = "crm"
@@ -99,7 +99,7 @@ class Task(models.Model):
 
 class OptionTask(admin.ModelAdmin):
     list_display = ('id',
-                    'short_description',
+                    'title',
                     'planned_start_date',
                     'planned_end_date',
                     'project',
@@ -115,7 +115,7 @@ class OptionTask(admin.ModelAdmin):
 
     fieldsets = (
         (_('Work'), {
-            'fields': ('short_description',
+            'fields': ('title',
                        'planned_start_date',
                        'planned_end_date',
                        'project',
@@ -142,7 +142,7 @@ class InlineTasks(admin.TabularInline):
     fieldsets = (
         (_('Task'), {
             'fields': ('id',
-                       'short_description',
+                       'title',
                        'planned_start_date',
                        'planned_end_date',
                        'status',
@@ -166,7 +166,7 @@ class TaskJSONSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Task
         fields = ('id',
-                  'short_description',
+                  'title',
                   'planned_end_date',
                   'planned_start_date',
                   'project',
