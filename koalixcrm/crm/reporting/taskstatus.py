@@ -17,7 +17,7 @@ class TaskStatus(models.Model):
         verbose_name_plural = _('Task Status')
 
     def __str__(self):
-        return _("Task Status") + " ID: " + str(self.id) + " title: " + str(self.title)
+        return str(self.id) + str(self.title)
 
 
 class OptionTaskStatus(admin.ModelAdmin):

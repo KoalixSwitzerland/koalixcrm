@@ -8,13 +8,13 @@
     <!-- defines page layout -->
     <fo:layout-master-set>
       <fo:simple-page-master master-name="simple"
-                    page-height="29.7cm"
-                    page-width="21cm"
+                    page-height="21cm"
+                    page-width="29.7cm"
                     margin-top="1.5cm"
                     margin-bottom="1.0cm"
                     margin-left="1.5cm"
                     margin-right="1.5cm">
-        <fo:region-body margin-top="1.0cm" margin-bottom="1.5cm"/>
+        <fo:region-body margin-top="2.5cm" margin-bottom="1.5cm"/>
         <fo:region-before extent="4.5cm"/>
         <fo:region-after extent="1.5cm"/>
       </fo:simple-page-master>
@@ -22,7 +22,7 @@
     <fo:page-sequence master-reference="simple">
       <fo:static-content flow-name="xsl-region-before" >
         <fo:table table-layout="fixed" width="100%">
-          <fo:table-column column-width="15.2cm"/>
+          <fo:table-column column-width="23.9cm"/>
           <fo:table-column column-width="2.8cm"/>
           <fo:table-body font-size="9pt"
                          font-family="BitstreamVeraSans">
@@ -68,7 +68,7 @@
        <fo:table table-layout="fixed" width="100%">
           <fo:table-column column-width="5.0cm"/>
           <fo:table-column column-width="5.0cm"/>
-          <fo:table-column column-width="5.0cm"/>
+          <fo:table-column column-width="13.7cm"/>
           <fo:table-column column-width="3.0cm"/>
         <fo:table-body>
           <fo:table-row border-top-color="black" border-top-style="solid" border-top-width="0.5pt" height="0.1cm">
@@ -151,14 +151,14 @@
           </xsl:choose>
        </xsl:for-each>
        <fo:table table-layout="fixed" width="100%">
-          <fo:table-column column-width="3cm"/>
-          <fo:table-column column-width="8cm"/>
+          <fo:table-column column-width="4.5cm"/>
+          <fo:table-column column-width="15.2cm"/>
           <fo:table-column column-width="3cm"/>
           <fo:table-column column-width="3cm"/>
      <fo:table-header font-size="8pt" line-height="9pt" font-weight="bold" font-family="BitstreamVeraSans">
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="start" >
-                      Title
+                      Task
                    </fo:block>
                 </fo:table-cell>
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
@@ -182,7 +182,7 @@
          <xsl:for-each select="object[@model='crm.task']">
           <xsl:sort select="short_description" data-type="number"/>
              <xsl:variable name="current_task_id" select="current()/@pk"/>
-             <fo:table-row keep-together="always">
+             <fo:table-row>
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                     <fo:block-container overflow="hidden">
                         <fo:block  text-align="start">
@@ -191,6 +191,7 @@
                     </fo:block-container>
                 </fo:table-cell>
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
+                    <fo:block-container overflow="hidden">
                     <fo:list-block  text-align="start" >
                     <xsl:for-each select="../object[@model='crm.work']">
                         <xsl:choose><xsl:when test="field[@name='task'] = $current_task_id">
@@ -210,6 +211,7 @@
                         </xsl:choose>
                     </xsl:for-each>
                     </fo:list-block>
+                    </fo:block-container>
                 </fo:table-cell>
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="end" >
