@@ -143,7 +143,7 @@ class OptionProject(admin.ModelAdmin):
         }),
     )
 
-    inlines = [InlineTasks, InlineGenericLinks,]
+    inlines = [InlineTasks, InlineGenericLinks]
     actions = ['create_report_pdf', ]
 
     def save_model(self, request, obj, form, change):

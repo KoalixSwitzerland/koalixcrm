@@ -17,15 +17,10 @@ Including another URLconf
 from django.conf.urls.static import *
 from django.contrib.staticfiles.urls import static
 from django.contrib import admin
-from filebrowser.sites import FileBrowserSite
-from django.core.files.storage import DefaultStorage
 from django.conf.urls import include
+from filebrowser.sites import site
 from rest_framework import routers
 from koalixcrm.crm.views.restinterface import TaskAsJSON, ContractAsJSON, TaskStatusAsJSON, ProjectAsJSON
-
-site = FileBrowserSite(name="filebrowser", storage=DefaultStorage())
-customsite = FileBrowserSite(name='custom_filebrowser', storage=DefaultStorage())
-customsite.directory = "media/uploads/"
 
 router = routers.DefaultRouter()
 router.register(r'tasks', TaskAsJSON)
@@ -37,9 +32,9 @@ admin.autodiscover()
 
 urlpatterns = [
     url(r'^', include(router.urls)),
+    url(r'^admin/filebrowser/', include(site.urls)),
     url(r'^grappelli/', include('grappelli.urls')), # grappelli URLS
     url(r'^koalixcrm/crm/reporting/', include('koalixcrm.crm.reporting.urls')), # koalixcrm crm reporting URLS
-    url(r'^admin/filebrowser/', customsite.urls),
     url(r'^admin/', admin.site.urls),
     url(r'^api-auth/', include('rest_framework.urls')),
 ]
