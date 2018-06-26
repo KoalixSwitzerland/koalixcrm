@@ -88,10 +88,10 @@ def evaluate_pre_check_to_date(range_selection_form):
 
 def load_formset(range_selection_form, request):
     WorkEntryFormSet = forms.formset_factory(WorkEntry,
-                                               extra=1,
-                                               max_num=60,
-                                               can_delete=True,
-                                               formset=BaseWorkEntryFormset)
+                                             extra=1,
+                                             max_num=60,
+                                             can_delete=True,
+                                             formset=BaseWorkEntryFormset)
     from_date = evaluate_pre_check_from_date(range_selection_form)
     to_date = evaluate_pre_check_to_date(range_selection_form)
     form_kwargs = compose_form_kwargs(from_date, to_date)
@@ -107,10 +107,10 @@ def compose_form_kwargs(from_date, to_date):
 
 def create_updated_formset(range_selection_form, request):
     WorkEntryFormSet = forms.formset_factory(WorkEntry,
-                                               extra=1,
-                                               max_num=60,
-                                               can_delete=True,
-                                               formset=BaseWorkEntryFormset)
+                                             extra=1,
+                                             max_num=60,
+                                             can_delete=True,
+                                             formset=BaseWorkEntryFormset)
     employee = UserExtension.get_user_extension(request.user)
     from_date = range_selection_form.cleaned_data['from_date']
     to_date = range_selection_form.cleaned_data['to_date']

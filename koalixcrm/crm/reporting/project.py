@@ -61,22 +61,22 @@ class Project(models.Model):
         template_set = self.get_template_set()
         return template_set.get_xsl_file()
 
-    def serialize_to_xml(self):
+    def serialize_to_xml(self, reporting_period):
         from koalixcrm.djangoUserExtension.models import UserExtension
         objects = [self, ]
         objects += UserExtension.objects_to_serialize(self, self.project_manager)
         main_xml = PDFExport.write_xml(objects)
         for task in Task.objects.filter(project=self.id):
-            task_xml = task.serialize_to_xml()
+            task_xml = task.serialize_to_xml(reporting_period=reporting_period)
             main_xml = PDFExport.merge_xml(main_xml, task_xml)
         main_xml = PDFExport.append_element_to_pattern(main_xml,
                                                        "object/[@model='crm.project']",
-                                                       "Effective_Effort",
-                                                       self.effective_effort())
+                                                       "Effective_Effort_Overall",
+                                                       self.effective_effort(reporting_period=None))
         main_xml = PDFExport.append_element_to_pattern(main_xml,
                                                        "object/[@model='crm.project']",
-                                                       "Planned_Effort",
-                                                       self.planned_effort())
+                                                       "Effective_Effort_InPeriod",
+                                                       self.effective_effort(reporting_period=reporting_period))
         main_xml = PDFExport.append_element_to_pattern(main_xml,
                                                        "object/[@model='crm.project']",
                                                        "Effective_Duration",
@@ -87,14 +87,17 @@ class Project(models.Model):
                                                        self.planned_duration())
         return main_xml
 
-    def effective_effort(self):
-        effective_effort_accumulated=0
+    def effective_effort_overall(self):
+        return self.effective_effort(reporting_period=None)
+
+    def effective_effort(self, reporting_period):
+        effective_effort_accumulated = 0
         for task in Task.objects.filter(project=self.id):
-            effective_effort_accumulated += task.effective_effort()
+            effective_effort_accumulated += task.effective_effort(reporting_period=reporting_period)
         return effective_effort_accumulated
 
     def planned_effort(self):
-        planned_effort_accumulated=0
+        planned_effort_accumulated = 0
         for task in Task.objects.filter(project=self.id):
             planned_effort_accumulated += task.planned_effort()
         return planned_effort_accumulated
@@ -126,7 +129,7 @@ class OptionProject(admin.ModelAdmin):
                     'project_name',
                     'project_manager',
                     'planned_effort',
-                    'effective_effort',
+                    'effective_effort_overall',
                     'planned_duration',
                     'effective_duration')
 

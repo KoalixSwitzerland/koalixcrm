@@ -14,9 +14,9 @@ class GenericProjectLink(models.Model):
                              blank=False,
                              null=False)
     project_link_type = models.ForeignKey("ProjectLinkType",
-                                       verbose_name=_('Project Link Type'),
-                                       blank=True,
-                                       null=True)
+                                          verbose_name=_('Project Link Type'),
+                                          blank=True,
+                                          null=True)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     generic_crm_object = GenericForeignKey('content_type',

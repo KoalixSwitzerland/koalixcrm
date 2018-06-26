@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.test import LiveServerTestCase
 from koalixcrm.crm.models import Project
+from koalixcrm.crm.models import ReportingPeriod
 from koalixcrm.crm.models import Customer
 from koalixcrm.crm.models import CustomerGroup
 from koalixcrm.crm.models import CustomerBillingCycle
@@ -60,13 +61,19 @@ class ReportingCalculationsTest(TestCase):
             defaultTemplateSet = test_template_set,
             defaultCurrency = test_currency
         )
-        test_project=Project.objects.create(
+        test_project = Project.objects.create(
             project_manager=test_user,
             project_name="This is a test project",
             last_modification=date_now,
             last_modified_by=test_user
         )
-        test_task_status=TaskStatus.objects.create(
+        ReportingPeriod.objects.create(
+            project=test_project,
+            begin=start_date,
+            end=end_date_first_task,
+            title="This is a Test Period"
+        )
+        test_task_status = TaskStatus.objects.create(
             title="planned",
             description="This represents the state when something has been planned but not yet started",
             is_done=False
@@ -109,6 +116,7 @@ class ReportingCalculationsTest(TestCase):
         self.assertEqual(
             (test_task_second.planned_effort()).__str__(), "0")
         test_user = User.objects.get(username="admin")
+        test_reporting_period = ReportingPeriod.objects.get(title="This is a Test Period")
         test_employee = UserExtension.objects.get(user=test_user)
         EmployeeAssignmentToTask.objects.create(
             employee=test_employee,
@@ -133,11 +141,11 @@ class ReportingCalculationsTest(TestCase):
         self.assertEqual(
             (test_task_first.planned_effort()).__str__(), "3.50")
         self.assertEqual(
-            (test_task_first.effective_effort()).__str__(), "0.0")
+            (test_task_first.effective_effort(reporting_period=None)).__str__(), "0.0")
         self.assertEqual(
             (test_task_second.planned_effort()).__str__(), "8.00")
         self.assertEqual(
-            (test_task_second.effective_effort()).__str__(), "0.0")
+            (test_task_second.effective_effort(reporting_period=None)).__str__(), "0.0")
         Work.objects.create(
             employee=test_employee,
             date=date_now,
@@ -145,7 +153,8 @@ class ReportingCalculationsTest(TestCase):
             stop_time=datetime_later_1,
             short_description="Not really relevant",
             description="Performed some hard work",
-            task=test_task_first
+            task=test_task_first,
+            reporting_period=test_reporting_period
         )
         Work.objects.create(
             employee=test_employee,
@@ -154,7 +163,8 @@ class ReportingCalculationsTest(TestCase):
             stop_time=datetime_later_2,
             short_description="Not really relevant 2nd part",
             description="Performed some hard work 2nd part",
-            task=test_task_first
+            task=test_task_first,
+            reporting_period=test_reporting_period
         )
         Work.objects.create(
             employee=test_employee,
@@ -163,7 +173,8 @@ class ReportingCalculationsTest(TestCase):
             stop_time=datetime_later_3,
             short_description="Not really relevant",
             description="Performed some hard work",
-            task=test_task_second
+            task=test_task_second,
+            reporting_period=test_reporting_period
         )
         Work.objects.create(
             employee=test_employee,
@@ -172,14 +183,15 @@ class ReportingCalculationsTest(TestCase):
             stop_time=datetime_later_4,
             short_description="Not really relevant 2nd part",
             description="Performed some hard work 2nd part",
-            task=test_task_second
+            task=test_task_second,
+            reporting_period=test_reporting_period
         )
         self.assertEqual(
-            (test_task_first.effective_effort()).__str__(), "3.5")
+            (test_task_first.effective_effort(reporting_period=None)).__str__(), "3.5")
         self.assertEqual(
-            (test_task_second.effective_effort()).__str__(), "12.0")
+            (test_task_second.effective_effort(reporting_period=None)).__str__(), "12.0")
         self.assertEqual(
-            (test_project.effective_effort()).__str__(), "15.5")
+            (test_project.effective_effort(reporting_period=None)).__str__(), "15.5")
         self.assertEqual(
             (test_project.planned_effort()).__str__(), "11.50")
 

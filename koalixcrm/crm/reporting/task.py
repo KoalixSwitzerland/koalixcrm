@@ -45,16 +45,21 @@ class Task(models.Model):
                     return self.last_status_change - self.planned_start_date
         return "n/a"
 
-    def serialize_to_xml(self):
+    def serialize_to_xml(self, reporting_period):
         objects = [self, ]
         main_xml = PDFExport.write_xml(objects)
-        for work in koalixcrm.crm.reporting.work.Work.objects.filter(task=self.id):
+        for work in koalixcrm.crm.reporting.work.Work.objects.filter(task=self.id,
+                                                                     reporting_period=reporting_period):
             work_xml = work.serialize_to_xml()
             main_xml = PDFExport.merge_xml(main_xml, work_xml)
         main_xml = PDFExport.append_element_to_pattern(main_xml,
                                                        "object/[@model='crm.task']",
-                                                       "Effective_Effort",
-                                                       self.effective_effort())
+                                                       "Effective_Effort_Overall",
+                                                       self.effective_effort(reporting_period=None))
+        main_xml = PDFExport.append_element_to_pattern(main_xml,
+                                                       "object/[@model='crm.task']",
+                                                       "Effective_Effort_InPeriod",
+                                                       self.effective_effort(reporting_period=reporting_period))
         main_xml = PDFExport.append_element_to_pattern(main_xml,
                                                        "object/[@model='crm.task']",
                                                        "Planned_Effort",
@@ -69,8 +74,18 @@ class Task(models.Model):
                                                        self.planned_duration())
         return main_xml
 
-    def effective_effort(self):
-        work_objects = koalixcrm.crm.reporting.work.Work.objects.filter(task=self.id)
+    def effective_effort_overall(self):
+        return self.effective_effort(reporting_period=None)
+
+    def effective_effort(self, reporting_period):
+        """ effective effort returns the effective effort on a task
+        when reporting_period is None, the effective effort overall is calculated
+        when reporting_period is specified, the effective effort in this period is calculated"""
+        if reporting_period:
+            work_objects = koalixcrm.crm.reporting.work.Work.objects.filter(task=self.id,
+                                                                            reporting_period=reporting_period)
+        else:
+            work_objects = koalixcrm.crm.reporting.work.Work.objects.filter(task=self.id)
         sum_effort = 0
         for work_object in work_objects:
             if (not work_object.start_time) or (not work_object.stop_time):
@@ -138,7 +153,7 @@ class InlineTasks(admin.TabularInline):
     readonly_fields = ('planned_duration',
                        'planned_effort',
                        'effective_duration',
-                       'effective_effort')
+                       'effective_effort_overall')
     fieldsets = (
         (_('Task'), {
             'fields': ('id',
@@ -150,7 +165,7 @@ class InlineTasks(admin.TabularInline):
                        'planned_duration',
                        'planned_effort',
                        'effective_duration',
-                       'effective_effort')
+                       'effective_effort_overall')
         }),
     )
     extra = 0

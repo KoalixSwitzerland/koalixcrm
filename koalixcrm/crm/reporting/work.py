@@ -14,6 +14,7 @@ class Work(models.Model):
     short_description = models.CharField(verbose_name=_("Short Description"), max_length=300, blank=False, null=False)
     description = models.TextField(verbose_name=_("Text"), blank=True, null=True)
     task = models.ForeignKey("Task", verbose_name=_('Task'), blank=False, null=False)
+    reporting_period = models.ForeignKey("ReportingPeriod", verbose_name=_('Reporting Period'), blank=False, null=False)
 
     def serialize_to_xml(self):
         objects = [self, ]
