@@ -6,6 +6,7 @@ from django.contrib.admin.widgets import *
 from koalixcrm.djangoUserExtension.models import UserExtension
 from koalixcrm.crm.reporting.task import Task
 from koalixcrm.crm.reporting.project import Project
+from koalixcrm.crm.reporting.reporting_period import ReportingPeriod
 import datetime
 
 
@@ -157,6 +158,7 @@ def update_work(form, request):
             work.stop_time = datetime.datetime.combine(form.cleaned_data['date'],
                                                        form.cleaned_data['stop_time'])
             work.description = form.cleaned_data['description']
+            work.reporting_period = ReportingPeriod.get_current_valid_reporting_period()
             work.save()
 
 

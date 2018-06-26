@@ -5,6 +5,7 @@ from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext as _
 from koalixcrm.crm.documents.pdfexport import PDFExport
+from koalixcrm.crm.exceptions import ReportingPeriodNotFound
 from rest_framework import serializers
 
 
@@ -21,29 +22,26 @@ class ReportingPeriod(models.Model):
                              blank=False, null=False)
     end = models.DateField(verbose_name=_("End"),
                            blank=False, null=False)
-    status = models.ForeignKey("ReportingPeriodStatus",
-                               verbose_name=_('Status Reporting Period'),
-                               blank=False, null=False)
 
     @staticmethod
     def get_current_valid_reporting_period():
-        """Returns the accounting period that is currently valid. Valid is an accounting_period when the current date
-          lies between begin and end of the accounting_period
+        """Returns the reporting period that is currently valid. Valid is a reporting period when the current date
+          lies between begin and end of the reporting period
 
         Args:
           no arguments
 
         Returns:
-          accounting_period (AccoutingPeriod)
+          accounting_period (ReportPeriod)
 
         Raises:
-          AccountingPeriodNotFound when there is no valid accounting Period"""
-        current_valid_accounting_period = None
-        for accounting_period in AccountingPeriod.objects.all():
-            if accounting_period.begin < date.today() and accounting_period.end > date.today():
-                return accounting_period
-        if not current_valid_accounting_period:
-            raise AccountingPeriodNotFound()
+          ReportPeriodNotFound when there is no valid reporting Period"""
+        current_valid_reporting_period = None
+        for reporting_period in ReportingPeriod.objects.all():
+            if reporting_period.begin < date.today() and reporting_period.end > date.today():
+                return reporting_period
+        if not current_valid_reporting_period:
+            raise ReportingPeriodNotFound()
 
     @staticmethod
     def get_all_prior_reporting_periods(target_reporting_period):
@@ -54,17 +52,17 @@ class ReportingPeriod(models.Model):
           no arguments
 
         Returns:
-          reporting_period (List of AccoutingPeriod)
+          reporting_period (List of ReportPeriod)
 
         Raises:
-          AccountingPeriodNotFound when there is no valid accounting Period"""
-        accounting_periods = []
-        for accounting_period in AccountingPeriod.objects.all():
-            if accounting_period.end < target_accounting_period.begin:
-                accounting_periods.append(accounting_period)
-        if accounting_periods == []:
-            raise AccountingPeriodNotFound("Accounting Period does not exist")
-        return accounting_periods
+          ReportPeriodNotFound when there is no valid reporting Period"""
+        reporting_periods = []
+        for reporting_period in ReportingPeriod.objects.all():
+            if reporting_period.end < reporting_period.begin:
+                reporting_period.append(reporting_period)
+        if reporting_periods:
+            raise ReportingPeriodNotFound("Accounting Period does not exist")
+        return reporting_periods
 
     def create_pdf(self, template_set, printed_by):
         self.last_print_date = datetime.now()
