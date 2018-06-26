@@ -1,13 +1,23 @@
 # Welcome to the koalixcrm 
 ## Why koalixcrm
-- **Free and open**
-  - REST interface to many entities
-  - Open source
-  - BSD license
-- Simple and beautiful user interface
-- High quality output documents
-- Small business <10 employees with access
-- Cloud hosted, Self-hosted, Not hosted (single-user, offline)
+<table><tr><th>Values:</th><th>Features:</th></tr>
+<tr><td><ul>
+  <li><b>Free and open</b></li>
+ <li>REST interface to many entities - Open source - BSD license </li>
+<li>Simple and beautiful user interface </li>
+<li>High quality output documents </li>
+<li>Small business <10 employees with access </li>
+                       <li>Cloud hosted, Self-hosted, Not hosted (single-user, offline)</li></ul></td>
+<td><ul>
+<li> Manage Contacts, Leads, Persons</li>
+<li> Manage Products and Prices</li>
+<li> Manage Documents such as Invoices, Quotes, Purchase Orders, ...</li>
+<li> Manage Projects, Tasks, Work (Traditional project management)</li>
+<li> Manage Document Tempaltes</li>
+<li>Double Entry Accounting</li>
+<li> Create Project Reports</li>
+<li> Adjust Access Rights </li></ul></td>
+  </tr></table>
 
 ## Quality badges on master
 | Project build: | Codacy results: |Docker: |
