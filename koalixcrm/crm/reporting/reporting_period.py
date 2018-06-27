@@ -6,6 +6,7 @@ from django.contrib import admin
 from django.utils.translation import ugettext as _
 from koalixcrm.crm.documents.pdfexport import PDFExport
 from koalixcrm.crm.exceptions import ReportingPeriodNotFound
+from koalixcrm.crm.reporting.work import InlineWork
 from rest_framework import serializers
 
 
@@ -73,15 +74,13 @@ class ReportingPeriod(models.Model):
         return self.project.get_template_set()
 
     def get_fop_config_file(self, template_set):
-        return self.project.get_fop_config_file()
+        return self.project.get_fop_config_file(template_set=None)
 
     def get_xsl_file(self, template_set):
-        return self.project.get_xsl_file()
+        return self.project.get_xsl_file(template_set=None)
 
     def serialize_to_xml(self):
-        from koalixcrm.djangoUserExtension.models import UserExtension
         objects = [self, ]
-        objects += UserExtension.objects_to_serialize(self, self.project_manager)
         main_xml = PDFExport.write_xml(objects)
         project_xml = self.project.serialize_to_xml(reporting_period=self)
         main_xml = PDFExport.merge_xml(main_xml, project_xml)
@@ -115,6 +114,7 @@ class OptionReportingPeriod(admin.ModelAdmin):
         }),
     )
 
+    inlines = [InlineWork, ]
     actions = ['create_report_pdf', ]
 
     def save_model(self, request, obj, form, change):
@@ -132,7 +132,7 @@ class OptionReportingPeriod(admin.ModelAdmin):
                                                 request,
                                                 obj,
                                                 ("/admin/crm/"+obj.__class__.__name__.lower()+"/"),
-                                                obj.default_template_set.monthly_project_summary_template)
+                                                obj.project.default_template_set.monthly_project_summary_template)
             return response
 
     create_report_pdf.short_description = _("Create Report PDF")

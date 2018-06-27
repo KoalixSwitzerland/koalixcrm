@@ -47,6 +47,7 @@ class OptionWork(admin.ModelAdmin):
                     'date',
                     'start_time',
                     'stop_time',
+                    'reporting_period',
                     'effort_as_string',)
 
     list_display_links = ('id',)
@@ -61,7 +62,8 @@ class OptionWork(admin.ModelAdmin):
                        'stop_time',
                        'short_description',
                        'description',
-                       'task')
+                       'task',
+                       'reporting_period',)
         }),
     )
     save_as = True
@@ -73,14 +75,16 @@ class InlineWork(admin.TabularInline):
                        'short_description',
                        'date',
                        'start_time',
-                       'stop_time',)
+                       'stop_time',
+                       'effort_as_string',)
     fieldsets = (
         (_('Work'), {
             'fields': ('employee',
                        'short_description',
                        'date',
                        'start_time',
-                       'stop_time',)
+                       'stop_time',
+                       'effort_as_string',)
         }),
     )
     extra = 0
