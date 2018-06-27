@@ -245,4 +245,4 @@ class ContractJSONSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Contract
         fields = ('id',
-                  'description',)
+                  'description')
