@@ -62,7 +62,7 @@ class ProductUnitTransform(admin.TabularInline):
     allow_add = True
 
 
-class ParentUnitJSONSerializer(serializers.HyperlinkedModelSerializer):
+class UnitMinimalJSONSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.IntegerField(required=False)
     description = serializers.CharField(read_only=True)
     shortName = serializers.CharField(source='short_name', read_only=True)
@@ -77,8 +77,8 @@ class ParentUnitJSONSerializer(serializers.HyperlinkedModelSerializer):
 class UnitJSONSerializer(serializers.HyperlinkedModelSerializer):
     shortName = serializers.CharField(source='short_name')
     description = serializers.CharField()
-    isFractionOf = ParentUnitJSONSerializer(source='is_a_fraction_of',
-                                            allow_null=True)
+    isFractionOf = UnitMinimalJSONSerializer(source='is_a_fraction_of',
+                                             allow_null=True)
     fractionFactor = serializers.IntegerField(source='fraction_factor_to_next_higher_unit',
                                               required=False,
                                               allow_null=True)

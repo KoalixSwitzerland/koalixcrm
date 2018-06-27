@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from koalixcrm.crm.product.product import Product, ProductJSONSerializer
+
 from koalixcrm.crm.product.unit import Unit, UnitJSONSerializer
 
 from koalixcrm.crm.product.tax import Tax, TaxJSONSerializer
@@ -57,3 +59,11 @@ class UnitAsJSON(viewsets.ModelViewSet):
     """
     queryset = Unit.objects.all()
     serializer_class = UnitJSONSerializer
+
+
+class ProductAsJSON(viewsets.ModelViewSet):
+    """
+    API endpoint that allows products to be viewed.
+    """
+    queryset = Product.objects.all()
+    serializer_class = ProductJSONSerializer
