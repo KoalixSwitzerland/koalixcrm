@@ -2,8 +2,7 @@
 
 from django.db import models
 from django.utils.translation import ugettext as _
-from django.contrib import admin, messages
-import koalixcrm
+from django.contrib import admin
 
 
 class EmployeeAssignmentToTask(models.Model):

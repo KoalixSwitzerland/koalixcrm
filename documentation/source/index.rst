@@ -4,7 +4,7 @@ Welcome to koalixcrm's documentation!
 Contents:
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 2
 
    installation
    intro
@@ -13,6 +13,7 @@ Contents:
    crm
    djangoUserExtention
    customisation
+   architecture
    faq
 
 Indices and tables

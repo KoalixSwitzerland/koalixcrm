@@ -10,7 +10,7 @@ from koalixcrm.crm.product.currency import CurrencyJSONSerializer, Currency
 from koalixcrm.crm.reporting.task import Task, TaskJSONSerializer
 from koalixcrm.crm.reporting.taskstatus import TaskStatus, TaskStatusJSONSerializer
 from koalixcrm.crm.documents.contract import Contract, ContractJSONSerializer
-
+from koalixcrm.crm.reporting.project import Project, ProjectJSONSerializer
 
 class TaskAsJSON(viewsets.ReadOnlyModelViewSet):
     """
@@ -67,3 +67,12 @@ class ProductAsJSON(viewsets.ModelViewSet):
     """
     queryset = Product.objects.all()
     serializer_class = ProductJSONSerializer
+
+
+
+class ProjectAsJSON(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint that allows users to be viewed.
+    """
+    queryset = Project.objects.all()
+    serializer_class = ProjectJSONSerializer

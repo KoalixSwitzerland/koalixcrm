@@ -81,7 +81,8 @@ class OptionTemplateSet(admin.ModelAdmin):
             'fields': ('title', 'invoice_template', 'quote_template',
                      'delivery_note_template', 'payment_reminder_template',
                      'purchase_confirmation_template', 'purchase_order_template',
-                     'profit_loss_statement_template', 'balance_sheet_statement_template' )
+                     'profit_loss_statement_template', 'balance_sheet_statement_template',
+                     'monthly_project_summary_template')
         }),
     )
 
@@ -190,6 +191,18 @@ class OptionBalanceSheetTemplate(admin.ModelAdmin):
     inlines = [InlineTextParagraph]
 
 
+class OptionProjectSummaryTemplate(admin.ModelAdmin):
+    list_display = ('id', 'title')
+    list_display_links = ('id', 'title')
+    ordering = ('id',)
+    search_fields = ('id', 'title')
+    fieldsets = (
+        (_('Basics'), {
+            'fields': ('title', 'xsl_file', 'fop_config_file', 'logo')
+        }),
+    )
+    inlines = [InlineTextParagraph]
+
 admin.site.register(UserExtension, OptionUserExtension)
 admin.site.register(TemplateSet, OptionTemplateSet)
 admin.site.register(InvoiceTemplate, OptionInvoiceTemplate)
@@ -200,3 +213,4 @@ admin.site.register(PurchaseOrderTemplate, OptionPurchaseOrderTemplate)
 admin.site.register(PurchaseConfirmationTemplate, OptionPurchaseConfirmationTemplate)
 admin.site.register(ProfitLossStatementTemplate, OptionProfitLossStatementTemplate)
 admin.site.register(BalanceSheetTemplate, OptionBalanceSheetTemplate)
+admin.site.register(MonthlyProjectSummaryTemplate, OptionProjectSummaryTemplate)

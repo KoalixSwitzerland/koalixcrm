@@ -225,12 +225,7 @@
              </fo:table-row>
           </fo:table-body>
        </fo:table>
-              <fo:block font-size="10pt"
-              font-family="BitstreamVeraSans"
-              text-align="left"
-              line-height="13pt"
-              id="last-page">-
-             </fo:block>
+          <fo:block id="last-page"> </fo:block>
     </fo:flow>
      <xsl:apply-templates/>
   </fo:page-sequence>

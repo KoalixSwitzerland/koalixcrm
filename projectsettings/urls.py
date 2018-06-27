@@ -25,6 +25,7 @@ from rest_framework import routers
 from koalixcrm.accounting.restinterface import AccountAsJSON
 from koalixcrm.crm.views.restinterface import TaskAsJSON, ContractAsJSON, TaskStatusAsJSON, CurrencyAsJSON, TaxAsJSON, \
     UnitAsJSON, ProductAsJSON
+from koalixcrm.crm.views.restinterface import TaskAsJSON, ContractAsJSON, TaskStatusAsJSON, ProjectAsJSON
 
 site = FileBrowserSite(name="filebrowser", storage=DefaultStorage())
 customsite = FileBrowserSite(name='custom_filebrowser', storage=DefaultStorage())
@@ -36,6 +37,7 @@ router.register(r'contracts', ContractAsJSON)
 router.register(r'currencies', CurrencyAsJSON)
 router.register(r'products', ProductAsJSON)
 router.register(r'tasks', TaskAsJSON)
+router.register(r'project', ProjectAsJSON)
 router.register(r'taskstatus', TaskStatusAsJSON)
 router.register(r'taxes', TaxAsJSON)
 router.register(r'units', UnitAsJSON)

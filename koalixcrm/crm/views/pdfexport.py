@@ -17,7 +17,7 @@ class PDFExportView:
             Args:
               calling_model_admin (ModelAdmin):  The calling ModelAdmin must be provided for error message response.
               request: The request User is to know where to save the error message
-              document (Contract):  The model from which a PDF should be exported
+              document (SalesDocument):  The model from which a PDF should be exported
               redirect_to (str): String that describes to where the method should redirect in case of an error
               template_to_use (Template Set): For some documents that need to be created there exists more
               than one template with this parameter the template set can be set during the export function

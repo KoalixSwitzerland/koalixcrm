@@ -6,11 +6,20 @@ CRM
 Introduction
 ------------
 
-Objecttypes
------------
+Products
+--------
 
-Contract
+Contact
+--------
+
+Customer
 ^^^^^^^^
+
+Documents
+---------
+
+Sales Contract
+^^^^^^^^^^^^^^
 
 Purchase Order
 ^^^^^^^^^^^^^^
@@ -21,12 +30,8 @@ Invoice
 Quote
 ^^^^^
 
-Customer
-^^^^^^^^
+Reporting
+---------
 
-Distributors
-^^^^^^^^^^^^
 
-Suppliers
-^^^^^^^^^
 

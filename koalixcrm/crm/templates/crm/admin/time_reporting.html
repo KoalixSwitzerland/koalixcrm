@@ -23,7 +23,7 @@
                   $.getJSON("/tasks/?format=json", {project: $(this).val()}, function (j) {
                       var options = '<option value="">--------&nbsp;</option>';
                       for (var i = 0; i < j.length; i++) {
-                          options += '<option value="' + j[i].id + '">' + j[i].short_description + '</option>';
+                          options += '<option value="' + j[i].id + '">' + j[i].title + '</option>';
                       }
                       $("#id_form-"+form_number+"-task").html(options);
                       $("#id_form-"+form_number+"-task option:first").attr('selected', 'selected');

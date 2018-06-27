@@ -5,7 +5,7 @@ from django.template.context_processors import csrf
 from django.contrib.admin.widgets import *
 from koalixcrm.djangoUserExtension.models import UserExtension
 from koalixcrm.crm.reporting.task import Task
-from koalixcrm.crm.documents.contract import Contract
+from koalixcrm.crm.reporting.project import Project
 import datetime
 
 
@@ -23,7 +23,7 @@ class BaseWorkEntryFormset(forms.models.BaseFormSet):
 
 class WorkEntry(forms.Form):
     task_list = Task.objects.all()
-    projects = forms.ModelChoiceField(Contract.objects.all())
+    projects = forms.ModelChoiceField(Project.objects.all())
     task = forms.ModelChoiceField(task_list)
     date = forms.DateField(widget=AdminDateWidget)
     start_time = forms.TimeField(widget=AdminTimeWidget)
@@ -206,8 +206,8 @@ def work_report(request):
         HttpResponseRedirect('/admin/')
     else:
         datetime_now = datetime.datetime.today()
-        from_date = (datetime_now - datetime.timedelta(days=30)).date()
-        to_date = datetime_now.date()
+        to_date = (datetime_now + datetime.timedelta(days=30)).date()
+        from_date = datetime_now.date()
         range_selection_form = create_range_selection_form(from_date, to_date)
         formset = create_new_formset(from_date, to_date, request)
         c = {'formset': formset,

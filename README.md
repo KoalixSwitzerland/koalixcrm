@@ -1,18 +1,34 @@
 # Welcome to the koalixcrm 
-#### Project build: [![Build Status](https://travis-ci.org/scaphilo/koalixcrm.svg?branch=master)](https://travis-ci.org/scaphilo/koalixcrm)
-#### Codacy results: [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4f0acae8f6d04c2b81c0c4a4b2b48e09)](https://www.codacy.com/app/simon.riedener/koalixcrm?utm_source=github.com&utm_medium=referral&utm_content=scaphilo/koalixcrm&utm_campaign=badger) [![Codacy Badge](https://api.codacy.com/project/badge/Coverage/4f0acae8f6d04c2b81c0c4a4b2b48e09)](https://www.codacy.com/app/simon.riedener/koalixcrm?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=scaphilo/koalixcrm&amp;utm_campaign=Badge_Coverage)
-#### Docker: [![Docker Automated build](https://img.shields.io/docker/automated/koalixswitzerland/koalixcrm.svg)]() [![Docker Build Status](https://img.shields.io/docker/build/koalixswitzerland/koalixcrm.svg)]() [![Docker Stars](https://img.shields.io/docker/stars/koalixswitzerland/koalixcrm.svg)]() [![Docker Pulls](https://img.shields.io/docker/pulls/koalixswitzerland/koalixcrm.svg)]()
+## Why koalixcrm
+<table><tr><th>Values:</th><th>Features:</th></tr>
+<tr><td><ul>
+  <li><b>Free and open</b></li>
+ <li>REST interface to many entities - Open source - BSD license </li>
+<li>Simple and beautiful user interface </li>
+<li>High quality output documents </li>
+<li>Small business <10 employees with access </li>
+                       <li>Cloud hosted, Self-hosted, Not hosted (single-user, offline)</li></ul></td>
+<td><ul>
+<li> Manage Contacts, Leads, Persons</li>
+<li> Manage Products and Prices</li>
+<li> Manage Documents such as Invoices, Quotes, Purchase Orders, ...</li>
+<li> Manage Projects, Tasks, Work (Traditional project management)</li>
+<li> Manage Document Tempaltes</li>
+<li>Double Entry Accounting</li>
+<li> Create Project Reports</li>
+<li> Adjust Access Rights </li></ul></td>
+  </tr></table>
 
-![dashboard](https://github.com/scaphilo/koalixcrm/blob/master/documentation/source/images/koalixcrm-V1.12dev2_dashboard.png)
+## Quality badges on master
+| Project build: | Codacy results: |Docker: |
+| --- | --- | --- |
+| [![Build Status](https://travis-ci.org/scaphilo/koalixcrm.svg?branch=master)](https://travis-ci.org/scaphilo/koalixcrm) | [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4f0acae8f6d04c2b81c0c4a4b2b48e09)](https://www.codacy.com/app/simon.riedener/koalixcrm?utm_source=github.com&utm_medium=referral&utm_content=scaphilo/koalixcrm&utm_campaign=badger) [![Codacy Badge](https://api.codacy.com/project/badge/Coverage/4f0acae8f6d04c2b81c0c4a4b2b48e09)](https://www.codacy.com/app/simon.riedener/koalixcrm?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=scaphilo/koalixcrm&amp;utm_campaign=Badge_Coverage) | [![Docker Automated build](https://img.shields.io/docker/automated/koalixswitzerland/koalixcrm.svg)]() [![Docker Build Status](https://img.shields.io/docker/build/koalixswitzerland/koalixcrm.svg)]() [![Docker Stars](https://img.shields.io/docker/stars/koalixswitzerland/koalixcrm.svg)]() [![Docker Pulls](https://img.shields.io/docker/pulls/koalixswitzerland/koalixcrm.svg)]() |
 
 ## Demos
-You can find an english demo of the koalixcrm here: [demo](http://koalixcrmdemoenglish.koalix.org/admin/).
-You can find a german demo of the koalixcrm here: [demo](http://koalixcrmdemogerman.koalix.org/admin/).
+[demo](http://koalixcrmdemoenglish.koalix.org/admin/).
 
-To be able to log in use the following
-
+To be able to log in use the following credentials 
   **user: guest**
-
   **password: guestpassword**
 
 ## Documentation
