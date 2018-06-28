@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.contrib.auth.models import User
 from koalixcrm.crm.models import Contract
 from koalixcrm.crm.models import Customer
 from koalixcrm.crm.models import CustomerGroup
@@ -9,9 +10,9 @@ from koalixcrm.crm.models import Tax
 from koalixcrm.crm.models import Unit
 from koalixcrm.crm.models import Quote
 from koalixcrm.crm.models import Price
+from koalixcrm.crm.models import Task
 from koalixcrm.crm.models import SalesDocumentPosition
-from django.contrib.auth.models import User
-from koalixcrm.crm.documents.calculations import Calculations
+from koalixcrm.crm.views.createtask import CreateTaskView
 import datetime
 
 
@@ -28,9 +29,9 @@ class DocumentCalculationsTest(TestCase):
         )
         test_user = User.objects.create(
             username='Username',
-            password="Userone")
+            password="User_one")
         test_customer_group = CustomerGroup.objects.create(
-            name="Tripple A"
+            name="Triple A"
         )
         test_customer = Customer.objects.create(
             name="John Smith",
@@ -65,7 +66,7 @@ class DocumentCalculationsTest(TestCase):
             contract=test_contract,
             external_reference="ThisIsAnExternalReference",
             discount="11.23",
-            description="ThisIsATestOffer",
+            description="This is a test offer",
             customer=test_customer,
             staff=test_user,
             currency=test_currency,
@@ -94,22 +95,23 @@ class DocumentCalculationsTest(TestCase):
                 sales_document=test_quote,
                 position_number=i*10,
                 quantity=0.333*i,
-                description="This is a Testposition " + i.__str__(),
+                description="This is a test position " + i.__str__(),
                 discount=i*5,
                 product=test_product,
                 unit=test_unit,
                 overwrite_product_price=False,
             )
 
-    def test_calculate_document_price(self):
-        datetime_now = datetime.datetime(2024, 1, 1, 0, 00)
-        date_now = datetime_now.date()
-        test_quote = Quote.objects.get(description="ThisIsATestOffer")
-        Calculations.calculate_document_price(
-            document=test_quote,
-            pricing_date=date_now)
+    def test_create_task(self):
+        test_quote = Quote.objects.get(description="This is a test offer")
+        test_user = User.objects.get(username='Username')
+        project = CreateTaskView.create_project_from_document(test_user, test_quote)
+        tasks =Task.objects.filter(project=project.id)
+        task_counter = 0
+        for task_current in tasks:
+            self.assertEqual(
+                task_current.title.__str__()[:24], "This is a test position ")
+            task_counter += 1
         self.assertEqual(
-            test_quote.last_calculated_price.__str__(), "5431.50")
-        self.assertEqual(
-            test_quote.last_calculated_tax.__str__(), "418.05")
+            task_counter.__str__(), "10")
 

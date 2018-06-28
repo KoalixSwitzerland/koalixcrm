@@ -4,6 +4,7 @@ from datetime import *
 from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext as _
+from django.utils.html import format_html
 from koalixcrm.crm.reporting.genericprojectlink import InlineGenericLinks
 from koalixcrm.crm.reporting.task import InlineTasks
 from koalixcrm.crm.documents.pdfexport import PDFExport
@@ -42,6 +43,13 @@ class Project(models.Model):
                                          verbose_name=_("Last modified by"),
                                          related_name="db_project_last_modified")
 
+    def link_to_project(self):
+        if self.id:
+            return format_html("<a href='/admin/crm/project/%s' >%s</a>" % (str(self.id), str(self.project_name)))
+        else:
+            return "Not present"
+    link_to_project.short_description = _("Project")
+
     def create_pdf(self, template_set, printed_by):
         self.last_print_date = datetime.now()
         self.save()
@@ -61,18 +69,24 @@ class Project(models.Model):
         template_set = self.get_template_set()
         return template_set.get_xsl_file()
 
-    def serialize_to_xml(self):
+    def serialize_to_xml(self, **kwargs):
+        reporting_period = kwargs.get('reporting_period', None)
         from koalixcrm.djangoUserExtension.models import UserExtension
         objects = [self, ]
         objects += UserExtension.objects_to_serialize(self, self.project_manager)
         main_xml = PDFExport.write_xml(objects)
         for task in Task.objects.filter(project=self.id):
-            task_xml = task.serialize_to_xml()
+            task_xml = task.serialize_to_xml(reporting_period=reporting_period)
             main_xml = PDFExport.merge_xml(main_xml, task_xml)
         main_xml = PDFExport.append_element_to_pattern(main_xml,
                                                        "object/[@model='crm.project']",
-                                                       "Effective_Effort",
-                                                       self.effective_effort())
+                                                       "Effective_Effort_Overall",
+                                                       self.effective_effort(reporting_period=None))
+        if reporting_period:
+            main_xml = PDFExport.append_element_to_pattern(main_xml,
+                                                           "object/[@model='crm.project']",
+                                                           "Effective_Effort_InPeriod",
+                                                           self.effective_effort(reporting_period=reporting_period))
         main_xml = PDFExport.append_element_to_pattern(main_xml,
                                                        "object/[@model='crm.project']",
                                                        "Planned_Effort",
@@ -87,14 +101,17 @@ class Project(models.Model):
                                                        self.planned_duration())
         return main_xml
 
-    def effective_effort(self):
-        effective_effort_accumulated=0
+    def effective_effort_overall(self):
+        return self.effective_effort(reporting_period=None)
+
+    def effective_effort(self, reporting_period):
+        effective_effort_accumulated = 0
         for task in Task.objects.filter(project=self.id):
-            effective_effort_accumulated += task.effective_effort()
+            effective_effort_accumulated += task.effective_effort(reporting_period=reporting_period)
         return effective_effort_accumulated
 
     def planned_effort(self):
-        planned_effort_accumulated=0
+        planned_effort_accumulated = 0
         for task in Task.objects.filter(project=self.id):
             planned_effort_accumulated += task.planned_effort()
         return planned_effort_accumulated
@@ -102,8 +119,38 @@ class Project(models.Model):
     def effective_duration(self):
         return "n/a"
 
+    def planned_start(self):
+        tasks = Task.objects.filter(project=self.id)
+        if tasks:
+            i = 0
+            for task in tasks:
+                if i == 0:
+                    project_start = task.planned_start_date
+                elif task.planned_start_date < project_start:
+                    project_start = task.planned_start_date
+                i = i+1
+            return project_start
+        else:
+            None
+
+    def planned_end(self):
+        i = 0
+        for task in Task.objects.filter(project=self.id):
+            if i == 0:
+                project_start = task.planned_start_date
+            elif task.planned_start_date < project_start:
+                project_start = task.planned_start_date
+            i = i+1
+        else:
+            None
+
     def planned_duration(self):
-        return "n/a"
+        if (not self.planned_start()) or (not self.planned_end()):
+            return 0
+        elif self.planned_start() > self.planned_end():
+            return 0
+        else:
+            return self.planned_end()-self.planned_start()
 
     def get_project_name(self):
         if self.project_name:
@@ -126,7 +173,7 @@ class OptionProject(admin.ModelAdmin):
                     'project_name',
                     'project_manager',
                     'planned_effort',
-                    'effective_effort',
+                    'effective_effort_overall',
                     'planned_duration',
                     'effective_duration')
 
@@ -143,7 +190,7 @@ class OptionProject(admin.ModelAdmin):
         }),
     )
 
-    inlines = [InlineTasks, InlineGenericLinks,]
+    inlines = [InlineTasks, InlineGenericLinks]
     actions = ['create_report_pdf', ]
 
     def save_model(self, request, obj, form, change):
@@ -169,9 +216,15 @@ class OptionProject(admin.ModelAdmin):
 
 class InlineProject(admin.TabularInline):
     model = Project
+    readonly_fields = ('link_to_project',
+                       'project_status',
+                       'project_manager',
+                       'description',
+                       'default_template_set')
     fieldsets = (
         (_('Project'), {
-            'fields': ('project_status',
+            'fields': ('link_to_project',
+                       'project_status',
                        'project_manager',
                        'description',
                        'default_template_set')

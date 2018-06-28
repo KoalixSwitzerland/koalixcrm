@@ -21,8 +21,9 @@ class Product(models.Model):
                                          verbose_name=_("Last modified by"), null=True, blank="True")
     tax = models.ForeignKey("Tax", blank=False)
     accounting_product_categorie = models.ForeignKey('accounting.ProductCategorie',
-                                                    verbose_name=_("Accounting Product Categorie"), null=True,
-                                                    blank="True")
+                                                     verbose_name=_("Accounting Product Categorie"),
+                                                     null=True,
+                                                     blank="True")
 
     def get_price(self, date, unit, customer, currency):
         prices = koalixcrm.crm.product.price.Price.objects.filter(product=self.id)
