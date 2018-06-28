@@ -23,7 +23,7 @@ class Work(models.Model):
             return format_html("<a href='/admin/crm/work/%s' >%s</a>" % (str(self.id), str(self.id)))
         else:
             return "Not present"
-    link_to_work.short_description = _("Work");
+    link_to_work.short_description = _("Work")
 
     def get_short_description(self):
         if self.short_description:

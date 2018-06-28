@@ -6,6 +6,7 @@ from django.db import models
 from django.contrib import admin
 from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext as _
+from django.utils.html import format_html
 from koalixcrm.crm.const.status import *
 from koalixcrm.crm.exceptions import *
 from koalixcrm import accounting
@@ -24,6 +25,13 @@ class Invoice(SalesDocument):
     payment_bank_reference = models.CharField(verbose_name=_("Payment Bank Reference"), max_length=100, blank=True,
                                               null=True)
     status = models.CharField(max_length=1, choices=INVOICESTATUS)
+
+    def link_to_invoice(self):
+        if self.id:
+            return format_html("<a href='/admin/crm/invoice/%s' >%s</a>" % (str(self.id), str(self.description)))
+        else:
+            return "Not present"
+    link_to_invoice.short_description = _("Invoice");
 
     def create_from_reference(self, calling_model):
         self.create_sales_document(calling_model)
@@ -166,16 +174,26 @@ class InlineInvoice(admin.TabularInline):
     show_change_link = True
     can_delete = True
     extra = 1
-    readonly_fields = (
-    'last_pricing_date', 'last_calculated_price', 'last_calculated_tax', 'description', 'contract', 'customer',
-    'payable_until', 'status')
+    readonly_fields = ('link_to_invoice',
+                       'last_pricing_date',
+                       'last_calculated_price',
+                       'last_calculated_tax',
+                       'description',
+                       'contract',
+                       'customer',
+                       'payable_until',
+                       'status')
     fieldsets = (
-        (_('Basics'), {
-            'fields': ('description', 'contract', 'customer', 'payable_until', 'status'),
-        }),
-        (_('Advanced (not editable)'), {
-            'classes': ('collapse',),
-            'fields': ('last_pricing_date', 'last_calculated_price', 'last_calculated_tax',)
+        (_('Invoice'), {
+            'fields': ('link_to_invoice',
+                       'last_pricing_date',
+                       'last_calculated_price',
+                       'last_calculated_tax',
+                       'description',
+                       'contract',
+                       'customer',
+                       'payable_until',
+                       'status')
         }),
     )
 

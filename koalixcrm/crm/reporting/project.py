@@ -4,6 +4,7 @@ from datetime import *
 from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext as _
+from django.utils.html import format_html
 from koalixcrm.crm.reporting.genericprojectlink import InlineGenericLinks
 from koalixcrm.crm.reporting.task import InlineTasks
 from koalixcrm.crm.documents.pdfexport import PDFExport
@@ -41,6 +42,13 @@ class Project(models.Model):
                                          limit_choices_to={'is_staff': True},
                                          verbose_name=_("Last modified by"),
                                          related_name="db_project_last_modified")
+
+    def link_to_project(self):
+        if self.id:
+            return format_html("<a href='/admin/crm/project/%s' >%s</a>" % (str(self.id), str(self.project_name)))
+        else:
+            return "Not present"
+    link_to_project.short_description = _("Project")
 
     def create_pdf(self, template_set, printed_by):
         self.last_print_date = datetime.now()
@@ -208,9 +216,15 @@ class OptionProject(admin.ModelAdmin):
 
 class InlineProject(admin.TabularInline):
     model = Project
+    readonly_fields = ('link_to_project',
+                       'project_status',
+                       'project_manager',
+                       'description',
+                       'default_template_set')
     fieldsets = (
         (_('Project'), {
-            'fields': ('project_status',
+            'fields': ('link_to_project',
+                       'project_status',
                        'project_manager',
                        'description',
                        'default_template_set')

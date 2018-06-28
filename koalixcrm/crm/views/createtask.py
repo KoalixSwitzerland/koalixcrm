@@ -23,7 +23,7 @@ class CreateTaskView:
                                                  project):
         date_now = date.today()
         content_type_sales_document_position = ContentType.objects.get_for_model(SalesDocumentPosition)
-        task_title = CreateTaskView.limit_string_length(sales_document_position.description, 30)
+        task_title = limit_string_length(sales_document_position.description, 30)
         try:
             existing_task = GenericTaskLink.objects.get(content_type=content_type_sales_document_position,
                                                         object_id=sales_document_position.id)
