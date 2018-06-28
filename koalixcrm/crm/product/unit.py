@@ -97,7 +97,7 @@ class UnitJSONSerializer(serializers.HyperlinkedModelSerializer):
         unit.description = validated_data['description']
         unit.short_name = validated_data['short_name']
         if 'fraction_factor_to_next_higher_unit' in validated_data:
-            unit.fraction_factor_to_next_higher_unit=validated_data['fraction_factor_to_next_higher_unit']
+            unit.fraction_factor_to_next_higher_unit = validated_data['fraction_factor_to_next_higher_unit']
 
         parent_unit = validated_data.pop('is_a_fraction_of')
         if parent_unit:

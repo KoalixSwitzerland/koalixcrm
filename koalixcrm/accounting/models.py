@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from datetime import *
+
 from django.db import models
 from django.utils.translation import ugettext as _
 from rest_framework import serializers
@@ -33,12 +34,14 @@ class AccountingPeriod(models.Model):
             if self.template_set_balance_sheet:
                 return self.template_set_balance_sheet
             else:
-                raise TemplateSetMissingInAccountingPeriod((_("Template Set for balance sheet is missing in Accounting Period" + str(self))))
+                raise TemplateSetMissingInAccountingPeriod(
+                    (_("Template Set for balance sheet is missing in Accounting Period" + str(self))))
         elif template_set == self.template_profit_loss_statement:
             if self.template_profit_loss_statement:
                 return self.template_profit_loss_statement
             else:
-                raise TemplateSetMissingInAccountingPeriod((_("Template Set for profit loss statement is missing in Accounting Period" + str(self))))
+                raise TemplateSetMissingInAccountingPeriod(
+                    (_("Template Set for profit loss statement is missing in Accounting Period" + str(self))))
 
     def get_fop_config_file(self, template_set):
         template_set = self.get_template_set(template_set)
@@ -238,7 +241,8 @@ class Account(models.Model):
         main_xml = PDFExport.append_element_to_pattern(main_xml,
                                                        "object/[@model='accounting.account']",
                                                        "sum_of_all_bookings_within_accounting_period",
-                                                       self.sum_of_all_bookings_within_accounting_period(accounting_period))
+                                                       self.sum_of_all_bookings_within_accounting_period(
+                                                           accounting_period))
         main_xml = PDFExport.append_element_to_pattern(main_xml,
                                                        "object/[@model='accounting.account']",
                                                        "sum_of_all_bookings_through_now",
@@ -246,7 +250,8 @@ class Account(models.Model):
         main_xml = PDFExport.append_element_to_pattern(main_xml,
                                                        "object/[@model='accounting.account']",
                                                        "sum_of_all_bookings_before_accounting_period",
-                                                       self.sum_of_all_bookings_before_accounting_period(accounting_period))
+                                                       self.sum_of_all_bookings_before_accounting_period(
+                                                           accounting_period))
         main_xml = PDFExport.append_element_to_pattern(main_xml,
                                                        "object/[@model='accounting.account']",
                                                        "sum_of_all_bookings_through_now",
@@ -266,9 +271,9 @@ class Account(models.Model):
 class ProductCategorie(models.Model):
     title = models.CharField(verbose_name=_("Product Categorie Title"), max_length=50)
     profit_account = models.ForeignKey(Account, verbose_name=_("Profit Account"), limit_choices_to={"accountType": "E"},
-                                      related_name="db_profit_account")
+                                       related_name="db_profit_account")
     loss_account = models.ForeignKey(Account, verbose_name=_("Loss Account"), limit_choices_to={"accountType": "S"},
-                                    related_name="db_loss_account")
+                                     related_name="db_loss_account")
 
     class Meta:
         app_label = "accounting"
@@ -292,7 +297,7 @@ class Booking(models.Model):
     date_of_creation = models.DateTimeField(verbose_name=_("Created at"), auto_now=True)
     last_modification = models.DateTimeField(verbose_name=_("Last modified"), auto_now_add=True)
     last_modified_by = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True,
-                                       verbose_name=_("Last modified by"), related_name="db_booking_lstmodified")
+                                         verbose_name=_("Last modified by"), related_name="db_booking_lstmodified")
 
     def booking_date_only(self):
         return self.booking_date.date()
@@ -308,8 +313,17 @@ class Booking(models.Model):
         verbose_name_plural = _('Bookings')
 
 
-class AccountJSONSerializer(serializers.HyperlinkedModelSerializer):
+class AccountMinimalJSONSerializer(serializers.HyperlinkedModelSerializer):
+    accountNumber = serializers.IntegerField(source='account_number')
 
+    class Meta:
+        model = Account
+        fields = ('id',
+                  'accountNumber',
+                  'title')
+
+
+class AccountJSONSerializer(serializers.HyperlinkedModelSerializer):
     accountNumber = serializers.IntegerField(source='account_number', allow_null=False)
     accountType = serializers.CharField(source='account_type', allow_null=False)
     isOpenReliabilitiesAccount = serializers.BooleanField(source='is_open_reliabilities_account')
@@ -330,3 +344,64 @@ class AccountJSONSerializer(serializers.HyperlinkedModelSerializer):
                   'isCustomerPaymentAccount')
         depth = 1
 
+
+class ProductCategoryJSONSerializer(serializers.HyperlinkedModelSerializer):
+    profitAccount = AccountMinimalJSONSerializer(source='profit_account')
+    lossAccount = AccountMinimalJSONSerializer(source='loss_account')
+
+    class Meta:
+        model = ProductCategorie
+        fields = ('id',
+                  'title',
+                  'profitAccount',
+                  'lossAccount')
+        depth = 1
+
+    def create(self, validated_data):
+        product_category = ProductCategorie()
+        product_category.title = validated_data['title']
+
+        # Deserialize profit account
+        profit_account = validated_data.pop('profit_account')
+        if profit_account:
+            if profit_account.get('id', None):
+                product_category.profit_account = Account.objects.get(id=profit_account.get('id', None))
+            else:
+                product_category.profit_account = None
+
+        # Deserialize loss account
+        loss_account = validated_data.pop('loss_account')
+        if loss_account:
+            if loss_account.get('id', None):
+                product_category.loss_account = Account.objects.get(id=loss_account.get('id', None))
+            else:
+                product_category.loss_account = None
+
+        product_category.save()
+        return product_category
+
+    def update(self, instance, validated_data):
+        instance.title = validated_data.get('description', instance.description)
+
+        # Deserialize profit account
+        profit_account = validated_data.pop('profit_account')
+        if profit_account:
+            if profit_account.get('id', instance.profit_account_id):
+                instance.profit_account = Account.objects.get(id=profit_account.get('id', None))
+            else:
+                instance.profit_account = instance.profit_account_id
+        else:
+            instance.profit_account = None
+
+        # Deserialize loss account
+        loss_account = validated_data.pop('loss_account')
+        if loss_account:
+            if loss_account.get('id', instance.loss_account_id):
+                instance.loss_account = Account.objects.get(id=loss_account.get('id', None))
+            else:
+                instance.loss_account = instance.loss_account_id
+        else:
+            instance.loss_account = None
+
+        instance.save()
+        return instance

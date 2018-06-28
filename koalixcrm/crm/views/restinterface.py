@@ -69,7 +69,6 @@ class ProductAsJSON(viewsets.ModelViewSet):
     serializer_class = ProductJSONSerializer
 
 
-
 class ProjectAsJSON(viewsets.ReadOnlyModelViewSet):
     """
     API endpoint that allows users to be viewed.
