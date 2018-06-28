@@ -3,6 +3,8 @@ from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext as _
 from django import forms
+from rest_framework import serializers
+
 from koalixcrm.accounting.const.accountTypeChoices import *
 from koalixcrm.accounting.exceptions import AccountingPeriodNotFound
 from koalixcrm.crm.documents.pdfexport import PDFExport
@@ -170,3 +172,35 @@ class OptionAccount(admin.ModelAdmin):
     save_as = True
 
     form = AccountForm
+
+
+class AccountMinimalJSONSerializer(serializers.HyperlinkedModelSerializer):
+    accountNumber = serializers.IntegerField(source='account_number')
+
+    class Meta:
+        model = Account
+        fields = ('id',
+                  'accountNumber',
+                  'title')
+
+
+class AccountJSONSerializer(serializers.HyperlinkedModelSerializer):
+    accountNumber = serializers.IntegerField(source='account_number', allow_null=False)
+    accountType = serializers.CharField(source='account_type', allow_null=False)
+    isOpenReliabilitiesAccount = serializers.BooleanField(source='is_open_reliabilities_account')
+    isOpenInterestAccount = serializers.BooleanField(source='is_open_interest_account')
+    isProductInventoryActiva = serializers.BooleanField(source='is_product_inventory_activa')
+    isCustomerPaymentAccount = serializers.BooleanField(source='is_a_customer_payment_account')
+
+    class Meta:
+        model = Account
+        fields = ('id',
+                  'accountNumber',
+                  'title',
+                  'accountType',
+                  'description',
+                  'isOpenReliabilitiesAccount',
+                  'isOpenInterestAccount',
+                  'isProductInventoryActiva',
+                  'isCustomerPaymentAccount')
+        depth = 1
