@@ -61,7 +61,8 @@ class Project(models.Model):
         template_set = self.get_template_set()
         return template_set.get_xsl_file()
 
-    def serialize_to_xml(self, reporting_period):
+    def serialize_to_xml(self, **kwargs):
+        reporting_period = kwargs.get('reporting_period', None)
         from koalixcrm.djangoUserExtension.models import UserExtension
         objects = [self, ]
         objects += UserExtension.objects_to_serialize(self, self.project_manager)
@@ -73,10 +74,15 @@ class Project(models.Model):
                                                        "object/[@model='crm.project']",
                                                        "Effective_Effort_Overall",
                                                        self.effective_effort(reporting_period=None))
+        if reporting_period:
+            main_xml = PDFExport.append_element_to_pattern(main_xml,
+                                                           "object/[@model='crm.project']",
+                                                           "Effective_Effort_InPeriod",
+                                                           self.effective_effort(reporting_period=reporting_period))
         main_xml = PDFExport.append_element_to_pattern(main_xml,
                                                        "object/[@model='crm.project']",
-                                                       "Effective_Effort_InPeriod",
-                                                       self.effective_effort(reporting_period=reporting_period))
+                                                       "Planned_Effort",
+                                                       self.planned_effort())
         main_xml = PDFExport.append_element_to_pattern(main_xml,
                                                        "object/[@model='crm.project']",
                                                        "Effective_Duration",
@@ -105,8 +111,38 @@ class Project(models.Model):
     def effective_duration(self):
         return "n/a"
 
+    def planned_start(self):
+        tasks = Task.objects.filter(project=self.id)
+        if tasks:
+            i = 0
+            for task in tasks:
+                if i == 0:
+                    project_start = task.planned_start_date
+                elif task.planned_start_date < project_start:
+                    project_start = task.planned_start_date
+                i = i+1
+            return project_start
+        else:
+            None
+
+    def planned_end(self):
+        i = 0
+        for task in Task.objects.filter(project=self.id):
+            if i == 0:
+                project_start = task.planned_start_date
+            elif task.planned_start_date < project_start:
+                project_start = task.planned_start_date
+            i = i+1
+        else:
+            None
+
     def planned_duration(self):
-        return "n/a"
+        if (not self.planned_start()) or (not self.planned_end()):
+            return 0
+        elif self.planned_start() > self.planned_end():
+            return 0
+        else:
+            return self.planned_end()-self.planned_start()
 
     def get_project_name(self):
         if self.project_name:

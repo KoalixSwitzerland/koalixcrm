@@ -3,6 +3,7 @@
 from django.db import models
 from django.utils.translation import ugettext as _
 from django.contrib import admin
+from django.utils.html import format_html
 from koalixcrm.crm.reporting.employeeassignmenttotask import EmployeeAssignmentToTask, InlineEmployeeAssignmentToTask
 from koalixcrm.crm.reporting.generictasklink import InlineGenericTaskLink
 from koalixcrm.crm.reporting.work import InlineWork
@@ -20,6 +21,13 @@ class Task(models.Model):
     description = models.TextField(verbose_name=_("Description"), blank=True, null=True)
     status = models.ForeignKey("TaskStatus", verbose_name=_('Task Status'), blank=True, null=True)
     last_status_change = models.DateField(verbose_name=_("Last Status Change"), blank=True, null=False)
+
+    def link_to_task(self):
+        if self.id:
+            return format_html("<a href='/admin/crm/task/%s' >%s</a>" % (str(self.id), str(self.title)))
+        else:
+            return "Not present"
+    link_to_task.short_description = _("Task");
 
     def planned_duration(self):
         if (not self.planned_start_date) or (not self.planned_end_date):
@@ -48,18 +56,23 @@ class Task(models.Model):
     def serialize_to_xml(self, reporting_period):
         objects = [self, ]
         main_xml = PDFExport.write_xml(objects)
-        for work in koalixcrm.crm.reporting.work.Work.objects.filter(task=self.id,
-                                                                     reporting_period=reporting_period):
+        if reporting_period:
+            works = koalixcrm.crm.reporting.work.Work.objects.filter(task=self.id,
+                                                                     reporting_period=reporting_period)
+        else:
+            works = koalixcrm.crm.reporting.work.Work.objects.filter(task=self.id)
+        for work in works:
             work_xml = work.serialize_to_xml()
             main_xml = PDFExport.merge_xml(main_xml, work_xml)
         main_xml = PDFExport.append_element_to_pattern(main_xml,
                                                        "object/[@model='crm.task']",
                                                        "Effective_Effort_Overall",
                                                        self.effective_effort(reporting_period=None))
-        main_xml = PDFExport.append_element_to_pattern(main_xml,
-                                                       "object/[@model='crm.task']",
-                                                       "Effective_Effort_InPeriod",
-                                                       self.effective_effort(reporting_period=reporting_period))
+        if reporting_period:
+            main_xml = PDFExport.append_element_to_pattern(main_xml,
+                                                           "object/[@model='crm.task']",
+                                                           "Effective_Effort_InPeriod",
+                                                           self.effective_effort(reporting_period=reporting_period))
         main_xml = PDFExport.append_element_to_pattern(main_xml,
                                                        "object/[@model='crm.task']",
                                                        "Planned_Effort",
@@ -113,8 +126,7 @@ class Task(models.Model):
 
 
 class OptionTask(admin.ModelAdmin):
-    list_display = ('id',
-                    'title',
+    list_display = ('link_to_task',
                     'planned_start_date',
                     'planned_end_date',
                     'project',
@@ -123,8 +135,8 @@ class OptionTask(admin.ModelAdmin):
                     'planned_duration',
                     'planned_effort',
                     'effective_duration',
-                    'effective_effort')
-    list_display_links = ('id',)
+                    'effective_effort_overall')
+    list_display_links = ('link_to_task',)
     list_filter = ('project',)
     ordering = ('-id',)
 
@@ -150,14 +162,18 @@ class OptionTask(admin.ModelAdmin):
 
 class InlineTasks(admin.TabularInline):
     model = Task
-    readonly_fields = ('planned_duration',
+    readonly_fields = ('link_to_task',
+                       'planned_start_date',
+                       'planned_end_date',
+                       'status',
+                       'last_status_change',
+                       'planned_duration',
                        'planned_effort',
                        'effective_duration',
                        'effective_effort_overall')
     fieldsets = (
         (_('Task'), {
-            'fields': ('id',
-                       'title',
+            'fields': ('link_to_task',
                        'planned_start_date',
                        'planned_end_date',
                        'status',

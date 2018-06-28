@@ -10,6 +10,7 @@ from koalixcrm.crm.documents.salesdocumentposition import SalesDocumentPosition
 from koalixcrm.crm.reporting.task import Task
 from koalixcrm.crm.reporting.generictasklink import GenericTaskLink
 from koalixcrm.crm.reporting.project import Project
+from koalixcrm.globalSupportFunctions import *
 from datetime import date
 
 
@@ -57,17 +58,9 @@ class CreateTaskView:
         return task
 
     @staticmethod
-    def limit_string_length(input_string, maximum_length):
-        if len(input_string) > maximum_length:
-            output_string = input_string[:maximum_length]
-        else:
-            output_string = input_string
-        return output_string
-
-    @staticmethod
     def create_project_from_document(user, document):
         sales_document_positions = SalesDocumentPosition.objects.filter(sales_document=document)
-        project_name = CreateTaskView.limit_string_length(document.contract.description, 30)
+        project_name = limit_string_length(document.contract.description, 30)
         project = Project.objects.create(project_manager=user,
                                          project_name=project_name,
                                          description=document.contract.description,
