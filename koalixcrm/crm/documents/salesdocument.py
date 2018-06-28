@@ -364,13 +364,13 @@ class OptionSalesDocument(admin.ModelAdmin):
 
     create_pdf.short_description = _("Create PDF")
 
-    def create_tasks(self, request, queryset):
+    def create_project(self, request, queryset):
         from koalixcrm.crm.views.createtask import CreateTaskView
         for obj in queryset:
-            response = CreateTaskView.create_tasks_from_document(self,
-                                                                 request,
-                                                                 obj,
-                                                                 ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
+            response = CreateTaskView.create_project(self,
+                                                     request,
+                                                     obj,
+                                                     ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
             return response
 
-    create_tasks.short_description = _("Create Tasks")
+    create_project.short_description = _("Create Project")

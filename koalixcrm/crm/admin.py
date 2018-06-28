@@ -26,6 +26,7 @@ from koalixcrm.crm.reporting.project import Project, OptionProject
 from koalixcrm.crm.reporting.projectlinktype import ProjectLinkType, OptionProjectLinkType
 from koalixcrm.crm.reporting.projectstatus import ProjectStatus, OptionProjectStatus
 from koalixcrm.crm.reporting.work import Work, OptionWork
+from koalixcrm.crm.reporting.reporting_period import ReportingPeriod, OptionReportingPeriod
 
 
 admin.site.register(Customer, OptionCustomer)
@@ -56,3 +57,4 @@ admin.site.register(Work, OptionWork)
 admin.site.register(Project, OptionProject)
 admin.site.register(ProjectLinkType, OptionProjectLinkType)
 admin.site.register(ProjectStatus, OptionProjectStatus)
+admin.site.register(ReportingPeriod, OptionReportingPeriod)
