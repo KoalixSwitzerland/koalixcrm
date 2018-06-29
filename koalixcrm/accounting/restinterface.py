@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-from koalixcrm.accounting.models import Account, AccountJSONSerializer, ACCOUNTTYPECHOICES, ProductCategorie, \
-    ProductCategoryJSONSerializer
+from koalixcrm.accounting.accounting.account import AccountJSONSerializer
+from koalixcrm.accounting.accounting.product_categorie import ProductCategoryJSONSerializer
+from koalixcrm.accounting.models import Account, ProductCategorie
 from rest_framework import viewsets
 
 

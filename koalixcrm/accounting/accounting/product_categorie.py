@@ -82,7 +82,7 @@ class ProductCategoryJSONSerializer(serializers.HyperlinkedModelSerializer):
         return product_category
 
     def update(self, instance, validated_data):
-        instance.title = validated_data.get('description', instance.description)
+        instance.title = validated_data.get('title', instance.title)
 
         # Deserialize profit account
         profit_account = validated_data.pop('profit_account')

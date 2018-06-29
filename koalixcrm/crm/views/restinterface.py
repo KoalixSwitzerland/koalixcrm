@@ -12,6 +12,7 @@ from koalixcrm.crm.reporting.taskstatus import TaskStatus, TaskStatusJSONSeriali
 from koalixcrm.crm.documents.contract import Contract, ContractJSONSerializer
 from koalixcrm.crm.reporting.project import Project, ProjectJSONSerializer
 
+
 class TaskAsJSON(viewsets.ReadOnlyModelViewSet):
     """
     API endpoint that allows users to be viewed.

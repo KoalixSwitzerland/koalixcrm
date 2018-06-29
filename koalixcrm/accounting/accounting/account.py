@@ -175,6 +175,7 @@ class OptionAccount(admin.ModelAdmin):
 
 
 class AccountMinimalJSONSerializer(serializers.HyperlinkedModelSerializer):
+    id = serializers.IntegerField(required=False)
     accountNumber = serializers.IntegerField(source='account_number')
 
     class Meta:
