@@ -25,6 +25,7 @@ class OptionCurrency(admin.ModelAdmin):
     fieldsets = (('', {'fields': ('description', 'short_name', 'rounding')}),)
     allow_add = True
 
+
 class CurrencyJSONSerializer(serializers.HyperlinkedModelSerializer):
     shortName = serializers.CharField(source='short_name')
 

@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
-from django.db import models
 from django.contrib import admin
+from django.db import models
 from django.utils.translation import ugettext as _
-from koalixcrm.crm.product.tax import TaxJSONSerializer, Tax, TaxMinimalJSONSerializer
+from koalixcrm.accounting.models import ProductCategorie
 from rest_framework import serializers
 
-from koalixcrm.crm.product.unit import UnitTransform, UnitJSONSerializer, Unit, UnitMinimalJSONSerializer
-from koalixcrm.crm.contact.customergroup import CustomerGroup
-from koalixcrm.crm.product.unit import ProductUnitTransform
-from koalixcrm.crm.product.price import ProductPrice
 import koalixcrm.crm.product.price
+from koalixcrm.accounting.accounting.product_categorie import ProductCategoryMinimalJSONSerializer
+from koalixcrm.crm.contact.customergroup import CustomerGroup
+from koalixcrm.crm.product.price import ProductPrice
+from koalixcrm.crm.product.tax import Tax, TaxMinimalJSONSerializer
+from koalixcrm.crm.product.unit import ProductUnitTransform
+from koalixcrm.crm.product.unit import UnitTransform, Unit, UnitMinimalJSONSerializer
 
 
 class Product(models.Model):
@@ -46,9 +48,9 @@ class Product(models.Model):
                             for unitTransfrom in list(unit_transforms):
                                 if price.matchesDateUnitCustomerGroupCurrency(date,
                                                                               unitTransfrom.transfrom(unit).transform(
-                                                                                      unitTransfrom),
+                                                                                  unitTransfrom),
                                                                               customerGroupTransfrom.transform(
-                                                                                      customerGroup), currency):
+                                                                                  customerGroup), currency):
                                     valid_prices.append(
                                         price.price * customerGroupTransform.factor * unitTransform.factor);
         if (len(valid_prices) > 0):
@@ -83,7 +85,8 @@ class Product(models.Model):
         def __str__(self):
             return _("There is no Price for this product") + ": " + self.product.__str__() + _(
                 "that matches the date") + ": " + self.date.__str__() + " ," + _(
-                "customer") + ": " + self.customer.__str__() + " ," + _("currency")+ ": "+ self.currency.__str__()+ _(" and unit") + ":" + self.unit.__str__()
+                "customer") + ": " + self.customer.__str__() + " ," + _(
+                "currency") + ": " + self.currency.__str__() + _(" and unit") + ":" + self.unit.__str__()
 
 
 class OptionProduct(admin.ModelAdmin):
@@ -100,15 +103,17 @@ class ProductJSONSerializer(serializers.HyperlinkedModelSerializer):
     productNumber = serializers.IntegerField(source='product_number', allow_null=False)
     unit = UnitMinimalJSONSerializer(source='default_unit', allow_null=False)
     tax = TaxMinimalJSONSerializer(allow_null=False)
+    productCategory = ProductCategoryMinimalJSONSerializer(source='accounting_product_categorie', allow_null=False)
 
     class Meta:
-            model = Product
-            fields = ('id',
-                      'productNumber',
-                      'title',
-                      'unit',
-                      'tax')
-            depth = 1
+        model = Product
+        fields = ('id',
+                  'productNumber',
+                  'title',
+                  'unit',
+                  'tax',
+                  'productCategory')
+        depth = 1
 
     def create(self, validated_data):
         product = Product()
@@ -130,6 +135,14 @@ class ProductJSONSerializer(serializers.HyperlinkedModelSerializer):
                 product.tax = Tax.objects.get(id=tax.get('id', None))
             else:
                 product.tax = None
+
+        # Deserialize product category
+        product_category = validated_data.pop('accounting_product_categorie')
+        if product_category:
+            if product_category.get('id', None):
+                product.accounting_product_categorie = ProductCategorie.objects.get(id=product_category.get('id', None))
+            else:
+                product.accounting_product_categorie = None
 
         product.save()
         return product
@@ -157,6 +170,17 @@ class ProductJSONSerializer(serializers.HyperlinkedModelSerializer):
                 instance.tax = instance.tax
         else:
             instance.tax = None
+
+        # Deserialize product category
+        product_category = validated_data.pop('accounting_product_categorie')
+        if product_category:
+            if product_category.get('id', instance.accounting_product_categorie):
+                instance.accounting_product_categorie = ProductCategorie.objects.get(
+                    id=product_category.get('id', None))
+            else:
+                instance.accounting_product_categorie = instance.accounting_product_categorie
+        else:
+            instance.accounting_product_categorie = None
 
         instance.save()
         return instance

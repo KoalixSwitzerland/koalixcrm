@@ -46,6 +46,16 @@ class OptionProductCategorie(admin.ModelAdmin):
     save_as = True
 
 
+class ProductCategoryMinimalJSONSerializer(serializers.HyperlinkedModelSerializer):
+    id = serializers.IntegerField(required=False)
+    title = serializers.CharField(read_only=True)
+
+    class Meta:
+        model = Account
+        fields = ('id',
+                  'title')
+
+
 class ProductCategoryJSONSerializer(serializers.HyperlinkedModelSerializer):
     profitAccount = AccountMinimalJSONSerializer(source='profit_account')
     lossAccount = AccountMinimalJSONSerializer(source='loss_account')
