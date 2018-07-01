@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from datetime import *
 from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext as _
@@ -11,6 +10,7 @@ from koalixcrm.crm.contact.phoneaddress import PhoneAddress
 from koalixcrm.crm.contact.emailaddress import EmailAddress
 from koalixcrm.crm.documents.pdfexport import PDFExport
 from koalixcrm.djangoUserExtension.const.purpose import *
+from koalixcrm.djangoUserExtension.exceptions import TemplateSetMissingForUserExtension
 from koalixcrm.globalSupportFunctions import xstr
 
 
@@ -51,9 +51,30 @@ class UserExtension(models.Model):
         return user_extensions[0]
 
     def create_pdf(self, template_set, printed_by):
-        self.last_print_date = datetime.now()
-        self.save()
         return PDFExport.create_pdf(self, template_set, printed_by)
+
+    def get_template_set(self, template_set):
+        if template_set == self.defaultTemplateSet.work_report_template:
+            if self.defaultTemplateSet.work_report_template:
+                return self.defaultTemplateSet.work_report_template
+            else:
+                raise TemplateSetMissingForUserExtension((_("Template Set for work report " +
+                                                            "is missing for User Extension" + str(self))))
+
+    def get_fop_config_file(self, template_set):
+        template_set = self.get_template_set(template_set)
+        return template_set.get_fop_config_file()
+
+    def get_xsl_file(self, template_set):
+        template_set = self.get_template_set(template_set)
+        return template_set.get_xsl_file()
+
+    def serialize_to_xml(self):
+        objects = [self, ]
+        main_xml = PDFExport.write_xml(objects)
+        project_xml = self.project.serialize_to_xml(reporting_period=self)
+        main_xml = PDFExport.merge_xml(main_xml, project_xml)
+        return main_xml
 
     class Meta:
         app_label = "djangoUserExtension"
@@ -172,7 +193,21 @@ class OptionUserExtension(admin.ModelAdmin):
                        'defaultCurrency')
         }),
     )
+
+    def create_work_report_pdf(self, request, queryset):
+        from koalixcrm.crm.views.pdfexport import PDFExportView
+        for obj in queryset:
+            response = PDFExportView.export_pdf(self,
+                                                request,
+                                                obj,
+                                                ("/admin/djangoUserExtension/"+obj.__class__.__name__.lower()+"/"),
+                                                obj.defaultTemplateSet.work_report_template)
+        return response
+
+    create_work_report_pdf.short_description = _("Work Report PDF")
+
     save_as = True
+    actions = [create_work_report_pdf]
     inlines = [InlineUserExtensionPostalAddress,
                InlineUserExtensionPhoneAddress,
                InlineUserExtensionEmailAddress]
