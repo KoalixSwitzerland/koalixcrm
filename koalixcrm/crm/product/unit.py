@@ -6,11 +6,19 @@ from django.utils.translation import ugettext as _
 
 
 class Unit(models.Model):
-    description = models.CharField(verbose_name=_("Description"), max_length=100)
-    short_name = models.CharField(verbose_name=_("Displayed Name After Quantity In The Position"), max_length=3)
-    is_a_fraction_of = models.ForeignKey('self', blank=True, null=True, verbose_name=_("Is A Fraction Of"))
-    fraction_factor_to_next_higher_unit = models.IntegerField(verbose_name=_("Factor Between This And Next Higher Unit"),
-                                                              blank=True, null=True)
+    description = models.CharField(verbose_name=_("Description"),
+                                   max_length=100)
+    short_name = models.CharField(verbose_name=_("Displayed Name After Quantity In The Position"),
+                                  max_length=3)
+    is_a_fraction_of = models.ForeignKey('self',
+                                         blank=True,
+                                         null=True,
+                                         verbose_name=_("Is A Fraction Of"))
+    fraction_factor_to_next_higher_unit = models.DecimalField(verbose_name=_("Factor Between This And Next Higher Unit"),
+                                                              max_digits=20,
+                                                              decimal_places=10,
+                                                              blank=True,
+                                                              null=True)
 
     def __str__(self):
         return self.short_name
