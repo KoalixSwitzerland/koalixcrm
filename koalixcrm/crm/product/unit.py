@@ -87,7 +87,9 @@ class UnitJSONSerializer(serializers.HyperlinkedModelSerializer):
     description = serializers.CharField()
     isFractionOf = UnitMinimalJSONSerializer(source='is_a_fraction_of',
                                              allow_null=True)
-    fractionFactor = serializers.IntegerField(source='fraction_factor_to_next_higher_unit',
+    fractionFactor = serializers.DecimalField(source='fraction_factor_to_next_higher_unit',
+                                              max_digits=20,
+                                              decimal_places=10,
                                               required=False,
                                               allow_null=True)
 
