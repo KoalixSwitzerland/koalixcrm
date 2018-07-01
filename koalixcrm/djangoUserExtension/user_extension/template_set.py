@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.contrib import admin
 from django.utils.translation import ugettext as _
+
 from koalixcrm.globalSupportFunctions import xstr
 from koalixcrm.crm.exceptions import *
-from django.contrib import admin
 
 
 class TemplateSet(models.Model):
@@ -34,6 +35,9 @@ class TemplateSet(models.Model):
     monthly_project_summary_template = models.ForeignKey("MonthlyProjectSummaryTemplate",
                                                          blank=True,
                                                          null=True)
+    work_report_template = models.ForeignKey("WorkReportTemplate",
+                                             blank=True,
+                                             null=True)
 
     class Meta:
         app_label = "djangoUserExtension"
@@ -52,7 +56,8 @@ class TemplateSet(models.Model):
                                       "PurchaseOrder": self.purchase_order_template,
                                       "ProfitLossStatement": self.profit_loss_statement_template,
                                       "BalanceSheet": self.balance_sheet_statement_template,
-                                      "MonthlyProjectSummaryTemplate": self.monthly_project_summary_template}
+                                      "MonthlyProjectSummaryTemplate": self.monthly_project_summary_template,
+                                      "WorkReport": self.work_report_template}
         try:
             if mapping_class_to_templates[required_template_set]:
                 return mapping_class_to_templates[required_template_set]
@@ -79,6 +84,7 @@ class OptionTemplateSet(admin.ModelAdmin):
                        'purchase_order_template',
                        'profit_loss_statement_template',
                        'balance_sheet_statement_template',
-                       'monthly_project_summary_template')
+                       'monthly_project_summary_template',
+                       'work_report_template')
         }),
     )

@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from django.utils.translation import ugettext as _
-from koalixcrm.crm.const.purpose import *
 from django.contrib import admin
+from django.utils.translation import ugettext as _
+
+from koalixcrm.crm.const.purpose import *
 
 
 class TextParagraphInDocumentTemplate(models.Model):

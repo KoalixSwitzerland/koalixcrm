@@ -4,23 +4,25 @@
 from koalixcrm.djangoUserExtension.models import *
 from koalixcrm.djangoUserExtension.user_extension.user_extension import UserExtension, OptionUserExtension
 from koalixcrm.djangoUserExtension.user_extension.template_set import TemplateSet, OptionTemplateSet
-from koalixcrm.djangoUserExtension.user_extension.document_template import InvoiceTemplate, OptionInvoiceTemplate
-from koalixcrm.djangoUserExtension.user_extension.document_template import QuoteTemplate, OptionQuoteTemplate
-from koalixcrm.djangoUserExtension.user_extension.document_template import DeliveryNoteTemplate, OptionDeliveryNoteTemplate
-from koalixcrm.djangoUserExtension.user_extension.document_template import PaymentReminderTemplate, OptionPaymentReminderTemplate
-from koalixcrm.djangoUserExtension.user_extension.document_template import PurchaseOrderTemplate, OptionPurchaseOrderTemplate
-from koalixcrm.djangoUserExtension.user_extension.document_template import ProfitLossStatementTemplate, OptionProfitLossStatementTemplate
-from koalixcrm.djangoUserExtension.user_extension.document_template import BalanceSheetTemplate, OptionBalanceSheetTemplate
+from koalixcrm.djangoUserExtension.user_extension.document_template import InvoiceTemplate
+from koalixcrm.djangoUserExtension.user_extension.document_template import QuoteTemplate
+from koalixcrm.djangoUserExtension.user_extension.document_template import DeliveryNoteTemplate
+from koalixcrm.djangoUserExtension.user_extension.document_template import PaymentReminderTemplate
+from koalixcrm.djangoUserExtension.user_extension.document_template import PurchaseOrderTemplate
+from koalixcrm.djangoUserExtension.user_extension.document_template import ProfitLossStatementTemplate
+from koalixcrm.djangoUserExtension.user_extension.document_template import BalanceSheetTemplate
+from koalixcrm.djangoUserExtension.user_extension.document_template import OptionDocumentTemplate
 
 
 admin.site.register(UserExtension, OptionUserExtension)
 admin.site.register(TemplateSet, OptionTemplateSet)
-admin.site.register(InvoiceTemplate, OptionInvoiceTemplate)
-admin.site.register(QuoteTemplate, OptionQuoteTemplate)
-admin.site.register(DeliveryNoteTemplate, OptionDeliveryNoteTemplate)
-admin.site.register(PaymentReminderTemplate, OptionPaymentReminderTemplate)
-admin.site.register(PurchaseOrderTemplate, OptionPurchaseOrderTemplate)
-admin.site.register(PurchaseConfirmationTemplate, OptionPurchaseConfirmationTemplate)
-admin.site.register(ProfitLossStatementTemplate, OptionProfitLossStatementTemplate)
-admin.site.register(BalanceSheetTemplate, OptionBalanceSheetTemplate)
-admin.site.register(MonthlyProjectSummaryTemplate, OptionProjectSummaryTemplate)
+admin.site.register(InvoiceTemplate, OptionDocumentTemplate)
+admin.site.register(QuoteTemplate, OptionDocumentTemplate)
+admin.site.register(DeliveryNoteTemplate, OptionDocumentTemplate)
+admin.site.register(PaymentReminderTemplate, OptionDocumentTemplate)
+admin.site.register(PurchaseOrderTemplate, OptionDocumentTemplate)
+admin.site.register(PurchaseConfirmationTemplate, OptionDocumentTemplate)
+admin.site.register(ProfitLossStatementTemplate, OptionDocumentTemplate)
+admin.site.register(BalanceSheetTemplate, OptionDocumentTemplate)
+admin.site.register(MonthlyProjectSummaryTemplate, OptionDocumentTemplate)
+admin.site.register(WorkReportTemplate, OptionDocumentTemplate)

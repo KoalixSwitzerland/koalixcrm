@@ -1,12 +1,17 @@
 # -*- coding: utf-8 -*-
 
+from datetime import *
 from django.db import models
+from django.contrib import admin
 from django.utils.translation import ugettext as _
-from koalixcrm import crm
+
+from koalixcrm.crm.exceptions import *
+from koalixcrm.crm.contact.postaladdress import PostalAddress
+from koalixcrm.crm.contact.phoneaddress import PhoneAddress
+from koalixcrm.crm.contact.emailaddress import EmailAddress
+from koalixcrm.crm.documents.pdfexport import PDFExport
 from koalixcrm.djangoUserExtension.const.purpose import *
 from koalixcrm.globalSupportFunctions import xstr
-from koalixcrm.crm.exceptions import *
-from django.contrib import admin
 
 
 class UserExtension(models.Model):
@@ -45,6 +50,11 @@ class UserExtension(models.Model):
             raise UserExtensionMissing(_("No User Extension define for user ") + django_user.__str__())
         return user_extensions[0]
 
+    def create_pdf(self, template_set, printed_by):
+        self.last_print_date = datetime.now()
+        self.save()
+        return PDFExport.create_pdf(self, template_set, printed_by)
+
     class Meta:
         app_label = "djangoUserExtension"
         verbose_name = _('User Extension')
@@ -54,7 +64,7 @@ class UserExtension(models.Model):
         return xstr(self.id) + ' ' + xstr(self.user.__str__())
 
 
-class UserExtensionPostalAddress(crm.contact.postaladdress.PostalAddress):
+class UserExtensionPostalAddress(PostalAddress):
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINUSEREXTENTION)
     userExtension = models.ForeignKey(UserExtension)
 
@@ -67,7 +77,7 @@ class UserExtensionPostalAddress(crm.contact.postaladdress.PostalAddress):
         verbose_name_plural = _('Postal Address for User Extension')
 
 
-class UserExtensionPhoneAddress(crm.contact.phoneaddress.PhoneAddress):
+class UserExtensionPhoneAddress(PhoneAddress):
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINUSEREXTENTION)
     userExtension = models.ForeignKey(UserExtension)
 
@@ -80,7 +90,7 @@ class UserExtensionPhoneAddress(crm.contact.phoneaddress.PhoneAddress):
         verbose_name_plural = _('Phone number for User Extension')
 
 
-class UserExtensionEmailAddress(crm.contact.emailaddress.EmailAddress):
+class UserExtensionEmailAddress(EmailAddress):
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINUSEREXTENTION)
     userExtension = models.ForeignKey(UserExtension)
 

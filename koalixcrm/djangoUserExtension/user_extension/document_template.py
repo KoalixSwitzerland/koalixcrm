@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.contrib import admin
 from django.utils.translation import ugettext as _
+
 from filebrowser.fields import FileBrowseField
+
 from koalixcrm.djangoUserExtension.user_extension.text_paragraph import InlineTextParagraph
 from koalixcrm.globalSupportFunctions import xstr
 from koalixcrm.crm.exceptions import *
-from django.contrib import admin
 
 
 class DocumentTemplate(models.Model):
@@ -109,118 +111,25 @@ class MonthlyProjectSummaryTemplate(DocumentTemplate):
         verbose_name_plural = _('Monthly project summary templates')
 
 
-class OptionInvoiceTemplate(admin.ModelAdmin):
+class WorkReportTemplate(DocumentTemplate):
+    class Meta:
+        app_label = "djangoUserExtension"
+        verbose_name = _('Work report template')
+        verbose_name_plural = _('Work report templates')
+
+
+class OptionDocumentTemplate(admin.ModelAdmin):
     list_display = ('id', 'title')
     list_display_links = ('id', 'title')
     ordering = ('id',)
     search_fields = ('id', 'title')
     fieldsets = (
         (_('Basics'), {
-            'fields': ('title', 'xsl_file', 'fop_config_file', 'logo')
+            'fields': ('title',
+                       'xsl_file',
+                       'fop_config_file',
+                       'logo')
         }),
     )
     inlines = [InlineTextParagraph]
 
-
-class OptionQuoteTemplate(admin.ModelAdmin):
-    list_display = ('id', 'title')
-    list_display_links = ('id', 'title')
-    ordering = ('id',)
-    search_fields = ('id', 'title')
-    fieldsets = (
-        (_('Basics'), {
-            'fields': ('title', 'xsl_file', 'fop_config_file', 'logo')
-        }),
-    )
-    inlines = [InlineTextParagraph]
-
-
-class OptionDeliveryNoteTemplate(admin.ModelAdmin):
-    list_display = ('id', 'title')
-    list_display_links = ('id', 'title')
-    ordering = ('id',)
-    search_fields = ('id', 'title')
-    fieldsets = (
-        (_('Basics'), {
-            'fields': ('title', 'xsl_file', 'fop_config_file', 'logo')
-        }),
-    )
-    inlines = [InlineTextParagraph]
-
-
-class OptionPaymentReminderTemplate(admin.ModelAdmin):
-    list_display = ('id', 'title')
-    list_display_links = ('id', 'title')
-    ordering = ('id',)
-    search_fields = ('id', 'title')
-    fieldsets = (
-        (_('Basics'), {
-            'fields': ('title', 'xsl_file', 'fop_config_file', 'logo')
-        }),
-    )
-    inlines = [InlineTextParagraph]
-
-
-class OptionPurchaseOrderTemplate(admin.ModelAdmin):
-    list_display = ('id', 'title')
-    list_display_links = ('id', 'title')
-    ordering = ('id',)
-    search_fields = ('id', 'title')
-    fieldsets = (
-        (_('Basics'), {
-            'fields': ('title', 'xsl_file', 'fop_config_file', 'logo')
-        }),
-    )
-    inlines = [InlineTextParagraph]
-
-
-class OptionPurchaseConfirmationTemplate(admin.ModelAdmin):
-    list_display = ('id', 'title')
-    list_display_links = ('id', 'title')
-    ordering = ('id',)
-    search_fields = ('id', 'title')
-    fieldsets = (
-        (_('Basics'), {
-            'fields': ('title', 'xsl_file', 'fop_config_file', 'logo')
-        }),
-    )
-    inlines = [InlineTextParagraph]
-
-
-class OptionProfitLossStatementTemplate(admin.ModelAdmin):
-    list_display = ('id', 'title')
-    list_display_links = ('id', 'title')
-    ordering = ('id',)
-    search_fields = ('id', 'title')
-    fieldsets = (
-        (_('Basics'), {
-            'fields': ('title', 'xsl_file', 'fop_config_file', 'logo')
-        }),
-    )
-    inlines = [InlineTextParagraph]
-
-
-class OptionBalanceSheetTemplate(admin.ModelAdmin):
-    list_display = ('id', 'title')
-    list_display_links = ('id', 'title')
-    ordering = ('id',)
-    search_fields = ('id', 'title')
-    fieldsets = (
-        (_('Basics'), {
-            'fields': ('title', 'xsl_file', 'fop_config_file', 'logo')
-        }),
-    )
-    inlines = [InlineTextParagraph]
-
-
-class OptionProjectSummaryTemplate(admin.ModelAdmin):
-    list_display = ('id', 'title')
-    list_display_links = ('id', 'title')
-    ordering = ('id',)
-    search_fields = ('id', 'title')
-    fieldsets = (
-        (_('Basics'), {
-            'fields': ('title', 'xsl_file', 'fop_config_file', 'logo')
-        }),
-    )
-    inlines = [InlineTextParagraph]
