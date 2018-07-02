@@ -64,7 +64,7 @@ class PostalAddressForContact(PostalAddress):
         verbose_name_plural = _('Postal Address For Contact')
 
     def __str__(self):
-        return xstr(self.prename) + ' ' + xstr(self.name) + ' ' + xstr(self.addressline1)
+        return xstr(self.pre_name) + ' ' + xstr(self.name) + ' ' + xstr(self.address_line_1)
 
 
 class ContactPostalAddress(admin.StackedInline):
@@ -73,9 +73,18 @@ class ContactPostalAddress(admin.StackedInline):
     classes = ['collapse']
     fieldsets = (
         ('Basics', {
-            'fields': (
-            'prefix', 'prename', 'name', 'addressline1', 'addressline2', 'addressline3', 'addressline4', 'zipcode',
-            'town', 'state', 'country', 'purpose')
+            'fields': ('prefix',
+                       'pre_name',
+                       'name',
+                       'address_line_1',
+                       'address_line_2',
+                       'address_line_3',
+                       'address_line_4',
+                       'zip_code',
+                       'town',
+                       'state',
+                       'country',
+                       'purpose')
         }),
     )
     allow_add = True
@@ -131,8 +140,18 @@ class CompaniesInlineAdmin(admin.TabularInline):
 
 
 class OptionPerson(admin.ModelAdmin):
-    list_display = ('id', 'name', 'prename', 'email', 'role', 'get_companies',)
-    fieldsets = (('', {'fields': ('prefix','name','prename','role','email','phone',)}),)
+    list_display = ('id',
+                    'name',
+                    'pre_name',
+                    'email',
+                    'role',
+                    'get_companies',)
+    fieldsets = (('', {'fields': ('prefix',
+                                  'name',
+                                  'pre_name',
+                                  'role',
+                                  'email',
+                                  'phone',)}),)
     allow_add = True
     inlines = [CompaniesInlineAdmin]
 
@@ -181,7 +200,11 @@ class ContactCall(LimitedAdminInlineMixin, admin.StackedInline):
     fieldsets = (
         ('Basics', {
             'fields': (
-            'description', 'date_due', 'purpose', 'status', 'cperson',)
+                'description',
+                'date_due',
+                'purpose',
+                'status',
+                'cperson',)
         }),
     )
     allow_add = True
@@ -197,7 +220,12 @@ class ContactVisit(LimitedAdminInlineMixin, admin.StackedInline):
     fieldsets = (
         ('Basics', {
             'fields': (
-            'description', 'date_due', 'purpose', 'status', 'cperson', 'ref_call',)
+                'description',
+                'date_due',
+                'purpose',
+                'status',
+                'cperson',
+                'ref_call',)
         }),
     )
     allow_add = True

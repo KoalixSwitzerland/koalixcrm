@@ -16,8 +16,8 @@ from koalixcrm.globalSupportFunctions import xstr
 
 class UserExtension(models.Model):
     user = models.ForeignKey("auth.User", blank=False, null=False)
-    defaultTemplateSet = models.ForeignKey("TemplateSet")
-    defaultCurrency = models.ForeignKey("crm.Currency")
+    default_template_set = models.ForeignKey("TemplateSet")
+    default_currency = models.ForeignKey("crm.Currency")
 
     @staticmethod
     def objects_to_serialize(object_to_create_pdf, reference_user):
@@ -54,9 +54,9 @@ class UserExtension(models.Model):
         return PDFExport.create_pdf(self, template_set, printed_by)
 
     def get_template_set(self, template_set):
-        if template_set == self.defaultTemplateSet.work_report_template:
-            if self.defaultTemplateSet.work_report_template:
-                return self.defaultTemplateSet.work_report_template
+        if template_set == self.default_template_set.work_report_template:
+            if self.default_template_set.work_report_template:
+                return self.default_template_set.work_report_template
             else:
                 raise TemplateSetMissingForUserExtension((_("Template Set for work report " +
                                                             "is missing for User Extension" + str(self))))
@@ -132,13 +132,13 @@ class InlineUserExtensionPostalAddress(admin.StackedInline):
         (_('Basics'), {
             'fields': (
                 'prefix',
-                'prename',
+                'pre_name',
                 'name',
-                'addressline1',
-                'addressline2',
-                'addressline3',
-                'addressline4',
-                'zipcode',
+                'address_line_1',
+                'address_line_2',
+                'address_line_3',
+                'address_line_4',
+                'zip_code',
                 'town',
                 'state',
                 'country',
@@ -177,20 +177,20 @@ class InlineUserExtensionEmailAddress(admin.StackedInline):
 class OptionUserExtension(admin.ModelAdmin):
     list_display = ('id',
                     'user',
-                    'defaultTemplateSet',
-                    'defaultCurrency')
+                    'default_template_set',
+                    'default_currency')
     list_display_links = ('id',
                           'user')
     list_filter = ('user',
-                   'defaultTemplateSet',)
+                   'default_template_set',)
     ordering = ('id',)
     search_fields = ('id',
                      'user')
     fieldsets = (
         (_('Basics'), {
             'fields': ('user',
-                       'defaultTemplateSet',
-                       'defaultCurrency')
+                       'default_template_set',
+                       'default_currency')
         }),
     )
 

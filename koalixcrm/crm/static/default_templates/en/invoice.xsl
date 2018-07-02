@@ -331,51 +331,51 @@
                                                       font-family="BitstreamVeraSans"
                                                       text-align="left">
                                                 <xsl:value-of
-                                                        select="object[@model='crm.postaladdress']/field[@name='prename']"/><xsl:text> </xsl:text>
+                                                        select="object[@model='crm.postaladdress']/field[@name='pre_name']"/><xsl:text> </xsl:text>
                                                 <xsl:value-of
                                                         select="object[@model='crm.postaladdress']/field[@name='name']"/>
                                             </fo:block>
                                             <xsl:choose>
                                                 <xsl:when
-                                                        test="object[@model='crm.postaladdress']/field[@name='addressline1']">
+                                                        test="object[@model='crm.postaladdress']/field[@name='address_line_1']">
                                                     <fo:block font-size="9pt"
                                                               font-family="BitstreamVeraSans"
                                                               text-align="left">
                                                         <xsl:value-of
-                                                                select="object[@model='crm.postaladdress']/field[@name='addressline1']"/>
+                                                                select="object[@model='crm.postaladdress']/field[@name='address_line_1']"/>
                                                     </fo:block>
                                                 </xsl:when>
                                             </xsl:choose>
                                             <xsl:choose>
                                                 <xsl:when
-                                                        test="object[@model='crm.postaladdress']/field[@name='addressline2']">
+                                                        test="object[@model='crm.postaladdress']/field[@name='address_line_2']">
                                                     <fo:block font-size="9pt"
                                                               font-family="BitstreamVeraSans"
                                                               text-align="left">
                                                         <xsl:value-of
-                                                                select="object[@model='crm.postaladdress']/field[@name='addressline2']"/>
+                                                                select="object[@model='crm.postaladdress']/field[@name='address_line_2']"/>
                                                     </fo:block>
                                                 </xsl:when>
                                             </xsl:choose>
                                             <xsl:choose>
                                                 <xsl:when
-                                                        test="object[@model='crm.postaladdress']/field[@name='addressline3']">
+                                                        test="object[@model='crm.postaladdress']/field[@name='address_line_3']">
                                                     <fo:block font-size="9pt"
                                                               font-family="BitstreamVeraSans"
                                                               text-align="left">
                                                         <xsl:value-of
-                                                                select="object[@model='crm.postaladdress']/field[@name='addressline3']"/>
+                                                                select="object[@model='crm.postaladdress']/field[@name='address_line_3']"/>
                                                     </fo:block>
                                                 </xsl:when>
                                             </xsl:choose>
                                             <xsl:choose>
                                                 <xsl:when
-                                                        test="object[@model='crm.postaladdress']/field[@name='addressline4']">
+                                                        test="object[@model='crm.postaladdress']/field[@name='address_line_4']">
                                                     <fo:block font-size="9pt"
                                                               font-family="BitstreamVeraSans"
                                                               text-align="left">
                                                         <xsl:value-of
-                                                                select="object[@model='crm.postaladdress']/field[@name='addressline4']"/>
+                                                                select="object[@model='crm.postaladdress']/field[@name='address_line_4']"/>
                                                     </fo:block>
                                                 </xsl:when>
                                             </xsl:choose>
@@ -384,7 +384,7 @@
                                                       text-align="left">
                                                 <xsl:value-of
                                                         select="object[@model='crm.postaladdress']/field[@name='country']"/><xsl:text>-</xsl:text><xsl:value-of
-                                                    select="object[@model='crm.postaladdress']/field[@name='zipcode']"/>
+                                                    select="object[@model='crm.postaladdress']/field[@name='zip_code']"/>
                                                 <xsl:text> </xsl:text>
                                                 <xsl:value-of
                                                         select="object[@model='crm.postaladdress']/field[@name='town']"/>

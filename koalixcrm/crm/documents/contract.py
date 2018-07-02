@@ -68,9 +68,18 @@ class ContractPostalAddress(admin.StackedInline):
     classes = ['collapse']
     fieldsets = (
         ('Basics', {
-            'fields': (
-            'prefix', 'prename', 'name', 'addressline1', 'addressline2', 'addressline3', 'addressline4', 'zipcode',
-            'town', 'state', 'country', 'purpose'),
+            'fields': ('prefix',
+                       'pre_name',
+                       'name',
+                       'address_line_1',
+                       'address_line_2',
+                       'address_line_3',
+                       'address_line_4',
+                       'zip_code',
+                       'town',
+                       'state',
+                       'country',
+                       'purpose'),
         }),
     )
     allow_add = True

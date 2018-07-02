@@ -10,12 +10,12 @@ class PostalAddress(models.Model):
     prefix = models.CharField(max_length=1, choices=POSTALADDRESSPREFIX, verbose_name=_("Prefix"), blank=True,
                               null=True)
     name = models.CharField(max_length=100, verbose_name=_("Name"), blank=True, null=True)
-    prename = models.CharField(max_length=100, verbose_name=_("Prename"), blank=True, null=True)
-    addressline1 = models.CharField(max_length=200, verbose_name=_("Addressline 1"), blank=True, null=True)
-    addressline2 = models.CharField(max_length=200, verbose_name=_("Addressline 2"), blank=True, null=True)
-    addressline3 = models.CharField(max_length=200, verbose_name=_("Addressline 3"), blank=True, null=True)
-    addressline4 = models.CharField(max_length=200, verbose_name=_("Addressline 4"), blank=True, null=True)
-    zipcode = models.IntegerField(verbose_name=_("Zipcode"), blank=True, null=True)
+    pre_name = models.CharField(max_length=100, verbose_name=_("Pre-name"), blank=True, null=True)
+    address_line_1 = models.CharField(max_length=200, verbose_name=_("Address line 1"), blank=True, null=True)
+    address_line_2 = models.CharField(max_length=200, verbose_name=_("Address line 2"), blank=True, null=True)
+    address_line_3 = models.CharField(max_length=200, verbose_name=_("Address line 3"), blank=True, null=True)
+    address_line_4 = models.CharField(max_length=200, verbose_name=_("Address line 4"), blank=True, null=True)
+    zip_code = models.IntegerField(verbose_name=_("Zip Code"), blank=True, null=True)
     town = models.CharField(max_length=100, verbose_name=_("City"), blank=True, null=True)
     state = models.CharField(max_length=100, verbose_name=_("State"), blank=True, null=True)
     country = models.CharField(max_length=2, choices=[(x[0], x[3]) for x in COUNTRIES], verbose_name=_("Country"),
