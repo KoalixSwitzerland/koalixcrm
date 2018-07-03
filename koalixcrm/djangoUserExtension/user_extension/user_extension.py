@@ -12,6 +12,7 @@ from koalixcrm.crm.documents.pdfexport import PDFExport
 from koalixcrm.djangoUserExtension.const.purpose import *
 from koalixcrm.djangoUserExtension.exceptions import TemplateSetMissingForUserExtension
 from koalixcrm.globalSupportFunctions import xstr
+from koalixcrm.crm.reporting.work import Work
 
 
 class UserExtension(models.Model):
@@ -72,8 +73,17 @@ class UserExtension(models.Model):
     def serialize_to_xml(self):
         objects = [self, ]
         main_xml = PDFExport.write_xml(objects)
-        project_xml = self.project.serialize_to_xml(reporting_period=self)
-        main_xml = PDFExport.merge_xml(main_xml, project_xml)
+        works = Work.objects.filter(employee=self)
+        reporting_periods = list()
+        for work in works:
+            if reporting_periods:
+                if not (work.reporting_period in reporting_periods):
+                    reporting_periods += list([work.reporting_period])
+            else:
+                reporting_periods = list([work.reporting_period])
+        for reporting_period in reporting_periods:
+            reporting_period_xml = reporting_period.serialize_to_xml()
+            main_xml = PDFExport.merge_xml(main_xml, reporting_period_xml)
         return main_xml
 
     class Meta:
@@ -201,7 +211,7 @@ class OptionUserExtension(admin.ModelAdmin):
                                                 request,
                                                 obj,
                                                 ("/admin/djangoUserExtension/"+obj.__class__.__name__.lower()+"/"),
-                                                obj.defaultTemplateSet.work_report_template)
+                                                obj.default_template_set.work_report_template)
         return response
 
     create_work_report_pdf.short_description = _("Work Report PDF")
