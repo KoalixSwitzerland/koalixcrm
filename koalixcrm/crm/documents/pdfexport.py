@@ -28,11 +28,12 @@ class PDFExport:
             return 0
 
     @staticmethod
-    def append_element_to_pattern(xml_string, find_pattern, name_of_element, value_of_element):
+    def append_element_to_pattern(xml_string, find_pattern, name_of_element, value_of_element, **kwargs):
+        attributes = kwargs.get('attributes', None)
         parser = etree.XMLParser(encoding='utf-8')
         root_element = etree.fromstring(xml_string.encode('utf-8'), parser=parser)
         found_element = root_element.find(find_pattern)
-        new_element = etree.SubElement(found_element, name_of_element)
+        new_element = etree.SubElement(found_element, name_of_element, attrib=attributes)
         new_element.text = value_of_element.__str__()
         return (etree.tostring(root_element,
                                encoding='UTF-8',

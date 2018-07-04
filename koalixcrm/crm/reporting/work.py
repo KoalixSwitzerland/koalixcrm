@@ -39,14 +39,20 @@ class Work(models.Model):
         main_xml = PDFExport.write_xml(objects)
         return main_xml
 
-    def effort(self):
+    def effort_hours(self):
+        if self.effort_seconds() != 0:
+            return self.effort_seconds()/3600
+        else:
+            return 0
+
+    def effort_seconds(self):
         if not self.stop_time or not self.start_time:
             return 0
         else:
             return (self.stop_time - self.start_time).total_seconds()
 
     def effort_as_string(self):
-        return str(self.effort()/3600) + " h"
+        return str(self.effort_hours()) + " h"
 
     def __str__(self):
         return _("Work") + ": " + str(self.id) + " " + _("from Person") + ": " + str(self.employee.id)

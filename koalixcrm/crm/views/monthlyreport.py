@@ -158,7 +158,7 @@ def update_work(form, request):
             work.stop_time = datetime.datetime.combine(form.cleaned_data['date'],
                                                        form.cleaned_data['stop_time'])
             work.description = form.cleaned_data['description']
-            work.reporting_period = ReportingPeriod.get_current_valid_reporting_period()
+            work.reporting_period = ReportingPeriod.get_current_valid_reporting_period(work.task.project)
             work.save()
 
 

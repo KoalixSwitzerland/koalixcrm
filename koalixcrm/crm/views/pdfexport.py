@@ -11,13 +11,13 @@ from koalixcrm.accounting.exceptions import *
 
 
 class PDFExportView:
-    def export_pdf(calling_model_admin, request, document, redirect_to, template_to_use):
+    def export_pdf(calling_model_admin, request, source, redirect_to, template_to_use):
         """This method exports PDFs provided by different Models in the crm application
 
             Args:
               calling_model_admin (ModelAdmin):  The calling ModelAdmin must be provided for error message response.
               request: The request User is to know where to save the error message
-              document (SalesDocument):  The model from which a PDF should be exported
+              source:  The model from which a PDF should be exported
               redirect_to (str): String that describes to where the method should redirect in case of an error
               template_to_use (Template Set): For some documents that need to be created there exists more
               than one template with this parameter the template set can be set during the export function
@@ -30,7 +30,7 @@ class PDFExportView:
             Raises:
               raises Http404 exception if anything goes wrong"""
         try:
-            pdf = document.create_pdf(template_to_use, request.user)
+            pdf = source.create_pdf(template_to_use, request.user)
             response = HttpResponse(FileWrapper(open(pdf, 'rb')), content_type='application/pdf')
             response['Content-Length'] = path.getsize(pdf)
         except (TemplateSetMissing,

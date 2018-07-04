@@ -25,7 +25,7 @@ class ReportingPeriod(models.Model):
                            blank=False, null=False)
 
     @staticmethod
-    def get_current_valid_reporting_period():
+    def get_current_valid_reporting_period(project):
         """Returns the reporting period that is currently valid. Valid is a reporting period when the current date
           lies between begin and end of the reporting period
 
@@ -38,14 +38,14 @@ class ReportingPeriod(models.Model):
         Raises:
           ReportPeriodNotFound when there is no valid reporting Period"""
         current_valid_reporting_period = None
-        for reporting_period in ReportingPeriod.objects.all():
+        for reporting_period in ReportingPeriod.objects.filter(project=project):
             if reporting_period.begin < date.today() and reporting_period.end > date.today():
                 return reporting_period
         if not current_valid_reporting_period:
-            raise ReportingPeriodNotFound()
+            raise ReportingPeriodNotFound("Reporting Period does not exist")
 
     @staticmethod
-    def get_all_prior_reporting_periods(target_reporting_period):
+    def get_all_prior_reporting_periods(target_reporting_period, project):
         """Returns the reporting period that is currently valid. Valid is a reporting period when the current date
           lies between begin and end of the reporting period
 
@@ -58,11 +58,11 @@ class ReportingPeriod(models.Model):
         Raises:
           ReportPeriodNotFound when there is no valid reporting Period"""
         reporting_periods = []
-        for reporting_period in ReportingPeriod.objects.all():
+        for reporting_period in ReportingPeriod.objects.filter(project=project):
             if reporting_period.end < reporting_period.begin:
                 reporting_period.append(reporting_period)
         if reporting_periods:
-            raise ReportingPeriodNotFound("Accounting Period does not exist")
+            raise ReportingPeriodNotFound("Reporting Period does not exist")
         return reporting_periods
 
     def create_pdf(self, template_set, printed_by):

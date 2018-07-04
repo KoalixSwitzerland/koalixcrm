@@ -56,6 +56,7 @@ class TooManyUserExtensionsAvailable(Exception):
     def __str__(self):
         return repr(self.value)
 
+
 class UserExtensionPhoneAddressMissing(Exception):
     def __init__(self, value):
         self.value = value
