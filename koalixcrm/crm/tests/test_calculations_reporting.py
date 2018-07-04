@@ -58,8 +58,8 @@ class ReportingCalculationsTest(TestCase):
         )
         UserExtension.objects.create(
             user=test_user,
-            defaultTemplateSet = test_template_set,
-            defaultCurrency = test_currency
+            default_template_set=test_template_set,
+            default_currency=test_currency
         )
         test_project = Project.objects.create(
             project_manager=test_user,

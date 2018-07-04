@@ -106,7 +106,7 @@ class Task(models.Model):
             elif work_object.start_time > work_object.stop_time:
                 sum_effort += 0
             else:
-                sum_effort += work_object.effort()
+                sum_effort += work_object.effort_seconds()
         sum_effort_in_hours = sum_effort / 3600
         return sum_effort_in_hours
 

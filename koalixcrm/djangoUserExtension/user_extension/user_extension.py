@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import datetime
 from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext as _
@@ -70,20 +71,45 @@ class UserExtension(models.Model):
         template_set = self.get_template_set(template_set)
         return template_set.get_xsl_file()
 
-    def serialize_to_xml(self):
+    def serialize_to_xml(self, **kwargs):
+        date_from = kwargs.get('date_from', datetime.date.today()-datetime.timedelta(days=30))
+        date_to = kwargs.get('date_to', datetime.date.today())
         objects = [self, ]
         main_xml = PDFExport.write_xml(objects)
-        works = Work.objects.filter(employee=self)
-        reporting_periods = list()
+        works = Work.objects.filter(employee=self, date__range=(date_from, date_to))
+        date = date_from
+        days = dict()
+        weeks = dict()
+        months = dict()
+        while date < date_to:
+            days[date] = 0
+            if date.isoweekday() == 1 or not weeks: # if is weekday "Monday"
+                weeks[date.isocalendar()[1]] = 0
+            if not (date.month in months):
+                months[date.month] = 0
+            date += datetime.timedelta(days=1)
         for work in works:
-            if reporting_periods:
-                if not (work.reporting_period in reporting_periods):
-                    reporting_periods += list([work.reporting_period])
-            else:
-                reporting_periods = list([work.reporting_period])
-        for reporting_period in reporting_periods:
-            reporting_period_xml = reporting_period.serialize_to_xml()
-            main_xml = PDFExport.merge_xml(main_xml, reporting_period_xml)
+            days[work.date] += work.effort_hours()
+            weeks[work.date.isocalendar()[1]] += work.effort_hours()
+            months[work.date.month] += work.effort_hours()
+        for day_key in days.keys():
+            main_xml = PDFExport.append_element_to_pattern(main_xml,
+                                                           "object/[@model='djangoUserExtension.userextension']",
+                                                           "Day_Work_Hours",
+                                                           str(days[day_key]),
+                                                           attributes={"day": str(day_key)})
+        for week_key in weeks.keys():
+            main_xml = PDFExport.append_element_to_pattern(main_xml,
+                                                           "object/[@model='djangoUserExtension.userextension']",
+                                                           "Week_Work_Hours",
+                                                           str(weeks[week_key]),
+                                                           attributes={"week": str(week_key)})
+        for month_key in months.keys():
+            main_xml = PDFExport.append_element_to_pattern(main_xml,
+                                                           "object/[@model='djangoUserExtension.userextension']",
+                                                           "Month_Work_Hours",
+                                                           str(months[month_key]),
+                                                           attributes={"week": str(month_key)})
         return main_xml
 
     class Meta:
