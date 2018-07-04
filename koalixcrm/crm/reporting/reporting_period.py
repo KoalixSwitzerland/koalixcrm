@@ -38,11 +38,11 @@ class ReportingPeriod(models.Model):
         Raises:
           ReportPeriodNotFound when there is no valid reporting Period"""
         current_valid_reporting_period = None
-        for reporting_period in ReportingPeriod.objects.all(project=project):
+        for reporting_period in ReportingPeriod.objects.filter(project=project):
             if reporting_period.begin < date.today() and reporting_period.end > date.today():
                 return reporting_period
         if not current_valid_reporting_period:
-            raise ReportingPeriodNotFound()
+            raise ReportingPeriodNotFound("Reporting Period does not exist")
 
     @staticmethod
     def get_all_prior_reporting_periods(target_reporting_period, project):
@@ -58,11 +58,11 @@ class ReportingPeriod(models.Model):
         Raises:
           ReportPeriodNotFound when there is no valid reporting Period"""
         reporting_periods = []
-        for reporting_period in ReportingPeriod.objects.all(project=project):
+        for reporting_period in ReportingPeriod.objects.filter(project=project):
             if reporting_period.end < reporting_period.begin:
                 reporting_period.append(reporting_period)
         if reporting_periods:
-            raise ReportingPeriodNotFound("Accounting Period does not exist")
+            raise ReportingPeriodNotFound("Reporting Period does not exist")
         return reporting_periods
 
     def create_pdf(self, template_set, printed_by):
