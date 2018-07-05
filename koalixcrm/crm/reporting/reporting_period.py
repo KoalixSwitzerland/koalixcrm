@@ -25,7 +25,7 @@ class ReportingPeriod(models.Model):
                            blank=False, null=False)
 
     @staticmethod
-    def get_current_valid_reporting_period(project):
+    def get_reporting_period(project, search_date):
         """Returns the reporting period that is currently valid. Valid is a reporting period when the current date
           lies between begin and end of the reporting period
 
@@ -39,7 +39,7 @@ class ReportingPeriod(models.Model):
           ReportPeriodNotFound when there is no valid reporting Period"""
         current_valid_reporting_period = None
         for reporting_period in ReportingPeriod.objects.filter(project=project):
-            if reporting_period.begin < date.today() and reporting_period.end > date.today():
+            if reporting_period.begin <= search_date <= reporting_period.end:
                 return reporting_period
         if not current_valid_reporting_period:
             raise ReportingPeriodNotFound("Reporting Period does not exist")
