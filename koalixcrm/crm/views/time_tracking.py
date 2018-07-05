@@ -188,7 +188,7 @@ def update_range_selection_form(old_range_selection_form):
 def work_report(request):
     if request.POST.get('post'):
         if 'cancel' in request.POST:
-            HttpResponseRedirect('/admin/')
+            return HttpResponseRedirect('/admin/')
         elif 'save' in request.POST:
             range_selection_form = RangeSelectionForm(request.POST)
             if range_selection_form.is_valid():
@@ -208,7 +208,7 @@ def work_report(request):
                  'formset': formset}
             c.update(csrf(request))
             return render(request, 'crm/admin/time_reporting.html', c)
-        HttpResponseRedirect('/admin/')
+        return HttpResponseRedirect('/admin/')
     else:
         datetime_now = datetime.datetime.today()
         to_date = (datetime_now + datetime.timedelta(days=30)).date()

@@ -73,8 +73,8 @@ class CustomIndexDashboard(Dashboard):
                     _('Report Personaly work'),
                     column=1,
                     children=[{'title': _('Time Tracking'),
-                               'url': '/koalixcrm/crm/reporting/monthlyreport/',
-                               'external': False,},]
+                               'url': '/koalixcrm/crm/reporting/time_tracking/',
+                               'external': False}]
                 )
 
             ]
@@ -85,7 +85,7 @@ class CustomIndexDashboard(Dashboard):
             _('Group: Administration & Applications'),
             column=1,
             collapsible=True,
-            children = [
+            children=[
                 modules.ModelList(
                     _('Administration'),
                     column=1,

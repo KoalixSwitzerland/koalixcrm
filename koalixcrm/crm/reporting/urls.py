@@ -3,8 +3,8 @@
 # DJANGO IMPORTS
 from django.conf.urls import url
 
-from koalixcrm.crm.views.monthlyreport import work_report
+from koalixcrm.crm.views.time_tracking import work_report
 
 urlpatterns = [
-    url(r'^monthlyreport/$', work_report, name="monthly_report"),
+    url(r'^time_tracking/$', work_report, name="monthly_report"),
 ]
