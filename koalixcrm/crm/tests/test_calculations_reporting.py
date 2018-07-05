@@ -230,7 +230,7 @@ class ReportingCalculationsUITest(LiveServerTestCase):
         except TimeoutException:
             print("Timed out waiting for page to load")
         #Opening the link we want to test
-        selenium.get('%s%s' % (self.live_server_url, '/koalixcrm/crm/reporting/monthlyreport/'))
+        selenium.get('%s%s' % (self.live_server_url, '/koalixcrm/crm/reporting/time_tracking/'))
         try:
             element_present = EC.presence_of_element_located((By.ID, 'id_form-0-projects'))
             WebDriverWait(selenium, timeout).until(element_present)
