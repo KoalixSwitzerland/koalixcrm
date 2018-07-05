@@ -8,6 +8,7 @@ from koalixcrm.crm.reporting.task import Task
 from koalixcrm.crm.reporting.project import Project
 from koalixcrm.crm.reporting.reporting_period import ReportingPeriod
 import datetime
+from koalixcrm.globalSupportFunctions import limit_string_length
 
 
 class RangeSelectionForm(forms.Form):
@@ -44,9 +45,9 @@ class WorkEntry(forms.Form):
 
     def clean_date(self):
         date = self.cleaned_data['date']
-        if (date < self.from_date):
+        if date < self.from_date:
             raise forms.ValidationError('date is not within the selected range', code='invalid')
-        elif (self.to_date < date):
+        elif self.to_date < date:
             raise forms.ValidationError('date is not within the selected range', code='invalid')
         return date
 
@@ -147,6 +148,8 @@ def update_work(form, request):
             work = Work.objects.get(id=form.cleaned_data['work_id'])
         else:
             work = Work()
+            work.reporting_period = ReportingPeriod.get_reporting_period(project=form.cleaned_data['task'].project,
+                                                                         search_date=form.cleaned_data['date'])
         if form.cleaned_data['DELETE']:
             work.delete()
         else:
@@ -158,7 +161,7 @@ def update_work(form, request):
             work.stop_time = datetime.datetime.combine(form.cleaned_data['date'],
                                                        form.cleaned_data['stop_time'])
             work.description = form.cleaned_data['description']
-            work.reporting_period = ReportingPeriod.get_current_valid_reporting_period(work.task.project)
+            work.short_description = limit_string_length(work.description, 100)
             work.save()
 
 
