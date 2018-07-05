@@ -243,4 +243,4 @@ class ReportingCalculationsUITest(LiveServerTestCase):
         start_time = selenium.find_element_by_xpath('//*[@id="id_form-0-start_time"]')
         stop_time = selenium.find_element_by_xpath('//*[@id="id_form-0-stop_time"]')
         description = selenium.find_element_by_xpath('//*[@id="id_form-0-description"]')
-        save = selenium.find_element_by_name('save') 
+        save = selenium.find_element_by_name('save')
