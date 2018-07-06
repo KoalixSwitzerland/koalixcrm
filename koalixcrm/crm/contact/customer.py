@@ -50,7 +50,7 @@ class Customer(Contact):
 
 class IsLeadFilter(admin.SimpleListFilter):
     title = _('Is lead')
-    parameter_name = 'isLead'
+    parameter_name = 'is_lead'
 
     def lookups(self, request, model_admin):
         return (
@@ -60,9 +60,9 @@ class IsLeadFilter(admin.SimpleListFilter):
 
     def queryset(self, request, queryset):
         if self.value() == 'lead':
-            return queryset.filter(isLead=True)
+            return queryset.filter(is_lead=True)
         elif self.value() == 'customer':
-            return queryset.filter(isLead=False)
+            return queryset.filter(is_lead=False)
         else:
             return queryset
 
