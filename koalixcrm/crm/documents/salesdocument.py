@@ -167,7 +167,7 @@ class PostalAddressForSalesDocument(PostalAddress):
         verbose_name_plural = _('Postal Address For Sales Documents')
 
     def __str__(self):
-        return xstr(self.prename) + ' ' + xstr(self.name) + ' ' + xstr(self.addressline1)
+        return xstr(self.pre_name) + ' ' + xstr(self.name) + ' ' + xstr(self.address_line_1)
 
 
 class EmailAddressForSalesDocument(EmailAddress):

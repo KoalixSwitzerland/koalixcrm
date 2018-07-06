@@ -16,7 +16,7 @@ class PDFExport:
 
     @staticmethod
     def find_element_in_xml(xml_string, find_pattern, find_value):
-        parser = etree.XMLParser(encoding='utf-8')
+        parser = etree.XMLParser(encoding='utf-8', remove_blank_text=True)
         root_element = etree.fromstring(xml_string.encode('utf-8'), parser=parser)
         found_element = root_element.findall(find_pattern)
         if found_element is None:
@@ -30,7 +30,7 @@ class PDFExport:
     @staticmethod
     def append_element_to_pattern(xml_string, find_pattern, name_of_element, value_of_element, **kwargs):
         attributes = kwargs.get('attributes', None)
-        parser = etree.XMLParser(encoding='utf-8')
+        parser = etree.XMLParser(encoding='utf-8', remove_blank_text=True)
         root_element = etree.fromstring(xml_string.encode('utf-8'), parser=parser)
         found_element = root_element.find(find_pattern)
         new_element = etree.SubElement(found_element, name_of_element, attrib=attributes)
@@ -42,7 +42,7 @@ class PDFExport:
 
     @staticmethod
     def merge_xml(xml_string_1, xml_string_2):
-        parser = etree.XMLParser(encoding='utf-8')
+        parser = etree.XMLParser(encoding='utf-8', remove_blank_text=True)
         root_element_1 = etree.fromstring(xml_string_1.encode('utf-8'), parser=parser)
         root_element_2 = etree.fromstring(xml_string_2.encode('utf-8'), parser=parser)
         for child in root_element_2:

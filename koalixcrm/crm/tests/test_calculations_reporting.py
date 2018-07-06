@@ -210,7 +210,7 @@ class ReportingCalculationsUITest(LiveServerTestCase):
 
     def test_registration_of_work(self):
         selenium = self.selenium
-        #login
+        # login
         selenium.get('%s%s' % (self.live_server_url, '/admin/'))
         timeout = 5
         try:
@@ -229,14 +229,14 @@ class ReportingCalculationsUITest(LiveServerTestCase):
             WebDriverWait(selenium, timeout).until(element_present)
         except TimeoutException:
             print("Timed out waiting for page to load")
-        #Opening the link we want to test
+        # Opening the link we want to test
         selenium.get('%s%s' % (self.live_server_url, '/koalixcrm/crm/reporting/time_tracking/'))
         try:
             element_present = EC.presence_of_element_located((By.ID, 'id_form-0-projects'))
             WebDriverWait(selenium, timeout).until(element_present)
         except TimeoutException:
             print("Timed out waiting for page to load")
-        #find the form element
+        # find the form element
         project = selenium.find_element_by_xpath('//*[@id="id_form-0-projects"]')
         task = selenium.find_element_by_xpath('//*[@id="id_form-0-task"]')
         date = selenium.find_element_by_xpath('//*[@id="id_form-0-date"]')

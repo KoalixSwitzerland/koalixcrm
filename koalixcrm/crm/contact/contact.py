@@ -250,7 +250,7 @@ class StateFilter(admin.SimpleListFilter):
     def queryset(self, request, queryset):
         if self.value():
             matching_addresses = PostalAddressForContact.objects.filter(state=self.value())
-            ids = [(a.company.id) for a in matching_addresses]
+            ids = [a.person.id for a in matching_addresses]
             return queryset.filter(pk__in=ids)
         return queryset
 
@@ -274,7 +274,7 @@ class CityFilter(admin.SimpleListFilter):
     def queryset(self, request, queryset):
         if self.value():
             matching_addresses = PostalAddressForContact.objects.filter(town=self.value())
-            ids = [(a.company.id) for a in matching_addresses]
+            ids = [(a.person.id) for a in matching_addresses]
             return queryset.filter(pk__in=ids)
         return queryset
 
