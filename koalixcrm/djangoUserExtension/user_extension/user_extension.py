@@ -134,7 +134,7 @@ class UserExtensionPostalAddress(PostalAddress):
     userExtension = models.ForeignKey(UserExtension)
 
     def __str__(self):
-        return xstr(self.name) + ' ' + xstr(self.prename)
+        return xstr(self.name) + ' ' + xstr(self.pre_name)
 
     class Meta:
         app_label = "djangoUserExtension"
