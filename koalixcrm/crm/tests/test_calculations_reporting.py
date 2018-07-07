@@ -211,7 +211,8 @@ class ReportingCalculationsUITest(LiveServerTestCase):
     def test_registration_of_work(self):
         selenium = self.selenium
         # login
-        selenium.get('%s%s' % (self.live_server_url, '/admin/'))
+        selenium.get('%s%s' % (self.live_server_url, '/koalixcrm/crm/reporting/time_tracking/'))
+        # the browser will be redirected to the login page
         timeout = 5
         try:
             element_present = EC.presence_of_element_located((By.ID, 'id_username'))
@@ -224,13 +225,7 @@ class ReportingCalculationsUITest(LiveServerTestCase):
         username.send_keys("admin")
         password.send_keys("admin")
         submit_button.send_keys(Keys.RETURN)
-        try:
-            element_present = EC.presence_of_element_located((By.ID, 'module_1_7'))
-            WebDriverWait(selenium, timeout).until(element_present)
-        except TimeoutException:
-            print("Timed out waiting for page to load")
-        # Opening the link we want to test
-        selenium.get('%s%s' % (self.live_server_url, '/koalixcrm/crm/reporting/time_tracking/'))
+        # after the login, the browser is redirected to the target url /koalixcrm/crm/reporting/time_tracking
         try:
             element_present = EC.presence_of_element_located((By.ID, 'id_form-0-projects'))
             WebDriverWait(selenium, timeout).until(element_present)

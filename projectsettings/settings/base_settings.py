@@ -141,6 +141,8 @@ FILEBROWSER_EXTENSIONS = {
     'TTF': ['.ttf'],
 }
 
+LOGIN_URL = "/admin/login"
+
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',)
 }

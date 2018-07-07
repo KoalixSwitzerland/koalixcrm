@@ -3,10 +3,14 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.template.context_processors import csrf
 from django.contrib.admin.widgets import *
+from django.contrib.auth.decorators import login_required
 from koalixcrm.djangoUserExtension.models import UserExtension
 from koalixcrm.crm.reporting.task import Task
 from koalixcrm.crm.reporting.project import Project
 from koalixcrm.crm.reporting.reporting_period import ReportingPeriod
+from koalixcrm.crm.exceptions import ReportingPeriodNotFound
+from koalixcrm.djangoUserExtension.exceptions import UserExtensionMissing, TooManyUserExtensionsAvailable
+
 import datetime
 from koalixcrm.globalSupportFunctions import limit_string_length
 
@@ -117,8 +121,8 @@ def create_updated_formset(range_selection_form, request):
     from_date = range_selection_form.cleaned_data['from_date']
     to_date = range_selection_form.cleaned_data['to_date']
     initial_formset_data = generate_initial_data(from_date,
-                                                                   to_date,
-                                                                   employee)
+                                                 to_date,
+                                                 employee)
     form_kwargs = compose_form_kwargs(from_date, to_date)
     formset = WorkEntryFormSet(initial=initial_formset_data,
                                form_kwargs=form_kwargs)
@@ -184,39 +188,53 @@ def update_range_selection_form(old_range_selection_form):
     range_selection_form = RangeSelectionForm(initial=initial_form_data)
     return range_selection_form
 
-
+@login_required
 def work_report(request):
-    if request.POST.get('post'):
-        if 'cancel' in request.POST:
+    try:
+        if request.POST.get('post'):
+            if 'cancel' in request.POST:
+                return HttpResponseRedirect('/admin/')
+            elif 'save' in request.POST:
+                range_selection_form = RangeSelectionForm(request.POST)
+                if range_selection_form.is_valid():
+                    formset = load_formset(range_selection_form,
+                                                             request)
+                    if not formset.is_valid():
+                        c = {'range_selection_form': range_selection_form,
+                             'formset': formset}
+                        c.update(csrf(request))
+                        return render(request, 'crm/admin/time_reporting.html', c)
+                    else:
+                        for form in formset:
+                            update_work(form,request)
+                formset = create_updated_formset(range_selection_form, request)
+                range_selection_form = update_range_selection_form(range_selection_form)
+                c = {'range_selection_form': range_selection_form,
+                     'formset': formset}
+                c.update(csrf(request))
+                return render(request, 'crm/admin/time_reporting.html', c)
             return HttpResponseRedirect('/admin/')
-        elif 'save' in request.POST:
-            range_selection_form = RangeSelectionForm(request.POST)
-            if range_selection_form.is_valid():
-                formset = load_formset(range_selection_form,
-                                                         request)
-                if not formset.is_valid():
-                    c = {'range_selection_form': range_selection_form,
-                         'formset': formset}
-                    c.update(csrf(request))
-                    return render(request, 'crm/admin/time_reporting.html', c)
-                else:
-                    for form in formset:
-                        update_work(form,request)
-            formset = create_updated_formset(range_selection_form, request)
-            range_selection_form = update_range_selection_form(range_selection_form)
-            c = {'range_selection_form': range_selection_form,
-                 'formset': formset}
+        else:
+            datetime_now = datetime.datetime.today()
+            to_date = (datetime_now + datetime.timedelta(days=30)).date()
+            from_date = datetime_now.date()
+            range_selection_form = create_range_selection_form(from_date, to_date)
+            formset = create_new_formset(from_date, to_date, request)
+            c = {'formset': formset,
+                 'range_selection_form': range_selection_form}
             c.update(csrf(request))
             return render(request, 'crm/admin/time_reporting.html', c)
-        return HttpResponseRedirect('/admin/')
-    else:
-        datetime_now = datetime.datetime.today()
-        to_date = (datetime_now + datetime.timedelta(days=30)).date()
-        from_date = datetime_now.date()
-        range_selection_form = create_range_selection_form(from_date, to_date)
-        formset = create_new_formset(from_date, to_date, request)
-        c = {'formset': formset,
-             'range_selection_form': range_selection_form}
-        c.update(csrf(request))
-        return render(request, 'crm/admin/time_reporting.html', c)
+    except (UserExtensionMissing,
+            ReportingPeriodNotFound,
+            TooManyUserExtensionsAvailable) as e:
+        if isinstance(e, UserExtensionMissing):
+            return render(request, 'crm/exceptions.html')
+        elif isinstance(e, TooManyUserExtensionsAvailable):
+            return render(request, 'crm/exceptions.html')
+        elif isinstance(e, UserExtensionPhoneAddressMissing):
+            return render(request, 'crm/exceptions.html')
+        else:
+            raise Http404
+        return response
+
 
