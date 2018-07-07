@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext as _
 from koalixcrm.crm.exceptions import *
-from koalixcrm.accounting.exceptions import *
+from koalixcrm.djangoUserExtension.exceptions import *
 
 
 class PDFExportView:

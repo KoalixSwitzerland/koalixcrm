@@ -5,13 +5,12 @@ from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext as _
 
-from koalixcrm.crm.exceptions import *
 from koalixcrm.crm.contact.postaladdress import PostalAddress
 from koalixcrm.crm.contact.phoneaddress import PhoneAddress
 from koalixcrm.crm.contact.emailaddress import EmailAddress
 from koalixcrm.crm.documents.pdfexport import PDFExport
 from koalixcrm.djangoUserExtension.const.purpose import *
-from koalixcrm.djangoUserExtension.exceptions import TemplateSetMissingForUserExtension
+from koalixcrm.djangoUserExtension.exceptions import *
 from koalixcrm.globalSupportFunctions import xstr
 from koalixcrm.crm.reporting.work import Work
 
