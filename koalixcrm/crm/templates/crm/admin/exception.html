@@ -1,23 +1,21 @@
 {% extends "admin/base.html" %}
+{% for obj in queryset %}
 {% block title %}
-Register Payment Amount
+{{description}}
 {% endblock %}
 
 {% block content %}
 
 <form action="" method="post">{% csrf_token %}
 <table>
-{% for obj in queryset %}
   <tr>
     <td>
-      Amount to Register:
+      {{description}}
     </td>
-    {{ form }}
-    <td>
-      Amount on Invoice:
-    </td>
-    <td>
-      {{ obj.last_calculated_price }}
+  </tr>
+  <tr>
+      {{ form }}
+      {{ obj.next_steps }}
     </td>
   </tr>
   <tr>
@@ -30,7 +28,7 @@ Register Payment Amount
     </td>
   </tr>
 </table>
-{% endfor %}
 </form>
 {% endblock %}
+{% endfor %}
 
