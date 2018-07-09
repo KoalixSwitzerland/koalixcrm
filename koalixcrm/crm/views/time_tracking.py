@@ -229,9 +229,10 @@ def work_report(request):
             ReportingPeriodNotFound,
             TooManyUserExtensionsAvailable) as e:
         if isinstance(e, UserExtensionMissing):
-            form = e.UserExtensionMissingForm()
-            title = e.title
-            description = e.description
+            return HttpResponseRedirect(e.form_address)
+            form = e.UserExtensionMissingForm(initial={'next_steps': 'return_to_start'})
+            title = "User Extension Missing"
+            description = "Choose next steps"
             c = {'action_checkbox_name': helpers.ACTION_CHECKBOX_NAME,
                  'form': form,
                  'description': description,

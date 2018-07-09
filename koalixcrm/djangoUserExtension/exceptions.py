@@ -12,19 +12,10 @@ class TemplateSetMissingForUserExtension(Exception):
 
 
 class UserExtensionMissing(Exception):
-    class UserExtensionMissingForm(forms.Form):
-        NEXT_STEPS = (
-            ('create_user_extension', 'Create User Extension'),
-            ('Return to Start', 'Return To Start'),
-        )
-        next_steps = forms.MultipleChoiceField(required=True,
-                                               widget=forms.CheckboxSelectMultiple,
-                                               choices=NEXT_STEPS)
 
     def __init__(self, value):
         self.value = value
-        self.title = "User Extension Required"
-        self.description = "You need to create a User Extension to access this view"
+        self.form_address = "/koalixcrm/crm/reporting/user_extension_missing"
 
     def __str__(self):
         return repr(self.value)
