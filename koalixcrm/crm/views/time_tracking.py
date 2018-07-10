@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render
 from django.template.context_processors import csrf
+from django.contrib.admin import helpers
 from django.contrib.admin.widgets import *
 from django.contrib.auth.decorators import login_required
 from koalixcrm.djangoUserExtension.models import UserExtension
@@ -137,8 +138,8 @@ def create_new_formset(from_date, to_date, request):
                                                formset=BaseWorkEntryFormset)
     employee = UserExtension.get_user_extension(request.user)
     initial_formset_data = generate_initial_data(from_date,
-                                                                   to_date,
-                                                                   employee)
+                                                 to_date,
+                                                 employee)
     form_kwargs = compose_form_kwargs(from_date, to_date)
     formset = WorkEntryFormSet(initial=initial_formset_data,
                                form_kwargs=form_kwargs)
@@ -228,11 +229,13 @@ def work_report(request):
             ReportingPeriodNotFound,
             TooManyUserExtensionsAvailable) as e:
         if isinstance(e, UserExtensionMissing):
-            return render(request, 'crm/exceptions.html')
+            return HttpResponseRedirect(e.view)
+        elif isinstance(e, ReportingPeriodNotFound):
+            return HttpResponseRedirect(e.view)
         elif isinstance(e, TooManyUserExtensionsAvailable):
-            return render(request, 'crm/exceptions.html')
+            return HttpResponseRedirect(e.view)
         elif isinstance(e, UserExtensionPhoneAddressMissing):
-            return render(request, 'crm/exceptions.html')
+            return HttpResponseRedirect(e.view)
         else:
             raise Http404
         return response

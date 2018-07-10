@@ -5,6 +5,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext as _
 from django.contrib.contenttypes.models import ContentType
 from koalixcrm.crm.exceptions import *
+from koalixcrm.djangoUserExtension.exceptions import *
 from koalixcrm.crm.documents.salesdocument import SalesDocument
 from koalixcrm.crm.documents.salesdocumentposition import SalesDocumentPosition
 from koalixcrm.crm.reporting.task import Task
@@ -103,11 +104,9 @@ class CreateTaskView:
                 UserExtensionEmailAddressMissing,
                 UserExtensionPhoneAddressMissing) as e:
             if isinstance(e, UserExtensionMissing):
-                response = HttpResponseRedirect(redirect_to)
-                calling_model_admin.message_user(request, _("User Extension Missing"))
+                return render(request, 'crm/admin/exception.html')
             elif isinstance(e, UserExtensionEmailAddressMissing):
-                response = HttpResponseRedirect(redirect_to)
-                calling_model_admin.message_user(request, _("User Extension Email Missing"))
+                return render(request, 'crm/admin/exception.html')
             else:
                 raise Http404
         return response
