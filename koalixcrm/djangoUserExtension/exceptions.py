@@ -15,7 +15,7 @@ class UserExtensionMissing(Exception):
 
     def __init__(self, value):
         self.value = value
-        self.form_address = "/koalixcrm/crm/reporting/user_extension_missing"
+        self.view = "/koalixcrm/crm/reporting/user_extension_missing"
 
     def __str__(self):
         return repr(self.value)

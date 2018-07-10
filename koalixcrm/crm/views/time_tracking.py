@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render
 from django.template.context_processors import csrf
 from django.contrib.admin import helpers
@@ -229,20 +229,13 @@ def work_report(request):
             ReportingPeriodNotFound,
             TooManyUserExtensionsAvailable) as e:
         if isinstance(e, UserExtensionMissing):
-            return HttpResponseRedirect(e.form_address)
-            form = e.UserExtensionMissingForm(initial={'next_steps': 'return_to_start'})
-            title = "User Extension Missing"
-            description = "Choose next steps"
-            c = {'action_checkbox_name': helpers.ACTION_CHECKBOX_NAME,
-                 'form': form,
-                 'description': description,
-                 'title': title}
-            c.update(csrf(request))
-            return render(request, 'crm/admin/exception.html', c)
+            return HttpResponseRedirect(e.view)
+        elif isinstance(e, ReportingPeriodNotFound):
+            return HttpResponseRedirect(e.view)
         elif isinstance(e, TooManyUserExtensionsAvailable):
-            return render(request, 'crm/admin/exception.html')
+            return HttpResponseRedirect(e.view)
         elif isinstance(e, UserExtensionPhoneAddressMissing):
-            return render(request, 'crm/admin/exception.html')
+            return HttpResponseRedirect(e.view)
         else:
             raise Http404
         return response

@@ -7,9 +7,9 @@ from django.contrib.admin.widgets import *
 from koalixcrm.djangoUserExtension.exceptions import TooManyUserExtensionsAvailable
 
 
-class UserExtensionMissingForm(forms.Form):
+class ReportingPeriodMissingForm(forms.Form):
     NEXT_STEPS = (
-        ('create_user_extension', 'Create User Extension'),
+        ('add_reporting_period', 'Add Reporting Period'),
         ('return_to_start', 'Return To Start'),
     )
     next_steps = forms.ChoiceField(required=True,
@@ -17,25 +17,25 @@ class UserExtensionMissingForm(forms.Form):
                                    choices=NEXT_STEPS)
 
 
-def user_extension_missing(request):
+def reporting_period_missing(request):
     try:
         if request.POST.get('post'):
             if 'confirm_selection' in request.POST:
-                user_extension_missing_form = UserExtensionMissingForm(request.POST)
-                if user_extension_missing_form.is_valid():
-                    if user_extension_missing_form.cleaned_data['next_steps'] == 'return_to_start':
+                reporting_period_missing_form = ReportingPeriodMissingForm(request.POST)
+                if reporting_period_missing_form.is_valid():
+                    if reporting_period_missing_form.cleaned_data['next_steps'] == 'return_to_start':
                         return HttpResponseRedirect('/admin/')
                     else:
-                        return HttpResponseRedirect('/admin/djangoUserExtension/userextension/add/')
+                        return HttpResponseRedirect('/admin/crm/reportingperiod/add/')
         else:
-            user_extension_missing_form = UserExtensionMissingForm(initial={'next_steps': 'create_user_extension'})
+            reporting_period_missing_form = ReportingPeriodMissingForm(initial={'next_steps': 'create_user_extension'})
         title = "User Extension Missing"
-        description = "The operation you have selected requires an existing 'User Extension' element to exist" \
-                      "for the user. For one of the required users this 'User Extension' did not exist" \
-                      " Please choose one of the available options and proceed with the intended " \
+        description = "The operation you have selected requires an existing 'Reporting Period' element to exist" \
+                      "for the project. For one of the required project this 'Reporting Period' did not exist" \
+                      "Please choose one of the available options and proceed with the intended " \
                       "operation afterwards"
         c = {'action_checkbox_name': helpers.ACTION_CHECKBOX_NAME,
-             'form': user_extension_missing_form,
+             'form': reporting_period_missing_form,
              'description': description,
              'title': title}
         c.update(csrf(request))
