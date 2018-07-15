@@ -2,7 +2,6 @@
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render
 from django.template.context_processors import csrf
-from django.contrib.admin import helpers
 from django.contrib.admin.widgets import *
 from django.contrib.auth.decorators import login_required
 from koalixcrm.djangoUserExtension.models import UserExtension
