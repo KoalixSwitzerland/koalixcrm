@@ -7,24 +7,24 @@
 {% block content %}
 
 <form action="" method="post">{% csrf_token %}
-<table>
-  <tr>
-    <td>
-      {{description}}
-    </td>
-  </tr>
-  <tr>
-    <td>
-      {{ form.next_steps }}
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <input type="hidden" name="post" value="yes" />
-      <input type="submit" name="confirm_selection" value="Confirm Selection" />
-    </td>
-  </tr>
-</table>
+    <table>
+        <tr>
+            <td>
+                {{description}}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                {{ form.next_steps }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="hidden" name="post" value="yes"/>
+                <input type="submit" name="confirm_selection" value="Confirm Selection"/>
+            </td>
+        </tr>
+    </table>
 </form>
 {% endblock %}
 {% endfor %}

@@ -13,7 +13,7 @@ from koalixcrm.djangoUserExtension.exceptions import *
 class PDFExportView:
 
     @staticmethod
-    def export_pdf(calling_model_admin, request, source, redirect_to, template_to_use, **kwargs, *args):
+    def export_pdf(calling_model_admin, request, source, redirect_to, template_to_use, *args, **kwargs):
         """This method exports PDFs provided by different Models in the crm application
 
             Args:
@@ -32,7 +32,7 @@ class PDFExportView:
             Raises:
               raises Http404 exception if anything goes wrong"""
         try:
-            pdf = source.create_pdf(template_to_use, request.user, **kwargs, *args)
+            pdf = source.create_pdf(template_to_use, request.user, *args, **kwargs)
             response = HttpResponse(FileWrapper(open(pdf, 'rb')), content_type='application/pdf')
             response['Content-Length'] = path.getsize(pdf)
         except (TemplateSetMissing,

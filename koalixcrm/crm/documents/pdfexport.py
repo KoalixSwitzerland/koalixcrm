@@ -73,7 +73,7 @@ class PDFExport:
                       '-pdf', file_output_pdf], stderr=STDOUT)
 
     @staticmethod
-    def create_pdf(object_to_create_pdf, template_set, printed_by):
+    def create_pdf(object_to_create_pdf, template_set, printed_by, *args, **kwargs):
         # define the files which are involved in pdf creation process
         fop_config_file = object_to_create_pdf.get_fop_config_file(template_set)
         xsl_file = object_to_create_pdf.get_xsl_file(template_set)
@@ -83,7 +83,7 @@ class PDFExport:
                                                                   "_" + str(object_to_create_pdf.id) + ".pdf"))
 
         # list the sub-objects which have to be serialized
-        xml_string = object_to_create_pdf.serialize_to_xml()
+        xml_string = object_to_create_pdf.serialize_to_xml(*args, **kwargs)
         objects_to_serialize = list(koalixcrm.djangoUserExtension.models.DocumentTemplate.objects.filter(id=template_set.id))
         xml_string_temp = PDFExport.write_xml(objects_to_serialize)
         xml_string = PDFExport.merge_xml(xml_string, xml_string_temp)

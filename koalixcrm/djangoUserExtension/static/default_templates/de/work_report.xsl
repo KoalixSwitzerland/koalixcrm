@@ -177,13 +177,13 @@
                     </xsl:for-each>
                     <xsl:for-each select="object[@model='djangoUserExtension.userextension']/Month_Work_Hours">
                         <fo:table table-layout="fixed" width="100%">
-                            <xsl:for-each select="../../object[@model='djangoUserExtension.userextension']/Day_Work_Hours">
+                            <xsl:for-each select="../../object[@model='djangoUserExtension.userextension']/Day_Work_Hours[@month=current()/@month]">
                                 <fo:table-column column-width="0.8cm"/>
                             </xsl:for-each>
                             <fo:table-header font-size="8pt" line-height="9pt" font-weight="bold"
                                              font-family="BitstreamVeraSans">
                                 <fo:table-row>
-                                    <xsl:for-each select="../../object[@model='djangoUserExtension.userextension']/Day_Work_Hours">
+                                    <xsl:for-each select="../../object[@model='djangoUserExtension.userextension']/Day_Work_Hours[@month=current()/@month]">
                                         <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt"
                                                        padding="2.5pt">
                                             <fo:block text-align="start">
@@ -196,7 +196,7 @@
                             <fo:table-body font-size="9pt"
                                            font-family="BitstreamVeraSans">
                                 <fo:table-row>
-                                    <xsl:for-each select="../../object[@model='djangoUserExtension.userextension']/Day_Work_Hours">
+                                    <xsl:for-each select="../../object[@model='djangoUserExtension.userextension']/Day_Work_Hours[@month=current()/@month]">
                                         <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt"
                                                        padding="2.5pt">
                                             <fo:block text-align="start">
