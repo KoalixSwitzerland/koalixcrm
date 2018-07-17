@@ -91,7 +91,7 @@ class UserExtension(models.Model):
                           "month": str(date.month),
                           "year": str(date.year)}
             date += datetime.timedelta(days=1)
-        while date < date_to:
+        while date <= date_to:
             days[date] = {'effort': 0,
                           "day": str(date.day),
                           "week": str(date.isocalendar()[1]),
@@ -118,13 +118,32 @@ class UserExtension(models.Model):
                           "year": str(date.year)}
             date += datetime.timedelta(days=1)
         works = Work.objects.filter(employee=self, date__range=(date_from, date_to))
-
+        main_xml = PDFExport.append_element_to_pattern(main_xml,
+                                                       ".",
+                                                       "range_from",
+                                                       date_from.__str__(),
+                                                       attributes={"day": str(date_from.day),
+                                                                   "week": str(date_from.isocalendar()[1]),
+                                                                   "week_day": str(date_from.isoweekday()),
+                                                                   "month": str(date_from.month),
+                                                                   "year": str(date_from.year)})
+        main_xml = PDFExport.append_element_to_pattern(main_xml,
+                                                       ".",
+                                                       "range_to",
+                                                       date_to.__str__(),
+                                                       attributes={"day": str(date_to.day),
+                                                                   "week": str(date_to.isocalendar()[1]),
+                                                                   "week_day": str(date_to.isoweekday()),
+                                                                   "month": str(date_to.month),
+                                                                   "year": str(date_to.year)})
         for work in works:
             days[work.date]['effort'] += work.effort_hours()
             month_key = str(work.date.month)+"/"+str(work.date.year)
             week_key = str(work.date.isocalendar()[1])+"/"+str(work.date.year)
             weeks[week_key]['effort'] += work.effort_hours()
             months[month_key]['effort'] += work.effort_hours()
+            work_xml = work.serialize_to_xml()
+            main_xml = PDFExport.merge_xml(main_xml, work_xml)
         for day_key in days.keys():
             main_xml = PDFExport.append_element_to_pattern(main_xml,
                                                            "object/[@model='djangoUserExtension.userextension']",

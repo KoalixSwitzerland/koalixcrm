@@ -156,9 +156,16 @@
                               font-family="BitstreamVeraSans"
                               color="black"
                               text-align="left"
+                              font-weight="bold">
+                        Employee: <xsl:value-of select="object[@model='auth.user']/field[@name='username']"/>
+                    </fo:block>
+                    <fo:block font-size="10pt"
+                              font-family="BitstreamVeraSans"
+                              color="black"
+                              text-align="left"
                               font-weight="bold"
                               margin-bottom="1cm">
-                        Employee: <xsl:value-of select="object[@model='auth.user']/field[@name='username']"/>
+                        Range: <xsl:value-of select="range_from"/> to <xsl:value-of select="range_to"/>
                     </fo:block>
                     <xsl:for-each select="object[@model='crm.textparagraphinsalesdocument']">
                         <xsl:choose>
