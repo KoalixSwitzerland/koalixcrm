@@ -188,6 +188,7 @@ def update_range_selection_form(old_range_selection_form):
     range_selection_form = RangeSelectionForm(initial=initial_form_data)
     return range_selection_form
 
+
 @login_required
 def work_report(request):
     try:
