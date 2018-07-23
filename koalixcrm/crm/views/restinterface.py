@@ -10,7 +10,6 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
 
-@login_required
 class TaskAsJSON(viewsets.ReadOnlyModelViewSet):
     """
     API endpoint that allows users to be viewed.
@@ -25,7 +24,6 @@ class TaskAsJSON(viewsets.ReadOnlyModelViewSet):
         return super(TaskAsJSON, self).dispatch(*args, **kwargs)
 
 
-@login_required
 class ContractAsJSON(viewsets.ReadOnlyModelViewSet):
     """
     API endpoint that allows users to be viewed.
