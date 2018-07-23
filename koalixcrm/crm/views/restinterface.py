@@ -8,6 +8,7 @@ from rest_framework_xml.renderers import XMLRenderer
 from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from koalixcrm.crm.views.renderer import PDFRenderer
 
 
 class TaskAsJSON(viewsets.ReadOnlyModelViewSet):
@@ -16,8 +17,9 @@ class TaskAsJSON(viewsets.ReadOnlyModelViewSet):
     """
     queryset = Task.objects.all()
     serializer_class = TaskJSONSerializer
-    renderer_classes = (BrowsableAPIRenderer, XMLRenderer, JSONRenderer)
+    renderer_classes = (BrowsableAPIRenderer, XMLRenderer, JSONRenderer, PDFRenderer)
     filter_fields = ('project',)
+    file_name = "this_is_awesome.xml"
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
