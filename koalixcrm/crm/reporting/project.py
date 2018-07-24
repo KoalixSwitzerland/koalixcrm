@@ -239,9 +239,14 @@ class InlineProject(admin.TabularInline):
         return False
 
 
-class ProjectJSONSerializer(serializers.HyperlinkedModelSerializer):
+class ProjectJSONSerializer(serializers.ModelSerializer):
+    from koalixcrm.crm.reporting.task import TaskSerializer
+
+    tasks = TaskSerializer(many=True, read_only=True)
+
     class Meta:
         model = Project
         fields = ('id',
                   'project_manager',
-                  'project_name')
+                  'project_name',
+                  'tasks')

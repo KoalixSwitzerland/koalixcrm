@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from rest_framework import viewsets
-from koalixcrm.crm.reporting.task import Task, TaskJSONSerializer
+from koalixcrm.crm.reporting.task import Task, TaskSerializer
 from koalixcrm.crm.reporting.taskstatus import TaskStatus, TaskStatusJSONSerializer
 from koalixcrm.crm.documents.contract import Contract, ContractJSONSerializer
 from koalixcrm.crm.reporting.project import Project, ProjectJSONSerializer
@@ -16,10 +16,10 @@ class TaskAsJSON(viewsets.ReadOnlyModelViewSet):
     API endpoint that allows users to be viewed.
     """
     queryset = Task.objects.all()
-    serializer_class = TaskJSONSerializer
+    serializer_class = TaskSerializer
     renderer_classes = (BrowsableAPIRenderer, XMLRenderer, JSONRenderer, PDFRenderer)
     filter_fields = ('project',)
-    file_name = "this_is_awesome.xml"
+    file_name = "this_is_the_TaskList.xml"
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -58,7 +58,8 @@ class ProjectAsJSON(viewsets.ReadOnlyModelViewSet):
     """
     queryset = Project.objects.all()
     serializer_class = ProjectJSONSerializer
-    renderer_classes = (BrowsableAPIRenderer, XMLRenderer, JSONRenderer)
+    renderer_classes = (BrowsableAPIRenderer, XMLRenderer, JSONRenderer, PDFRenderer)
+    file_name = "this_is_the_ProjectList.xml"
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
