@@ -20,9 +20,9 @@
   </tr></table>
 
 ## Quality badges on master
-| Project build: | Codacy results: |Docker: |
-| --- | --- | --- |
-| [![Build Status](https://travis-ci.org/scaphilo/koalixcrm.svg?branch=master)](https://travis-ci.org/scaphilo/koalixcrm) | [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4f0acae8f6d04c2b81c0c4a4b2b48e09)](https://www.codacy.com/app/simon.riedener/koalixcrm?utm_source=github.com&utm_medium=referral&utm_content=scaphilo/koalixcrm&utm_campaign=badger) [![Codacy Badge](https://api.codacy.com/project/badge/Coverage/4f0acae8f6d04c2b81c0c4a4b2b48e09)](https://www.codacy.com/app/simon.riedener/koalixcrm?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=scaphilo/koalixcrm&amp;utm_campaign=Badge_Coverage) | [![Docker Automated build](https://img.shields.io/docker/automated/koalixswitzerland/koalixcrm.svg)]() [![Docker Build Status](https://img.shields.io/docker/build/koalixswitzerland/koalixcrm.svg)]() [![Docker Stars](https://img.shields.io/docker/stars/koalixswitzerland/koalixcrm.svg)]() [![Docker Pulls](https://img.shields.io/docker/pulls/koalixswitzerland/koalixcrm.svg)]() |
+| Project build: | Codacy results: |Docker: | Social Networks: |
+| --- | --- | --- | --- |
+| [![Build Status](https://travis-ci.org/scaphilo/koalixcrm.svg?branch=master)](https://travis-ci.org/scaphilo/koalixcrm) | [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4f0acae8f6d04c2b81c0c4a4b2b48e09)](https://www.codacy.com/app/simon.riedener/koalixcrm?utm_source=github.com&utm_medium=referral&utm_content=scaphilo/koalixcrm&utm_campaign=badger) [![Codacy Badge](https://api.codacy.com/project/badge/Coverage/4f0acae8f6d04c2b81c0c4a4b2b48e09)](https://www.codacy.com/app/simon.riedener/koalixcrm?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=scaphilo/koalixcrm&amp;utm_campaign=Badge_Coverage) | [![Docker Automated build](https://img.shields.io/docker/automated/koalixswitzerland/koalixcrm.svg)]() [![Docker Build Status](https://img.shields.io/docker/build/koalixswitzerland/koalixcrm.svg)]()<br/> [![Docker Stars](https://img.shields.io/docker/stars/koalixswitzerland/koalixcrm.svg)]() [![Docker Pulls](https://img.shields.io/docker/pulls/koalixswitzerland/koalixcrm.svg)]() | [![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/koalix-crm/Lobby) |
 
 ## Demos
 [demo](http://koalixcrmdemoenglish.koalix.org/admin/).

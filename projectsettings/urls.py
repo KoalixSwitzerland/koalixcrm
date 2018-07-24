@@ -20,13 +20,23 @@ from django.contrib import admin
 from django.conf.urls import include
 from filebrowser.sites import site
 from rest_framework import routers
-from koalixcrm.crm.views.restinterface import TaskAsJSON, ContractAsJSON, TaskStatusAsJSON, ProjectAsJSON
+
+from koalixcrm.accounting.restinterface import AccountAsJSON, ProductCategoryAsJSON
+from koalixcrm.crm.views.restinterface import TaskAsJSON, ContractAsJSON, TaskStatusAsJSON, CurrencyAsJSON, TaxAsJSON, \
+    UnitAsJSON, ProductAsJSON, ProjectAsJSON
 
 router = routers.DefaultRouter()
-router.register(r'tasks', TaskAsJSON)
+router.register(r'accounts', AccountAsJSON)
 router.register(r'contracts', ContractAsJSON)
+router.register(r'currencies', CurrencyAsJSON)
+router.register(r'products', ProductAsJSON)
+router.register(r'productCategories', ProductCategoryAsJSON)
 router.register(r'project', ProjectAsJSON)
+router.register(r'tasks', TaskAsJSON)
 router.register(r'taskstatus', TaskStatusAsJSON)
+router.register(r'taxes', TaxAsJSON)
+router.register(r'units', UnitAsJSON)
+
 
 admin.autodiscover()
 
