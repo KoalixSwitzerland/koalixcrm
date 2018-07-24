@@ -36,6 +36,7 @@ router.register(r'tasks', TaskAsJSON)
 router.register(r'taskstatus', TaskStatusAsJSON)
 router.register(r'taxes', TaxAsJSON)
 router.register(r'units', UnitAsJSON)
+router.register(r'units', UnitAsJSON)
 
 
 admin.autodiscover()
