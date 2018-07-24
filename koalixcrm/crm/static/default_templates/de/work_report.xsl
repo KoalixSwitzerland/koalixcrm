@@ -129,7 +129,7 @@
                         </fo:table-body>
                     </fo:table>
                 </fo:static-content>
-                < flow-name="xsl-region-body">
+                <fo:flow flow-name="xsl-region-body">
                     <xsl:for-each select="object[@model='crm.textparagraphinsalesdocument']">
                         <xsl:choose>
                             <xsl:when test="field[@name='purpose']='BS'">
@@ -151,7 +151,21 @@
                               font-weight="bold"
                               margin-top="2cm">
                         Work Report
-                        Project: <xsl:value-of select="object[@model='auth.user']/field[@name='username']"/>
+                    </fo:block>
+                    <fo:block font-size="10pt"
+                              font-family="BitstreamVeraSans"
+                              color="black"
+                              text-align="left"
+                              font-weight="bold">
+                        Employee: <xsl:value-of select="object[@model='auth.user']/field[@name='username']"/>
+                    </fo:block>
+                    <fo:block font-size="10pt"
+                              font-family="BitstreamVeraSans"
+                              color="black"
+                              text-align="left"
+                              font-weight="bold"
+                              margin-bottom="1cm">
+                        Range: <xsl:value-of select="range_from"/> to <xsl:value-of select="range_to"/>
                     </fo:block>
                     <xsl:for-each select="object[@model='crm.textparagraphinsalesdocument']">
                         <xsl:choose>
@@ -168,167 +182,64 @@
                             </xsl:when>
                         </xsl:choose>
                     </xsl:for-each>
-
-                    <fo:table table-layout="fixed" width="100%">
-                        <fo:table-column column-width="4.5cm"/>
-                        <xsl:choose>
-                            <xsl:when test="object[@model='crm.project']/Effective_Effort_InPeriod">
-                                <fo:table-column column-width="12.2cm"/>
-                                <fo:table-column column-width="3cm"/>
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <fo:table-column column-width="15.2cm"/>
-                            </xsl:otherwise>
-                        </xsl:choose>
-                        <fo:table-column column-width="3cm"/>
-                        <fo:table-column column-width="3cm"/>
-                        <fo:table-header font-size="8pt" line-height="9pt" font-weight="bold"
-                                         font-family="BitstreamVeraSans">
-                            <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt"
-                                           padding="2.5pt">
-                                <fo:block text-align="start">
-                                    Task
-                                </fo:block>
-                            </fo:table-cell>
-                            <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt"
-                                           padding="2.5pt">
-                                <fo:block text-align="start">
-                                    Work
-                                </fo:block>
-                            </fo:table-cell>
+                    <xsl:for-each select="object[@model='djangoUserExtension.userextension']/Month_Work_Hours">
+                        <fo:block font-size="9pt"
+                                  font-family="BitstreamVeraSans"
+                                  font-weight="bold"
+                                  margin-bottom="0.3cm"
+                                  color="black"
+                                  text-align="left"
+                                  margin-top="1cm"
+                                  linefeed-treatment="preserve">
                             <xsl:choose>
-                                <xsl:when test="object[@model='crm.project']/Effective_Effort_InPeriod">
-                                    <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt"
-                                                   padding="2.5pt">
-                                        <fo:block text-align="end">
-                                            Act. Effort
-                                        </fo:block>
-                                    </fo:table-cell>
-                                </xsl:when>
-                            </xsl:choose>
-                            <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt"
-                                           padding="2.5pt">
-                                <fo:block text-align="end">
-                                    Total Act.Effort
-                                </fo:block>
-                            </fo:table-cell>
-                            <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt"
-                                           padding="2.5pt">
-                                <fo:block text-align="end">
-                                    Planned Effort
-                                </fo:block>
-                            </fo:table-cell>
-                        </fo:table-header>
-                        <fo:table-body font-size="9pt"
-                                       font-family="BitstreamVeraSans">
-                            <xsl:for-each select="object[@model='crm.task']">
-                                <xsl:sort select="short_description" data-type="number"/>
-                                <xsl:variable name="current_task_id" select="current()/@pk"/>
-                                <fo:table-row>
-                                    <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt"
-                                                   padding="2.5pt">
-                                        <fo:block-container overflow="hidden">
-                                            <fo:block text-align="start">
-                                                <xsl:value-of select="field[@name='title']"/>
-                                            </fo:block>
-                                        </fo:block-container>
-                                    </fo:table-cell>
-                                    <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt"
-                                                   padding="2.5pt">
-                                        <fo:block-container overflow="hidden">
-                                            <fo:list-block text-align="start">
-                                                <xsl:for-each select="../object[@model='crm.work']">
-                                                    <xsl:choose>
-                                                        <xsl:when test="field[@name='task'] = $current_task_id">
-                                                            <fo:list-item>
-                                                                <fo:list-item-label end-indent="label-end()">
-                                                                    <fo:block>
-                                                                        <fo:inline font-family="Symbol">•</fo:inline>
-                                                                    </fo:block>
-                                                                </fo:list-item-label>
-                                                                <fo:list-item-body start-indent="body-start()">
-                                                                    <fo:block>
-                                                                        <xsl:value-of
-                                                                                select="field[@name='description']"/>
-                                                                    </fo:block>
-                                                                </fo:list-item-body>
-                                                            </fo:list-item>
-                                                        </xsl:when>
-                                                    </xsl:choose>
-                                                </xsl:for-each>
-                                            </fo:list-block>
-                                        </fo:block-container>
-                                    </fo:table-cell>
-                                    <xsl:choose>
-                                        <xsl:when test="../object[@model='crm.project']/Effective_Effort_InPeriod">
-                                            <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt"
-                                                           padding="2.5pt">
-                                                <fo:block text-align="end">
-                                                    <xsl:value-of
-                                                            select="format-number(Effective_Effort_InPeriod,'#.##0,00', 'european')"/>
-                                                    hrs
-                                                </fo:block>
-                                            </fo:table-cell>
-                                        </xsl:when>
-                                    </xsl:choose>
-                                    <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt"
-                                                   padding="2.5pt">
-                                        <fo:block text-align="end">
-                                            <xsl:value-of
-                                                    select="format-number(Effective_Effort_Overall,'#.##0,00', 'european')"/>
-                                            hrs
-                                        </fo:block>
-                                    </fo:table-cell>
-                                    <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt"
-                                                   padding="2.5pt">
-                                        <fo:block text-align="end">
-                                            <xsl:value-of
-                                                    select="format-number(Planned_Effort,'#.##0,00', 'european')"/> hrs
-                                        </fo:block>
-                                    </fo:table-cell>
-                                </fo:table-row>
+                                <xsl:when test="current()/@month='1'">January</xsl:when>
+                                <xsl:when test="current()/@month='2'">February</xsl:when>
+                                <xsl:when test="current()/@month='3'">March</xsl:when>
+                                <xsl:when test="current()/@month='4'">April</xsl:when>
+                                <xsl:when test="current()/@month='5'">May</xsl:when>
+                                <xsl:when test="current()/@month='6'">June</xsl:when>
+                                <xsl:when test="current()/@month='7'">July</xsl:when>
+                                <xsl:when test="current()/@month='8'">August</xsl:when>
+                                <xsl:when test="current()/@month='9'">September</xsl:when>
+                                <xsl:when test="current()/@month='10'">October</xsl:when>
+                                <xsl:when test="current()/@month='11'">November</xsl:when>
+                                <xsl:when test="current()/@month='12'">December</xsl:when>
+                            </xsl:choose> / <xsl:value-of select="current()/@year"/>
+                        </fo:block>
+                        <fo:table table-layout="fixed" width="100%">
+                            <xsl:for-each select="../../object[@model='djangoUserExtension.userextension']/Day_Work_Hours[@month=current()/@month]">
+                                <fo:table-column column-width="0.8cm"/>
                             </xsl:for-each>
-                            <fo:table-row keep-together="always">
-                                <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt"
-                                               padding="2.5pt">
-                                    <fo:block text-align="start">All tasks
-                                    </fo:block>
-                                </fo:table-cell>
-                                <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt"
-                                               padding="2.5pt">
-                                    <fo:block text-align="start"></fo:block>
-                                </fo:table-cell>
-                                <xsl:choose>
-                                    <xsl:when test="object[@model='crm.project']/Effective_Effort_InPeriod">
+                            <fo:table-header font-size="8pt"
+                                             line-height="9pt"
+                                             font-weight="bold"
+                                             font-family="BitstreamVeraSans">
+                                <fo:table-row>
+                                    <xsl:for-each select="../../object[@model='djangoUserExtension.userextension']/Day_Work_Hours[@month=current()/@month]">
                                         <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt"
                                                        padding="2.5pt">
-                                            <fo:block text-align="end">
-                                                <xsl:value-of
-                                                        select="format-number(object[@model='crm.project']/Effective_Effort_InPeriod,'#.##0,00', 'european')"/>
-                                                hrs
+                                            <fo:block text-align="start">
+                                                <xsl:value-of select="current()/@day"/>
                                             </fo:block>
                                         </fo:table-cell>
-                                    </xsl:when>
-                                </xsl:choose>
-                                <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt"
-                                               padding="2.5pt">
-                                    <fo:block text-align="end">
-                                        <xsl:value-of
-                                                select="format-number(object[@model='crm.project']/Effective_Effort_Overall,'#.##0,00', 'european')"/>
-                                        hrs
-                                    </fo:block>
-                                </fo:table-cell>
-                                <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt"
-                                               padding="2.5pt">
-                                    <fo:block text-align="end">
-                                        <xsl:value-of
-                                                select="format-number(object[@model='crm.project']/Planned_Effort,'#.##0,00', 'european')"/>
-                                        hrs
-                                    </fo:block>
-                                </fo:table-cell>
-                            </fo:table-row>
-                        </fo:table-body>
-                    </fo:table>
+                                    </xsl:for-each>
+                                </fo:table-row>
+                            </fo:table-header>
+                            <fo:table-body font-size="9pt"
+                                           font-family="BitstreamVeraSans">
+                                <fo:table-row>
+                                    <xsl:for-each select="../../object[@model='djangoUserExtension.userextension']/Day_Work_Hours[@month=current()/@month]">
+                                        <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt"
+                                                       padding="2.5pt">
+                                            <fo:block text-align="start">
+                                                <xsl:value-of select="current()"/>
+                                            </fo:block>
+                                        </fo:table-cell>
+                                    </xsl:for-each>
+                                </fo:table-row>
+                            </fo:table-body>
+                        </fo:table>
+                    </xsl:for-each>
                     <fo:block id="last-page"></fo:block>
                 </fo:flow>
                 <xsl:apply-templates/>

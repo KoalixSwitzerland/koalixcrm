@@ -7,9 +7,9 @@ from django.contrib.admin.widgets import *
 from koalixcrm.djangoUserExtension.exceptions import TooManyUserExtensionsAvailable
 
 
-class ReportingPeriodMissingForm(forms.Form):
+class TemplateSetMissingFrom(forms.Form):
     NEXT_STEPS = (
-        ('add_reporting_period', 'Add Reporting Period'),
+        ('create_template_set', 'Create Required Template Set'),
         ('return_to_start', 'Return To Start'),
     )
     next_steps = forms.ChoiceField(required=True,
@@ -17,25 +17,25 @@ class ReportingPeriodMissingForm(forms.Form):
                                    choices=NEXT_STEPS)
 
 
-def reporting_period_missing(request):
+def template_set_missing(request):
     try:
         if request.POST.get('post'):
             if 'confirm_selection' in request.POST:
-                reporting_period_missing_form = ReportingPeriodMissingForm(request.POST)
-                if reporting_period_missing_form.is_valid():
-                    if reporting_period_missing_form.cleaned_data['next_steps'] == 'return_to_start':
+                user_extension_missing_form = TemplateSetMissingFrom(request.POST)
+                if user_extension_missing_form.is_valid():
+                    if user_extension_missing_form.cleaned_data['next_steps'] == 'return_to_start':
                         return HttpResponseRedirect('/admin/')
                     else:
-                        return HttpResponseRedirect('/admin/crm/reportingperiod/add/')
+                        return HttpResponseRedirect('/admin/djangoUserExtension/templatesets/')
         else:
-            reporting_period_missing_form = ReportingPeriodMissingForm(initial={'next_steps': 'create_user_extension'})
+            user_extension_missing_form = TemplateSetMissingFrom(initial={'next_steps': 'create_template_set'})
         title = "User Extension Missing"
-        description = "The operation you have selected requires an existing 'Reporting Period' element to exist" \
-                      "for the project. For one of the required project this 'Reporting Period' did not exist" \
-                      "Please choose one of the available options and proceed with the intended " \
+        description = "The operation you have selected requires an existing 'Template Set' element to exist" \
+                      "for the object. For one of the required objects this 'Template Set' did not exist" \
+                      " Please choose one of the available options and proceed with the intended " \
                       "operation afterwards"
         c = {'action_checkbox_name': helpers.ACTION_CHECKBOX_NAME,
-             'form': reporting_period_missing_form,
+             'form': user_extension_missing_form,
              'description': description,
              'title': title}
         c.update(csrf(request))

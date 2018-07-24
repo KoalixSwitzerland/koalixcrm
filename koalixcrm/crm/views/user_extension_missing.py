@@ -40,7 +40,7 @@ def user_extension_missing(request):
              'title': title}
         c.update(csrf(request))
         return render(request, 'crm/admin/exception.html', c)
-    except TooManyUserExtensionsAvailable as e:
+    except TooManyUserExtensionsAvailable:
         raise Http404
 
 

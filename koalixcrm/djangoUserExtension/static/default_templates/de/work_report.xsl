@@ -156,9 +156,16 @@
                               font-family="BitstreamVeraSans"
                               color="black"
                               text-align="left"
+                              font-weight="bold">
+                        Employee: <xsl:value-of select="object[@model='auth.user']/field[@name='username']"/>
+                    </fo:block>
+                    <fo:block font-size="10pt"
+                              font-family="BitstreamVeraSans"
+                              color="black"
+                              text-align="left"
                               font-weight="bold"
                               margin-bottom="1cm">
-                        Employee: <xsl:value-of select="object[@model='auth.user']/field[@name='username']"/>
+                        Range: <xsl:value-of select="range_from"/> to <xsl:value-of select="range_to"/>
                     </fo:block>
                     <xsl:for-each select="object[@model='crm.textparagraphinsalesdocument']">
                         <xsl:choose>
@@ -176,14 +183,39 @@
                         </xsl:choose>
                     </xsl:for-each>
                     <xsl:for-each select="object[@model='djangoUserExtension.userextension']/Month_Work_Hours">
+                        <fo:block font-size="9pt"
+                                  font-family="BitstreamVeraSans"
+                                  font-weight="bold"
+                                  margin-bottom="0.3cm"
+                                  color="black"
+                                  text-align="left"
+                                  margin-top="1cm"
+                                  linefeed-treatment="preserve">
+                            <xsl:choose>
+                                <xsl:when test="current()/@month='1'">January</xsl:when>
+                                <xsl:when test="current()/@month='2'">February</xsl:when>
+                                <xsl:when test="current()/@month='3'">March</xsl:when>
+                                <xsl:when test="current()/@month='4'">April</xsl:when>
+                                <xsl:when test="current()/@month='5'">May</xsl:when>
+                                <xsl:when test="current()/@month='6'">June</xsl:when>
+                                <xsl:when test="current()/@month='7'">July</xsl:when>
+                                <xsl:when test="current()/@month='8'">August</xsl:when>
+                                <xsl:when test="current()/@month='9'">September</xsl:when>
+                                <xsl:when test="current()/@month='10'">October</xsl:when>
+                                <xsl:when test="current()/@month='11'">November</xsl:when>
+                                <xsl:when test="current()/@month='12'">December</xsl:when>
+                            </xsl:choose> / <xsl:value-of select="current()/@year"/>
+                        </fo:block>
                         <fo:table table-layout="fixed" width="100%">
-                            <xsl:for-each select="../../object[@model='djangoUserExtension.userextension']/Day_Work_Hours">
+                            <xsl:for-each select="../../object[@model='djangoUserExtension.userextension']/Day_Work_Hours[@month=current()/@month]">
                                 <fo:table-column column-width="0.8cm"/>
                             </xsl:for-each>
-                            <fo:table-header font-size="8pt" line-height="9pt" font-weight="bold"
+                            <fo:table-header font-size="8pt"
+                                             line-height="9pt"
+                                             font-weight="bold"
                                              font-family="BitstreamVeraSans">
                                 <fo:table-row>
-                                    <xsl:for-each select="../../object[@model='djangoUserExtension.userextension']/Day_Work_Hours">
+                                    <xsl:for-each select="../../object[@model='djangoUserExtension.userextension']/Day_Work_Hours[@month=current()/@month]">
                                         <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt"
                                                        padding="2.5pt">
                                             <fo:block text-align="start">
@@ -196,7 +228,7 @@
                             <fo:table-body font-size="9pt"
                                            font-family="BitstreamVeraSans">
                                 <fo:table-row>
-                                    <xsl:for-each select="../../object[@model='djangoUserExtension.userextension']/Day_Work_Hours">
+                                    <xsl:for-each select="../../object[@model='djangoUserExtension.userextension']/Day_Work_Hours[@month=current()/@month]">
                                         <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt"
                                                        padding="2.5pt">
                                             <fo:block text-align="start">

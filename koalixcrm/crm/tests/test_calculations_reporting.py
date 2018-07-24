@@ -20,6 +20,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 import datetime
+from koalixcrm.crm.tests.test_support_functions import *
 
 
 class ReportingCalculationsTest(TestCase):
@@ -232,10 +233,16 @@ class ReportingCalculationsUITest(LiveServerTestCase):
         except TimeoutException:
             print("Timed out waiting for page to load")
         # find the form element
-        project = selenium.find_element_by_xpath('//*[@id="id_form-0-projects"]')
-        task = selenium.find_element_by_xpath('//*[@id="id_form-0-task"]')
-        date = selenium.find_element_by_xpath('//*[@id="id_form-0-date"]')
-        start_time = selenium.find_element_by_xpath('//*[@id="id_form-0-start_time"]')
-        stop_time = selenium.find_element_by_xpath('//*[@id="id_form-0-stop_time"]')
-        description = selenium.find_element_by_xpath('//*[@id="id_form-0-description"]')
-        save = selenium.find_element_by_name('save')
+        assert_when_element_does_not_exist(self, '//*[@id="id_form-0-projects"]')
+        assert_when_element_does_not_exist(self, '//*[@id="id_form-0-task"]')
+        assert_when_element_does_not_exist(self, '//*[@id="id_form-0-date"]')
+        assert_when_element_does_not_exist(self, '//*[@id="id_form-0-start_time"]')
+        assert_when_element_does_not_exist(self, '//*[@id="id_form-0-stop_time"]')
+        assert_when_element_does_not_exist(self, '//*[@id="id_form-0-description"]')
+        assert_when_element_does_not_exist(self, 'save')
+        # check existence of a second form before pressing add more
+        assert_when_element_exists(self, '//*[@id="id_form-1-projects"]')
+        add_more_button = selenium.find_element_by_xpath('//*[@id="add_more"]')
+        add_more_button.send_keys(Keys.RETURN)
+        # check existence of a second form before pressing add more
+        assert_when_element_does_not_exist(self, '//*[@id="id_form-1-projects"]')

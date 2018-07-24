@@ -128,7 +128,7 @@ PROJECT_ROOT = BASE_DIR
 
 # Settings specific for koalixcrm
 PDF_OUTPUT_ROOT = os.path.join(STATIC_ROOT, 'pdf')
-FOP_EXECUTABLE = "/usr/bin/fop-2.2/fop/fop"
+FOP_EXECUTABLE = "/usr/bin/fop"
 
 # Settings specific for filebrowser
 FILEBROWSER_DIRECTORY = 'media/uploads/'

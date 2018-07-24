@@ -150,7 +150,9 @@ class OptionInvoice(OptionSalesDocument):
                     return HttpResponseRedirect(request.get_full_path())
         else:
             form = self.PaymentForm
-            c = {'action_checkbox_name': helpers.ACTION_CHECKBOX_NAME, 'queryset': queryset, 'form': form}
+            c = {'action_checkbox_name': helpers.ACTION_CHECKBOX_NAME,
+                 'queryset': queryset,
+                 'form': form}
             c.update(csrf(request))
             return render(request, 'crm/admin/register_payment.html', c)
 

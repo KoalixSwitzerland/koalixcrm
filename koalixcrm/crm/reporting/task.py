@@ -14,13 +14,30 @@ import koalixcrm
 
 
 class Task(models.Model):
-    title = models.CharField(verbose_name=_("Title"), max_length=100, blank=True, null=True)
-    planned_start_date = models.DateField(verbose_name=_("Planned Start Date"), blank=True, null=True)
-    planned_end_date = models.DateField(verbose_name=_("Planned End Date"), blank=True, null=True)
-    project = models.ForeignKey("Project", verbose_name=_('Project'), blank=False, null=False)
-    description = models.TextField(verbose_name=_("Description"), blank=True, null=True)
-    status = models.ForeignKey("TaskStatus", verbose_name=_('Task Status'), blank=True, null=True)
-    last_status_change = models.DateField(verbose_name=_("Last Status Change"), blank=True, null=False)
+    title = models.CharField(verbose_name=_("Title"),
+                             max_length=100,
+                             blank=True,
+                             null=True)
+    planned_start_date = models.DateField(verbose_name=_("Planned Start Date"),
+                                          blank=True,
+                                          null=True)
+    planned_end_date = models.DateField(verbose_name=_("Planned End Date"),
+                                        blank=True,
+                                        null=True)
+    project = models.ForeignKey("Project",
+                                verbose_name=_('Project'),
+                                related_name='tasks',
+                                blank=False,
+                                null=False)
+    description = models.TextField(verbose_name=_("Description"),
+                                   blank=True,
+                                   null=True)
+    status = models.ForeignKey("TaskStatus", verbose_name=_('Task Status'),
+                               blank=True,
+                               null=True)
+    last_status_change = models.DateField(verbose_name=_("Last Status Change"),
+                                          blank=True,
+                                          null=False)
 
     def link_to_task(self):
         if self.id:
@@ -193,7 +210,7 @@ class InlineTasks(admin.TabularInline):
         return False
 
 
-class TaskJSONSerializer(serializers.HyperlinkedModelSerializer):
+class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
         fields = ('id',

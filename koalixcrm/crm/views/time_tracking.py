@@ -2,7 +2,6 @@
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render
 from django.template.context_processors import csrf
-from django.contrib.admin import helpers
 from django.contrib.admin.widgets import *
 from django.contrib.auth.decorators import login_required
 from koalixcrm.djangoUserExtension.models import UserExtension
@@ -188,6 +187,7 @@ def update_range_selection_form(old_range_selection_form):
                          'original_to_date': to_date}
     range_selection_form = RangeSelectionForm(initial=initial_form_data)
     return range_selection_form
+
 
 @login_required
 def work_report(request):
