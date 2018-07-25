@@ -5,8 +5,6 @@ from subprocess import check_output
 from subprocess import STDOUT
 from django.conf import settings
 from django.core import serializers
-from django.utils.translation import ugettext as _
-from koalixcrm.crm.exceptions import *
 from lxml import etree
 import koalixcrm.crm.documents.salesdocument
 import koalixcrm.djangoUserExtension.models
