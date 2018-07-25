@@ -15,4 +15,6 @@ from .base_settings import *
 import dj_database_url
 DATABASES = { 'default': dj_database_url.config(conn_max_age=500) }
 
+GRAPPELLI_INDEX_DASHBOARD = 'projectsettings.dashboard.CustomIndexDashboard'
+
 ALLOWED_HOSTS = ['koalix-crm.herokuapp.com']
