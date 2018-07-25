@@ -27,6 +27,5 @@ deploy:
     repo: scaphilo/koalixcrm
   run:
   - "python manage.py collectstatic --settings=projectsettings.settings.heroku_settings --noinput"
-  - "python manage.py makemigrations --settings=projectsettings.settings.heroku_settings"
   - "python manage.py migrate --settings=projectsettings.settings.heroku_settings"
   - "echo \"from django.contrib.auth.models import User; User.objects.create_superuser('Admin002', 'admin002@koalixcrm.com', 'admin002');\" | python manage.py shell"
