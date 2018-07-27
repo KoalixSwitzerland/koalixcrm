@@ -81,7 +81,7 @@ class UserExtension(models.Model):
         weeks = dict()
         months = dict()
         projects = self.user_contribution_project(date_from, date_to)
-        objects = [self, ]
+        objects = [self, self.user]
         objects.extend(projects)
         main_xml = PDFExport.write_xml(objects)
         while date < date_from:
