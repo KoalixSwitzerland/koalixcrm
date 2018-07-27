@@ -152,12 +152,13 @@
                               margin-top="2cm">
                         Work Report
                     </fo:block>
+                    <xsl:variable name="report_of_user" select="object[@model='djangoUserExtension.userextension']/field[@name='user']"/>
                     <fo:block font-size="10pt"
                               font-family="BitstreamVeraSans"
                               color="black"
                               text-align="left"
                               font-weight="bold">
-                        Employee: <xsl:value-of select="object[@model='auth.user']/field[@name='username']"/>
+                        Employee: <xsl:value-of select="object[@model='auth.user' and @pk=$report_of_user]/field[@name='username']"/>
                     </fo:block>
                     <fo:block font-size="10pt"
                               font-family="BitstreamVeraSans"
@@ -212,6 +213,7 @@
                             <xsl:for-each select="../../object[@model='djangoUserExtension.userextension']/Day_Work_Hours[@month=$current_month]">
                                 <fo:table-column column-width="0.6cm"/>
                             </xsl:for-each>
+                            <fo:table-column column-width="1.2cm"/>
                             <fo:table-header font-size="6pt"
                                              line-height="9pt"
                                              font-weight="bold"
@@ -233,6 +235,12 @@
                                             </fo:block>
                                         </fo:table-cell>
                                     </xsl:for-each>
+                                    <fo:table-cell border-color="black"
+                                                   border-style="solid"
+                                                   border-width="0.5pt"
+                                                   padding="2.5pt">
+                                    <fo:block text-align="start">Total</fo:block>
+                                    </fo:table-cell>
                                 </fo:table-row>
                             </fo:table-header>
                             <fo:table-body font-size="6pt"
@@ -248,15 +256,66 @@
                                             </fo:block>
                                         </fo:table-cell>
                                         <xsl:for-each select="../object[@model='djangoUserExtension.userextension']/Day_Project_Work_Hours[@month=$current_month and @project=current()/@pk]">
-                                            <fo:table-cell border-color="black"
-                                                           border-style="solid"
-                                                           border-width="0.5pt"
-                                                           padding="2.5pt">
-                                                <fo:block text-align="start">
-                                                    <xsl:value-of select="current()"/>
-                                                </fo:block>
-                                            </fo:table-cell>
+                                            <xsl:choose>
+                                                <xsl:when test="current() = '0'">
+                                                    <fo:table-cell border-color="black"
+                                                                   border-style="solid"
+                                                                   border-width="0.5pt"
+                                                                   padding="2.5pt">
+                                                        <fo:block text-align="start">-</fo:block>
+                                                    </fo:table-cell>
+                                                </xsl:when>
+                                                <xsl:when test="current() = '-'">
+                                                    <fo:table-cell border-color="black"
+                                                                   border-style="solid"
+                                                                   border-width="0.5pt"
+                                                                   padding="2.5pt"
+                                                                   background-color="#DDDDDD">
+                                                        <fo:block text-align="start" />
+                                                    </fo:table-cell>
+                                                </xsl:when>
+                                                <xsl:otherwise>
+                                                    <fo:table-cell border-color="black"
+                                                                   border-style="solid"
+                                                                   border-width="0.5pt"
+                                                                   padding="2.5pt">
+                                                        <fo:block text-align="start">
+                                                            <xsl:value-of select="format-number(current(), '#.#0,0', 'european')"/>
+                                                        </fo:block>
+                                                    </fo:table-cell>
+                                                </xsl:otherwise>
+                                            </xsl:choose>
                                         </xsl:for-each>
+                                        <xsl:variable name="monthly_project_total" select="../object[@model='djangoUserExtension.userextension']/Month_Project_Work_Hours[@month=$current_month and @project=current()/@pk]"/>
+                                        <xsl:choose>
+                                            <xsl:when test="$monthly_project_total = '0'">
+                                                <fo:table-cell border-color="black"
+                                                               border-style="solid"
+                                                               border-width="0.5pt"
+                                                               padding="2.5pt">
+                                                    <fo:block text-align="start">-</fo:block>
+                                                </fo:table-cell>
+                                            </xsl:when>
+                                            <xsl:when test="$monthly_project_total = '-'">
+                                                <fo:table-cell border-color="black"
+                                                               border-style="solid"
+                                                               border-width="0.5pt"
+                                                               padding="2.5pt"
+                                                               background-color="#DDDDDD">
+                                                    <fo:block text-align="start" />
+                                                </fo:table-cell>
+                                            </xsl:when>
+                                            <xsl:otherwise>
+                                                <fo:table-cell border-color="black"
+                                                               border-style="solid"
+                                                               border-width="0.5pt"
+                                                               padding="2.5pt">
+                                                    <fo:block text-align="start">
+                                                        <xsl:value-of select="format-number($monthly_project_total, '#.#0,0', 'european')"/>
+                                                    </fo:block>
+                                                </fo:table-cell>
+                                            </xsl:otherwise>
+                                        </xsl:choose>
                                     </fo:table-row>
                                 </xsl:for-each>
                                 <fo:table-row>
@@ -269,15 +328,66 @@
                                         </fo:block>
                                     </fo:table-cell>
                                     <xsl:for-each select="../../object[@model='djangoUserExtension.userextension']/Day_Work_Hours[@month=$current_month]">
-                                        <fo:table-cell border-color="black"
-                                                       border-style="solid"
-                                                       border-width="0.5pt"
-                                                       padding="2.5pt">
-                                            <fo:block text-align="start">
-                                                <xsl:value-of select="current()"/>
-                                            </fo:block>
-                                        </fo:table-cell>
+                                        <xsl:choose>
+                                            <xsl:when test="current() = '0'">
+                                                <fo:table-cell border-color="black"
+                                                               border-style="solid"
+                                                               border-width="0.5pt"
+                                                               padding="2.5pt">
+                                                <fo:block text-align="start">-</fo:block>
+                                                </fo:table-cell>
+                                            </xsl:when>
+                                            <xsl:when test="current() = '-'">
+                                                <fo:table-cell border-color="black"
+                                                               border-style="solid"
+                                                               border-width="0.5pt"
+                                                               padding="2.5pt"
+                                                               background-color="#DDDDDD">
+                                                    <fo:block text-align="start" />
+                                                </fo:table-cell>
+                                            </xsl:when>
+                                            <xsl:otherwise>
+                                                <fo:table-cell border-color="black"
+                                                               border-style="solid"
+                                                               border-width="0.5pt"
+                                                               padding="2.5pt">
+                                                    <fo:block text-align="start">
+                                                        <xsl:value-of select="format-number(current(), '#.#0,0', 'european')"/>
+                                                    </fo:block>
+                                                </fo:table-cell>
+                                            </xsl:otherwise>
+                                        </xsl:choose>
                                     </xsl:for-each>
+                                    <xsl:variable name="monthly_total" select="../../object[@model='djangoUserExtension.userextension']/Month_Work_Hours[@month=$current_month]"/>
+                                    <xsl:choose>
+                                        <xsl:when test="$monthly_total = '0'">
+                                            <fo:table-cell border-color="black"
+                                                           border-style="solid"
+                                                           border-width="0.5pt"
+                                                           padding="2.5pt">
+                                                <fo:block text-align="start">-</fo:block>
+                                            </fo:table-cell>
+                                        </xsl:when>
+                                        <xsl:when test="$monthly_total = '-'">
+                                            <fo:table-cell border-color="black"
+                                                           border-style="solid"
+                                                           border-width="0.5pt"
+                                                           padding="2.5pt"
+                                                           background-color="#DDDDDD">
+                                                <fo:block text-align="start" />
+                                            </fo:table-cell>
+                                        </xsl:when>
+                                        <xsl:otherwise>
+                                            <fo:table-cell border-color="black"
+                                                           border-style="solid"
+                                                           border-width="0.5pt"
+                                                           padding="2.5pt">
+                                                <fo:block text-align="start">
+                                                    <xsl:value-of select="format-number($monthly_total, '#.#0,0', 'european')"/>
+                                                </fo:block>
+                                            </fo:table-cell>
+                                        </xsl:otherwise>
+                                    </xsl:choose>
                                 </fo:table-row>
                             </fo:table-body>
                         </fo:table>
