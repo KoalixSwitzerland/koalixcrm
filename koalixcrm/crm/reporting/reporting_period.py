@@ -8,6 +8,8 @@ from koalixcrm.crm.documents.pdfexport import PDFExport
 from koalixcrm.crm.exceptions import ReportingPeriodNotFound
 from koalixcrm.crm.reporting.work import InlineWork
 from rest_framework import serializers
+from django.core.exceptions import ValidationError
+from django.forms import ModelForm
 
 
 class ReportingPeriod(models.Model):
@@ -30,12 +32,11 @@ class ReportingPeriod(models.Model):
     status = models.ForeignKey("ReportingPeriodStatus",
                                verbose_name=_("Reporting Period Status"),
                                blank=True,
-                               null=True),
-
+                               null=True)
 
     @staticmethod
     def get_reporting_period(project, search_date):
-        """Returns the reporting period that is currently valid. Valid is a reporting period when the current date
+        """Returns the reporting period that is currently valid. Valid is a reporting period when the provided date
           lies between begin and end of the reporting period
 
         Args:
@@ -128,12 +129,34 @@ class ReportingPeriod(models.Model):
         verbose_name_plural = _('Reporting Periods')
 
 
-class OptionReportingPeriod(admin.ModelAdmin):
+class ReportingPeriodAdminForm(ModelForm):
+    def clean(self):
+        """Check that the begin of the new reporting period is not located within an existing
+        reporting period, Checks that the begin is date earlier than the end"""
+        cleaned_data = super().clean()
+        project = cleaned_data['project']
+        end = cleaned_data['end']
+        begin = cleaned_data['begin']
+        reporting_periods = ReportingPeriod.objects.filter(project=project)
+        for reporting_period in reporting_periods:
+            if (begin < reporting_period.end) and (begin > reporting_period.begin):
+                raise ValidationError('The Reporting Period overlaps with an existing '
+                                      'Reporting Period within the same project')
+            if (end < reporting_period.end) and (end > reporting_period.begin):
+                raise ValidationError('The Reporting Period overlaps with an existing '
+                                      'Reporting Period within the same project')
+        if end < begin:
+            raise ValidationError('Begin date must be earlier than end date')
+
+
+class ReportingPeriodAdmin(admin.ModelAdmin):
+    form = ReportingPeriodAdminForm
     list_display = ('id',
                     'project',
                     'title',
                     'begin',
-                    'end')
+                    'end',
+                    'status')
 
     list_display_links = ('id',)
     ordering = ('-id',)
@@ -143,7 +166,8 @@ class OptionReportingPeriod(admin.ModelAdmin):
             'fields': ('project',
                        'title',
                        'begin',
-                       'end')
+                       'end',
+                       'status')
         }),
     )
 
@@ -178,7 +202,8 @@ class InlineReportingPeriod(admin.TabularInline):
             'fields': ('project',
                        'title',
                        'begin',
-                       'end')
+                       'end',
+                       'status')
         }),
     )
     extra = 0

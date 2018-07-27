@@ -69,6 +69,21 @@ class Project(models.Model):
         template_set = self.get_template_set()
         return template_set.get_xsl_file()
 
+    def get_reporting_period(self, search_date):
+        from koalixcrm.crm.reporting.reporting_period import ReportingPeriod
+        """Returns the reporting period that is currently valid. Valid is a reporting period when the provided date
+          lies between begin and end of the reporting period
+
+        Args:
+          no arguments
+
+        Returns:
+          accounting_period (ReportPeriod)
+
+        Raises:
+          ReportPeriodNotFound when there is no valid reporting Period"""
+        return ReportingPeriod.get_reporting_period(self, search_date)
+
     def serialize_to_xml(self, **kwargs):
         reporting_period = kwargs.get('reporting_period', None)
         from koalixcrm.djangoUserExtension.models import UserExtension
@@ -241,12 +256,21 @@ class InlineProject(admin.TabularInline):
 
 class ProjectJSONSerializer(serializers.ModelSerializer):
     from koalixcrm.crm.reporting.task import TaskSerializer
-
     tasks = TaskSerializer(many=True, read_only=True)
+
+    is_reporting_allowed = serializers.SerializerMethodField()
+
+    def get_is_reporting_allowed(self, obj):
+        if obj.is_reporting_allowed():
+            return "True"
+        else:
+            return "False"
+
 
     class Meta:
         model = Project
         fields = ('id',
                   'project_manager',
                   'project_name',
-                  'tasks')
+                  'tasks',
+                  'is_reporting_allowed')

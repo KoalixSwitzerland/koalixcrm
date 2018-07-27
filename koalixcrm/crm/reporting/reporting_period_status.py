@@ -22,7 +22,10 @@ class ReportingPeriodStatus(models.Model):
         verbose_name_plural = _('Reporting Period Status')
 
     def __str__(self):
-        return str(self.id) + str(self.title)
+        if self.title:
+            return str(self.title)
+        else:
+            return str(self.id)
 
 
 class OptionReportingPeriodStatus(admin.ModelAdmin):
