@@ -118,6 +118,8 @@ class Project(models.Model):
 
     def effective_effort_overall(self):
         return self.effective_effort(reporting_period=None)
+    effective_effort_overall.short_description = _("Effective Effort [hrs]")
+    effective_effort_overall.tags = True
 
     def effective_effort(self, reporting_period):
         effective_effort_accumulated = 0
@@ -130,6 +132,8 @@ class Project(models.Model):
         for task in Task.objects.filter(project=self.id):
             planned_effort_accumulated += task.planned_effort()
         return planned_effort_accumulated
+    planned_effort.short_description = _("Planned Effort [hrs]")
+    planned_effort.tags = True
 
     def effective_duration(self):
         return "n/a"
@@ -138,40 +142,93 @@ class Project(models.Model):
         tasks = Task.objects.filter(project=self.id)
         if tasks:
             i = 0
+            project_start = datetime.today()
             for task in tasks:
-                if i == 0:
-                    project_start = task.planned_start_date
-                elif task.planned_start_date < project_start:
-                    project_start = task.planned_start_date
-                i = i+1
+                if task.planned_start_date:
+                    if i == 0:
+                        project_start = task.planned_start_date
+                    elif task.planned_start_date < project_start:
+                        project_start = task.planned_start_date
+                    i += 1
             return project_start
         else:
-            None
+            return None
 
     def planned_end(self):
-        i = 0
-        for task in Task.objects.filter(project=self.id):
-            if i == 0:
-                project_start = task.planned_start_date
-            elif task.planned_start_date < project_start:
-                project_start = task.planned_start_date
-            i = i+1
+        tasks = Task.objects.filter(project=self.id)
+        if tasks:
+            i = 0
+            project_end = datetime.today()
+            for task in tasks:
+                if task.planned_end_date:
+                    if i == 0:
+                        project_end = task.planned_end_date
+                    elif task.planned_end > project_end:
+                        project_end = task.planned_end_date
+                    i += 1
+                    return project_end
         else:
-            None
+            return None
 
     def planned_duration(self):
+        """The function return planned overall duration of a project as a string in days
+
+        Args:
+        no arguments
+
+        Returns:
+        duration_in_days (String)
+
+        Raises:
+        No exceptions planned"""
         if (not self.planned_start()) or (not self.planned_end()):
-            return 0
+            duration_in_days = "n/a"
         elif self.planned_start() > self.planned_end():
-            return 0
+            duration_in_days = "n/a"
         else:
-            return self.planned_end()-self.planned_start()
+            duration_in_days = (self.planned_end()-self.planned_start()).days.__str__()
+        return duration_in_days
+    planned_duration.short_description = _("Planned Duration [dys]")
+    planned_duration.tags = True
 
     def get_project_name(self):
+        """The function safely returns a project_name even if the values is empty, in such a case
+        the function returns a n/a"
+
+        Args:
+        no arguments
+
+        Returns:
+        project_name (String)
+
+        Raises:
+        No exceptions planned"""
         if self.project_name:
             return self.project_name
         else:
             return "n/a"
+
+    def is_reporting_allowed(self):
+        from koalixcrm.crm.reporting.reporting_period import ReportingPeriod
+        """The function returns a boolean True when it is allowed to report on the project and 
+        on one of the reporting periods does also allow reporting
+
+        Args:
+          no arguments
+
+        Returns:
+          reporting_allowed (Boolean)
+
+        Raises:
+          No exceptions planned"""
+        reporting_periods = ReportingPeriod.objects.filter(project=self.id, status__is_done=False)
+        if len(reporting_periods) != 0:
+            if not self.project_status.is_done:
+                return True
+            else:
+                return False
+        else:
+            return False
 
     def __str__(self):
         return str(self.id)+" "+self.get_project_name()
@@ -265,7 +322,6 @@ class ProjectJSONSerializer(serializers.ModelSerializer):
             return "True"
         else:
             return "False"
-
 
     class Meta:
         model = Project

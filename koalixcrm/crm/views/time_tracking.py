@@ -49,6 +49,9 @@ class WorkEntry(forms.Form):
             raise forms.ValidationError('date is not within the selected range', code='invalid')
         elif self.to_date < date:
             raise forms.ValidationError('date is not within the selected range', code='invalid')
+        elif not self.cleaned_data["project"].is_reporting_allowed():
+            raise forms.ValidationError('The project is either closed or there is not '
+                                        'reporting period available', code='invalid')
         return date
 
 

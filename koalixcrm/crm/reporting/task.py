@@ -18,10 +18,10 @@ class Task(models.Model):
                              max_length=100,
                              blank=True,
                              null=True)
-    planned_start_date = models.DateField(verbose_name=_("Planned Start Date"),
+    planned_start_date = models.DateField(verbose_name=_("Planned Start"),
                                           blank=True,
                                           null=True)
-    planned_end_date = models.DateField(verbose_name=_("Planned End Date"),
+    planned_end_date = models.DateField(verbose_name=_("Planned End"),
                                         blank=True,
                                         null=True)
     project = models.ForeignKey("Project",
@@ -32,12 +32,24 @@ class Task(models.Model):
     description = models.TextField(verbose_name=_("Description"),
                                    blank=True,
                                    null=True)
-    status = models.ForeignKey("TaskStatus", verbose_name=_('Task Status'),
+    status = models.ForeignKey("TaskStatus", verbose_name=_('Status'),
                                blank=True,
                                null=True)
     last_status_change = models.DateField(verbose_name=_("Last Status Change"),
                                           blank=True,
                                           null=False)
+    previous_status = None
+
+    def __init__(self, *args, **kwargs):
+        super(Task, self).__init__(*args, **kwargs)
+        self.previous_status = self.status
+
+    def save(self, *args, **kwargs):
+        if not self.previous_status:
+            if self.status != self.previous_status:
+                self.last_status_change = datetime.today()
+            self.last_status_change = datetime.today()
+        super().save(*args, **kwargs)
 
     def link_to_task(self):
         if self.id:
@@ -48,11 +60,14 @@ class Task(models.Model):
 
     def planned_duration(self):
         if (not self.planned_start_date) or (not self.planned_end_date):
-            return 0
+            duration_in_days = "n/a"
         elif self.planned_start_date > self.planned_end_date:
-            return 0
+            duration_in_days = "n/a"
         else:
-            return self.planned_end_date-self.planned_start_date
+            duration_in_days = (self.planned_end_date-self.planned_start_date).days
+        return duration_in_days
+    planned_duration.short_description = _("Planned Duration [dys]")
+    planned_duration.tags = True
 
     def planned_effort(self):
         assignments_to_this_task = EmployeeAssignmentToTask.objects.filter(task=self.id)
@@ -60,6 +75,8 @@ class Task(models.Model):
         for assignment_to_this_task in assignments_to_this_task:
             sum_effort += assignment_to_this_task.planned_effort
         return sum_effort
+    planned_effort.short_description = _("Planned Effort [hrs]")
+    planned_effort.tags = True
 
     def effective_duration(self):
         if self.status:
@@ -69,6 +86,8 @@ class Task(models.Model):
                 else:
                     return self.last_status_change - self.planned_start_date
         return "n/a"
+    effective_duration.short_description = _("Effective Duration [dys]")
+    effective_duration.tags = True
 
     def serialize_to_xml(self, reporting_period):
         objects = [self, ]
@@ -106,6 +125,8 @@ class Task(models.Model):
 
     def effective_effort_overall(self):
         return self.effective_effort(reporting_period=None)
+    effective_effort_overall.short_description = _("Effective Effort [hrs]")
+    effective_effort_overall.tags = True
 
     def effective_effort(self, reporting_period):
         """ effective effort returns the effective effort on a task
@@ -150,6 +171,8 @@ class Task(models.Model):
         else:
             allowed = True
         return allowed
+    is_reporting_allowed.short_description = _("Reporting")
+    is_reporting_allowed.tags = True
 
     def get_title(self):
         if self.title:
@@ -204,9 +227,6 @@ class OptionTask(admin.ModelAdmin):
 class InlineTasks(admin.TabularInline):
     model = Task
     readonly_fields = ('link_to_task',
-                       'planned_start_date',
-                       'planned_end_date',
-                       'status',
                        'last_status_change',
                        'planned_duration',
                        'planned_effort',
@@ -215,6 +235,7 @@ class InlineTasks(admin.TabularInline):
     fieldsets = (
         (_('Task'), {
             'fields': ('link_to_task',
+                       'title',
                        'planned_start_date',
                        'planned_end_date',
                        'status',
@@ -225,10 +246,10 @@ class InlineTasks(admin.TabularInline):
                        'effective_effort_overall')
         }),
     )
-    extra = 0
+    extra = 1
 
     def has_add_permission(self, request):
-        return False
+        return True
 
     def has_delete_permission(self, request, obj=None):
         return False
