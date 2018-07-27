@@ -13,4 +13,5 @@ DATABASES = {
     }
 }
 
+FOP_EXECUTABLE = "/usr/bin/fop-2.2/fop/fop"
 GRAPPELLI_INDEX_DASHBOARD = 'projectsettings.dashboard.CustomIndexDashboard'
