@@ -37,6 +37,7 @@ from koalixcrm.crm.reporting.projectlinktype import *
 from koalixcrm.crm.reporting.projectstatus import *
 from koalixcrm.crm.reporting.genericprojectlink import *
 from koalixcrm.crm.reporting.reporting_period import *
+from koalixcrm.crm.reporting.reporting_period_status import *
 
 
 

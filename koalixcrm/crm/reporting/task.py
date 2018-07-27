@@ -172,6 +172,30 @@ class OptionTask(admin.ModelAdmin):
                InlineGenericTaskLink,
                InlineWork]
 
+    def is_reporting_allowed(self):
+        """Returns True when the task is available for reporting,
+        Returns False when the task is not available for reporting,
+        The decision whether the task is available for reporting is purely depending
+        on the task_status. When the status is done, the task is not longer
+        available for reporting. In all other cases the reporting is allowed.
+
+        Args:
+          no arguments
+
+        Returns:
+          allowed (Boolean)
+
+        Raises:
+           when there is no valid reporting Period"""
+        if self.status:
+            if self.status.is_done:
+                allowed = False
+            else:
+                allowed = True
+        else:
+            allowed = False
+        return allowed
+
     def save_model(self, request, obj, form, change):
         obj.last_status_change = date.today().__str__()
         obj.save()
@@ -213,10 +237,12 @@ class InlineTasks(admin.TabularInline):
 class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
+        readonly_fields = ('is_allowed_for_reporting',)
         fields = ('id',
                   'title',
                   'planned_end_date',
                   'planned_start_date',
                   'project',
                   'description',
-                  'status')
+                  'status',
+                  'is_allowed_for_reporting')
