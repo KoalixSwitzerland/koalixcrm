@@ -127,6 +127,30 @@ class Task(models.Model):
         sum_effort_in_hours = sum_effort / 3600
         return sum_effort_in_hours
 
+    def is_reporting_allowed(self):
+        """Returns True when the task is available for reporting,
+        Returns False when the task is not available for reporting,
+        The decision whether the task is available for reporting is purely depending
+        on the task_status. When the status is done, the task is not longer
+        available for reporting. In all other cases the reporting is allowed.
+
+        Args:
+          no arguments
+
+        Returns:
+          allowed (Boolean)
+
+        Raises:
+           when there is no valid reporting Period"""
+        if self.status:
+            if self.status.is_done:
+                allowed = False
+            else:
+                allowed = True
+        else:
+            allowed = True
+        return allowed
+
     def get_title(self):
         if self.title:
             return self.title
@@ -211,6 +235,14 @@ class InlineTasks(admin.TabularInline):
 
 
 class TaskSerializer(serializers.ModelSerializer):
+    is_reporting_allowed = serializers.SerializerMethodField()
+
+    def get_is_reporting_allowed(self, obj):
+        if obj.is_reporting_allowed():
+            return "True"
+        else:
+            return "False"
+
     class Meta:
         model = Task
         fields = ('id',
@@ -219,4 +251,5 @@ class TaskSerializer(serializers.ModelSerializer):
                   'planned_start_date',
                   'project',
                   'description',
-                  'status')
+                  'status',
+                  'is_reporting_allowed')

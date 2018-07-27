@@ -20,10 +20,12 @@
             $('body').on('change', '[id*=projects]', function () {
                 var project_id = $(this).attr('name')
                 var form_number = project_id.slice(5, -9)
-                $.getJSON("/tasks/?format=json", {project: $(this).val()}, function (j) {
+                $.getJSON("/tasks/?format=json", {project: $(this).val()}, function (tasks) {
                     var options = '<option value="">--------&nbsp;</option>';
-                    for (var i = 0; i < j.length; i++) {
-                        options += '<option value="' + j[i].id + '">' + j[i].title + '</option>';
+                    for (var i = 0; i < tasks.length; i++) {
+                        if (tasks[i].is_reporting_allowed === "True") {
+                            options += '<option value="' + tasks[i].id + '">' + tasks[i].title + '</option>';
+                        }
                     }
                     $("#id_form-" + form_number + "-task").html(options);
                     $("#id_form-" + form_number + "-task option:first").attr('selected', 'selected');

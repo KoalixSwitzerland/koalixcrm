@@ -28,23 +28,19 @@ class BaseWorkEntryFormset(forms.models.BaseFormSet):
 
 
 class WorkEntry(forms.Form):
-    task_list = Task.objects.all()
-    projects = forms.ModelChoiceField(Project.objects.all())
-    task = forms.ModelChoiceField(task_list)
+    projects = forms.ModelChoiceField(queryset=Project.objects.filter(reportingperiod__status__is_done=False))
+    task = forms.ModelChoiceField(queryset=Task.objects.filter(status__is_done=False))
     date = forms.DateField(widget=AdminDateWidget)
     start_time = forms.TimeField(widget=AdminTimeWidget)
     stop_time = forms.TimeField(widget=AdminTimeWidget)
     description = forms.CharField(widget=AdminTextareaWidget)
     work_id = forms.IntegerField(widget=forms.HiddenInput(), required=False)
 
-    def __init__(self, *args, **kwargs ):
+    def __init__(self, *args, **kwargs):
         self.from_date = kwargs.pop('from_date')
         self.to_date = kwargs.pop('to_date')
         self.original_from_date = self.from_date
         self.original_to_date = self.to_date
-        project_list = []
-        for task_element in self.task_list:
-            project_list.append(task_element.project)
         super(WorkEntry, self).__init__(*args, **kwargs)
 
     def clean_date(self):
@@ -131,10 +127,10 @@ def create_updated_formset(range_selection_form, request):
 
 def create_new_formset(from_date, to_date, request):
     WorkEntryFormSet = forms.formset_factory(WorkEntry,
-                                               extra=1,
-                                               max_num=60,
-                                               can_delete=True,
-                                               formset=BaseWorkEntryFormset)
+                                             extra=1,
+                                             max_num=60,
+                                             can_delete=True,
+                                             formset=BaseWorkEntryFormset)
     employee = UserExtension.get_user_extension(request.user)
     initial_formset_data = generate_initial_data(from_date,
                                                  to_date,
@@ -199,7 +195,7 @@ def work_report(request):
                 range_selection_form = RangeSelectionForm(request.POST)
                 if range_selection_form.is_valid():
                     formset = load_formset(range_selection_form,
-                                                             request)
+                                           request)
                     if not formset.is_valid():
                         c = {'range_selection_form': range_selection_form,
                              'formset': formset}
