@@ -20,6 +20,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 import datetime
+import pytest
 from koalixcrm.crm.tests.test_support_functions import *
 
 
@@ -98,6 +99,7 @@ class ReportingCalculationsTest(TestCase):
             last_status_change=date_now
         )
 
+    @pytest.mark.back_end_tests
     def test_calculation_of_reported_hours(self):
         datetime_now = datetime.datetime(2024, 1, 1, 0, 00)
         datetime_later_1 = datetime.datetime(2024, 1, 1, 2, 00)
@@ -209,6 +211,7 @@ class ReportingCalculationsUITest(LiveServerTestCase):
     def tearDown(self):
         self.selenium.quit()
 
+    @pytest.mark.front_end_tests
     def test_registration_of_work(self):
         selenium = self.selenium
         # login

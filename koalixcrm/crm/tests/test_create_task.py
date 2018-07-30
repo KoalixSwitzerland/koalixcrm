@@ -14,6 +14,7 @@ from koalixcrm.crm.models import Task
 from koalixcrm.crm.models import SalesDocumentPosition
 from koalixcrm.crm.views.createtask import CreateTaskView
 import datetime
+import pytest
 
 
 class DocumentCalculationsTest(TestCase):
@@ -102,6 +103,7 @@ class DocumentCalculationsTest(TestCase):
                 overwrite_product_price=False,
             )
 
+    @pytest.mark.back_end_tests
     def test_create_task(self):
         test_quote = Quote.objects.get(description="This is a test offer")
         test_user = User.objects.get(username='Username')
