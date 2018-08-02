@@ -36,26 +36,26 @@ class ReportingCalculationsTest(TestCase):
             time_to_payment_date=30,
             payment_reminder_time_to_payment=10
         )
-        test_user=User.objects.create_superuser(
+        test_user = User.objects.create_superuser(
             username='admin',
             password='admin',
             email='admin@admin.com')
         test_customer_group=CustomerGroup.objects.create(
             name="Tripple A"
         )
-        test_customer=Customer.objects.create(
+        test_customer = Customer.objects.create(
             name="John Smith",
             last_modified_by=test_user,
             default_customer_billing_cycle=test_billing_cycle,
         )
         test_customer.is_member_of=[test_customer_group,]
         test_customer.save()
-        test_currency=Currency.objects.create(
+        test_currency = Currency.objects.create(
             description="Swiss Francs",
             short_name="CHF",
             rounding=0.05,
         )
-        test_template_set=TemplateSet.objects.create(
+        test_template_set = TemplateSet.objects.create(
             title="Just an empty Template Set"
         )
         UserExtension.objects.create(
@@ -111,11 +111,11 @@ class ReportingCalculationsTest(TestCase):
         test_task_second = Task.objects.get(title="2nd Test Task")
         test_project = Project.objects.get(project_name="This is a test project")
         self.assertEqual(
-            (test_task_first.planned_duration()).__str__(), "60 days, 0:00:00")
+            (test_task_first.planned_duration()).__str__(), "60")
         self.assertEqual(
             (test_task_first.planned_effort()).__str__(), "0")
         self.assertEqual(
-            (test_task_second.planned_duration()).__str__(), "90 days, 0:00:00")
+            (test_task_second.planned_duration()).__str__(), "90")
         self.assertEqual(
             (test_task_second.planned_effort()).__str__(), "0")
         test_user = User.objects.get(username="admin")
