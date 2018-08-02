@@ -17,6 +17,7 @@ Including another URLconf
 from django.conf.urls.static import *
 from django.contrib.staticfiles.urls import static
 from django.contrib import admin
+from django.shortcuts import redirect
 from django.conf.urls import include
 from filebrowser.sites import site
 from rest_framework import routers
@@ -42,6 +43,7 @@ router.register(r'units', UnitAsJSON)
 admin.autodiscover()
 
 urlpatterns = [
+    url(r'^$', lambda _: redirect('admin:index'), name='index'),
     url(r'^', include(router.urls)),
     url(r'^admin/filebrowser/', include(site.urls)),
     url(r'^grappelli/', include('grappelli.urls')), # grappelli URLS
