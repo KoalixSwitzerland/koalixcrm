@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import datetime
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render
 from django.template.context_processors import csrf
@@ -10,8 +11,6 @@ from koalixcrm.crm.reporting.project import Project
 from koalixcrm.crm.reporting.reporting_period import ReportingPeriod
 from koalixcrm.crm.exceptions import ReportingPeriodNotFound
 from koalixcrm.djangoUserExtension.exceptions import UserExtensionMissing, TooManyUserExtensionsAvailable
-
-import datetime
 from koalixcrm.globalSupportFunctions import limit_string_length
 
 
@@ -49,6 +48,9 @@ class WorkEntry(forms.Form):
             raise forms.ValidationError('date is not within the selected range', code='invalid')
         elif self.to_date < date:
             raise forms.ValidationError('date is not within the selected range', code='invalid')
+        elif not self.cleaned_data["project"].is_reporting_allowed():
+            raise forms.ValidationError('The project is either closed or there is not '
+                                        'reporting period available', code='invalid')
         return date
 
 

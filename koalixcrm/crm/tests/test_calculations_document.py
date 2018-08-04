@@ -1,4 +1,5 @@
 from django.test import TestCase
+import pytest
 from koalixcrm.crm.models import Contract
 from koalixcrm.crm.models import Customer
 from koalixcrm.crm.models import CustomerGroup
@@ -101,6 +102,7 @@ class DocumentCalculationsTest(TestCase):
                 overwrite_product_price=False,
             )
 
+    @pytest.mark.back_end_tests
     def test_calculate_document_price(self):
         datetime_now = datetime.datetime(2024, 1, 1, 0, 00)
         date_now = datetime_now.date()
