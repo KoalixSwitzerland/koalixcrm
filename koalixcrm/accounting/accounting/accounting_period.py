@@ -5,6 +5,7 @@ from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext as _
 from django import forms
+from rest_framework import serializers
 from koalixcrm.accounting.models import Account
 from koalixcrm.crm.documents.pdfexport import PDFExport
 from koalixcrm.accounting.exceptions import AccountingPeriodNotFound
@@ -246,3 +247,14 @@ class OptionAccountingPeriod(admin.ModelAdmin):
 
     actions = ['create_pdf_of_balance_sheet',
                'create_pdf_of_profit_loss_statement']
+
+
+class AccountingPeriodJSONSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = AccountingPeriod
+        fields = ('id',
+                  'title',
+                  'begin',
+                  'end')
+        depth = 1
