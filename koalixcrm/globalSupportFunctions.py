@@ -21,3 +21,15 @@ def xstr(s):
         return ""
     else:
         return str(s)
+
+
+class ConditionalMethodDecorator(object):
+    def __init__(self, dec, condition):
+        self.decorator = dec
+        self.condition = condition
+
+    def __call__(self, func):
+        if not self.condition:
+            # Return the function unchanged, not decorated.
+            return func
+        return self.decorator(func)

@@ -10,7 +10,7 @@ before_install:
 
 install:
   - python setup.py install
-  - pip install -r requirements/heroku_requirements.txte
+  - pip install -r requirements/heroku_requirements.txt
 
 script:
   - pytest --cov=koalixcrm --cov-report xml --cov-report term -m "not version_increase"
