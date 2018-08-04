@@ -10,12 +10,12 @@ before_install:
 
 install:
   - python setup.py install
-  - pip install -r requirements/heroku_requirements.txt
+  - pip install -r requirements/heroku_requirements.txte
 
 script:
   - pytest --cov=koalixcrm --cov-report xml --cov-report term -m "not version_increase"
   - python-codacy-coverage -r coverage.xml
-  - if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then bash pytest -m version_increase; fi
+  - if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then pytest -m version_increase; fi
 
 # Deployment
 deploy:
