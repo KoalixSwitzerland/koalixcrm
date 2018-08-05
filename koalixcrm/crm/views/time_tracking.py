@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render
 from django.template.context_processors import csrf
 from django.contrib.admin.widgets import *
+from django.forms import NumberInput
 from django.contrib.auth.decorators import login_required
 from koalixcrm.djangoUserExtension.models import UserExtension
 from koalixcrm.crm.reporting.task import Task
@@ -27,12 +28,14 @@ class BaseWorkEntryFormset(forms.models.BaseFormSet):
 
 
 class WorkEntry(forms.Form):
-    projects = forms.ModelChoiceField(queryset=Project.objects.filter(reportingperiod__status__is_done=False))
-    task = forms.ModelChoiceField(queryset=Task.objects.filter(status__is_done=False))
-    date = forms.DateField(widget=AdminDateWidget)
+    project = forms.ModelChoiceField(queryset=Project.objects.filter(reportingperiod__status__is_done=False),
+                                     required=True)
+    task = forms.ModelChoiceField(queryset=Task.objects.filter(status__is_done=False),
+                                  required=True)
+    date = forms.DateField(widget=AdminDateWidget, required=True)
     start_time = forms.TimeField(widget=AdminTimeWidget)
     stop_time = forms.TimeField(widget=AdminTimeWidget)
-    description = forms.CharField(widget=AdminTextareaWidget)
+    description = forms.CharField(widget=AdminTextareaWidget, required=True)
     work_id = forms.IntegerField(widget=forms.HiddenInput(), required=False)
 
     def __init__(self, *args, **kwargs):
@@ -42,16 +45,17 @@ class WorkEntry(forms.Form):
         self.original_to_date = self.to_date
         super(WorkEntry, self).__init__(*args, **kwargs)
 
-    def clean_date(self):
-        date = self.cleaned_data['date']
+    def clean(self):
+        cleaned_data = super(WorkEntry, self).clean()
+        date = cleaned_data['date']
         if date < self.from_date:
             raise forms.ValidationError('date is not within the selected range', code='invalid')
         elif self.to_date < date:
             raise forms.ValidationError('date is not within the selected range', code='invalid')
-        elif not self.cleaned_data["project"].is_reporting_allowed():
+        elif not cleaned_data["project"].is_reporting_allowed():
             raise forms.ValidationError('The project is either closed or there is not '
                                         'reporting period available', code='invalid')
-        return date
+        return cleaned_data
 
 
 def generate_initial_data(start_date, stop_date, employee):
@@ -61,7 +65,7 @@ def generate_initial_data(start_date, stop_date, employee):
     for work in list_of_work:
         initial.append({'work_id': work.id,
                         'task': work.task,
-                        'projects': work.task.project,
+                        'project': work.task.project,
                         'date': work.date,
                         'start_time': work.start_time,
                         'stop_time': work.stop_time,

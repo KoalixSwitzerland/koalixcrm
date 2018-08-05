@@ -17,7 +17,7 @@
                     }
                 }
             });
-            $('body').on('change', '[id*=projects]', function () {
+            $('body').on('change', '[id*=project]', function () {
                 var project_id = $(this).attr('name')
                 var form_number = project_id.slice(5, -9)
                 $.getJSON("/tasks/?format=json", {project: $(this).val()}, function (tasks) {
