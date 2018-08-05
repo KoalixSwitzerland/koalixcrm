@@ -37,6 +37,10 @@ class WorkEntry(forms.Form):
     stop_time = forms.TimeField(widget=AdminTimeWidget)
     description = forms.CharField(widget=AdminTextareaWidget, required=True)
     work_id = forms.IntegerField(widget=forms.HiddenInput(), required=False)
+    '''    worked_hours = forms.DecimalField(widget=NumberInput(attrs={'step': 0.1,
+                                                                'min': 0,
+                                                                'max': 24}),
+                                             required=False)'''
 
     def __init__(self, *args, **kwargs):
         self.from_date = kwargs.pop('from_date')
