@@ -33,14 +33,14 @@ class WorkEntry(forms.Form):
     task = forms.ModelChoiceField(queryset=Task.objects.filter(status__is_done=False),
                                   required=True)
     date = forms.DateField(widget=AdminDateWidget, required=True)
-    start_time = forms.TimeField(widget=AdminTimeWidget)
-    stop_time = forms.TimeField(widget=AdminTimeWidget)
-    description = forms.CharField(widget=AdminTextareaWidget, required=True)
-    work_id = forms.IntegerField(widget=forms.HiddenInput(), required=False)
-    '''    worked_hours = forms.DecimalField(widget=NumberInput(attrs={'step': 0.1,
+    start_time = forms.TimeField(widget=AdminTimeWidget, required=False)
+    stop_time = forms.TimeField(widget=AdminTimeWidget, required=False)
+    worked_hours = forms.DecimalField(widget=NumberInput(attrs={'step': 0.1,
                                                                 'min': 0,
                                                                 'max': 24}),
-                                             required=False)'''
+                                      required=False)
+    description = forms.CharField(widget=AdminTextareaWidget, required=True)
+    work_id = forms.IntegerField(widget=forms.HiddenInput(), required=False)
 
     def __init__(self, *args, **kwargs):
         self.from_date = kwargs.pop('from_date')
@@ -48,6 +48,32 @@ class WorkEntry(forms.Form):
         self.original_from_date = self.from_date
         self.original_to_date = self.to_date
         super(WorkEntry, self).__init__(*args, **kwargs)
+
+    @staticmethod
+    def check_working_hours(cleaned_data):
+        """This method checks that the working hour is correctly proved either using the start_stop pattern
+        or by providing the worked_hours in total.
+
+        Args:
+          cleaned_data (Dict):  The cleaned_data must contain the values form the form validation.
+          The django built in form validation must already have been passed
+
+        Returns:
+          True when no ValidationError was raised
+
+        Raises:
+          may raise ValidationError exception"""
+        start_stop_pattern_complete = ("start_time" in cleaned_data) & ("stop_time" in cleaned_data)
+        start_stop_pattern_stop_missing = ("start_time" in cleaned_data) & ("stop_time" not in cleaned_data)
+        start_stop_pattern_start_missing = ("stop_time" in cleaned_data) & ("start_time" not in cleaned_data)
+        worked_hours_pattern = "worked_hours" in cleaned_data
+        if start_stop_pattern_complete & worked_hours_pattern:
+            raise forms.ValidationError('Please either set the start, stop time or worked hours (not both)',
+                                        code='invalid')
+        elif start_stop_pattern_start_missing or start_stop_pattern_stop_missing:
+            raise forms.ValidationError('Set start and stop time',
+                                        code='invalid')
+        return True
 
     def clean(self):
         cleaned_data = super(WorkEntry, self).clean()
@@ -73,6 +99,7 @@ def generate_initial_data(start_date, stop_date, employee):
                         'date': work.date,
                         'start_time': work.start_time,
                         'stop_time': work.stop_time,
+                        'worked_hours': work.worked_hours,
                         'description': work.description})
     return initial
 
@@ -170,6 +197,7 @@ def update_work(form, request):
                                                         form.cleaned_data['start_time'])
             work.stop_time = datetime.datetime.combine(form.cleaned_data['date'],
                                                        form.cleaned_data['stop_time'])
+            work.worked_hours = form.cleaned_data['worked_hours']
             work.description = form.cleaned_data['description']
             work.short_description = limit_string_length(work.description, 100)
             work.save()
@@ -244,6 +272,3 @@ def work_report(request):
             return HttpResponseRedirect(e.view)
         else:
             raise Http404
-        return response
-
-
