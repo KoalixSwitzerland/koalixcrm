@@ -19,7 +19,7 @@
             });
             $('body').on('change', '[id*=project]', function () {
                 var project_id = $(this).attr('name')
-                var form_number = project_id.slice(5, -9)
+                var form_number = project_id.slice(5, -8)
                 $.getJSON("/tasks/?format=json", {project: $(this).val()}, function (tasks) {
                     var options = '<option value="">--------&nbsp;</option>';
                     for (var i = 0; i < tasks.length; i++) {
