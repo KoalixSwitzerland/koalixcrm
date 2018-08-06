@@ -24,7 +24,7 @@ class CustomIndexDashboard(Dashboard):
             _('koalixcrm Version' + KOALIXCRM_VERSION),
             column=1,
             collapsible=True,
-            children = [
+            children=[
                    modules.ModelList(
                     _('Sales Documents and Contracts'),
                     column=1,
@@ -35,48 +35,48 @@ class CustomIndexDashboard(Dashboard):
                             'koalixcrm.crm.documents.deliverynote.DeliveryNote',
                             'koalixcrm.crm.documents.invoice.Invoice',
                             'koalixcrm.crm.documents.paymentreminder.PaymentReminder',),
-                ),
-                modules.ModelList(
-                    _('Scheduler'),
-                    column=1,
-                    css_classes=('collapse closed',),
-                    models=('koalixcrm.crm.contact.contact.CallForContact',
-                            'koalixcrm.crm.contact.contact.VisitForContact',),
-                ),
-                modules.ModelList(
-                    _('Products'),
-                    column=1,
-                    css_classes=('collapse closed',),
-                    models=('koalixcrm.crm.product.product.Product',),
-                ),
-                modules.ModelList(
-                    _('Contacts'),
-                    column=1,
-                    css_classes=('collapse closed',),
-                    models=('koalixcrm.crm.contact.customer.Customer',
-                            'koalixcrm.crm.contact.supplier.Supplier',
-                            'koalixcrm.crm.contact.person.Person',),
-                ),
-                modules.ModelList(
-                    _('Accounting'),
-                    column=1,
-                    css_classes=('collapse closed',),
-                    models=('koalixcrm.accounting.*',),
-                ),
-                modules.ModelList(
-                    _('Projects'),
-                    column=1,
-                    css_classes=('collapse closed',),
-                    models=('koalixcrm.crm.reporting.*',
-                            'koalixcrm.crm.documents.purchaseorder.PurchaseOrder',),
-                ),
-                modules.LinkList(
-                    _('Report Personaly work'),
-                    column=1,
-                    children=[{'title': _('Time Tracking'),
-                               'url': '/koalixcrm/crm/reporting/time_tracking/',
-                               'external': False}]
-                )
+                    ),
+                    modules.ModelList(
+                        _('Scheduler'),
+                        column=1,
+                        css_classes=('collapse closed',),
+                        models=('koalixcrm.crm.contact.contact.CallForContact',
+                                'koalixcrm.crm.contact.contact.VisitForContact',),
+                    ),
+                    modules.ModelList(
+                        _('Products'),
+                        column=1,
+                        css_classes=('collapse closed',),
+                        models=('koalixcrm.crm.product.product.Product',),
+                    ),
+                    modules.ModelList(
+                        _('Contacts'),
+                        column=1,
+                        css_classes=('collapse closed',),
+                        models=('koalixcrm.crm.contact.customer.Customer',
+                                'koalixcrm.crm.contact.supplier.Supplier',
+                                'koalixcrm.crm.contact.person.Person',),
+                    ),
+                    modules.ModelList(
+                        _('Accounting'),
+                        column=1,
+                        css_classes=('collapse closed',),
+                        models=('koalixcrm.accounting.*',),
+                    ),
+                    modules.ModelList(
+                        _('Projects'),
+                        column=1,
+                        css_classes=('collapse closed',),
+                        models=('koalixcrm.crm.reporting.*',
+                                'koalixcrm.crm.documents.purchaseorder.PurchaseOrder',),
+                    ),
+                    modules.LinkList(
+                        _('Report Work And Expenses'),
+                        column=1,
+                        children=[{'title': _('Time Tracking'),
+                                   'url': '/koalixcrm/crm/reporting/time_tracking/',
+                                   'external': False}]
+                    )
 
             ]
         ))

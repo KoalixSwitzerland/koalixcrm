@@ -139,12 +139,7 @@ class Task(models.Model):
             work_objects = koalixcrm.crm.reporting.work.Work.objects.filter(task=self.id)
         sum_effort = 0
         for work_object in work_objects:
-            if (not work_object.start_time) or (not work_object.stop_time):
-                sum_effort = 0
-            elif work_object.start_time > work_object.stop_time:
-                sum_effort += 0
-            else:
-                sum_effort += work_object.effort_seconds()
+            sum_effort += work_object.effort_seconds()
         sum_effort_in_hours = sum_effort / 3600
         return sum_effort_in_hours
 

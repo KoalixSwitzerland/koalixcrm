@@ -4,6 +4,8 @@ from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render
 from django.template.context_processors import csrf
 from django.contrib.admin.widgets import *
+from django.forms import NumberInput
+from django.forms.formsets import BaseFormSet
 from django.contrib.auth.decorators import login_required
 from koalixcrm.djangoUserExtension.models import UserExtension
 from koalixcrm.crm.reporting.task import Task
@@ -17,23 +19,36 @@ from koalixcrm.globalSupportFunctions import limit_string_length
 class RangeSelectionForm(forms.Form):
     from_date = forms.DateField(widget=AdminDateWidget)
     to_date = forms.DateField(widget=AdminDateWidget)
-    original_from_date = forms.DateField(widget=forms.HiddenInput(), required=False)
-    original_to_date = forms.DateField(widget=forms.HiddenInput(), required=False)
+    original_from_date = forms.DateField(widget=forms.HiddenInput(),
+                                         required=False)
+    original_to_date = forms.DateField(widget=forms.HiddenInput(),
+                                       required=False)
 
 
-class BaseWorkEntryFormset(forms.models.BaseFormSet):
-    def __init__(self,*args, **kwargs):
+class BaseWorkEntryFormset(BaseFormSet):
+    def __init__(self, *args, **kwargs):
         super(BaseWorkEntryFormset, self).__init__(*args, **kwargs)
 
 
 class WorkEntry(forms.Form):
-    projects = forms.ModelChoiceField(queryset=Project.objects.filter(reportingperiod__status__is_done=False))
-    task = forms.ModelChoiceField(queryset=Task.objects.filter(status__is_done=False))
-    date = forms.DateField(widget=AdminDateWidget)
-    start_time = forms.TimeField(widget=AdminTimeWidget)
-    stop_time = forms.TimeField(widget=AdminTimeWidget)
-    description = forms.CharField(widget=AdminTextareaWidget)
-    work_id = forms.IntegerField(widget=forms.HiddenInput(), required=False)
+    project = forms.ModelChoiceField(queryset=Project.objects.filter(reportingperiod__status__is_done=False),
+                                     required=True)
+    task = forms.ModelChoiceField(queryset=Task.objects.filter(status__is_done=False),
+                                  required=True)
+    date = forms.DateField(widget=AdminDateWidget,
+                           required=True)
+    start_time = forms.TimeField(widget=AdminTimeWidget,
+                                 required=False)
+    stop_time = forms.TimeField(widget=AdminTimeWidget,
+                                required=False)
+    worked_hours = forms.DecimalField(widget=NumberInput(attrs={'step': 0.1,
+                                                                'min': 0,
+                                                                'max': 24}),
+                                      required=False)
+    description = forms.CharField(widget=AdminTextareaWidget,
+                                  required=True)
+    work_id = forms.IntegerField(widget=forms.HiddenInput(),
+                                 required=False)
 
     def __init__(self, *args, **kwargs):
         self.from_date = kwargs.pop('from_date')
@@ -42,16 +57,51 @@ class WorkEntry(forms.Form):
         self.original_to_date = self.to_date
         super(WorkEntry, self).__init__(*args, **kwargs)
 
-    def clean_date(self):
-        date = self.cleaned_data['date']
-        if date < self.from_date:
-            raise forms.ValidationError('date is not within the selected range', code='invalid')
-        elif self.to_date < date:
-            raise forms.ValidationError('date is not within the selected range', code='invalid')
-        elif not self.cleaned_data["project"].is_reporting_allowed():
+    @staticmethod
+    def check_working_hours(cleaned_data):
+        """This method checks that the working hour is correctly proved either using the start_stop pattern
+        or by providing the worked_hours in total.
+
+        Args:
+          cleaned_data (Dict):  The cleaned_data must contain the values form the form validation.
+          The django built in form validation must already have been passed
+
+        Returns:
+          True when no ValidationError was raised
+
+        Raises:
+          may raise ValidationError exception"""
+        if ("start_time" in cleaned_data) & ("stop_time" in cleaned_data) & ("worked_hours" in cleaned_data):
+            start_stop_pattern_complete = bool(cleaned_data["start_time"]) & bool(cleaned_data["stop_time"])
+            start_stop_pattern_stop_missing = bool(cleaned_data["start_time"]) & (not bool(cleaned_data["stop_time"]))
+            start_stop_pattern_start_missing = (not bool(cleaned_data["start_time"])) & bool(cleaned_data["stop_time"])
+            worked_hours_pattern = bool(cleaned_data["worked_hours"])
+        else:
+            raise forms.ValidationError('Programming error', code='invalid')
+        if start_stop_pattern_complete & worked_hours_pattern:
+            raise forms.ValidationError('Please either set the start, stop time or worked hours (not both)',
+                                        code='invalid')
+        elif start_stop_pattern_start_missing or start_stop_pattern_stop_missing:
+            raise forms.ValidationError('Set start and stop time',
+                                        code='invalid')
+        elif not start_stop_pattern_complete and not worked_hours_pattern:
+            raise forms.ValidationError('Either fill out the start_time and stop_time or the worked_hours',
+                                        code='invalid')
+        return True
+
+    def clean(self):
+        cleaned_data = super(WorkEntry, self).clean()
+        if 'date' in cleaned_data:
+            date = cleaned_data['date']
+            if date < self.from_date:
+                raise forms.ValidationError('date is not within the selected range', code='invalid')
+            elif self.to_date < date:
+                raise forms.ValidationError('date is not within the selected range', code='invalid')
+        if not cleaned_data["project"].is_reporting_allowed():
             raise forms.ValidationError('The project is either closed or there is not '
                                         'reporting period available', code='invalid')
-        return date
+        WorkEntry.check_working_hours(cleaned_data)
+        return cleaned_data
 
 
 def generate_initial_data(start_date, stop_date, employee):
@@ -61,10 +111,11 @@ def generate_initial_data(start_date, stop_date, employee):
     for work in list_of_work:
         initial.append({'work_id': work.id,
                         'task': work.task,
-                        'projects': work.task.project,
+                        'project': work.task.project,
                         'date': work.date,
                         'start_time': work.start_time,
                         'stop_time': work.stop_time,
+                        'worked_hours': work.worked_hours,
                         'description': work.description})
     return initial
 
@@ -158,10 +209,13 @@ def update_work(form, request):
             work.task = form.cleaned_data['task']
             work.employee = UserExtension.get_user_extension(request.user)
             work.date = form.cleaned_data['date']
-            work.start_time = datetime.datetime.combine(form.cleaned_data['date'],
-                                                        form.cleaned_data['start_time'])
-            work.stop_time = datetime.datetime.combine(form.cleaned_data['date'],
-                                                       form.cleaned_data['stop_time'])
+            if bool(form.cleaned_data['start_time']) & bool(form.cleaned_data['stop_time']):
+                work.start_time = datetime.datetime.combine(form.cleaned_data['date'],
+                                                            form.cleaned_data['start_time'])
+                work.stop_time = datetime.datetime.combine(form.cleaned_data['date'],
+                                                           form.cleaned_data['stop_time'])
+            else:
+                work.worked_hours = form.cleaned_data['worked_hours']
             work.description = form.cleaned_data['description']
             work.short_description = limit_string_length(work.description, 100)
             work.save()
@@ -205,7 +259,7 @@ def work_report(request):
                         return render(request, 'crm/admin/time_reporting.html', c)
                     else:
                         for form in formset:
-                            update_work(form,request)
+                            update_work(form, request)
                 formset = create_updated_formset(range_selection_form, request)
                 range_selection_form = update_range_selection_form(range_selection_form)
                 c = {'range_selection_form': range_selection_form,
@@ -236,6 +290,3 @@ def work_report(request):
             return HttpResponseRedirect(e.view)
         else:
             raise Http404
-        return response
-
-

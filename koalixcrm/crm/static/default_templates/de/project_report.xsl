@@ -271,6 +271,20 @@
                                                         </xsl:when>
                                                     </xsl:choose>
                                                 </xsl:for-each>
+                                                <xsl:if test="count(../object[@model='crm.work']/field[@name='task'][text()=$current_task_id]) = 0">
+                                                    <fo:list-item>
+                                                        <fo:list-item-label end-indent="label-end()">
+                                                            <fo:block>
+                                                                <fo:inline font-family="Symbol">-</fo:inline>
+                                                            </fo:block>
+                                                        </fo:list-item-label>
+                                                        <fo:list-item-body start-indent="body-start()">
+                                                            <fo:block>
+                                                                -
+                                                            </fo:block>
+                                                        </fo:list-item-body>
+                                                    </fo:list-item>
+                                                </xsl:if>
                                             </fo:list-block>
                                         </fo:block-container>
                                     </fo:table-cell>
