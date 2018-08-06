@@ -10,11 +10,8 @@ class Migration(migrations.Migration):
     dependencies = [
         ('crm', '0045_auto_20180805_2047'),
     ]
-
     operations = [
-        migrations.AlterField(
+        migrations.RemoveField(
             model_name='work',
-            name='worked_hours',
-            field=models.DecimalField(blank=True, decimal_places=2, max_digits=5, null=True, verbose_name='Worked Hours'),
-        ),
+            name='worked_hours')
     ]
