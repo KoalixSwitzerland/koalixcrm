@@ -55,7 +55,7 @@ class Work(models.Model):
         if not self.start_stop_pattern_complete() and not bool(self.worked_hours):
             return 0
         elif (not bool(self.stop_time)) or (not bool(self.start_time)):
-            return self.worked_hours*3600
+            return float(self.worked_hours)*3600
         else:
             return (self.stop_time - self.start_time).total_seconds()
 
