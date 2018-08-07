@@ -60,7 +60,5 @@ def work_report(request):
             return HttpResponseRedirect(e.view)
         elif isinstance(e, TooManyUserExtensionsAvailable):
             return HttpResponseRedirect(e.view)
-        elif isinstance(e, UserExtensionPhoneAddressMissing):
-            return HttpResponseRedirect(e.view)
         else:
             raise Http404
