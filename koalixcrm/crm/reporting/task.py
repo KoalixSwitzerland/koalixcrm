@@ -147,8 +147,8 @@ class Task(models.Model):
         """Returns True when the task is available for reporting,
         Returns False when the task is not available for reporting,
         The decision whether the task is available for reporting is purely depending
-        on the task_status. When the status is done, the task is not longer
-        available for reporting. In all other cases the reporting is allowed.
+        on the task_status. When the status is done or when the status is unknown,
+        the task is not longer available for reporting.
 
         Args:
           no arguments
@@ -164,7 +164,7 @@ class Task(models.Model):
             else:
                 allowed = True
         else:
-            allowed = True
+            allowed = False
         return allowed
     is_reporting_allowed.short_description = _("Reporting")
     is_reporting_allowed.tags = True
