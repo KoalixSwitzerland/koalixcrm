@@ -7,7 +7,7 @@ def assert_when_element_does_not_exist(testcase, xpath):
     try:
         testcase.selenium.find_element_by_xpath(xpath)
     except NoSuchElementException:
-        assert(xpath+" does not exist")
+        print(xpath+" does not exist")
 
 
 def assert_when_element_exists(testcase, xpath):
@@ -15,4 +15,4 @@ def assert_when_element_exists(testcase, xpath):
         testcase.selenium.find_element_by_xpath(xpath)
     except NoSuchElementException:
         return
-    assert(xpath+" does exist")
+    print(xpath+" does exist")

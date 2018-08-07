@@ -2,6 +2,7 @@
 import datetime
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render
+from django.utils.translation import ugettext as _
 from django.template.context_processors import csrf
 from django.contrib.auth.decorators import login_required
 from koalixcrm.djangoUserExtension.models import UserExtension
@@ -9,6 +10,7 @@ from koalixcrm.crm.exceptions import ReportingPeriodNotFound
 from koalixcrm.djangoUserExtension.exceptions import UserExtensionMissing, TooManyUserExtensionsAvailable
 from koalixcrm.crm.views.range_selection_form import RangeSelectionForm
 from koalixcrm.crm.views.work_entry_fromset import BaseWorkEntryFormset
+from django.contrib import messages
 
 
 @login_required
@@ -31,6 +33,7 @@ def work_report(request):
                     else:
                         for form in formset:
                             form.update_work(request)
+                        messages.success(request, _('you have successfully updated your work'))
                 formset = BaseWorkEntryFormset.create_updated_formset(range_selection_form,
                                                                       employee)
                 range_selection_form.update_from_input()

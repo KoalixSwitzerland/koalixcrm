@@ -12,7 +12,7 @@ from koalixcrm.djangoUserExtension.models import UserExtension
 from koalixcrm.djangoUserExtension.models import TemplateSet
 from koalixcrm.crm.models import Work
 from koalixcrm.crm.models import EmployeeAssignmentToTask
-from django.contrib.auth.models import User
+from koalixcrm.crm.factories.factory_user import GoodUserFactory
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
@@ -26,26 +26,23 @@ from koalixcrm.crm.tests.test_support_functions import *
 
 class ReportingCalculationsTest(TestCase):
     def setUp(self):
-        datetime_now=datetime.datetime(2024, 1, 1, 0, 00)
-        start_date=(datetime_now - datetime.timedelta(days=30)).date()
-        end_date_first_task=(datetime_now + datetime.timedelta(days=30)).date()
-        end_date_second_task=(datetime_now + datetime.timedelta(days=60)).date()
-        date_now=datetime_now.date()
-        test_billing_cycle=CustomerBillingCycle.objects.create(
+        datetime_now = datetime.datetime(2024, 1, 1, 0, 00)
+        start_date = (datetime_now - datetime.timedelta(days=30)).date()
+        end_date_first_task = (datetime_now + datetime.timedelta(days=30)).date()
+        end_date_second_task = (datetime_now + datetime.timedelta(days=60)).date()
+        date_now = datetime_now.date()
+        test_billing_cycle = CustomerBillingCycle.objects.create(
             name="30 days to pay",
             time_to_payment_date=30,
             payment_reminder_time_to_payment=10
         )
-        test_user = User.objects.create_superuser(
-            username='admin',
-            password='admin',
-            email='admin@admin.com')
+        self.test_user = GoodUserFactory.create()
         test_customer_group=CustomerGroup.objects.create(
             name="Tripple A"
         )
         test_customer = Customer.objects.create(
             name="John Smith",
-            last_modified_by=test_user,
+            last_modified_by=self.test_user,
             default_customer_billing_cycle=test_billing_cycle,
         )
         test_customer.is_member_of=[test_customer_group,]
@@ -59,15 +56,15 @@ class ReportingCalculationsTest(TestCase):
             title="Just an empty Template Set"
         )
         UserExtension.objects.create(
-            user=test_user,
+            user=self.test_user,
             default_template_set=test_template_set,
             default_currency=test_currency
         )
         test_project = Project.objects.create(
-            project_manager=test_user,
+            project_manager=self.test_user,
             project_name="This is a test project",
             last_modification=date_now,
-            last_modified_by=test_user
+            last_modified_by=self.test_user
         )
         ReportingPeriod.objects.create(
             project=test_project,
@@ -118,9 +115,8 @@ class ReportingCalculationsTest(TestCase):
             (test_task_second.planned_duration()).__str__(), "90")
         self.assertEqual(
             (test_task_second.planned_effort()).__str__(), "0")
-        test_user = User.objects.get(username="admin")
         test_reporting_period = ReportingPeriod.objects.get(title="This is a Test Period")
-        test_employee = UserExtension.objects.get(user=test_user)
+        test_employee = UserExtension.objects.get(user=self.test_user)
         EmployeeAssignmentToTask.objects.create(
             employee=test_employee,
             planned_effort="2.00",
@@ -231,12 +227,12 @@ class ReportingCalculationsUITest(LiveServerTestCase):
         submit_button.send_keys(Keys.RETURN)
         # after the login, the browser is redirected to the target url /koalixcrm/crm/reporting/time_tracking
         try:
-            element_present = EC.presence_of_element_located((By.ID, 'id_form-0-projects'))
+            element_present = EC.presence_of_element_located((By.ID, 'id_form-0-project'))
             WebDriverWait(selenium, timeout).until(element_present)
         except TimeoutException:
             print("Timed out waiting for page to load")
         # find the form element
-        assert_when_element_does_not_exist(self, '//*[@id="id_form-0-projects"]')
+        assert_when_element_does_not_exist(self, '//*[@id="id_form-0-project"]')
         assert_when_element_does_not_exist(self, '//*[@id="id_form-0-task"]')
         assert_when_element_does_not_exist(self, '//*[@id="id_form-0-date"]')
         assert_when_element_does_not_exist(self, '//*[@id="id_form-0-start_time"]')
@@ -244,8 +240,8 @@ class ReportingCalculationsUITest(LiveServerTestCase):
         assert_when_element_does_not_exist(self, '//*[@id="id_form-0-description"]')
         assert_when_element_does_not_exist(self, 'save')
         # check existence of a second form before pressing add more
-        assert_when_element_exists(self, '//*[@id="id_form-1-projects"]')
+        assert_when_element_exists(self, '//*[@id="id_form-1-project"]')
         add_more_button = selenium.find_element_by_xpath('//*[@id="add_more"]')
         add_more_button.send_keys(Keys.RETURN)
         # check existence of a second form before pressing add more
-        assert_when_element_does_not_exist(self, '//*[@id="id_form-1-projects"]')
+        assert_when_element_does_not_exist(self, '//*[@id="id_form-1-project"]')
