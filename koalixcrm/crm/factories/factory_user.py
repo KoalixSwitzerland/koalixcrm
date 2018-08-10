@@ -4,7 +4,21 @@ import factory
 from django.contrib.auth.models import User
 
 
-class GoodUserFactory(factory.django.DjangoModelFactory):
+class StaffUserFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = User
+
+    username = 'staff_user'
+    email = 'staff_user@staff_user.com'
+
+    password = factory.PostGenerationMethodCall('set_password', 'staff_user')
+
+    is_superuser = False
+    is_staff = True
+    is_active = True
+
+
+class AdminUserFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = User
 
@@ -15,4 +29,18 @@ class GoodUserFactory(factory.django.DjangoModelFactory):
 
     is_superuser = True
     is_staff = True
+    is_active = True
+
+
+class StandardUserFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = User
+
+    username = 'standard'
+    email = 'standard@standard.com'
+
+    password = factory.PostGenerationMethodCall('set_password', 'standard')
+
+    is_superuser = False
+    is_staff = False
     is_active = True
