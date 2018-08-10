@@ -5,9 +5,9 @@ from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext as _
 from django.utils.html import format_html
-from koalixcrm.crm.reporting.genericprojectlink import InlineGenericLinks
+from koalixcrm.crm.reporting.generic_project_link import InlineGenericLinks
 from koalixcrm.crm.reporting.task import InlineTasks
-from koalixcrm.crm.documents.pdfexport import PDFExport
+from koalixcrm.crm.documents.pdf_export import PDFExport
 from koalixcrm.crm.exceptions import TemplateSetMissingInContract
 from koalixcrm.crm.models import Task
 from rest_framework import serializers

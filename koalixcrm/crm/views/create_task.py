@@ -6,10 +6,10 @@ from django.utils.translation import ugettext as _
 from django.contrib.contenttypes.models import ContentType
 from koalixcrm.crm.exceptions import *
 from koalixcrm.djangoUserExtension.exceptions import *
-from koalixcrm.crm.documents.salesdocument import SalesDocument
-from koalixcrm.crm.documents.salesdocumentposition import SalesDocumentPosition
+from koalixcrm.crm.documents.sales_document import SalesDocument
+from koalixcrm.crm.documents.sales_document_position import SalesDocumentPosition
 from koalixcrm.crm.reporting.task import Task
-from koalixcrm.crm.reporting.generictasklink import GenericTaskLink
+from koalixcrm.crm.reporting.generic_task_link import GenericTaskLink
 from koalixcrm.crm.reporting.project import Project
 from koalixcrm.globalSupportFunctions import *
 from datetime import date

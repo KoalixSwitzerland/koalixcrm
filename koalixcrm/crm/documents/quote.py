@@ -7,7 +7,7 @@ from django.utils.translation import ugettext as _
 from django.utils.html import format_html
 from koalixcrm.crm.const.status import *
 from koalixcrm.plugin import *
-from koalixcrm.crm.documents.salesdocument import SalesDocument, OptionSalesDocument
+from koalixcrm.crm.documents.sales_document import SalesDocument, OptionSalesDocument
 
 
 class Quote(SalesDocument):

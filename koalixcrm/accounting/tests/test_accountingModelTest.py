@@ -3,7 +3,7 @@ from koalixcrm.accounting.models import Account
 from koalixcrm.accounting.models import AccountingPeriod
 from koalixcrm.accounting.models import Booking
 from django.contrib.auth.models import User
-from koalixcrm.crm.documents.pdfexport import PDFExport
+from koalixcrm.crm.documents.pdf_export import PDFExport
 import datetime
 
 

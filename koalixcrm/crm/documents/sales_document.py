@@ -9,12 +9,12 @@ from koalixcrm.globalSupportFunctions import xstr
 from koalixcrm.crm.contact.phoneaddress import PhoneAddress
 from koalixcrm.crm.contact.emailaddress import EmailAddress
 from koalixcrm.crm.contact.postaladdress import PostalAddress
-from koalixcrm.crm.documents.salesdocumentposition import SalesDocumentPosition, SalesDocumentInlinePosition
+from koalixcrm.crm.documents.sales_document_position import SalesDocumentPosition, SalesDocumentInlinePosition
 from koalixcrm.djangoUserExtension.models import TextParagraphInDocumentTemplate, UserExtension
 from koalixcrm.crm.product.product import Product
 from koalixcrm.crm.exceptions import TemplateSetMissingInContract
 import koalixcrm.crm.documents.calculations
-from koalixcrm.crm.documents.pdfexport import PDFExport
+from koalixcrm.crm.documents.pdf_export import PDFExport
 
 
 class TextParagraphInSalesDocument(models.Model):
@@ -395,7 +395,7 @@ class OptionSalesDocument(admin.ModelAdmin):
     create_pdf.short_description = _("Create PDF")
 
     def create_project(self, request, queryset):
-        from koalixcrm.crm.views.createtask import CreateTaskView
+        from koalixcrm.crm.views.create_task import CreateTaskView
         for obj in queryset:
             response = CreateTaskView.create_project(self,
                                                      request,

@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from decimal import Decimal
-from koalixcrm.crm.documents.salesdocumentposition import SalesDocumentPosition
-import koalixcrm.crm.documents.salesdocument
+from koalixcrm.crm.documents.sales_document_position import SalesDocumentPosition
 
 
 class Calculations:

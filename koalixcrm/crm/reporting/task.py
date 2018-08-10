@@ -4,10 +4,10 @@ from django.db import models
 from django.utils.translation import ugettext as _
 from django.contrib import admin
 from django.utils.html import format_html
-from koalixcrm.crm.reporting.employeeassignmenttotask import EmployeeAssignmentToTask, InlineEmployeeAssignmentToTask
-from koalixcrm.crm.reporting.generictasklink import InlineGenericTaskLink
+from koalixcrm.crm.reporting.employee_assignment_to_task import EmployeeAssignmentToTask, InlineEmployeeAssignmentToTask
+from koalixcrm.crm.reporting.generic_task_link import InlineGenericTaskLink
 from koalixcrm.crm.reporting.work import InlineWork
-from koalixcrm.crm.documents.pdfexport import PDFExport
+from koalixcrm.crm.documents.pdf_export import PDFExport
 from datetime import *
 from rest_framework import serializers
 import koalixcrm

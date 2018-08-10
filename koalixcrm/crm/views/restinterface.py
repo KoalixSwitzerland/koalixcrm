@@ -9,7 +9,7 @@ from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
 
 from koalixcrm.crm.documents.contract import Contract, ContractJSONSerializer
 from koalixcrm.crm.reporting.task import Task, TaskSerializer
-from koalixcrm.crm.reporting.taskstatus import TaskStatus
+from koalixcrm.crm.reporting.task_status import TaskStatus
 from koalixcrm.crm.reporting.project import Project, ProjectJSONSerializer
 from koalixcrm.crm.product.product import Product, ProductJSONSerializer
 from koalixcrm.crm.product.unit import Unit, UnitJSONSerializer

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render
 from django.template.context_processors import csrf

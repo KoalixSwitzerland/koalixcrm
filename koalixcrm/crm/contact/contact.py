@@ -5,7 +5,7 @@ from django.utils.translation import ugettext as _
 from koalixcrm.crm.contact.phoneaddress import PhoneAddress
 from koalixcrm.crm.contact.emailaddress import EmailAddress
 from koalixcrm.crm.contact.postaladdress import PostalAddress
-from koalixcrm.crm.documents.activity import Call
+from koalixcrm.crm.contact.call import Call
 from koalixcrm.crm.contact.person import *
 from koalixcrm.crm.const.purpose import *
 from koalixcrm.globalSupportFunctions import xstr

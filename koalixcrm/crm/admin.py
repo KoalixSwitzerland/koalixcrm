@@ -2,11 +2,11 @@
 
 from django.contrib import admin
 from koalixcrm.crm.documents.quote import Quote, OptionQuote
-from koalixcrm.crm.documents.purchaseconfirmation import PurchaseConfirmation, OptionPurchaseConfirmation
-from koalixcrm.crm.documents.deliverynote import DeliveryNote, OptionDeliveryNote
+from koalixcrm.crm.documents.purchase_confirmation import PurchaseConfirmation, OptionPurchaseConfirmation
+from koalixcrm.crm.documents.delivery_note import DeliveryNote, OptionDeliveryNote
 from koalixcrm.crm.documents.invoice import Invoice, OptionInvoice
-from koalixcrm.crm.documents.paymentreminder import PaymentReminder, OptionPaymentReminder
-from koalixcrm.crm.documents.purchaseorder import PurchaseOrder, OptionPurchaseOrder
+from koalixcrm.crm.documents.payment_reminder import PaymentReminder, OptionPaymentReminder
+from koalixcrm.crm.documents.purchase_order import PurchaseOrder, OptionPurchaseOrder
 from koalixcrm.crm.documents.contract import Contract, OptionContract
 from koalixcrm.crm.product.tax import Tax, OptionTax
 from koalixcrm.crm.product.unit import Unit, OptionUnit
@@ -18,13 +18,13 @@ from koalixcrm.crm.contact.customergroup import CustomerGroup, OptionCustomerGro
 from koalixcrm.crm.contact.customerbillingcycle import CustomerBillingCycle, OptionCustomerBillingCycle
 from koalixcrm.crm.contact.person import Person
 from koalixcrm.crm.contact.contact import OptionPerson, CallForContact, VisitForContact
-from koalixcrm.crm.documents.activity import OptionCall, OptionVisit
+from koalixcrm.crm.contact.call import OptionCall, OptionVisit
 from koalixcrm.crm.reporting.task import Task, OptionTask
-from koalixcrm.crm.reporting.tasklinktype import TaskLinkType, OptionTaskLinkType
-from koalixcrm.crm.reporting.taskstatus import TaskStatus, OptionTaskStatus
+from koalixcrm.crm.reporting.task_link_type import TaskLinkType, OptionTaskLinkType
+from koalixcrm.crm.reporting.task_status import TaskStatus, OptionTaskStatus
 from koalixcrm.crm.reporting.project import Project, OptionProject
-from koalixcrm.crm.reporting.projectlinktype import ProjectLinkType, OptionProjectLinkType
-from koalixcrm.crm.reporting.projectstatus import ProjectStatus, OptionProjectStatus
+from koalixcrm.crm.reporting.project_link_type import ProjectLinkType, OptionProjectLinkType
+from koalixcrm.crm.reporting.project_status import ProjectStatus, OptionProjectStatus
 from koalixcrm.crm.reporting.work import Work, OptionWork
 from koalixcrm.crm.reporting.reporting_period import ReportingPeriod, ReportingPeriodAdmin
 from koalixcrm.crm.reporting.reporting_period_status import ReportingPeriodStatus, OptionReportingPeriodStatus

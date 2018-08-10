@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
+
 import datetime
 from django.http import HttpResponseRedirect, Http404
+from django.contrib import messages
 from django.shortcuts import render
 from django.utils.translation import ugettext as _
 from django.template.context_processors import csrf
@@ -10,7 +12,6 @@ from koalixcrm.crm.exceptions import ReportingPeriodNotFound
 from koalixcrm.djangoUserExtension.exceptions import UserExtensionMissing, TooManyUserExtensionsAvailable
 from koalixcrm.crm.views.range_selection_form import RangeSelectionForm
 from koalixcrm.crm.views.work_entry_fromset import BaseWorkEntryFormset
-from django.contrib import messages
 
 
 @login_required

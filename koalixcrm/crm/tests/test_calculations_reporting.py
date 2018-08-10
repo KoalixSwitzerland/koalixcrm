@@ -12,7 +12,7 @@ from koalixcrm.djangoUserExtension.models import UserExtension
 from koalixcrm.djangoUserExtension.models import TemplateSet
 from koalixcrm.crm.models import Work
 from koalixcrm.crm.models import EmployeeAssignmentToTask
-from koalixcrm.crm.factories.factory_user import GoodUserFactory
+from koalixcrm.crm.factories.factory_user import AdminUserFactory
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
@@ -36,7 +36,7 @@ class ReportingCalculationsTest(TestCase):
             time_to_payment_date=30,
             payment_reminder_time_to_payment=10
         )
-        self.test_user = GoodUserFactory.create()
+        self.test_user = AdminUserFactory.create()
         test_customer_group=CustomerGroup.objects.create(
             name="Tripple A"
         )

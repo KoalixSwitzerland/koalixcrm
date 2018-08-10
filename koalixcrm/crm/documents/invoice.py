@@ -10,8 +10,8 @@ from django.utils.html import format_html
 from koalixcrm.crm.const.status import *
 from koalixcrm.crm.exceptions import *
 from koalixcrm import accounting
-from koalixcrm.crm.documents.salesdocument import SalesDocument, OptionSalesDocument
-from koalixcrm.crm.documents.salesdocumentposition import SalesDocumentPosition
+from koalixcrm.crm.documents.sales_document import SalesDocument, OptionSalesDocument
+from koalixcrm.crm.documents.sales_document_position import SalesDocumentPosition
 from koalixcrm.plugin import *
 from koalixcrm.accounting.models import Account
 from django.contrib.admin import helpers

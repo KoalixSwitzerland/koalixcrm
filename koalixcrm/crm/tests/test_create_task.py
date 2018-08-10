@@ -12,7 +12,7 @@ from koalixcrm.crm.models import Quote
 from koalixcrm.crm.models import Price
 from koalixcrm.crm.models import Task
 from koalixcrm.crm.models import SalesDocumentPosition
-from koalixcrm.crm.views.createtask import CreateTaskView
+from koalixcrm.crm.views.create_task import CreateTaskView
 import datetime
 import pytest
 

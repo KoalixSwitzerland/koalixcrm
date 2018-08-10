@@ -7,7 +7,7 @@ from rest_framework import serializers
 
 from koalixcrm.accounting.const.accountTypeChoices import *
 from koalixcrm.accounting.exceptions import AccountingPeriodNotFound
-from koalixcrm.crm.documents.pdfexport import PDFExport
+from koalixcrm.crm.documents.pdf_export import PDFExport
 
 
 class Account(models.Model):
