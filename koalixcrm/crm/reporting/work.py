@@ -100,11 +100,11 @@ class Work(models.Model):
         self.check_working_hours()
         return cleaned_data
 
-    def delete(self):
+    def delete(self, using, keep_parents):
         if self.reporting_period.status.is_done:
             raise ReportingPeriodDoneDeleteNotPossible()
         else:
-            super(Work, self).delete()
+            super(Work, self).delete(using, keep_parents)
 
     class Meta:
         app_label = "crm"

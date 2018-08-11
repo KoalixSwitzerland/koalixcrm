@@ -91,9 +91,10 @@ class OptionCustomer(admin.ModelAdmin):
     pluginProcessor = PluginProcessor()
     inlines.extend(pluginProcessor.getPluginAdditions("customerInline"))
 
-    def get_postal_address(self, obj):
+    @staticmethod
+    def get_postal_address(obj):
         return PostalAddressForContact.objects.filter(person=obj.id).first()
-    
+
     def get_state(self, obj):
         address = self.get_postal_address(obj)
         return address.state if address is not None else None
@@ -106,7 +107,8 @@ class OptionCustomer(admin.ModelAdmin):
 
     get_town.short_description = _("City")
 
-    def get_is_lead(self, obj):
+    @staticmethod
+    def get_is_lead(obj):
         return obj.is_lead
 
     get_is_lead.short_description = _("Is Lead")

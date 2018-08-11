@@ -297,10 +297,10 @@ class OptionSalesDocument(admin.ModelAdmin):
                SalesDocumentPostalAddress, SalesDocumentPhoneAddress,
                SalesDocumentEmailAddress]
 
-    def response_add(self, request, new_object):
+    def response_add(self, request, new_object, post_url_continue):
         obj = self.after_saving_model_and_related_inlines(request, new_object)
         obj.custom_date_field = date.today().__str__()
-        return super(OptionSalesDocument, self).response_add(request, obj)
+        return super(OptionSalesDocument, self).response_add(request, obj, post_url_continue)
 
     def response_change(self, request, new_object):
         obj = self.after_saving_model_and_related_inlines(request, new_object)

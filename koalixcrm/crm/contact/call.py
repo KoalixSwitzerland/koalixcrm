@@ -60,11 +60,12 @@ class CallOverdueFilter(admin.SimpleListFilter):
 class OptionCall(admin.ModelAdmin):
     list_display = ('id',
                     'description',
-                    'cperson',
                     'date_due',
                     'purpose',
                     'status',
-                    'is_call_overdue',)
+                    'cperson',
+                    'is_call_overdue',
+                    'get_contact_name')
     fieldsets = (('', {'fields': ('staff',
                                   'description',
                                   'date_due',
@@ -74,12 +75,14 @@ class OptionCall(admin.ModelAdmin):
                                   'status')}),)
     list_filter = [CallOverdueFilter]
 
-    def get_contact_name(self, obj):
+    @staticmethod
+    def get_contact_name(obj):
         return obj.company.name
 
     get_contact_name.short_description = _("Company")
 
-    def is_call_overdue(self, obj):
+    @staticmethod
+    def is_call_overdue(obj):
         if obj.date_due < timezone.now() and obj.status not in ['F', 'S']:
             overdue = True
         else:
@@ -106,7 +109,8 @@ class OptionVisit(admin.ModelAdmin):
                                   'cperson',
                                   'status')}),)
 
-    def get_contact_name(self, obj):
+    @staticmethod
+    def get_contact_name(obj):
         return obj.company.name
 
     get_contact_name.short_description = _("Company")

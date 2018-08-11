@@ -161,7 +161,7 @@ class OptionPerson(admin.ModelAdmin):
             items.append(c.name)
         return ','.join(items)
     
-    get_companies.short_description = _("Works at")    
+    get_companies.short_description = _("Works at")
 
 
 class CallForContact(Call):
