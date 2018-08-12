@@ -11,7 +11,7 @@ from koalixcrm.crm.documents.sales_document_position import SalesDocumentPositio
 from koalixcrm.crm.reporting.task import Task
 from koalixcrm.crm.reporting.generic_task_link import GenericTaskLink
 from koalixcrm.crm.reporting.project import Project
-from koalixcrm.globalSupportFunctions import *
+from koalixcrm.global_support_functions import *
 from datetime import date
 
 

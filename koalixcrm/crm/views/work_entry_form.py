@@ -5,7 +5,7 @@ from django.forms import NumberInput
 from koalixcrm.crm.reporting.task import Task
 from koalixcrm.crm.reporting.project import Project
 from django.contrib.admin.widgets import *
-from koalixcrm.globalSupportFunctions import limit_string_length
+from koalixcrm.global_support_functions import limit_string_length
 from koalixcrm.djangoUserExtension.models import UserExtension
 from koalixcrm.crm.reporting.reporting_period import ReportingPeriod
 

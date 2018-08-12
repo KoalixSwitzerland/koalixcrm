@@ -1,17 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import factory
-from koalixcrm.crm.models import Task
+from koalixcrm.djangoUserExtension.models import TemplateSet
 
 
-class GoodTaskFactory(factory.Factory):
+class StandardTemplateSetFactory(factory.Factory):
     class Meta:
-        model = Task
+        model = TemplateSet
 
-    title = 'This is a test Task'
-    planned_start_date = '2018-05-02'
-    planned_end_date = '2018-06-15'
-    project = factory.SubFactory(GoodProjectFactory)
-    description = factory.Faker('description')
-    status = factory.Faker('status')
-    last_status_change = factory.Faker('last_status_change')
+    title = "Just an empty Template Set"

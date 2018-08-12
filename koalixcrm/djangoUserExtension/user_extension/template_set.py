@@ -4,7 +4,7 @@ from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext as _
 
-from koalixcrm.globalSupportFunctions import xstr
+from koalixcrm.global_support_functions import xstr
 from koalixcrm.crm.exceptions import *
 
 

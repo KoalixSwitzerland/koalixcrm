@@ -2,10 +2,11 @@
 
 import factory
 from koalixcrm.crm.models import Customer
+from koalixcrm.crm.factories.factory_contact import StandardContactFactory
 from koalixcrm.crm.factories.factory_customer_billing_cycle import StandardCustomerBillingCycleFactory
 
 
-class StandardCustomerFactory(factory.Factory):
+class StandardCustomerFactory(StandardContactFactory):
     class Meta:
         model = Customer
 

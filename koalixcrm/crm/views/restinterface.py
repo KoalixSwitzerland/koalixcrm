@@ -16,7 +16,7 @@ from koalixcrm.crm.product.unit import Unit, UnitJSONSerializer
 from koalixcrm.crm.product.tax import Tax, TaxJSONSerializer
 from koalixcrm.crm.product.currency import CurrencyJSONSerializer, Currency
 from koalixcrm.crm.views.renderer import XSLFORenderer
-from koalixcrm.globalSupportFunctions import ConditionalMethodDecorator
+from koalixcrm.global_support_functions import ConditionalMethodDecorator
 from django.conf import settings
 
 

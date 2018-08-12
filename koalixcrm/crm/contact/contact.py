@@ -2,13 +2,13 @@
 
 from django.contrib import admin
 from django.utils.translation import ugettext as _
-from koalixcrm.crm.contact.phoneaddress import PhoneAddress
-from koalixcrm.crm.contact.emailaddress import EmailAddress
-from koalixcrm.crm.contact.postaladdress import PostalAddress
+from koalixcrm.crm.contact.phone_address import PhoneAddress
+from koalixcrm.crm.contact.email_address import EmailAddress
+from koalixcrm.crm.contact.postal_address import PostalAddress
 from koalixcrm.crm.contact.call import Call
 from koalixcrm.crm.contact.person import *
 from koalixcrm.crm.const.purpose import *
-from koalixcrm.globalSupportFunctions import xstr
+from koalixcrm.global_support_functions import xstr
 from koalixcrm.crm.inlinemixin import LimitedAdminInlineMixin
 
 

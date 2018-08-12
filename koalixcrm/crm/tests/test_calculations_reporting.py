@@ -3,8 +3,6 @@ from django.test import LiveServerTestCase
 from koalixcrm.crm.models import Project
 from koalixcrm.crm.models import ReportingPeriod
 from koalixcrm.crm.models import Customer
-from koalixcrm.crm.models import CustomerGroup
-from koalixcrm.crm.models import CustomerBillingCycle
 from koalixcrm.crm.models import Currency
 from koalixcrm.crm.models import Task
 from koalixcrm.crm.models import TaskStatus
@@ -13,6 +11,12 @@ from koalixcrm.djangoUserExtension.models import TemplateSet
 from koalixcrm.crm.models import Work
 from koalixcrm.crm.models import EmployeeAssignmentToTask
 from koalixcrm.crm.factories.factory_user import AdminUserFactory
+from koalixcrm.crm.factories.factory_customer_billing_cycle import StandardCustomerBillingCycleFactory
+from koalixcrm.crm.factories.factory_customer import StandardCustomerFactory
+from koalixcrm.crm.factories.factory_customer_group import StandardCustomerGroupFactory
+from koalixcrm.crm.factories.factory_currency import StandardCurrencyFactory
+from koalixcrm.crm.factories.factory_reporting_period import StandardReportingPeriodFactory
+from koalixcrm.djangoUserExtension.factories.factory_user_extension import StandardUserExtensionFactory
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
@@ -31,47 +35,14 @@ class ReportingCalculationsTest(TestCase):
         end_date_first_task = (datetime_now + datetime.timedelta(days=30)).date()
         end_date_second_task = (datetime_now + datetime.timedelta(days=60)).date()
         date_now = datetime_now.date()
-        test_billing_cycle = CustomerBillingCycle.objects.create(
-            name="30 days to pay",
-            time_to_payment_date=30,
-            payment_reminder_time_to_payment=10
-        )
+
+        self.test_billing_cycle = StandardCustomerBillingCycleFactory.create()
         self.test_user = AdminUserFactory.create()
-        test_customer_group=CustomerGroup.objects.create(
-            name="Tripple A"
-        )
-        test_customer = Customer.objects.create(
-            name="John Smith",
-            last_modified_by=self.test_user,
-            default_customer_billing_cycle=test_billing_cycle,
-        )
-        test_customer.is_member_of=[test_customer_group,]
-        test_customer.save()
-        test_currency = Currency.objects.create(
-            description="Swiss Francs",
-            short_name="CHF",
-            rounding=0.05,
-        )
-        test_template_set = TemplateSet.objects.create(
-            title="Just an empty Template Set"
-        )
-        UserExtension.objects.create(
-            user=self.test_user,
-            default_template_set=test_template_set,
-            default_currency=test_currency
-        )
-        test_project = Project.objects.create(
-            project_manager=self.test_user,
-            project_name="This is a test project",
-            last_modification=date_now,
-            last_modified_by=self.test_user
-        )
-        ReportingPeriod.objects.create(
-            project=test_project,
-            begin=start_date,
-            end=end_date_first_task,
-            title="This is a Test Period"
-        )
+        self.test_customer_group = StandardCustomerGroupFactory.create()
+        self.test_customer = StandardCustomerFactory.create(is_member_of=(self.test_customer_group,))
+        self.test_currency = StandardCurrencyFactory.create()
+        self.test_user_extension = StandardUserExtensionFactory.create(user=self.test_user)
+        self.test_reporting_period = StandardReportingPeriodFactory.create()
         test_task_status = TaskStatus.objects.create(
             title="planned",
             description="This represents the state when something has been planned but not yet started",
@@ -81,7 +52,7 @@ class ReportingCalculationsTest(TestCase):
             title="Test Task",
             planned_start_date=start_date,
             planned_end_date=end_date_first_task,
-            project=test_project,
+            project=self.test_reporting_period.project,
             description="This is a simple test task",
             status=test_task_status,
             last_status_change=date_now
@@ -90,7 +61,7 @@ class ReportingCalculationsTest(TestCase):
             title="2nd Test Task",
             planned_start_date=start_date,
             planned_end_date=end_date_second_task,
-            project=test_project,
+            project=self.test_reporting_period.project,
             description="This is an other simple test task",
             status=test_task_status,
             last_status_change=date_now
@@ -115,7 +86,6 @@ class ReportingCalculationsTest(TestCase):
             (test_task_second.planned_duration()).__str__(), "90")
         self.assertEqual(
             (test_task_second.planned_effort()).__str__(), "0")
-        test_reporting_period = ReportingPeriod.objects.get(title="This is a Test Period")
         test_employee = UserExtension.objects.get(user=self.test_user)
         EmployeeAssignmentToTask.objects.create(
             employee=test_employee,
@@ -153,7 +123,7 @@ class ReportingCalculationsTest(TestCase):
             short_description="Not really relevant",
             description="Performed some hard work",
             task=test_task_first,
-            reporting_period=test_reporting_period
+            reporting_period=self.test_reporting_period
         )
         Work.objects.create(
             employee=test_employee,
@@ -163,7 +133,7 @@ class ReportingCalculationsTest(TestCase):
             short_description="Not really relevant 2nd part",
             description="Performed some hard work 2nd part",
             task=test_task_first,
-            reporting_period=test_reporting_period
+            reporting_period=self.test_reporting_period
         )
         Work.objects.create(
             employee=test_employee,
@@ -173,7 +143,7 @@ class ReportingCalculationsTest(TestCase):
             short_description="Not really relevant",
             description="Performed some hard work",
             task=test_task_second,
-            reporting_period=test_reporting_period
+            reporting_period=self.test_reporting_period
         )
         Work.objects.create(
             employee=test_employee,
@@ -183,7 +153,7 @@ class ReportingCalculationsTest(TestCase):
             short_description="Not really relevant 2nd part",
             description="Performed some hard work 2nd part",
             task=test_task_second,
-            reporting_period=test_reporting_period
+            reporting_period=self.test_reporting_period
         )
         self.assertEqual(
             (test_task_first.effective_effort(reporting_period=None)).__str__(), "3.5")

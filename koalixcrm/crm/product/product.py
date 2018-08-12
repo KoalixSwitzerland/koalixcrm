@@ -8,7 +8,7 @@ from rest_framework import serializers
 
 import koalixcrm.crm.product.price
 from koalixcrm.accounting.accounting.product_categorie import ProductCategoryMinimalJSONSerializer
-from koalixcrm.crm.contact.customergroup import CustomerGroup
+from koalixcrm.crm.contact.customer_group import CustomerGroup
 from koalixcrm.crm.product.price import ProductPrice
 from koalixcrm.crm.product.tax import Tax, TaxMinimalJSONSerializer
 from koalixcrm.crm.product.unit import ProductUnitTransform

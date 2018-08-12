@@ -5,7 +5,8 @@ from django.utils.translation import ugettext as _
 
 
 class EmailAddress(models.Model):
-    email = models.EmailField(max_length=200, verbose_name=_("Email Address"))
+    email = models.EmailField(max_length=200,
+                              verbose_name=_("Email Address"))
 
     class Meta:
         app_label = "crm"
