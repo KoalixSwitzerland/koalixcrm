@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django import forms
-from koalixcrm.crm.views.work_entry_from import WorkEntry
+from koalixcrm.crm.views.work_entry_form import WorkEntry
 
 
 class BaseWorkEntryFormset(forms.BaseFormSet):

@@ -19,6 +19,8 @@ from koalixcrm.crm.documents.invoice import Invoice
 from koalixcrm.crm.documents.purchase_confirmation import PurchaseConfirmation
 from koalixcrm.crm.documents.purchase_order import PurchaseOrder
 from koalixcrm.crm.documents.quote import Quote
+from koalixcrm.crm.documents.payment_reminder import PaymentReminder
+from koalixcrm.crm.documents.delivery_note import DeliveryNote
 
 from koalixcrm.crm.product.currency import *
 from koalixcrm.crm.product.price import *

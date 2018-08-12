@@ -15,7 +15,8 @@ class Customer(Contact):
     default_customer_billing_cycle = models.ForeignKey('CustomerBillingCycle',
                                                        verbose_name=_('Default Billing Cycle'))
     is_member_of = models.ManyToManyField("CustomerGroup",
-                                          verbose_name=_('Is member of'), blank=True)
+                                          verbose_name=_('Is member of'),
+                                          blank=True)
     is_lead = models.BooleanField(default=True)
 
     def create_contract(self, request):

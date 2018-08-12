@@ -11,7 +11,7 @@ from koalixcrm.djangoUserExtension.models import UserExtension
 from koalixcrm.crm.exceptions import ReportingPeriodNotFound
 from koalixcrm.djangoUserExtension.exceptions import UserExtensionMissing, TooManyUserExtensionsAvailable
 from koalixcrm.crm.views.range_selection_form import RangeSelectionForm
-from koalixcrm.crm.views.work_entry_fromset import BaseWorkEntryFormset
+from koalixcrm.crm.views.work_entry_formset import BaseWorkEntryFormset
 
 
 @login_required
