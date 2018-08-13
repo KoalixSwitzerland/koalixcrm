@@ -9,7 +9,7 @@ from koalixcrm.crm.factories.factory_currency import StandardCurrencyFactory
 from koalixcrm.djangoUserExtension.factories import StandardDefaultTemplateSet
 
 
-class StandardContractFactory(factory.Factory):
+class StandardContractFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Contract
 

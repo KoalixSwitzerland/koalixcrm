@@ -7,6 +7,7 @@ from koalixcrm.crm.models import ReportingPeriodStatus
 class InPreparationReportingPeriodStatusFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = ReportingPeriodStatus
+        django_get_or_create = ('title',)
 
     title = "In Preparation"
     description = "In Preparation, reporting not yet enabled"
@@ -16,6 +17,7 @@ class InPreparationReportingPeriodStatusFactory(factory.django.DjangoModelFactor
 class ReportingReportingPeriodStatusFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = ReportingPeriodStatus
+        django_get_or_create = ('title',)
 
     title = "Reporting"
     description = "Reporting is enabled"
@@ -25,6 +27,7 @@ class ReportingReportingPeriodStatusFactory(factory.django.DjangoModelFactory):
 class DoneReportingPeriodStatusFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = ReportingPeriodStatus
+        django_get_or_create = ('title',)
 
     title = "Done"
     description = "This reporting period is done"

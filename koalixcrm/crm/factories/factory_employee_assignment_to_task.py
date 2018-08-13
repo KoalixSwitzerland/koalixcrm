@@ -6,7 +6,7 @@ from koalixcrm.crm.factories.factory_user import StaffUserFactory
 from koalixcrm.crm.factories.factory_task import StandardTaskFactory
 
 
-class StandardEmployeeAssignmentToTaskFactory(factory.Factory):
+class StandardEmployeeAssignmentToTaskFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = EmployeeAssignmentToTask
 

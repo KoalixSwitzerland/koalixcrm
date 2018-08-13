@@ -7,9 +7,10 @@ from koalixcrm.djangoUserExtension.factories.factory_template_set import Standar
 from koalixcrm.crm.factories.factory_user import StaffUserFactory
 
 
-class StandardProjectFactory(factory.Factory):
+class StandardProjectFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Project
+        django_get_or_create = ('project_name',)
 
     project_manager = factory.SubFactory(StaffUserFactory)
     project_name = "This is a Test Project"

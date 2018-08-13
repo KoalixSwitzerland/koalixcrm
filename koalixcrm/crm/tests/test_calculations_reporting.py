@@ -77,7 +77,6 @@ class ReportingCalculationsTest(TestCase):
         date_now = datetime_now.date()
         test_task_first = Task.objects.get(title="Test Task")
         test_task_second = Task.objects.get(title="2nd Test Task")
-        test_project = Project.objects.get(project_name="This is a test project")
         self.assertEqual(
             (test_task_first.planned_duration()).__str__(), "60")
         self.assertEqual(
@@ -160,9 +159,9 @@ class ReportingCalculationsTest(TestCase):
         self.assertEqual(
             (test_task_second.effective_effort(reporting_period=None)).__str__(), "12.0")
         self.assertEqual(
-            (test_project.effective_effort(reporting_period=None)).__str__(), "15.5")
+            (self.test_reporting_period.project.effective_effort(reporting_period=None)).__str__(), "15.5")
         self.assertEqual(
-            (test_project.planned_effort()).__str__(), "11.50")
+            (self.test_reporting_period.project.planned_effort()).__str__(), "11.50")
 
 
 class ReportingCalculationsUITest(LiveServerTestCase):

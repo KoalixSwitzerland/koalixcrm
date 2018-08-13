@@ -4,9 +4,10 @@ import factory
 from koalixcrm.crm.models import CustomerBillingCycle
 
 
-class StandardCustomerBillingCycleFactory(factory.Factory):
+class StandardCustomerBillingCycleFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = CustomerBillingCycle
+        django_get_or_create = ('name',)
 
     name = "This is a test billing cycle"
     time_to_payment_date = 30

@@ -4,7 +4,7 @@ import factory
 from koalixcrm.crm.models import PostalAddress
 
 
-class StandardPostalAddressFactory(factory.Factory):
+class StandardPostalAddressFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = PostalAddress
 

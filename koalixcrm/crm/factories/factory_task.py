@@ -5,7 +5,7 @@ from koalixcrm.crm.models import Task
 from koalixcrm.crm.factories.factory_project import StandardProjectFactory
 
 
-class StandardTaskFactory(factory.Factory):
+class StandardTaskFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Task
 

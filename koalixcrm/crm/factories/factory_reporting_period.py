@@ -6,9 +6,10 @@ from koalixcrm.crm.factories.factory_project import StandardProjectFactory
 from koalixcrm.crm.factories.factory_reporting_period_status import ReportingReportingPeriodStatusFactory
 
 
-class StandardReportingPeriodFactory(factory.Factory):
+class StandardReportingPeriodFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = ReportingPeriod
+        django_get_or_create = ('title',)
 
     project = factory.SubFactory(StandardProjectFactory)
     title = "This is a test project"

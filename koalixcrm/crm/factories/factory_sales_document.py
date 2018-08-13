@@ -5,12 +5,11 @@ from koalixcrm.crm.models import SalesDocument
 from koalixcrm.crm.factories.factory_user import StaffUserFactory
 from koalixcrm.crm.factories.factory_contract import StandardContractFactory
 from koalixcrm.crm.factories.factory_customer import StandardCustomerFactory
-from koalixcrm.crm.factories.factory_supplier import StandardSupplierFactory
 from koalixcrm.crm.factories.factory_currency import StandardCurrencyFactory
 from koalixcrm.djangoUserExtension.factories import StandardDefaultTemplateSet
 
 
-class StandardSalesDocumentFactory(factory.Factory):
+class StandardSalesDocumentFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = SalesDocument
 

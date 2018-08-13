@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 class StaffUserFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = User
+        django_get_or_create = ('username',)
 
     username = 'staff_user'
     email = 'staff_user@staff_user.com'
@@ -21,6 +22,7 @@ class StaffUserFactory(factory.django.DjangoModelFactory):
 class AdminUserFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = User
+        django_get_or_create = ('username',)
 
     username = 'admin'
     email = 'admin@admin.com'
@@ -35,6 +37,7 @@ class AdminUserFactory(factory.django.DjangoModelFactory):
 class StandardUserFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = User
+        django_get_or_create = ('username',)
 
     username = 'standard'
     email = 'standard@standard.com'

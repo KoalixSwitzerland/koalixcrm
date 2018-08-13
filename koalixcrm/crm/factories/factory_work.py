@@ -7,7 +7,7 @@ from koalixcrm.crm.factories.factory_task import StandardTaskFactory
 from koalixcrm.crm.factories.factory_reporting_period import StandardReportingPeriodFactory
 
 
-class StandardWorkFactory(factory.Factory):
+class StandardWorkFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Work
 

@@ -4,7 +4,7 @@ import factory
 from koalixcrm.djangoUserExtension.models import TemplateSet
 
 
-class StandardTemplateSetFactory(factory.Factory):
+class StandardTemplateSetFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = TemplateSet
 
