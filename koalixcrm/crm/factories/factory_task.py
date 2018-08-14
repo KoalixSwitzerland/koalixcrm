@@ -3,6 +3,7 @@
 import factory
 from koalixcrm.crm.models import Task
 from koalixcrm.crm.factories.factory_project import StandardProjectFactory
+from koalixcrm.crm.factories.factory_task_status import StartedTaskStatusFactory
 
 
 class StandardTaskFactory(factory.django.DjangoModelFactory):
@@ -13,6 +14,6 @@ class StandardTaskFactory(factory.django.DjangoModelFactory):
     planned_start_date = '2018-05-02'
     planned_end_date = '2018-06-15'
     project = factory.SubFactory(StandardProjectFactory)
-    description = factory.Faker('description')
-    status = factory.Faker('status')
-    last_status_change = factory.Faker('last_status_change')
+    description = "This is a description"
+    status = factory.SubFactory(StartedTaskStatusFactory)
+    last_status_change = '2018-06-15'
