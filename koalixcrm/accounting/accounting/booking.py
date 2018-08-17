@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
-from django.db import models
 from django.contrib import admin
+from django.db import models
 from django.utils.translation import ugettext as _
-from rest_framework import serializers
-from koalixcrm.accounting.accounting.account import AccountMinimalJSONSerializer
-from koalixcrm.accounting.models import Account
 
 
 class Booking(models.Model):
@@ -77,79 +74,3 @@ class InlineBookings(admin.TabularInline):
         }),
     )
     allow_add = False
-
-
-class BookingJSONSerializer(serializers.HyperlinkedModelSerializer):
-    fromAccount = AccountMinimalJSONSerializer(source='from_account', allow_null=False)
-    toAccount = AccountMinimalJSONSerializer(source='to_account', allow_null=False)
-    bookingDate = serializers.DateField(source='booking_date', allow_null=False)
-    booking_reference = serializers.DateField(source='booking_date', allow_null=False)
-
-    class Meta:
-        model = Booking
-        fields = ('id',
-                  'fromAccount',
-                  'toAccount',
-                  'description',
-                  'amount',
-                  'bookingDate',
-                  'staff',
-                  'bookingReference')
-        depth = 1
-
-    def create(self, validated_data):
-        booking = Booking()
-        booking.description = validated_data['description']
-        booking.amount = validated_data['description']
-        booking.bookingDate = validated_data['booking_date']
-        booking.staff = validated_data['staff']
-        booking.bookingReference = validated_data['booking_reference']
-
-        # Deserialize from account
-        from_account = validated_data.pop('from_account')
-        if from_account:
-            if from_account.get('id', None):
-                booking.from_account = Account.objects.get(id=from_account.get('id', None))
-            else:
-                booking.from_account = None
-
-        # Deserialize to account
-        to_account = validated_data.pop('to_account')
-        if to_account:
-            if to_account.get('id', None):
-                booking.to_account = Account.objects.get(id=to_account.get('id', None))
-            else:
-                booking.to_account = None
-
-        booking.save()
-        return booking
-
-    def update(self, instance, validated_data):
-        instance.description = validated_data['description']
-        instance.amount = validated_data['description']
-        instance.bookingDate = validated_data['booking_date']
-        instance.staff = validated_data['staff']
-        instance.bookingReference = validated_data['booking_reference']
-
-        # Deserialize from account
-        from_account = validated_data.pop('from_account')
-        if from_account:
-            if from_account.get('id', instance.from_account):
-                instance.from_account = Account.objects.get(id=from_account.get('id', None))
-            else:
-                instance.from_account = instance.from_account_id
-        else:
-            instance.from_account = None
-
-        # Deserialize to account
-        to_account = validated_data.pop('to_account')
-        if to_account:
-            if to_account.get('id', instance.to_account):
-                instance.to_account = Account.objects.get(id=to_account.get('id', None))
-            else:
-                instance.to_account = instance.to_account_id
-        else:
-            instance.to_account = None
-
-        instance.save()
-        return instance

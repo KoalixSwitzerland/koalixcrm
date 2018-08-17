@@ -1,20 +1,15 @@
 # -*- coding: utf-8 -*-
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-
 from rest_framework import viewsets
-from rest_framework_xml.renderers import XMLRenderer
-from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
 
-from koalixcrm.accounting.accounting.account import AccountJSONSerializer
-from koalixcrm.accounting.accounting.accounting_period import AccountingPeriodJSONSerializer
-from koalixcrm.accounting.accounting.booking import BookingJSONSerializer
-from koalixcrm.accounting.accounting.product_categorie import ProductCategoryJSONSerializer
 from koalixcrm.accounting.models import Account, AccountingPeriod, Booking, ProductCategorie
+from koalixcrm.accounting.rest.account_rest import AccountJSONSerializer
+from koalixcrm.accounting.rest.accounting_period_rest import AccountingPeriodJSONSerializer
+from koalixcrm.accounting.rest.booking_rest import BookingJSONSerializer
+from koalixcrm.accounting.rest.product_categorie_rest import ProductCategoryJSONSerializer
 from koalixcrm.globalSupportFunctions import ConditionalMethodDecorator
-from rest_framework import viewsets
-
-from django.conf import settings
 
 
 class AccountAsJSON(viewsets.ModelViewSet):
