@@ -3,7 +3,6 @@
 from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext as _
-from rest_framework import serializers
 
 
 class Currency(models.Model):
@@ -24,14 +23,3 @@ class OptionCurrency(admin.ModelAdmin):
     list_display = ('id', 'description', 'short_name', 'rounding')
     fieldsets = (('', {'fields': ('description', 'short_name', 'rounding')}),)
     allow_add = True
-
-
-class CurrencyJSONSerializer(serializers.HyperlinkedModelSerializer):
-    shortName = serializers.CharField(source='short_name')
-
-    class Meta:
-        model = Currency
-        fields = ('id',
-                  'description',
-                  'shortName',
-                  'rounding')

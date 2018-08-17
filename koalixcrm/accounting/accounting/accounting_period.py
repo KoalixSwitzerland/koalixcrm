@@ -9,7 +9,7 @@ from koalixcrm.accounting.models import Account
 from koalixcrm.crm.documents.pdfexport import PDFExport
 from koalixcrm.accounting.exceptions import AccountingPeriodNotFound
 from koalixcrm.accounting.exceptions import TemplateSetMissingInAccountingPeriod
-from koalixcrm.accounting.accounting.booking import InlineBookings
+from koalixcrm.accounting.models import InlineBookings
 
 
 class AccountingPeriod(models.Model):
