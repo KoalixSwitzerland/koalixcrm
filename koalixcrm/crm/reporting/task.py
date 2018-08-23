@@ -8,9 +8,9 @@ from koalixcrm.crm.reporting.employee_assignment_to_task import EmployeeAssignme
 from koalixcrm.crm.reporting.generic_task_link import InlineGenericTaskLink
 from koalixcrm.crm.reporting.work import InlineWork, Work
 from koalixcrm.crm.documents.pdf_export import PDFExport
-from datetime import *
 from rest_framework import serializers
-import koalixcrm
+from koalixcrm import global_support_functions
+from koalixcrm.crm.reporting.work import Work
 
 
 class Task(models.Model):
@@ -45,10 +45,11 @@ class Task(models.Model):
         self.previous_status = self.status
 
     def save(self, *args, **kwargs):
-        if not self.previous_status:
+        if self.id is not None:
             if self.status != self.previous_status:
-                self.last_status_change = datetime.today()
-            self.last_status_change = datetime.today()
+                self.last_status_change = global_support_functions.get_today_date()
+        elif self.last_status_change is None:
+            self.last_status_change
         super().save(*args, **kwargs)
 
     def link_to_task(self):
@@ -158,10 +159,10 @@ class Task(models.Model):
         objects = [self, ]
         main_xml = PDFExport.write_xml(objects)
         if reporting_period:
-            works = koalixcrm.crm.reporting.work.Work.objects.filter(task=self.id,
-                                                                     reporting_period=reporting_period)
+            works = Work.objects.filter(task=self.id,
+                                        reporting_period=reporting_period)
         else:
-            works = koalixcrm.crm.reporting.work.Work.objects.filter(task=self.id)
+            works = Work.objects.filter(task=self.id)
         for work in works:
             work_xml = work.serialize_to_xml()
             main_xml = PDFExport.merge_xml(main_xml, work_xml)
@@ -198,10 +199,10 @@ class Task(models.Model):
         when reporting_period is None, the effective effort overall is calculated
         when reporting_period is specified, the effective effort in this period is calculated"""
         if reporting_period:
-            work_objects = koalixcrm.crm.reporting.work.Work.objects.filter(task=self.id,
-                                                                            reporting_period=reporting_period)
+            work_objects = Work.objects.filter(task=self.id,
+                                               reporting_period=reporting_period)
         else:
-            work_objects = koalixcrm.crm.reporting.work.Work.objects.filter(task=self.id)
+            work_objects = Work.objects.filter(task=self.id)
         sum_effort = 0
         for work_object in work_objects:
             sum_effort += work_object.effort_seconds()
@@ -278,10 +279,6 @@ class OptionTask(admin.ModelAdmin):
     inlines = [InlineEmployeeAssignmentToTask,
                InlineGenericTaskLink,
                InlineWork]
-
-    def save_model(self, request, obj, form, change):
-        obj.last_status_change = date.today().__str__()
-        obj.save()
 
 
 class InlineTasks(admin.TabularInline):
