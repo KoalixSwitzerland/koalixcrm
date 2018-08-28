@@ -4,7 +4,7 @@ from django.db import models
 from django.utils.translation import ugettext as _
 
 import koalixcrm.crm.product.price
-from koalixcrm.crm.contact.customergroup import CustomerGroup
+from koalixcrm.crm.contact.customer_group import CustomerGroup
 from koalixcrm.crm.product.price import ProductPrice
 from koalixcrm.crm.product.unit import ProductUnitTransform
 from koalixcrm.crm.product.unit import UnitTransform
