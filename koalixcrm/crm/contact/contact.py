@@ -2,22 +2,27 @@
 
 from django.contrib import admin
 from django.utils.translation import ugettext as _
-from koalixcrm.crm.contact.phoneaddress import PhoneAddress
-from koalixcrm.crm.contact.emailaddress import EmailAddress
-from koalixcrm.crm.contact.postaladdress import PostalAddress
-from koalixcrm.crm.documents.activity import Call
+from koalixcrm.crm.contact.phone_address import PhoneAddress
+from koalixcrm.crm.contact.email_address import EmailAddress
+from koalixcrm.crm.contact.postal_address import PostalAddress
+from koalixcrm.crm.contact.call import Call
 from koalixcrm.crm.contact.person import *
 from koalixcrm.crm.const.purpose import *
-from koalixcrm.globalSupportFunctions import xstr
+from koalixcrm.global_support_functions import xstr
 from koalixcrm.crm.inlinemixin import LimitedAdminInlineMixin
 
 
 class Contact(models.Model):
-    name = models.CharField(max_length=300, verbose_name=_("Name"))
-    date_of_creation = models.DateTimeField(verbose_name=_("Created at"), auto_now_add=True)
-    last_modification = models.DateTimeField(verbose_name=_("Last modified"), auto_now=True)
-    last_modified_by = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True,
-                                       verbose_name=_("Last modified by"), editable=True)
+    name = models.CharField(max_length=300,
+                            verbose_name=_("Name"))
+    date_of_creation = models.DateTimeField(verbose_name=_("Created at"),
+                                            auto_now_add=True)
+    last_modification = models.DateTimeField(verbose_name=_("Last modified"),
+                                             auto_now=True)
+    last_modified_by = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True},
+                                         blank=True,
+                                         verbose_name=_("Last modified by"),
+                                         editable=True)
 
     class Meta:
         app_label = "crm"
@@ -29,7 +34,9 @@ class Contact(models.Model):
 
 
 class PhoneAddressForContact(PhoneAddress):
-    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCUSTOMER)
+    purpose = models.CharField(verbose_name=_("Purpose"),
+                               max_length=1,
+                               choices=PURPOSESADDRESSINCUSTOMER)
     person = models.ForeignKey(Contact)
 
     class Meta:
@@ -42,7 +49,9 @@ class PhoneAddressForContact(PhoneAddress):
 
 
 class EmailAddressForContact(EmailAddress):
-    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCUSTOMER)
+    purpose = models.CharField(verbose_name=_("Purpose"),
+                               max_length=1,
+                               choices=PURPOSESADDRESSINCUSTOMER)
     person = models.ForeignKey(Contact)
 
     class Meta:
@@ -55,7 +64,9 @@ class EmailAddressForContact(EmailAddress):
 
 
 class PostalAddressForContact(PostalAddress):
-    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCUSTOMER)
+    purpose = models.CharField(verbose_name=_("Purpose"),
+                               max_length=1,
+                               choices=PURPOSESADDRESSINCUSTOMER)
     person = models.ForeignKey(Contact)
 
     class Meta:
@@ -161,13 +172,17 @@ class OptionPerson(admin.ModelAdmin):
             items.append(c.name)
         return ','.join(items)
     
-    get_companies.short_description = _("Works at")    
+    get_companies.short_description = _("Works at")
 
 
 class CallForContact(Call):
     company = models.ForeignKey(Contact)
-    cperson = models.ForeignKey(Person, verbose_name=_("Person"), blank=True, null=True)
-    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSECALLINCUSTOMER)
+    cperson = models.ForeignKey(Person, verbose_name=_("Person"),
+                                blank=True,
+                                null=True)
+    purpose = models.CharField(verbose_name=_("Purpose"),
+                               max_length=1,
+                               choices=PURPOSECALLINCUSTOMER)
     
     class Meta:
         app_label = "crm"
@@ -180,9 +195,17 @@ class CallForContact(Call):
 
 class VisitForContact(Call):
     company = models.ForeignKey(Contact)
-    cperson = models.ForeignKey(Person, verbose_name=_("Person"), blank=True, null=True)
-    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSEVISITINCUSTOMER)
-    ref_call = models.ForeignKey(CallForContact, verbose_name=_("Reference Call"), blank=True, null=True)
+    cperson = models.ForeignKey(Person,
+                                verbose_name=_("Person"),
+                                blank=True,
+                                null=True)
+    purpose = models.CharField(verbose_name=_("Purpose"),
+                               max_length=1,
+                               choices=PURPOSEVISITINCUSTOMER)
+    ref_call = models.ForeignKey(CallForContact,
+                                 verbose_name=_("Reference Call"),
+                                 blank=True,
+                                 null=True)
     
     class Meta:
         app_label = "crm"

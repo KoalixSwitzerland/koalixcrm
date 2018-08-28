@@ -5,13 +5,13 @@ from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext as _
 
-from koalixcrm.crm.contact.postaladdress import PostalAddress
-from koalixcrm.crm.contact.phoneaddress import PhoneAddress
-from koalixcrm.crm.contact.emailaddress import EmailAddress
-from koalixcrm.crm.documents.pdfexport import PDFExport
+from koalixcrm.crm.contact.postal_address import PostalAddress
+from koalixcrm.crm.contact.phone_address import PhoneAddress
+from koalixcrm.crm.contact.email_address import EmailAddress
+from koalixcrm.crm.documents.pdf_export import PDFExport
 from koalixcrm.djangoUserExtension.const.purpose import *
 from koalixcrm.djangoUserExtension.exceptions import *
-from koalixcrm.globalSupportFunctions import xstr
+from koalixcrm.global_support_functions import xstr
 from koalixcrm.crm.reporting.work import Work
 
 
@@ -22,8 +22,8 @@ class UserExtension(models.Model):
 
     @staticmethod
     def objects_to_serialize(object_to_create_pdf, reference_user):
-        from koalixcrm.crm.contact.phoneaddress import PhoneAddress
-        from koalixcrm.crm.contact.emailaddress import EmailAddress
+        from koalixcrm.crm.contact.phone_address import PhoneAddress
+        from koalixcrm.crm.contact.email_address import EmailAddress
         from django.contrib import auth
         objects = list(auth.models.User.objects.filter(id=reference_user.id))
         user_extension = UserExtension.objects.filter(user=reference_user.id)

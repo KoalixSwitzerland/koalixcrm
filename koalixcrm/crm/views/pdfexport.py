@@ -8,6 +8,7 @@ from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext as _
 from koalixcrm.crm.exceptions import *
 from koalixcrm.djangoUserExtension.exceptions import *
+from django.contrib import messages
 
 
 class PDFExportView:
@@ -42,22 +43,28 @@ class PDFExportView:
                 UserExtensionPhoneAddressMissing) as e:
             if isinstance(e, UserExtensionMissing):
                 response = HttpResponseRedirect(redirect_to)
-                calling_model_admin.message_user(request, _("User Extension Missing"))
+                calling_model_admin.message_user(request, _("User Extension Missing"),
+                                                 level=messages.ERROR)
             elif isinstance(e, UserExtensionEmailAddressMissing):
                 response = HttpResponseRedirect(redirect_to)
-                calling_model_admin.message_user(request, _("User Extension Email Missing"))
+                calling_model_admin.message_user(request, _("User Extension Email Missing"),
+                                                 level=messages.ERROR)
             elif isinstance(e, UserExtensionPhoneAddressMissing):
                 response = HttpResponseRedirect(redirect_to)
-                calling_model_admin.message_user(request, _("User Extension Phone Missing"))
+                calling_model_admin.message_user(request, _("User Extension Phone Missing"),
+                                                 level=messages.ERROR)
             elif isinstance(e, TemplateSetMissing):
                 response = HttpResponseRedirect(redirect_to)
-                calling_model_admin.message_user(request, _("Templateset Missing"))
+                calling_model_admin.message_user(request, _("Templateset Missing"),
+                                                 level=messages.ERROR)
             elif isinstance(e, TemplateFOPConfigFileMissing):
                 response = HttpResponseRedirect(redirect_to)
-                calling_model_admin.message_user(request, _("Fop Config File Missing in TemplateSet"))
+                calling_model_admin.message_user(request, _("Fop Config File Missing in TemplateSet"),
+                                                 level=messages.ERROR)
             elif isinstance(e, TemplateXSLTFileMissing):
                 response = HttpResponseRedirect(redirect_to)
-                calling_model_admin.message_user(request, _("XSLT File Missing in TemplateSet"))
+                calling_model_admin.message_user(request, _("XSLT File Missing in TemplateSet"),
+                                                 level=messages.ERROR)
             elif type(e) == CalledProcessError:
                 response = HttpResponseRedirect(redirect_to)
                 calling_model_admin.message_user(request, e.output)

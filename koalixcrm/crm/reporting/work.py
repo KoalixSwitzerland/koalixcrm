@@ -5,8 +5,10 @@ from django.forms import ValidationError
 from django.contrib import admin
 from django.utils.html import format_html
 from django.utils.translation import ugettext as _
-from koalixcrm.crm.documents.pdfexport import PDFExport
-from koalixcrm.globalSupportFunctions import *
+from koalixcrm.crm.documents.pdf_export import PDFExport
+from koalixcrm.global_support_functions import *
+from koalixcrm.crm.exceptions import ReportingPeriodDoneDeleteNotPossible
+from django.contrib import messages
 
 
 class Work(models.Model):
@@ -98,6 +100,12 @@ class Work(models.Model):
         self.check_working_hours()
         return cleaned_data
 
+    def delete(self, using, keep_parents):
+        if self.reporting_period.status.is_done:
+            raise ReportingPeriodDoneDeleteNotPossible()
+        else:
+            super(Work, self).delete(using, keep_parents)
+
     class Meta:
         app_label = "crm"
         verbose_name = _('Work')
@@ -130,6 +138,20 @@ class OptionWork(admin.ModelAdmin):
         }),
     )
     save_as = True
+
+    actions = ['delete_selected', ]
+
+    def delete_selected(self, request, queryset):
+        for obj in queryset:
+            if obj.reporting_period.status.is_done:
+                self.message_user(request, _("Delete is not allowed because the work"
+                                             " is used in a reporting period which is marked "
+                                             "'as done'"),
+                                  level=messages.ERROR)
+            else:
+                obj.delete()
+
+    delete_selected.short_description = _("Delete Selected Work")
 
 
 class InlineWork(admin.TabularInline):

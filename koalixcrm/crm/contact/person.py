@@ -11,11 +11,22 @@ class Person(models.Model):
                               verbose_name=_("Prefix"),
                               blank=True,
                               null=True)
-    name = models.CharField(max_length=100, verbose_name=_("Name"), blank=True, null=True)
-    pre_name = models.CharField(max_length=100, verbose_name=_("Pre-name"), blank=True, null=True)
-    email = models.EmailField(max_length=200, verbose_name=_("Email Address"))
-    phone = models.CharField(max_length=20, verbose_name=_("Phone Number"))
-    role = models.CharField(max_length=100, verbose_name=_("Role"), blank=True, null=True)
+    name = models.CharField(max_length=100,
+                            verbose_name=_("Name"),
+                            blank=True,
+                            null=True)
+    pre_name = models.CharField(max_length=100,
+                                verbose_name=_("Pre-name"),
+                                blank=True,
+                                null=True)
+    email = models.EmailField(max_length=200,
+                              verbose_name=_("Email Address"))
+    phone = models.CharField(max_length=20,
+                             verbose_name=_("Phone Number"))
+    role = models.CharField(max_length=100,
+                            verbose_name=_("Role"),
+                            blank=True,
+                            null=True)
     companies = models.ManyToManyField("Contact",
                                        through='ContactPersonAssociation',
                                        verbose_name=_('Works at'), blank=True)

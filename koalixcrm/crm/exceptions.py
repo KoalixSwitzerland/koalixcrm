@@ -73,6 +73,15 @@ class InvoiceAlreadyRegistered(Exception):
         return repr(self.value)
 
 
+class ReportingPeriodDoneDeleteNotPossible(Exception):
+    def __init__(self, value):
+        self.value = value
+        self.view = "/koalixcrm/crm/reporting/reporting_period_done_delete_not_possible"
+
+    def __str__(self):
+        return repr(self.value)
+
+
 class ReportingPeriodNotFound(Exception):
     def __init__(self, value):
         self.value = value

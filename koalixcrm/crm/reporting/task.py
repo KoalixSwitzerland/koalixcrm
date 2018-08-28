@@ -4,13 +4,13 @@ from django.db import models
 from django.utils.translation import ugettext as _
 from django.contrib import admin
 from django.utils.html import format_html
-from koalixcrm.crm.reporting.employeeassignmenttotask import EmployeeAssignmentToTask, InlineEmployeeAssignmentToTask
-from koalixcrm.crm.reporting.generictasklink import InlineGenericTaskLink
-from koalixcrm.crm.reporting.work import InlineWork
-from koalixcrm.crm.documents.pdfexport import PDFExport
-from datetime import *
+from koalixcrm.crm.reporting.employee_assignment_to_task import EmployeeAssignmentToTask, InlineEmployeeAssignmentToTask
+from koalixcrm.crm.reporting.generic_task_link import InlineGenericTaskLink
+from koalixcrm.crm.reporting.work import InlineWork, Work
+from koalixcrm.crm.documents.pdf_export import PDFExport
 from rest_framework import serializers
-import koalixcrm
+from koalixcrm import global_support_functions
+from koalixcrm.crm.reporting.work import Work
 
 
 class Task(models.Model):
@@ -45,10 +45,11 @@ class Task(models.Model):
         self.previous_status = self.status
 
     def save(self, *args, **kwargs):
-        if not self.previous_status:
+        if self.id is not None:
             if self.status != self.previous_status:
-                self.last_status_change = datetime.today()
-            self.last_status_change = datetime.today()
+                self.last_status_change = global_support_functions.get_today_date()
+        elif self.last_status_change is None:
+            self.last_status_change
         super().save(*args, **kwargs)
 
     def link_to_task(self):
@@ -78,14 +79,79 @@ class Task(models.Model):
     planned_effort.short_description = _("Planned Effort [hrs]")
     planned_effort.tags = True
 
+    def effective_start(self):
+        """The function return the effective start of a project as a date
+
+        Args:
+        no arguments
+
+        Returns:
+        effective_start (Date) or None when not yet started
+
+        Raises:
+        No exceptions planned"""
+        all_task_works = Work.objects.filter(task=self.id)
+        effective_task_start = None
+        if len(all_task_works) == 0:
+            effective_task_start = None
+        else:
+            for work in all_task_works:
+                if not effective_task_start:
+                    effective_task_start = work.date
+                elif work.date < effective_task_start:
+                    effective_task_start = work.date
+        return effective_task_start
+    effective_start.short_description = _("Effective Start")
+    effective_start.tags = True
+
+    def effective_end(self):
+        """The function return the effective end of a project as a date
+
+        Args:
+        no arguments
+
+        Returns:
+        effective_end (Date) or None when not yet ended
+
+        Raises:
+        No exceptions planned"""
+        all_task_works = Work.objects.filter(task=self.id)
+        effective_task_end = None
+        if len(all_task_works) == 0:
+            effective_task_end = None
+        else:
+            for work in all_task_works:
+                if not effective_task_end:
+                    effective_task_end = work.date
+                elif work.date > effective_task_end:
+                    effective_task_end = work.date
+        return effective_task_end
+    effective_end.short_description = _("Effective End")
+    effective_end.tags = True
+
     def effective_duration(self):
-        if self.status:
-            if self.status.is_done:
-                if self.planned_start_date > self.last_status_change:
-                    return 0
-                else:
-                    return self.last_status_change - self.planned_start_date
-        return "n/a"
+        """The function return the effective overall duration of a task as a string in days
+        The function is reading the effective_starts and effective_ends of the task and
+        substract them from each other.
+
+        Args:
+        no arguments
+
+        Returns:
+        duration_in_days or description (String)
+
+        Raises:
+        No exceptions planned"""
+        effective_end = self.effective_end()
+        effective_start = self.effective_start()
+        if not effective_start:
+            duration_as_string = "Task has not yet started"
+        elif not effective_end:
+            duration_as_string = "Task has not yet ended"
+        else:
+            duration_as_date = self.effective_end()-self.effective_start()
+            duration_as_string = duration_as_date.days.__str__()
+        return duration_as_string
     effective_duration.short_description = _("Effective Duration [dys]")
     effective_duration.tags = True
 
@@ -93,10 +159,10 @@ class Task(models.Model):
         objects = [self, ]
         main_xml = PDFExport.write_xml(objects)
         if reporting_period:
-            works = koalixcrm.crm.reporting.work.Work.objects.filter(task=self.id,
-                                                                     reporting_period=reporting_period)
+            works = Work.objects.filter(task=self.id,
+                                        reporting_period=reporting_period)
         else:
-            works = koalixcrm.crm.reporting.work.Work.objects.filter(task=self.id)
+            works = Work.objects.filter(task=self.id)
         for work in works:
             work_xml = work.serialize_to_xml()
             main_xml = PDFExport.merge_xml(main_xml, work_xml)
@@ -133,10 +199,10 @@ class Task(models.Model):
         when reporting_period is None, the effective effort overall is calculated
         when reporting_period is specified, the effective effort in this period is calculated"""
         if reporting_period:
-            work_objects = koalixcrm.crm.reporting.work.Work.objects.filter(task=self.id,
-                                                                            reporting_period=reporting_period)
+            work_objects = Work.objects.filter(task=self.id,
+                                               reporting_period=reporting_period)
         else:
-            work_objects = koalixcrm.crm.reporting.work.Work.objects.filter(task=self.id)
+            work_objects = Work.objects.filter(task=self.id)
         sum_effort = 0
         for work_object in work_objects:
             sum_effort += work_object.effort_seconds()
@@ -147,8 +213,8 @@ class Task(models.Model):
         """Returns True when the task is available for reporting,
         Returns False when the task is not available for reporting,
         The decision whether the task is available for reporting is purely depending
-        on the task_status. When the status is done, the task is not longer
-        available for reporting. In all other cases the reporting is allowed.
+        on the task_status. When the status is done or when the status is unknown,
+        the task is not longer available for reporting.
 
         Args:
           no arguments
@@ -164,7 +230,7 @@ class Task(models.Model):
             else:
                 allowed = True
         else:
-            allowed = True
+            allowed = False
         return allowed
     is_reporting_allowed.short_description = _("Reporting")
     is_reporting_allowed.tags = True
@@ -213,10 +279,6 @@ class OptionTask(admin.ModelAdmin):
     inlines = [InlineEmployeeAssignmentToTask,
                InlineGenericTaskLink,
                InlineWork]
-
-    def save_model(self, request, obj, form, change):
-        obj.last_status_change = date.today().__str__()
-        obj.save()
 
 
 class InlineTasks(admin.TabularInline):

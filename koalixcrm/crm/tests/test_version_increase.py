@@ -1,5 +1,5 @@
 from django.test import TestCase
-from koalixcrm.globalSupportFunctions import get_string_between
+from koalixcrm.global_support_functions import get_string_between
 from subprocess import Popen, PIPE
 from koalixcrm.version import KOALIXCRM_VERSION
 import pytest

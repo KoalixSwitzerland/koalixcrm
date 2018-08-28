@@ -5,21 +5,21 @@ from django.contrib import admin
 from django.utils.translation import ugettext as _
 
 from koalixcrm.plugin import *
-from koalixcrm.crm.contact.phoneaddress import PhoneAddress
-from koalixcrm.crm.contact.emailaddress import EmailAddress
-from koalixcrm.crm.contact.postaladdress import PostalAddress
+from koalixcrm.crm.contact.phone_address import PhoneAddress
+from koalixcrm.crm.contact.email_address import EmailAddress
+from koalixcrm.crm.contact.postal_address import PostalAddress
 from koalixcrm.crm.documents.invoice import Invoice
 from koalixcrm.crm.documents.quote import Quote
-from koalixcrm.crm.documents.purchaseorder import PurchaseOrder
-from koalixcrm.globalSupportFunctions import xstr
+from koalixcrm.crm.documents.purchase_order import PurchaseOrder
+from koalixcrm.global_support_functions import xstr
 from koalixcrm.crm.const.purpose import *
 from koalixcrm.crm.documents.invoice import InlineInvoice
 from koalixcrm.crm.documents.quote import InlineQuote
-from koalixcrm.crm.reporting.genericprojectlink import InlineGenericProjectLink
+from koalixcrm.crm.reporting.generic_project_link import InlineGenericProjectLink
 from koalixcrm.crm.exceptions import *
 from koalixcrm.djangoUserExtension.models import UserExtension
 import koalixcrm.crm.documents.calculations
-import koalixcrm.crm.documents.pdfexport
+import koalixcrm.crm.documents.pdf_export
 from rest_framework import serializers
 
 
@@ -103,24 +103,43 @@ class ContractEmailAddress(admin.TabularInline):
     classes = ['collapse']
     fieldsets = (
         ('Basics', {
-            'fields': ('email', 'purpose',)
+            'fields': ('email',
+                       'purpose',)
         }),
     )
     allow_add = True
 
 
 class Contract(models.Model):
-    staff = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True}, blank=True, verbose_name=_("Staff"),
-                              related_name="db_relcontractstaff", null=True)
+    staff = models.ForeignKey('auth.User',
+                              limit_choices_to={'is_staff': True},
+                              verbose_name=_("Staff"),
+                              related_name="db_relcontractstaff",
+                              blank=True,
+                              null=True)
     description = models.TextField(verbose_name=_("Description"))
-    default_customer = models.ForeignKey("Customer", verbose_name=_("Default Customer"), null=True, blank=True)
-    default_supplier = models.ForeignKey("Supplier", verbose_name=_("Default Supplier"), null=True, blank=True)
-    default_currency = models.ForeignKey("Currency", verbose_name=_("Default Currency"), blank=False, null=False)
-    default_template_set = models.ForeignKey("djangoUserExtension.TemplateSet", verbose_name=_("Default Template Set"), null=True, blank=True)
-    date_of_creation = models.DateTimeField(verbose_name=_("Created at"), auto_now_add=True)
-    last_modification = models.DateTimeField(verbose_name=_("Last modified"), auto_now=True)
-    last_modified_by = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True},
-                                         verbose_name=_("Last modified by"), related_name="db_contractlstmodified")
+    default_customer = models.ForeignKey("Customer",
+                                         verbose_name=_("Default Customer"),
+                                         null=True,
+                                         blank=True)
+    default_supplier = models.ForeignKey("Supplier",
+                                         verbose_name=_("Default Supplier"),
+                                         null=True,
+                                         blank=True)
+    default_currency = models.ForeignKey("Currency",
+                                         verbose_name=_("Default Currency"),
+                                         blank=False,
+                                         null=False)
+    default_template_set = models.ForeignKey("djangoUserExtension.TemplateSet",
+                                             verbose_name=_("Default Template Set"), null=True, blank=True)
+    date_of_creation = models.DateTimeField(verbose_name=_("Created at"),
+                                            auto_now_add=True)
+    last_modification = models.DateTimeField(verbose_name=_("Last modified"),
+                                             auto_now=True)
+    last_modified_by = models.ForeignKey('auth.User',
+                                         limit_choices_to={'is_staff': True},
+                                         verbose_name=_("Last modified by"),
+                                         related_name="db_contractlstmodified")
 
     class Meta:
         app_label = "crm"

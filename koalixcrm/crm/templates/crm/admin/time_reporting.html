@@ -77,6 +77,7 @@ Reporting
 {% block content %}
 <form action="" method="post">{% csrf_token %}
     {{ formset.management_form }}
+    <div style="font-weight: bold;">Selected Range</div>
     <table style="border: none;">
     {{ range_selection_form}}
     </table>
@@ -102,65 +103,33 @@ Reporting
             <tr id='single_form' name="form-{{ forloop.counter0 }}">
                 <td>
                     {{ form.project }}
-                    {% if form.project.errors %}
-                        {% for error in form.project.errors %}
-                            {{ error|escape }}
-                        {% endfor %}
-                    {% endif %}
+                    {{ form.project.errors }}
                     <br/><br/>
                     {{ form.task }}
-                    {% if form.task.errors %}
-                        {% for error in form.task.errors %}
-                            {{ error|escape }}
-                        {% endfor %}
-                    {% endif %}
+                    {{ form.task.errors }}
                 </td>
                 <td>
                     {{ form.date }}
-                    {% if form.date.errors %}
-                        {% for error in form.date.errors %}
-                            {{ error|escape }}
-                        {% endfor %}
-                    {% endif %}
+                    {{ form.date.errors }}
                 </td>
                 <td>
                     {{ form.start_time }}
-                    {% if form.start_time.errors %}
-                        {% for error in form.start_time.errors %}
-                            {{ error|escape }}
-                        {% endfor %}
-                    {% endif %}
+                    {{ form.start_time.errors }}
                     <br/><br/>
                     {{ form.stop_time }}
-                    {% if form.stop_time.errors %}
-                        {% for error in form.stop_time.errors %}
-                            {{ error|escape }}
-                        {% endfor %}
-                    {% endif %}
+                    {{ form.stop_time.errors }}
                 </td>
                 <td>
                     {{ form.worked_hours }}
-                    {% if form.worked_hours.errors %}
-                        {% for error in form.worked_hours.errors %}
-                            {{ error|escape }}
-                        {% endfor %}
-                    {% endif %}
+                    {{ form.worked_hours.errors }}
                 </td>
                 <td>
                     {{ form.description }}
-                    {% if form.description.errors %}
-                        {% for error in form.description.errors %}
-                            {{ error|escape }}
-                        {% endfor %}
-                    {% endif %}
+                    {{ form.description.errors }}
                 </td>
                 <td>
                     {{ form.DELETE }}
-                    {% if form.DELETE.errors %}
-                        {% for error in form.DELETE.errors %}
-                            {{ error|escape }}
-                        {% endfor %}
-                    {% endif %}
+                    {{ form.DELETE.errors }}
                 </td>
 
                 {% for field in form.hidden_fields %}
