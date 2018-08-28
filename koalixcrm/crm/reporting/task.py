@@ -71,6 +71,17 @@ class Task(models.Model):
     planned_duration.tags = True
 
     def planned_effort(self):
+        """The function return the planned effort of all employees which have been assigned to
+        this task
+
+        Args:
+        no arguments
+
+        Returns:
+        planned_effort [hrs] (Decimal), 0 if when no assignments are present
+
+        Raises:
+        No exceptions planned"""
         assignments_to_this_task = EmployeeAssignmentToTask.objects.filter(task=self.id)
         sum_effort = 0
         for assignment_to_this_task in assignments_to_this_task:
@@ -80,20 +91,23 @@ class Task(models.Model):
     planned_effort.tags = True
 
     def effective_start(self):
-        """The function return the effective start of a project as a date
+        """The function return the effective start of a project as a date. The
+        function return the effective start of a task as a date based on the reported work
+        in case there was no work reported to this task, the planned start is used as a
+        fall-back.
 
         Args:
         no arguments
 
         Returns:
-        effective_start (Date) or None when not yet started
+        effective_start (Date)
 
         Raises:
         No exceptions planned"""
         all_task_works = Work.objects.filter(task=self.id)
         effective_task_start = None
         if len(all_task_works) == 0:
-            effective_task_start = None
+            effective_task_start = self.planned_start_date
         else:
             for work in all_task_works:
                 if not effective_task_start:
@@ -104,8 +118,30 @@ class Task(models.Model):
     effective_start.short_description = _("Effective Start")
     effective_start.tags = True
 
+    def task_end(self):
+        """The function returns a boolean value True when the task is on
+        status done. In all other case (example in no status case) the function
+        returns False
+
+        Args:
+        no arguments
+
+        Returns:
+        task_ended (Boolean)
+
+        Raises:
+        No exceptions planned"""
+        if self.status.is_done:
+            task_ended = self.status.is_done
+        else:
+            task_ended = False
+        return task_ended
+
     def effective_end(self):
-        """The function return the effective end of a project as a date
+        """When the task has already ended, the
+        function return the effective end of a task as a date based on the reported work
+        in case there was no work reported to this task, the last status change is used as a
+        fall-back. When the task did not yet end, the function returns None
 
         Args:
         no arguments
@@ -117,14 +153,17 @@ class Task(models.Model):
         No exceptions planned"""
         all_task_works = Work.objects.filter(task=self.id)
         effective_task_end = None
-        if len(all_task_works) == 0:
-            effective_task_end = None
+        if self.task_end():
+            if len(all_task_works) == 0:
+                effective_task_end = self.last_status_change
+            else:
+                for work in all_task_works:
+                    if not effective_task_end:
+                        effective_task_end = work.date
+                    elif work.date > effective_task_end:
+                        effective_task_end = work.date
         else:
-            for work in all_task_works:
-                if not effective_task_end:
-                    effective_task_end = work.date
-                elif work.date > effective_task_end:
-                    effective_task_end = work.date
+            effective_task_end = None
         return effective_task_end
     effective_end.short_description = _("Effective End")
     effective_end.tags = True
@@ -138,16 +177,16 @@ class Task(models.Model):
         no arguments
 
         Returns:
-        duration_in_days or description (String)
+        duration [dys]
 
         Raises:
         No exceptions planned"""
         effective_end = self.effective_end()
         effective_start = self.effective_start()
         if not effective_start:
-            duration_as_string = "Task has not yet started"
+            duration_as_string = 0
         elif not effective_end:
-            duration_as_string = "Task has not yet ended"
+            duration_as_string = 0
         else:
             duration_as_date = self.effective_end()-self.effective_start()
             duration_as_string = duration_as_date.days.__str__()
