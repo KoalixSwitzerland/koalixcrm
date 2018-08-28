@@ -1,23 +1,26 @@
 # -*- coding: utf-8 -*-
 
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-
 from rest_framework import viewsets
-from rest_framework_xml.renderers import XMLRenderer
 from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
+from rest_framework_xml.renderers import XMLRenderer
 
 from koalixcrm.crm.documents.contract import Contract, ContractJSONSerializer
-from koalixcrm.crm.reporting.task import Task, TaskSerializer
-from koalixcrm.crm.reporting.task_status import TaskStatus
+from koalixcrm.crm.product.currency import Currency
+from koalixcrm.crm.product.product import Product
+from koalixcrm.crm.product.tax import Tax
+from koalixcrm.crm.product.unit import Unit
 from koalixcrm.crm.reporting.project import Project, ProjectJSONSerializer
-from koalixcrm.crm.product.product import Product, ProductJSONSerializer
-from koalixcrm.crm.product.unit import Unit, UnitJSONSerializer
-from koalixcrm.crm.product.tax import Tax, TaxJSONSerializer
-from koalixcrm.crm.product.currency import CurrencyJSONSerializer, Currency
+from koalixcrm.crm.reporting.task import Task, TaskSerializer
+from koalixcrm.crm.reporting.taskstatus import TaskStatus
+from koalixcrm.crm.rest.currency_rest import CurrencyJSONSerializer
+from koalixcrm.crm.rest.product_rest import ProductJSONSerializer
+from koalixcrm.crm.rest.tax_rest import TaxJSONSerializer
+from koalixcrm.crm.rest.unit_rest import UnitJSONSerializer
 from koalixcrm.crm.views.renderer import XSLFORenderer
-from koalixcrm.global_support_functions import ConditionalMethodDecorator
-from django.conf import settings
+from koalixcrm.globalSupportFunctions import ConditionalMethodDecorator
 
 
 class TaskAsJSON(viewsets.ModelViewSet):
@@ -124,4 +127,3 @@ class ProjectAsJSON(viewsets.ModelViewSet):
     @ConditionalMethodDecorator(method_decorator(login_required), settings.KOALIXCRM_REST_API_AUTH)
     def dispatch(self, *args, **kwargs):
         return super(ProjectAsJSON, self).dispatch(*args, **kwargs)
-
