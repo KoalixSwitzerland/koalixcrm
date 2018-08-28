@@ -1,5 +1,6 @@
 import datetime
 import pytest
+import pytz
 from django.test import TestCase
 from koalixcrm.crm.factories.factory_user import AdminUserFactory
 from koalixcrm.crm.factories.factory_customer_billing_cycle import StandardCustomerBillingCycleFactory
@@ -16,6 +17,7 @@ from koalixcrm.crm.factories.factory_employee_assignment_to_task import Standard
 class TaskPlannedEffort(TestCase):
     def setUp(self):
         datetime_now = datetime.datetime(2024, 1, 1, 0, 00)
+        datetime_now = pytz.timezone("UTC").localize(datetime_now, is_dst=None)
         start_date = (datetime_now - datetime.timedelta(days=30)).date()
         end_date_first_task = (datetime_now + datetime.timedelta(days=30)).date()
         end_date_second_task = (datetime_now + datetime.timedelta(days=60)).date()
@@ -39,10 +41,15 @@ class TaskPlannedEffort(TestCase):
     @pytest.mark.back_end_tests
     def test_planned_effort(self):
         datetime_now = datetime.datetime(2024, 1, 1, 0, 00)
+        datetime_now = pytz.timezone("UTC").localize(datetime_now, is_dst=None)
         datetime_later_1 = datetime.datetime(2024, 1, 1, 2, 00)
+        datetime_later_1 = pytz.timezone("UTC").localize(datetime_later_1, is_dst=None)
         datetime_later_2 = datetime.datetime(2024, 1, 1, 3, 30)
+        datetime_later_2 = pytz.timezone("UTC").localize(datetime_later_2, is_dst=None)
         datetime_later_3 = datetime.datetime(2024, 1, 1, 5, 45)
+        datetime_later_3 = pytz.timezone("UTC").localize(datetime_later_3, is_dst=None)
         datetime_later_4 = datetime.datetime(2024, 1, 1, 6, 15)
+        datetime_later_4 = pytz.timezone("UTC").localize(datetime_later_4, is_dst=None)
         date_now = datetime_now.date()
         self.assertEqual(
             (self.test_1st_task.planned_duration()).__str__(), "60")

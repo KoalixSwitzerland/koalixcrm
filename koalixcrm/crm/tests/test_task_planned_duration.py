@@ -9,11 +9,12 @@ from koalixcrm.crm.factories.factory_currency import StandardCurrencyFactory
 from koalixcrm.crm.factories.factory_reporting_period import StandardReportingPeriodFactory
 from koalixcrm.djangoUserExtension.factories.factory_user_extension import StandardUserExtensionFactory
 from koalixcrm.crm.factories.factory_task import StandardTaskFactory
+from koalixcrm.test_support_functions import make_date_utc
 
 
 class TaskPlannedDuration(TestCase):
     def setUp(self):
-        datetime_now = datetime.datetime(2024, 1, 1, 0, 00)
+        datetime_now = make_date_utc(datetime.datetime(2024, 1, 1, 0, 00))
         start_date = (datetime_now - datetime.timedelta(days=30)).date()
         end_date_first_task = (datetime_now + datetime.timedelta(days=30)).date()
         end_date_second_task = (datetime_now + datetime.timedelta(days=60)).date()

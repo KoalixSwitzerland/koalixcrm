@@ -1,12 +1,12 @@
 import pytest
+from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from django.test import LiveServerTestCase
-from koalixcrm.crm.tests.test_support_functions import *
+from koalixcrm.test_support_functions import *
 from koalixcrm.crm.factories.factory_user import AdminUserFactory
 from koalixcrm.crm.factories.factory_customer import StandardCustomerFactory
 from koalixcrm.crm.factories.factory_customer_group import StandardCustomerGroupFactory

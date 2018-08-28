@@ -59,7 +59,7 @@ class TaskUpdateLastStatusUpdate(TestCase):
 
     def setUp(self):
         datetime_now = datetime.datetime(2024, 1, 1, 0, 00)
-        datetime_now = pytz.timezone(("UTC").localize(datetime_now, is_dst=None)
+        datetime_now = pytz.timezone("UTC").localize(datetime_now, is_dst=None)
         start_date = (datetime_now - datetime.timedelta(days=30)).date().__str__()
         end_date_first_task = (datetime_now + datetime.timedelta(days=30)).date().__str__()
         end_date_second_task = (datetime_now + datetime.timedelta(days=60)).date().__str__()

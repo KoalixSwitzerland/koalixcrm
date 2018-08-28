@@ -1,10 +1,11 @@
+import datetime
 from django.test import TestCase
+from django.contrib.auth.models import User
 from koalixcrm.accounting.models import Account
 from koalixcrm.accounting.models import AccountingPeriod
 from koalixcrm.accounting.models import Booking
-from django.contrib.auth.models import User
 from koalixcrm.crm.documents.pdf_export import PDFExport
-import datetime
+from koalixcrm.test_support_functions import make_date_utc
 
 
 class AccountingModelTest(TestCase):
@@ -21,13 +22,13 @@ class AccountingModelTest(TestCase):
                                       is_product_inventory_activa=False,
                                       is_a_customer_payment_account=True)
         bank_account = Account.objects.create(account_number="1300",
-                                      title="Bank Account",
-                                      account_type="A",
-                                      description="Moderate liquid asset",
-                                      is_open_interest_account=False,
-                                      is_open_reliabilities_account=False,
-                                      is_product_inventory_activa=False,
-                                      is_a_customer_payment_account=True)
+                                              title="Bank Account",
+                                              account_type="A",
+                                              description="Moderate liquid asset",
+                                              is_open_interest_account=False,
+                                              is_open_reliabilities_account=False,
+                                              is_product_inventory_activa=False,
+                                              is_a_customer_payment_account=True)
         bank_loan = Account.objects.create(account_number="2000",
                                       title="Shortterm bankloans",
                                       account_type="L",
@@ -60,7 +61,7 @@ class AccountingModelTest(TestCase):
                                           is_open_reliabilities_account=False,
                                           is_product_inventory_activa=False,
                                           is_a_customer_payment_account=False)
-        datetime_now = datetime.datetime(2024, 1, 1, 0, 00)
+        datetime_now = make_date_utc(datetime.datetime(2024, 1, 1, 0, 00))
         from_date = datetime_now.date()
         to_date = (datetime_now + datetime.timedelta(days=365)).date()
         accounting_period_2024 = AccountingPeriod.objects.create(title="Fiscal year 2024",
@@ -80,7 +81,7 @@ class AccountingModelTest(TestCase):
                                to_account=spendings,
                                amount="1000",
                                description="This is the first booking",
-                               booking_date=datetime.date.today(),
+                               booking_date=make_date_utc(datetime.datetime(2025, 1, 1, 0, 00)),
                                accounting_period=accounting_period_2025,
                                staff=user,
                                last_modified_by=user)
@@ -89,7 +90,7 @@ class AccountingModelTest(TestCase):
                                to_account=cash,
                                amount="500",
                                description="This is the first booking",
-                               booking_date=datetime.date.today(),
+                               booking_date=make_date_utc(datetime.datetime(2025, 1, 1, 0, 00)),
                                accounting_period=accounting_period_2025,
                                staff=user,
                                last_modified_by=user)
@@ -98,7 +99,7 @@ class AccountingModelTest(TestCase):
                                to_account=cash,
                                amount="5000",
                                description="This is the first booking",
-                               booking_date=datetime.date.today(),
+                               booking_date=make_date_utc(datetime.datetime(2025, 1, 1, 0, 00)),
                                accounting_period=accounting_period_2025,
                                staff=user,
                                last_modified_by=user)
@@ -107,7 +108,7 @@ class AccountingModelTest(TestCase):
                                to_account=bank_account,
                                amount="490000",
                                description="This is the first booking",
-                               booking_date=datetime.date.today(),
+                               booking_date=make_date_utc(datetime.datetime(2025, 1, 1, 0, 00)),
                                accounting_period=accounting_period_2024,
                                staff=user,
                                last_modified_by=user)
@@ -161,23 +162,23 @@ class AccountingModelTest(TestCase):
     def test_serialize_to_xml(self):
         accounting_period_2025 = AccountingPeriod.objects.get(title="Fiscal year 2025")
         xml = accounting_period_2025.serialize_to_xml()
-        result=PDFExport.find_element_in_xml(xml,"object/[@model='accounting.account']/field[@name='title']", 'Earnings')
+        result=PDFExport.find_element_in_xml(xml, "object/[@model='accounting.account']/field[@name='title']", 'Earnings')
         self.assertEqual(result, 1)
-        result=PDFExport.find_element_in_xml(xml,"object/[@model='accounting.account']/field[@name='title']", 'Spendings')
+        result=PDFExport.find_element_in_xml(xml, "object/[@model='accounting.account']/field[@name='title']", 'Spendings')
         self.assertEqual(result, 1)
-        result=PDFExport.find_element_in_xml(xml,"object/[@model='accounting.account']/field[@name='title']", 'Investment capital')
+        result=PDFExport.find_element_in_xml(xml, "object/[@model='accounting.account']/field[@name='title']", 'Investment capital')
         self.assertEqual(result, 1)
-        result=PDFExport.find_element_in_xml(xml,"object/[@model='accounting.account']/field[@name='title']", 'Shortterm bankloans')
+        result=PDFExport.find_element_in_xml(xml, "object/[@model='accounting.account']/field[@name='title']", 'Shortterm bankloans')
         self.assertEqual(result, 1)
-        result=PDFExport.find_element_in_xml(xml,"object/[@model='accounting.account']/field[@name='title']",'Cash')
+        result=PDFExport.find_element_in_xml(xml, "object/[@model='accounting.account']/field[@name='title']",'Cash')
         self.assertEqual(result, 1)
-        result=PDFExport.find_element_in_xml(xml,"object/[@model='accounting.account']/field[@name='title']",'Bank Account')
+        result=PDFExport.find_element_in_xml(xml, "object/[@model='accounting.account']/field[@name='title']",'Bank Account')
         self.assertEqual(result, 1)
-        result=PDFExport.find_element_in_xml(xml,"object/[@model='accounting.accountingperiod']/Overall_Spendings", '1000.00')
+        result=PDFExport.find_element_in_xml(xml, "object/[@model='accounting.accountingperiod']/Overall_Spendings", '1000.00')
         self.assertEqual(result, 1)
-        result=PDFExport.find_element_in_xml(xml,"object/[@model='accounting.accountingperiod']/Overall_Earnings", '500.00')
+        result=PDFExport.find_element_in_xml(xml, "object/[@model='accounting.accountingperiod']/Overall_Earnings", '500.00')
         self.assertEqual(result, 1)
-        result=PDFExport.find_element_in_xml(xml,"object/[@model='accounting.accountingperiod']/Overall_Assets", '494500.00')
+        result=PDFExport.find_element_in_xml(xml, "object/[@model='accounting.accountingperiod']/Overall_Assets", '494500.00')
         self.assertEqual(result, 1)
-        result=PDFExport.find_element_in_xml(xml,"object/[@model='accounting.accountingperiod']/Overall_Liabilities", '495000.00')
+        result=PDFExport.find_element_in_xml(xml, "object/[@model='accounting.accountingperiod']/Overall_Liabilities", '495000.00')
         self.assertEqual(result, 1)
