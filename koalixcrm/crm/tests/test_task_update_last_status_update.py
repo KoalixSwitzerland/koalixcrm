@@ -75,13 +75,13 @@ class TaskUpdateLastStatusUpdate(TestCase):
                                                         planned_start_date=start_date,
                                                         planned_end_date=end_date_first_task,
                                                         project=self.test_reporting_period.project,
-                                                        last_status_change='2018-06-15'
+                                                        last_status_change=datetime.date(2024, 6, 15)
                                                         )
         self.test_2nd_task = StandardTaskFactory.create(title="2nd Test Task",
                                                         planned_start_date=start_date,
                                                         planned_end_date=end_date_second_task,
                                                         project=self.test_reporting_period.project,
-                                                        last_status_change='2018-06-15')
+                                                        last_status_change=datetime.date(2024, 6, 15))
 
     def test_last_status_update(self):
         previous_last_status_change = self.test_1st_task.last_status_change
@@ -91,5 +91,5 @@ class TaskUpdateLastStatusUpdate(TestCase):
         print(datetime.date.today())
         self.test_1st_task.status = new_status
         self.test_1st_task.save()
-        self.assertEquals(previous_last_status_change, '2018-06-15')
+        self.assertEquals(previous_last_status_change, datetime.date(2024, 6, 15))
         self.assertEqual(self.test_1st_task.last_status_change, datetime.date(2024, 6, 2))

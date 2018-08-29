@@ -10,7 +10,6 @@ from koalixcrm.crm.reporting.work import InlineWork, Work
 from koalixcrm.crm.documents.pdf_export import PDFExport
 from rest_framework import serializers
 from koalixcrm import global_support_functions
-from koalixcrm.crm.reporting.work import Work
 
 
 class Task(models.Model):

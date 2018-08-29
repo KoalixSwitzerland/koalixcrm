@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import factory
+import datetime
 from koalixcrm.crm.models import Task
 from koalixcrm.crm.factories.factory_project import StandardProjectFactory
 from koalixcrm.crm.factories.factory_task_status import StartedTaskStatusFactory
+from koalixcrm.test_support_functions import make_date_utc
 
 
 class StandardTaskFactory(factory.django.DjangoModelFactory):
@@ -11,9 +13,9 @@ class StandardTaskFactory(factory.django.DjangoModelFactory):
         model = Task
 
     title = 'This is a test Task'
-    planned_start_date = '2018-05-02'
-    planned_end_date = '2018-06-15'
+    planned_start_date = make_date_utc(datetime.datetime(2018, 5, 2, 00))
+    planned_end_date = make_date_utc(datetime.datetime(2018, 6, 15, 00))
     project = factory.SubFactory(StandardProjectFactory)
     description = "This is a description"
     status = factory.SubFactory(StartedTaskStatusFactory)
-    last_status_change = '2018-06-15'
+    last_status_change = make_date_utc(datetime.datetime(2018, 6, 15, 00))
