@@ -30,7 +30,7 @@ class TimeTrackingAddRow(LiveServerTestCase):
         self.selenium.quit()
 
     @pytest.mark.front_end_tests
-    def test_registration_of_work(self):
+    def test_add_new_row(self):
         selenium = self.selenium
         # login
         selenium.get('%s%s' % (self.live_server_url, '/koalixcrm/crm/reporting/time_tracking/'))
@@ -65,5 +65,5 @@ class TimeTrackingAddRow(LiveServerTestCase):
         assert_when_element_exists(self, '//*[@id="id_form-1-project"]')
         add_more_button = selenium.find_element_by_xpath('//*[@id="add_more"]')
         add_more_button.send_keys(Keys.RETURN)
-        # check existence of a second form before pressing add more
+        # check existence of a second form after pressing add more
         assert_when_element_does_not_exist(self, '//*[@id="id_form-1-project"]')
