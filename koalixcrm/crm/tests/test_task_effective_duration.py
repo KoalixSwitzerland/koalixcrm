@@ -86,7 +86,6 @@ class TaskEffectiveDuration(TestCase):
         datetime_later_2 = make_date_utc(datetime.datetime(2024, 1, 2, 3, 30))
         datetime_later_3 = make_date_utc(datetime.datetime(2024, 1, 4, 5, 45))
         datetime_later_4 = make_date_utc(datetime.datetime(2024, 1, 4, 6, 15))
-        date_now = make_date_utc(datetime.datetime(2024, 1, 1, 0, 00))
         self.assertEqual(
             (self.test_1st_task.planned_duration()).__str__(), "60")
         self.assertEqual(
