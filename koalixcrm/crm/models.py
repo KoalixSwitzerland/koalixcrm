@@ -25,10 +25,12 @@ from koalixcrm.crm.documents.delivery_note import DeliveryNote
 from koalixcrm.crm.product.currency import *
 from koalixcrm.crm.product.price import *
 from koalixcrm.crm.product.product import *
+from koalixcrm.crm.product.customer_group_transform import *
+from koalixcrm.crm.product.unit_transform import *
 from koalixcrm.crm.product.tax import *
 from koalixcrm.crm.product.unit import *
 
-from koalixcrm.crm.reporting.employee_assignment_to_task import *
+from koalixcrm.crm.reporting.estimation_of_resource_consumption import *
 from koalixcrm.crm.reporting.generic_task_link import *
 from koalixcrm.crm.reporting.task import *
 from koalixcrm.crm.reporting.task_link_type import *

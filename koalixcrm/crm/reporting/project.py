@@ -130,7 +130,7 @@ class Project(models.Model):
     def planned_effort(self):
         planned_effort_accumulated = 0
         for task in Task.objects.filter(project=self.id):
-            planned_effort_accumulated += task.planned_effort()
+            planned_effort_accumulated += task.planned_costs()
         return planned_effort_accumulated
     planned_effort.short_description = _("Planned Effort [hrs]")
     planned_effort.tags = True

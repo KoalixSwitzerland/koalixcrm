@@ -4,9 +4,11 @@ from django.db import models
 from django.utils.translation import ugettext as _
 from django.contrib import admin
 from django.utils.html import format_html
-from koalixcrm.crm.reporting.employee_assignment_to_task import EmployeeAssignmentToTask, InlineEmployeeAssignmentToTask
+from koalixcrm.crm.reporting.estimation_of_resource_consumption import EstimationOfResourceConsumption
+from koalixcrm.crm.reporting.estimation_of_resource_consumption import InlineEstimationOfResourceConsumption
 from koalixcrm.crm.reporting.generic_task_link import InlineGenericTaskLink
 from koalixcrm.crm.reporting.work import InlineWork, Work
+from koalixcrm.crm.reporting.reporting_period import ReportingPeriod
 from koalixcrm.crm.documents.pdf_export import PDFExport
 from rest_framework import serializers
 from koalixcrm import global_support_functions
@@ -17,12 +19,6 @@ class Task(models.Model):
                              max_length=100,
                              blank=True,
                              null=True)
-    planned_start_date = models.DateField(verbose_name=_("Planned Start"),
-                                          blank=True,
-                                          null=True)
-    planned_end_date = models.DateField(verbose_name=_("Planned End"),
-                                        blank=True,
-                                        null=True)
     project = models.ForeignKey("Project",
                                 verbose_name=_('Project'),
                                 related_name='tasks',
@@ -69,25 +65,32 @@ class Task(models.Model):
     planned_duration.short_description = _("Planned Duration [dys]")
     planned_duration.tags = True
 
-    def planned_effort(self):
-        """The function return the planned effort of all employees which have been assigned to
-        this task
+    def planned_costs(self, reporting_period):
+        """The function return the planned costs of resources which have been estimated for this task
+        at a specific reporting period. When no reporting_period is provided, the last reporting period
+        is selected
 
         Args:
         no arguments
 
         Returns:
-        planned_effort [hrs] (Decimal), 0 if when no assignments are present
+        planned costs (Decimal), 0 if when no estimations are present
 
         Raises:
         No exceptions planned"""
-        assignments_to_this_task = EmployeeAssignmentToTask.objects.filter(task=self.id)
-        sum_effort = 0
-        for assignment_to_this_task in assignments_to_this_task:
-            sum_effort += assignment_to_this_task.planned_effort
-        return sum_effort
-    planned_effort.short_description = _("Planned Effort [hrs]")
-    planned_effort.tags = True
+        if not reporting_period:
+            reporting_period_internal = ReportingPeriod.get_reporting_period(self.project,
+                                                                             global_support_functions.get_today_date())
+        else:
+            reporting_period_internal = reporting_period
+        estimations_to_this_task = EstimationOfResourceConsumption.objects.filter(task=self.id,
+                                                                                  reporting_period=reporting_period_internal)
+        sum_costs = 0
+        for estimation_to_this_task in estimations_to_this_task:
+            sum_costs += estimation_to_this_task.calculated_costs
+        return sum_costs
+    planned_costs.short_description = _("Planned Costs")
+    planned_costs.tags = True
 
     def effective_start(self):
         """The function return the effective start of a project as a date. The
@@ -216,7 +219,7 @@ class Task(models.Model):
         main_xml = PDFExport.append_element_to_pattern(main_xml,
                                                        "object/[@model='crm.task']",
                                                        "Planned_Effort",
-                                                       self.planned_effort())
+                                                       self.planned_costs())
         main_xml = PDFExport.append_element_to_pattern(main_xml,
                                                        "object/[@model='crm.task']",
                                                        "Effective_Duration",
@@ -233,7 +236,7 @@ class Task(models.Model):
     effective_effort_overall.tags = True
 
     def effective_effort(self, reporting_period):
-        """ effective effort returns the effective effort on a task
+        """ Effective effort returns the effective effort on a task
         when reporting_period is None, the effective effort overall is calculated
         when reporting_period is specified, the effective effort in this period is calculated"""
         if reporting_period:
@@ -246,6 +249,25 @@ class Task(models.Model):
             sum_effort += work_object.effort_seconds()
         sum_effort_in_hours = sum_effort / 3600
         return sum_effort_in_hours
+
+    def effective_costs(self, reporting_period):
+        """ Effective effort returns the effective costs on a task
+        when reporting_period is None, the effective effort overall is calculated
+        when reporting_period is specified, the effective effort in this period is calculated"""
+        if reporting_period:
+            work_objects = Work.objects.filter(task=self.id,
+                                               reporting_period=reporting_period)
+            expense_objects = Expense.objects.filter(task=self.id,
+                                                     reporting_period=reporting_period)
+        else:
+            work_objects = Work.objects.filter(task=self.id)
+            expense_objects = Expense.objects.filter(task=self.id)
+        sum_costs = 0
+        for work_object in work_objects:
+            sum_costs += work_object.costs()
+        for expense_object in expense_objects:
+            sum_costs += expense_object.costs()
+        return sum_costs
 
     def is_reporting_allowed(self):
         """Returns True when the task is available for reporting,
@@ -306,15 +328,13 @@ class OptionTask(admin.ModelAdmin):
     fieldsets = (
         (_('Work'), {
             'fields': ('title',
-                       'planned_start_date',
-                       'planned_end_date',
                        'project',
                        'description',
                        'status')
         }),
     )
     save_as = True
-    inlines = [InlineEmployeeAssignmentToTask,
+    inlines = [InlineEstimationOfResourceConsumption,
                InlineGenericTaskLink,
                InlineWork]
 
@@ -323,6 +343,8 @@ class InlineTasks(admin.TabularInline):
     model = Task
     readonly_fields = ('link_to_task',
                        'last_status_change',
+                       'planned_start_date',
+                       'planned_end_date',
                        'planned_duration',
                        'planned_effort',
                        'effective_duration',

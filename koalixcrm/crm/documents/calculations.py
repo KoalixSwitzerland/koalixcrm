@@ -31,7 +31,10 @@ class Calculations:
 
         if positions.exists():
             for position in positions:
-                price += Calculations.calculate_position_price(position, pricing_date, contact_for_price_calculation, document.currency)
+                price += Calculations.calculate_position_price(position,
+                                                               pricing_date,
+                                                               contact_for_price_calculation,
+                                                               document.currency)
                 tax += Calculations.calculate_position_tax(position, document.currency)
 
             if calculate_with_document_discount:
@@ -64,7 +67,10 @@ class Calculations:
             Can trow Product.NoPriceFound when Product Price could not be found"""
 
         if not position.overwrite_product_price:
-            position.position_price_per_unit = position.product.get_price(pricing_date, position.unit, contact, currency)
+            position.position_price_per_unit = position.product.get_price(pricing_date,
+                                                                          position.unit,
+                                                                          contact,
+                                                                          currency)
         if isinstance(position.discount, Decimal):
             position.last_calculated_price = int(position.position_price_per_unit * position.quantity * (
                 1 - position.discount / 100) / currency.rounding) * currency.rounding

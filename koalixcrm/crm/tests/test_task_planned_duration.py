@@ -40,8 +40,8 @@ class TaskPlannedDuration(TestCase):
         self.assertEqual(
             (self.test_1st_task.planned_duration()).__str__(), "60")
         self.assertEqual(
-            (self.test_1st_task.planned_effort()).__str__(), "0")
+            (self.test_1st_task.planned_costs()).__str__(), "0")
         self.assertEqual(
             (self.test_2nd_task.planned_duration()).__str__(), "90")
         self.assertEqual(
-            (self.test_2nd_task.planned_effort()).__str__(), "0")
+            (self.test_2nd_task.planned_costs()).__str__(), "0")

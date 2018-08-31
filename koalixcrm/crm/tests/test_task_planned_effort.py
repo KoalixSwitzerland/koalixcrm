@@ -44,11 +44,11 @@ class TaskPlannedEffort(TestCase):
         self.assertEqual(
             (self.test_1st_task.planned_duration()).__str__(), "60")
         self.assertEqual(
-            (self.test_1st_task.planned_effort()).__str__(), "0")
+            (self.test_1st_task.planned_costs()).__str__(), "0")
         self.assertEqual(
             (self.test_2nd_task.planned_duration()).__str__(), "90")
         self.assertEqual(
-            (self.test_2nd_task.planned_effort()).__str__(), "0")
+            (self.test_2nd_task.planned_costs()).__str__(), "0")
         StandardEmployeeAssignmentToTaskFactory.create(employee=self.test_user_extension,
                                                        planned_effort="2.00",
                                                        task=self.test_1st_task)
@@ -62,10 +62,10 @@ class TaskPlannedEffort(TestCase):
                                                        planned_effort="3.25",
                                                        task=self.test_2nd_task)
         self.assertEqual(
-            (self.test_1st_task.planned_effort()).__str__(), "3.50")
+            (self.test_1st_task.planned_costs()).__str__(), "3.50")
         self.assertEqual(
             (self.test_1st_task.effective_effort(reporting_period=None)).__str__(), "0.0")
         self.assertEqual(
-            (self.test_2nd_task.planned_effort()).__str__(), "8.00")
+            (self.test_2nd_task.planned_costs()).__str__(), "8.00")
         self.assertEqual(
             (self.test_2nd_task.effective_effort(reporting_period=None)).__str__(), "0.0")

@@ -40,23 +40,38 @@ class Product(models.Model):
         customer_group_transforms = koalixcrm.crm.product.price.CustomerGroupTransform.objects.filter(product=self.id)
         valid_prices = list()
         for price in list(prices):
+            if price.direct_fits(date,
+                                 unit,
+                                 customerGroup,
+                                 currency):
+                valid_prices.append(price.price)
+            elif price.fits_trough_customer_group_transform():
+                valid_prices.append(price.price)
+            elif price.fits_through_currency_transform():
+                price.transform()
+            elif price.fits_through_price_and_group_transform():
+
             for customerGroup in CustomerGroup.objects.filter(customer=customer):
-                if price.matchesDateUnitCustomerGroupCurrency(date, unit, customerGroup, currency):
-                    valid_prices.append(price.price)
+                if price.matches_date_unit_customer_group_currency(date,
+                                                                   unit,
+                                                                   customerGroup,
+                                                                   currency):
                 else:
                     for customerGroupTransform in customer_group_transforms:
-                        if price.matchesDateUnitCustomerGroupCurrency(date,
-                                                                      unit,
-                                                                      customerGroupTransform.transform(customerGroup),
-                                                                      currency):
+                        if price.matches_date_unit_customer_group_currency(date,
+                                                                           unit,
+                                                                           customerGroupTransform.transform(
+                                                                               customerGroup),
+                                                                           currency):
                             valid_prices.append(price.price * customerGroup.factor);
                         else:
                             for unitTransform in list(unit_transforms):
-                                if price.matchesDateUnitCustomerGroupCurrency(date,
-                                                                              unitTransform.transfrom(unit).transform(
-                                                                                  unitTransform),
-                                                                              customerGroupTransform.transform(
-                                                                                  customerGroup), currency):
+                                if price.matches_date_unit_customer_group_currency(date,
+                                                                                   unitTransform.transfrom(unit).transform(
+                                                                                       unitTransform),
+                                                                                   customerGroupTransform.transform(
+                                                                                       customerGroup),
+                                                                                   currency):
                                     valid_prices.append(
                                         price.price * customerGroupTransform.factor * unitTransform.factor);
         if len(valid_prices) > 0:
@@ -96,10 +111,19 @@ class Product(models.Model):
 
 
 class OptionProduct(admin.ModelAdmin):
-    list_display = ('product_number', 'title', 'default_unit', 'tax', 'accounting_product_categorie')
+    list_display = ('product_number',
+                    'title',
+                    'default_unit',
+                    'tax',
+                    'accounting_product_categorie')
     list_display_links = ('product_number',)
     fieldsets = (
         (_('Basics'), {
-            'fields': ('product_number', 'title', 'description', 'default_unit', 'tax', 'accounting_product_categorie')
+            'fields': ('product_number',
+                       'title',
+                       'description',
+                       'default_unit',
+                       'tax',
+                       'accounting_product_categorie')
         }),)
     inlines = [ProductPrice, ProductUnitTransform]

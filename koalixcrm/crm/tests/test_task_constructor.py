@@ -1,6 +1,5 @@
 import datetime
 import pytest
-import pytz
 from django.test import TestCase
 from koalixcrm.crm.factories.factory_user import AdminUserFactory
 from koalixcrm.crm.factories.factory_customer_billing_cycle import StandardCustomerBillingCycleFactory
@@ -9,9 +8,7 @@ from koalixcrm.crm.factories.factory_customer_group import StandardCustomerGroup
 from koalixcrm.crm.factories.factory_currency import StandardCurrencyFactory
 from koalixcrm.crm.factories.factory_reporting_period import StandardReportingPeriodFactory
 from koalixcrm.djangoUserExtension.factories.factory_user_extension import StandardUserExtensionFactory
-from koalixcrm.crm.factories.factory_task_status import DoneTaskStatusFactory
-from koalixcrm.crm.factories.factory_task import StandardTaskFactory
-from koalixcrm.global_support_functions import get_today_date
+from koalixcrm.crm.reporting.task import Task
 
 
 @pytest.fixture()
@@ -51,18 +48,13 @@ def freeze(monkeypatch):
     return Freeze
 
 
-class TaskUpdateLastStatusUpdate(TestCase):
+class TaskConstructorTest(TestCase):
 
     @pytest.fixture(autouse=True)
     def freeze_time(self, freeze):
         self._freeze = freeze
 
     def setUp(self):
-        datetime_now = datetime.datetime(2024, 1, 1, 0, 00)
-        datetime_now = pytz.timezone("UTC").localize(datetime_now, is_dst=None)
-        start_date = (datetime_now - datetime.timedelta(days=30)).date().__str__()
-        end_date_first_task = (datetime_now + datetime.timedelta(days=30)).date().__str__()
-        end_date_second_task = (datetime_now + datetime.timedelta(days=60)).date().__str__()
 
         self.test_billing_cycle = StandardCustomerBillingCycleFactory.create()
         self.test_user = AdminUserFactory.create()
@@ -71,24 +63,17 @@ class TaskUpdateLastStatusUpdate(TestCase):
         self.test_currency = StandardCurrencyFactory.create()
         self.test_user_extension = StandardUserExtensionFactory.create(user=self.test_user)
         self.test_reporting_period = StandardReportingPeriodFactory.create()
-        self.test_1st_task = StandardTaskFactory.create(title="1st Test Task",
-                                                        planned_start_date=start_date,
-                                                        planned_end_date=end_date_first_task,
-                                                        project=self.test_reporting_period.project,
-                                                        last_status_change=datetime.date(2024, 6, 15)
-                                                        )
-        self.test_2nd_task = StandardTaskFactory.create(title="2nd Test Task",
-                                                        planned_start_date=start_date,
-                                                        planned_end_date=end_date_second_task,
-                                                        project=self.test_reporting_period.project,
-                                                        last_status_change=datetime.date(2024, 6, 15))
 
-    def test_last_status_update(self):
-        previous_last_status_change = self.test_1st_task.last_status_change
-        new_status = DoneTaskStatusFactory.create()
+    def test_task_constructor(self):
         self._freeze.freeze(datetime.date(2024, 6, 2))
-        self.test_1st_task.status = new_status
-        self.test_1st_task.save()
-        self.assertEquals(previous_last_status_change, datetime.date(2024, 6, 15))
-        self.assertEqual(self.test_1st_task.last_status_change, datetime.date(2024, 6, 2))
-
+        task_minimal_1 = Task.objects.create(
+            project=self.test_reporting_period.project,
+        )
+        task_minimal_1.save()
+        self.assertEquals(task_minimal_1.last_status_change, datetime.date(2024, 6, 2))
+        self._freeze.freeze(datetime.date(2018, 6, 15))
+        task_minimal_2 = Task.objects.create(
+            project=self.test_reporting_period.project,
+        )
+        task_minimal_2.save()
+        self.assertEquals(task_minimal_2.last_status_change, datetime.date(2018, 6, 15))
