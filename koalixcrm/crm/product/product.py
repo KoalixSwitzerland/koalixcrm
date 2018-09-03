@@ -3,11 +3,11 @@ from django.contrib import admin
 from django.db import models
 from django.utils.translation import ugettext as _
 
-import koalixcrm.crm.product.price
-from koalixcrm.crm.contact.customer_group import CustomerGroup
+from koalixcrm.crm.product.price import Price
 from koalixcrm.crm.product.price import ProductPrice
-from koalixcrm.crm.product.unit import ProductUnitTransform
-from koalixcrm.crm.product.unit import UnitTransform
+from koalixcrm.crm.product.unit_transform import ProductUnitTransform
+from koalixcrm.crm.product.customer_group_transform import ProductCustomerGroupTransform
+from koalixcrm.crm.product.currency_transform import ProductCurrencyTransform
 
 
 class Product(models.Model):
@@ -35,45 +35,16 @@ class Product(models.Model):
                                                      blank="True")
 
     def get_price(self, date, unit, customer, currency):
-        prices = koalixcrm.crm.product.price.Price.objects.filter(product=self.id)
-        unit_transforms = UnitTransform.objects.filter(product=self.id)
-        customer_group_transforms = koalixcrm.crm.product.price.CustomerGroupTransform.objects.filter(product=self.id)
+        prices = Price.objects.filter(product=self.id)
         valid_prices = list()
         for price in list(prices):
-            if price.direct_fits(date,
-                                 unit,
-                                 customerGroup,
-                                 currency):
-                valid_prices.append(price.price)
-            elif price.fits_trough_customer_group_transform():
-                valid_prices.append(price.price)
-            elif price.fits_through_currency_transform():
-                price.transform()
-            elif price.fits_through_price_and_group_transform():
-
-            for customerGroup in CustomerGroup.objects.filter(customer=customer):
-                if price.matches_date_unit_customer_group_currency(date,
-                                                                   unit,
-                                                                   customerGroup,
-                                                                   currency):
-                else:
-                    for customerGroupTransform in customer_group_transforms:
-                        if price.matches_date_unit_customer_group_currency(date,
-                                                                           unit,
-                                                                           customerGroupTransform.transform(
-                                                                               customerGroup),
-                                                                           currency):
-                            valid_prices.append(price.price * customerGroup.factor);
-                        else:
-                            for unitTransform in list(unit_transforms):
-                                if price.matches_date_unit_customer_group_currency(date,
-                                                                                   unitTransform.transfrom(unit).transform(
-                                                                                       unitTransform),
-                                                                                   customerGroupTransform.transform(
-                                                                                       customerGroup),
-                                                                                   currency):
-                                    valid_prices.append(
-                                        price.price * customerGroupTransform.factor * unitTransform.factor);
+            currency_factor = price.get_currency_transform_factor(price)
+            unit_factor = price.get_unit_transform_factor(price)
+            group_factor = price.get_customer_group_transform_factor(customer)
+            if currency_factor != 0 and \
+                    group_factor != 0 and \
+                    unit_factor != 0:
+                valid_prices.append(price)
         if len(valid_prices) > 0:
             lowest_price = valid_prices[0]
             for price in valid_prices:
@@ -84,10 +55,10 @@ class Product(models.Model):
             raise Product.NoPriceFound(customer, unit, date, currency, self)
 
     def get_tax_rate(self):
-        return self.tax.get_tax_rate();
+        return self.tax.get_tax_rate()
 
     def __str__(self):
-        return str(self.product_number) + ' ' + self.title
+        return str(self.product_number) + ' ' + self.title.__str__()
 
     class Meta:
         app_label = "crm"
@@ -126,4 +97,7 @@ class OptionProduct(admin.ModelAdmin):
                        'tax',
                        'accounting_product_categorie')
         }),)
-    inlines = [ProductPrice, ProductUnitTransform]
+    inlines = [ProductPrice,
+               ProductUnitTransform,
+               ProductCurrencyTransform,
+               ProductCustomerGroupTransform]

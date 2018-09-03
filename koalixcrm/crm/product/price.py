@@ -6,6 +6,9 @@ from django.utils.translation import ugettext as _
 from koalixcrm.crm.product.currency import Currency
 from koalixcrm.crm.product.unit import Unit
 from koalixcrm.crm.contact.customer_group import CustomerGroup
+from koalixcrm.crm.product.unit_transform import UnitTransform
+from koalixcrm.crm.product.customer_group_transform import CustomerGroupTransform
+from koalixcrm.crm.product.currency_transform import CurrencyTransform
 
 
 class Price(models.Model):
@@ -23,7 +26,8 @@ class Price(models.Model):
                                        blank=True,
                                        null=True)
     price = models.DecimalField(max_digits=17,
-                                decimal_places=2, verbose_name=_("Price Per Unit"))
+                                decimal_places=2,
+                                verbose_name=_("Price Per Unit"))
     valid_from = models.DateField(verbose_name=_("Valid from"),
                                   blank=True,
                                   null=True)
@@ -66,6 +70,44 @@ class Price(models.Model):
             return True
         else:
             return False
+
+    def get_currency_transform_factor(self, currency):
+        """check currency conditions and factor"""
+        if self.currency == currency:
+            currency_factor = 1
+        elif CurrencyTransform.currency_transfrom_exists(from_currency=self.currency,
+                                                         to_currency=currency):
+            currency_factor = CurrencyTransform.currency_transfrom(from_currency=self.currency,
+                                                                   to_currency=currency)
+        else:
+            currency_factor = 0
+        return currency_factor
+
+    def get_unit_transform_factor(self, unit):
+        """check unit conditions and factor"""
+        if self.unit == unit:
+            unit_factor = 1
+        elif UnitTransform.unit_transfrom_exists(from_unit=self.unit,
+                                                 to_unit=unit):
+            unit_factor = UnitTransform.unit_transfrom(from_unit=self.unit,
+                                                       to_unit=unit)
+        else:
+            unit_factor = 0
+        return unit_factor
+
+    def get_customer_group_transform_factor(self, customer):
+        """check currency conditions and factor"""
+        customer_groups = CustomerGroup.objects.filter(customer=customer)
+        for customer_group in customer_groups:
+            if self.customer_group == customer_group:
+                customer_group_factor = 1
+            elif CustomerGroupTransform.group_transfrom_exists(from_group=self.customer_group,
+                                                               to_group=customer_group):
+                customer_group_factor = CustomerGroupTransform.group_transform(from_group=self.customer_group,
+                                                                               to_group=customer_group)
+            else:
+                customer_group_factor = 0
+        return customer_group_factor
 
     def matches_date_unit_customer_group_currency(self, date, unit, customer_group, currency):
         if (self.is_unit_criteria_fulfilled(unit) &

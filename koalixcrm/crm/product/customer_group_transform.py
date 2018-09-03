@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.contrib import admin
 from django.utils.translation import ugettext as _
 
 
 class CustomerGroupTransform(models.Model):
     from_customer_group = models.ForeignKey('CustomerGroup',
-                                            verbose_name=_("From Unit"),
+                                            verbose_name=_("From Customer Group"),
                                             related_name="db_reltransfromfromcustomergroup",
                                             blank=False,
                                             null=False)
     to_customer_group = models.ForeignKey('CustomerGroup',
-                                          verbose_name=_("To Unit"),
+                                          verbose_name=_("To Customer Group"),
                                           related_name="db_reltransfromtocustomergroup",
                                           blank=False,
                                           null=False)
@@ -49,3 +50,17 @@ class CustomerGroupTransform(models.Model):
         app_label = "crm"
         verbose_name = _('Customer Group Price Transform')
         verbose_name_plural = _('Customer Group Price Transforms')
+
+
+class ProductCustomerGroupTransform(admin.TabularInline):
+    model = CustomerGroupTransform
+    extra = 1
+    classes = ['collapse']
+    fieldsets = (
+        ('', {
+            'fields': ('from_customer_group',
+                       'to_customer_group',
+                       'factor',)
+        }),
+    )
+    allow_add = True
