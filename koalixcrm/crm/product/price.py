@@ -71,42 +71,68 @@ class Price(models.Model):
         else:
             return False
 
-    def get_currency_transform_factor(self, currency):
+    def is_date_in_range(self, date):
+        if (self.valid_from <= date) and (date <= self.valid_until):
+            return True
+        else:
+            return False
+
+    def get_currency_transform_factor(self, currency, product):
         """check currency conditions and factor"""
         if self.currency == currency:
             currency_factor = 1
-        elif CurrencyTransform.currency_transfrom_exists(from_currency=self.currency,
-                                                         to_currency=currency):
-            currency_factor = CurrencyTransform.currency_transfrom(from_currency=self.currency,
-                                                                   to_currency=currency)
         else:
-            currency_factor = 0
+            currency_transform = CurrencyTransform.objects.get(from_currency=self.currency,
+                                                               to_currency=currency,
+                                                               product=product)
+            if currency_transform:
+                currency_transform.get_transfrom_factor()
+            else:
+                currency_factor = 0
         return currency_factor
 
-    def get_unit_transform_factor(self, unit):
+    def get_unit_transform_factor(self, unit, product):
         """check unit conditions and factor"""
         if self.unit == unit:
             unit_factor = 1
-        elif UnitTransform.unit_transfrom_exists(from_unit=self.unit,
-                                                 to_unit=unit):
-            unit_factor = UnitTransform.unit_transfrom(from_unit=self.unit,
-                                                       to_unit=unit)
         else:
-            unit_factor = 0
+            unit_transform = UnitTransform.objects.get(from_unit=self.unit,
+                                                       to_unit=unit,
+                                                       product=product)
+            if unit_transform:
+                unit_transform.get_transfrom_factor()
+            else:
+                unit_factor = 0
         return unit_factor
 
-    def get_customer_group_transform_factor(self, customer):
-        """check currency conditions and factor"""
+    def get_customer_group_transform_factor(self, customer, product):
+        """The function searches through all customer_groups in which the customer is member of
+        from these customer_groups, the function returns the customer_group with the perfect match
+        or it returns the factor with the lowest transform factor
+
+        Args:
+            koalixcrm.crm.contact.customer customer
+            koalixcrm.crm.product.product product
+
+        Returns:
+            Decimal factor
+
+        Raises:
+            No exceptions planned"""
         customer_groups = CustomerGroup.objects.filter(customer=customer)
+        customer_group_factor = 0
         for customer_group in customer_groups:
             if self.customer_group == customer_group:
                 customer_group_factor = 1
-            elif CustomerGroupTransform.group_transfrom_exists(from_group=self.customer_group,
-                                                               to_group=customer_group):
-                customer_group_factor = CustomerGroupTransform.group_transform(from_group=self.customer_group,
-                                                                               to_group=customer_group)
+                """Stop for loop when a perfect match is found"""
+                break
             else:
-                customer_group_factor = 0
+                customer_group = CustomerGroupTransform.objects.get(from_customer_group=self.customer_group,
+                                                                    to_customer_group=customer_group,
+                                                                    product=product)
+                if customer_group:
+                    if customer_group_factor > customer_group.get_transfrom_factor():
+                        customer_group_factor = customer_group.get_transfrom_factor()
         return customer_group_factor
 
     def matches_date_unit_customer_group_currency(self, date, unit, customer_group, currency):

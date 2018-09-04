@@ -31,7 +31,10 @@ class EstimationOfResourceConsumption(models.Model):
                                 null=True)
 
     def calculated_costs(self):
-        res
+        currency = self.task.project.default_currency
+        unit = self.resource_type.default_unit
+
+        self.resource_type.get_costs(self, date, unit, customer, currency)
 
     def __str__(self):
         return _("Estimation of Resource Consumption") + ": " + str(self.id)

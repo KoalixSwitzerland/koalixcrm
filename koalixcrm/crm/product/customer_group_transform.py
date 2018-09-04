@@ -43,6 +43,9 @@ class CustomerGroupTransform(models.Model):
         else:
             return None
 
+    def get_transform_factor(self):
+        return self.factor
+
     def __str__(self):
         return "From " + self.from_customer_group.name + " to " + self.to_customer_group.name
 

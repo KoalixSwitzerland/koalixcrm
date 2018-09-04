@@ -24,6 +24,9 @@ class UnitTransform(models.Model):
         else:
             return None
 
+    def get_transform_factor(self):
+        return self.factor
+
     def __str__(self):
         return "From " + self.from_unit.short_name + " to " + self.to_unit.short_name
 

@@ -34,6 +34,10 @@ class Project(models.Model):
                                              verbose_name=_("Default Template Set"),
                                              null=True,
                                              blank=True)
+    default_currency = models.ForeignKey("Currency",
+                                         verbose_name=_("Default Currency"),
+                                         null=False,
+                                         blank=False)
     date_of_creation = models.DateTimeField(verbose_name=_("Created at"),
                                             auto_now_add=True)
     last_modification = models.DateTimeField(verbose_name=_("Last modified"),

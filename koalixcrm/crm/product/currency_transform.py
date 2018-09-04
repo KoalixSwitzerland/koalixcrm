@@ -8,21 +8,18 @@ from django.utils.translation import ugettext as _
 class CurrencyTransform(models.Model):
     from_currency = models.ForeignKey('Currency',
                                   verbose_name=_("From Currency"),
-                                  related_name="db_reltransfromfromcurrency")
+                                  related_name="db_reltransformfromcurrency")
     to_currency = models.ForeignKey('Currency',
                                 verbose_name=_("To Currency"),
-                                related_name="db_reltransfromtocurrency")
+                                related_name="db_reltransformtocurrency")
     product = models.ForeignKey('Product',
                                 verbose_name=_("Product"))
     factor = models.IntegerField(verbose_name=_("Factor between From and To Currency"),
                                  blank=True,
                                  null=True)
 
-    def transform(self, currency):
-        if self.from_currency == currency:
-            return self.to_currency
-        else:
-            return None
+    def get_transform_factor(self):
+        return self.factor
 
     def __str__(self):
         return "From " + self.from_currency.short_name + " to " + self.to_currency.short_name

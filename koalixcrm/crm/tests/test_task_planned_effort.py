@@ -40,7 +40,6 @@ class TaskPlannedEffort(TestCase):
 
     @pytest.mark.back_end_tests
     def test_planned_effort(self):
-        datetime_now = make_date_utc(datetime.datetime(2024, 1, 1, 0, 00))
         self.assertEqual(
             (self.test_1st_task.planned_duration()).__str__(), "60")
         self.assertEqual(
