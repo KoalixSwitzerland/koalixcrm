@@ -100,7 +100,7 @@ class Work(models.Model):
         self.check_working_hours()
         return cleaned_data
 
-    def delete(self, using, keep_parents):
+    def delete(self, using=None, keep_parents=False):
         if self.reporting_period.status.is_done:
             raise ReportingPeriodDoneDeleteNotPossible()
         else:
