@@ -133,7 +133,9 @@ class Task(models.Model):
 
         Raises:
         No exceptions planned"""
-        if self.status.is_done:
+        if not self.status:
+            task_ended = False
+        elif self.status.is_done:
             task_ended = self.status.is_done
         else:
             task_ended = False
