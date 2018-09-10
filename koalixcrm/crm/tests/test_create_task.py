@@ -7,7 +7,7 @@ from koalixcrm.crm.models import Customer
 from koalixcrm.crm.models import CustomerGroup
 from koalixcrm.crm.models import CustomerBillingCycle
 from koalixcrm.crm.models import Currency
-from koalixcrm.crm.models import Product
+from koalixcrm.crm.models import ProductType
 from koalixcrm.crm.models import Tax
 from koalixcrm.crm.models import Unit
 from koalixcrm.crm.models import Quote
@@ -75,7 +75,7 @@ class DocumentCalculationsTest(TestCase):
             date_of_creation=date_now,
             last_modified_by=test_user,)
         for i in range(10):
-            test_product = Product.objects.create(
+            test_product = ProductType.objects.create(
                 description="This is a test product " + i.__str__(),
                 title="This is a test product " + i.__str__(),
                 product_number=12334235+i,

@@ -24,7 +24,7 @@ from koalixcrm.crm.documents.delivery_note import DeliveryNote
 
 from koalixcrm.crm.product.currency import *
 from koalixcrm.crm.product.price import *
-from koalixcrm.crm.product.product import *
+from koalixcrm.crm.product.product_type import *
 from koalixcrm.crm.product.customer_group_transform import *
 from koalixcrm.crm.product.unit_transform import *
 from koalixcrm.crm.product.tax import *

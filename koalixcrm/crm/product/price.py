@@ -12,8 +12,8 @@ from koalixcrm.crm.product.currency_transform import CurrencyTransform
 
 
 class Price(models.Model):
-    product = models.ForeignKey("Product",
-                                verbose_name=_("Product"))
+    product_type = models.ForeignKey("Product Type",
+                                     verbose_name=_("Product Type"))
     unit = models.ForeignKey(Unit,
                              blank=False,
                              verbose_name=_("Unit"))

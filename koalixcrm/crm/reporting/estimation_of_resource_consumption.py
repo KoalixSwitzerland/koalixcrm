@@ -10,10 +10,10 @@ class EstimationOfResourceConsumption(models.Model):
                              verbose_name=_('Task'),
                              blank=False,
                              null=False)
-    resource_type = models.ForeignKey("Product",
-                                      verbose_name="Resource Type",
-                                      blank=False,
-                                      null=False)
+    product = models.ForeignKey("Product",
+                                verbose_name="Resource Type",
+                                blank=False,
+                                null=False)
     reporting_period = models.ForeignKey("ReportingPeriod",
                                          verbose_name="Reporting Period",
                                          blank=False,
@@ -32,9 +32,9 @@ class EstimationOfResourceConsumption(models.Model):
 
     def calculated_costs(self):
         currency = self.task.project.default_currency
-        unit = self.resource_type.default_unit
+        unit = self.product.default_unit
 
-        self.resource_type.get_costs(self, date, unit, currency)
+        self.product.get_costs(self, date, unit, currency)
 
     def __str__(self):
         return _("Estimation of Resource Consumption") + ": " + str(self.id)

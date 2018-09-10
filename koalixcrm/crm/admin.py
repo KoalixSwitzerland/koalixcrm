@@ -10,7 +10,7 @@ from koalixcrm.crm.documents.purchase_order import PurchaseOrder, OptionPurchase
 from koalixcrm.crm.documents.contract import Contract, OptionContract
 from koalixcrm.crm.product.tax import Tax, OptionTax
 from koalixcrm.crm.product.unit import Unit, OptionUnit
-from koalixcrm.crm.product.product import Product, OptionProduct
+from koalixcrm.crm.product.product_type import ProductType, OptionProductType
 from koalixcrm.crm.product.currency import Currency, OptionCurrency
 from koalixcrm.crm.contact.customer import Customer, OptionCustomer
 from koalixcrm.crm.contact.supplier import Supplier, OptionSupplier
@@ -49,7 +49,7 @@ admin.site.register(PurchaseOrder, OptionPurchaseOrder)
 admin.site.register(Unit, OptionUnit)
 admin.site.register(Currency, OptionCurrency)
 admin.site.register(Tax, OptionTax)
-admin.site.register(Product, OptionProduct)
+admin.site.register(ProductType, OptionProductType)
 
 admin.site.register(Task, OptionTask)
 admin.site.register(TaskLinkType, OptionTaskLinkType)

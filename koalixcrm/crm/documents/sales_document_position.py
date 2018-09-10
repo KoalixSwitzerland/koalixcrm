@@ -45,11 +45,11 @@ class SalesDocumentPosition(Position):
     @staticmethod
     def add_positions(position_class, object_to_create_pdf):
         from koalixcrm.crm.product.unit import Unit
-        from koalixcrm.crm.product.product import Product
+        from koalixcrm.crm.product.product_type import ProductType
         objects = list(position_class.objects.filter(sales_document=object_to_create_pdf.id))
         for position in list(position_class.objects.filter(sales_document=object_to_create_pdf.id)):
             objects += list(Position.objects.filter(id=position.id))
-            objects += list(Product.objects.filter(id=position.product.id))
+            objects += list(ProductType.objects.filter(id=position.product.id))
             objects += list(Unit.objects.filter(id=position.unit.id))
         return objects
 

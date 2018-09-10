@@ -11,7 +11,7 @@ from koalixcrm.crm.contact.email_address import EmailAddress
 from koalixcrm.crm.contact.postal_address import PostalAddress
 from koalixcrm.crm.documents.sales_document_position import SalesDocumentPosition, SalesDocumentInlinePosition
 from koalixcrm.djangoUserExtension.models import TextParagraphInDocumentTemplate, UserExtension
-from koalixcrm.crm.product.product import Product
+from koalixcrm.crm.product.product_type import ProductType
 from koalixcrm.crm.exceptions import TemplateSetMissingInContract
 import koalixcrm.crm.documents.calculations
 from koalixcrm.crm.documents.pdf_export import PDFExport
@@ -350,7 +350,7 @@ class OptionSalesDocument(admin.ModelAdmin):
         try:
             koalixcrm.crm.documents.calculations.Calculations.calculate_document_price(obj, date.today())
             self.message_user(request, "Successfully calculated Prices")
-        except Product.NoPriceFound as e:
+        except ProductType.NoPriceFound as e:
             self.message_user(request, "Unsuccessful in updating the Prices " + e.__str__(), level=messages.ERROR)
         return obj
 

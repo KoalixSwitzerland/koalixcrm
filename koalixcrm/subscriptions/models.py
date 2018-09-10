@@ -5,7 +5,7 @@ from django.utils.translation import ugettext as _
 from filebrowser.fields import FileBrowseField
 import koalixcrm.crm.documents
 from koalixcrm.subscriptions.const.events import *
-from koalixcrm.crm.product.product import Product
+from koalixcrm.crm.product.product_type import ProductType
 
 
 class Subscription(models.Model):
@@ -64,7 +64,7 @@ class SubscriptionEvent(models.Model):
         verbose_name_plural = _('Subscription Events')
 
 
-class SubscriptionType(Product):
+class SubscriptionType(ProductType):
     cancelationPeriod = models.IntegerField(verbose_name=_("Cancelation Period (months)"), blank=True, null=True)
     automaticContractExtension = models.IntegerField(verbose_name=_("Automatic Contract Extension (months)"),
                                                      blank=True, null=True)
