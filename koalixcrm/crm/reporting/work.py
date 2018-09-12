@@ -12,7 +12,7 @@ from django.contrib import messages
 
 
 class Work(models.Model):
-    employee = models.ForeignKey("djangoUserExtension.UserExtension")
+    resource = models.ForeignKey("Resource")
     date = models.DateField(verbose_name=_("Date"), blank=False, null=False)
     start_time = models.DateTimeField(verbose_name=_("Start Time"), blank=True, null=True)
     stop_time = models.DateTimeField(verbose_name=_("Stop Time"), blank=True, null=True)
@@ -74,7 +74,7 @@ class Work(models.Model):
         return bool(self.stop_time) & (not bool(self.start_time))
 
     def __str__(self):
-        return _("Work") + ": " + str(self.id) + " " + _("from Person") + ": " + str(self.employee.id)
+        return _("Work") + ": " + str(self.id) + " " + _("from Person") + ": " + str(self.resource.id)
 
     def check_working_hours(self):
         """This method checks that the working hour is correctly proved either using the start_stop pattern
@@ -114,7 +114,7 @@ class Work(models.Model):
 
 class OptionWork(admin.ModelAdmin):
     list_display = ('link_to_work',
-                    'employee',
+                    'resource',
                     'task',
                     'get_short_description',
                     'date',
@@ -126,7 +126,7 @@ class OptionWork(admin.ModelAdmin):
 
     fieldsets = (
         (_('Work'), {
-            'fields': ('employee',
+            'fields': ('resource',
                        'date',
                        'start_time',
                        'stop_time',
@@ -158,14 +158,14 @@ class InlineWork(admin.TabularInline):
     model = Work
     readonly_fields = ('link_to_work',
                        'get_short_description',
-                       'employee',
+                       'resource',
                        'date',
                        'effort_as_string',)
     fieldsets = (
         (_('Work'), {
             'fields': ('link_to_work',
                        'get_short_description',
-                       'employee',
+                       'resource',
                        'date',
                        'effort_as_string',)
         }),

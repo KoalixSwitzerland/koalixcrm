@@ -17,7 +17,7 @@ class ProductType(models.Model):
     title = models.CharField(verbose_name=_("Title"),
                              max_length=200)
     product_identifier = models.CharField(verbose_name=_("Product Number"),
-                                          max_lenghth=200,
+                                          max_length=200,
                                           null=True,
                                           blank=True)
     default_unit = models.ForeignKey("Unit", verbose_name=_("Unit"))

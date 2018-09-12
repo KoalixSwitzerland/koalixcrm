@@ -30,7 +30,7 @@ from koalixcrm.crm.product.unit_transform import *
 from koalixcrm.crm.product.tax import *
 from koalixcrm.crm.product.unit import *
 
-from koalixcrm.crm.reporting.estimation_of_resource_consumption import *
+from koalixcrm.crm.reporting.agreement import *
 from koalixcrm.crm.reporting.generic_task_link import *
 from koalixcrm.crm.reporting.task import *
 from koalixcrm.crm.reporting.task_link_type import *

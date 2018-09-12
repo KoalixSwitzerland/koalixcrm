@@ -4,8 +4,8 @@ from django.db import models
 from django.utils.translation import ugettext as _
 from django.contrib import admin
 from django.utils.html import format_html
-from koalixcrm.crm.reporting.estimation_of_resource_consumption import EstimationOfResourceConsumption
-from koalixcrm.crm.reporting.estimation_of_resource_consumption import InlineEstimationOfResourceConsumption
+from koalixcrm.crm.reporting.agreement import Agreement
+from koalixcrm.crm.reporting.agreement import InlineAgreement
 from koalixcrm.crm.reporting.generic_task_link import InlineGenericTaskLink
 from koalixcrm.crm.reporting.work import InlineWork, Work
 from koalixcrm.crm.reporting.reporting_period import ReportingPeriod
@@ -74,7 +74,7 @@ class Task(models.Model):
         no arguments
 
         Returns:
-        planned costs (Decimal), 0 if when no estimations are present
+        planned costs (Decimal), 0 if when no agreements are present
 
         Raises:
         No exceptions planned"""
@@ -83,11 +83,11 @@ class Task(models.Model):
                                                                              global_support_functions.get_today_date())
         else:
             reporting_period_internal = reporting_period
-        estimations_to_this_task = EstimationOfResourceConsumption.objects.filter(task=self.id,
-                                                                                  reporting_period=reporting_period_internal)
+        agreements_to_this_task = Agreement.objects.filter(task=self.id,
+                                                           reporting_period=reporting_period_internal)
         sum_costs = 0
-        for estimation_to_this_task in estimations_to_this_task:
-            sum_costs += estimation_to_this_task.calculated_costs
+        for agreement_to_this_task in agreements_to_this_task:
+            sum_costs += agreement_to_this_task.calculated_costs
         return sum_costs
     planned_costs.short_description = _("Planned Costs")
     planned_costs.tags = True
@@ -336,7 +336,7 @@ class OptionTask(admin.ModelAdmin):
         }),
     )
     save_as = True
-    inlines = [InlineEstimationOfResourceConsumption,
+    inlines = [InlineAgreement,
                InlineGenericTaskLink,
                InlineWork]
 
