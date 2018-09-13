@@ -1,14 +1,21 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from django.forms import ValidationError
 from django.contrib import admin
-from django.utils.html import format_html
+from koalixcrm.djangoUserExtension.user_extension.user_extension import UserExtension
 from django.utils.translation import ugettext as _
-from koalixcrm.crm.documents.pdf_export import PDFExport
-from koalixcrm.global_support_functions import *
-from koalixcrm.crm.exceptions import ReportingPeriodDoneDeleteNotPossible
-from django.contrib import messages
 
 
 class ResourceManager(models.Model):
+    user = models.ForeignKey(UserExtension,
+                             verbose_name=_("User"))
+
+
+class ResourceManagerAdminView(admin.ModelAdmin):
+    list_display = ('id',
+                    'user',)
+    fieldsets = (
+        (_('Basics'), {
+            'fields': ('user',)
+        }),
+    )

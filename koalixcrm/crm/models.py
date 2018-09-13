@@ -24,13 +24,23 @@ from koalixcrm.crm.documents.delivery_note import DeliveryNote
 
 from koalixcrm.crm.product.currency import *
 from koalixcrm.crm.product.price import *
+from koalixcrm.crm.product.product import *
 from koalixcrm.crm.product.product_type import *
+from koalixcrm.crm.product.product_price import *
 from koalixcrm.crm.product.customer_group_transform import *
 from koalixcrm.crm.product.unit_transform import *
 from koalixcrm.crm.product.tax import *
 from koalixcrm.crm.product.unit import *
 
 from koalixcrm.crm.reporting.agreement import *
+from koalixcrm.crm.reporting.agreement_status import *
+from koalixcrm.crm.reporting.agreement_type import *
+from koalixcrm.crm.reporting.agreement_status import *
+from koalixcrm.crm.reporting.estimation import *
+from koalixcrm.crm.reporting.human_resource import *
+from koalixcrm.crm.reporting.resource_manager import *
+from koalixcrm.crm.reporting.resource_type import *
+from koalixcrm.crm.reporting.resource_price import *
 from koalixcrm.crm.reporting.generic_task_link import *
 from koalixcrm.crm.reporting.task import *
 from koalixcrm.crm.reporting.task_link_type import *

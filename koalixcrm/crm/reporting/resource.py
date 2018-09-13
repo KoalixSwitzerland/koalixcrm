@@ -1,16 +1,15 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from django.forms import ValidationError
-from django.contrib import admin
-from django.utils.html import format_html
 from django.utils.translation import ugettext as _
-from koalixcrm.crm.documents.pdf_export import PDFExport
-from koalixcrm.global_support_functions import *
-from koalixcrm.crm.exceptions import ReportingPeriodDoneDeleteNotPossible
-from django.contrib import messages
 
 
 class Resource(models.Model):
-    default_cost
-    ressource_type
+    resource_manager = models.ForeignKey("ResourceManager",
+                                         verbose_name=_("Manager"),
+                                         blank=True,
+                                         null=True)
+    resource_type = models.ForeignKey("ResourceType",
+                                      verbose_name=_("Resource Type"),
+                                      blank=True,
+                                      null=True)

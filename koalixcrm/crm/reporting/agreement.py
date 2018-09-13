@@ -1,14 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from django.forms import ValidationError
 from django.contrib import admin
-from django.utils.html import format_html
 from django.utils.translation import ugettext as _
-from koalixcrm.crm.documents.pdf_export import PDFExport
-from koalixcrm.global_support_functions import *
-from koalixcrm.crm.exceptions import ReportingPeriodDoneDeleteNotPossible
-from django.contrib import messages
+from koalixcrm.crm.reporting.resource_price import ResourcePrice
 
 
 class Agreement(models.Model):
@@ -16,14 +11,9 @@ class Agreement(models.Model):
                              verbose_name=_('Task'),
                              blank=False,
                              null=False)
-    reporting_period = models.ForeignKey("ReportingPeriod",
-                                         verbose_name="Reporting Period",
-                                         blank=False,
-                                         null=False)
     resource = models.ForeignKey("Resource")
-    resource_manager = models.ForeignKey("ResourceManager")
     unit = models.ForeignKey("Unit")
-    costs = models.ForeignKey("Cost")
+    costs = models.ForeignKey(ResourcePrice)
     agreement_type = models.ForeignKey("AgreementType")
     agreement_status = models.ForeignKey("AgreementStatus")
     agreement_from = models.DateField(verbose_name=_("Agreement From"),
@@ -49,19 +39,19 @@ class Agreement(models.Model):
 
     class Meta:
         app_label = "crm"
-        verbose_name = _('Estimation of Resource Consumption')
-        verbose_name_plural = _('Estimation of Resource Consumptions')
+        verbose_name = _('Agreement')
+        verbose_name_plural = _('Agreements')
 
 
-class InlineEstimationOfResourceConsumption(admin.TabularInline):
-    model = EstimationOfResourceConsumption
+class AgreementInlineAdminView(admin.TabularInline):
+    model = Agreement
     fieldsets = (
         (_('Work'), {
             'fields': ('task',
-                       'resource_type',
-                       'amount',
-                       'start_date',
-                       'end_date')
+                       'resource',
+                       'agreement_amount',
+                       'agreement_from',
+                       'agreement_to')
         }),
     )
     extra = 1

@@ -12,7 +12,7 @@ from django.contrib import messages
 
 
 class Work(models.Model):
-    resource = models.ForeignKey("Resource")
+    human_resource = models.ForeignKey("HumanResource")
     date = models.DateField(verbose_name=_("Date"), blank=False, null=False)
     start_time = models.DateTimeField(verbose_name=_("Start Time"), blank=True, null=True)
     stop_time = models.DateTimeField(verbose_name=_("Stop Time"), blank=True, null=True)
@@ -74,7 +74,7 @@ class Work(models.Model):
         return bool(self.stop_time) & (not bool(self.start_time))
 
     def __str__(self):
-        return _("Work") + ": " + str(self.id) + " " + _("from Person") + ": " + str(self.resource.id)
+        return _("Work") + ": " + str(self.id) + " " + _("from Person") + ": " + str(self.human_resource.id)
 
     def check_working_hours(self):
         """This method checks that the working hour is correctly proved either using the start_stop pattern
@@ -112,9 +112,9 @@ class Work(models.Model):
         verbose_name_plural = _('Work')
 
 
-class OptionWork(admin.ModelAdmin):
+class WorkAdminView(admin.ModelAdmin):
     list_display = ('link_to_work',
-                    'resource',
+                    'human_resource',
                     'task',
                     'get_short_description',
                     'date',
@@ -126,7 +126,7 @@ class OptionWork(admin.ModelAdmin):
 
     fieldsets = (
         (_('Work'), {
-            'fields': ('resource',
+            'fields': ('human_resource',
                        'date',
                        'start_time',
                        'stop_time',
@@ -154,18 +154,18 @@ class OptionWork(admin.ModelAdmin):
     delete_selected.short_description = _("Delete Selected Work")
 
 
-class InlineWork(admin.TabularInline):
+class WorkInlineAdminView(admin.TabularInline):
     model = Work
     readonly_fields = ('link_to_work',
                        'get_short_description',
-                       'resource',
+                       'human_resource',
                        'date',
                        'effort_as_string',)
     fieldsets = (
         (_('Work'), {
             'fields': ('link_to_work',
                        'get_short_description',
-                       'resource',
+                       'human_resource',
                        'date',
                        'effort_as_string',)
         }),

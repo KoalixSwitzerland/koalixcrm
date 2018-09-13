@@ -6,7 +6,7 @@ from django.contrib import admin
 from django.utils.translation import ugettext as _
 from django.utils.html import format_html
 from koalixcrm.crm.reporting.generic_project_link import InlineGenericLinks
-from koalixcrm.crm.reporting.task import InlineTasks
+from koalixcrm.crm.reporting.task import TaskInlineAdminView
 from koalixcrm.crm.documents.pdf_export import PDFExport
 from koalixcrm.crm.exceptions import TemplateSetMissingInContract
 from koalixcrm.crm.models import Task
@@ -241,11 +241,11 @@ class Project(models.Model):
             i = 0
             project_start = datetime.today()
             for task in tasks:
-                if task.planned_start_date:
+                if task.planned_start():
                     if i == 0:
-                        project_start = task.planned_start_date
-                    elif task.planned_start_date < project_start:
-                        project_start = task.planned_start_date
+                        project_start = task.planned_start()
+                    elif task.planned_start() < project_start:
+                        project_start = task.planned_start()
                     i += 1
             return project_start
         else:
@@ -257,11 +257,11 @@ class Project(models.Model):
             i = 0
             project_end = datetime.today()
             for task in tasks:
-                if task.planned_end_date:
+                if task.planned_end():
                     if i == 0:
-                        project_end = task.planned_end_date
-                    elif task.planned_end > project_end:
-                        project_end = task.planned_end_date
+                        project_end = task.planned_end()
+                    elif task.planned_end() > project_end:
+                        project_end = task.planned_end()
                     i += 1
                     return project_end
         else:
@@ -336,12 +336,13 @@ class Project(models.Model):
         verbose_name_plural = _('Projects')
 
 
-class OptionProject(admin.ModelAdmin):
+class ProjectAdminView(admin.ModelAdmin):
     list_display = ('id',
                     'project_status',
                     'project_name',
                     'project_manager',
                     'planned_effort',
+                    'default_currency',
                     'effective_effort_overall',
                     'planned_duration',
                     'effective_duration')
@@ -355,11 +356,12 @@ class OptionProject(admin.ModelAdmin):
                        'project_manager',
                        'project_name',
                        'description',
+                       'default_currency',
                        'default_template_set')
         }),
     )
 
-    inlines = [InlineTasks, InlineGenericLinks]
+    inlines = [TaskInlineAdminView, InlineGenericLinks]
     actions = ['create_report_pdf', ]
 
     def save_model(self, request, obj, form, change):
@@ -383,7 +385,7 @@ class OptionProject(admin.ModelAdmin):
     create_report_pdf.short_description = _("Create Report PDF")
 
 
-class InlineProject(admin.TabularInline):
+class ProjectInlineAdminView(admin.TabularInline):
     model = Project
     readonly_fields = ('link_to_project',
                        'project_status',

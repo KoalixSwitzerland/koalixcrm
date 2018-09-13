@@ -16,8 +16,8 @@ class CustomerGroupTransform(models.Model):
                                           related_name="db_reltransfromtocustomergroup",
                                           blank=False,
                                           null=False)
-    product = models.ForeignKey('Product',
-                                verbose_name=_("Product"),
+    product_type = models.ForeignKey('ProductType',
+                                verbose_name=_("Product Type"),
                                 blank=False,
                                 null=False)
     factor = models.IntegerField(verbose_name=_("Factor between From and To Customer Group"),
@@ -55,7 +55,7 @@ class CustomerGroupTransform(models.Model):
         verbose_name_plural = _('Customer Group Price Transforms')
 
 
-class ProductCustomerGroupTransform(admin.TabularInline):
+class CustomerGroupTransformInlineAdminView(admin.TabularInline):
     model = CustomerGroupTransform
     extra = 1
     classes = ['collapse']

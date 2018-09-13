@@ -7,13 +7,13 @@ from django.utils.translation import ugettext as _
 
 class CurrencyTransform(models.Model):
     from_currency = models.ForeignKey('Currency',
-                                  verbose_name=_("From Currency"),
-                                  related_name="db_reltransformfromcurrency")
+                                      verbose_name=_("From Currency"),
+                                      related_name="db_reltransformfromcurrency")
     to_currency = models.ForeignKey('Currency',
-                                verbose_name=_("To Currency"),
-                                related_name="db_reltransformtocurrency")
-    product = models.ForeignKey('Product',
-                                verbose_name=_("Product"))
+                                    verbose_name=_("To Currency"),
+                                    related_name="db_reltransformtocurrency")
+    product_type = models.ForeignKey('ProductType',
+                                     verbose_name=_("Product"))
     factor = models.IntegerField(verbose_name=_("Factor between From and To Currency"),
                                  blank=True,
                                  null=True)
@@ -30,7 +30,7 @@ class CurrencyTransform(models.Model):
         verbose_name_plural = _('Currency Transforms')
 
 
-class ProductCurrencyTransform(admin.TabularInline):
+class CurrencyTransformInlineAdminView(admin.TabularInline):
     model = CurrencyTransform
     extra = 1
     classes = ['collapse']

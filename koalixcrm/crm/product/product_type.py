@@ -3,11 +3,11 @@ from django.contrib import admin
 from django.db import models
 from django.utils.translation import ugettext as _
 
-from koalixcrm.crm.product.price import Price
-from koalixcrm.crm.product.price import ProductPrice
-from koalixcrm.crm.product.unit_transform import ProductUnitTransform
-from koalixcrm.crm.product.customer_group_transform import ProductCustomerGroupTransform
-from koalixcrm.crm.product.currency_transform import ProductCurrencyTransform
+from koalixcrm.crm.product.product_price import ProductPrice
+from koalixcrm.crm.product.product_price import ProductPriceInlineAdminView
+from koalixcrm.crm.product.unit_transform import UnitTransformInlineAdminView
+from koalixcrm.crm.product.customer_group_transform import CustomerGroupTransformInlineAdminView
+from koalixcrm.crm.product.currency_transform import CurrencyTransformInlineAdminView
 
 
 class ProductType(models.Model):
@@ -16,20 +16,14 @@ class ProductType(models.Model):
                                    blank=True)
     title = models.CharField(verbose_name=_("Title"),
                              max_length=200)
-    product_identifier = models.CharField(verbose_name=_("Product Number"),
-                                          max_length=200,
-                                          null=True,
-                                          blank=True)
+    product_type_identifier = models.CharField(verbose_name=_("Product Number"),
+                                               max_length=200,
+                                               null=True,
+                                               blank=True)
     default_unit = models.ForeignKey("Unit", verbose_name=_("Unit"))
     tax = models.ForeignKey("Tax",
                             blank=False,
                             null=False)
-    product_category = models.ForeignKey("ProductCategory",
-                                         blank=False,
-                                         null=False)
-    product_status = models.ForeignKey("ProductStatus",
-                                       blank=False,
-                                       null=False)
     last_status_change = models.DateField(verbose_name=_("Last Status Change"),
                                           blank=True,
                                           null=False)
@@ -63,7 +57,7 @@ class ProductType(models.Model):
         Raises:
             In case the algorithm does not find a valid product price, the function raises a
             NoPriceFound Exception"""
-        prices = Price.objects.filter(product_type=self.id)
+        prices = ProductPrice.objects.filter(product_type=self.id)
         valid_prices = list()
         for price in list(prices):
             currency_factor = price.get_currency_transform_factor(price)
@@ -113,22 +107,23 @@ class ProductType(models.Model):
                 "currency") + ": " + self.currency.__str__() + _(" and unit") + ":" + self.unit.__str__()
 
 
-class OptionProductType(admin.ModelAdmin):
-    list_display = ('product_type_number',
+class ProductTypeAdminView(admin.ModelAdmin):
+    list_display = ('product_type_identifier',
                     'title',
                     'default_unit',
                     'tax',
                     'accounting_product_categorie')
-    list_display_links = ('product_number',)
+    list_display_links = ('product_type_identifier',)
     fieldsets = (
         (_('Basics'), {
-                       'title',
+            'fields': ('title',
                        'description',
                        'default_unit',
                        'tax',
-                       'accounting_product_categorie'
-        }),)
-    inlines = [ProductPrice,
-               ProductUnitTransform,
-               ProductCurrencyTransform,
-               ProductCustomerGroupTransform]
+                       'accounting_product_categorie')
+        }),
+    )
+    inlines = [ProductPriceInlineAdminView,
+               UnitTransformInlineAdminView,
+               CurrencyTransformInlineAdminView,
+               CustomerGroupTransformInlineAdminView]

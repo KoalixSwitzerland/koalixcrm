@@ -12,8 +12,8 @@ class UnitTransform(models.Model):
     to_unit = models.ForeignKey('Unit',
                                 verbose_name=_("To Unit"),
                                 related_name="db_reltransfromtounit")
-    product = models.ForeignKey('Product',
-                                verbose_name=_("Product"))
+    product_type = models.ForeignKey('ProductType',
+                                     verbose_name=_("Product Type"))
     factor = models.IntegerField(verbose_name=_("Factor between From and To Unit"),
                                  blank=True,
                                  null=True)
@@ -36,7 +36,7 @@ class UnitTransform(models.Model):
         verbose_name_plural = _('Unit Transforms')
 
 
-class ProductUnitTransform(admin.TabularInline):
+class UnitTransformInlineAdminView(admin.TabularInline):
     model = UnitTransform
     extra = 1
     classes = ['collapse']

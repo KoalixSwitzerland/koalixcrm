@@ -5,7 +5,7 @@ from django.utils.translation import ugettext as _
 
 class Product(models.Model):
     identifier = models.CharField(verbose_name=_("Product Number"),
-                                  max_lenghth=200,
+                                  max_length=200,
                                   null=True,
                                   blank=True)
     product_type = models.ForeignKey("ProductType", verbose_name=_("Product Type"))

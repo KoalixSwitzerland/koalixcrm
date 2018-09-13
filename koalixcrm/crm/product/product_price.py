@@ -1,36 +1,20 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.contrib import admin
 from django.utils.translation import ugettext as _
-from koalixcrm.crm.product.currency import Currency
-from koalixcrm.crm.product.unit import Unit
 from koalixcrm.crm.contact.customer_group import CustomerGroup
 from koalixcrm.crm.product.unit_transform import UnitTransform
 from koalixcrm.crm.product.customer_group_transform import CustomerGroupTransform
 from koalixcrm.crm.product.currency_transform import CurrencyTransform
 
 
-class Price(models.Model):
-    unit = models.ForeignKey(Unit,
-                             blank=False,
-                             verbose_name=_("Unit"))
-    currency = models.ForeignKey(Currency,
-                                 verbose_name='Currency',
-                                 blank=False,
-                                 null=False)
-    customer_group = models.ForeignKey(CustomerGroup,
-                                       verbose_name=_("Customer Group"),
-                                       blank=True,
-                                       null=True)
-    price = models.DecimalField(max_digits=17,
-                                decimal_places=2,
-                                verbose_name=_("Price Per Unit"))
-    valid_from = models.DateField(verbose_name=_("Valid from"),
-                                  blank=True,
-                                  null=True)
-    valid_until = models.DateField(verbose_name=_("Valid until"),
-                                   blank=True,
-                                   null=True)
+class ProductPrice(models.Model):
+    product_type = models.ForeignKey("ProductType",
+                                     verbose_name=_("Product Type"))
+    price = models.ForeignKey("Price",
+                              blank=False,
+                              verbose_name=_("Price"))
 
     def is_valid_from_criteria_fulfilled(self, date):
         if not self.valid_from:
@@ -144,5 +128,22 @@ class Price(models.Model):
 
     class Meta:
         app_label = "crm"
-        verbose_name = _('Price')
-        verbose_name_plural = _('Prices')
+        verbose_name = _('Product Price')
+        verbose_name_plural = _('Product Prices')
+
+
+class ProductPriceInlineAdminView(admin.TabularInline):
+    model = ProductPrice
+    extra = 1
+    classes = ['collapse']
+    fieldsets = (
+        ('', {
+            'fields': ('price',
+                       'currency',
+                       'unit',
+                       'valid_from',
+                       'valid_until',
+                       'customer_group')
+        }),
+    )
+    allow_add = True
