@@ -48,7 +48,7 @@ class Task(models.Model):
             if self.status != self.previous_status:
                 self.last_status_change = global_support_functions.get_today_date()
         elif self.last_status_change is None:
-            self.last_status_change
+            self.last_status_change = global_support_functions.get_today_date()
         super().save(*args, **kwargs)
 
     def link_to_task(self):
