@@ -15,6 +15,9 @@ class HumanResource(Resource):
     user = models.ForeignKey(UserExtension,
                              verbose_name=_("User"))
 
+    def __str__(self):
+        return self.user.__str__()
+
     def serialize_to_xml(self, **kwargs):
         date_from = kwargs.get('date_from', datetime.date.today()-datetime.timedelta(days=60))
         date_to = kwargs.get('date_to', datetime.date.today())

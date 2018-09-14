@@ -13,18 +13,35 @@ from django.contrib import messages
 
 class Work(models.Model):
     human_resource = models.ForeignKey("HumanResource")
-    date = models.DateField(verbose_name=_("Date"), blank=False, null=False)
-    start_time = models.DateTimeField(verbose_name=_("Start Time"), blank=True, null=True)
-    stop_time = models.DateTimeField(verbose_name=_("Stop Time"), blank=True, null=True)
+    date = models.DateField(verbose_name=_("Date"),
+                            blank=False,
+                            null=False)
+    start_time = models.DateTimeField(verbose_name=_("Start Time"),
+                                      blank=True,
+                                      null=True)
+    stop_time = models.DateTimeField(verbose_name=_("Stop Time"),
+                                     blank=True,
+                                     null=True)
     worked_hours = models.DecimalField(verbose_name=_("Worked Hours"),
                                        max_digits=5,
                                        decimal_places=2,
                                        blank=True,
                                        null=True)
-    short_description = models.CharField(verbose_name=_("Short Description"), max_length=300, blank=False, null=False)
-    description = models.TextField(verbose_name=_("Text"), blank=True, null=True)
-    task = models.ForeignKey("Task", verbose_name=_('Task'), blank=False, null=False)
-    reporting_period = models.ForeignKey("ReportingPeriod", verbose_name=_('Reporting Period'), blank=False, null=False)
+    short_description = models.CharField(verbose_name=_("Short Description"),
+                                         max_length=300,
+                                         blank=False,
+                                         null=False)
+    description = models.TextField(verbose_name=_("Text"),
+                                   blank=True,
+                                   null=True)
+    task = models.ForeignKey("Task",
+                             verbose_name=_('Task'),
+                             blank=False,
+                             null=False)
+    reporting_period = models.ForeignKey("ReportingPeriod",
+                                         verbose_name=_('Reporting Period'),
+                                         blank=False,
+                                         null=False)
 
     def link_to_work(self):
         if self.id:

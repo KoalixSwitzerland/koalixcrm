@@ -14,19 +14,19 @@ class Agreement(models.Model):
     resource = models.ForeignKey("Resource")
     unit = models.ForeignKey("Unit")
     costs = models.ForeignKey(ResourcePrice)
-    agreement_type = models.ForeignKey("AgreementType")
-    agreement_status = models.ForeignKey("AgreementStatus")
-    agreement_from = models.DateField(verbose_name=_("Agreement From"),
-                                      blank=False,
-                                      null=False)
-    agreement_to = models.DateField(verbose_name=_("Agreement To"),
-                                    blank=False,
-                                    null=False)
-    agreement_amount = models.DecimalField(verbose_name=_("Amount"),
-                                           max_digits=5,
-                                           decimal_places=2,
-                                           blank=True,
-                                           null=True)
+    type = models.ForeignKey("AgreementType")
+    status = models.ForeignKey("AgreementStatus")
+    date_from = models.DateField(verbose_name=_("Agreement From"),
+                                 blank=False,
+                                 null=False)
+    date_until = models.DateField(verbose_name=_("Agreement To"),
+                                  blank=False,
+                                  null=False)
+    amount = models.DecimalField(verbose_name=_("Amount"),
+                                 max_digits=5,
+                                 decimal_places=2,
+                                 blank=True,
+                                 null=True)
 
     def calculated_costs(self):
         currency = self.task.project.default_currency
@@ -35,7 +35,7 @@ class Agreement(models.Model):
         self.product.get_costs(self, date, unit, currency)
 
     def __str__(self):
-        return _("Estimation of Resource Consumption") + ": " + str(self.id)
+        return _("Agreement of Resource Consumption") + ": " + str(self.id)
 
     class Meta:
         app_label = "crm"
@@ -49,9 +49,11 @@ class AgreementInlineAdminView(admin.TabularInline):
         (_('Work'), {
             'fields': ('task',
                        'resource',
-                       'agreement_amount',
-                       'agreement_from',
-                       'agreement_to')
+                       'amount',
+                       'date_from',
+                       'date_until',
+                       'type',
+                       'status')
         }),
     )
     extra = 1

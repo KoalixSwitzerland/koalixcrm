@@ -37,7 +37,7 @@ class GenericProjectLink(models.Model):
         verbose_name_plural = _('Project Links')
 
 
-class InlineGenericLinks(admin.TabularInline):
+class GenericLinkInlineAdminView(admin.TabularInline):
     model = GenericProjectLink
     readonly_fields = ('project_link_type',
                        'content_type',

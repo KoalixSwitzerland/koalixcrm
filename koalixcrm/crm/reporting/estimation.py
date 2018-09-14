@@ -12,22 +12,30 @@ class Estimation(models.Model):
                              blank=False,
                              null=False)
     resource = models.ForeignKey("Resource")
-    estimation_from = models.DateField(verbose_name=_("Estimation From"),
-                                       blank=False,
-                                       null=False)
-    estimation_to = models.DateField(verbose_name=_("Estimation To"),
-                                     blank=False,
-                                     null=False)
-    estimation_amount = models.DecimalField(verbose_name=_("Amount"),
-                                            max_digits=5,
-                                            decimal_places=2,
-                                            blank=True,
-                                            null=True)
+    date_from = models.DateField(verbose_name=_("Estimation From"),
+                                 blank=False,
+                                 null=False)
+    date_until = models.DateField(verbose_name=_("Estimation To"),
+                                  blank=False,
+                                  null=False)
+    amount = models.DecimalField(verbose_name=_("Amount"),
+                                 max_digits=5,
+                                 decimal_places=2,
+                                 blank=True,
+                                 null=True)
+    status = models.ForeignKey("EstimationStatus",
+                               verbose_name=_('Status of the estimation'),
+                               blank=False,
+                               null=False)
+    reporting_period = models.ForeignKey("ReportingPeriod",
+                                         verbose_name=_('Reporting Period based on which the estimation was done'),
+                                         blank=False,
+                                         null=False)
 
     def calculated_costs(self):
         currency = self.task.project.default_currency
         unit = Unit.objects.filter(short_name="hrs")
-        date = self.estimation_from
+        date = self.date_from
 
         self.product.get_costs(self, unit, date, currency)
 
@@ -46,9 +54,11 @@ class EstimationInlineAdminView(admin.TabularInline):
         (_('Work'), {
             'fields': ('task',
                        'resource',
-                       'estimation_amount',
-                       'estimation_from',
-                       'estimation_to')
+                       'amount',
+                       'date_from',
+                       'date_until',
+                       'status',
+                       'reporting_period')
         }),
     )
     extra = 1

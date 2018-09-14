@@ -5,7 +5,8 @@ from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext as _
 from django.utils.html import format_html
-from koalixcrm.crm.reporting.generic_project_link import InlineGenericLinks
+from koalixcrm.crm.reporting.generic_project_link import GenericLinkInlineAdminView
+from koalixcrm.crm.reporting.reporting_period import ReportingPeriodInlineAdminView
 from koalixcrm.crm.reporting.task import TaskInlineAdminView
 from koalixcrm.crm.documents.pdf_export import PDFExport
 from koalixcrm.crm.exceptions import TemplateSetMissingInContract
@@ -75,7 +76,7 @@ class Project(models.Model):
 
     def get_reporting_period(self, search_date):
         from koalixcrm.crm.reporting.reporting_period import ReportingPeriod
-        """Returns the reporting period that is currently valid. Valid is a reporting period when the provided date
+        """Returns the reporting period that is valid. Valid is a reporting period when the provided date
           lies between begin and end of the reporting period
 
         Args:
@@ -109,7 +110,7 @@ class Project(models.Model):
         main_xml = PDFExport.append_element_to_pattern(main_xml,
                                                        "object/[@model='crm.project']",
                                                        "Planned_Effort",
-                                                       self.planned_effort())
+                                                       self.planned_costs())
         main_xml = PDFExport.append_element_to_pattern(main_xml,
                                                        "object/[@model='crm.project']",
                                                        "Effective_Duration",
@@ -120,10 +121,13 @@ class Project(models.Model):
                                                        self.planned_duration())
         return main_xml
 
-    def effective_effort_overall(self):
-        return self.effective_effort(reporting_period=None)
-    effective_effort_overall.short_description = _("Effective Effort [hrs]")
-    effective_effort_overall.tags = True
+    def effective_accumulated_costs(self, reporting_period=None):
+        effective_effort_accumulated = 0
+        for task in Task.objects.filter(project=self.id):
+            effective_effort_accumulated += task.effective_acucumulated_costs(reporting_period=reporting_period)
+        return effective_effort_accumulated
+    effective_accumulated_costs.short_description = _("Effective Effort [hrs]")
+    effective_accumulated_costs.tags = True
 
     def effective_effort(self, reporting_period):
         effective_effort_accumulated = 0
@@ -131,13 +135,25 @@ class Project(models.Model):
             effective_effort_accumulated += task.effective_effort(reporting_period=reporting_period)
         return effective_effort_accumulated
 
-    def planned_effort(self):
-        planned_effort_accumulated = 0
-        for task in Task.objects.filter(project=self.id):
-            planned_effort_accumulated += task.planned_costs()
+    def planned_costs(self, reporting_period=None):
+        """The function return the planned overall costs
+
+        Args:
+        no arguments
+
+        Returns:
+        planned costs (String)
+
+        Raises:
+        No exceptions planned"""
+        planned_effort_accumulated = "0"
+        all_project_tasks = Task.objects.filter(project=self.id)
+        if all_project_tasks:
+            for task in all_project_tasks:
+                planned_effort_accumulated += task.planned_costs(reporting_period)
         return planned_effort_accumulated
-    planned_effort.short_description = _("Planned Effort [hrs]")
-    planned_effort.tags = True
+    planned_costs.short_description = _("Planned Costs")
+    planned_costs.tags = True
 
     def effective_start(self):
         """The function return the effective start of a project as a date
@@ -236,10 +252,23 @@ class Project(models.Model):
     effective_duration.tags = True
 
     def planned_start(self):
+        """ The function return planned overall start of a project as a date
+        the function finds all tasks within this project and finds the earliest start date.
+        when no task is attached the task has which are attached have no start_date set, the
+        function returns a None value
+
+        Args:
+        no arguments
+
+        Returns:
+        planned_end (datetime.Date) or  None
+
+        Raises:
+        No exceptions planned"""
         tasks = Task.objects.filter(project=self.id)
         if tasks:
             i = 0
-            project_start = datetime.today()
+            project_start = None
             for task in tasks:
                 if task.planned_start():
                     if i == 0:
@@ -252,10 +281,23 @@ class Project(models.Model):
             return None
 
     def planned_end(self):
+        """T he function return planned overall end of a project as a date
+        the function finds all tasks within this project and finds the latest start end_date.
+        when no task is attached the task has which are attached have no end_date set, the
+        function returns a None value
+
+        Args:
+        no arguments
+
+        Returns:
+        planned_end (datetime.Date)
+
+        Raises:
+        No exceptions planned"""
         tasks = Task.objects.filter(project=self.id)
         if tasks:
             i = 0
-            project_end = datetime.today()
+            project_end = None
             for task in tasks:
                 if task.planned_end():
                     if i == 0:
@@ -345,7 +387,7 @@ class ProjectAdminView(admin.ModelAdmin):
                     'default_currency',
                     'effective_effort_overall',
                     'planned_duration',
-                    'effective_duration')
+                    'effective_duration',)
 
     list_display_links = ('id',)
     ordering = ('-id',)
@@ -357,11 +399,13 @@ class ProjectAdminView(admin.ModelAdmin):
                        'project_name',
                        'description',
                        'default_currency',
-                       'default_template_set')
+                       'default_template_set',)
         }),
     )
 
-    inlines = [TaskInlineAdminView, InlineGenericLinks]
+    inlines = [TaskInlineAdminView,
+               GenericLinkInlineAdminView,
+               ReportingPeriodInlineAdminView]
     actions = ['create_report_pdf', ]
 
     def save_model(self, request, obj, form, change):

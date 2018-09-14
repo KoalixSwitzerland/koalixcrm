@@ -87,9 +87,9 @@ class Task(models.Model):
         else:
             for estimation in all_task_estimations:
                 if not planned_task_start:
-                    planned_task_start = estimation.estimation_from
-                elif estimation.estimation_from < planned_task_start:
-                    planned_task_start = estimation.estimation_from
+                    planned_task_start = estimation.date_from
+                elif estimation.date_from < planned_task_start:
+                    planned_task_start = estimation.date_from
         return planned_task_start
         planned_start.short_description = _("Planned Start")
         planned_start.tags = True
@@ -113,9 +113,9 @@ class Task(models.Model):
         else:
             for estimation in all_task_estimations:
                 if not planned_task_end:
-                    planned_task_end = estimation.estimation_to
-                elif estimation.estimation_to < planned_task_end:
-                    planned_task_end = estimation.estimation_to
+                    planned_task_end = estimation.date_until
+                elif estimation.date_until < planned_task_end:
+                    planned_task_end = estimation.date_until
         return planned_task_end
         planned_start.short_description = _("Planned End")
         planned_start.tags = True

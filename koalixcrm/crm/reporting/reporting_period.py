@@ -195,7 +195,7 @@ class ReportingPeriodAdmin(admin.ModelAdmin):
     create_report_pdf.short_description = _("Create Report PDF")
 
 
-class InlineReportingPeriod(admin.TabularInline):
+class ReportingPeriodInlineAdminView(admin.TabularInline):
     model = ReportingPeriod
     fieldsets = (
         (_('ReportingPeriod'), {
@@ -206,7 +206,6 @@ class InlineReportingPeriod(admin.TabularInline):
                        'status')
         }),
     )
-    extra = 0
 
     def has_add_permission(self, request):
         return False

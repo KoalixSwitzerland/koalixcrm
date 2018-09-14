@@ -6,7 +6,7 @@ from django.contrib import admin
 from rest_framework import serializers
 
 
-class AgreementStatus(models.Model):
+class EstimationStatus(models.Model):
     title = models.CharField(verbose_name=_("Title"),
                              max_length=250,
                              blank=False,
@@ -14,36 +14,36 @@ class AgreementStatus(models.Model):
     description = models.TextField(verbose_name=_("Text"),
                                    blank=True,
                                    null=True)
-    is_agreed = models.BooleanField(verbose_name=_("Status represents agreement exists"),)
+    is_obsolete = models.BooleanField(verbose_name=_("Status represents estimation is obsolete"),)
 
     class Meta:
         app_label = "crm"
-        verbose_name = _('Agreement Status')
-        verbose_name_plural = _('Agreement Status')
+        verbose_name = _('Estimation Status')
+        verbose_name_plural = _('Estimation Status')
 
     def __str__(self):
         return str(self.id) + " " + str(self.title)
 
 
-class AgreementStatusAdminView(admin.ModelAdmin):
+class EstimationStatusAdminView(admin.ModelAdmin):
     list_display = ('id',
                     'title',
                     'description',
-                    'is_agreed')
+                    'is_obsolete')
 
     fieldsets = (
         (_('Agreement Status'), {
             'fields': ('title',
                        'description',
-                       'is_agreed')
+                       'is_obsolete')
         }),
     )
     save_as = True
 
 
-class AgreementStatusJSONSerializer(serializers.HyperlinkedModelSerializer):
+class EstimationStatusJSONSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = AgreementStatus
+        model = EstimationStatus
         fields = ('id',
                   'title',
                   'description',)
