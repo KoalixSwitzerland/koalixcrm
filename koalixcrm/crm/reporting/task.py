@@ -18,6 +18,7 @@ from koalixcrm import global_support_functions
 
 
 class Task(models.Model):
+    """ The Task model"""
     title = models.CharField(verbose_name=_("Title"),
                              max_length=100,
                              blank=True,
