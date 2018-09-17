@@ -311,23 +311,25 @@ class Task(models.Model):
         sum_effort_in_hours = sum_effort / 3600
         return sum_effort_in_hours
 
-    def effective_costs(self, reporting_period):
+    def effective_costs(self, reporting_period=None):
         """ Effective effort returns the effective costs on a task
         when reporting_period is None, the effective effort overall is calculated
         when reporting_period is specified, the effective effort in this period is calculated"""
+        agreements = Agreement.objects.filter(task=self)
+        for agreement in agreements:
+            agreement_dict = {'id': agreement.id,
+                              'human_resource': agreement.rsource,
+                              'amount': agreement.amount,
+                              'price': agreement.costs}
         if reporting_period:
             work_objects = Work.objects.filter(task=self.id,
                                                reporting_period=reporting_period)
-            expense_objects = Expense.objects.filter(task=self.id,
-                                                     reporting_period=reporting_period)
         else:
             work_objects = Work.objects.filter(task=self.id)
-            expense_objects = Expense.objects.filter(task=self.id)
-        sum_costs = 0
+        sum_seconds = 0
         for work_object in work_objects:
-            sum_costs += work_object.costs()
-        for expense_object in expense_objects:
-            sum_costs += expense_object.costs()
+            sum_seconds += work_object.effort_seconds()
+            
         return sum_costs
 
     def is_reporting_allowed(self):

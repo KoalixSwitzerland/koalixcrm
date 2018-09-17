@@ -6,7 +6,7 @@ from django.contrib import admin
 from django.utils.translation import ugettext as _
 from django.utils.html import format_html
 from koalixcrm.crm.reporting.generic_project_link import GenericLinkInlineAdminView
-from koalixcrm.crm.reporting.reporting_period import ReportingPeriodInlineAdminView
+from koalixcrm.crm.reporting.reporting_period import ReportingPeriodInlineAdminView, ReportingPeriod
 from koalixcrm.crm.reporting.task import TaskInlineAdminView
 from koalixcrm.crm.documents.pdf_export import PDFExport
 from koalixcrm.crm.exceptions import TemplateSetMissingInContract
@@ -101,12 +101,12 @@ class Project(models.Model):
         main_xml = PDFExport.append_element_to_pattern(main_xml,
                                                        "object/[@model='crm.project']",
                                                        "Effective_Effort_Overall",
-                                                       self.effective_effort(reporting_period=None))
+                                                       self.effective_costs(reporting_period=None))
         if reporting_period:
             main_xml = PDFExport.append_element_to_pattern(main_xml,
                                                            "object/[@model='crm.project']",
                                                            "Effective_Effort_InPeriod",
-                                                           self.effective_effort(reporting_period=reporting_period))
+                                                           self.effective_costs(reporting_period=reporting_period))
         main_xml = PDFExport.append_element_to_pattern(main_xml,
                                                        "object/[@model='crm.project']",
                                                        "Planned_Effort",
@@ -122,17 +122,23 @@ class Project(models.Model):
         return main_xml
 
     def effective_accumulated_costs(self, reporting_period=None):
+        if reporting_period:
+            reporting_periods = ReportingPeriod.objects.filter(project=self.id, end__lte=reporting_period.end)
+        else:
+            reporting_periods = ReportingPeriod.objects.filter(project=self.id)
         effective_effort_accumulated = 0
-        for task in Task.objects.filter(project=self.id):
-            effective_effort_accumulated += task.effective_acucumulated_costs(reporting_period=reporting_period)
-        return effective_effort_accumulated
+        for single_reporting_period in reporting_periods:
+            all_project_tasks = Task.objects.filter(project=self.id)
+            for task in all_project_tasks:
+                effective_effort_accumulated += task.effective_acucumulated_costs(reporting_period=single_reporting_period)
+            return effective_effort_accumulated
     effective_accumulated_costs.short_description = _("Effective Effort [hrs]")
     effective_accumulated_costs.tags = True
 
-    def effective_effort(self, reporting_period):
+    def effective_costs(self, reporting_period):
         effective_effort_accumulated = 0
         for task in Task.objects.filter(project=self.id):
-            effective_effort_accumulated += task.effective_effort(reporting_period=reporting_period)
+            effective_effort_accumulated += task.effective_costs(reporting_period=reporting_period)
         return effective_effort_accumulated
 
     def planned_costs(self, reporting_period=None):
