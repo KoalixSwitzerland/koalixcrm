@@ -30,9 +30,7 @@ class Agreement(models.Model):
 
     def calculated_costs(self):
         currency = self.task.project.default_currency
-        unit = self.product.default_unit
-
-        self.product.get_costs(self, date, unit, currency)
+        return 0
 
     def __str__(self):
         return _("Agreement of Resource Consumption") + ": " + str(self.id)
@@ -50,6 +48,8 @@ class AgreementInlineAdminView(admin.TabularInline):
             'fields': ('task',
                        'resource',
                        'amount',
+                       'unit',
+                       'costs',
                        'date_from',
                        'date_until',
                        'type',

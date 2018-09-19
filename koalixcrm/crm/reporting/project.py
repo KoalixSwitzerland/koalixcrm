@@ -389,9 +389,7 @@ class ProjectAdminView(admin.ModelAdmin):
                     'project_status',
                     'project_name',
                     'project_manager',
-                    'planned_effort',
                     'default_currency',
-                    'effective_effort_overall',
                     'planned_duration',
                     'effective_duration',)
 

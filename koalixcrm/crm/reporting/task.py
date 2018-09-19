@@ -10,6 +10,7 @@ from koalixcrm.crm.reporting.estimation import EstimationInlineAdminView
 from koalixcrm.crm.reporting.generic_task_link import InlineGenericTaskLink
 from koalixcrm.crm.reporting.work import WorkInlineAdminView, Work
 from koalixcrm.crm.reporting.reporting_period import ReportingPeriod
+from koalixcrm.crm.reporting.resource_price import ResourcePrice
 from koalixcrm.crm.reporting.estimation import Estimation
 from koalixcrm.crm.documents.pdf_export import PDFExport
 from koalixcrm.crm.exceptions import ReportingPeriodNotFound
@@ -141,11 +142,10 @@ class Task(models.Model):
 
             else:
                 reporting_period_internal = reporting_period
-            agreements_to_this_task = Agreement.objects.filter(task=self.id,
-                                                               reporting_period=reporting_period_internal)
+            agreements_to_this_task = Agreement.objects.filter(task=self.id)
             sum_costs = 0
             for agreement_to_this_task in agreements_to_this_task:
-                sum_costs += agreement_to_this_task.calculated_costs
+                sum_costs += agreement_to_this_task.calculated_costs()
         except ReportingPeriodNotFound as e:
             sum_costs = 0
         return sum_costs
@@ -313,25 +313,59 @@ class Task(models.Model):
         return sum_effort_in_hours
 
     def effective_costs(self, reporting_period=None):
-        """ Effective effort returns the effective costs on a task
-        when reporting_period is None, the effective effort overall is calculated
-        when reporting_period is specified, the effective effort in this period is calculated"""
+        """Returns the effective costs on a task
+        when reporting_period is None, the effective costs overall is calculated
+        when reporting_period is specified, the effective effort in this period is calculated
+        the costs are calculated in the project currency
+
+        Args:
+          no arguments
+
+        Returns:
+          costs [Currency] (Decimal)
+
+        Raises:
+           no exception planned
+        """
         agreements = Agreement.objects.filter(task=self)
-        for agreement in agreements:
-            agreement_dict = {'id': agreement.id,
-                              'human_resource': agreement.rsource,
-                              'amount': agreement.amount,
-                              'price': agreement.costs}
         if reporting_period:
             work_objects = Work.objects.filter(task=self.id,
                                                reporting_period=reporting_period)
         else:
             work_objects = Work.objects.filter(task=self.id)
         sum_seconds = 0
+        effort_in_seconds = 0
+        sum_costs = 0
+        human_resource_list = dict()
         for work_object in work_objects:
-            sum_seconds += work_object.effort_seconds()
-            
-        return sum_costs
+            effort_in_seconds += work_object.effort_seconds()
+            sum_seconds += effort_in_seconds
+            if work_object.human_resource not in human_resource_list:
+                human_resource_list[work_object.human_resource] = dict()
+            for agreement in agreements:
+                agreement_matches = True
+                """agreement.matches_with(work_object)"""
+                if agreement_matches:
+                    if agreement not in human_resource_list.get(work_object.human_resource):
+                        human_resource_list.get(work_object.human_resource)[agreement] = list()
+                    human_resource_list.get(work_object.human_resource).get(agreement).append(work_object)
+        covered_work = list()
+        for human_resource_dict in human_resource_list:
+            agreement_list = Agreement.objects.filter(task=self, resource=human_resource_dict).order_by('costs__price')
+            for agreement in agreement_list:
+                agreement_remaining_amount = agreement.amount
+                for work in human_resource_list[human_resource_dict].get(agreement):
+                    if work not in covered_work:
+                        if (agreement_remaining_amount - work.worked_hours) > 0:
+                            agreement_remaining_amount -= work.worked_hours
+                            sum_costs += work.worked_hours*agreement.costs.price.price
+                            covered_work.append(work)
+        for work in work_objects:
+            if work not in covered_work:
+                sum_costs += work.worked_hours*ResourcePrice.objects.get(work.human_resource).price
+        return sum_costs.__str__()
+    effective_costs.short_description = _("Effective costs")
+    effective_costs.tags = True
 
     def is_reporting_allowed(self):
         """Returns True when the task is available for reporting,
@@ -384,7 +418,8 @@ class TaskAdminView(admin.ModelAdmin):
                     'planned_duration',
                     'planned_costs',
                     'effective_duration',
-                    'effective_effort_overall')
+                    'effective_effort_overall',
+                    'effective_costs')
     list_display_links = ('link_to_task',)
     list_filter = ('project',)
     ordering = ('-id',)
@@ -414,7 +449,8 @@ class TaskInlineAdminView(admin.TabularInline):
                        'planned_costs',
                        'effective_duration',
                        'effective_duration',
-                       'effective_effort_overall')
+                       'effective_effort_overall',
+                       'effective_costs')
     fieldsets = (
         (_('Task'), {
             'fields': ('link_to_task',
@@ -426,7 +462,8 @@ class TaskInlineAdminView(admin.TabularInline):
                        'planned_duration',
                        'planned_costs',
                        'effective_duration',
-                       'effective_effort_overall')
+                       'effective_effort_overall',
+                       'effective_costs')
         }),
     )
     extra = 1

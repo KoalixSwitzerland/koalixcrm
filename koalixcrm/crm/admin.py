@@ -24,6 +24,7 @@ from koalixcrm.crm.reporting.task_link_type import TaskLinkType, OptionTaskLinkT
 from koalixcrm.crm.reporting.task_status import TaskStatus, OptionTaskStatus
 from koalixcrm.crm.reporting.estimation_status import EstimationStatus, EstimationStatusAdminView
 from koalixcrm.crm.reporting.agreement_status import AgreementStatus, AgreementStatusAdminView
+from koalixcrm.crm.reporting.agreement_type import AgreementType, AgreementTypeAdminView
 from koalixcrm.crm.reporting.resource_type import ResourceType, ResourceTypeAdminView
 from koalixcrm.crm.reporting.human_resource import HumanResource, HumanResourceAdminView
 from koalixcrm.crm.reporting.resource_manager import ResourceManager, ResourceManagerAdminView
@@ -61,6 +62,7 @@ admin.site.register(TaskLinkType, OptionTaskLinkType)
 admin.site.register(TaskStatus, OptionTaskStatus)
 admin.site.register(EstimationStatus, EstimationStatusAdminView)
 admin.site.register(AgreementStatus, AgreementStatusAdminView)
+admin.site.register(AgreementType, AgreementTypeAdminView)
 admin.site.register(Work, WorkAdminView)
 admin.site.register(HumanResource, HumanResourceAdminView)
 admin.site.register(ResourceType, ResourceTypeAdminView)

@@ -18,7 +18,7 @@ class AgreementType(models.Model):
         return _("Agreement Type") + " ID: " + str(self.id) + " title: " + str(self.title)
 
 
-class OptionAgreementType(admin.ModelAdmin):
+class AgreementTypeAdminView(admin.ModelAdmin):
     list_display = ('id',
                     'title',
                     'description')
