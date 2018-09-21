@@ -12,22 +12,27 @@ from koalixcrm.accounting.rest.accounting_period_rest import OptionAccountingPer
 class UserJSONSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.IntegerField(required=False)
     username = serializers.CharField(read_only=True)
+    firstName = serializers.CharField(source='first_name', read_only=True)
+    lastName = serializers.CharField(source='last_name', read_only=True)
 
     class Meta:
         model = User
         fields = (
             'id',
-            'username')
+            'username',
+            'firstName',
+            'lastName')
 
 
 class BookingJSONSerializer(serializers.HyperlinkedModelSerializer):
+
     fromAccount = OptionAccountJSONSerializer(source='from_account', allow_null=False)
     toAccount = OptionAccountJSONSerializer(source='to_account', allow_null=False)
     bookingDate = serializers.DateTimeField(source='booking_date', format="%Y-%m-%dT%H:%M", input_formats=None,
                                             allow_null=False)
     bookingReference = serializers.CharField(source='booking_reference', allow_null=True)
     accountingPeriod = OptionAccountingPeriodJSONSerializer(source='accounting_period', allow_null=False)
-    staff = UserJSONSerializer(allow_null=False)
+    staff = UserJSONSerializer(required=False, allow_null=True)
 
     class Meta:
         model = Booking
@@ -43,6 +48,7 @@ class BookingJSONSerializer(serializers.HyperlinkedModelSerializer):
         depth = 1
 
     def create(self, validated_data):
+
         booking = Booking()
         booking.description = validated_data['description']
         booking.amount = validated_data['amount']
@@ -50,15 +56,11 @@ class BookingJSONSerializer(serializers.HyperlinkedModelSerializer):
         booking.booking_reference = validated_data['booking_reference']
 
         # Deserialize from staff
-        staff = validated_data.pop('staff')
-        if staff:
-            if staff.get('id', None):
-                user = User.objects.get(id=staff.get('id', None))
-
-                booking.staff = user
-                booking.last_modified_by = user
-            else:
-                booking.staff = None
+        request = self.context.get('request')
+        koalixcrm_user = request.META.get('HTTP_KOALIXCRM_USER')
+        user = User.objects.get(username=koalixcrm_user)
+        booking.staff = user
+        booking.last_modified_by = user
 
         # Deserialize from account
         from_account = validated_data.pop('from_account')
@@ -94,14 +96,10 @@ class BookingJSONSerializer(serializers.HyperlinkedModelSerializer):
         instance.booking_reference = validated_data['booking_reference']
 
         # Deserialize from staff
-        staff = validated_data.pop('staff')
-        if staff:
-            if staff.get('id', instance.staff):
-                instance.staff = User.objects.get(id=staff.get('id', None))
-            else:
-                instance.staff = instance.staff_id
-        else:
-            instance.staff = None
+        request = self.context.get('request')
+        koalixcrm_user = request.META.get('HTTP_KOALIXCRM_USER')
+        user = User.objects.get(username=koalixcrm_user)
+        instance.staff = user
 
         # Deserialize from account
         from_account = validated_data.pop('from_account')
@@ -117,10 +115,7 @@ class BookingJSONSerializer(serializers.HyperlinkedModelSerializer):
         to_account = validated_data.pop('to_account')
         if to_account:
             if to_account.get('id', instance.to_account):
-                user = User.objects.get(id=staff.get('id', None))
-
-                instance.staff = user
-                instance.last_modified_by = user
+                instance.to_account = Account.objects.get(id=to_account.get('id', None))
             else:
                 instance.to_account = instance.to_account_id
         else:
