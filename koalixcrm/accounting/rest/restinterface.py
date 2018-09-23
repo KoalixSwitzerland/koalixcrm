@@ -11,7 +11,7 @@ from koalixcrm.accounting.rest.account_rest import AccountJSONSerializer
 from koalixcrm.accounting.rest.accounting_period_rest import AccountingPeriodJSONSerializer
 from koalixcrm.accounting.rest.booking_rest import BookingJSONSerializer
 from koalixcrm.accounting.rest.product_categorie_rest import ProductCategoryJSONSerializer
-from koalixcrm.globalSupportFunctions import ConditionalMethodDecorator
+from koalixcrm.global_support_functions import ConditionalMethodDecorator
 
 
 class AccountAsJSON(viewsets.ModelViewSet):

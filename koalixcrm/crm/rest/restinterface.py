@@ -16,13 +16,13 @@ from koalixcrm.crm.product.tax import Tax
 from koalixcrm.crm.product.unit import Unit
 from koalixcrm.crm.reporting.project import Project, ProjectJSONSerializer
 from koalixcrm.crm.reporting.task import Task, TaskSerializer
-from koalixcrm.crm.reporting.taskstatus import TaskStatus
+from koalixcrm.crm.reporting.task_status import TaskStatus
 from koalixcrm.crm.rest.currency_rest import CurrencyJSONSerializer
 from koalixcrm.crm.rest.product_rest import ProductJSONSerializer
 from koalixcrm.crm.rest.tax_rest import TaxJSONSerializer
 from koalixcrm.crm.rest.unit_rest import UnitJSONSerializer
 from koalixcrm.crm.views.renderer import XSLFORenderer
-from koalixcrm.globalSupportFunctions import ConditionalMethodDecorator
+from koalixcrm.global_support_functions import ConditionalMethodDecorator
 
 
 class TaskAsJSON(viewsets.ModelViewSet):

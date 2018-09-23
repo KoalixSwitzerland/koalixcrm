@@ -6,7 +6,7 @@ from django.contrib import admin
 from django.utils.translation import ugettext as _
 from django import forms
 from koalixcrm.accounting.models import Account
-from koalixcrm.crm.documents.pdfexport import PDFExport
+from koalixcrm.crm.documents.pdf_export import PDFExport
 from koalixcrm.accounting.exceptions import AccountingPeriodNotFound
 from koalixcrm.accounting.exceptions import TemplateSetMissingInAccountingPeriod
 from koalixcrm.accounting.models import InlineBookings

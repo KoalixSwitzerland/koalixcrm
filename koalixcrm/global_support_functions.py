@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import datetime
+
 
 def limit_string_length(input_string, maximum_length):
     if len(input_string) > maximum_length:
@@ -21,6 +23,14 @@ def xstr(s):
         return ""
     else:
         return str(s)
+
+
+def get_today_date():
+    return datetime.date.today()
+
+
+def get_today_datetime():
+    return datetime.datetime.today()
 
 
 class ConditionalMethodDecorator(object):

@@ -5,9 +5,9 @@ from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext as _
 from django.utils.html import format_html
-from koalixcrm.crm.reporting.genericprojectlink import InlineGenericLinks
+from koalixcrm.crm.reporting.generic_project_link import InlineGenericLinks
 from koalixcrm.crm.reporting.task import InlineTasks
-from koalixcrm.crm.documents.pdfexport import PDFExport
+from koalixcrm.crm.documents.pdf_export import PDFExport
 from koalixcrm.crm.exceptions import TemplateSetMissingInContract
 from koalixcrm.crm.models import Task
 from rest_framework import serializers
@@ -135,8 +135,101 @@ class Project(models.Model):
     planned_effort.short_description = _("Planned Effort [hrs]")
     planned_effort.tags = True
 
+    def effective_start(self):
+        """The function return the effective start of a project as a date
+
+        Args:
+        no arguments
+
+        Returns:
+        effective_start (Date) or None when not yet started
+
+        Raises:
+        No exceptions planned"""
+        no_tasks_started = True
+        all_project_tasks = Task.objects.filter(project=self.id)
+        effective_project_start = None
+        if len(all_project_tasks) == 0:
+            effective_project_start = None
+        else:
+            for task in all_project_tasks:
+                if not effective_project_start:
+                    if task.effective_start():
+                        effective_project_start = task.effective_start()
+                        no_tasks_started = False
+                effective_task_start = task.effective_start()
+                if effective_task_start:
+                    if effective_task_start < effective_project_start:
+                        effective_project_start = effective_task_start
+            if no_tasks_started:
+                effective_project_start = None
+        return effective_project_start
+    effective_start.short_description = _("Effective Start")
+    effective_start.tags = True
+
+    def effective_end(self):
+        """The function return the effective end of a project as a date
+
+        Args:
+        no arguments
+
+        Returns:
+        effective_end (Date) or None when not yet ended
+
+        Raises:
+        No exceptions planned"""
+        all_tasks_done = True
+        all_project_tasks = Task.objects.filter(project=self.id)
+        effective_project_end = None
+        if len(all_project_tasks) == 0:
+            effective_project_end = None
+        else:
+            i = 0
+            for task in all_project_tasks:
+                if not effective_project_end:
+                    if not task.effective_start():
+                        all_tasks_done = False
+                        break
+                    else:
+                        effective_project_end = task.effective_start()
+                effective_task_end = task.effective_end()
+                if not effective_task_end:
+                    all_tasks_done = False
+                    break
+                elif effective_task_end > effective_project_end:
+                    effective_project_end = effective_task_end
+                i = i+1
+            if not all_tasks_done:
+                effective_project_end = None
+        return effective_project_end
+    effective_end.short_description = _("Effective End")
+    effective_end.tags = True
+
     def effective_duration(self):
-        return "n/a"
+        """The function return the effective overall duration of a project as a string in days
+        The function is reading the effective_starts and effective_ends of the project and
+        substract them from each other.
+
+        Args:
+        no arguments
+
+        Returns:
+        duration_in_days or description (String)
+
+        Raises:
+        No exceptions planned"""
+        effective_end = self.effective_end()
+        effective_start = self.effective_start()
+        if not effective_start:
+            duration_as_string = "Project has not yet started"
+        elif not effective_end:
+            duration_as_string = "Project has not yet ended"
+        else:
+            duration_as_date = self.effective_end()-self.effective_start()
+            duration_as_string = duration_as_date.days.__str__()
+        return duration_as_string
+    effective_duration.short_description = _("Effective Duration [dys]")
+    effective_duration.tags = True
 
     def planned_start(self):
         tasks = Task.objects.filter(project=self.id)

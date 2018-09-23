@@ -5,7 +5,7 @@ from django.contrib import admin
 from django.utils.translation import ugettext as _
 from koalixcrm.crm.product.currency import Currency
 from koalixcrm.crm.product.unit import Unit
-from koalixcrm.crm.contact.customergroup import CustomerGroup
+from koalixcrm.crm.contact.customer_group import CustomerGroup
 
 
 class CustomerGroupTransform(models.Model):

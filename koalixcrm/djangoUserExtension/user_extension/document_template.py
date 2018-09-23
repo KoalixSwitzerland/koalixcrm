@@ -7,7 +7,7 @@ from django.utils.translation import ugettext as _
 from filebrowser.fields import FileBrowseField
 
 from koalixcrm.djangoUserExtension.user_extension.text_paragraph import InlineTextParagraph
-from koalixcrm.globalSupportFunctions import xstr
+from koalixcrm.global_support_functions import xstr
 from koalixcrm.crm.exceptions import *
 
 

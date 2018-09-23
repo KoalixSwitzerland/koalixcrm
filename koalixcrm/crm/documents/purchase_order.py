@@ -3,7 +3,7 @@
 from django.db import models
 from django.utils.translation import ugettext as _
 from koalixcrm.crm.const.status import *
-from koalixcrm.crm.documents.salesdocument import SalesDocument, OptionSalesDocument
+from koalixcrm.crm.documents.sales_document import SalesDocument, OptionSalesDocument
 from koalixcrm.plugin import *
 
 

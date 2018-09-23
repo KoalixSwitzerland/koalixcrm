@@ -1,3 +1,5 @@
+import datetime
+import pytest
 from django.test import TestCase
 from django.contrib.auth.models import User
 from koalixcrm.crm.models import Contract
@@ -12,14 +14,13 @@ from koalixcrm.crm.models import Quote
 from koalixcrm.crm.models import Price
 from koalixcrm.crm.models import Task
 from koalixcrm.crm.models import SalesDocumentPosition
-from koalixcrm.crm.views.createtask import CreateTaskView
-import datetime
-import pytest
+from koalixcrm.crm.views.create_task import CreateTaskView
+from koalixcrm.test_support_functions import make_date_utc
 
 
 class DocumentCalculationsTest(TestCase):
     def setUp(self):
-        datetime_now = datetime.datetime(2024, 1, 1, 0, 00)
+        datetime_now = make_date_utc(datetime.datetime(2024, 1, 1, 0, 00))
         valid_from = (datetime_now - datetime.timedelta(days=30)).date()
         valid_until = (datetime_now + datetime.timedelta(days=30)).date()
         date_now = datetime_now.date()

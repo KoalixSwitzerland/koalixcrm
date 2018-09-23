@@ -6,7 +6,7 @@ from subprocess import STDOUT
 from django.conf import settings
 from django.core import serializers
 from lxml import etree
-import koalixcrm.crm.documents.salesdocument
+import koalixcrm.crm.documents.sales_document
 import koalixcrm.djangoUserExtension.models
 
 
