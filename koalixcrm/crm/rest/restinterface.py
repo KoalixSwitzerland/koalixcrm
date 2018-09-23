@@ -4,6 +4,8 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from rest_framework import viewsets
+from rest_framework.authentication import BasicAuthentication, SessionAuthentication
+from rest_framework.decorators import authentication_classes
 from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
 from rest_framework_xml.renderers import XMLRenderer
 
@@ -33,6 +35,7 @@ class TaskAsJSON(viewsets.ModelViewSet):
     filter_fields = ('project',)
 
     @ConditionalMethodDecorator(method_decorator(login_required), settings.KOALIXCRM_REST_API_AUTH)
+    @authentication_classes((SessionAuthentication, BasicAuthentication))
     def dispatch(self, *args, **kwargs):
         return super(TaskAsJSON, self).dispatch(*args, **kwargs)
 
@@ -46,6 +49,7 @@ class ContractAsJSON(viewsets.ModelViewSet):
     renderer_classes = (BrowsableAPIRenderer, JSONRenderer, XMLRenderer)
 
     @ConditionalMethodDecorator(method_decorator(login_required), settings.KOALIXCRM_REST_API_AUTH)
+    @authentication_classes((SessionAuthentication, BasicAuthentication))
     def dispatch(self, *args, **kwargs):
         return super(ContractAsJSON, self).dispatch(*args, **kwargs)
 
@@ -59,6 +63,7 @@ class TaskStatusAsJSON(viewsets.ModelViewSet):
     renderer_classes = (BrowsableAPIRenderer, JSONRenderer, XMLRenderer)
 
     @ConditionalMethodDecorator(method_decorator(login_required), settings.KOALIXCRM_REST_API_AUTH)
+    @authentication_classes((SessionAuthentication, BasicAuthentication))
     def dispatch(self, *args, **kwargs):
         return super(TaskStatusAsJSON, self).dispatch(*args, **kwargs)
 
@@ -72,6 +77,7 @@ class CurrencyAsJSON(viewsets.ModelViewSet):
     renderer_classes = (BrowsableAPIRenderer, JSONRenderer, XMLRenderer)
 
     @ConditionalMethodDecorator(method_decorator(login_required), settings.KOALIXCRM_REST_API_AUTH)
+    @authentication_classes((SessionAuthentication, BasicAuthentication))
     def dispatch(self, *args, **kwargs):
         return super(CurrencyAsJSON, self).dispatch(*args, **kwargs)
 
@@ -85,6 +91,7 @@ class TaxAsJSON(viewsets.ModelViewSet):
     renderer_classes = (BrowsableAPIRenderer, JSONRenderer, XMLRenderer)
 
     @ConditionalMethodDecorator(method_decorator(login_required), settings.KOALIXCRM_REST_API_AUTH)
+    @authentication_classes((SessionAuthentication, BasicAuthentication))
     def dispatch(self, *args, **kwargs):
         return super(TaxAsJSON, self).dispatch(*args, **kwargs)
 
@@ -98,6 +105,7 @@ class UnitAsJSON(viewsets.ModelViewSet):
     renderer_classes = (BrowsableAPIRenderer, JSONRenderer, XMLRenderer)
 
     @ConditionalMethodDecorator(method_decorator(login_required), settings.KOALIXCRM_REST_API_AUTH)
+    @authentication_classes((SessionAuthentication, BasicAuthentication))
     def dispatch(self, *args, **kwargs):
         return super(UnitAsJSON, self).dispatch(*args, **kwargs)
 
@@ -111,6 +119,7 @@ class ProductAsJSON(viewsets.ModelViewSet):
     renderer_classes = (BrowsableAPIRenderer, JSONRenderer, XMLRenderer)
 
     @ConditionalMethodDecorator(method_decorator(login_required), settings.KOALIXCRM_REST_API_AUTH)
+    @authentication_classes((SessionAuthentication, BasicAuthentication))
     def dispatch(self, *args, **kwargs):
         return super(ProductAsJSON, self).dispatch(*args, **kwargs)
 
@@ -125,5 +134,6 @@ class ProjectAsJSON(viewsets.ModelViewSet):
     file_name = "this_is_the_ProjectList.xml"
 
     @ConditionalMethodDecorator(method_decorator(login_required), settings.KOALIXCRM_REST_API_AUTH)
+    @authentication_classes((SessionAuthentication, BasicAuthentication))
     def dispatch(self, *args, **kwargs):
         return super(ProjectAsJSON, self).dispatch(*args, **kwargs)

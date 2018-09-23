@@ -35,11 +35,10 @@ router.register(r'contracts', ContractAsJSON)
 router.register(r'currencies', CurrencyAsJSON)
 router.register(r'products', ProductAsJSON)
 router.register(r'productCategories', ProductCategoryAsJSON)
-router.register(r'project', ProjectAsJSON)
+router.register(r'projects', ProjectAsJSON)
 router.register(r'tasks', TaskAsJSON)
 router.register(r'taskstatus', TaskStatusAsJSON)
 router.register(r'taxes', TaxAsJSON)
-router.register(r'units', UnitAsJSON)
 router.register(r'units', UnitAsJSON)
 
 

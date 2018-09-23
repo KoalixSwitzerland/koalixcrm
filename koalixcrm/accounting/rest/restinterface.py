@@ -3,6 +3,8 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from rest_framework import viewsets
+from rest_framework.authentication import BasicAuthentication, SessionAuthentication
+from rest_framework.decorators import authentication_classes
 
 from koalixcrm.accounting.models import Account, AccountingPeriod, Booking, ProductCategorie
 from koalixcrm.accounting.rest.account_rest import AccountJSONSerializer
@@ -21,6 +23,7 @@ class AccountAsJSON(viewsets.ModelViewSet):
     filter_fields = ('account_type',)
 
     @ConditionalMethodDecorator(method_decorator(login_required), settings.KOALIXCRM_REST_API_AUTH)
+    @authentication_classes((SessionAuthentication, BasicAuthentication))
     def dispatch(self, *args, **kwargs):
         return super(AccountAsJSON, self).dispatch(*args, **kwargs)
 
@@ -33,6 +36,7 @@ class AccountingPeriodAsJSON(viewsets.ModelViewSet):
     serializer_class = AccountingPeriodJSONSerializer
 
     @ConditionalMethodDecorator(method_decorator(login_required), settings.KOALIXCRM_REST_API_AUTH)
+    @authentication_classes((SessionAuthentication, BasicAuthentication))
     def dispatch(self, *args, **kwargs):
         return super(AccountingPeriodAsJSON, self).dispatch(*args, **kwargs)
 
@@ -45,6 +49,7 @@ class BookingAsJSON(viewsets.ModelViewSet):
     serializer_class = BookingJSONSerializer
 
     @ConditionalMethodDecorator(method_decorator(login_required), settings.KOALIXCRM_REST_API_AUTH)
+    @authentication_classes((SessionAuthentication, BasicAuthentication))
     def dispatch(self, *args, **kwargs):
         return super(BookingAsJSON, self).dispatch(*args, **kwargs)
 
@@ -57,5 +62,6 @@ class ProductCategoryAsJSON(viewsets.ModelViewSet):
     serializer_class = ProductCategoryJSONSerializer
 
     @ConditionalMethodDecorator(method_decorator(login_required), settings.KOALIXCRM_REST_API_AUTH)
+    @authentication_classes((SessionAuthentication, BasicAuthentication))
     def dispatch(self, *args, **kwargs):
         return super(ProductCategoryAsJSON, self).dispatch(*args, **kwargs)
