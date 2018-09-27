@@ -94,12 +94,10 @@ class Work(models.Model):
         return _("Work") + ": " + str(self.id) + " " + _("from Person") + ": " + str(self.human_resource.id)
 
     def check_working_hours(self):
-        """This method checks that the working hour is correctly proved either using the start_stop pattern
+        """This method checks that the working hour is correctly provided either using the start_stop pattern
         or by providing the worked_hours in total.
 
         Args:
-          cleaned_data (Dict):  The cleaned_data must contain the values form the form validation.
-          The django built in form validation must already have been passed
 
         Returns:
           True when no ValidationError was raised

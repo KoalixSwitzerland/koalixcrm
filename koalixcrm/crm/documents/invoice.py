@@ -31,7 +31,7 @@ class Invoice(SalesDocument):
             return format_html("<a href='/admin/crm/invoice/%s' >%s</a>" % (str(self.id), str(self.description)))
         else:
             return "Not present"
-    link_to_invoice.short_description = _("Invoice");
+    link_to_invoice.short_description = _("Invoice")
 
     def create_from_reference(self, calling_model):
         self.create_sales_document(calling_model)
@@ -52,7 +52,7 @@ class Invoice(SalesDocument):
         if not self.is_complete_with_price():
             raise IncompleteInvoice(_("Complete invoice and run price recalculation. Price may not be Zero"))
         if len(activa_account) == 0:
-            raise OpenInterestAccountMissing(_("Please specify one open intrest account in the accounting"))
+            raise OpenInterestAccountMissing(_("Please specify one open interest account in the accounting"))
         for position in list(SalesDocumentPosition.objects.filter(sales_document=self.id)):
             profit_account = position.product.accounting_product_categorie.profitAccount
             dict_prices[profit_account] = position.last_calculated_price
@@ -103,7 +103,7 @@ class OptionInvoice(OptionSalesDocument):
     search_fields = OptionSalesDocument.search_fields
     fieldsets = OptionSalesDocument.fieldsets + (
         (_('Invoice specific'), {
-            'fields': ( 'payable_until', 'status', 'payment_bank_reference' )
+            'fields': ('payable_until', 'status', 'payment_bank_reference' )
         }),
     )
 

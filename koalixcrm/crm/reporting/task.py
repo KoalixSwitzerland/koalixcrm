@@ -329,40 +329,51 @@ class Task(models.Model):
         """
         agreements = Agreement.objects.filter(task=self)
         if reporting_period:
-            work_objects = Work.objects.filter(task=self.id,
-                                               reporting_period=reporting_period)
+            all_work_in_task = Work.objects.filter(task=self.id,
+                                                   reporting_period=reporting_period)
         else:
-            work_objects = Work.objects.filter(task=self.id)
-        sum_seconds = 0
-        effort_in_seconds = 0
+            all_work_in_task = Work.objects.filter(task=self.id)
         sum_costs = 0
+        work_with_agreement = list()
+        work_without_agreement = list()
+        work_calculated = list()
         human_resource_list = dict()
-        for work_object in work_objects:
-            effort_in_seconds += work_object.effort_seconds()
-            sum_seconds += effort_in_seconds
+        for work_object in all_work_in_task:
             if work_object.human_resource not in human_resource_list:
                 human_resource_list[work_object.human_resource] = dict()
             for agreement in agreements:
-                agreement_matches = True
-                """agreement.matches_with(work_object)"""
+                agreement_matches = agreement.match_with_work(work_object)
                 if agreement_matches:
+                    if work_object not in work_with_agreement:
+                        work_with_agreement.append(work_object)
                     if agreement not in human_resource_list.get(work_object.human_resource):
                         human_resource_list.get(work_object.human_resource)[agreement] = list()
                     human_resource_list.get(work_object.human_resource).get(agreement).append(work_object)
-        covered_work = list()
+            if work_object not in work_with_agreement:
+                work_without_agreement.append(work_object)
+
         for human_resource_dict in human_resource_list:
             agreement_list = Agreement.objects.filter(task=self, resource=human_resource_dict).order_by('costs__price')
             for agreement in agreement_list:
                 agreement_remaining_amount = agreement.amount
-                for work in human_resource_list[human_resource_dict].get(agreement):
-                    if work not in covered_work:
-                        if (agreement_remaining_amount - work.worked_hours) > 0:
-                            agreement_remaining_amount -= work.worked_hours
-                            sum_costs += work.worked_hours*agreement.costs.price.price
-                            covered_work.append(work)
-        for work in work_objects:
-            if work not in covered_work:
-                sum_costs += work.worked_hours*ResourcePrice.objects.get(work.human_resource).price
+                if human_resource_list[human_resource_dict].get(agreement):
+                    for work in human_resource_list[human_resource_dict].get(agreement):
+                        if work in work_with_agreement:
+                            if (agreement_remaining_amount - work.worked_hours) > 0:
+                                agreement_remaining_amount -= work.worked_hours
+                                sum_costs += work.worked_hours*agreement.costs.price
+                                work_calculated.append(work)
+        for work in all_work_in_task:
+            if work not in work_calculated:
+                if work not in work_without_agreement:
+                    work_without_agreement.append(work)
+        for work in work_without_agreement:
+            default_resource_price = ResourcePrice.objects.get(id=work.human_resource.id)
+            if default_resource_price:
+                sum_costs += work.worked_hours*default_resource_price.price
+            else:
+                sum_costs = "n/a"
+                break
         return sum_costs.__str__()
     effective_costs.short_description = _("Effective costs")
     effective_costs.tags = True
