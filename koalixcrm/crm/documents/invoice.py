@@ -7,6 +7,10 @@ from django.contrib import admin
 from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext as _
 from django.utils.html import format_html
+from django.contrib.admin import helpers
+from django.shortcuts import render
+from django.contrib import messages
+from django.template.context_processors import csrf
 from koalixcrm.crm.const.status import *
 from koalixcrm.crm.exceptions import *
 from koalixcrm import accounting
@@ -14,10 +18,7 @@ from koalixcrm.crm.documents.sales_document import SalesDocument, OptionSalesDoc
 from koalixcrm.crm.documents.sales_document_position import SalesDocumentPosition
 from koalixcrm.plugin import *
 from koalixcrm.accounting.models import Account
-from django.contrib.admin import helpers
-from django.shortcuts import render
-from django.contrib import messages
-from django.template.context_processors import csrf
+from koalixcrm.global_support_functions import limit_string_length
 
 
 class Invoice(SalesDocument):
@@ -28,7 +29,9 @@ class Invoice(SalesDocument):
 
     def link_to_invoice(self):
         if self.id:
-            return format_html("<a href='/admin/crm/invoice/%s' >%s</a>" % (str(self.id), str(self.description)))
+            return format_html("<a href='/admin/crm/invoice/%s' >%s</a>" % (str(self.id),
+                                                                            limit_string_length(str(self.description),
+                                                                                                30)))
         else:
             return "Not present"
     link_to_invoice.short_description = _("Invoice")
@@ -177,25 +180,23 @@ class InlineInvoice(admin.TabularInline):
     can_delete = True
     extra = 1
     readonly_fields = ('link_to_invoice',
-                       'last_pricing_date',
-                       'last_calculated_price',
-                       'last_calculated_tax',
-                       'description',
                        'contract',
                        'customer',
                        'payable_until',
-                       'status')
+                       'status',
+                       'last_pricing_date',
+                       'last_calculated_price',
+                       'last_calculated_tax')
     fieldsets = (
         (_('Invoice'), {
             'fields': ('link_to_invoice',
-                       'last_pricing_date',
-                       'last_calculated_price',
-                       'last_calculated_tax',
-                       'description',
                        'contract',
                        'customer',
                        'payable_until',
-                       'status')
+                       'status',
+                       'last_pricing_date',
+                       'last_calculated_price',
+                       'last_calculated_tax')
         }),
     )
 

@@ -32,6 +32,9 @@ class Price(models.Model):
                                    blank=True,
                                    null=True)
 
+    def __str__(self):
+        return str(self.id) + " " +str(self.price) + " " + str(self.currency.short_name)
+
     def is_valid_from_criteria_fulfilled(self, date):
         if not self.valid_from:
             return True

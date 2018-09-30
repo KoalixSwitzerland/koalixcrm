@@ -16,6 +16,9 @@ class ProductPrice(models.Model):
                               blank=False,
                               verbose_name=_("Price"))
 
+    def __str__(self):
+        return str(self.price.price) + " " + str(self.price.currency.short_name)
+
     def is_valid_from_criteria_fulfilled(self, date):
         if not self.valid_from:
             return True

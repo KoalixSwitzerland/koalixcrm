@@ -14,13 +14,13 @@ class ResourceType(models.Model):
                                    blank=True,
                                    null=True)
 
+    def __str__(self):
+        return str(self.id) + " " + str(self.title)
+
     class Meta:
         app_label = "crm"
         verbose_name = _('Resource Link Type')
         verbose_name_plural = _('Resource Link Type')
-
-    def __str__(self):
-        return str(self.title)
 
 
 class ResourceTypeAdminView(admin.ModelAdmin):

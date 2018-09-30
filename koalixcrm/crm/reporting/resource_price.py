@@ -13,6 +13,9 @@ class ResourcePrice(Price):
                                  blank=False,
                                  null=False)
 
+    def __str__(self):
+        return str(self.price) + " " + str(self.currency.short_name)
+
 
 class ResourcePriceInlineAdminView(admin.TabularInline):
     model = ResourcePrice

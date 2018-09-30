@@ -8,6 +8,7 @@ from django.utils.html import format_html
 from koalixcrm.crm.const.status import *
 from koalixcrm.plugin import *
 from koalixcrm.crm.documents.sales_document import SalesDocument, OptionSalesDocument
+from koalixcrm.global_support_functions import limit_string_length
 
 
 class Quote(SalesDocument):
@@ -16,7 +17,9 @@ class Quote(SalesDocument):
 
     def link_to_quote(self):
         if self.id:
-            return format_html("<a href='/admin/crm/quote/%s' >%s</a>" % (str(self.id), str(self.description)))
+            return format_html("<a href='/admin/crm/quote/%s' >%s</a>" % (str(self.id),
+                                                                          limit_string_length(str(self.description),
+                                                                                              30)))
         else:
             return "Not present"
     link_to_quote.short_description = _("Quote");

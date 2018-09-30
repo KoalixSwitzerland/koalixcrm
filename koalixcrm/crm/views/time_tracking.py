@@ -12,12 +12,13 @@ from koalixcrm.crm.exceptions import ReportingPeriodNotFound
 from koalixcrm.djangoUserExtension.exceptions import UserExtensionMissing, TooManyUserExtensionsAvailable
 from koalixcrm.crm.views.range_selection_form import RangeSelectionForm
 from koalixcrm.crm.views.work_entry_formset import BaseWorkEntryFormset
+from koalixcrm.crm.reporting.human_resource import HumanResource
 
 
 @login_required
 def work_report(request):
     try:
-        employee = UserExtension.get_user_extension(request.user)
+        human_resource = HumanResource.objects.get(user=UserExtension.get_user_extension(request.user))
         if request.POST.get('post'):
             if 'cancel' in request.POST:
                 return HttpResponseRedirect('/admin/')
@@ -36,7 +37,7 @@ def work_report(request):
                             form.update_work(request)
                         messages.success(request, _('you have successfully updated your work'))
                 formset = BaseWorkEntryFormset.create_updated_formset(range_selection_form,
-                                                                      employee)
+                                                                      human_resource)
                 range_selection_form.update_from_input()
                 c = {'range_selection_form': range_selection_form,
                      'formset': formset}
@@ -50,7 +51,7 @@ def work_report(request):
             range_selection_form = RangeSelectionForm.create_range_selection_form(from_date, to_date)
             formset = BaseWorkEntryFormset.create_new_formset(from_date,
                                                               to_date,
-                                                              employee)
+                                                              human_resource)
             c = {'formset': formset,
                  'range_selection_form': range_selection_form}
             c.update(csrf(request))

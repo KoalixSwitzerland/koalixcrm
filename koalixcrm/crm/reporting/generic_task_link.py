@@ -18,7 +18,7 @@ class GenericTaskLink(models.Model):
                                          verbose_name=_("Last modified by"), related_name="db_task_link_last_modified")
 
     def __str__(self):
-        return _("Task Link")
+        return str(self.id) + " " + str(self.title)
 
     class Meta:
         app_label = "crm"

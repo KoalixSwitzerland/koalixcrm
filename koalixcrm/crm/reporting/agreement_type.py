@@ -15,7 +15,7 @@ class AgreementType(models.Model):
         verbose_name_plural = _('Agreement Type')
 
     def __str__(self):
-        return _("Agreement Type") + " ID: " + str(self.id) + " title: " + str(self.title)
+        return str(self.id) + " " + str(self.title)
 
 
 class AgreementTypeAdminView(admin.ModelAdmin):

@@ -130,9 +130,10 @@ class Project(models.Model):
         for single_reporting_period in reporting_periods:
             all_project_tasks = Task.objects.filter(project=self.id)
             for task in all_project_tasks:
-                effective_effort_accumulated += task.effective_acucumulated_costs(reporting_period=single_reporting_period)
-            return effective_effort_accumulated
-    effective_accumulated_costs.short_description = _("Effective Effort [hrs]")
+                effective_effort_accumulated += float(task.effective_costs(reporting_period=single_reporting_period))
+        return effective_effort_accumulated
+
+    effective_accumulated_costs.short_description = _("Effective Accumulated costs [hrs]")
     effective_accumulated_costs.tags = True
 
     def effective_costs(self, reporting_period):
@@ -152,7 +153,7 @@ class Project(models.Model):
 
         Raises:
         No exceptions planned"""
-        planned_effort_accumulated = "0"
+        planned_effort_accumulated = 0
         all_project_tasks = Task.objects.filter(project=self.id)
         if all_project_tasks:
             for task in all_project_tasks:
@@ -391,7 +392,10 @@ class ProjectAdminView(admin.ModelAdmin):
                     'project_manager',
                     'default_currency',
                     'planned_duration',
-                    'effective_duration',)
+                    'planned_costs',
+                    'effective_duration',
+                    'effective_accumulated_costs'
+                    )
 
     list_display_links = ('id',)
     ordering = ('-id',)
