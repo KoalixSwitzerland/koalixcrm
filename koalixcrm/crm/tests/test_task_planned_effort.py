@@ -11,7 +11,7 @@ from koalixcrm.crm.factories.factory_reporting_period import StandardReportingPe
 from koalixcrm.djangoUserExtension.factories.factory_user_extension import StandardUserExtensionFactory
 from koalixcrm.crm.factories.factory_work import StandardWorkFactory
 from koalixcrm.crm.factories.factory_task import StandardTaskFactory
-from koalixcrm.crm.factories.factory_employee_assignment_to_task import StandardEmployeeAssignmentToTaskFactory
+from koalixcrm.crm.factories.factory_estimation import StandardEmployeeAssignmentToTaskFactory
 from koalixcrm.test_support_functions import make_date_utc
 
 

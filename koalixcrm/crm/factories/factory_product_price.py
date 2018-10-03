@@ -2,7 +2,7 @@
 
 import factory
 import datetime
-from koalixcrm.crm.models import Price
+from koalixcrm.crm.models import ProductPrice
 from koalixcrm.crm.factories.factory_product import StandardProductFactory
 from koalixcrm.crm.factories.factory_unit import StandardUnitFactory
 from koalixcrm.crm.factories.factory_currency import StandardCurrencyFactory
@@ -12,11 +12,11 @@ from koalixcrm.test_support_functions import make_date_utc
 
 class StandardPriceFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = Price
-        django_get_or_create = ('product',
+        model = ProductPrice
+        django_get_or_create = ('product_type',
                                 'price')
 
-    product = factory.SubFactory(StandardProductFactory)
+    product_type = factory.SubFactory(StandardProductFactory)
     unit = factory.SubFactory(StandardUnitFactory)
     currency = factory.SubFactory(StandardCurrencyFactory)
     customer_group = factory.SubFactory(StandardCustomerGroupFactory)
@@ -27,11 +27,11 @@ class StandardPriceFactory(factory.django.DjangoModelFactory):
 
 class HighPriceFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = Price
-        django_get_or_create = ('product',
+        model = ProductPrice
+        django_get_or_create = ('product_type',
                                 'price')
 
-    product = factory.SubFactory(StandardProductFactory)
+    product_type = factory.SubFactory(StandardProductFactory)
     unit = factory.SubFactory(StandardUnitFactory)
     currency = factory.SubFactory(StandardCurrencyFactory)
     customer_group = factory.SubFactory(StandardCustomerGroupFactory)

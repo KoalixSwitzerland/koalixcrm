@@ -33,10 +33,10 @@ class ProductType(models.Model):
                                          blank=True)
     date_of_creation = models.DateTimeField(verbose_name=_("Created at"),
                                             auto_now_add=True)
-    accounting_product_categorie = models.ForeignKey('accounting.ProductCategorie',
-                                                     verbose_name=_("Accounting Product Categorie"),
-                                                     null=True,
-                                                     blank="True")
+    accounting_product_category = models.ForeignKey('accounting.ProductCategory',
+                                                    verbose_name=_("Accounting Product Category"),
+                                                    null=True,
+                                                    blank="True")
 
     def get_price(self, date, unit, customer, currency):
         """The function searches for a valid price and returns the price of the product as a decimal value.
@@ -110,7 +110,7 @@ class ProductTypeAdminView(admin.ModelAdmin):
         'title',
         'default_unit',
         'tax',
-        'accounting_product_categorie')
+        'accounting_product_category')
     list_display_links = ('product_type_identifier',)
     fieldsets = (
         (_('Basics'), {
@@ -120,7 +120,7 @@ class ProductTypeAdminView(admin.ModelAdmin):
                 'description',
                 'default_unit',
                 'tax',
-                'accounting_product_categorie')
+                'accounting_product_category')
         }),
     )
     inlines = [ProductPriceInlineAdminView,

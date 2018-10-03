@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from koalixcrm.accounting.accounting.product_categorie import ProductCategorie
+from koalixcrm.accounting.accounting.product_category import ProductCategory
 from koalixcrm.accounting.rest.product_categorie_rest import ProductCategoryMinimalJSONSerializer
 from koalixcrm.crm.product.product_type import ProductType
 from koalixcrm.crm.product.tax import Tax
@@ -50,9 +50,9 @@ class ProductJSONSerializer(serializers.HyperlinkedModelSerializer):
         product_category = validated_data.pop('accounting_product_categorie')
         if product_category:
             if product_category.get('id', None):
-                product.accounting_product_categorie = ProductCategorie.objects.get(id=product_category.get('id', None))
+                product.accounting_product_category = ProductCategory.objects.get(id=product_category.get('id', None))
             else:
-                product.accounting_product_categorie = None
+                product.accounting_product_category = None
 
         product.save()
         return product
@@ -85,7 +85,7 @@ class ProductJSONSerializer(serializers.HyperlinkedModelSerializer):
         product_category = validated_data.pop('accounting_product_categorie')
         if product_category:
             if product_category.get('id', instance.accounting_product_categorie):
-                instance.accounting_product_categorie = ProductCategorie.objects.get(
+                instance.accounting_product_categorie = ProductCategory.objects.get(
                     id=product_category.get('id', None))
             else:
                 instance.accounting_product_categorie = instance.accounting_product_categorie
