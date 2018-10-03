@@ -24,9 +24,6 @@ class ProductType(models.Model):
     tax = models.ForeignKey("Tax",
                             blank=False,
                             null=False)
-    last_status_change = models.DateField(verbose_name=_("Last Status Change"),
-                                          blank=True,
-                                          null=False)
     last_modification = models.DateTimeField(verbose_name=_("Last modified"),
                                              auto_now=True)
     last_modified_by = models.ForeignKey('auth.User',
@@ -60,9 +57,9 @@ class ProductType(models.Model):
         prices = ProductPrice.objects.filter(product_type=self.id)
         valid_prices = list()
         for price in list(prices):
-            currency_factor = price.get_currency_transform_factor(price)
-            unit_factor = price.get_unit_transform_factor(price)
-            group_factors = price.get_customer_group_transform_factor(customer)
+            currency_factor = price.get_currency_transform_factor(currency, self.id)
+            unit_factor = price.get_unit_transform_factor(unit, self.id)
+            group_factors = price.get_customer_group_transform_factor(customer, self.id)
             date_in_range = price.is_date_in_range(date)
             if currency_factor != 0 and \
                     group_factors != 0 and \
@@ -84,7 +81,7 @@ class ProductType(models.Model):
         return self.tax.get_tax_rate()
 
     def __str__(self):
-        return str(self.product_identifier) + ' ' + self.title.__str__()
+        return str(self.product_type_identifier) + ' ' + self.title.__str__()
 
     class Meta:
         app_label = "crm"
@@ -108,19 +105,22 @@ class ProductType(models.Model):
 
 
 class ProductTypeAdminView(admin.ModelAdmin):
-    list_display = ('product_type_identifier',
-                    'title',
-                    'default_unit',
-                    'tax',
-                    'accounting_product_categorie')
+    list_display = (
+        'product_type_identifier',
+        'title',
+        'default_unit',
+        'tax',
+        'accounting_product_categorie')
     list_display_links = ('product_type_identifier',)
     fieldsets = (
         (_('Basics'), {
-            'fields': ('title',
-                       'description',
-                       'default_unit',
-                       'tax',
-                       'accounting_product_categorie')
+            'fields': (
+                'product_type_identifier',
+                'title',
+                'description',
+                'default_unit',
+                'tax',
+                'accounting_product_categorie')
         }),
     )
     inlines = [ProductPriceInlineAdminView,

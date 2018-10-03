@@ -9,23 +9,45 @@ from django.utils.translation import ugettext as _
 class Position(models.Model):
     position_number = models.PositiveIntegerField(verbose_name=_("Position Number"),
                                                   validators=[MinValueValidator(1)])
-    quantity = models.DecimalField(verbose_name=_("Quantity"), decimal_places=3, max_digits=10)
-    description = models.TextField(verbose_name=_("Description"), blank=True, null=True)
-    discount = models.DecimalField(max_digits=5, decimal_places=2, verbose_name=_("Discount"), blank=True, null=True)
-    product = models.ForeignKey("Product", verbose_name=_("Product"), blank=True, null=True)
-    unit = models.ForeignKey("Unit", verbose_name=_("Unit"), blank=True, null=True)
-    sent_on = models.DateField(verbose_name=_("Shipment on"), blank=True, null=True)
+    quantity = models.DecimalField(verbose_name=_("Quantity"),
+                                   decimal_places=3,
+                                   max_digits=10)
+    description = models.TextField(verbose_name=_("Description"),
+                                   blank=True, null=True)
+    discount = models.DecimalField(max_digits=5, decimal_places=2,
+                                   verbose_name=_("Discount"),
+                                   blank=True,
+                                   null=True)
+    product_type = models.ForeignKey("ProductType",
+                                     verbose_name=_("Product"),
+                                     blank=True,
+                                     null=True)
+    unit = models.ForeignKey("Unit", verbose_name=_("Unit"),
+                             blank=True,
+                             null=True)
+    sent_on = models.DateField(verbose_name=_("Shipment on"),
+                               blank=True,
+                               null=True)
     overwrite_product_price = models.BooleanField(verbose_name=_('Overwrite Product Price'))
-    position_price_per_unit = models.DecimalField(verbose_name=_("Price Per Unit"), max_digits=17, decimal_places=2,
-                                               blank=True, null=True)
-    last_pricing_date = models.DateField(verbose_name=_("Last Pricing Date"), blank=True, null=True)
-    last_calculated_price = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculated Price"),
+    position_price_per_unit = models.DecimalField(verbose_name=_("Price Per Unit"),
+                                                  max_digits=17,
+                                                  decimal_places=2,
+                                                  blank=True, null=True)
+    last_pricing_date = models.DateField(verbose_name=_("Last Pricing Date"),
+                                         blank=True,
+                                         null=True)
+    last_calculated_price = models.DecimalField(max_digits=17,
+                                                decimal_places=2,
+                                                verbose_name=_("Last Calculated Price"),
                                                 blank=True, null=True)
-    last_calculated_tax = models.DecimalField(max_digits=17, decimal_places=2, verbose_name=_("Last Calculated Tax"),
-                                              blank=True, null=True)
+    last_calculated_tax = models.DecimalField(max_digits=17,
+                                              decimal_places=2,
+                                              verbose_name=_("Last Calculated Tax"),
+                                              blank=True,
+                                              null=True)
 
     def __str__(self):
-        return _("Position") + ": " + str(self.id)
+        return _("Position") + ": " + self.id.__str__()
 
     class Meta:
         app_label = "crm"
@@ -49,7 +71,7 @@ class SalesDocumentPosition(Position):
         objects = list(position_class.objects.filter(sales_document=object_to_create_pdf.id))
         for position in list(position_class.objects.filter(sales_document=object_to_create_pdf.id)):
             objects += list(Position.objects.filter(id=position.id))
-            objects += list(ProductType.objects.filter(id=position.product.id))
+            objects += list(ProductType.objects.filter(id=position.product_type.id))
             objects += list(Unit.objects.filter(id=position.unit.id))
         return objects
 
@@ -58,12 +80,11 @@ class SalesDocumentPosition(Position):
         links itself to the attach_to_model, this function is usually
         used within the create invoice, quote, reminder,... functions"""
 
-        self.product = calling_model.product
+        self.product_type = calling_model.product_type
         self.position_number = calling_model.position_number
         self.quantity = calling_model.quantity
         self.description = calling_model.description
         self.discount = calling_model.discount
-        self.product = calling_model.product
         self.unit = calling_model.unit
         self.sent_on = calling_model.sent_on
         self.overwrite_product_price = calling_model.overwrite_product_price
@@ -85,8 +106,15 @@ class SalesDocumentInlinePosition(admin.TabularInline):
     fieldsets = (
         ('', {
             'fields': (
-            'position_number', 'quantity', 'unit', 'product', 'description', 'discount', 'overwrite_product_price',
-            'position_price_per_unit', 'sent_on')
+                'position_number',
+                'quantity',
+                'unit',
+                'product_type',
+                'description',
+                'discount',
+                'overwrite_product_price',
+                'position_price_per_unit',
+                'sent_on')
         }),
     )
     allow_add = True

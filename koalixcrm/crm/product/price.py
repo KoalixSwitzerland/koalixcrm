@@ -36,7 +36,7 @@ class Price(models.Model):
         return str(self.id) + " " +str(self.price) + " " + str(self.currency.short_name)
 
     def is_valid_from_criteria_fulfilled(self, date):
-        if not self.valid_from:
+        if self.valid_from is None:
             return True
         elif (self.valid_from - date).days <= 0:
             return True
@@ -44,7 +44,7 @@ class Price(models.Model):
             return False
 
     def is_valid_until_criteria_fulfilled(self, date):
-        if not self.valid_until:
+        if self.valid_until is None:
             return True
         elif (date - self.valid_until).days <= 0:
             return True
@@ -52,7 +52,7 @@ class Price(models.Model):
             return False
 
     def is_customer_group_criteria_fulfilled(self, customer_group):
-        if not self.customer_group:
+        if self.customer_group is None:
             return True
         elif self.customer_group == customer_group:
             return True
@@ -77,35 +77,35 @@ class Price(models.Model):
         else:
             return False
 
-    def get_currency_transform_factor(self, currency, product):
+    def get_currency_transform_factor(self, currency, product_type):
         """check currency conditions and factor"""
         if self.currency == currency:
             currency_factor = 1
         else:
             currency_transform = CurrencyTransform.objects.get(from_currency=self.currency,
                                                                to_currency=currency,
-                                                               product=product)
+                                                               product_type=product_type)
             if currency_transform:
                 currency_transform.get_transfrom_factor()
             else:
                 currency_factor = 0
         return currency_factor
 
-    def get_unit_transform_factor(self, unit, product):
+    def get_unit_transform_factor(self, unit, product_type):
         """check unit conditions and factor"""
         if self.unit == unit:
             unit_factor = 1
         else:
             unit_transform = UnitTransform.objects.get(from_unit=self.unit,
                                                        to_unit=unit,
-                                                       product=product)
+                                                       product_type=product_type)
             if unit_transform:
                 unit_transform.get_transfrom_factor()
             else:
                 unit_factor = 0
         return unit_factor
 
-    def get_customer_group_transform_factor(self, customer, product):
+    def get_customer_group_transform_factor(self, customer, product_type):
         """The function searches through all customer_groups in which the customer is member of
         from these customer_groups, the function returns the customer_group with the perfect match
         or it returns the factor with the lowest transform factor
@@ -119,21 +119,26 @@ class Price(models.Model):
 
         Raises:
             No exceptions planned"""
-        customer_groups = CustomerGroup.objects.filter(customer=customer)
-        customer_group_factor = 0
-        for customer_group in customer_groups:
-            if self.customer_group == customer_group:
-                customer_group_factor = 1
-                """Stop for loop when a perfect match is found"""
-                break
-            else:
-                customer_group = CustomerGroupTransform.objects.get(from_customer_group=self.customer_group,
-                                                                    to_customer_group=customer_group,
-                                                                    product=product)
-                if customer_group:
-                    if customer_group_factor > customer_group.get_transfrom_factor():
-                        customer_group_factor = customer_group.get_transfrom_factor()
-        return customer_group_factor
+        if self.customer_group is None:
+            return 1
+        if customer is not None:
+            customer_groups = CustomerGroup.objects.filter(customer=customer)
+            customer_group_factor = 0
+            if customer_groups is not None:
+                for customer_group in customer_groups:
+                    if self.customer_group == customer_group:
+                        customer_group_factor = 1
+                        """Stop for loop when a perfect match is found"""
+                        break
+                    else:
+                        customer_group = CustomerGroupTransform.objects.get(from_customer_group=self.customer_group,
+                                                                            to_customer_group=customer_group,
+                                                                            product_type=product_type)
+                        if customer_group:
+                            if customer_group_factor > customer_group.get_transfrom_factor():
+                                customer_group_factor = customer_group.get_transfrom_factor()
+                return customer_group_factor
+        return 1
 
     def matches_date_unit_customer_group_currency(self, date, unit, customer_group, currency):
         if (self.is_unit_criteria_fulfilled(unit) &

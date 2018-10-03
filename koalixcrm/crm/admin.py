@@ -15,7 +15,7 @@ from koalixcrm.crm.product.currency import Currency, OptionCurrency
 from koalixcrm.crm.contact.customer import Customer, OptionCustomer
 from koalixcrm.crm.contact.supplier import Supplier, OptionSupplier
 from koalixcrm.crm.contact.customer_group import CustomerGroup, OptionCustomerGroup
-from koalixcrm.crm.contact.customerbillingcycle import CustomerBillingCycle, OptionCustomerBillingCycle
+from koalixcrm.crm.contact.customer_billing_cycle import CustomerBillingCycle, OptionCustomerBillingCycle
 from koalixcrm.crm.contact.person import Person
 from koalixcrm.crm.contact.contact import OptionPerson, CallForContact, VisitForContact
 from koalixcrm.crm.contact.call import OptionCall, OptionVisit

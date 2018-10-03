@@ -91,7 +91,7 @@ class Invoice(SalesDocument):
         booking.save()
 
     def __str__(self):
-        return _("Invoice") + ": " + str(self.id) + " " + _("from Contract") + ": " + str(self.contract.id)
+        return _("Invoice") + ": " + self.id.__str__() + " " + _("from Contract") + ": " + self.contract.id.__str__()
 
     class Meta:
         app_label = "crm"

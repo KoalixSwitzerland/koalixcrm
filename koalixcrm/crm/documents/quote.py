@@ -35,7 +35,7 @@ class Quote(SalesDocument):
         self.attach_text_paragraphs()
 
     def __str__(self):
-        return _("Quote") + ": " + str(self.id) + " " + _("from Contract") + ": " + str(self.contract.id)
+        return _("Quote") + ": " + self.id.__str__() + " " + _("from Contract") + ": " + self.contract.id.__str__()
 
     class Meta:
         app_label = "crm"

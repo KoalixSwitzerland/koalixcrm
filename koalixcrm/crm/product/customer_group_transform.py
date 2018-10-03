@@ -17,9 +17,9 @@ class CustomerGroupTransform(models.Model):
                                           blank=False,
                                           null=False)
     product_type = models.ForeignKey('ProductType',
-                                verbose_name=_("Product Type"),
-                                blank=False,
-                                null=False)
+                                     verbose_name=_("Product Type"),
+                                     blank=False,
+                                     null=False)
     factor = models.IntegerField(verbose_name=_("Factor between From and To Customer Group"),
                                  blank=True,
                                  null=True)

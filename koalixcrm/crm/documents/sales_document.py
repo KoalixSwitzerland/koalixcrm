@@ -35,7 +35,7 @@ class TextParagraphInSalesDocument(models.Model):
         verbose_name_plural = _('Text Paragraphs In Sales Documents')
 
     def __str__(self):
-        return self.id.__str__
+        return self.id.__str__()
 
 
 class SalesDocument(models.Model):
@@ -78,8 +78,9 @@ class SalesDocument(models.Model):
                                  blank=False, null=False)
     date_of_creation = models.DateTimeField(verbose_name=_("Created at"),
                                             auto_now_add=True)
-    custom_date_field = models.DateTimeField(verbose_name=_("Custom Date/Time"),
-                                             blank=True, null=True)
+    custom_date_field = models.DateField(verbose_name=_("Custom Date"),
+                                         blank=True,
+                                         null=True)
     last_modification = models.DateTimeField(verbose_name=_("Last modified"),
                                              auto_now=True)
     last_modified_by = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True},

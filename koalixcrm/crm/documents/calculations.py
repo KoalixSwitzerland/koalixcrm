@@ -67,10 +67,10 @@ class Calculations:
             Can trow Product.NoPriceFound when Product Price could not be found"""
 
         if not position.overwrite_product_price:
-            position.position_price_per_unit = position.product.get_price(pricing_date,
-                                                                          position.unit,
-                                                                          contact,
-                                                                          currency)
+            position.position_price_per_unit = position.product_type.get_price(pricing_date,
+                                                                               position.unit,
+                                                                               contact,
+                                                                               currency)
         if isinstance(position.discount, Decimal):
             position.last_calculated_price = int(position.position_price_per_unit * position.quantity * (
                 1 - position.discount / 100) / currency.rounding) * currency.rounding
@@ -96,10 +96,10 @@ class Calculations:
         Raises:
             Can trow Product.NoPriceFound when Product Price could not be found"""
         if isinstance(position.discount, Decimal):
-            position.last_calculated_tax = int(position.product.get_tax_rate() / 100 * position.position_price_per_unit * position.quantity * (
+            position.last_calculated_tax = int(position.product_type.get_tax_rate() / 100 * position.position_price_per_unit * position.quantity * (
                 1 - position.discount / 100) / currency.rounding) * currency.rounding
         else:
-            position.last_calculated_tax = int(position.product.get_tax_rate() / 100 * position.position_price_per_unit * position.quantity /
+            position.last_calculated_tax = int(position.product_type.get_tax_rate() / 100 * position.position_price_per_unit * position.quantity /
                                              currency.rounding) * currency.rounding
         position.save()
         return position.last_calculated_tax
