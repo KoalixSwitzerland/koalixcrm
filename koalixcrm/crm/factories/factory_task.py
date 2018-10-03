@@ -13,8 +13,6 @@ class StandardTaskFactory(factory.django.DjangoModelFactory):
         model = Task
 
     title = 'This is a test Task'
-    planned_start_date = make_date_utc(datetime.datetime(2018, 5, 2, 00))
-    planned_end_date = make_date_utc(datetime.datetime(2018, 6, 15, 00))
     project = factory.SubFactory(StandardProjectFactory)
     description = "This is a description"
     status = factory.SubFactory(StartedTaskStatusFactory)

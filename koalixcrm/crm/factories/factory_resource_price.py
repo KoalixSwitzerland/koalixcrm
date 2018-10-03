@@ -10,7 +10,7 @@ from koalixcrm.crm.factories.factory_customer_group import StandardCustomerGroup
 from koalixcrm.test_support_functions import make_date_utc
 
 
-class StandardPriceFactory(factory.django.DjangoModelFactory):
+class StandardResourcePriceFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = ResourcePrice
         django_get_or_create = ('product',
@@ -25,9 +25,9 @@ class StandardPriceFactory(factory.django.DjangoModelFactory):
     valid_until = make_date_utc(datetime.datetime(2024, 6, 15, 00))
 
 
-class HighPriceFactory(factory.django.DjangoModelFactory):
+class HighResourcePriceFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = Price
+        model = ResourcePrice
         django_get_or_create = ('product',
                                 'price')
 

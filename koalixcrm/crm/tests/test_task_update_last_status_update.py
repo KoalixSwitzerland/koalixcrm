@@ -11,6 +11,7 @@ from koalixcrm.crm.factories.factory_reporting_period import StandardReportingPe
 from koalixcrm.djangoUserExtension.factories.factory_user_extension import StandardUserExtensionFactory
 from koalixcrm.crm.factories.factory_task_status import DoneTaskStatusFactory
 from koalixcrm.crm.factories.factory_task import StandardTaskFactory
+from koalixcrm.crm.factories.factory_estimation import StandardHumanResourceEstimationToTaskFactory
 from koalixcrm.global_support_functions import get_today_date
 
 
@@ -72,16 +73,18 @@ class TaskUpdateLastStatusUpdate(TestCase):
         self.test_user_extension = StandardUserExtensionFactory.create(user=self.test_user)
         self.test_reporting_period = StandardReportingPeriodFactory.create()
         self.test_1st_task = StandardTaskFactory.create(title="1st Test Task",
-                                                        planned_start_date=start_date,
-                                                        planned_end_date=end_date_first_task,
                                                         project=self.test_reporting_period.project,
                                                         last_status_change=datetime.date(2024, 6, 15)
                                                         )
+        self.estimation_1st_task = StandardHumanResourceEstimationToTaskFactory(task=self.test_1st_task,
+                                                                                date_from=start_date,
+                                                                                date_to=end_date_first_task)
         self.test_2nd_task = StandardTaskFactory.create(title="2nd Test Task",
-                                                        planned_start_date=start_date,
-                                                        planned_end_date=end_date_second_task,
                                                         project=self.test_reporting_period.project,
                                                         last_status_change=datetime.date(2024, 6, 15))
+        self.estimation_2nd_task = StandardHumanResourceEstimationToTaskFactory(task=self.test_2nd_task,
+                                                                                date_from=start_date,
+                                                                                date_to=end_date_second_task)
 
     def test_last_status_update(self):
         previous_last_status_change = self.test_1st_task.last_status_change

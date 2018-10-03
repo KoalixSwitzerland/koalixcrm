@@ -29,7 +29,6 @@ class Agreement(models.Model):
                                  null=True)
 
     def calculated_costs(self):
-        currency = self.task.project.default_currency
         return 0
 
     def match_with_work(self, work):

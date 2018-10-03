@@ -9,9 +9,9 @@ from koalixcrm.crm.factories.factory_customer_group import StandardCustomerGroup
 from koalixcrm.crm.factories.factory_currency import StandardCurrencyFactory
 from koalixcrm.crm.factories.factory_reporting_period import StandardReportingPeriodFactory
 from koalixcrm.djangoUserExtension.factories.factory_user_extension import StandardUserExtensionFactory
-from koalixcrm.crm.factories.factory_work import StandardWorkFactory
 from koalixcrm.crm.factories.factory_task import StandardTaskFactory
-from koalixcrm.crm.factories.factory_estimation import StandardEmployeeAssignmentToTaskFactory
+from koalixcrm.crm.factories.factory_estimation import StandardEstimationToTaskFactory
+from koalixcrm.crm.factories.factory_human_resource import StandardHumanResourceFactory
 from koalixcrm.test_support_functions import make_date_utc
 
 
@@ -29,13 +29,10 @@ class TaskPlannedEffort(TestCase):
         self.test_currency = StandardCurrencyFactory.create()
         self.test_user_extension = StandardUserExtensionFactory.create(user=self.test_user)
         self.test_reporting_period = StandardReportingPeriodFactory.create()
+        self.test_human_resource = StandardHumanResourceFactory.create()
         self.test_1st_task = StandardTaskFactory.create(title="1st Test Task",
-                                                        planned_start_date=start_date,
-                                                        planned_end_date=end_date_first_task,
                                                         project=self.test_reporting_period.project)
         self.test_2nd_task = StandardTaskFactory.create(title="2nd Test Task",
-                                                        planned_start_date=start_date,
-                                                        planned_end_date=end_date_second_task,
                                                         project=self.test_reporting_period.project)
 
     @pytest.mark.back_end_tests
@@ -48,18 +45,18 @@ class TaskPlannedEffort(TestCase):
             (self.test_2nd_task.planned_duration()).__str__(), "90")
         self.assertEqual(
             (self.test_2nd_task.planned_costs()).__str__(), "0")
-        StandardEmployeeAssignmentToTaskFactory.create(employee=self.test_user_extension,
-                                                       planned_effort="2.00",
-                                                       task=self.test_1st_task)
-        StandardEmployeeAssignmentToTaskFactory.create(employee=self.test_user_extension,
-                                                       planned_effort="1.50",
-                                                       task=self.test_1st_task)
-        StandardEmployeeAssignmentToTaskFactory.create(employee=self.test_user_extension,
-                                                       planned_effort="4.75",
-                                                       task=self.test_2nd_task)
-        StandardEmployeeAssignmentToTaskFactory.create(employee=self.test_user_extension,
-                                                       planned_effort="3.25",
-                                                       task=self.test_2nd_task)
+        StandardEstimationToTaskFactory.create(resource=self.test_human_resource,
+                                               planned_effort="2.00",
+                                               task=self.test_1st_task)
+        StandardEstimationToTaskFactory.create(resource=self.test_human_resource,
+                                               planned_effort="1.50",
+                                               task=self.test_1st_task)
+        StandardEstimationToTaskFactory.create(resource=self.test_human_resource,
+                                               planned_effort="4.75",
+                                               task=self.test_2nd_task)
+        StandardEstimationToTaskFactory.create(resource=self.test_human_resource,
+                                               planned_effort="3.25",
+                                               task=self.test_2nd_task)
         self.assertEqual(
             (self.test_1st_task.planned_costs()).__str__(), "3.50")
         self.assertEqual(

@@ -37,6 +37,7 @@ from koalixcrm.crm.reporting.agreement_status import *
 from koalixcrm.crm.reporting.agreement_type import *
 from koalixcrm.crm.reporting.agreement_status import *
 from koalixcrm.crm.reporting.estimation import *
+from koalixcrm.crm.reporting.estimation_status import *
 from koalixcrm.crm.reporting.human_resource import *
 from koalixcrm.crm.reporting.resource_manager import *
 from koalixcrm.crm.reporting.resource_type import *
