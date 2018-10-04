@@ -2,11 +2,11 @@
 
 import factory
 from koalixcrm.crm.models import ResourceManager
-from koalixcrm.crm.factories.factory_user import StaffUserFactory
+from koalixcrm.djangoUserExtension.factories.factory_user_extension import StandardUserExtensionFactory
 
 
 class StandardResourceManagerFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = ResourceManager
 
-    user = factory.SubFactory(StaffUserFactory)
+    user = factory.SubFactory(StandardUserExtensionFactory)

@@ -23,7 +23,7 @@ class TimeTrackingWorkEntry(LiveServerTestCase):
 
     def setUp(self):
         firefox_options = webdriver.firefox.options.Options()
-        firefox_options.set_headless(headless=False)
+        firefox_options.set_headless(headless=True)
         self.selenium = webdriver.Firefox(firefox_options=firefox_options)
         self.test_user = AdminUserFactory.create()
         self.test_customer_group = StandardCustomerGroupFactory.create()

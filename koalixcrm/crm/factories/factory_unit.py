@@ -7,7 +7,7 @@ from koalixcrm.crm.models import Unit
 class StandardUnitFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Unit
-        django_get_or_create = ('project_name',)
+        django_get_or_create = ('short_name',)
 
     description = "Kilogram"
     short_name = "kg"

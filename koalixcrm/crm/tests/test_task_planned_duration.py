@@ -31,12 +31,12 @@ class TaskPlannedDuration(TestCase):
                                                         project=self.test_reporting_period.project)
         self.estimation_1st_task = StandardHumanResourceEstimationToTaskFactory(task=self.test_1st_task,
                                                                                 date_from=start_date,
-                                                                                date_to=end_date_first_task)
+                                                                                date_until=end_date_first_task)
         self.test_2nd_task = StandardTaskFactory.create(title="2nd Test Task",
                                                         project=self.test_reporting_period.project)
         self.estimation_2nd_task = StandardHumanResourceEstimationToTaskFactory(task=self.test_2nd_task,
                                                                                 date_from=start_date,
-                                                                                date_to=end_date_second_task)
+                                                                                date_until=end_date_second_task)
 
 
     @pytest.mark.back_end_tests

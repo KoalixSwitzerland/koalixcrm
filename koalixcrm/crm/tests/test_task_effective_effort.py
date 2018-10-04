@@ -7,7 +7,7 @@ from koalixcrm.crm.factories.factory_customer import StandardCustomerFactory
 from koalixcrm.crm.factories.factory_customer_group import StandardCustomerGroupFactory
 from koalixcrm.crm.factories.factory_currency import StandardCurrencyFactory
 from koalixcrm.crm.factories.factory_reporting_period import StandardReportingPeriodFactory
-from koalixcrm.djangoUserExtension.factories.factory_user_extension import StandardUserExtensionFactory
+from koalixcrm.crm.factories.factory_human_resource import StandardHumanResourceFactory
 from koalixcrm.crm.factories.factory_work import StandardWorkFactory
 from koalixcrm.crm.factories.factory_task import StandardTaskFactory
 from koalixcrm.crm.factories.factory_estimation import StandardHumanResourceEstimationToTaskFactory
@@ -26,18 +26,18 @@ class TaskEffectiveEffort(TestCase):
         self.test_customer_group = StandardCustomerGroupFactory.create()
         self.test_customer = StandardCustomerFactory.create(is_member_of=(self.test_customer_group,))
         self.test_currency = StandardCurrencyFactory.create()
-        self.test_user_extension = StandardUserExtensionFactory.create(user=self.test_user)
+        self.human_resource = StandardHumanResourceFactory.create()
         self.test_reporting_period = StandardReportingPeriodFactory.create()
         self.test_1st_task = StandardTaskFactory.create(title="1st Test Task",
                                                         project=self.test_reporting_period.project)
         self.estimation_1st_task = StandardHumanResourceEstimationToTaskFactory(task=self.test_1st_task,
                                                                                 date_from=start_date,
-                                                                                date_to=end_date_first_task)
+                                                                                date_until=end_date_first_task)
         self.test_2nd_task = StandardTaskFactory.create(title="2nd Test Task",
                                                         project=self.test_reporting_period.project)
         self.estimation_2nd_task = StandardHumanResourceEstimationToTaskFactory(task=self.test_2nd_task,
                                                                                 date_from=start_date,
-                                                                                date_to=end_date_second_task)
+                                                                                date_until=end_date_second_task)
 
     @pytest.mark.back_end_tests
     def test_effective_effort(self):
@@ -56,7 +56,7 @@ class TaskEffectiveEffort(TestCase):
         self.assertEqual(
             (self.test_2nd_task.planned_costs()).__str__(), "0")
         StandardWorkFactory.create(
-            employee=self.test_user_extension,
+            human_resource=self.human_resource,
             date=date_now,
             start_time=datetime_now,
             stop_time=datetime_later_1,
@@ -64,7 +64,7 @@ class TaskEffectiveEffort(TestCase):
             reporting_period=self.test_reporting_period
         )
         StandardWorkFactory.create(
-            employee=self.test_user_extension,
+            human_resource=self.human_resource,
             date=date_now,
             start_time=datetime_later_1,
             stop_time=datetime_later_2,
@@ -72,7 +72,7 @@ class TaskEffectiveEffort(TestCase):
             reporting_period=self.test_reporting_period
         )
         StandardWorkFactory.create(
-            employee=self.test_user_extension,
+            human_resource=self.human_resource,
             date=date_now,
             start_time=datetime_now,
             stop_time=datetime_later_3,
@@ -80,7 +80,7 @@ class TaskEffectiveEffort(TestCase):
             reporting_period=self.test_reporting_period
         )
         StandardWorkFactory.create(
-            employee=self.test_user_extension,
+            human_resource=self.human_resource,
             date=date_now,
             start_time=datetime_now,
             stop_time=datetime_later_4,

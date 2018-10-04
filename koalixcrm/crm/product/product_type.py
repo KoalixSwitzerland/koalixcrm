@@ -36,7 +36,7 @@ class ProductType(models.Model):
     accounting_product_category = models.ForeignKey('accounting.ProductCategory',
                                                     verbose_name=_("Accounting Product Category"),
                                                     null=True,
-                                                    blank="True")
+                                                    blank=True)
 
     def get_price(self, date, unit, customer, currency):
         """The function searches for a valid price and returns the price of the product as a decimal value.

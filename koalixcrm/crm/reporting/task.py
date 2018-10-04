@@ -219,7 +219,7 @@ class Task(models.Model):
         effective_task_end = None
         if self.task_end():
             if len(all_task_works) == 0:
-                effective_task_end = self.last_status_change
+                effective_task_end = self.last_status_change.date
             else:
                 for work in all_task_works:
                     if not effective_task_end:
@@ -252,7 +252,7 @@ class Task(models.Model):
         elif not effective_end:
             duration_as_string = 0
         else:
-            duration_as_date = self.effective_end()-self.effective_start()
+            duration_as_date = effective_end-effective_start
             duration_as_string = duration_as_date.days.__str__()
         return duration_as_string
     effective_duration.short_description = _("Effective Duration [dys]")
