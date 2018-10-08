@@ -1,4 +1,4 @@
-Django>=1.9.x,<=1.11.x
+Django==1.11.15
 django-filebrowser==3.9.1
 lxml==3.8.0
 olefile==0.44
