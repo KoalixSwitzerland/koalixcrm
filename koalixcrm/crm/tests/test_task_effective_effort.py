@@ -88,6 +88,6 @@ class TaskEffectiveEffort(TestCase):
             reporting_period=self.test_reporting_period
         )
         self.assertEqual(
-            (self.test_1st_task.effective_costs(reporting_period=None)).__str__(), "3.5")
+            (self.test_1st_task.effective_effort(reporting_period=None)).__str__(), "3.5")
         self.assertEqual(
-            (self.test_2nd_task.effective_costs(reporting_period=None)).__str__(), "12.0")
+            (self.test_2nd_task.effective_effort(reporting_period=None)).__str__(), "12.0")

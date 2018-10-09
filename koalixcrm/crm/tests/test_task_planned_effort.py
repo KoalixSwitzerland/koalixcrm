@@ -35,12 +35,14 @@ class TaskPlannedEffort(TestCase):
                                                         project=self.test_reporting_period.project)
         self.estimation_1st_task = StandardHumanResourceEstimationToTaskFactory(task=self.test_1st_task,
                                                                                 date_from=start_date,
-                                                                                date_until=end_date_first_task)
+                                                                                date_until=end_date_first_task,
+                                                                                amount=0)
         self.test_2nd_task = StandardTaskFactory.create(title="2nd Test Task",
                                                         project=self.test_reporting_period.project)
         self.estimation_2nd_task = StandardHumanResourceEstimationToTaskFactory(task=self.test_2nd_task,
                                                                                 date_from=start_date,
-                                                                                date_until=end_date_second_task)
+                                                                                date_until=end_date_second_task,
+                                                                                amount=0)
 
     @pytest.mark.back_end_tests
     def test_planned_effort(self):
@@ -65,10 +67,10 @@ class TaskPlannedEffort(TestCase):
                                                amount="3.25",
                                                task=self.test_2nd_task)
         self.assertEqual(
-            (self.test_1st_task.planned_costs()).__str__(), "3.50")
+            (self.test_1st_task.planned_effort()).__str__(), "3.50")
         self.assertEqual(
-            (self.test_1st_task.effective_costs(reporting_period=None)).__str__(), "0.0")
+            (self.test_1st_task.effective_effort(reporting_period=None)).__str__(), "0.0")
         self.assertEqual(
-            (self.test_2nd_task.planned_costs()).__str__(), "8.00")
+            (self.test_2nd_task.planned_effort()).__str__(), "8.00")
         self.assertEqual(
-            (self.test_2nd_task.effective_costs(reporting_period=None)).__str__(), "0.0")
+            (self.test_2nd_task.effective_effort(reporting_period=None)).__str__(), "0.0")

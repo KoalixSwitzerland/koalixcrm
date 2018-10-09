@@ -17,6 +17,7 @@ from koalixcrm.djangoUserExtension.factories.factory_user_extension import Stand
 from koalixcrm.crm.factories.factory_reporting_period import StandardReportingPeriodFactory
 from koalixcrm.crm.factories.factory_task import StandardTaskFactory
 from koalixcrm.crm.reporting.work import Work
+from koalixcrm.crm.factories.factory_human_resource import StandardHumanResourceFactory
 
 
 class TimeTrackingWorkEntry(LiveServerTestCase):
@@ -30,6 +31,7 @@ class TimeTrackingWorkEntry(LiveServerTestCase):
         self.test_customer = StandardCustomerFactory.create(is_member_of=(self.test_customer_group,))
         self.test_currency = StandardCurrencyFactory.create()
         self.test_user_extension = StandardUserExtensionFactory.create(user=self.test_user)
+        self.test_human_resource = StandardHumanResourceFactory.create(user=self.test_user_extension)
         self.test_customer_group = StandardCustomerGroupFactory.create()
         self.test_customer = StandardCustomerFactory.create(is_member_of=(self.test_customer_group,))
         self.test_currency = StandardCurrencyFactory.create()

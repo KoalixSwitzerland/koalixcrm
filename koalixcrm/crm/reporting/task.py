@@ -88,7 +88,7 @@ class Task(models.Model):
             planned_task_start = None
         else:
             for estimation in all_task_estimations:
-                if not planned_task_start:
+                if planned_task_start is None:
                     planned_task_start = estimation.date_from
                 elif estimation.date_from < planned_task_start:
                     planned_task_start = estimation.date_from
@@ -121,6 +121,37 @@ class Task(models.Model):
         return planned_task_end
         planned_start.short_description = _("Planned End")
         planned_start.tags = True
+
+    def planned_effort(self, reporting_period=None):
+        """The function return the planned effort of resources which have been estimated for this task
+        at a specific reporting period. When no reporting_period is provided, the last reporting period
+        is selected
+
+        Args:
+        no arguments
+
+        Returns:
+        planned effort (Decimal) [hrs], 0 if when no estimation are present
+
+        Raises:
+        no exceptions expected"""
+        try:
+            if not reporting_period:
+                reporting_period_internal = ReportingPeriod.get_reporting_period(self.project,
+                                                                                 global_support_functions.get_today_date())
+
+            else:
+                reporting_period_internal = reporting_period
+            estimations_to_this_task = Estimation.objects.filter(task=self.id,
+                                                                 reporting_period=reporting_period_internal)
+            effort = 0
+            for estimation_to_this_task in estimations_to_this_task:
+                effort += estimation_to_this_task.amount
+        except ReportingPeriodNotFound as e:
+            effort = 0
+        return effort
+    planned_effort.short_description = _("Planned Effort")
+    planned_effort.tags = True
 
     def planned_costs(self, reporting_period=None):
         """The function return the planned costs of resources which have been estimated for this task
@@ -219,7 +250,7 @@ class Task(models.Model):
         effective_task_end = None
         if self.task_end():
             if len(all_task_works) == 0:
-                effective_task_end = self.last_status_change.date
+                effective_task_end = self.last_status_change
             else:
                 for work in all_task_works:
                     if not effective_task_end:
@@ -247,9 +278,9 @@ class Task(models.Model):
         No exceptions planned"""
         effective_end = self.effective_end()
         effective_start = self.effective_start()
-        if not effective_start:
+        if effective_start is None:
             duration_as_string = 0
-        elif not effective_end:
+        elif effective_end is None:
             duration_as_string = 0
         else:
             duration_as_date = effective_end-effective_start
@@ -297,7 +328,7 @@ class Task(models.Model):
     effective_effort_overall.short_description = _("Effective Effort [hrs]")
     effective_effort_overall.tags = True
 
-    def effective_effort(self, reporting_period):
+    def effective_effort(self, reporting_period=None):
         """ Effective effort returns the effective effort on a task
         when reporting_period is None, the effective effort overall is calculated
         when reporting_period is specified, the effective effort in this period is calculated"""
@@ -458,7 +489,6 @@ class TaskInlineAdminView(admin.TabularInline):
                        'planned_end',
                        'planned_duration',
                        'planned_costs',
-                       'effective_duration',
                        'effective_duration',
                        'effective_effort_overall',
                        'effective_costs')
