@@ -8,6 +8,7 @@ from django.contrib.admin.widgets import *
 from koalixcrm.global_support_functions import limit_string_length
 from koalixcrm.djangoUserExtension.models import UserExtension
 from koalixcrm.crm.reporting.reporting_period import ReportingPeriod
+from koalixcrm.crm.reporting.human_resource import HumanResource
 
 
 class WorkEntry(forms.Form):
@@ -100,7 +101,7 @@ class WorkEntry(forms.Form):
                 work.task = self.cleaned_data['task']
                 work.reporting_period = ReportingPeriod.get_reporting_period(project=self.cleaned_data['task'].project,
                                                                              search_date=self.cleaned_data['date'])
-                work.resource = UserExtension.get_user_extension(request.user)
+                work.human_resource = HumanResource.objects.get(user=UserExtension.get_user_extension(request.user))
                 work.date = self.cleaned_data['date']
                 if bool(self.cleaned_data['start_time']) & bool(self.cleaned_data['stop_time']):
                     work.start_time = datetime.datetime.combine(self.cleaned_data['date'],
