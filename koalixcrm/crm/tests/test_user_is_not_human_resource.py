@@ -3,6 +3,7 @@ from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -11,7 +12,6 @@ from koalixcrm.crm.factories.factory_user import AdminUserFactory
 from koalixcrm.crm.factories.factory_customer import StandardCustomerFactory
 from koalixcrm.crm.factories.factory_customer_group import StandardCustomerGroupFactory
 from koalixcrm.crm.factories.factory_currency import StandardCurrencyFactory
-from koalixcrm.crm.factories.factory_human_resource import StandardHumanResourceFactory
 from koalixcrm.djangoUserExtension.factories.factory_user_extension import StandardUserExtensionFactory
 
 
@@ -50,21 +50,52 @@ class TimeTrackingAddRow(LiveServerTestCase):
         submit_button.send_keys(Keys.RETURN)
         # after the login, the browser is redirected to the target url /koalixcrm/crm/reporting/time_tracking
         try:
-            element_present = expected_conditions.presence_of_element_located((By.ID, 'id_form-0-project'))
+            element_present = expected_conditions.presence_of_element_located((By.ID, 'id_next_steps'))
             WebDriverWait(selenium, timeout).until(element_present)
         except TimeoutException:
             print("Timed out waiting for page to load")
-        # find the form element
-        assert_when_element_does_not_exist(self, '//*[@id="id_form-0-project"]')
-        assert_when_element_does_not_exist(self, '//*[@id="id_form-0-task"]')
-        assert_when_element_does_not_exist(self, '//*[@id="id_form-0-date"]')
-        assert_when_element_does_not_exist(self, '//*[@id="id_form-0-start_time"]')
-        assert_when_element_does_not_exist(self, '//*[@id="id_form-0-stop_time"]')
-        assert_when_element_does_not_exist(self, '//*[@id="id_form-0-description"]')
-        assert_when_element_does_not_exist(self, 'save')
-        # check existence of a second form before pressing add more
-        assert_when_element_exists(self, '//*[@id="id_form-1-project"]')
-        add_more_button = selenium.find_element_by_xpath('//*[@id="add_more"]')
-        add_more_button.send_keys(Keys.RETURN)
-        # check existence of a second form after pressing add more
-        assert_when_element_does_not_exist(self, '//*[@id="id_form-1-project"]')
+
+        """ Because the user is not equipped with a corresponding human_resource, the user must receive an exception
+        screen giving im the possibility to select what he wants to do next
+        In this test_step it is checked whether the form contains the required fields. the test will then select
+        to return to the start page instead of defining a new human resource"""
+
+        assert_when_element_does_not_exist(self, '//*[@id="id_next_steps"]')
+        assert_when_element_does_not_exist(self, 'confirm_selection')
+        submit_button = selenium.find_element_by_xpath('/html/body/div/article/div/form/table/tbody/tr[3]/td/input[2]')
+        selection = Select(selenium.find_element_by_xpath('//*[@id="id_next_steps"]'))
+        selection.select_by_value("return_to_start")
+        submit_button.send_keys(Keys.RETURN)
+        try:
+            element_present = expected_conditions.presence_of_element_located((By.ID, 'grp-content-title'))
+            WebDriverWait(selenium, timeout).until(element_present)
+        except TimeoutException:
+            print("Timed out waiting for page to load")
+        assert_when_element_is_not_equal_to(self, 'grp-content-title', "<h1>Site administration</h1>")
+
+        """ Because the user is still not equipped with a corresponding human_resource, the user must 
+        receive an exception screen giving im the possibility to select what he wants to do next
+        In this test_step it is checked whether the form contains the required fields. the test will then select
+        to return to the start page instead of defining a new human resource"""
+
+        selenium.get('%s%s' % (self.live_server_url, '/koalixcrm/crm/reporting/time_tracking/'))
+        try:
+            element_present = expected_conditions.presence_of_element_located((By.ID, 'id_next_steps'))
+            WebDriverWait(selenium, timeout).until(element_present)
+        except TimeoutException:
+            print("Timed out waiting for page to load")
+        assert_when_element_does_not_exist(self, '//*[@id="id_next_steps"]')
+        assert_when_element_does_not_exist(self, 'confirm_selection')
+        submit_button = selenium.find_element_by_xpath('/html/body/div/article/div/form/table/tbody/tr[3]/td/input[2]')
+        selection = Select(selenium.find_element_by_xpath('//*[@id="id_next_steps"]'))
+        selection.select_by_value("create_human_resource")
+        submit_button.send_keys(Keys.RETURN)
+        try:
+            element_present = expected_conditions.presence_of_element_located((By.ID, 'grp-content-title'))
+            WebDriverWait(selenium, timeout).until(element_present)
+        except TimeoutException:
+            print("Timed out waiting for page to load")
+        assert_when_element_is_not_equal_to(self, 'grp-content-title', "<h1>Add human resource</h1>")
+
+        """ This test is passed here, other testcases are performed to ensure proper functionality of this view
+        when the human resource is properly set"""

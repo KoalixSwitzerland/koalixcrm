@@ -14,7 +14,9 @@ from koalixcrm.global_support_functions import xstr
 
 
 class UserExtension(models.Model):
-    user = models.ForeignKey("auth.User", blank=False, null=False)
+    user = models.ForeignKey("auth.User",
+                             blank=False,
+                             null=False)
     default_template_set = models.ForeignKey("TemplateSet")
     default_currency = models.ForeignKey("crm.Currency")
 
