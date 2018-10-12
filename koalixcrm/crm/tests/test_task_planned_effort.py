@@ -9,9 +9,10 @@ from koalixcrm.crm.factories.factory_customer_group import StandardCustomerGroup
 from koalixcrm.crm.factories.factory_currency import StandardCurrencyFactory
 from koalixcrm.crm.factories.factory_reporting_period import StandardReportingPeriodFactory
 from koalixcrm.djangoUserExtension.factories.factory_user_extension import StandardUserExtensionFactory
-from koalixcrm.crm.factories.factory_work import StandardWorkFactory
 from koalixcrm.crm.factories.factory_task import StandardTaskFactory
-from koalixcrm.crm.factories.factory_employee_assignment_to_task import StandardEmployeeAssignmentToTaskFactory
+from koalixcrm.crm.factories.factory_estimation import StandardEstimationToTaskFactory
+from koalixcrm.crm.factories.factory_human_resource import StandardHumanResourceFactory
+from koalixcrm.crm.factories.factory_estimation import StandardHumanResourceEstimationToTaskFactory
 from koalixcrm.test_support_functions import make_date_utc
 
 
@@ -29,38 +30,42 @@ class TaskPlannedEffort(TestCase):
         self.test_currency = StandardCurrencyFactory.create()
         self.test_user_extension = StandardUserExtensionFactory.create(user=self.test_user)
         self.test_reporting_period = StandardReportingPeriodFactory.create()
+        self.test_human_resource = StandardHumanResourceFactory.create()
         self.test_1st_task = StandardTaskFactory.create(title="1st Test Task",
-                                                        planned_start_date=start_date,
-                                                        planned_end_date=end_date_first_task,
                                                         project=self.test_reporting_period.project)
+        self.estimation_1st_task = StandardHumanResourceEstimationToTaskFactory(task=self.test_1st_task,
+                                                                                date_from=start_date,
+                                                                                date_until=end_date_first_task,
+                                                                                amount=0)
         self.test_2nd_task = StandardTaskFactory.create(title="2nd Test Task",
-                                                        planned_start_date=start_date,
-                                                        planned_end_date=end_date_second_task,
                                                         project=self.test_reporting_period.project)
+        self.estimation_2nd_task = StandardHumanResourceEstimationToTaskFactory(task=self.test_2nd_task,
+                                                                                date_from=start_date,
+                                                                                date_until=end_date_second_task,
+                                                                                amount=0)
 
     @pytest.mark.back_end_tests
     def test_planned_effort(self):
-        datetime_now = make_date_utc(datetime.datetime(2024, 1, 1, 0, 00))
         self.assertEqual(
             (self.test_1st_task.planned_duration()).__str__(), "60")
         self.assertEqual(
-            (self.test_1st_task.planned_effort()).__str__(), "0")
+            (self.test_1st_task.planned_costs()).__str__(), "0")
         self.assertEqual(
             (self.test_2nd_task.planned_duration()).__str__(), "90")
         self.assertEqual(
-            (self.test_2nd_task.planned_effort()).__str__(), "0")
-        StandardEmployeeAssignmentToTaskFactory.create(employee=self.test_user_extension,
-                                                       planned_effort="2.00",
-                                                       task=self.test_1st_task)
-        StandardEmployeeAssignmentToTaskFactory.create(employee=self.test_user_extension,
-                                                       planned_effort="1.50",
-                                                       task=self.test_1st_task)
-        StandardEmployeeAssignmentToTaskFactory.create(employee=self.test_user_extension,
-                                                       planned_effort="4.75",
-                                                       task=self.test_2nd_task)
-        StandardEmployeeAssignmentToTaskFactory.create(employee=self.test_user_extension,
-                                                       planned_effort="3.25",
-                                                       task=self.test_2nd_task)
+            (self.test_2nd_task.planned_costs()).__str__(), "0")
+        StandardEstimationToTaskFactory.create(resource=self.test_human_resource,
+                                               amount="2.00",
+                                               task=self.test_1st_task)
+        StandardEstimationToTaskFactory.create(resource=self.test_human_resource,
+                                               amount="1.50",
+                                               task=self.test_1st_task)
+        StandardEstimationToTaskFactory.create(resource=self.test_human_resource,
+                                               amount="4.75",
+                                               task=self.test_2nd_task)
+        StandardEstimationToTaskFactory.create(resource=self.test_human_resource,
+                                               amount="3.25",
+                                               task=self.test_2nd_task)
         self.assertEqual(
             (self.test_1st_task.planned_effort()).__str__(), "3.50")
         self.assertEqual(

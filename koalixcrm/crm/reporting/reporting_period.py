@@ -6,7 +6,7 @@ from django.contrib import admin
 from django.utils.translation import ugettext as _
 from koalixcrm.crm.documents.pdf_export import PDFExport
 from koalixcrm.crm.exceptions import ReportingPeriodNotFound
-from koalixcrm.crm.reporting.work import InlineWork
+from koalixcrm.crm.reporting.work import WorkInlineAdminView
 from rest_framework import serializers
 from django.core.exceptions import ValidationError
 from django.forms import ModelForm
@@ -171,7 +171,7 @@ class ReportingPeriodAdmin(admin.ModelAdmin):
         }),
     )
 
-    inlines = [InlineWork, ]
+    inlines = [WorkInlineAdminView, ]
     actions = ['create_report_pdf', ]
 
     def save_model(self, request, obj, form, change):
@@ -195,7 +195,7 @@ class ReportingPeriodAdmin(admin.ModelAdmin):
     create_report_pdf.short_description = _("Create Report PDF")
 
 
-class InlineReportingPeriod(admin.TabularInline):
+class ReportingPeriodInlineAdminView(admin.TabularInline):
     model = ReportingPeriod
     fieldsets = (
         (_('ReportingPeriod'), {
@@ -206,7 +206,6 @@ class InlineReportingPeriod(admin.TabularInline):
                        'status')
         }),
     )
-    extra = 0
 
     def has_add_permission(self, request):
         return False

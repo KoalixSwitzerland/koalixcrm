@@ -11,6 +11,7 @@ from koalixcrm.crm.factories.factory_user import AdminUserFactory
 from koalixcrm.crm.factories.factory_customer import StandardCustomerFactory
 from koalixcrm.crm.factories.factory_customer_group import StandardCustomerGroupFactory
 from koalixcrm.crm.factories.factory_currency import StandardCurrencyFactory
+from koalixcrm.crm.factories.factory_human_resource import StandardHumanResourceFactory
 from koalixcrm.djangoUserExtension.factories.factory_user_extension import StandardUserExtensionFactory
 
 
@@ -25,6 +26,7 @@ class TimeTrackingAddRow(LiveServerTestCase):
         self.test_customer = StandardCustomerFactory.create(is_member_of=(self.test_customer_group,))
         self.test_currency = StandardCurrencyFactory.create()
         self.test_user_extension = StandardUserExtensionFactory.create(user=self.test_user)
+        self.test_human_resource = StandardHumanResourceFactory.create(user=self.test_user_extension)
 
     def tearDown(self):
         self.selenium.quit()

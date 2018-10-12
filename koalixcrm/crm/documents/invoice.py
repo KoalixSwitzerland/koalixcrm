@@ -7,6 +7,10 @@ from django.contrib import admin
 from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext as _
 from django.utils.html import format_html
+from django.contrib.admin import helpers
+from django.shortcuts import render
+from django.contrib import messages
+from django.template.context_processors import csrf
 from koalixcrm.crm.const.status import *
 from koalixcrm.crm.exceptions import *
 from koalixcrm import accounting
@@ -14,10 +18,7 @@ from koalixcrm.crm.documents.sales_document import SalesDocument, OptionSalesDoc
 from koalixcrm.crm.documents.sales_document_position import SalesDocumentPosition
 from koalixcrm.plugin import *
 from koalixcrm.accounting.models import Account
-from django.contrib.admin import helpers
-from django.shortcuts import render
-from django.contrib import messages
-from django.template.context_processors import csrf
+from koalixcrm.global_support_functions import limit_string_length
 
 
 class Invoice(SalesDocument):
@@ -28,10 +29,12 @@ class Invoice(SalesDocument):
 
     def link_to_invoice(self):
         if self.id:
-            return format_html("<a href='/admin/crm/invoice/%s' >%s</a>" % (str(self.id), str(self.description)))
+            return format_html("<a href='/admin/crm/invoice/%s' >%s</a>" % (str(self.id),
+                                                                            limit_string_length(str(self.description),
+                                                                                                30)))
         else:
             return "Not present"
-    link_to_invoice.short_description = _("Invoice");
+    link_to_invoice.short_description = _("Invoice")
 
     def create_from_reference(self, calling_model):
         self.create_sales_document(calling_model)
@@ -52,7 +55,7 @@ class Invoice(SalesDocument):
         if not self.is_complete_with_price():
             raise IncompleteInvoice(_("Complete invoice and run price recalculation. Price may not be Zero"))
         if len(activa_account) == 0:
-            raise OpenInterestAccountMissing(_("Please specify one open intrest account in the accounting"))
+            raise OpenInterestAccountMissing(_("Please specify one open interest account in the accounting"))
         for position in list(SalesDocumentPosition.objects.filter(sales_document=self.id)):
             profit_account = position.product.accounting_product_categorie.profitAccount
             dict_prices[profit_account] = position.last_calculated_price
@@ -88,7 +91,7 @@ class Invoice(SalesDocument):
         booking.save()
 
     def __str__(self):
-        return _("Invoice") + ": " + str(self.id) + " " + _("from Contract") + ": " + str(self.contract.id)
+        return _("Invoice") + ": " + self.id.__str__() + " " + _("from Contract") + ": " + self.contract.id.__str__()
 
     class Meta:
         app_label = "crm"
@@ -103,7 +106,7 @@ class OptionInvoice(OptionSalesDocument):
     search_fields = OptionSalesDocument.search_fields
     fieldsets = OptionSalesDocument.fieldsets + (
         (_('Invoice specific'), {
-            'fields': ( 'payable_until', 'status', 'payment_bank_reference' )
+            'fields': ('payable_until', 'status', 'payment_bank_reference' )
         }),
     )
 
@@ -177,25 +180,23 @@ class InlineInvoice(admin.TabularInline):
     can_delete = True
     extra = 1
     readonly_fields = ('link_to_invoice',
-                       'last_pricing_date',
-                       'last_calculated_price',
-                       'last_calculated_tax',
-                       'description',
                        'contract',
                        'customer',
                        'payable_until',
-                       'status')
+                       'status',
+                       'last_pricing_date',
+                       'last_calculated_price',
+                       'last_calculated_tax')
     fieldsets = (
         (_('Invoice'), {
             'fields': ('link_to_invoice',
-                       'last_pricing_date',
-                       'last_calculated_price',
-                       'last_calculated_tax',
-                       'description',
                        'contract',
                        'customer',
                        'payable_until',
-                       'status')
+                       'status',
+                       'last_pricing_date',
+                       'last_calculated_price',
+                       'last_calculated_tax')
         }),
     )
 

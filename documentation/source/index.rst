@@ -15,6 +15,7 @@ Contents:
    customisation
    architecture
    faq
+   code_documentation
 
 Indices and tables
 ==================

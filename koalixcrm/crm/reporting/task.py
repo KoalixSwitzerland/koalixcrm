@@ -4,25 +4,26 @@ from django.db import models
 from django.utils.translation import ugettext as _
 from django.contrib import admin
 from django.utils.html import format_html
-from koalixcrm.crm.reporting.employee_assignment_to_task import EmployeeAssignmentToTask, InlineEmployeeAssignmentToTask
+from koalixcrm.crm.reporting.agreement import Agreement
+from koalixcrm.crm.reporting.agreement import AgreementInlineAdminView
+from koalixcrm.crm.reporting.estimation import EstimationInlineAdminView
 from koalixcrm.crm.reporting.generic_task_link import InlineGenericTaskLink
-from koalixcrm.crm.reporting.work import InlineWork, Work
+from koalixcrm.crm.reporting.work import WorkInlineAdminView, Work
+from koalixcrm.crm.reporting.reporting_period import ReportingPeriod
+from koalixcrm.crm.reporting.resource_price import ResourcePrice
+from koalixcrm.crm.reporting.estimation import Estimation
 from koalixcrm.crm.documents.pdf_export import PDFExport
+from koalixcrm.crm.exceptions import ReportingPeriodNotFound
 from rest_framework import serializers
 from koalixcrm import global_support_functions
 
 
 class Task(models.Model):
+    """ The Task model"""
     title = models.CharField(verbose_name=_("Title"),
                              max_length=100,
                              blank=True,
                              null=True)
-    planned_start_date = models.DateField(verbose_name=_("Planned Start"),
-                                          blank=True,
-                                          null=True)
-    planned_end_date = models.DateField(verbose_name=_("Planned End"),
-                                        blank=True,
-                                        null=True)
     project = models.ForeignKey("Project",
                                 verbose_name=_('Project'),
                                 related_name='tasks',
@@ -59,38 +60,131 @@ class Task(models.Model):
     link_to_task.short_description = _("Task");
 
     def planned_duration(self):
-        if (not self.planned_start_date) or (not self.planned_end_date):
+        if (not self.planned_start()) or (not self.planned_end()):
             duration_in_days = "n/a"
-        elif self.planned_start_date > self.planned_end_date:
+        elif self.planned_start() > self.planned_end():
             duration_in_days = "n/a"
         else:
-            duration_in_days = (self.planned_end_date-self.planned_start_date).days
+            duration_in_days = (self.planned_end()-self.planned_start()).days
         return duration_in_days
     planned_duration.short_description = _("Planned Duration [dys]")
     planned_duration.tags = True
 
-    def planned_effort(self):
-        """The function return the planned effort of all employees which have been assigned to
-        this task
+    def planned_start(self):
+        """ The function return the planned start of a task as a date based on the estimations which are
+         attached to the task in case there was no estimation attached to this task, the function returns None
+
+         Args:
+         no arguments
+
+         Returns:
+         planned_start (Date) or None
+
+         Raises:
+         No exceptions planned"""
+        all_task_estimations = Estimation.objects.filter(task=self.id)
+        planned_task_start = None
+        if len(all_task_estimations) == 0:
+            planned_task_start = None
+        else:
+            for estimation in all_task_estimations:
+                if planned_task_start is None:
+                    planned_task_start = estimation.date_from
+                elif estimation.date_from < planned_task_start:
+                    planned_task_start = estimation.date_from
+        return planned_task_start
+        planned_start.short_description = _("Planned Start")
+        planned_start.tags = True
+
+    def planned_end(self):
+        """ The function return the planned end of a task as a date based on the estimations which are
+         attached to the task in case there was no estimation attached to this task, the function returns None
+
+         Args:
+         no arguments
+
+         Returns:
+         planned_end (Date) or None
+
+         Raises:
+         No exceptions planned"""
+        all_task_estimations = Estimation.objects.filter(task=self.id)
+        planned_task_end = None
+        if len(all_task_estimations) == 0:
+            planned_task_end = None
+        else:
+            for estimation in all_task_estimations:
+                if not planned_task_end:
+                    planned_task_end = estimation.date_until
+                elif estimation.date_until < planned_task_end:
+                    planned_task_end = estimation.date_until
+        return planned_task_end
+        planned_start.short_description = _("Planned End")
+        planned_start.tags = True
+
+    def planned_effort(self, reporting_period=None):
+        """The function return the planned effort of resources which have been estimated for this task
+        at a specific reporting period. When no reporting_period is provided, the last reporting period
+        is selected
 
         Args:
         no arguments
 
         Returns:
-        planned_effort [hrs] (Decimal), 0 if when no assignments are present
+        planned effort (Decimal) [hrs], 0 if when no estimation are present
+
+        Raises:
+        no exceptions expected"""
+        try:
+            if not reporting_period:
+                reporting_period_internal = ReportingPeriod.get_reporting_period(self.project,
+                                                                                 global_support_functions.get_today_date())
+
+            else:
+                reporting_period_internal = reporting_period
+            estimations_to_this_task = Estimation.objects.filter(task=self.id,
+                                                                 reporting_period=reporting_period_internal)
+            effort = 0
+            for estimation_to_this_task in estimations_to_this_task:
+                effort += estimation_to_this_task.amount
+        except ReportingPeriodNotFound as e:
+            effort = 0
+        return effort
+    planned_effort.short_description = _("Planned Effort")
+    planned_effort.tags = True
+
+    def planned_costs(self, reporting_period=None):
+        """The function return the planned costs of resources which have been estimated for this task
+        at a specific reporting period. When no reporting_period is provided, the last reporting period
+        is selected
+
+        Args:
+        no arguments
+
+        Returns:
+        planned costs (Decimal), 0 if when no agreements are present
 
         Raises:
         No exceptions planned"""
-        assignments_to_this_task = EmployeeAssignmentToTask.objects.filter(task=self.id)
-        sum_effort = 0
-        for assignment_to_this_task in assignments_to_this_task:
-            sum_effort += assignment_to_this_task.planned_effort
-        return sum_effort
-    planned_effort.short_description = _("Planned Effort [hrs]")
-    planned_effort.tags = True
+        try:
+            if not reporting_period:
+                reporting_period_internal = ReportingPeriod.get_reporting_period(self.project,
+                                                                                 global_support_functions.get_today_date())
+
+            else:
+                reporting_period_internal = reporting_period
+            agreements_to_this_task = Agreement.objects.filter(task=self.id)
+            sum_costs = 0
+            for agreement_to_this_task in agreements_to_this_task:
+                sum_costs += agreement_to_this_task.calculated_costs()
+        except ReportingPeriodNotFound as e:
+            sum_costs = 0
+        return sum_costs
+    planned_costs.short_description = _("Planned Costs")
+    planned_costs.tags = True
 
     def effective_start(self):
-        """The function return the effective start of a project as a date. The
+        """The function return the effective start of a task as a date. The
         function return the effective start of a task as a date based on the reported work
         in case there was no work reported to this task, the planned start is used as a
         fall-back.
@@ -106,7 +200,7 @@ class Task(models.Model):
         all_task_works = Work.objects.filter(task=self.id)
         effective_task_start = None
         if len(all_task_works) == 0:
-            effective_task_start = self.planned_start_date
+            effective_task_start = self.planned_start()
         else:
             for work in all_task_works:
                 if not effective_task_start:
@@ -184,12 +278,12 @@ class Task(models.Model):
         No exceptions planned"""
         effective_end = self.effective_end()
         effective_start = self.effective_start()
-        if not effective_start:
+        if effective_start is None:
             duration_as_string = 0
-        elif not effective_end:
+        elif effective_end is None:
             duration_as_string = 0
         else:
-            duration_as_date = self.effective_end()-self.effective_start()
+            duration_as_date = effective_end-effective_start
             duration_as_string = duration_as_date.days.__str__()
         return duration_as_string
     effective_duration.short_description = _("Effective Duration [dys]")
@@ -218,7 +312,7 @@ class Task(models.Model):
         main_xml = PDFExport.append_element_to_pattern(main_xml,
                                                        "object/[@model='crm.task']",
                                                        "Planned_Effort",
-                                                       self.planned_effort())
+                                                       self.planned_costs())
         main_xml = PDFExport.append_element_to_pattern(main_xml,
                                                        "object/[@model='crm.task']",
                                                        "Effective_Duration",
@@ -234,8 +328,8 @@ class Task(models.Model):
     effective_effort_overall.short_description = _("Effective Effort [hrs]")
     effective_effort_overall.tags = True
 
-    def effective_effort(self, reporting_period):
-        """ effective effort returns the effective effort on a task
+    def effective_effort(self, reporting_period=None):
+        """ Effective effort returns the effective effort on a task
         when reporting_period is None, the effective effort overall is calculated
         when reporting_period is specified, the effective effort in this period is calculated"""
         if reporting_period:
@@ -248,6 +342,72 @@ class Task(models.Model):
             sum_effort += work_object.effort_seconds()
         sum_effort_in_hours = sum_effort / 3600
         return sum_effort_in_hours
+
+    def effective_costs(self, reporting_period=None):
+        """Returns the effective costs on a task
+        when reporting_period is None, the effective costs overall is calculated
+        when reporting_period is specified, the effective effort in this period is calculated
+        the costs are calculated in the project currency
+
+        Args:
+          no arguments
+
+        Returns:
+          costs [Currency] (Decimal)
+
+        Raises:
+           no exception planned
+        """
+        agreements = Agreement.objects.filter(task=self)
+        if reporting_period:
+            all_work_in_task = Work.objects.filter(task=self.id,
+                                                   reporting_period=reporting_period)
+        else:
+            all_work_in_task = Work.objects.filter(task=self.id)
+        sum_costs = 0
+        work_with_agreement = list()
+        work_without_agreement = list()
+        work_calculated = list()
+        human_resource_list = dict()
+        for work_object in all_work_in_task:
+            if work_object.human_resource not in human_resource_list:
+                human_resource_list[work_object.human_resource] = dict()
+            for agreement in agreements:
+                agreement_matches = agreement.match_with_work(work_object)
+                if agreement_matches:
+                    if work_object not in work_with_agreement:
+                        work_with_agreement.append(work_object)
+                    if agreement not in human_resource_list.get(work_object.human_resource):
+                        human_resource_list.get(work_object.human_resource)[agreement] = list()
+                    human_resource_list.get(work_object.human_resource).get(agreement).append(work_object)
+            if work_object not in work_with_agreement:
+                work_without_agreement.append(work_object)
+
+        for human_resource_dict in human_resource_list:
+            agreement_list = Agreement.objects.filter(task=self, resource=human_resource_dict).order_by('costs__price')
+            for agreement in agreement_list:
+                agreement_remaining_amount = agreement.amount
+                if human_resource_list[human_resource_dict].get(agreement):
+                    for work in human_resource_list[human_resource_dict].get(agreement):
+                        if work in work_with_agreement:
+                            if (agreement_remaining_amount - work.worked_hours) > 0:
+                                agreement_remaining_amount -= work.worked_hours
+                                sum_costs += work.worked_hours*agreement.costs.price
+                                work_calculated.append(work)
+        for work in all_work_in_task:
+            if work not in work_calculated:
+                if work not in work_without_agreement:
+                    work_without_agreement.append(work)
+        for work in work_without_agreement:
+            default_resource_price = ResourcePrice.objects.get(id=work.human_resource.id)
+            if default_resource_price:
+                sum_costs += work.worked_hours*default_resource_price.price
+            else:
+                sum_costs = "n/a"
+                break
+        return sum_costs.__str__()
+    effective_costs.short_description = _("Effective costs")
+    effective_costs.tags = True
 
     def is_reporting_allowed(self):
         """Returns True when the task is available for reporting,
@@ -290,17 +450,18 @@ class Task(models.Model):
         verbose_name_plural = _('Tasks')
 
 
-class OptionTask(admin.ModelAdmin):
+class TaskAdminView(admin.ModelAdmin):
     list_display = ('link_to_task',
-                    'planned_start_date',
-                    'planned_end_date',
+                    'planned_start',
+                    'planned_end',
                     'project',
                     'status',
                     'last_status_change',
                     'planned_duration',
-                    'planned_effort',
+                    'planned_costs',
                     'effective_duration',
-                    'effective_effort_overall')
+                    'effective_effort_overall',
+                    'effective_costs')
     list_display_links = ('link_to_task',)
     list_filter = ('project',)
     ordering = ('-id',)
@@ -308,39 +469,42 @@ class OptionTask(admin.ModelAdmin):
     fieldsets = (
         (_('Work'), {
             'fields': ('title',
-                       'planned_start_date',
-                       'planned_end_date',
                        'project',
                        'description',
                        'status')
         }),
     )
     save_as = True
-    inlines = [InlineEmployeeAssignmentToTask,
+    inlines = [AgreementInlineAdminView,
+               EstimationInlineAdminView,
                InlineGenericTaskLink,
-               InlineWork]
+               WorkInlineAdminView]
 
 
-class InlineTasks(admin.TabularInline):
+class TaskInlineAdminView(admin.TabularInline):
     model = Task
     readonly_fields = ('link_to_task',
                        'last_status_change',
+                       'planned_start',
+                       'planned_end',
                        'planned_duration',
-                       'planned_effort',
+                       'planned_costs',
                        'effective_duration',
-                       'effective_effort_overall')
+                       'effective_effort_overall',
+                       'effective_costs')
     fieldsets = (
         (_('Task'), {
             'fields': ('link_to_task',
                        'title',
-                       'planned_start_date',
-                       'planned_end_date',
+                       'planned_start',
+                       'planned_end',
                        'status',
                        'last_status_change',
                        'planned_duration',
-                       'planned_effort',
+                       'planned_costs',
                        'effective_duration',
-                       'effective_effort_overall')
+                       'effective_effort_overall',
+                       'effective_costs')
         }),
     )
     extra = 1
@@ -365,8 +529,8 @@ class TaskSerializer(serializers.ModelSerializer):
         model = Task
         fields = ('id',
                   'title',
-                  'planned_end_date',
-                  'planned_start_date',
+                  'planned_end',
+                  'planned_start',
                   'project',
                   'description',
                   'status',

@@ -1,8 +1,8 @@
 from rest_framework import serializers
 
-from koalixcrm.accounting.accounting.product_categorie import ProductCategorie
+from koalixcrm.accounting.accounting.product_category import ProductCategory
 from koalixcrm.accounting.rest.product_categorie_rest import ProductCategoryMinimalJSONSerializer
-from koalixcrm.crm.product.product import Product
+from koalixcrm.crm.product.product_type import ProductType
 from koalixcrm.crm.product.tax import Tax
 from koalixcrm.crm.product.unit import Unit
 from koalixcrm.crm.rest.tax_rest import OptionTaxJSONSerializer
@@ -16,7 +16,7 @@ class ProductJSONSerializer(serializers.HyperlinkedModelSerializer):
     productCategory = ProductCategoryMinimalJSONSerializer(source='accounting_product_categorie', allow_null=False)
 
     class Meta:
-        model = Product
+        model = ProductType
         fields = ('id',
                   'productNumber',
                   'title',
@@ -26,7 +26,7 @@ class ProductJSONSerializer(serializers.HyperlinkedModelSerializer):
         depth = 1
 
     def create(self, validated_data):
-        product = Product()
+        product = ProductType()
         product.product_number = validated_data['product_number']
         product.title = validated_data['title']
 
@@ -50,9 +50,9 @@ class ProductJSONSerializer(serializers.HyperlinkedModelSerializer):
         product_category = validated_data.pop('accounting_product_categorie')
         if product_category:
             if product_category.get('id', None):
-                product.accounting_product_categorie = ProductCategorie.objects.get(id=product_category.get('id', None))
+                product.accounting_product_category = ProductCategory.objects.get(id=product_category.get('id', None))
             else:
-                product.accounting_product_categorie = None
+                product.accounting_product_category = None
 
         product.save()
         return product
@@ -85,7 +85,7 @@ class ProductJSONSerializer(serializers.HyperlinkedModelSerializer):
         product_category = validated_data.pop('accounting_product_categorie')
         if product_category:
             if product_category.get('id', instance.accounting_product_categorie):
-                instance.accounting_product_categorie = ProductCategorie.objects.get(
+                instance.accounting_product_categorie = ProductCategory.objects.get(
                     id=product_category.get('id', None))
             else:
                 instance.accounting_product_categorie = instance.accounting_product_categorie

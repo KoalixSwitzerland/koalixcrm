@@ -5,8 +5,8 @@ from django.utils.translation import ugettext as _
 from koalixcrm.accounting.models import Account
 
 
-class ProductCategorie(models.Model):
-    title = models.CharField(verbose_name=_("Product Categorie Title"),
+class ProductCategory(models.Model):
+    title = models.CharField(verbose_name=_("Product Category Title"),
                              max_length=50)
     profit_account = models.ForeignKey(Account,
                                        verbose_name=_("Profit Account"),
@@ -19,14 +19,14 @@ class ProductCategorie(models.Model):
 
     class Meta:
         app_label = "accounting"
-        verbose_name = _('Product Categorie')
+        verbose_name = _('Product Category')
         verbose_name_plural = _('Product Categories')
 
     def __str__(self):
         return self.title
 
 
-class OptionProductCategorie(admin.ModelAdmin):
+class OptionProductCategory(admin.ModelAdmin):
     list_display = ('title',
                     'profit_account',
                     'loss_account')

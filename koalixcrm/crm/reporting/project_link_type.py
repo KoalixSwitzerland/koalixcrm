@@ -15,7 +15,7 @@ class ProjectLinkType(models.Model):
         verbose_name_plural = _('Project Link Type')
 
     def __str__(self):
-        return _("Project Link Type") + " ID: " + str(self.id) + " title: " + str(self.title)
+        return str(self.id) + " " + str(self.title)
 
 
 class OptionProjectLinkType(admin.ModelAdmin):

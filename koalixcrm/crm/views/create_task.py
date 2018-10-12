@@ -39,7 +39,6 @@ class CreateTaskView:
         except ObjectDoesNotExist:
             task = Task.objects.create(
                 title=task_title,
-                planned_start_date=date_now,
                 project=project,
                 description=sales_document_position.description,
                 last_status_change=date_now
@@ -68,7 +67,8 @@ class CreateTaskView:
                                          default_template_set=document.contract.default_template_set,
                                          date_of_creation=date.today(),
                                          last_modification=date.today(),
-                                         last_modified_by=user)
+                                         last_modified_by=user,
+                                         default_currency=document.currency)
         for sales_document_position in sales_document_positions:
             CreateTaskView.create_task_from_sales_document_position(sales_document_position,
                                                                     user,

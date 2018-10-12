@@ -17,7 +17,7 @@ class CustomerBillingCycle(models.Model):
         verbose_name_plural = _('Customer Billing Cycle')
 
     def __str__(self):
-        return self.id.__str__ + ' ' + self.name
+        return self.id.__str__() + ' ' + self.name
 
 
 class OptionCustomerBillingCycle(admin.ModelAdmin):

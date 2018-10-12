@@ -37,6 +37,7 @@ class PDFExportView:
             response = HttpResponse(FileWrapper(open(pdf, 'rb')), content_type='application/pdf')
             response['Content-Length'] = path.getsize(pdf)
         except (TemplateSetMissing,
+                TemplateSetMissingInContract,
                 UserExtensionMissing,
                 CalledProcessError,
                 UserExtensionEmailAddressMissing,
@@ -55,7 +56,11 @@ class PDFExportView:
                                                  level=messages.ERROR)
             elif isinstance(e, TemplateSetMissing):
                 response = HttpResponseRedirect(redirect_to)
-                calling_model_admin.message_user(request, _("Templateset Missing"),
+                calling_model_admin.message_user(request, _("Template-set Missing"),
+                                                 level=messages.ERROR)
+            elif isinstance(e, TemplateSetMissingInContract):
+                response = HttpResponseRedirect(redirect_to)
+                calling_model_admin.message_user(request, _("Template-set Missing"),
                                                  level=messages.ERROR)
             elif isinstance(e, TemplateFOPConfigFileMissing):
                 response = HttpResponseRedirect(redirect_to)
