@@ -2,7 +2,7 @@
 from koalixcrm.accounting.rest.account_rest import OptionAccountJSONSerializer
 from rest_framework import serializers
 
-from koalixcrm.accounting.accounting.product_categorie import ProductCategorie
+from koalixcrm.accounting.accounting.product_category import ProductCategory
 from koalixcrm.accounting.models import Account
 
 
@@ -21,7 +21,7 @@ class ProductCategoryJSONSerializer(serializers.HyperlinkedModelSerializer):
     lossAccount = OptionAccountJSONSerializer(source='loss_account')
 
     class Meta:
-        model = ProductCategorie
+        model = ProductCategory
         fields = ('id',
                   'title',
                   'profitAccount',
@@ -29,7 +29,7 @@ class ProductCategoryJSONSerializer(serializers.HyperlinkedModelSerializer):
         depth = 1
 
     def create(self, validated_data):
-        product_category = ProductCategorie()
+        product_category = ProductCategory()
         product_category.title = validated_data['title']
 
         # Deserialize profit account

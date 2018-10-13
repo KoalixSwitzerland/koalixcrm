@@ -15,7 +15,7 @@ class TaskLinkType(models.Model):
         verbose_name_plural = _('Task Link Type')
 
     def __str__(self):
-        return _("Task Link Type") + " ID: " + str(self.id) + " title: " + str(self.title)
+        return str(self.id) + " " + str(self.title)
 
 
 class OptionTaskLinkType(admin.ModelAdmin):

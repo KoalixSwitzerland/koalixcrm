@@ -9,9 +9,9 @@ class BaseWorkEntryFormset(forms.BaseFormSet):
         super(BaseWorkEntryFormset, self).__init__(*args, **kwargs)
 
     @staticmethod
-    def generate_initial_data(start_date, stop_date, employee):
+    def generate_initial_data(start_date, stop_date, human_resource):
         from koalixcrm.crm.reporting.work import Work
-        list_of_work = Work.objects.filter(employee=employee).filter(date__lte=stop_date).filter(date__gte=start_date).order_by("date")
+        list_of_work = Work.objects.filter(human_resource=human_resource).filter(date__lte=stop_date).filter(date__gte=start_date).order_by("date")
         initial = []
         for work in list_of_work:
             initial.append({'work_id': work.id,
@@ -44,7 +44,7 @@ class BaseWorkEntryFormset(forms.BaseFormSet):
         return form_kwargs
 
     @staticmethod
-    def create_updated_formset(range_selection_form, employee):
+    def create_updated_formset(range_selection_form, human_resource):
         WorkEntryFormSet = forms.formset_factory(WorkEntry,
                                                  extra=1,
                                                  max_num=60,
@@ -54,14 +54,14 @@ class BaseWorkEntryFormset(forms.BaseFormSet):
         to_date = range_selection_form.cleaned_data['to_date']
         initial_formset_data = BaseWorkEntryFormset.generate_initial_data(from_date,
                                                                           to_date,
-                                                                          employee)
+                                                                          human_resource)
         form_kwargs = BaseWorkEntryFormset.compose_form_kwargs(from_date, to_date)
         formset = WorkEntryFormSet(initial=initial_formset_data,
                                    form_kwargs=form_kwargs)
         return formset
 
     @staticmethod
-    def create_new_formset(from_date, to_date, employee):
+    def create_new_formset(from_date, to_date, human_resource):
         WorkEntryFormSet = forms.formset_factory(WorkEntry,
                                                  extra=1,
                                                  max_num=60,
@@ -69,7 +69,7 @@ class BaseWorkEntryFormset(forms.BaseFormSet):
                                                  formset=BaseWorkEntryFormset)
         initial_formset_data = BaseWorkEntryFormset.generate_initial_data(from_date,
                                                                           to_date,
-                                                                          employee)
+                                                                          human_resource)
         form_kwargs = BaseWorkEntryFormset.compose_form_kwargs(from_date,
                                                                to_date)
         formset = WorkEntryFormSet(initial=initial_formset_data,

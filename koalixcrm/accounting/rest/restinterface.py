@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from rest_framework import viewsets
 
-from koalixcrm.accounting.models import Account, AccountingPeriod, Booking, ProductCategorie
+from koalixcrm.accounting.models import Account, AccountingPeriod, Booking, ProductCategory
 from koalixcrm.accounting.rest.account_rest import AccountJSONSerializer
 from koalixcrm.accounting.rest.accounting_period_rest import AccountingPeriodJSONSerializer
 from koalixcrm.accounting.rest.booking_rest import BookingJSONSerializer
@@ -53,7 +53,7 @@ class ProductCategoryAsJSON(viewsets.ModelViewSet):
     """
     API endpoint that allows product categories to be created, viewed and modified.
     """
-    queryset = ProductCategorie.objects.all()
+    queryset = ProductCategory.objects.all()
     serializer_class = ProductCategoryJSONSerializer
 
     @ConditionalMethodDecorator(method_decorator(login_required), settings.KOALIXCRM_REST_API_AUTH)
