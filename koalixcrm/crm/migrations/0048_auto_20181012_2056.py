@@ -12,16 +12,16 @@ def initiate_human_resource(apps, schema_editor):
     HumanResource = apps.get_model("crm", "HumanResource")
     db_alias = schema_editor.connection.alias
     all_works = Work.objects.using(db_alias).all()
-    all_human_resources = HumanResource.objects.using(db_alias).all()
     for work in all_works:
-        human_resource_found = False;
+        all_human_resources = HumanResource.objects.using(db_alias).all()
+        human_resource_found = False
         for human_resource in all_human_resources:
             if work.employee == human_resource.user:
-                human_resource_found = True;
+                human_resource_found = True
                 work.human_resource = human_resource
                 break
         if not human_resource_found:
-            new_human_resource = HumanResource.create(user=work.employee)
+            new_human_resource = HumanResource.objects.using(db_alias).create(user=work.employee)
             new_human_resource.save()
             work.human_resource = new_human_resource
         work.save()
@@ -403,7 +403,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='work',
             name='human_resource',
-            field=models.ForeignKey(to='crm.HumanResource'),
+            field=models.ForeignKey(null=True, to='crm.HumanResource', on_delete=django.db.models.deletion.SET_NULL),
             preserve_default=False,
         ),
         migrations.RunPython(initiate_human_resource, reverse_func),
@@ -414,6 +414,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='work',
             name='human_resource',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='crm.HumanResource'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.HumanResource'),
         ),
     ]
