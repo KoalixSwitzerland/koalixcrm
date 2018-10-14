@@ -9,6 +9,8 @@ from rest_framework.decorators import authentication_classes
 from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
 from rest_framework_xml.renderers import XMLRenderer
 
+from koalixcrm.crm.contact.customer_billing_cycle import CustomerBillingCycle
+from koalixcrm.crm.contact.customer_group import CustomerGroup
 from koalixcrm.crm.documents.contract import Contract, ContractJSONSerializer
 from koalixcrm.crm.product.currency import Currency
 from koalixcrm.crm.product.product_type import ProductType
@@ -18,6 +20,8 @@ from koalixcrm.crm.reporting.project import Project, ProjectJSONSerializer
 from koalixcrm.crm.reporting.task import Task, TaskSerializer
 from koalixcrm.crm.reporting.task_status import TaskStatus
 from koalixcrm.crm.rest.currency_rest import CurrencyJSONSerializer
+from koalixcrm.crm.rest.customer_billing_cycle_rest import CustomerBillingCycleJSONSerializer
+from koalixcrm.crm.rest.customer_group_rest import CustomerGroupJSONSerializer
 from koalixcrm.crm.rest.product_rest import ProductJSONSerializer
 from koalixcrm.crm.rest.tax_rest import TaxJSONSerializer
 from koalixcrm.crm.rest.unit_rest import UnitJSONSerializer
@@ -80,6 +84,34 @@ class CurrencyAsJSON(viewsets.ModelViewSet):
     @authentication_classes((SessionAuthentication, BasicAuthentication))
     def dispatch(self, *args, **kwargs):
         return super(CurrencyAsJSON, self).dispatch(*args, **kwargs)
+
+
+class CustomerBillingCycleAsJSON(viewsets.ModelViewSet):
+    """
+    API endpoint that allows customer billing cycles to be viewed.
+    """
+    queryset = CustomerBillingCycle.objects.all()
+    serializer_class = CustomerBillingCycleJSONSerializer
+    renderer_classes = (BrowsableAPIRenderer, JSONRenderer, XMLRenderer)
+
+    @ConditionalMethodDecorator(method_decorator(login_required), settings.KOALIXCRM_REST_API_AUTH)
+    @authentication_classes((SessionAuthentication, BasicAuthentication))
+    def dispatch(self, *args, **kwargs):
+        return super(CustomerBillingCycleAsJSON, self).dispatch(*args, **kwargs)
+
+
+class CustomerGroupAsJSON(viewsets.ModelViewSet):
+    """
+    API endpoint that allows customer groups to be viewed.
+    """
+    queryset = CustomerGroup.objects.all()
+    serializer_class = CustomerGroupJSONSerializer
+    renderer_classes = (BrowsableAPIRenderer, JSONRenderer, XMLRenderer)
+
+    @ConditionalMethodDecorator(method_decorator(login_required), settings.KOALIXCRM_REST_API_AUTH)
+    @authentication_classes((SessionAuthentication, BasicAuthentication))
+    def dispatch(self, *args, **kwargs):
+        return super(CustomerGroupAsJSON, self).dispatch(*args, **kwargs)
 
 
 class TaxAsJSON(viewsets.ModelViewSet):
