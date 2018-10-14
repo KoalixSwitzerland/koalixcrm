@@ -33,7 +33,7 @@ def fill_subscription_type_backup_table(apps, schema_editor):
         subscriptions = Subscription.objects.using(db_alias).all()
         if len(subscriptions) > 0:
             for subscription in subscriptions:
-                if subscription.subscription_type is not None:
+                if subscription.subscriptiontype is not None:
                     subscription.subscription_type_backup = subscription.subscriptiontype.id
                     subscription.save()
 

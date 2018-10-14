@@ -18,7 +18,6 @@ def fill_subscription_type_from_backup(apps, schema_editor):
         product_type = ProductType.objects.using(db_alias).create(
             description=subscription_type_backup.description,
             title=subscription_type_backup.title,
-            product_number=subscription_type_backup.product_number,
             default_unit=subscription_type_backup.default_unit,
             date_of_creation=subscription_type_backup.date_of_creation,
             last_modification=subscription_type_backup.last_modification,

@@ -67,17 +67,14 @@ class Migration(migrations.Migration):
             name='product_backup',
         ),
 
-        migrations.AlterField(
+        migrations.AddField(
             model_name='producttype',
-            name='accounting_product_categorie',
+            name='accounting_product_category',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='accounting.ProductCategory', verbose_name='Accounting Product Category'),
             preserve_default=False,
         ),
-        migrations.RenameField(model_name='producttype',
-                               old_name='accounting_product_categorie',
-                               new_name='accounting_product_category'),
-
-
+        migrations.RemoveField(model_name='producttype',
+                               name='accounting_product_categorie'),
         migrations.AlterModelOptions(
             name='producttype',
             options={'verbose_name': 'Product Type', 'verbose_name_plural': 'Product Types'},
