@@ -3,34 +3,44 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
+from filebrowser.fields import FileBrowseField
 import django.db.models.deletion
 
 
-def fill_product_type_from_backup(apps, schema_editor):
+def fill_subscription_type_from_backup(apps, schema_editor):
+    Subscription = apps.get_model("subscriptions", "Subscription")
     SubscriptionType = apps.get_model("subscriptions", "SubscriptionType")
-    CustomerGroupTransform = apps.get_model("crm", "CustomerGroupTransform")
-    Price = apps.get_model("crm", "Price")
-    ProductPrice = apps.get_model("crm", "ProductPrice")
-    UnitTransform = apps.get_model("crm", "UnitTransform")
+    SubscriptionTypeBackup = apps.get_model("subscriptions", "SubscriptionTypeBackup")
+    ProductType = apps.get_model("crm", "ProductType")
     db_alias = schema_editor.connection.alias
-    all_positions = Position.objects.using(db_alias).all()
-    for position in all_positions:
-        position.product_type = position.product_backup
-        position.save()
-    all_customer_group_transforms = CustomerGroupTransform.objects.using(db_alias).all()
-    for customer_group_transform in all_customer_group_transforms:
-        customer_group_transform.product_type = customer_group_transform.product_backup
-        customer_group_transform.save()
-    all_prices = Price.objects.using(db_alias).all()
-    for price in all_prices:
-        new_product_price = ProductPrice.objects.using(db_alias).create(price_ptr=price.id,
-                                                                        product_type=price.product_backup)
-        new_product_price.save()
-    all_unit_transforms = UnitTransform.objects.using(db_alias).all()
-    for unit_transform in all_unit_transforms:
-        unit_transform.product_type = unit_transform.product_backup
-        unit_transform.save()
+    all_subscription_type_backups = SubscriptionTypeBackup.objects.using(db_alias).all()
+    for subscription_type_backup in all_subscription_type_backups:
+        product_type = ProductType.objects.using(db_alias).create(
+            description=subscription_type_backup.description,
+            title=subscription_type_backup.title,
+            product_number=subscription_type_backup.product_number,
+            default_unit=subscription_type_backup.default_unit,
+            date_of_creation=subscription_type_backup.date_of_creation,
+            last_modification=subscription_type_backup.last_modification,
+            last_modified_by=subscription_type_backup.last_modified_by,
+            tax=subscription_type_backup.tax)
+        product_type.save()
 
+        subscription_type = SubscriptionType.objects.using(db_alias).create(
+            product_type=product_type,
+            contract_document=subscription_type_backup.contract_document,
+            payment_interval=subscription_type_backup.payment_interval,
+            minimum_duration=subscription_type_backup.minimum_duration,
+            automatic_contract_extension_reminder=subscription_type_backup.automatic_contract_extension_reminder,
+            automatic_contract_extension=subscription_type_backup.automatic_contract_extension,
+            cancellation_period=subscription_type_backup.cancellation_period)
+        subscription_type.save()
+
+        all_subscriptions = Subscription.objects.using(db_alias).filter(
+            subscription_type_backup=subscription_type_backup.old_id)
+        for subscription in all_subscriptions:
+            subscription.subscription_type=subscription_type
+            subscription.save()
 
 def reverse_func(apps, schema_editor):
     return 1
@@ -44,11 +54,63 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='subscriptiontype',
-            name='product_type',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='crm.ProductType', verbose_name='Product Type'),
+        migrations.CreateModel(
+            name='SubscriptionType',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('cancellation_period', models.IntegerField(verbose_name="Cancellation Period (months)",
+                                                            blank=True,
+                                                            null=True)),
+                ('automatic_contract_extension', models.IntegerField(
+                    verbose_name="Automatic Contract Extension (months)",
+                    blank=True,
+                    null=True)),
+                ('automatic_contract_extension_reminder', models.IntegerField(
+                    verbose_name="Automatic Contract Extension Reminder (days)",
+                    blank=True,
+                    null=True)),
+                ('minimum_duration', models.IntegerField(verbose_name="Minimum Contract Duration",
+                                                         blank=True,
+                                                         null=True)),
+                ('payment_interval', models.IntegerField(verbose_name="Payment Interval (days)",
+                                                         blank=True,
+                                                         null=True)),
+                ('contract_document', FileBrowseField(verbose_name="Contract Documents",
+                                                      blank=True,
+                                                      null=True,
+                                                      max_length=200)),
+                ('product_type', models.ForeignKey('crm.ProductType',
+                                                   verbose_name='Product Type',
+                                                   on_delete=models.deletion.SET_NULL,
+                                                   null=True,
+                                                   blank=True)),
+             ],
+            options={
+                'verbose_name': 'Subscription Type',
+                'verbose_name_plural': 'Subscription Types',
+            },
         ),
-        migrations.RunPython(fill_product_type_from_backup, reverse_func),
+        migrations.AddField(
+            model_name='subscription',
+            name='subscription_type',
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL,
+                                    to='SubscriptionType',
+                                    verbose_name='Subscription Type'),
+            preserve_default=False,
+        ),
+        migrations.RunPython(fill_subscription_type_from_backup, reverse_func),
+        migrations.AlterField(
+            model_name='subscription',
+            name='subscription_type',
+            field=models.ForeignKey(null=True,
+                                    on_delete=django.db.models.deletion.CASCADE,
+                                    to='subscriptions.SubscriptionType',
+                                    verbose_name='Subscription Type'),
 
+        ),
+        migrations.DeleteModel('SubscriptionTypeBackup'),
+        migrations.RemoveField(
+            model_name='subscription',
+            name='subscription_type_backup',
+        ),
     ]

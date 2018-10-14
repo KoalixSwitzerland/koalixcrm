@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 
 from django.db import migrations, models
 from filebrowser.fields import FileBrowseField
-from django.db.models.indexes import Index
 
 
 def fill_subscription_type_backup_table(apps, schema_editor):
@@ -15,12 +14,12 @@ def fill_subscription_type_backup_table(apps, schema_editor):
     all_subscription_types = SubscriptionType.objects.using(db_alias).all()
     for subscription_type in all_subscription_types:
         subscription_type_backup = SubscriptionTypeBackup.objects.using(db_alias).create(
-            cancellation_period=subscription_type.cancellation_period,
-            automatic_contract_extension=subscription_type.automatic_contract_extension,
-            automatic_contract_extension_reminder=subscription_type.automatic_contract_extension_reminder,
-            minimum_duration=subscription_type.minimum_duration,
-            payment_interval=subscription_type.payment_interval,
-            contract_document=subscription_type.contract_document,
+            cancellation_period=subscription_type.cancellationPeriod,
+            automatic_contract_extension=subscription_type.automaticContractExtension,
+            automatic_contract_extension_reminder=subscription_type.automaticContractExtensionReminder,
+            minimum_duration=subscription_type.minimumDuration,
+            payment_interval=subscription_type.paymentInterval,
+            contract_document=subscription_type.contractDocument,
             description=subscription_type.description,
             title=subscription_type.title,
             product_number=subscription_type.product_number,
@@ -29,12 +28,13 @@ def fill_subscription_type_backup_table(apps, schema_editor):
             last_modification=subscription_type.last_modification,
             last_modified_by=subscription_type.last_modified_by,
             tax=subscription_type.tax,
-            accounting_product_categorie=subscription_type.accounting_product_categorie)
+            old_id=subscription_type.id)
         subscription_type_backup.save()
-        subscriptions = Subscription.objects.using(db_alias).filter(subscription_type=subscription_type)
-        for subscription in subscriptions:
-            subscription.subscription_type_backup = subscription.subscription_type.id
-            subscription.save()
+        subscriptions = Subscription.objects.using(db_alias).all()
+        if len(subscriptions) > 0:
+            for subscription in subscriptions:
+                subscription.subscription_type_backup = subscription.subscription_type.id
+                subscription.save()
 
 
 def reverse_func(apps, schema_editor):
@@ -49,6 +49,11 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.RenameField(
+            model_name='subscriptionevent',
+            old_name='eventdate',
+            new_name='event_date',
+        ),
         migrations.AddField(
             model_name='Subscription',
             name='subscription_type_backup',
@@ -97,10 +102,9 @@ class Migration(migrations.Migration):
                                                        blank="True")),
                 ('tax', models.ForeignKey("crm.Tax",
                                           blank=False)),
-                ('accounting_product_categorie', models.ForeignKey('accounting.ProductCategorie',
-                                                                   verbose_name="Accounting Product Categorie",
-                                                                   null=True,
-                                                                   blank="True")),
+                ('old_id', models.IntegerField(blank=True,
+                                               null=True,
+                                               verbose_name='Subscription Type Backup')),
             ],
             options={
                 'verbose_name': 'SubscriptionTypeBackup',
@@ -110,7 +114,7 @@ class Migration(migrations.Migration):
         migrations.RunPython(fill_subscription_type_backup_table, reverse_func),
         migrations.RemoveField(
             model_name='subscription',
-            name='subscription_type',
+            name='subscriptiontype',
         ),
         migrations.DeleteModel('SubscriptionType'),
     ]
