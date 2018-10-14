@@ -68,7 +68,12 @@ class SubscriptionEvent(models.Model):
         verbose_name_plural = _('Subscription Events')
 
 
-class SubscriptionType(ProductType):
+class SubscriptionType(models.Model):
+    product_type = models.ForeignKey('crm.ProductType',
+                                     verbose_name=_('Product Type'),
+                                     on_delete=models.deletion.SET_NULL,
+                                     null=True,
+                                     blank=True)
     cancellation_period = models.IntegerField(verbose_name=_("Cancellation Period (months)"),
                                               blank=True,
                                               null=True)

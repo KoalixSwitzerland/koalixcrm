@@ -80,24 +80,13 @@ class OptionSubscription(admin.ModelAdmin):
 
 
 class OptionSubscriptionType(admin.ModelAdmin):
-    list_display = ('id',
-                    'title',
-                    'default_unit',
-                    'tax',
-                    'accounting_product_category')
+    list_display = ('id',)
     list_display_links = ('id',)
-    list_filter = ('title',)
-    ordering = ('id', 'title',)
-    search_fields = ('id', 'title')
+    ordering = ('id', )
+    search_fields = ('id',)
     fieldsets = (
         (_('Basics'), {
             'fields': (
-                'product_number',
-                'title',
-                'description',
-                'default_unit',
-                'tax',
-                'accounting_product_category',
                 'cancellation_period',
                 'automatic_contract_extension',
                 'automatic_contract_extension_reminder',
