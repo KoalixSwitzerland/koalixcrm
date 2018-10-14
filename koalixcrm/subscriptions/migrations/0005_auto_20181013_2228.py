@@ -49,7 +49,7 @@ def reverse_func(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('crm', '0048_auto_20181012_2056'),
+        ('crm', '0053_auto_20181014_2305'),
         ('subscriptions', '0004_auto_20181013_2213'),
     ]
 
