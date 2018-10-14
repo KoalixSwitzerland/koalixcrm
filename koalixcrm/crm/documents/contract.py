@@ -188,7 +188,10 @@ class OptionContract(admin.ModelAdmin):
                     'default_customer',
                     'default_supplier',
                     'staff',
-                    'default_currency')
+                    'default_currency',
+                    'date_of_creation',
+                    'last_modification',
+                    'last_modified_by')
     list_display_links = ('id',)
     list_filter = ('default_customer',
                    'default_supplier',

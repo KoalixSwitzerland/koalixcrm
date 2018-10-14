@@ -9,10 +9,10 @@ from django.contrib.contenttypes.admin import GenericTabularInline
 
 
 class GenericProjectLink(models.Model):
-    task = models.ForeignKey("Project",
-                             verbose_name=_('Project'),
-                             blank=False,
-                             null=False)
+    project = models.ForeignKey("Project",
+                                verbose_name=_('Project'),
+                                blank=False,
+                                null=False)
     project_link_type = models.ForeignKey("ProjectLinkType",
                                           verbose_name=_('Project Link Type'),
                                           blank=True,
@@ -29,7 +29,7 @@ class GenericProjectLink(models.Model):
                                          related_name="db_project_link_last_modified")
 
     def __str__(self):
-        return _("Project Link")
+        return _("Link to") + " " + str(self.project)
 
     class Meta:
         app_label = "crm"
@@ -37,7 +37,7 @@ class GenericProjectLink(models.Model):
         verbose_name_plural = _('Project Links')
 
 
-class InlineGenericLinks(admin.TabularInline):
+class GenericLinkInlineAdminView(admin.TabularInline):
     model = GenericProjectLink
     readonly_fields = ('project_link_type',
                        'content_type',

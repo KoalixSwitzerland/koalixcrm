@@ -73,6 +73,15 @@ class InvoiceAlreadyRegistered(Exception):
         return repr(self.value)
 
 
+class UserIsNoHumanResource(Exception):
+    def __init__(self, value):
+        self.value = value
+        self.view = "/koalixcrm/crm/reporting/user_is_not_human_resource"
+
+    def __str__(self):
+        return repr(self.value)
+
+
 class ReportingPeriodDoneDeleteNotPossible(Exception):
     def __init__(self, value):
         self.value = value

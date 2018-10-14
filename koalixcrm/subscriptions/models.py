@@ -1,18 +1,19 @@
-from datetime import *
+# -*- coding: utf-8 -*-
 
+from datetime import *
 from django.db import models
 from django.utils.translation import ugettext as _
 from filebrowser.fields import FileBrowseField
-import koalixcrm.crm.documents
 from koalixcrm.subscriptions.const.events import *
-from koalixcrm.crm.product.product import Product
+from koalixcrm.crm.product.product_type import ProductType
+import koalixcrm.crm.documents
 
 
 class Subscription(models.Model):
     contract = models.ForeignKey('crm.Contract', verbose_name=_('Subscription Type'))
-    subscriptiontype = models.ForeignKey('SubscriptionType', verbose_name=_('Subscription Type'), null=True)
+    subscription_type = models.ForeignKey('SubscriptionType', verbose_name=_('Subscription Type'), null=True)
 
-    def createSubscriptionFromContract(self, contract):
+    def create_subscription_from_contract(self, contract):
         self.contract = contract
         self.save()
         return self
@@ -51,9 +52,12 @@ class Subscription(models.Model):
 
 
 class SubscriptionEvent(models.Model):
-    subscriptions = models.ForeignKey('Subscription', verbose_name=_('Subscription'))
-    eventdate = models.DateField(verbose_name=_("Event Date"), blank=True, null=True)
-    event = models.CharField(max_length=1, choices=SUBSCRITIONEVENTS, verbose_name=_('Event'))
+    subscriptions = models.ForeignKey('Subscription',
+                                      verbose_name=_('Subscription'))
+    event_date = models.DateField(verbose_name=_("Event Date"),
+                                  blank=True, null=True)
+    event = models.CharField(max_length=1, choices=SUBSCRITIONEVENTS,
+                             verbose_name=_('Event'))
 
     def __str__(self):
         return self.event
@@ -64,15 +68,27 @@ class SubscriptionEvent(models.Model):
         verbose_name_plural = _('Subscription Events')
 
 
-class SubscriptionType(Product):
-    cancelationPeriod = models.IntegerField(verbose_name=_("Cancelation Period (months)"), blank=True, null=True)
-    automaticContractExtension = models.IntegerField(verbose_name=_("Automatic Contract Extension (months)"),
-                                                     blank=True, null=True)
-    automaticContractExtensionReminder = models.IntegerField(
-        verbose_name=_("Automatic Contract Extensoin Reminder (days)"), blank=True, null=True)
-    minimumDuration = models.IntegerField(verbose_name=_("Minimum Contract Duration"), blank=True, null=True)
-    paymentIntervall = models.IntegerField(verbose_name=_("Payment Intervall (days)"), blank=True, null=True)
-    contractDocument = FileBrowseField(verbose_name=_("Contract Documents"), blank=True, null=True, max_length=200)
+class SubscriptionType(ProductType):
+    cancellation_period = models.IntegerField(verbose_name=_("Cancellation Period (months)"),
+                                              blank=True,
+                                              null=True)
+    automatic_contract_extension = models.IntegerField(verbose_name=_("Automatic Contract Extension (months)"),
+                                                       blank=True,
+                                                       null=True)
+    automatic_contract_extension_reminder = models.IntegerField(
+        verbose_name=_("Automatic Contract Extension Reminder (days)"),
+        blank=True,
+        null=True)
+    minimum_duration = models.IntegerField(verbose_name=_("Minimum Contract Duration"),
+                                           blank=True,
+                                           null=True)
+    payment_interval = models.IntegerField(verbose_name=_("Payment Interval (days)"),
+                                           blank=True,
+                                           null=True)
+    contract_document = FileBrowseField(verbose_name=_("Contract Documents"),
+                                        blank=True,
+                                        null=True,
+                                        max_length=200)
 
     class Meta:
         app_label = "subscriptions"

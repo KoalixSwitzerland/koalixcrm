@@ -6,7 +6,7 @@ from koalixcrm.crm.factories.factory_user import StaffUserFactory
 from koalixcrm.crm.factories.factory_contract import StandardContractFactory
 from koalixcrm.crm.factories.factory_customer import StandardCustomerFactory
 from koalixcrm.crm.factories.factory_currency import StandardCurrencyFactory
-from koalixcrm.djangoUserExtension.factories import StandardDefaultTemplateSet
+from koalixcrm.djangoUserExtension.factories.factory_document_template import StandardQuoteTemplateFactory
 
 
 class StandardSalesDocumentFactory(factory.django.DjangoModelFactory):
@@ -27,7 +27,7 @@ class StandardSalesDocumentFactory(factory.django.DjangoModelFactory):
     custom_date_field = "2018-05-20"
     last_modification = "2018-05-25"
     last_modified_by = factory.SubFactory(StaffUserFactory)
-    template_set = factory.SubFactory(StandardDefaultTemplateSet)
+    template_set = factory.SubFactory(StandardQuoteTemplateFactory)
     derived_from_sales_document = None
     last_print_date = "2018-05-26"
 

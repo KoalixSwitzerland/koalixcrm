@@ -7,11 +7,11 @@ from koalixcrm.crm.models import Customer
 from koalixcrm.crm.models import CustomerGroup
 from koalixcrm.crm.models import CustomerBillingCycle
 from koalixcrm.crm.models import Currency
-from koalixcrm.crm.models import Product
+from koalixcrm.crm.models import ProductType
 from koalixcrm.crm.models import Tax
 from koalixcrm.crm.models import Unit
 from koalixcrm.crm.models import Quote
-from koalixcrm.crm.models import Price
+from koalixcrm.crm.models import ProductPrice
 from koalixcrm.crm.models import SalesDocumentPosition
 from koalixcrm.crm.documents.calculations import Calculations
 from koalixcrm.test_support_functions import make_date_utc
@@ -74,17 +74,17 @@ class DocumentCalculationsTest(TestCase):
             date_of_creation=date_now,
             last_modified_by=test_user,)
         for i in range(10):
-            test_product = Product.objects.create(
+            test_product = ProductType.objects.create(
                 description="This is a test product " + i.__str__(),
                 title="This is a test product " + i.__str__(),
-                product_number=12334235+i,
+                product_type_identifier=12334235+i,
                 default_unit=test_unit,
                 last_modification=date_now,
                 last_modified_by=test_user,
                 tax=test_tax,
             )
-            Price.objects.create(
-                product=test_product,
+            ProductPrice.objects.create(
+                product_type=test_product,
                 unit=test_unit,
                 currency=test_currency,
                 customer_group=test_customer_group,
@@ -98,7 +98,7 @@ class DocumentCalculationsTest(TestCase):
                 quantity=0.333*i,
                 description="This is a Testposition " + i.__str__(),
                 discount=i*5,
-                product=test_product,
+                product_type=test_product,
                 unit=test_unit,
                 overwrite_product_price=False,
             )

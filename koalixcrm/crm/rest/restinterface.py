@@ -11,7 +11,7 @@ from rest_framework_xml.renderers import XMLRenderer
 
 from koalixcrm.crm.documents.contract import Contract, ContractJSONSerializer
 from koalixcrm.crm.product.currency import Currency
-from koalixcrm.crm.product.product import Product
+from koalixcrm.crm.product.product_type import ProductType
 from koalixcrm.crm.product.tax import Tax
 from koalixcrm.crm.product.unit import Unit
 from koalixcrm.crm.reporting.project import Project, ProjectJSONSerializer
@@ -114,7 +114,7 @@ class ProductAsJSON(viewsets.ModelViewSet):
     """
     API endpoint that allows products to be viewed.
     """
-    queryset = Product.objects.all()
+    queryset = ProductType.objects.all()
     serializer_class = ProductJSONSerializer
     renderer_classes = (BrowsableAPIRenderer, JSONRenderer, XMLRenderer)
 

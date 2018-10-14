@@ -1,17 +1,19 @@
 import datetime
 import pytest
 from django.test import TestCase
-from koalixcrm.crm.factories.factory_user import AdminUserFactory
+from koalixcrm.djangoUserExtension.factories.factory_user_extension import StandardUserExtensionFactory
 from koalixcrm.crm.factories.factory_customer_billing_cycle import StandardCustomerBillingCycleFactory
+from koalixcrm.crm.factories.factory_user import AdminUserFactory
 from koalixcrm.crm.factories.factory_customer import StandardCustomerFactory
 from koalixcrm.crm.factories.factory_customer_group import StandardCustomerGroupFactory
 from koalixcrm.crm.factories.factory_currency import StandardCurrencyFactory
 from koalixcrm.crm.factories.factory_work import StandardWorkFactory
 from koalixcrm.crm.factories.factory_task_status import DoneTaskStatusFactory
 from koalixcrm.crm.factories.factory_reporting_period import StandardReportingPeriodFactory
-from koalixcrm.djangoUserExtension.factories.factory_user_extension import StandardUserExtensionFactory
+from koalixcrm.crm.factories.factory_human_resource import StandardHumanResourceFactory
 from koalixcrm.crm.factories.factory_task import StandardTaskFactory
 from koalixcrm.test_support_functions import make_date_utc
+from koalixcrm.crm.factories.factory_estimation import StandardHumanResourceEstimationToTaskFactory
 
 
 @pytest.fixture()
@@ -64,20 +66,21 @@ class TaskEffectiveDuration(TestCase):
         end_date_second_task = (datetime_now + datetime.timedelta(days=60))
 
         self.test_billing_cycle = StandardCustomerBillingCycleFactory.create()
-        self.test_user = AdminUserFactory.create()
         self.test_customer_group = StandardCustomerGroupFactory.create()
         self.test_customer = StandardCustomerFactory.create(is_member_of=(self.test_customer_group,))
         self.test_currency = StandardCurrencyFactory.create()
-        self.test_user_extension = StandardUserExtensionFactory.create(user=self.test_user)
+        self.human_resource = StandardHumanResourceFactory.create()
         self.test_reporting_period = StandardReportingPeriodFactory.create()
         self.test_1st_task = StandardTaskFactory.create(title="1st Test Task",
-                                                        planned_start_date=start_date,
-                                                        planned_end_date=end_date_first_task,
                                                         project=self.test_reporting_period.project)
+        self.estimation_1st_task = StandardHumanResourceEstimationToTaskFactory(task=self.test_1st_task,
+                                                                                date_from=start_date,
+                                                                                date_until=end_date_first_task)
         self.test_2nd_task = StandardTaskFactory.create(title="2nd Test Task",
-                                                        planned_start_date=start_date,
-                                                        planned_end_date=end_date_second_task,
                                                         project=self.test_reporting_period.project)
+        self.estimation_2nd_task = StandardHumanResourceEstimationToTaskFactory(task=self.test_2nd_task,
+                                                                                date_from=start_date,
+                                                                                date_until=end_date_second_task)
 
     @pytest.mark.back_end_tests
     def test_effective_duration(self):
@@ -86,7 +89,6 @@ class TaskEffectiveDuration(TestCase):
         datetime_later_2 = make_date_utc(datetime.datetime(2024, 1, 2, 3, 30))
         datetime_later_3 = make_date_utc(datetime.datetime(2024, 1, 4, 5, 45))
         datetime_later_4 = make_date_utc(datetime.datetime(2024, 1, 4, 6, 15))
-        date_now = make_date_utc(datetime.datetime(2024, 1, 1, 0, 00))
         self.assertEqual(
             (self.test_1st_task.planned_duration()).__str__(), "60")
         self.assertEqual(
@@ -97,10 +99,10 @@ class TaskEffectiveDuration(TestCase):
             (self.test_2nd_task.effective_duration()).__str__(), "0")
 
         new_status = DoneTaskStatusFactory.create()
-        self._freeze.freeze(make_date_utc(datetime.date(2024, 2, 2)))
+        self._freeze.freeze(datetime.date(2024, 2, 2))
         self.test_1st_task.status = new_status
         self.test_1st_task.save()
-        self._freeze.freeze(make_date_utc(datetime.date(2024, 2, 5)))
+        self._freeze.freeze(datetime.date(2024, 2, 5))
         self.test_2nd_task.status = new_status
         self.test_2nd_task.save()
 
@@ -114,7 +116,7 @@ class TaskEffectiveDuration(TestCase):
             (self.test_2nd_task.effective_duration()).__str__(), "65")
 
         StandardWorkFactory.create(
-            employee=self.test_user_extension,
+            human_resource=self.human_resource,
             date=datetime_now,
             start_time=datetime_now,
             stop_time=datetime_later_1,
@@ -122,7 +124,7 @@ class TaskEffectiveDuration(TestCase):
             reporting_period=self.test_reporting_period
         )
         StandardWorkFactory.create(
-            employee=self.test_user_extension,
+            human_resource=self.human_resource,
             date=datetime_later_2,
             start_time=datetime_later_1,
             stop_time=datetime_later_2,
@@ -130,7 +132,7 @@ class TaskEffectiveDuration(TestCase):
             reporting_period=self.test_reporting_period
         )
         StandardWorkFactory.create(
-            employee=self.test_user_extension,
+            human_resource=self.human_resource,
             date=datetime_now,
             start_time=datetime_now,
             stop_time=datetime_later_3,
@@ -138,7 +140,7 @@ class TaskEffectiveDuration(TestCase):
             reporting_period=self.test_reporting_period
         )
         StandardWorkFactory.create(
-            employee=self.test_user_extension,
+            human_resource=self.human_resource,
             date=datetime_later_4,
             start_time=datetime_now,
             stop_time=datetime_later_4,
