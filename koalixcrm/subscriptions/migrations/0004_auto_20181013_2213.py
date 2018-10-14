@@ -14,11 +14,11 @@ def fill_subscription_type_backup_table(apps, schema_editor):
     all_subscription_types = SubscriptionType.objects.using(db_alias).all()
     for subscription_type in all_subscription_types:
         subscription_type_backup = SubscriptionTypeBackup.objects.using(db_alias).create(
-            cancellation_period=subscription_type.cancellationPeriod,
+            cancellation_period=subscription_type.cancelationPeriod,
             automatic_contract_extension=subscription_type.automaticContractExtension,
             automatic_contract_extension_reminder=subscription_type.automaticContractExtensionReminder,
             minimum_duration=subscription_type.minimumDuration,
-            payment_interval=subscription_type.paymentInterval,
+            payment_interval=subscription_type.paymentIntervall,
             contract_document=subscription_type.contractDocument,
             description=subscription_type.description,
             title=subscription_type.title,
@@ -33,8 +33,9 @@ def fill_subscription_type_backup_table(apps, schema_editor):
         subscriptions = Subscription.objects.using(db_alias).all()
         if len(subscriptions) > 0:
             for subscription in subscriptions:
-                subscription.subscription_type_backup = subscription.subscription_type.id
-                subscription.save()
+                if subscription.subscription_type is not None:
+                    subscription.subscription_type_backup = subscription.subscriptiontype.id
+                    subscription.save()
 
 
 def reverse_func(apps, schema_editor):
