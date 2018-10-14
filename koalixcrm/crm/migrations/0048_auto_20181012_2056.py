@@ -7,6 +7,80 @@ from django.db import migrations, models
 import django.db.models.deletion
 
 
+def initiate_human_resource(apps, schema_editor):
+    Work = apps.get_model("crm", "Work")
+    HumanResource = apps.get_model("crm", "HumanResource")
+    db_alias = schema_editor.connection.alias
+    all_works = Work.objects.using(db_alias).all()
+    for work in all_works:
+        all_human_resources = HumanResource.objects.using(db_alias).all()
+        human_resource_found = False
+        for human_resource in all_human_resources:
+            if work.employee == human_resource.user:
+                human_resource_found = True
+                work.human_resource = human_resource
+                break
+        if not human_resource_found:
+            new_human_resource = HumanResource.objects.using(db_alias).create(user=work.employee)
+            new_human_resource.save()
+            work.human_resource = new_human_resource
+        work.save()
+
+
+def reverse_func(apps, schema_editor):
+    return 1
+
+
+def backup_identifiers(apps, schema_editor):
+    Position = apps.get_model("crm", "Position")
+    CustomerGroupTransform = apps.get_model("crm", "CustomerGroupTransform")
+    Price = apps.get_model("crm", "Price")
+    UnitTransform = apps.get_model("crm", "UnitTransform")
+    db_alias = schema_editor.connection.alias
+    all_positions = Position.objects.using(db_alias).all()
+    for position in all_positions:
+        position.product_backup = position.product.id
+        position.save()
+    all_customer_group_transforms = CustomerGroupTransform.objects.using(db_alias).all()
+    for customer_group_transform in all_customer_group_transforms:
+        customer_group_transform.product_backup = customer_group_transform.product.id
+        customer_group_transform.save()
+    all_prices = Price.objects.using(db_alias).all()
+    for price in all_prices:
+        price.product_backup = price.product.id
+        price.save()
+    all_unit_transforms = UnitTransform.objects.using(db_alias).all()
+    for unit_transform in all_unit_transforms:
+        unit_transform.product_backup = unit_transform.product.id
+        unit_transform.save()
+
+
+def restore_from_backup(apps, schema_editor):
+    Position = apps.get_model("crm", "Position")
+    CustomerGroupTransform = apps.get_model("crm", "CustomerGroupTransform")
+    Price = apps.get_model("crm", "Price")
+    ProductPrice = apps.get_model("crm", "ProductPrice")
+    UnitTransform = apps.get_model("crm", "UnitTransform")
+    db_alias = schema_editor.connection.alias
+    all_positions = Position.objects.using(db_alias).all()
+    for position in all_positions:
+        position.product_type = position.product_backup
+        position.save()
+    all_customer_group_transforms = CustomerGroupTransform.objects.using(db_alias).all()
+    for customer_group_transform in all_customer_group_transforms:
+        customer_group_transform.product_type = customer_group_transform.product_backup
+        customer_group_transform.save()
+    all_prices = Price.objects.using(db_alias).all()
+    for price in all_prices:
+        new_product_price = ProductPrice.objects.using(db_alias).create(price_ptr=price.id,
+                                                                        product_type=price.product_backup)
+        new_product_price.save()
+    all_unit_transforms = UnitTransform.objects.using(db_alias).all()
+    for unit_transform in all_unit_transforms:
+        unit_transform.product_type = unit_transform.product_backup
+        unit_transform.save()
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -14,9 +88,165 @@ class Migration(migrations.Migration):
         ('accounting', '0008_auto_20181012_2056'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ('crm', '0047_work_worked_hours'),
+        ('subscriptions', '0004_auto_20181013_2213')
     ]
 
     operations = [
+        migrations.AddField(
+            model_name='customergrouptransform',
+            name='product_backup',
+            field=models.IntegerField(blank=True, null=True, verbose_name='Product Backup Identifier'),
+        ),
+        migrations.AddField(
+            model_name='position',
+            name='product_backup',
+            field=models.IntegerField(blank=True, null=True, verbose_name='Product Backup Identifier'),
+        ),
+        migrations.AddField(
+            model_name='unittransform',
+            name='product_backup',
+            field=models.IntegerField(blank=True, null=True, verbose_name='Product Backup Identifier'),
+        ),
+        migrations.AddField(
+            model_name='price',
+            name='product_backup',
+            field=models.IntegerField(blank=True, null=True, verbose_name='Product Backup Identifier'),
+        ),
+        migrations.RunPython(backup_identifiers, reverse_func),
+        migrations.RemoveField(
+            model_name='customergrouptransform',
+            name='product',
+        ),
+        migrations.RemoveField(
+            model_name='position',
+            name='product',
+        ),
+        migrations.RemoveField(
+            model_name='unittransform',
+            name='product',
+        ),
+        migrations.RemoveField(
+            model_name='Price',
+            name='product',
+        ),
+        migrations.RenameModel(old_name='Product',
+                               new_name='ProductType'),
+
+        migrations.CreateModel(
+            name='ProductPrice',
+            fields=[
+                ('price_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='crm.Price')),
+                ('product_type', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='crm.ProductType', verbose_name='Product'),)
+            ],
+            options={
+                'verbose_name': 'Product Price',
+                'verbose_name_plural': 'Product Prices',
+            },
+            bases=('crm.price',),
+        ),
+        migrations.AddField(
+            model_name='customergrouptransform',
+            name='product_type',
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='crm.ProductType', verbose_name='Product Type'),
+            preserve_default=False,
+        ),
+        migrations.AddField(
+            model_name='position',
+            name='product_type',
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='crm.ProductType', verbose_name='Product'),
+        ),
+        migrations.AddField(
+            model_name='unittransform',
+            name='product_type',
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='crm.ProductType', verbose_name='Product Type'),
+            preserve_default=False,
+        ),
+        migrations.RunPython(restore_from_backup, reverse_func),
+
+        migrations.AlterField(
+            model_name='customergrouptransform',
+            name='product_type',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.ProductType', verbose_name='Product Type'),
+            preserve_default=False,
+        ),
+        migrations.AlterField(
+            model_name='unittransform',
+            name='product_type',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.ProductType', verbose_name='Product Type'),
+            preserve_default=False,
+        ),
+        migrations.RemoveField(
+            model_name='customergrouptransform',
+            name='product_backup',
+        ),
+        migrations.RemoveField(
+            model_name='position',
+            name='product_backup',
+        ),
+        migrations.RemoveField(
+            model_name='price',
+            name='product_backup',
+        ),
+        migrations.RemoveField(
+            model_name='unittransform',
+            name='product_backup',
+        ),
+
+        migrations.AlterField(
+            model_name='producttype',
+            name='accounting_product_categorie',
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='accounting.ProductCategory', verbose_name='Accounting Product Category'),
+            preserve_default=False,
+        ),
+        migrations.RenameField(model_name='producttype',
+                               old_name='accounting_product_categorie',
+                               new_name='accounting_product_category'),
+
+
+        migrations.AlterModelOptions(
+            name='producttype',
+            options={'verbose_name': 'Product Type', 'verbose_name_plural': 'Product Types'},
+        ),
+        migrations.RemoveField(
+            model_name='producttype',
+            name='product_number',
+        ),
+        migrations.AddField(
+            model_name='producttype',
+            name='product_type_identifier',
+            field=models.CharField(blank=True, max_length=200, null=True, verbose_name='Product Number'),
+        ),
+        migrations.AlterField(
+            model_name='position',
+            name='product_type',
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='crm.ProductType', verbose_name='Product'),
+        ),
+        migrations.AlterField(
+            model_name='productprice',
+            name='product_type',
+            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='crm.ProductType', verbose_name='Product Type'),
+            preserve_default=False,
+        ),
+        migrations.AlterField(
+            model_name='producttype',
+            name='last_modified_by',
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='Last modified by'),
+        ),
+        migrations.CreateModel(
+            name='Product',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('identifier', models.CharField(verbose_name="Product Number",
+                                                max_length=200,
+                                                null=True,
+                                                blank=True)),
+                ('product_type', models.ForeignKey("ProductType", verbose_name='Product Type')),
+            ],
+            options={
+                'verbose_name': 'Product',
+                'verbose_name_plural': 'Products',
+            },
+        ),
         migrations.CreateModel(
             name='Agreement',
             fields=[
@@ -95,36 +325,6 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='ProductPrice',
-            fields=[
-                ('price_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='crm.Price')),
-            ],
-            options={
-                'verbose_name': 'Product Price',
-                'verbose_name_plural': 'Product Prices',
-            },
-            bases=('crm.price',),
-        ),
-        migrations.CreateModel(
-            name='ProductType',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('description', models.TextField(blank=True, null=True, verbose_name='Description')),
-                ('title', models.CharField(max_length=200, verbose_name='Title')),
-                ('product_type_identifier', models.CharField(blank=True, max_length=200, null=True, verbose_name='Product Number')),
-                ('last_modification', models.DateTimeField(auto_now=True, verbose_name='Last modified')),
-                ('date_of_creation', models.DateTimeField(auto_now_add=True, verbose_name='Created at')),
-                ('accounting_product_category', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='accounting.ProductCategory', verbose_name='Accounting Product Category')),
-                ('default_unit', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.Unit', verbose_name='Unit')),
-                ('last_modified_by', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='Last modified by')),
-                ('tax', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.Tax')),
-            ],
-            options={
-                'verbose_name': 'Product Type',
-                'verbose_name_plural': 'Product Types',
-            },
-        ),
-        migrations.CreateModel(
             name='Resource',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
@@ -182,73 +382,12 @@ class Migration(migrations.Migration):
             new_name='project',
         ),
         migrations.RemoveField(
-            model_name='customergrouptransform',
-            name='product',
-        ),
-        migrations.RemoveField(
-            model_name='position',
-            name='product',
-        ),
-        migrations.RemoveField(
-            model_name='price',
-            name='product',
-        ),
-        migrations.RemoveField(
-            model_name='product',
-            name='accounting_product_categorie',
-        ),
-        migrations.RemoveField(
-            model_name='product',
-            name='date_of_creation',
-        ),
-        migrations.RemoveField(
-            model_name='product',
-            name='default_unit',
-        ),
-        migrations.RemoveField(
-            model_name='product',
-            name='description',
-        ),
-        migrations.RemoveField(
-            model_name='product',
-            name='last_modification',
-        ),
-        migrations.RemoveField(
-            model_name='product',
-            name='last_modified_by',
-        ),
-        migrations.RemoveField(
-            model_name='product',
-            name='product_number',
-        ),
-        migrations.RemoveField(
-            model_name='product',
-            name='tax',
-        ),
-        migrations.RemoveField(
-            model_name='product',
-            name='title',
-        ),
-        migrations.RemoveField(
             model_name='task',
             name='planned_end_date',
         ),
         migrations.RemoveField(
             model_name='task',
             name='planned_start_date',
-        ),
-        migrations.RemoveField(
-            model_name='unittransform',
-            name='product',
-        ),
-        migrations.RemoveField(
-            model_name='work',
-            name='employee',
-        ),
-        migrations.AddField(
-            model_name='product',
-            name='identifier',
-            field=models.CharField(blank=True, max_length=200, null=True, verbose_name='Product Number'),
         ),
         migrations.AddField(
             model_name='project',
@@ -298,11 +437,6 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='crm.ResourceType', verbose_name='Resource Type'),
         ),
         migrations.AddField(
-            model_name='productprice',
-            name='product_type',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.ProductType', verbose_name='Product Type'),
-        ),
-        migrations.AddField(
             model_name='estimation',
             name='resource',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.Resource'),
@@ -316,11 +450,6 @@ class Migration(migrations.Migration):
             model_name='estimation',
             name='task',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.Task', verbose_name='Task'),
-        ),
-        migrations.AddField(
-            model_name='currencytransform',
-            name='product_type',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.ProductType', verbose_name='Product'),
         ),
         migrations.AddField(
             model_name='currencytransform',
@@ -358,32 +487,30 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.Unit'),
         ),
         migrations.AddField(
-            model_name='customergrouptransform',
-            name='product_type',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='crm.ProductType', verbose_name='Product Type'),
-            preserve_default=False,
-        ),
-        migrations.AddField(
-            model_name='position',
-            name='product_type',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='crm.ProductType', verbose_name='Product'),
-        ),
-        migrations.AddField(
-            model_name='product',
-            name='product_type',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='crm.ProductType', verbose_name='Product Type'),
-            preserve_default=False,
-        ),
-        migrations.AddField(
-            model_name='unittransform',
-            name='product_type',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='crm.ProductType', verbose_name='Product Type'),
-            preserve_default=False,
-        ),
-        migrations.AddField(
             model_name='work',
             name='human_resource',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='crm.HumanResource'),
+            field=models.ForeignKey(null=True, to='crm.HumanResource', on_delete=django.db.models.deletion.SET_NULL),
             preserve_default=False,
+        ),
+        migrations.AddField(
+            model_name='currencytransform',
+            name='product_type',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.ProductType', verbose_name='Product'),
+        ),
+        migrations.RunPython(initiate_human_resource, reverse_func),
+        migrations.RemoveField(
+            model_name='work',
+            name='employee',
+        ),
+        migrations.AlterField(
+            model_name='product',
+            name='product_type',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.ProductType', verbose_name='Product Type'),
+            preserve_default=False,
+        ),
+        migrations.AlterField(
+            model_name='work',
+            name='human_resource',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.HumanResource'),
         ),
     ]
