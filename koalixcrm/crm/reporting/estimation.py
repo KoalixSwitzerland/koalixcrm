@@ -3,7 +3,7 @@
 from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext as _
-from koalixcrm.crm.product.unit import Unit
+from koalixcrm.crm.reporting.resource_price import ResourcePrice
 
 
 class Estimation(models.Model):
@@ -33,11 +33,8 @@ class Estimation(models.Model):
                                          null=False)
 
     def calculated_costs(self):
-        currency = self.task.project.default_currency
-        unit = Unit.objects.filter(short_name="hrs")
-        date = self.date_from
-
-        self.product.get_costs(self, unit, date, currency)
+        default_resource_price = ResourcePrice.objects.get(id=self.resource.id)
+        return self.amount*default_resource_price.price
 
     def __str__(self):
         return _("Estimation of Resource Consumption") + ": " + str(self.id)

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from decimal import *
 from django.db import models
 from django.utils.translation import ugettext as _
 from django.contrib import admin
@@ -154,15 +155,17 @@ class Task(models.Model):
     planned_effort.tags = True
 
     def planned_costs(self, reporting_period=None):
-        """The function return the planned costs of resources which have been estimated for this task
-        at a specific reporting period. When no reporting_period is provided, the last reporting period
-        is selected
+        """The function returns the planned costs of resources which have been estimated for this task
+         at a specific reporting period plus the costs of the effective effort before the provided reporting_period
+         When no reporting_period is provided, the last reporting period
+
+        is selected.
 
         Args:
         no arguments
 
         Returns:
-        planned costs (Decimal), 0 if when no agreements are present
+        planned costs (Decimal), 0 if when no estimation or no reporting period is present
 
         Raises:
         No exceptions planned"""
@@ -173,10 +176,16 @@ class Task(models.Model):
 
             else:
                 reporting_period_internal = reporting_period
-            agreements_to_this_task = Agreement.objects.filter(task=self.id)
+            predecessor_reporting_periods = ReportingPeriod.get_all_predecessors(reporting_period_internal,
+                                                                                 self.project)
+            estimations_to_this_task = Estimation.objects.filter(task=self.id,
+                                                                 reporting_period=reporting_period_internal)
             sum_costs = 0
-            for agreement_to_this_task in agreements_to_this_task:
-                sum_costs += agreement_to_this_task.calculated_costs()
+            if len(estimations_to_this_task) != 0:
+                for estimation_to_this_task in estimations_to_this_task:
+                    sum_costs += estimation_to_this_task.calculated_costs()
+            for predecessor_reporting_period in predecessor_reporting_periods:
+                sum_costs += self.effective_costs(reporting_period=predecessor_reporting_period)
         except ReportingPeriodNotFound as e:
             sum_costs = 0
         return sum_costs
@@ -401,11 +410,12 @@ class Task(models.Model):
         for work in work_without_agreement:
             default_resource_price = ResourcePrice.objects.get(id=work.human_resource.id)
             if default_resource_price:
-                sum_costs += work.worked_hours*default_resource_price.price
+                getcontext().prec = 5
+                sum_costs += Decimal(work.effort_hours())*default_resource_price.price
             else:
-                sum_costs = "n/a"
+                sum_costs = 0
                 break
-        return sum_costs.__str__()
+        return sum_costs
     effective_costs.short_description = _("Effective costs")
     effective_costs.tags = True
 
