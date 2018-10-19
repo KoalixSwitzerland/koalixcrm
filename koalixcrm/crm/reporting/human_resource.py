@@ -172,6 +172,18 @@ class HumanResource(Resource):
                                                                            "project": months[month_key]['project_efforts'][project_key]['project']})
         return main_xml
 
+    def create_pdf(self, template_set, printed_by, *args, **kwargs):
+        return PDFExport.create_pdf(self, template_set, printed_by, *args, **kwargs)
+
+    def get_template_set(self, template_set):
+        return self.user.get_template_set(template_set)
+
+    def get_fop_config_file(self, template_set):
+        return self.user.get_fop_config_file(template_set)
+
+    def get_xsl_file(self, template_set):
+        return self.user.get_xsl_file(template_set)
+
     def resource_contribution_project(self, date_from, date_to):
         works = Work.objects.filter(resource=self,
                                     date__range=(date_from, date_to))
