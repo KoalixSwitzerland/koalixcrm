@@ -295,7 +295,6 @@
                                                 <fo:block text-align="end">
                                                     <xsl:value-of
                                                             select="format-number(Effective_Effort_InPeriod,'#.##0,00', 'european')"/>
-                                                    hrs
                                                 </fo:block>
                                             </fo:table-cell>
                                         </xsl:when>
@@ -305,14 +304,13 @@
                                         <fo:block text-align="end">
                                             <xsl:value-of
                                                     select="format-number(Effective_Effort_Overall,'#.##0,00', 'european')"/>
-                                            hrs
                                         </fo:block>
                                     </fo:table-cell>
                                     <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt"
                                                    padding="2.5pt">
                                         <fo:block text-align="end">
                                             <xsl:value-of
-                                                    select="format-number(Planned_Effort,'#.##0,00', 'european')"/> hrs
+                                                    select="format-number(Planned_Effort,'#.##0,00', 'european')"/>
                                         </fo:block>
                                     </fo:table-cell>
                                 </fo:table-row>
@@ -334,7 +332,6 @@
                                             <fo:block text-align="end">
                                                 <xsl:value-of
                                                         select="format-number(object[@model='crm.project']/Effective_Effort_InPeriod,'#.##0,00', 'european')"/>
-                                                hrs
                                             </fo:block>
                                         </fo:table-cell>
                                     </xsl:when>
@@ -344,7 +341,6 @@
                                     <fo:block text-align="end">
                                         <xsl:value-of
                                                 select="format-number(object[@model='crm.project']/Effective_Effort_Overall,'#.##0,00', 'european')"/>
-                                        hrs
                                     </fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt"
@@ -352,7 +348,6 @@
                                     <fo:block text-align="end">
                                         <xsl:value-of
                                                 select="format-number(object[@model='crm.project']/Planned_Effort,'#.##0,00', 'european')"/>
-                                        hrs
                                     </fo:block>
                                 </fo:table-cell>
                             </fo:table-row>
