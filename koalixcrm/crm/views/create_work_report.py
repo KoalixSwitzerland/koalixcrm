@@ -21,13 +21,14 @@ def create_work_report(calling_model_admin, request, queryset):
                 create_work_report_form = CreateWorkReportForm(request.POST)
                 if create_work_report_form.is_valid():
                     for obj in queryset:
-                        return PDFExportView.export_pdf(calling_model_admin=calling_model_admin,
-                                                        request=request,
-                                                        source=obj,
-                                                        redirect_to="/admin/",
-                                                        template_to_use=obj.default_template_set.work_report_template,
-                                                        date_from=create_work_report_form.cleaned_data["range_from"],
-                                                        date_to=create_work_report_form.cleaned_data["range_to"])
+                        return PDFExportView.export_pdf(
+                            calling_model_admin=calling_model_admin,
+                            request=request,
+                            source=obj,
+                            redirect_to="/admin/",
+                            template_to_use=obj.user.default_template_set.work_report_template,
+                            date_from=create_work_report_form.cleaned_data["range_from"],
+                            date_to=create_work_report_form.cleaned_data["range_to"])
         else:
             datetime_now = datetime.datetime.today()
             range_from_date = (datetime_now - datetime.timedelta(days=30)).date()

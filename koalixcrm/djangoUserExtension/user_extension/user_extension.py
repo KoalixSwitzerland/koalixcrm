@@ -51,9 +51,6 @@ class UserExtension(models.Model):
             raise UserExtensionMissing(_("No User Extension define for user ") + django_user.__str__())
         return user_extensions[0]
 
-    def create_pdf(self, template_set, printed_by, *args, **kwargs):
-        return PDFExport.create_pdf(self, template_set, printed_by, *args, **kwargs)
-
     def get_template_set(self, template_set):
         if template_set == self.default_template_set.work_report_template:
             if self.default_template_set.work_report_template:

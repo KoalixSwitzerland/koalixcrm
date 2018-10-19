@@ -107,7 +107,7 @@ class HumanResource(Resource):
                                                                    "week_day": str(date_to.isoweekday()),
                                                                    "month": str(date_to.month),
                                                                    "year": str(date_to.year)})
-        works = Work.objects.filter(employee=self, date__range=(date_from, date_to))
+        works = Work.objects.filter(human_resource=self, date__range=(date_from, date_to))
         for work in works:
             days[work.date]['effort'] += work.effort_hours()
             days[work.date]['project_efforts'][work.task.project]['effort'] += work.effort_hours()
@@ -172,12 +172,24 @@ class HumanResource(Resource):
                                                                            "project": months[month_key]['project_efforts'][project_key]['project']})
         return main_xml
 
+    def create_pdf(self, template_set, printed_by, *args, **kwargs):
+        return PDFExport.create_pdf(self, template_set, printed_by, *args, **kwargs)
+
+    def get_template_set(self, template_set):
+        return self.user.get_template_set(template_set)
+
+    def get_fop_config_file(self, template_set):
+        return self.user.get_fop_config_file(template_set)
+
+    def get_xsl_file(self, template_set):
+        return self.user.get_xsl_file(template_set)
+
     def resource_contribution_project(self, date_from, date_to):
-        works = Work.objects.filter(resource=self,
+        works = Work.objects.filter(human_resource=self,
                                     date__range=(date_from, date_to))
         projects = []
         for work in works:
-            if not work.task.project in projects:
+            if work.task.project not in projects:
                 projects.append(work.task.project)
         return projects
 
