@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from decimal import Decimal
 from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext as _
@@ -25,7 +26,7 @@ class Currency(models.Model):
 
         Raises: should not return exceptions"""
         if self.rounding is None:
-            return 0.05
+            return Decimal(0.05)
         else:
             return self.rounding
 
