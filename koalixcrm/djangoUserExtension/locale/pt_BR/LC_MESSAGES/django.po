@@ -1,0 +1,226 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-10-19 20:32+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+#: koalixcrm/djangoUserExtension/const/purpose.py:6
+msgid "Private"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/const/purpose.py:7
+msgid "Business"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/const/purpose.py:8
+msgid "Mobile Private"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/const/purpose.py:9
+msgid "Mobile Business"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/user_extension/document_template.py:15
+#: koalixcrm/djangoUserExtension/user_extension/template_set.py:12
+msgid "Title"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/user_extension/document_template.py:19
+msgid "XSL File"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/user_extension/document_template.py:21
+msgid "FOP Configuration File"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/user_extension/document_template.py:25
+msgid "Logo for the PDF generation"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/user_extension/document_template.py:34
+msgid "Fop Config File missing in Document Template"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/user_extension/document_template.py:40
+msgid "XSL Template missing in Document Template"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/user_extension/document_template.py:44
+msgid "Document template"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/user_extension/document_template.py:45
+msgid "Document templates"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/user_extension/document_template.py:54
+msgid "Invoice template"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/user_extension/document_template.py:55
+msgid "Invoice templates"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/user_extension/document_template.py:61
+msgid "Quote template"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/user_extension/document_template.py:62
+msgid "Quote templates"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/user_extension/document_template.py:68
+msgid "Delivery note template"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/user_extension/document_template.py:69
+msgid "Delivery note templates"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/user_extension/document_template.py:75
+msgid "Payment reminder template"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/user_extension/document_template.py:76
+msgid "Payment reminder templates"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/user_extension/document_template.py:82
+msgid "Purchase order template"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/user_extension/document_template.py:83
+msgid "Purchase order templates"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/user_extension/document_template.py:89
+msgid "Purchase confirmation template"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/user_extension/document_template.py:90
+msgid "Purchase confirmation templates"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/user_extension/document_template.py:96
+msgid "Profit loss statement template"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/user_extension/document_template.py:97
+msgid "Profit loss statement templates"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/user_extension/document_template.py:103
+msgid "Balance sheet template"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/user_extension/document_template.py:104
+msgid "Balance sheet templates"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/user_extension/document_template.py:110
+msgid "Monthly project summary template"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/user_extension/document_template.py:111
+msgid "Monthly project summary templates"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/user_extension/document_template.py:117
+msgid "Work report template"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/user_extension/document_template.py:118
+msgid "Work report templates"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/user_extension/document_template.py:127
+#: koalixcrm/djangoUserExtension/user_extension/template_set.py:77
+#: koalixcrm/djangoUserExtension/user_extension/text_paragraph.py:29
+#: koalixcrm/djangoUserExtension/user_extension/user_extension.py:123
+#: koalixcrm/djangoUserExtension/user_extension/user_extension.py:147
+#: koalixcrm/djangoUserExtension/user_extension/user_extension.py:160
+#: koalixcrm/djangoUserExtension/user_extension/user_extension.py:181
+msgid "Basics"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/user_extension/template_set.py:44
+msgid "Template-set"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/user_extension/template_set.py:45
+msgid "Template-sets"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/user_extension/text_paragraph.py:12
+#: koalixcrm/djangoUserExtension/user_extension/user_extension.py:80
+#: koalixcrm/djangoUserExtension/user_extension/user_extension.py:93
+#: koalixcrm/djangoUserExtension/user_extension/user_extension.py:106
+msgid "Purpose"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/user_extension/text_paragraph.py:13
+msgid "Text"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/user_extension/text_paragraph.py:17
+msgid "TextParagraphInDocumentTemplate"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/user_extension/text_paragraph.py:18
+msgid "TextParagraphInDocumentTemplates"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/user_extension/user_extension.py:31
+#: koalixcrm/djangoUserExtension/user_extension/user_extension.py:35
+#: koalixcrm/djangoUserExtension/user_extension/user_extension.py:39
+msgid "During "
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/user_extension/user_extension.py:49
+msgid "More than one User Extension define for user "
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/user_extension/user_extension.py:51
+msgid "No User Extension define for user "
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/user_extension/user_extension.py:59
+msgid "Template Set for work report is missing for User Extension"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/user_extension/user_extension.py:72
+#: koalixcrm/djangoUserExtension/user_extension/user_extension.py:73
+msgid "User Extension"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/user_extension/user_extension.py:88
+#: koalixcrm/djangoUserExtension/user_extension/user_extension.py:89
+msgid "Postal Address for User Extension"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/user_extension/user_extension.py:101
+#: koalixcrm/djangoUserExtension/user_extension/user_extension.py:102
+msgid "Phone number for User Extension"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/user_extension/user_extension.py:114
+#: koalixcrm/djangoUserExtension/user_extension/user_extension.py:115
+msgid "Email Address for User Extension"
+msgstr ""
+
+#: koalixcrm/djangoUserExtension/user_extension/user_extension.py:193
+msgid "Work Report PDF"
+msgstr ""
