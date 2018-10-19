@@ -123,24 +123,25 @@ class Project(models.Model):
 
     def effective_accumulated_costs(self, reporting_period=None):
         if reporting_period:
-            reporting_periods = ReportingPeriod.objects.filter(project=self.id, end__lte=reporting_period.end)
+            reporting_periods = ReportingPeriod.get_all_predecessors(target_reporting_period=reporting_period,
+                                                                     project=self)
         else:
             reporting_periods = ReportingPeriod.objects.filter(project=self.id)
-        effective_effort_accumulated = 0
+        effective_accumulated_costs = 0
         for single_reporting_period in reporting_periods:
             all_project_tasks = Task.objects.filter(project=self.id)
             for task in all_project_tasks:
-                effective_effort_accumulated += float(task.effective_costs(reporting_period=single_reporting_period))
-        return effective_effort_accumulated
+                effective_accumulated_costs += float(task.effective_costs(reporting_period=single_reporting_period))
+        return effective_accumulated_costs
 
     effective_accumulated_costs.short_description = _("Effective Accumulated costs [hrs]")
     effective_accumulated_costs.tags = True
 
     def effective_costs(self, reporting_period):
-        effective_effort_accumulated = 0
+        effective_cost = 0
         for task in Task.objects.filter(project=self.id):
-            effective_effort_accumulated += task.effective_costs(reporting_period=reporting_period)
-        return effective_effort_accumulated
+            effective_cost += task.effective_costs(reporting_period=reporting_period)
+        return effective_cost
 
     def planned_costs(self, reporting_period=None):
         """The function return the planned overall costs

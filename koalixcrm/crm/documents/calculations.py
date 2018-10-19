@@ -99,7 +99,6 @@ class Calculations:
             position.last_calculated_tax = int(position.product_type.get_tax_rate() / 100 * position.position_price_per_unit * position.quantity * (
                 1 - position.discount / 100) / currency.rounding) * currency.rounding
         else:
-            position.last_calculated_tax = int(position.product_type.get_tax_rate() / 100 * position.position_price_per_unit * position.quantity /
-                                             currency.rounding) * currency.rounding
+            position.last_calculated_tax = int(position.product_type.get_tax_rate() / 100 * position.position_price_per_unit * position.quantity / currency.rounding) * currency.rounding
         position.save()
         return position.last_calculated_tax
