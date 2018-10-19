@@ -41,7 +41,8 @@ class PDFExportView:
                 UserExtensionMissing,
                 CalledProcessError,
                 UserExtensionEmailAddressMissing,
-                UserExtensionPhoneAddressMissing) as e:
+                UserExtensionPhoneAddressMissing,
+                TemplateSetMissingForUserExtension) as e:
             if isinstance(e, UserExtensionMissing):
                 response = HttpResponseRedirect(redirect_to)
                 calling_model_admin.message_user(request, _("User Extension Missing"),
@@ -69,6 +70,10 @@ class PDFExportView:
             elif isinstance(e, TemplateXSLTFileMissing):
                 response = HttpResponseRedirect(redirect_to)
                 calling_model_admin.message_user(request, _("XSLT File Missing in TemplateSet"),
+                                                 level=messages.ERROR)
+            elif isinstance(e, TemplateSetMissingForUserExtension):
+                response = HttpResponseRedirect(redirect_to)
+                calling_model_admin.message_user(request, _("Work report template missing in the user extension"),
                                                  level=messages.ERROR)
             elif type(e) == CalledProcessError:
                 response = HttpResponseRedirect(redirect_to)
