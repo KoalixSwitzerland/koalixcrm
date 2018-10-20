@@ -72,7 +72,19 @@ class Price(models.Model):
             return False
 
     def is_date_in_range(self, date):
-        if (self.valid_from <= date) and (date <= self.valid_until):
+        if (self.valid_from is None) and (self.valid_until is None):
+            return True
+        elif self.valid_until is None:
+            if self.valid_from <= date:
+                return True
+            else:
+                return False
+        elif self.valid_from is None:
+            if date <= self.valid_until:
+                return True
+            else:
+                return False
+        elif (self.valid_from <= date) and (date <= self.valid_until):
             return True
         else:
             return False

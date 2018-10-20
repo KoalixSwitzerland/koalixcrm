@@ -54,7 +54,7 @@ class ProductType(models.Model):
         Raises:
             In case the algorithm does not find a valid product price, the function raises a
             NoPriceFound Exception"""
-        prices = ProductPrice.objects.filter(product_type=self.id)
+        prices = ProductPrice.objects.filter(product_type=self)
         valid_prices = list()
         for price in list(prices):
             currency_factor = price.get_currency_transform_factor(currency, self.id)

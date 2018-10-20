@@ -1,118 +1,234 @@
 import pytest
 import datetime
-from django.contrib.auth.models import User
 from django.test import TestCase
-from koalixcrm.crm.models import Contract
-from koalixcrm.crm.models import Customer
-from koalixcrm.crm.models import CustomerGroup
-from koalixcrm.crm.models import CustomerBillingCycle
-from koalixcrm.crm.models import Currency
-from koalixcrm.crm.models import ProductType
-from koalixcrm.crm.models import Tax
-from koalixcrm.crm.models import Unit
-from koalixcrm.crm.models import Quote
-from koalixcrm.crm.models import ProductPrice
-from koalixcrm.crm.models import SalesDocumentPosition
+from koalixcrm.crm.product.product_price import ProductPrice
 from koalixcrm.crm.documents.calculations import Calculations
+from koalixcrm.crm.factories.factory_currency import StandardCurrencyFactory
+from koalixcrm.crm.factories.factory_quote import StandardQuoteFactory
+from koalixcrm.crm.factories.factory_sales_document_position import StandardSalesDocumentPositionFactory
+from koalixcrm.crm.factories.factory_product_type import StandardProductTypeFactory
+from koalixcrm.crm.factories.factory_product_price import StandardPriceFactory
+from koalixcrm.crm.factories.factory_customer import StandardCustomerFactory
+from koalixcrm.crm.factories.factory_customer_group import StandardCustomerGroupFactory
+from koalixcrm.crm.factories.factory_tax import StandardTaxFactory
+from koalixcrm.crm.factories.factory_unit import StandardUnitFactory
 from koalixcrm.test_support_functions import make_date_utc
 
 
 class DocumentCalculationsTest(TestCase):
     def setUp(self):
         datetime_now = make_date_utc(datetime.datetime(2024, 1, 1, 0, 00))
-        valid_from = (datetime_now - datetime.timedelta(days=30)).date()
-        valid_until = (datetime_now + datetime.timedelta(days=30)).date()
-        date_now = datetime_now.date()
-        test_billing_cycle = CustomerBillingCycle.objects.create(
-            name="30 days to pay",
-            time_to_payment_date=30,
-            payment_reminder_time_to_payment=10
+        start_date = (datetime_now - datetime.timedelta(days=30)).date()
+        end_date = (datetime_now + datetime.timedelta(days=30)).date()
+        self.tax = StandardTaxFactory.create(tax_rate=10)
+        self.test_currency_with_rounding = StandardCurrencyFactory.create(rounding=1)
+        self.test_currency_without_rounding = StandardCurrencyFactory.create(
+            rounding=None,
+            description='Euro',
+            short_name='EUR'
         )
-        test_user = User.objects.create(
-            username='Username',
-            password="Userone")
-        test_customer_group = CustomerGroup.objects.create(
-            name="Tripple A"
+        self.customer_group = StandardCustomerGroupFactory.create()
+        self.customer = StandardCustomerFactory.create()
+        self.customer.is_member_of.add(self.customer_group)
+        self.customer.save()
+        self.unit = StandardUnitFactory.create()
+        self.product_without_dates = StandardProductTypeFactory.create(
+            product_type_identifier="A",
+            tax=self.tax
         )
-        test_customer = Customer.objects.create(
-            name="John Smith",
-            last_modified_by=test_user,
-            default_customer_billing_cycle=test_billing_cycle,
+        self.product_without_date_from = StandardProductTypeFactory.create(
+            product_type_identifier="B",
+            tax=self.tax
         )
-        test_customer.is_member_of = [test_customer_group]
-        test_customer.save()
-        test_currency = Currency.objects.create(
-            description="Swiss Francs",
-            short_name="CHF",
-            rounding=0.05,
+        self.product_without_date_until = StandardProductTypeFactory.create(
+            product_type_identifier="C",
+            tax=self.tax
         )
-        test_contract = Contract.objects.create(
-            staff=test_user,
-            description="This is a test contract",
-            default_customer=test_customer,
-            default_currency=test_currency,
-            last_modification=date_now,
-            last_modified_by=test_user
+        self.product_without_customer_group = StandardProductTypeFactory.create(
+            product_type_identifier="D",
+            tax=self.tax
         )
-        test_unit = Unit.objects.create(
-            description="Kilogram",
-            short_name="kg",
+        self.product_with_currency_rounding = StandardProductTypeFactory.create(
+            product_type_identifier="E",
+            tax=self.tax
         )
-        test_tax = Tax.objects.create(
-            tax_rate=7.7,
-            name="MwSt 7.7%")
-        test_quote = Quote.objects.create(
-            valid_until=valid_until,
-            status="C",
-            contract=test_contract,
-            external_reference="ThisIsAnExternalReference",
-            discount="11.23",
-            description="ThisIsATestOffer",
-            customer=test_customer,
-            staff=test_user,
-            currency=test_currency,
-            date_of_creation=date_now,
-            last_modified_by=test_user,)
-        for i in range(10):
-            test_product = ProductType.objects.create(
-                description="This is a test product " + i.__str__(),
-                title="This is a test product " + i.__str__(),
-                product_type_identifier=12334235+i,
-                default_unit=test_unit,
-                last_modification=date_now,
-                last_modified_by=test_user,
-                tax=test_tax,
-            )
-            ProductPrice.objects.create(
-                product_type=test_product,
-                unit=test_unit,
-                currency=test_currency,
-                customer_group=test_customer_group,
-                price=i*100,
-                valid_from=valid_from,
-                valid_until=valid_until,
-            )
-            SalesDocumentPosition.objects.create(
-                sales_document=test_quote,
-                position_number=i*10,
-                quantity=0.333*i,
-                description="This is a Testposition " + i.__str__(),
-                discount=i*5,
-                product_type=test_product,
-                unit=test_unit,
-                overwrite_product_price=False,
-            )
+        self.product_without_currency_rounding = StandardProductTypeFactory.create(
+            product_type_identifier="F",
+            tax=self.tax
+        )
+        self.price_without_customer_group = StandardPriceFactory.create(
+            product_type=self.product_without_customer_group,
+            customer_group=None,
+            price=100,
+            unit=self.unit,
+            currency=self.test_currency_with_rounding,
+            valid_from=start_date,
+            valid_until=end_date
+        )
+        self.price_without_dates = StandardPriceFactory.create(
+            product_type=self.product_without_dates,
+            customer_group=self.customer_group,
+            valid_from=None,
+            valid_until=None,
+            unit=self.unit,
+            currency=self.test_currency_with_rounding,
+            price=80
+        )
+        self.price_without_date_to = StandardPriceFactory.create(
+            product_type=self.product_without_date_until,
+            customer_group=self.customer_group,
+            valid_from=start_date,
+            valid_until=None,
+            unit=self.unit,
+            currency=self.test_currency_with_rounding,
+            price=130
+        )
+        self.price_without_date_from = StandardPriceFactory.create(
+            product_type=self.product_without_date_from,
+            customer_group=self.customer_group,
+            valid_from=None,
+            valid_until=end_date,
+            unit=self.unit,
+            currency=self.test_currency_with_rounding,
+            price=50
+        )
+        self.price_without_date_from = StandardPriceFactory.create(
+            product_type=self.product_without_currency_rounding,
+            currency=self.test_currency_without_rounding,
+            customer_group=self.customer_group,
+            price=25,
+            unit=self.unit,
+            valid_from=start_date,
+            valid_until=end_date
+        )
+        self.price_without_date_from = StandardPriceFactory.create(
+            product_type=self.product_with_currency_rounding,
+            currency=self.test_currency_with_rounding,
+            customer_group=self.customer_group,
+            price=33,
+            unit=self.unit,
+            valid_from=start_date,
+            valid_until=end_date
+        )
 
     @pytest.mark.back_end_tests
     def test_calculate_document_price(self):
+        quote_1 = StandardQuoteFactory.create(customer=self.customer)
+        StandardSalesDocumentPositionFactory.create(
+            quantity=1,
+            discount=0,
+            product_type=self.product_without_customer_group,
+            overwrite_product_price=False,
+            unit=self.unit,
+            sales_document=quote_1
+        )
         datetime_now = datetime.datetime(2024, 1, 1, 0, 00)
         date_now = datetime_now.date()
-        test_quote = Quote.objects.get(description="ThisIsATestOffer")
         Calculations.calculate_document_price(
-            document=test_quote,
+            document=quote_1,
             pricing_date=date_now)
         self.assertEqual(
-            test_quote.last_calculated_price.__str__(), "5431.50")
+            quote_1.last_calculated_price.__str__(), "90.00")
         self.assertEqual(
-            test_quote.last_calculated_tax.__str__(), "418.05")
+            quote_1.last_calculated_tax.__str__(), "10.00")
 
+        quote_2 = StandardQuoteFactory.create(customer=self.customer)
+        StandardSalesDocumentPositionFactory.create(
+            quantity=1,
+            discount=0,
+            unit=self.unit,
+            product_type=self.product_without_date_from,
+            overwrite_product_price=False,
+            sales_document=quote_2
+        )
+        datetime_now = datetime.datetime(2024, 1, 1, 0, 00)
+        date_now = datetime_now.date()
+        Calculations.calculate_document_price(
+            document=quote_2,
+            pricing_date=date_now)
+        self.assertEqual(
+            quote_2.last_calculated_price.__str__(), "45.00")
+        self.assertEqual(
+            quote_2.last_calculated_tax.__str__(), "5.00")
+
+        quote_3 = StandardQuoteFactory.create(customer=self.customer)
+        StandardSalesDocumentPositionFactory.create(
+            quantity=1,
+            discount=0,
+            unit=self.unit,
+            product_type=self.product_without_date_until,
+            overwrite_product_price=False,
+            sales_document=quote_3
+        )
+        datetime_now = datetime.datetime(2024, 1, 1, 0, 00)
+        date_now = datetime_now.date()
+        Calculations.calculate_document_price(
+            document=quote_3,
+            pricing_date=date_now)
+        self.assertEqual(
+            quote_3.last_calculated_price.__str__(), "117.00")
+        self.assertEqual(
+            quote_3.last_calculated_tax.__str__(), "13.00")
+
+        quote_4 = StandardQuoteFactory.create(customer=self.customer)
+        StandardSalesDocumentPositionFactory.create(
+            quantity=1,
+            discount=0,
+            unit=self.unit,
+            product_type=self.product_without_dates,
+            overwrite_product_price=False,
+            sales_document=quote_4
+        )
+        datetime_now = datetime.datetime(2024, 1, 1, 0, 00)
+        date_now = datetime_now.date()
+        Calculations.calculate_document_price(
+            document=quote_4,
+            pricing_date=date_now)
+        self.assertEqual(
+            quote_4.last_calculated_price.__str__(), "72.00")
+        self.assertEqual(
+            quote_4.last_calculated_tax.__str__(), "8.00")
+
+        quote_5 = StandardQuoteFactory.create(
+            customer=self.customer,
+            currency=self.test_currency_with_rounding
+        )
+        StandardSalesDocumentPositionFactory.create(
+            quantity=1,
+            discount=7.5,
+            unit=self.unit,
+            product_type=self.product_with_currency_rounding,
+            overwrite_product_price=False,
+            sales_document=quote_5
+        )
+        datetime_now = datetime.datetime(2024, 1, 1, 0, 00)
+        date_now = datetime_now.date()
+        Calculations.calculate_document_price(
+            document=quote_5,
+            pricing_date=date_now)
+        self.assertEqual(
+            quote_5.last_calculated_price.__str__(), "27")
+        self.assertEqual(
+            quote_5.last_calculated_tax.__str__(), "3")
+
+        quote_6 = StandardQuoteFactory.create(
+            customer=self.customer,
+            currency=self.test_currency_without_rounding
+        )
+        StandardSalesDocumentPositionFactory.create(
+            quantity=1,
+            discount=7.5,
+            unit=self.unit,
+            product_type=self.product_without_currency_rounding,
+            overwrite_product_price=False,
+            sales_document=quote_6
+        )
+        datetime_now = datetime.datetime(2024, 1, 1, 0, 00)
+        date_now = datetime_now.date()
+        Calculations.calculate_document_price(
+            document=quote_6,
+            pricing_date=date_now)
+        self.assertEqual(
+            quote_6.last_calculated_price.__str__(), "20.80")
+        self.assertEqual(
+            quote_6.last_calculated_tax.__str__(), "2.30")
