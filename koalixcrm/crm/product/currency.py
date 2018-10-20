@@ -26,7 +26,7 @@ class Currency(models.Model):
 
         Raises: should not return exceptions"""
         if self.rounding is None:
-            return Decimal(0.05)
+            return Decimal('0.05')
         else:
             return self.rounding
 

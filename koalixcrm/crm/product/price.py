@@ -84,6 +84,8 @@ class Price(models.Model):
                 return True
             else:
                 return False
+        elif (self.valid_from <= date) and (date <= self.valid_until):
+            return True
         else:
             return False
 

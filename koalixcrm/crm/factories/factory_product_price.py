@@ -14,7 +14,12 @@ class StandardPriceFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = ProductPrice
         django_get_or_create = ('product_type',
-                                'price')
+                                'unit',
+                                'currency',
+                                'customer_group',
+                                'price',
+                                'valid_from',
+                                'valid_until')
 
     product_type = factory.SubFactory(StandardProductFactory)
     unit = factory.SubFactory(StandardUnitFactory)
@@ -28,9 +33,6 @@ class StandardPriceFactory(factory.django.DjangoModelFactory):
 class HighPriceFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = ProductPrice
-        django_get_or_create = ('product_type',
-                                'price')
-
     product_type = factory.SubFactory(StandardProductFactory)
     unit = factory.SubFactory(StandardUnitFactory)
     currency = factory.SubFactory(StandardCurrencyFactory)
