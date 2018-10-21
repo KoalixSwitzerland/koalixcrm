@@ -35,9 +35,10 @@ class Calculations:
                                                                document.currency)
                 tax += Calculations.calculate_position_tax(position, document.currency)
 
-            if isinstance(document.discount, Decimal):
-                total_price = price * (1 - document.discount / 100)
-                total_tax = tax * (1 - document.discount / 100)
+            if document.discount is not None:
+                discount = Decimal(document.discount)
+                total_price = price * (1 - discount / 100)
+                total_tax = tax * (1 - discount / 100)
                 price = int(total_price / document.currency.get_rounding()) * document.currency.get_rounding()
                 tax = int(total_tax / document.currency.get_rounding()) * document.currency.get_rounding()
         document.last_calculated_price = price
