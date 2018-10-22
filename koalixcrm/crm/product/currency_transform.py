@@ -7,16 +7,24 @@ from django.utils.translation import ugettext as _
 
 class CurrencyTransform(models.Model):
     from_currency = models.ForeignKey('Currency',
+                                      blank=False,
+                                      null=False,
                                       verbose_name=_("From Currency"),
                                       related_name="db_reltransformfromcurrency")
     to_currency = models.ForeignKey('Currency',
+                                    blank=False,
+                                    null=False,
                                     verbose_name=_("To Currency"),
                                     related_name="db_reltransformtocurrency")
     product_type = models.ForeignKey('ProductType',
+                                     blank=False,
+                                     null=False,
                                      verbose_name=_("Product"))
-    factor = models.IntegerField(verbose_name=_("Factor between From and To Currency"),
-                                 blank=True,
-                                 null=True)
+    factor = models.DecimalField(verbose_name=_("Factor between From and To Currency"),
+                                 blank=False,
+                                 null=False,
+                                 max_digits=17,
+                                 decimal_places=2,)
 
     def get_transform_factor(self):
         return self.factor

@@ -332,7 +332,8 @@ class DocumentCalculationsTest(TestCase):
 
     @pytest.mark.back_end_tests
     def test_calculate_document_with_customer_group_transform(self):
-        quote_8 = StandardQuoteFactory.create(customer=self.customer)
+        quote_8 = StandardQuoteFactory.create(
+            customer=self.customer)
         StandardSalesDocumentPositionFactory.create(
             quantity=1,
             discount=0,
@@ -341,6 +342,7 @@ class DocumentCalculationsTest(TestCase):
             overwrite_product_price=False,
             sales_document=quote_8
         )
+        groups = self.customer.is_member_of.all()
         datetime_now = make_date_utc(datetime.datetime(2024, 1, 1, 0, 00))
         date_now = datetime_now.date()
         Calculations.calculate_document_price(
@@ -353,7 +355,9 @@ class DocumentCalculationsTest(TestCase):
 
     @pytest.mark.back_end_tests
     def test_calculate_document_with_currency_transform(self):
-        quote_9 = StandardQuoteFactory.create(customer=self.customer)
+        quote_9 = StandardQuoteFactory.create(
+            currency=self.test_currency_with_rounding,
+            customer=self.customer)
         StandardSalesDocumentPositionFactory.create(
             quantity=1,
             discount=0,
@@ -368,9 +372,9 @@ class DocumentCalculationsTest(TestCase):
             document=quote_9,
             pricing_date=date_now)
         self.assertEqual(
-            quote_9.last_calculated_price.__str__(), "36.00")
+            quote_9.last_calculated_price.__str__(), "36")
         self.assertEqual(
-            quote_9.last_calculated_tax.__str__(), "4.00")
+            quote_9.last_calculated_tax.__str__(), "4")
 
     @pytest.mark.back_end_tests
     def test_calculate_document_with_unit_transform(self):

@@ -15,6 +15,5 @@ class StandardCustomerGroupFactory(factory.django.DjangoModelFactory):
 class AdvancedCustomerGroupFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = CustomerGroup
-        django_get_or_create = ('name',)
 
     name = factory.Sequence(lambda n: "Customer Group #%s" % n)
