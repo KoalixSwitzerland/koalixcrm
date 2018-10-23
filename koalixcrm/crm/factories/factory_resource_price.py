@@ -13,8 +13,6 @@ from koalixcrm.test_support_functions import make_date_utc
 class StandardResourcePriceFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = ResourcePrice
-        django_get_or_create = ('product',
-                                'price')
 
     resource = factory.SubFactory(StandardResourceFactory)
     unit = factory.SubFactory(StandardUnitFactory)
@@ -28,8 +26,6 @@ class StandardResourcePriceFactory(factory.django.DjangoModelFactory):
 class HighResourcePriceFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = ResourcePrice
-        django_get_or_create = ('product',
-                                'price')
 
     resource = factory.SubFactory(StandardResourceFactory)
     unit = factory.SubFactory(StandardUnitFactory)
