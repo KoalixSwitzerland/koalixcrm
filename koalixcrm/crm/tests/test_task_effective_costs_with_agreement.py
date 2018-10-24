@@ -60,18 +60,22 @@ class TaskEffectiveCostsWithAgreement(TestCase):
             costs=self.resource_price_agreement
         )
         self.estimation_1st_task = StandardHumanResourceEstimationToTaskFactory(
+            resource=self.human_resource,
             task=self.test_1st_task,
             date_from=start_date,
-            date_until=end_date_first_task
+            date_until=end_date_first_task,
+            amount=20
         )
         self.test_2nd_task = StandardTaskFactory.create(
             title="2nd Test Task",
             project=self.test_reporting_period.project
         )
         self.estimation_2nd_task = StandardHumanResourceEstimationToTaskFactory(
+            resource=self.human_resource,
             task=self.test_2nd_task,
             date_from=start_date,
-            date_until=end_date_second_task
+            date_until=end_date_second_task,
+            amount=30
         )
 
     @pytest.mark.back_end_tests
@@ -85,11 +89,11 @@ class TaskEffectiveCostsWithAgreement(TestCase):
         self.assertEqual(
             (self.test_1st_task.planned_duration()).__str__(), "60")
         self.assertEqual(
-            (self.test_1st_task.planned_costs()).__str__(), "0")
+            (self.test_1st_task.planned_costs()).__str__(), "2400.0")
         self.assertEqual(
             (self.test_2nd_task.planned_duration()).__str__(), "90")
         self.assertEqual(
-            (self.test_2nd_task.planned_costs()).__str__(), "0")
+            (self.test_2nd_task.planned_costs()).__str__(), "3600.0")
         StandardWorkFactory.create(
             human_resource=self.human_resource,
             date=date_now,
