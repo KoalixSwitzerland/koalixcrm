@@ -14,6 +14,7 @@ from koalixcrm.crm.factories.factory_task import StandardTaskFactory
 from koalixcrm.crm.factories.factory_resource_price import StandardResourcePriceFactory
 from koalixcrm.crm.factories.factory_estimation import StandardHumanResourceEstimationToTaskFactory
 from koalixcrm.crm.factories.factory_agreement import StandardAgreementToTaskFactory
+from koalixcrm.crm.factories.factory_project import StandardProjectFactory
 from koalixcrm.test_support_functions import make_date_utc
 
 
@@ -47,10 +48,13 @@ class TaskEffectiveCostsWithAgreement(TestCase):
             customer_group=self.test_customer_group,
             price="90",
         )
-        self.test_reporting_period = StandardReportingPeriodFactory.create()
+        self.test_project = StandardProjectFactory.create()
+        self.test_reporting_period = StandardReportingPeriodFactory.create(
+            project=self.test_project
+        )
         self.test_1st_task = StandardTaskFactory.create(
             title="1st Test Task",
-            project=self.test_reporting_period.project
+            project=self.test_project
         )
         self.agreement_1st_task = StandardAgreementToTaskFactory(
             amount="3.50",
@@ -68,7 +72,7 @@ class TaskEffectiveCostsWithAgreement(TestCase):
         )
         self.test_2nd_task = StandardTaskFactory.create(
             title="2nd Test Task",
-            project=self.test_reporting_period.project
+            project=self.test_project
         )
         self.estimation_2nd_task = StandardHumanResourceEstimationToTaskFactory(
             resource=self.human_resource,
@@ -79,7 +83,7 @@ class TaskEffectiveCostsWithAgreement(TestCase):
         )
 
     @pytest.mark.back_end_tests
-    def test_task_effective_costs_with_agreement(self):
+    def test_project_effective_costs(self):
         datetime_now = make_date_utc(datetime.datetime(2024, 1, 1, 0, 00))
         datetime_later_1 = make_date_utc(datetime.datetime(2024, 1, 1, 2, 00))
         datetime_later_2 = make_date_utc(datetime.datetime(2024, 1, 1, 3, 30))
@@ -87,13 +91,7 @@ class TaskEffectiveCostsWithAgreement(TestCase):
         datetime_later_4 = make_date_utc(datetime.datetime(2024, 1, 1, 6, 15))
         date_now = datetime_now.date()
         self.assertEqual(
-            (self.test_1st_task.planned_duration()).__str__(), "60")
-        self.assertEqual(
-            (self.test_1st_task.planned_costs()).__str__(), "2400.0")
-        self.assertEqual(
-            (self.test_2nd_task.planned_duration()).__str__(), "90")
-        self.assertEqual(
-            (self.test_2nd_task.planned_costs()).__str__(), "3600.0")
+            (self.test_project.planned_costs()).__str__(), "6000.0000")
         StandardWorkFactory.create(
             human_resource=self.human_resource,
             date=date_now,
@@ -127,10 +125,4 @@ class TaskEffectiveCostsWithAgreement(TestCase):
             reporting_period=self.test_reporting_period
         )
         self.assertEqual(
-            (self.test_1st_task.effective_effort(reporting_period=None)).__str__(), "3.5")
-        self.assertEqual(
-            (self.test_1st_task.effective_costs(reporting_period=None)).__str__(), "315.00")
-        self.assertEqual(
-            (self.test_2nd_task.effective_effort(reporting_period=None)).__str__(), "12.0")
-        self.assertEqual(
-            (self.test_2nd_task.effective_costs(reporting_period=None)).__str__(), "1440.0")
+            (self.test_project.effective_costs(reporting_period=None)).__str__(), "1755.0")

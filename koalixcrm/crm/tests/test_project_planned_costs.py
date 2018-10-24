@@ -78,4 +78,4 @@ class TaskPlannedEffort(TestCase):
                                                task=self.test_2nd_task,
                                                reporting_period=self.test_reporting_period)
         self.assertEqual(
-            (self.test_project.planned_costs(reporting_period=self.test_reporting_period)).__str__(), "1380.0000")
+            (self.test_project.planned_costs(reporting_period=self.test_reporting_period)).__str__(), "1380.0")

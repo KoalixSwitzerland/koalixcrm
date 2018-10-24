@@ -142,7 +142,7 @@ class Project(models.Model):
         effective_cost = 0
         for task in Task.objects.filter(project=self.id):
             effective_cost += task.effective_costs(reporting_period=reporting_period)
-        self.currency.round(effective_cost)
+        self.default_currency.round(effective_cost)
         return effective_cost
 
     def planned_costs(self, reporting_period=None):
