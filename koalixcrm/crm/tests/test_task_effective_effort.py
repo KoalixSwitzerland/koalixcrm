@@ -40,7 +40,7 @@ class TaskEffectiveEffort(TestCase):
                                                                                 date_until=end_date_second_task)
 
     @pytest.mark.back_end_tests
-    def test_effective_effort(self):
+    def test_task_effective_effort(self):
         datetime_now = make_date_utc(datetime.datetime(2024, 1, 1, 0, 00))
         datetime_later_1 = make_date_utc(datetime.datetime(2024, 1, 1, 2, 00))
         datetime_later_2 = make_date_utc(datetime.datetime(2024, 1, 1, 3, 30))

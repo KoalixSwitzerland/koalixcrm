@@ -85,7 +85,7 @@ class TaskUpdateLastStatusUpdate(TestCase):
                                                                                 date_from=start_date,
                                                                                 date_until=end_date_second_task)
 
-    def test_last_status_update(self):
+    def test_task_last_status_update(self):
         previous_last_status_change = self.test_1st_task.last_status_change
         new_status = DoneTaskStatusFactory.create()
         self._freeze.freeze(datetime.date(2024, 6, 2))

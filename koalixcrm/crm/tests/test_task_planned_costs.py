@@ -54,7 +54,7 @@ class TaskPlannedEffort(TestCase):
                                                                                 amount=0)
 
     @pytest.mark.back_end_tests
-    def test_planned_effort(self):
+    def test_task_planned_costs(self):
         self.assertEqual(
             (self.test_1st_task.planned_duration()).__str__(), "60")
         self.assertEqual(

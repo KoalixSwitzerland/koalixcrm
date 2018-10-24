@@ -39,7 +39,7 @@ class TaskPlannedDuration(TestCase):
                                                                                 date_until=end_date_second_task)
 
     @pytest.mark.back_end_tests
-    def test_planned_duration(self):
+    def test_task_planned_duration(self):
         self.assertEqual(
             (self.test_1st_task.planned_duration()).__str__(), "60")
         self.assertEqual(
