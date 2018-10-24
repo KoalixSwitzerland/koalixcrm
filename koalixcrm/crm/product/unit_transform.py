@@ -8,15 +8,23 @@ from django.utils.translation import ugettext as _
 class UnitTransform(models.Model):
     from_unit = models.ForeignKey('Unit',
                                   verbose_name=_("From Unit"),
+                                  blank=False,
+                                  null=False,
                                   related_name="db_reltransfromfromunit")
     to_unit = models.ForeignKey('Unit',
                                 verbose_name=_("To Unit"),
+                                blank=False,
+                                null=False,
                                 related_name="db_reltransfromtounit")
     product_type = models.ForeignKey('ProductType',
+                                     blank=False,
+                                     null=False,
                                      verbose_name=_("Product Type"))
-    factor = models.IntegerField(verbose_name=_("Factor between From and To Unit"),
-                                 blank=True,
-                                 null=True)
+    factor = models.DecimalField(verbose_name=_("Factor between From and To Unit"),
+                                 blank=False,
+                                 null=False,
+                                 max_digits=17,
+                                 decimal_places=2,)
 
     def transform(self, unit):
         if self.from_unit == unit:
