@@ -34,6 +34,7 @@ class TaskEffectiveCostsWithAgreement(TestCase):
             rounding="0.05"
         )
         self.human_resource = StandardHumanResourceFactory.create()
+        self.human_resource_two = StandardHumanResourceFactory.create()
         self.resource_price = StandardResourcePriceFactory.create(
             resource=self.human_resource,
             unit=self.test_unit,
@@ -42,7 +43,7 @@ class TaskEffectiveCostsWithAgreement(TestCase):
             price="120",
         )
         self.resource_price_agreement = StandardResourcePriceFactory.create(
-            resource=self.human_resource,
+            resource=self.human_resource_two,
             unit=self.test_unit,
             currency=self.test_currency,
             customer_group=self.test_customer_group,
@@ -91,7 +92,7 @@ class TaskEffectiveCostsWithAgreement(TestCase):
         datetime_later_4 = make_date_utc(datetime.datetime(2024, 1, 1, 6, 15))
         date_now = datetime_now.date()
         self.assertEqual(
-            (self.test_project.planned_costs()).__str__(), "6000.0000")
+            (self.test_project.planned_costs()).__str__(), "6000.0")
         StandardWorkFactory.create(
             human_resource=self.human_resource,
             date=date_now,

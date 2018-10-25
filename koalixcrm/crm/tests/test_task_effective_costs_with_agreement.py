@@ -33,6 +33,7 @@ class TaskEffectiveCostsWithAgreement(TestCase):
             rounding="0.05"
         )
         self.human_resource = StandardHumanResourceFactory.create()
+        self.human_resource_two = StandardHumanResourceFactory.create()
         self.resource_price = StandardResourcePriceFactory.create(
             resource=self.human_resource,
             unit=self.test_unit,
@@ -41,7 +42,7 @@ class TaskEffectiveCostsWithAgreement(TestCase):
             price="120",
         )
         self.resource_price_agreement = StandardResourcePriceFactory.create(
-            resource=self.human_resource,
+            resource=self.human_resource_two,
             unit=self.test_unit,
             currency=self.test_currency,
             customer_group=self.test_customer_group,
