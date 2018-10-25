@@ -407,7 +407,7 @@ class Task(models.Model):
                 if work not in work_without_agreement:
                     work_without_agreement.append(work)
         for work in work_without_agreement:
-            default_resource_price = ResourcePrice.objects.get(id=work.human_resource.id)
+            default_resource_price = ResourcePrice.objects.get(resource=work.human_resource.id)
             if default_resource_price:
                 getcontext().prec = 5
                 sum_costs += Decimal(work.effort_hours())*default_resource_price.price

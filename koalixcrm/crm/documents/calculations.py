@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from decimal import Decimal
+from decimal import *
 from koalixcrm.crm.documents.sales_document_position import SalesDocumentPosition
 
 
@@ -39,6 +39,9 @@ class Calculations:
                 discount = Decimal(document.discount)
                 total_price = price * (1 - discount / 100)
                 total_tax = tax * (1 - discount / 100)
+                getcontext().prec = 5
+                total_price = Decimal(total_price)
+                total_tax = Decimal(total_tax)
                 price = document.currency.round(total_price)
                 tax = document.currency.round(total_tax)
         document.last_calculated_price = price
@@ -77,6 +80,8 @@ class Calculations:
         else:
             nominal_minus_discount = nominal_total
         total_with_tax = nominal_minus_discount * ((100-position.product_type.get_tax_rate()) / 100)
+        getcontext().prec = 5
+        total_with_tax = Decimal(total_with_tax)
         position.last_calculated_price = currency.round(total_with_tax)
         position.last_pricing_date = pricing_date
         position.save()
@@ -103,6 +108,8 @@ class Calculations:
         else:
             nominal_minus_discount = nominal_total
         total_tax = nominal_minus_discount * position.product_type.get_tax_rate() / 100
+        getcontext().prec = 5
+        total_tax = Decimal(total_tax)
         position.last_calculated_tax = currency.round(total_tax)
         position.save()
         return position.last_calculated_tax
