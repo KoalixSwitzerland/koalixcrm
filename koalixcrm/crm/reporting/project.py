@@ -132,15 +132,17 @@ class Project(models.Model):
             all_project_tasks = Task.objects.filter(project=self.id)
             for task in all_project_tasks:
                 effective_accumulated_costs += float(task.effective_costs(reporting_period=single_reporting_period))
+        self.default_currency.round(effective_accumulated_costs)
         return effective_accumulated_costs
 
-    effective_accumulated_costs.short_description = _("Effective Accumulated costs [hrs]")
+    effective_accumulated_costs.short_description = _("Effective Accumulated costs")
     effective_accumulated_costs.tags = True
 
     def effective_costs(self, reporting_period):
         effective_cost = 0
         for task in Task.objects.filter(project=self.id):
             effective_cost += task.effective_costs(reporting_period=reporting_period)
+        self.default_currency.round(effective_cost)
         return effective_cost
 
     def planned_costs(self, reporting_period=None):
@@ -159,6 +161,7 @@ class Project(models.Model):
         if all_project_tasks:
             for task in all_project_tasks:
                 planned_effort_accumulated += task.planned_costs(reporting_period)
+        self.default_currency.round(planned_effort_accumulated)
         return planned_effort_accumulated
     planned_costs.short_description = _("Planned Costs")
     planned_costs.tags = True

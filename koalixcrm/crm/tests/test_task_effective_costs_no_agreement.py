@@ -5,16 +5,18 @@ from koalixcrm.crm.factories.factory_user import AdminUserFactory
 from koalixcrm.crm.factories.factory_customer_billing_cycle import StandardCustomerBillingCycleFactory
 from koalixcrm.crm.factories.factory_customer import StandardCustomerFactory
 from koalixcrm.crm.factories.factory_customer_group import StandardCustomerGroupFactory
+from koalixcrm.crm.factories.factory_unit import StandardUnitFactory
 from koalixcrm.crm.factories.factory_currency import StandardCurrencyFactory
 from koalixcrm.crm.factories.factory_reporting_period import StandardReportingPeriodFactory
 from koalixcrm.crm.factories.factory_human_resource import StandardHumanResourceFactory
 from koalixcrm.crm.factories.factory_work import StandardWorkFactory
 from koalixcrm.crm.factories.factory_task import StandardTaskFactory
+from koalixcrm.crm.factories.factory_resource_price import StandardResourcePriceFactory
 from koalixcrm.crm.factories.factory_estimation import StandardHumanResourceEstimationToTaskFactory
 from koalixcrm.test_support_functions import make_date_utc
 
 
-class TaskEffectiveEffort(TestCase):
+class TaskEffectiveCostsWithoutAgreement(TestCase):
     def setUp(self):
         datetime_now = make_date_utc(datetime.datetime(2024, 1, 1, 0, 00))
         start_date = (datetime_now - datetime.timedelta(days=30)).date()
@@ -23,24 +25,42 @@ class TaskEffectiveEffort(TestCase):
 
         self.test_billing_cycle = StandardCustomerBillingCycleFactory.create()
         self.test_user = AdminUserFactory.create()
+        self.test_unit = StandardUnitFactory.create()
         self.test_customer_group = StandardCustomerGroupFactory.create()
         self.test_customer = StandardCustomerFactory.create(is_member_of=(self.test_customer_group,))
-        self.test_currency = StandardCurrencyFactory.create()
+        self.test_currency = StandardCurrencyFactory.create(
+            rounding="0.05"
+        )
         self.human_resource = StandardHumanResourceFactory.create()
+        self.resource_price = StandardResourcePriceFactory.create(
+            resource=self.human_resource,
+            unit=self.test_unit,
+            currency=self.test_currency,
+            customer_group=self.test_customer_group,
+            price="120",
+        )
         self.test_reporting_period = StandardReportingPeriodFactory.create()
-        self.test_1st_task = StandardTaskFactory.create(title="1st Test Task",
-                                                        project=self.test_reporting_period.project)
-        self.estimation_1st_task = StandardHumanResourceEstimationToTaskFactory(task=self.test_1st_task,
-                                                                                date_from=start_date,
-                                                                                date_until=end_date_first_task)
-        self.test_2nd_task = StandardTaskFactory.create(title="2nd Test Task",
-                                                        project=self.test_reporting_period.project)
-        self.estimation_2nd_task = StandardHumanResourceEstimationToTaskFactory(task=self.test_2nd_task,
-                                                                                date_from=start_date,
-                                                                                date_until=end_date_second_task)
+        self.test_1st_task = StandardTaskFactory.create(
+            title="1st Test Task",
+            project=self.test_reporting_period.project
+        )
+        self.estimation_1st_task = StandardHumanResourceEstimationToTaskFactory(
+            task=self.test_1st_task,
+            date_from=start_date,
+            date_until=end_date_first_task
+        )
+        self.test_2nd_task = StandardTaskFactory.create(
+            title="2nd Test Task",
+            project=self.test_reporting_period.project
+        )
+        self.estimation_2nd_task = StandardHumanResourceEstimationToTaskFactory(
+            task=self.test_2nd_task,
+            date_from=start_date,
+            date_until=end_date_second_task
+        )
 
     @pytest.mark.back_end_tests
-    def test_task_effective_effort(self):
+    def test_task_effective_costs_no_agreement(self):
         datetime_now = make_date_utc(datetime.datetime(2024, 1, 1, 0, 00))
         datetime_later_1 = make_date_utc(datetime.datetime(2024, 1, 1, 2, 00))
         datetime_later_2 = make_date_utc(datetime.datetime(2024, 1, 1, 3, 30))
@@ -90,4 +110,8 @@ class TaskEffectiveEffort(TestCase):
         self.assertEqual(
             (self.test_1st_task.effective_effort(reporting_period=None)).__str__(), "3.5")
         self.assertEqual(
+            (self.test_1st_task.effective_costs(reporting_period=None)).__str__(), "420.00")
+        self.assertEqual(
             (self.test_2nd_task.effective_effort(reporting_period=None)).__str__(), "12.0")
+        self.assertEqual(
+            (self.test_2nd_task.effective_costs(reporting_period=None)).__str__(), "1440.0")

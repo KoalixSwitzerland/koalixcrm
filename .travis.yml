@@ -2,8 +2,13 @@ language: python
 python:
 - '3.4'
 
+env:
+- MOZ_HEADLESS=1
+addons:
+  firefox: latest
+
 before_install:
-  - wget https://github.com/mozilla/geckodriver/releases/download/v0.20.1/geckodriver-v0.20.1-linux64.tar.gz
+  - wget https://github.com/mozilla/geckodriver/releases/download/v0.23.0/geckodriver-v0.23.0-linux64.tar.gz
   - mkdir geckodriver
   - tar -xzf geckodriver*.tar.gz -C geckodriver
   - export PATH=$PATH:$PWD/geckodriver
@@ -13,7 +18,7 @@ install:
   - pip install -r requirements/heroku_requirements.txt
 
 script:
-  - pytest --cov=koalixcrm --cov-report xml --cov-report term -m "not version_increase"
+  - pytest --cov=koalixcrm --cov-branch --cov-report xml --cov-report term -m "not version_increase"
   - python-codacy-coverage -r coverage.xml
   - if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then pytest -m version_increase; fi
 

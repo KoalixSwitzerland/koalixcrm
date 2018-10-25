@@ -55,10 +55,10 @@ class TimeTrackingAddRow(LiveServerTestCase):
         except TimeoutException:
             print("Timed out waiting for page to load")
 
-        """ Because the user is not equipped with a corresponding human_resource, the user must receive an exception
-        screen giving im the possibility to select what he wants to do next
-        In this test_step it is checked whether the form contains the required fields. the test will then select
-        to return to the start page instead of defining a new human resource"""
+        # Because the user is not equipped with a corresponding human_resource, the user must receive an exception
+        # screen giving im the possibility to select what he wants to do next
+        # In this test_step it is checked whether the form contains the required fields. the test will then select
+        # to return to the start page instead of defining a new human resource
 
         assert_when_element_does_not_exist(self, '//*[@id="id_next_steps"]')
         assert_when_element_does_not_exist(self, 'confirm_selection')
@@ -73,10 +73,10 @@ class TimeTrackingAddRow(LiveServerTestCase):
             print("Timed out waiting for page to load")
         assert_when_element_is_not_equal_to(self, 'grp-content-title', "<h1>Site administration</h1>")
 
-        """ Because the user is still not equipped with a corresponding human_resource, the user must 
-        receive an exception screen giving im the possibility to select what he wants to do next
-        In this test_step it is checked whether the form contains the required fields. the test will then select
-        to return to the start page instead of defining a new human resource"""
+        # Because the user is still not equipped with a corresponding human_resource, the user must
+        # receive an exception screen giving im the possibility to select what he wants to do next
+        # In this test_step it is checked whether the form contains the required fields. the test will then select
+        # to return to the start page instead of defining a new human resource
 
         selenium.get('%s%s' % (self.live_server_url, '/koalixcrm/crm/reporting/time_tracking/'))
         try:
@@ -97,5 +97,5 @@ class TimeTrackingAddRow(LiveServerTestCase):
             print("Timed out waiting for page to load")
         assert_when_element_is_not_equal_to(self, 'grp-content-title', "<h1>Add human resource</h1>")
 
-        """ This test is passed here, other testcases are performed to ensure proper functionality of this view
-        when the human resource is properly set"""
+        # This test is passed here, other testcase are performed to ensure proper functionality of this view
+        # when the human resource is properly set"

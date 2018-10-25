@@ -94,8 +94,8 @@ class Task(models.Model):
                 elif estimation.date_from < planned_task_start:
                     planned_task_start = estimation.date_from
         return planned_task_start
-        planned_start.short_description = _("Planned Start")
-        planned_start.tags = True
+    planned_start.short_description = _("Planned Start")
+    planned_start.tags = True
 
     def planned_end(self):
         """ The function return the planned end of a task as a date based on the estimations which are
@@ -120,8 +120,8 @@ class Task(models.Model):
                 elif estimation.date_until < planned_task_end:
                     planned_task_end = estimation.date_until
         return planned_task_end
-        planned_start.short_description = _("Planned End")
-        planned_start.tags = True
+    planned_end.short_description = _("Planned End")
+    planned_end.tags = True
 
     def planned_effort(self, reporting_period=None):
         """The function return the planned effort of resources which have been estimated for this task
@@ -169,25 +169,23 @@ class Task(models.Model):
 
         Raises:
         No exceptions planned"""
-        try:
-            if not reporting_period:
-                reporting_period_internal = ReportingPeriod.get_reporting_period(self.project,
-                                                                                 global_support_functions.get_today_date())
+        if not reporting_period:
+            reporting_period_internal = ReportingPeriod.get_reporting_period(self.project,
+                                                                             global_support_functions.get_today_date())
 
-            else:
-                reporting_period_internal = reporting_period
-            predecessor_reporting_periods = ReportingPeriod.get_all_predecessors(reporting_period_internal,
-                                                                                 self.project)
-            estimations_to_this_task = Estimation.objects.filter(task=self.id,
-                                                                 reporting_period=reporting_period_internal)
-            sum_costs = 0
-            if len(estimations_to_this_task) != 0:
-                for estimation_to_this_task in estimations_to_this_task:
-                    sum_costs += estimation_to_this_task.calculated_costs()
+        else:
+            reporting_period_internal = ReportingPeriod.objects.get(id=reporting_period.id)
+        predecessor_reporting_periods = ReportingPeriod.get_all_predecessors(reporting_period_internal,
+                                                                             self.project)
+        estimations_to_this_task = Estimation.objects.filter(task=self.id,
+                                                             reporting_period=reporting_period_internal)
+        sum_costs = 0
+        if len(estimations_to_this_task) != 0:
+            for estimation_to_this_task in estimations_to_this_task:
+                sum_costs += estimation_to_this_task.calculated_costs()
+        if len(predecessor_reporting_periods) != 0:
             for predecessor_reporting_period in predecessor_reporting_periods:
                 sum_costs += self.effective_costs(reporting_period=predecessor_reporting_period)
-        except ReportingPeriodNotFound as e:
-            sum_costs = 0
         return sum_costs
     planned_costs.short_description = _("Planned Costs")
     planned_costs.tags = True
@@ -401,7 +399,8 @@ class Task(models.Model):
                         if work in work_with_agreement:
                             if (agreement_remaining_amount - work.worked_hours) > 0:
                                 agreement_remaining_amount -= work.worked_hours
-                                sum_costs += work.worked_hours*agreement.costs.price
+                                getcontext().prec = 5
+                                sum_costs += Decimal(work.effort_hours())*agreement.costs.price
                                 work_calculated.append(work)
         for work in all_work_in_task:
             if work not in work_calculated:
@@ -415,6 +414,7 @@ class Task(models.Model):
             else:
                 sum_costs = 0
                 break
+        sum_costs = self.project.default_currency.round(sum_costs)
         return sum_costs
     effective_costs.short_description = _("Effective costs")
     effective_costs.tags = True
