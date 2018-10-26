@@ -11,9 +11,6 @@ from koalixcrm.crm.factories.factory_customer import StandardCustomerFactory
 from koalixcrm.crm.factories.factory_customer_group import StandardCustomerGroupFactory, AdvancedCustomerGroupFactory
 from koalixcrm.crm.factories.factory_tax import StandardTaxFactory
 from koalixcrm.crm.factories.factory_unit import StandardUnitFactory, SmallUnitFactory
-from koalixcrm.crm.factories.factory_customer_group_transform import StandardCustomerGroupTransformFactory
-from koalixcrm.crm.factories.factory_unit_transform import StandardUnitTransformFactory
-from koalixcrm.crm.factories.factory_currency_transform import StandardCurrencyTransformFactory
 from koalixcrm.test_support_functions import make_date_utc
 
 
