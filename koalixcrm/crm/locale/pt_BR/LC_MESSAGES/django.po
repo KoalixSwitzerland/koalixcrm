@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# FIRST AUTHOR <aaron.riedener@koalix.ch>, 2018.
 #
 #, fuzzy
 msgid ""
@@ -9,32 +9,32 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-19 20:32+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2018-10-24 00:08-0300\n"
+"Last-Translator: WILLIANO SERPA <WILLYUDI@GMAIL.COM>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: Brazilian Portuguese\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 #: koalixcrm/crm/const/country.py:6
-msgid "Afghanistan"
+msgid "Afeghanistào"
 msgstr ""
 
 #: koalixcrm/crm/const/country.py:7
-msgid "Aland Islands"
+msgid "Ilhas Aland"
 msgstr ""
 
 #: koalixcrm/crm/const/country.py:8
-msgid "Albania"
+msgid "Albânia"
 msgstr ""
 
 #: koalixcrm/crm/const/country.py:9
-msgid "Algeria"
+msgid "Argélia"
 msgstr ""
 
 #: koalixcrm/crm/const/country.py:10
-msgid "American Samoa"
+msgid "Samoa Americana"
 msgstr ""
 
 #: koalixcrm/crm/const/country.py:11
@@ -46,7 +46,7 @@ msgid "Angola"
 msgstr ""
 
 #: koalixcrm/crm/const/country.py:13
-msgid "Anguilla"
+msgid "Anguila"
 msgstr ""
 
 #: koalixcrm/crm/const/country.py:14
@@ -54,7 +54,7 @@ msgid "Antarctica"
 msgstr ""
 
 #: koalixcrm/crm/const/country.py:15
-msgid "Antigua and Barbuda"
+msgid "Antígua and Barbuda"
 msgstr ""
 
 #: koalixcrm/crm/const/country.py:16
@@ -62,7 +62,7 @@ msgid "Argentina"
 msgstr ""
 
 #: koalixcrm/crm/const/country.py:17
-msgid "Armenia"
+msgid "Armênia"
 msgstr ""
 
 #: koalixcrm/crm/const/country.py:18
@@ -70,19 +70,19 @@ msgid "Aruba"
 msgstr ""
 
 #: koalixcrm/crm/const/country.py:19
-msgid "Australia"
+msgid "Austrália"
 msgstr ""
 
 #: koalixcrm/crm/const/country.py:20
-msgid "Austria"
+msgid "Áustria"
 msgstr ""
 
 #: koalixcrm/crm/const/country.py:21
-msgid "Azerbaijan"
+msgid "Azerbaijão"
 msgstr ""
 
 #: koalixcrm/crm/const/country.py:22
-msgid "the Bahamas"
+msgid "Bahamas"
 msgstr ""
 
 #: koalixcrm/crm/const/country.py:23
@@ -102,7 +102,7 @@ msgid "Belarus"
 msgstr ""
 
 #: koalixcrm/crm/const/country.py:27
-msgid "Belgium"
+msgid "Bélgica"
 msgstr ""
 
 #: koalixcrm/crm/const/country.py:28
@@ -114,35 +114,35 @@ msgid "Benin"
 msgstr ""
 
 #: koalixcrm/crm/const/country.py:30
-msgid "Bermuda"
+msgid "Bermudas"
 msgstr ""
 
 #: koalixcrm/crm/const/country.py:31
-msgid "Bhutan"
+msgid "Butão"
 msgstr ""
 
 #: koalixcrm/crm/const/country.py:32
-msgid "Bolivia"
+msgid "Bolívia"
 msgstr ""
 
 #: koalixcrm/crm/const/country.py:33
-msgid "Bosnia and Herzegovina"
+msgid "Bósnia and Herzegovina"
 msgstr ""
 
 #: koalixcrm/crm/const/country.py:34
-msgid "Botswana"
+msgid "Botsuana"
 msgstr ""
 
 #: koalixcrm/crm/const/country.py:35
-msgid "Bouvet Island"
+msgid "Ilha Bouvet"
 msgstr ""
 
 #: koalixcrm/crm/const/country.py:36
-msgid "Brazil"
+msgid "Brasil"
 msgstr ""
 
 #: koalixcrm/crm/const/country.py:37
-msgid "British Indian Ocean Territory"
+msgid "Território Britânico do Oceano Índico"
 msgstr ""
 
 #: koalixcrm/crm/const/country.py:38
@@ -150,7 +150,7 @@ msgid "Brunei Darussalam"
 msgstr ""
 
 #: koalixcrm/crm/const/country.py:39
-msgid "Bulgaria"
+msgid "Bulgária"
 msgstr ""
 
 #: koalixcrm/crm/const/country.py:40
@@ -162,31 +162,31 @@ msgid "Burundi"
 msgstr ""
 
 #: koalixcrm/crm/const/country.py:42
-msgid "Cambodia"
+msgid "Camboja"
 msgstr ""
 
 #: koalixcrm/crm/const/country.py:43
-msgid "Cameroon"
+msgid "Camarões"
 msgstr ""
 
 #: koalixcrm/crm/const/country.py:44
-msgid "Canada"
+msgid "Canadá"
 msgstr ""
 
 #: koalixcrm/crm/const/country.py:45
-msgid "Cape Verde"
+msgid "Cabo Verde"
 msgstr ""
 
 #: koalixcrm/crm/const/country.py:46
-msgid "Cayman Islands"
+msgid "Ilhas Cayman"
 msgstr ""
 
 #: koalixcrm/crm/const/country.py:47
-msgid "Central African Republic"
+msgid "República Central da África"
 msgstr ""
 
 #: koalixcrm/crm/const/country.py:48
-msgid "Chad"
+msgid "Chade"
 msgstr ""
 
 #: koalixcrm/crm/const/country.py:49
@@ -198,19 +198,19 @@ msgid "China"
 msgstr ""
 
 #: koalixcrm/crm/const/country.py:51
-msgid "Christmas Island"
+msgid "Ilha Christmas"
 msgstr ""
 
 #: koalixcrm/crm/const/country.py:52
-msgid "Cocos (Keeling) Islands"
+msgid "Ilhas Cocos (Keeling)"
 msgstr ""
 
 #: koalixcrm/crm/const/country.py:53
-msgid "Colombia"
+msgid "Colômbia"
 msgstr ""
 
 #: koalixcrm/crm/const/country.py:54
-msgid "Comoros"
+msgid "Comores"
 msgstr ""
 
 #: koalixcrm/crm/const/country.py:55
@@ -218,11 +218,11 @@ msgid "Congo"
 msgstr ""
 
 #: koalixcrm/crm/const/country.py:56
-msgid "Democratic Republic of the Congo"
+msgid "República Democrata do Congo"
 msgstr ""
 
 #: koalixcrm/crm/const/country.py:57
-msgid "Cook Islands"
+msgid "Ilhas Cook"
 msgstr ""
 
 #: koalixcrm/crm/const/country.py:58
