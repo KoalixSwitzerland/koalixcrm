@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from decimal import *
 from datetime import *
 from django.db import models
 from django.contrib import admin
@@ -132,6 +133,8 @@ class Project(models.Model):
             all_project_tasks = Task.objects.filter(project=self.id)
             for task in all_project_tasks:
                 effective_accumulated_costs += float(task.effective_costs(reporting_period=single_reporting_period))
+        getcontext().prec = 5
+        effective_accumulated_costs = Decimal(effective_accumulated_costs)
         self.default_currency.round(effective_accumulated_costs)
         return effective_accumulated_costs
 
@@ -161,6 +164,8 @@ class Project(models.Model):
         if all_project_tasks:
             for task in all_project_tasks:
                 planned_effort_accumulated += task.planned_costs(reporting_period)
+        getcontext().prec = 5
+        planned_effort_accumulated = Decimal(planned_effort_accumulated)
         self.default_currency.round(planned_effort_accumulated)
         return planned_effort_accumulated
     planned_costs.short_description = _("Planned Costs")
