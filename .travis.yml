@@ -31,6 +31,7 @@ deploy:
   app: koalix
   on:
     repo: willyudi/koalixcrm
+    branch: Feature_Issue220
   run:
   - "python manage.py collectstatic --settings=projectsettings.settings.heroku_settings --noinput"
   - "python manage.py migrate --settings=projectsettings.settings.heroku_settings"
