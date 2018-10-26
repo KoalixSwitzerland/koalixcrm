@@ -23,7 +23,7 @@ deploy:
   api_key:
     secure: $HEROKU_API_KEY
 
-  app: koalix-crm
+  app: koalix
   on:
     repo: willyudi/koalixcrm
   run:
