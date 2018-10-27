@@ -58,7 +58,7 @@ class Task(models.Model):
             return format_html("<a href='/admin/crm/task/%s' >%s</a>" % (str(self.id), str(self.title)))
         else:
             return "Not present"
-    link_to_task.short_description = _("Task");
+    link_to_task.short_description = _("Task")
 
     def planned_duration(self):
         if (not self.planned_start()) or (not self.planned_end()):
@@ -138,9 +138,8 @@ class Task(models.Model):
         no exceptions expected"""
         try:
             if not reporting_period:
-                reporting_period_internal = ReportingPeriod.get_reporting_period(self.project,
-                                                                                 global_support_functions.get_today_date())
-
+                reporting_period_internal = ReportingPeriod.get_latest_reporting_period(
+                    self.project)
             else:
                 reporting_period_internal = reporting_period
             estimations_to_this_task = Estimation.objects.filter(task=self.id,
@@ -148,7 +147,7 @@ class Task(models.Model):
             effort = 0
             for estimation_to_this_task in estimations_to_this_task:
                 effort += estimation_to_this_task.amount
-        except ReportingPeriodNotFound as e:
+        except ReportingPeriodNotFound:
             effort = 0
         return effort
     planned_effort.short_description = _("Planned Effort")
@@ -170,8 +169,7 @@ class Task(models.Model):
         Raises:
         No exceptions planned"""
         if not reporting_period:
-            reporting_period_internal = ReportingPeriod.get_reporting_period(self.project,
-                                                                             global_support_functions.get_today_date())
+            reporting_period_internal = ReportingPeriod.get_latest_reporting_period(self.project)
 
         else:
             reporting_period_internal = ReportingPeriod.objects.get(id=reporting_period.id)
