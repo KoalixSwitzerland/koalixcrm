@@ -43,7 +43,7 @@ class ReportingPeriod(models.Model):
           no arguments
 
         Returns:
-          accounting_period (ReportPeriod)
+          reporting_period (ReportPeriod)
 
         Raises:
           ReportPeriodNotFound when there is no valid reporting Period"""
@@ -55,25 +55,70 @@ class ReportingPeriod(models.Model):
             raise ReportingPeriodNotFound("Reporting Period does not exist")
 
     @staticmethod
-    def get_all_prior_reporting_periods(target_reporting_period, project):
-        """Returns the reporting period that is currently valid. Valid is a reporting period when the current date
-          lies between begin and end of the reporting period
+    def get_latest_reporting_period(project):
+        """Returns the latest reporting period
 
         Args:
           no arguments
 
         Returns:
-          reporting_period (List of ReportPeriod)
+          reporting_period (ReportPeriod)
 
         Raises:
           ReportPeriodNotFound when there is no valid reporting Period"""
-        reporting_periods = []
+        latest_reporting_period = None
         for reporting_period in ReportingPeriod.objects.filter(project=project):
-            if reporting_period.end < reporting_period.begin:
-                reporting_period.append(reporting_period)
-        if reporting_periods:
+            if latest_reporting_period is None:
+                latest_reporting_period = reporting_period
+            else:
+                if latest_reporting_period.end <= reporting_period.begin:
+                    latest_reporting_period = reporting_period
+        if not latest_reporting_period:
             raise ReportingPeriodNotFound("Reporting Period does not exist")
-        return reporting_periods
+        return latest_reporting_period
+
+    @staticmethod
+    def get_predecessor(target_reporting_period, project):
+        """Returns the reporting period which was valid right before the provided target_reporting_period
+
+        Args:
+          no arguments
+
+        Returns:
+          predecessor_reporting_period (ReportPeriod)
+
+        Raises:
+          ReportPeriodNotFound when there is no valid reporting Period"""
+        predecessor_reporting_period = None
+        reporting_periods = ReportingPeriod.objects.filter(project=project)
+        for reporting_period in reporting_periods:
+            if reporting_period.end <= target_reporting_period.begin and\
+                    predecessor_reporting_period is None:
+                predecessor_reporting_period = reporting_period
+            elif reporting_period.end <= target_reporting_period.begin and\
+                    reporting_period.end <= predecessor_reporting_period.begin:
+                predecessor_reporting_period = reporting_period
+        if predecessor_reporting_period is None:
+            raise ReportingPeriodNotFound("Reporting Period does not exist")
+        return predecessor_reporting_period
+
+    @staticmethod
+    def get_all_predecessors(target_reporting_period, project):
+        """Returns all reporting periods which have been valid before the provided target_reporting_period
+
+        Args:
+          no arguments
+
+        Returns:
+          predecessor_reporting_periods[] (Array of ReportPeriod)
+
+        Raises:
+          ReportPeriodNotFound when there is no valid reporting Period"""
+        predecessor_reporting_periods = list()
+        for reporting_period in ReportingPeriod.objects.filter(project=project):
+            if reporting_period.end <= target_reporting_period.begin:
+                predecessor_reporting_periods.append(reporting_period)
+        return predecessor_reporting_periods
 
     def is_reporting_allowed(self):
         """Returns True when the reporting period is available for reporting,
@@ -139,12 +184,13 @@ class ReportingPeriodAdminForm(ModelForm):
         begin = cleaned_data['begin']
         reporting_periods = ReportingPeriod.objects.filter(project=project)
         for reporting_period in reporting_periods:
-            if (begin < reporting_period.end) and (begin > reporting_period.begin):
-                raise ValidationError('The Reporting Period overlaps with an existing '
-                                      'Reporting Period within the same project')
-            if (end < reporting_period.end) and (end > reporting_period.begin):
-                raise ValidationError('The Reporting Period overlaps with an existing '
-                                      'Reporting Period within the same project')
+            if reporting_period.pk != self.instance.pk:
+                if (begin < reporting_period.end) and (begin > reporting_period.begin):
+                    raise ValidationError('The Reporting Period overlaps with an existing '
+                                          'Reporting Period within the same project')
+                if (end < reporting_period.end) and (end > reporting_period.begin):
+                    raise ValidationError('The Reporting Period overlaps with an existing '
+                                          'Reporting Period within the same project')
         if end < begin:
             raise ValidationError('Begin date must be earlier than end date')
 

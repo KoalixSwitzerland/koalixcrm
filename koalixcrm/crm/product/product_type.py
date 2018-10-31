@@ -54,19 +54,18 @@ class ProductType(models.Model):
         Raises:
             In case the algorithm does not find a valid product price, the function raises a
             NoPriceFound Exception"""
-        prices = ProductPrice.objects.filter(product_type=self.id)
+        prices = ProductPrice.objects.filter(product_type=self)
         valid_prices = list()
         for price in list(prices):
             currency_factor = price.get_currency_transform_factor(currency, self.id)
             unit_factor = price.get_unit_transform_factor(unit, self.id)
-            group_factors = price.get_customer_group_transform_factor(customer, self.id)
+            group_factor = price.get_customer_group_transform_factor(customer, self.id)
             date_in_range = price.is_date_in_range(date)
-            if currency_factor != 0 and \
-                    group_factors != 0 and \
-                    date_in_range and \
-                    unit_factor != 0:
-
-                transformed_price = price.price*group_factors*unit_factor*unit_factor
+            if date_in_range \
+                    and currency_factor != 0 \
+                    and unit_factor != 0 \
+                    and group_factor != 0:
+                transformed_price = price.price*group_factor*unit_factor*currency_factor
                 valid_prices.append(transformed_price)
         if len(valid_prices) > 0:
             lowest_price = valid_prices[0]

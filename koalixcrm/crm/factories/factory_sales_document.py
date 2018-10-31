@@ -15,7 +15,7 @@ class StandardSalesDocumentFactory(factory.django.DjangoModelFactory):
 
     contract = factory.SubFactory(StandardContractFactory)
     external_reference = "This is an external Reference"
-    discount = "10.10"
+    discount = "0"
     description = "This is the description of a sales document"
     last_pricing_date = "2018-05-01"
     last_calculated_price = "220.00"

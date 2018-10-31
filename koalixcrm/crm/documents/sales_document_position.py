@@ -20,7 +20,7 @@ class Position(models.Model):
                                    null=True)
     product_type = models.ForeignKey("ProductType",
                                      verbose_name=_("Product"),
-                                     blank=True,
+                                     blank=False,
                                      null=True)
     unit = models.ForeignKey("Unit", verbose_name=_("Unit"),
                              blank=True,

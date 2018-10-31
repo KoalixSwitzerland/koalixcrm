@@ -11,7 +11,7 @@ class StandardCurrencyFactory(factory.django.DjangoModelFactory):
 
     description = "Swiss Francs"
     short_name = "CHF"
-    rounding = 0.05
+    rounding = "0.05"
 
 
 class SecondStandardCurrencyFactory(factory.django.DjangoModelFactory):
@@ -21,4 +21,4 @@ class SecondStandardCurrencyFactory(factory.django.DjangoModelFactory):
 
     description = "Euro"
     short_name = "EUR"
-    rounding = 0.01
+    rounding = "0.01"

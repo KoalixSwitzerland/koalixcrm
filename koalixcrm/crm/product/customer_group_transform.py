@@ -20,9 +20,11 @@ class CustomerGroupTransform(models.Model):
                                      verbose_name=_("Product Type"),
                                      blank=False,
                                      null=False)
-    factor = models.IntegerField(verbose_name=_("Factor between From and To Customer Group"),
-                                 blank=True,
-                                 null=True)
+    factor = models.DecimalField(verbose_name=_("Factor between From and To Customer Group"),
+                                 blank=False,
+                                 null=False,
+                                 max_digits=17,
+                                 decimal_places=2,)
 
     def transform(self, customer_group):
         """The transform function verifies whether the provided argument customer_group

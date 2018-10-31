@@ -23,12 +23,4 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'Product Categories',
             },
         ),
-        migrations.RemoveField(
-            model_name='productcategorie',
-            name='loss_account',
-        ),
-        migrations.RemoveField(
-            model_name='productcategorie',
-            name='profit_account',
-        ),
     ]

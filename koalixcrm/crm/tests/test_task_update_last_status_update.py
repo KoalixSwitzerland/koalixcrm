@@ -12,7 +12,6 @@ from koalixcrm.djangoUserExtension.factories.factory_user_extension import Stand
 from koalixcrm.crm.factories.factory_task_status import DoneTaskStatusFactory
 from koalixcrm.crm.factories.factory_task import StandardTaskFactory
 from koalixcrm.crm.factories.factory_estimation import StandardHumanResourceEstimationToTaskFactory
-from koalixcrm.global_support_functions import get_today_date
 
 
 @pytest.fixture()
@@ -86,7 +85,7 @@ class TaskUpdateLastStatusUpdate(TestCase):
                                                                                 date_from=start_date,
                                                                                 date_until=end_date_second_task)
 
-    def test_last_status_update(self):
+    def test_task_last_status_update(self):
         previous_last_status_change = self.test_1st_task.last_status_change
         new_status = DoneTaskStatusFactory.create()
         self._freeze.freeze(datetime.date(2024, 6, 2))
@@ -94,4 +93,3 @@ class TaskUpdateLastStatusUpdate(TestCase):
         self.test_1st_task.save()
         self.assertEquals(previous_last_status_change, datetime.date(2024, 6, 15))
         self.assertEqual(self.test_1st_task.last_status_change, datetime.date(2024, 6, 2))
-

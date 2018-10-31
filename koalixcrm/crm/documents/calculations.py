@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from decimal import Decimal
+from decimal import *
 from koalixcrm.crm.documents.sales_document_position import SalesDocumentPosition
 
 
@@ -27,8 +27,6 @@ class Calculations:
         tax = 0
         positions = SalesDocumentPosition.objects.filter(sales_document=document.id)
         contact_for_price_calculation = document.customer
-        calculate_with_document_discount = True
-
         if positions.exists():
             for position in positions:
                 price += Calculations.calculate_position_price(position,
@@ -37,10 +35,15 @@ class Calculations:
                                                                document.currency)
                 tax += Calculations.calculate_position_tax(position, document.currency)
 
-            if calculate_with_document_discount:
-                if isinstance(document.discount, Decimal):
-                    price = int(price * (1 - document.discount / 100) / document.currency.rounding) * document.currency.rounding
-                    tax = int(tax * (1 - document.discount / 100) / document.currency.rounding) * document.currency.rounding
+            if document.discount is not None:
+                discount = Decimal(document.discount)
+                total_price = price * (1 - discount / 100)
+                total_tax = tax * (1 - discount / 100)
+                getcontext().prec = 5
+                total_price = Decimal(total_price)
+                total_tax = Decimal(total_tax)
+                price = document.currency.round(total_price)
+                tax = document.currency.round(total_tax)
         document.last_calculated_price = price
         document.last_calculated_tax = tax
         document.last_pricing_date = pricing_date
@@ -71,11 +74,15 @@ class Calculations:
                                                                                position.unit,
                                                                                contact,
                                                                                currency)
+        nominal_total = position.position_price_per_unit * position.quantity
         if isinstance(position.discount, Decimal):
-            position.last_calculated_price = int(position.position_price_per_unit * position.quantity * (
-                1 - position.discount / 100) / currency.rounding) * currency.rounding
+            nominal_minus_discount = nominal_total * (1 - position.discount / 100)
         else:
-            position.last_calculated_price = position.position_price_per_unit * position.quantity
+            nominal_minus_discount = nominal_total
+        total_with_tax = nominal_minus_discount * ((100-position.product_type.get_tax_rate()) / 100)
+        getcontext().prec = 5
+        total_with_tax = Decimal(total_with_tax)
+        position.last_calculated_price = currency.round(total_with_tax)
         position.last_pricing_date = pricing_date
         position.save()
         return position.last_calculated_price
@@ -95,11 +102,14 @@ class Calculations:
 
         Raises:
             Can trow Product.NoPriceFound when Product Price could not be found"""
+        nominal_total = position.position_price_per_unit * position.quantity
         if isinstance(position.discount, Decimal):
-            position.last_calculated_tax = int(position.product_type.get_tax_rate() / 100 * position.position_price_per_unit * position.quantity * (
-                1 - position.discount / 100) / currency.rounding) * currency.rounding
+            nominal_minus_discount = nominal_total * (1 - position.discount / 100)
         else:
-            position.last_calculated_tax = int(position.product_type.get_tax_rate() / 100 * position.position_price_per_unit * position.quantity /
-                                             currency.rounding) * currency.rounding
+            nominal_minus_discount = nominal_total
+        total_tax = nominal_minus_discount * position.product_type.get_tax_rate() / 100
+        getcontext().prec = 5
+        total_tax = Decimal(total_tax)
+        position.last_calculated_tax = currency.round(total_tax)
         position.save()
         return position.last_calculated_tax
