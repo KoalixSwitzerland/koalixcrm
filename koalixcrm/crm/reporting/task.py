@@ -168,22 +168,25 @@ class Task(models.Model):
 
         Raises:
         No exceptions planned"""
-        if not reporting_period:
-            reporting_period_internal = ReportingPeriod.get_latest_reporting_period(self.project)
+        try:
+            if not reporting_period:
+                reporting_period_internal = ReportingPeriod.get_latest_reporting_period(self.project)
 
-        else:
-            reporting_period_internal = ReportingPeriod.objects.get(id=reporting_period.id)
-        predecessor_reporting_periods = ReportingPeriod.get_all_predecessors(reporting_period_internal,
-                                                                             self.project)
-        estimations_to_this_task = Estimation.objects.filter(task=self.id,
-                                                             reporting_period=reporting_period_internal)
-        sum_costs = 0
-        if len(estimations_to_this_task) != 0:
-            for estimation_to_this_task in estimations_to_this_task:
-                sum_costs += estimation_to_this_task.calculated_costs()
-        if len(predecessor_reporting_periods) != 0:
-            for predecessor_reporting_period in predecessor_reporting_periods:
-                sum_costs += self.effective_costs(reporting_period=predecessor_reporting_period)
+            else:
+                reporting_period_internal = ReportingPeriod.objects.get(id=reporting_period.id)
+            predecessor_reporting_periods = ReportingPeriod.get_all_predecessors(reporting_period_internal,
+                                                                                 self.project)
+            estimations_to_this_task = Estimation.objects.filter(task=self.id,
+                                                                 reporting_period=reporting_period_internal)
+            sum_costs = 0
+            if len(estimations_to_this_task) != 0:
+                for estimation_to_this_task in estimations_to_this_task:
+                    sum_costs += estimation_to_this_task.calculated_costs()
+            if len(predecessor_reporting_periods) != 0:
+                for predecessor_reporting_period in predecessor_reporting_periods:
+                    sum_costs += self.effective_costs(reporting_period=predecessor_reporting_period)
+        except ReportingPeriodNotFound:
+            sum_costs = 0
         return sum_costs
     planned_costs.short_description = _("Planned Costs")
     planned_costs.tags = True
@@ -271,7 +274,7 @@ class Task(models.Model):
     def effective_duration(self):
         """The function return the effective overall duration of a task as a string in days
         The function is reading the effective_starts and effective_ends of the task and
-        substract them from each other.
+        subtract them from each other.
 
         Args:
         no arguments

@@ -20,10 +20,6 @@ from koalixcrm.test_support_functions import make_date_utc
 
 class TaskPlannedEffort(TestCase):
     def setUp(self):
-        datetime_now = make_date_utc(datetime.datetime(2024, 1, 1, 0, 00))
-        start_date = (datetime_now - datetime.timedelta(days=30)).date()
-        end_date_first_task = (datetime_now + datetime.timedelta(days=30)).date()
-        end_date_second_task = (datetime_now + datetime.timedelta(days=60)).date()
 
         self.test_billing_cycle = StandardCustomerBillingCycleFactory.create()
         self.test_user = AdminUserFactory.create()
@@ -33,10 +29,35 @@ class TaskPlannedEffort(TestCase):
         self.test_currency = StandardCurrencyFactory.create()
         self.test_user_extension = StandardUserExtensionFactory.create(user=self.test_user)
         self.test_project = StandardProjectFactory.create()
+        self.test_human_resource = StandardHumanResourceFactory.create()
+
+    @pytest.mark.back_end_tests
+    def test_project_planned_costs(self):
+        datetime_now = make_date_utc(datetime.datetime(2024, 1, 1, 0, 00))
+        start_date = (datetime_now - datetime.timedelta(days=30)).date()
+        end_date_first_task = (datetime_now + datetime.timedelta(days=30)).date()
+        end_date_second_task = (datetime_now + datetime.timedelta(days=60)).date()
+        self.assertEqual(
+            (self.test_project.planned_costs()).__str__(), "0")
         self.test_reporting_period = StandardReportingPeriodFactory.create(
             project=self.test_project
         )
-        self.test_human_resource = StandardHumanResourceFactory.create()
+        self.assertEqual(
+            (self.test_project.planned_costs()).__str__(), "0")
+        self.test_1st_task = StandardTaskFactory.create(title="1st Test Task",
+                                                        project=self.test_project)
+        self.test_2nd_task = StandardTaskFactory.create(title="2nd Test Task",
+                                                        project=self.test_project)
+        self.assertEqual(
+            (self.test_project.planned_costs()).__str__(), "0")
+        self.estimation_1st_task = StandardHumanResourceEstimationToTaskFactory(task=self.test_1st_task,
+                                                                                date_from=start_date,
+                                                                                date_until=end_date_first_task,
+                                                                                amount=0)
+        self.estimation_2nd_task = StandardHumanResourceEstimationToTaskFactory(task=self.test_2nd_task,
+                                                                                date_from=start_date,
+                                                                                date_until=end_date_second_task,
+                                                                                amount=0)
         self.resource_price = StandardResourcePriceFactory.create(
             resource=self.test_human_resource,
             unit=self.test_unit,
@@ -44,23 +65,8 @@ class TaskPlannedEffort(TestCase):
             customer_group=self.test_customer_group,
             price="120",
         )
-        self.test_1st_task = StandardTaskFactory.create(title="1st Test Task",
-                                                        project=self.test_project)
-        self.estimation_1st_task = StandardHumanResourceEstimationToTaskFactory(task=self.test_1st_task,
-                                                                                date_from=start_date,
-                                                                                date_until=end_date_first_task,
-                                                                                amount=0)
-        self.test_2nd_task = StandardTaskFactory.create(title="2nd Test Task",
-                                                        project=self.test_project)
-        self.estimation_2nd_task = StandardHumanResourceEstimationToTaskFactory(task=self.test_2nd_task,
-                                                                                date_from=start_date,
-                                                                                date_until=end_date_second_task,
-                                                                                amount=0)
-
-    @pytest.mark.back_end_tests
-    def test_project_planned_costs(self):
         self.assertEqual(
-            (self.test_2nd_task.planned_costs()).__str__(), "0")
+            (self.test_project.planned_costs()).__str__(), "0")
         StandardEstimationToTaskFactory.create(resource=self.test_human_resource,
                                                amount="2.00",
                                                task=self.test_1st_task,

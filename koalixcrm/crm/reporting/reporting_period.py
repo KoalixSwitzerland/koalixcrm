@@ -67,7 +67,8 @@ class ReportingPeriod(models.Model):
         Raises:
           ReportPeriodNotFound when there is no valid reporting Period"""
         latest_reporting_period = None
-        for reporting_period in ReportingPeriod.objects.filter(project=project):
+        reporting_periods = ReportingPeriod.objects.filter(project=project)
+        for reporting_period in reporting_periods:
             if latest_reporting_period is None:
                 latest_reporting_period = reporting_period
             else:
@@ -115,7 +116,8 @@ class ReportingPeriod(models.Model):
         Raises:
           ReportPeriodNotFound when there is no valid reporting Period"""
         predecessor_reporting_periods = list()
-        for reporting_period in ReportingPeriod.objects.filter(project=project):
+        reporting_periods = ReportingPeriod.objects.filter(project=project)
+        for reporting_period in reporting_periods:
             if reporting_period.end <= target_reporting_period.begin:
                 predecessor_reporting_periods.append(reporting_period)
         return predecessor_reporting_periods
