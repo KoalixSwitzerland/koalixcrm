@@ -2206,236 +2206,236 @@ msgid "Status do Projeto"
 msgstr ""
 
 #: koalixcrm/crm/reporting/project.py:67
-msgid "Template Set missing in Project"
+msgid "Conjunto de modelos ausente no projeto"
 msgstr ""
 
 #: koalixcrm/crm/reporting/project.py:137
-msgid "Effective Accumulated costs [hrs]"
+msgid "Custos Acumulados Efetivo [hrs]"
 msgstr ""
 
 #: koalixcrm/crm/reporting/project.py:163 koalixcrm/crm/reporting/task.py:192
-msgid "Planned Costs"
+msgid "Custos Planejados"
 msgstr ""
 
 #: koalixcrm/crm/reporting/project.py:195 koalixcrm/crm/reporting/task.py:220
-msgid "Effective Start"
+msgid "Início Efetivo"
 msgstr ""
 
 #: koalixcrm/crm/reporting/project.py:233 koalixcrm/crm/reporting/task.py:272
-msgid "Effective End"
+msgid "Fim Efetivo"
 msgstr ""
 
 #: koalixcrm/crm/reporting/project.py:259 koalixcrm/crm/reporting/task.py:298
-msgid "Effective Duration [dys]"
+msgid "Duração Efetiva [dys]"
 msgstr ""
 
 #: koalixcrm/crm/reporting/project.py:338 koalixcrm/crm/reporting/task.py:71
-msgid "Planned Duration [dys]"
+msgid "Duração Planejada [dys]"
 msgstr ""
 
 #: koalixcrm/crm/reporting/project.py:386
-msgid "Projects"
+msgid "Projetos"
 msgstr ""
 
 #: koalixcrm/crm/reporting/project.py:438
 #: koalixcrm/crm/reporting/reporting_period.py:219
-msgid "Create Report PDF"
+msgid "Criar Relatório PDF"
 msgstr ""
 
 #: koalixcrm/crm/reporting/project_link_type.py:27
-msgid "ProjectLinkType"
+msgid "TipoLinkProjeto"
 msgstr ""
 
 #: koalixcrm/crm/reporting/project_status.py:17
-msgid "Status represents project is done"
+msgid "Status que representa o projeto está pronto"
 msgstr ""
 
 #: koalixcrm/crm/reporting/reporting_period.py:26
-msgid "Begin"
+msgid "Início"
 msgstr ""
 
 #: koalixcrm/crm/reporting/reporting_period.py:29
-msgid "End"
+msgid "Fim"
 msgstr ""
 
 #: koalixcrm/crm/reporting/reporting_period.py:33
 #: koalixcrm/crm/reporting/reporting_period_status.py:21
 #: koalixcrm/crm/reporting/reporting_period_status.py:22
-msgid "Reporting Period Status"
+msgid "Relatório de Status do Período"
 msgstr ""
 
 #: koalixcrm/crm/reporting/reporting_period.py:151
 #: koalixcrm/crm/reporting/work.py:42
-msgid "Reporting Period"
+msgid "Relatório do Período"
 msgstr ""
 
 #: koalixcrm/crm/reporting/reporting_period.py:152
-msgid "Reporting Periods"
+msgid "Relatório dos Períodos"
 msgstr ""
 
 #: koalixcrm/crm/reporting/reporting_period.py:189
 #: koalixcrm/crm/reporting/reporting_period.py:225
-msgid "ReportingPeriod"
+msgid "RelatórioPeríodo"
 msgstr ""
 
 #: koalixcrm/crm/reporting/reporting_period_status.py:17
-msgid "Status represents reporting period is closed"
+msgid "Status que representa o período de relatório fechado"
 msgstr ""
 
 #: koalixcrm/crm/reporting/reporting_period_status.py:38
 #: koalixcrm/crm/reporting/task_status.py:16
 #: koalixcrm/crm/reporting/task_status.py:17
 #: koalixcrm/crm/reporting/task_status.py:30
-msgid "Task Status"
+msgid "Status Tarefa"
 msgstr ""
 
 #: koalixcrm/crm/reporting/resource.py:9
-msgid "Manager"
+msgid "Gerente"
 msgstr ""
 
 #: koalixcrm/crm/reporting/resource.py:13
-msgid "Resource Type"
+msgid "Tipo de Recurso"
 msgstr ""
 
 #: koalixcrm/crm/reporting/resource_price.py:12
-msgid "Resource"
+msgid "Recurso"
 msgstr ""
 
 #: koalixcrm/crm/reporting/resource_type.py:22
 #: koalixcrm/crm/reporting/resource_type.py:23
-msgid "Resource Link Type"
+msgid "Tipo Link Recurso"
 msgstr ""
 
 #: koalixcrm/crm/reporting/resource_type.py:32
-msgid "ResourceType"
+msgid "RecursoTipo"
 msgstr ""
 
 #: koalixcrm/crm/reporting/task.py:39
-msgid "Last Status Change"
+msgid "Último Status da Mudança"
 msgstr ""
 
 #: koalixcrm/crm/reporting/task.py:97
-msgid "Planned Start"
+msgid "Início Planejado"
 msgstr ""
 
 #: koalixcrm/crm/reporting/task.py:123
-msgid "Planned End"
+msgid "Fim Planejado"
 msgstr ""
 
 #: koalixcrm/crm/reporting/task.py:154
-msgid "Planned Effort"
+msgid "Esforço Planejado"
 msgstr ""
 
 #: koalixcrm/crm/reporting/task.py:337
-msgid "Effective Effort [hrs]"
+msgid "Esforço Efetivo [hrs]"
 msgstr ""
 
 #: koalixcrm/crm/reporting/task.py:419
-msgid "Effective costs"
+msgid "Custos Efetivos"
 msgstr ""
 
 #: koalixcrm/crm/reporting/task.py:445
-msgid "Reporting"
+msgid "Relatório"
 msgstr ""
 
 #: koalixcrm/crm/reporting/task.py:460
-msgid "Tasks"
+msgid "Tarefas"
 msgstr ""
 
 #: koalixcrm/crm/reporting/task_link_type.py:27
-msgid "TaskLinkType"
+msgid "TarefaLinkTipo"
 msgstr ""
 
 #: koalixcrm/crm/reporting/task_status.py:12
-msgid "Status represents task done"
+msgid "Status que representa tarefa pronta"
 msgstr ""
 
 #: koalixcrm/crm/reporting/work.py:16
-msgid "Date"
+msgid "Data"
 msgstr ""
 
 #: koalixcrm/crm/reporting/work.py:19
-msgid "Start Time"
+msgid "Hora Início"
 msgstr ""
 
 #: koalixcrm/crm/reporting/work.py:22
-msgid "Stop Time"
+msgid "Hora Parada"
 msgstr ""
 
 #: koalixcrm/crm/reporting/work.py:25
-msgid "Worked Hours"
+msgid "Horas Trabalhadas"
 msgstr ""
 
 #: koalixcrm/crm/reporting/work.py:30
-msgid "Short Description"
+msgid "Descrição Abreviada"
 msgstr ""
 
 #: koalixcrm/crm/reporting/work.py:59
-msgid "Please add description"
+msgid "Por favor, adicione uma descrição"
 msgstr ""
 
 #: koalixcrm/crm/reporting/work.py:60
-msgid "Short description"
+msgid "Curta Descrição"
 msgstr ""
 
 #: koalixcrm/crm/reporting/work.py:94
-msgid "from Person"
+msgid "Da Pessoa"
 msgstr ""
 
 #: koalixcrm/crm/reporting/work.py:162
 msgid ""
-"Delete is not allowed because the work is used in a reporting period which "
-"is marked 'as done'"
+"Excluir não é permitido porque o trabalho é usado em um período de relatório que "
+"é marcado 'como pronto'"
 msgstr ""
 
 #: koalixcrm/crm/reporting/work.py:169
-msgid "Delete Selected Work"
+msgid "Excluir Trabalho Selecionado"
 msgstr ""
 
 #: koalixcrm/crm/views/create_task.py:97
-msgid "Successfully created Project and Tasks for this contract"
+msgid "Projeto e Tarefas criados com sucesso para este contrato"
 msgstr ""
 
 #: koalixcrm/crm/views/newdocument.py:31
-msgid " created"
+msgid " criado"
 msgstr ""
 
 #: koalixcrm/crm/views/newdocument.py:44
-msgid "Missing Templateset "
+msgid "Modelos em falta "
 msgstr ""
 
 #: koalixcrm/crm/views/newdocument.py:50
-msgid "Missing template for "
+msgid "Modelos em falta para "
 msgstr ""
 
 #: koalixcrm/crm/views/pdfexport.py:48
-msgid "User Extension Missing"
+msgid "Extensão de Usuário Ausente"
 msgstr ""
 
 #: koalixcrm/crm/views/pdfexport.py:52
-msgid "User Extension Email Missing"
+msgid "E-mail de Extensão de Usuário Ausente"
 msgstr ""
 
 #: koalixcrm/crm/views/pdfexport.py:56
-msgid "User Extension Phone Missing"
+msgid "Telefone de Extensão de Usuário Ausente"
 msgstr ""
 
 #: koalixcrm/crm/views/pdfexport.py:60 koalixcrm/crm/views/pdfexport.py:64
-msgid "Template-set Missing"
+msgid "Conjunto de Modelos em falta"
 msgstr ""
 
 #: koalixcrm/crm/views/pdfexport.py:68
-msgid "Fop Config File Missing in TemplateSet"
+msgid "Arquivo de configuração do Fop ausente no Modelo"
 msgstr ""
 
 #: koalixcrm/crm/views/pdfexport.py:72
-msgid "XSLT File Missing in TemplateSet"
+msgid "Arquivo XSLT ausente no Modelo"
 msgstr ""
 
 #: koalixcrm/crm/views/pdfexport.py:76
-msgid "Work report template missing in the user extension"
+msgid "Modelo de relatório de trabalho ausente na extensão do usuário"
 msgstr ""
 
 #: koalixcrm/crm/views/time_tracking.py:42
-msgid "you have successfully updated your work"
+msgid "você atualizou com sucesso seu trabalho"
 msgstr ""
