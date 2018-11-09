@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
+import os
 from decimal import *
 from datetime import *
+from django.conf import settings
 from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext as _
@@ -101,16 +103,24 @@ class Project(models.Model):
             main_xml = PDFExport.merge_xml(main_xml, task_xml)
         main_xml = PDFExport.append_element_to_pattern(main_xml,
                                                        "object/[@model='crm.project']",
-                                                       "Effective_Effort_Overall",
+                                                       "Effective_Costs_Overall",
                                                        self.effective_costs(reporting_period=None))
+        main_xml = PDFExport.append_element_to_pattern(main_xml,
+                                                       "object/[@model='crm.project']",
+                                                       "Effective_Effort_Overall",
+                                                       self.effective_effort(reporting_period=None))
         if reporting_period:
             main_xml = PDFExport.append_element_to_pattern(main_xml,
                                                            "object/[@model='crm.project']",
-                                                           "Effective_Effort_InPeriod",
+                                                           "Effective_Costs_InPeriod",
                                                            self.effective_costs(reporting_period=reporting_period))
+            main_xml = PDFExport.append_element_to_pattern(main_xml,
+                                                           "object/[@model='crm.project']",
+                                                           "Effective_Effort_InPeriod",
+                                                           self.effective_effort(reporting_period=reporting_period))
         main_xml = PDFExport.append_element_to_pattern(main_xml,
                                                        "object/[@model='crm.project']",
-                                                       "Planned_Effort",
+                                                       "Planned_Costs",
                                                        self.planned_costs())
         main_xml = PDFExport.append_element_to_pattern(main_xml,
                                                        "object/[@model='crm.project']",
@@ -120,33 +130,84 @@ class Project(models.Model):
                                                        "object/[@model='crm.project']",
                                                        "Planned_Duration",
                                                        self.planned_duration())
+        main_xml = PDFExport.append_element_to_pattern(main_xml,
+                                                       "object/[@model='crm.project']",
+                                                       "project_cost_overview",
+                                                       self.create_project_cost_overview_illustration())
         return main_xml
 
-    def effective_accumulated_costs(self, reporting_period=None):
-        if reporting_period:
-            reporting_periods = ReportingPeriod.get_all_predecessors(target_reporting_period=reporting_period,
-                                                                     project=self)
-        else:
-            reporting_periods = ReportingPeriod.objects.filter(project=self.id)
-        effective_accumulated_costs = 0
-        for single_reporting_period in reporting_periods:
-            all_project_tasks = Task.objects.filter(project=self.id)
-            for task in all_project_tasks:
-                effective_accumulated_costs += float(task.effective_costs(reporting_period=single_reporting_period))
-        getcontext().prec = 5
-        effective_accumulated_costs = Decimal(effective_accumulated_costs)
-        self.default_currency.round(effective_accumulated_costs)
-        return effective_accumulated_costs
+    def create_project_cost_overview_illustration(self, reporting_period=None):
+        """The function return a link to a svg illustration containing the cost overview of the project
 
-    effective_accumulated_costs.short_description = _("Effective Accumulated costs")
-    effective_accumulated_costs.tags = True
+        Args:
+        reporting_period (ReportingPeriod)
 
-    def effective_costs(self, reporting_period):
+        Returns:
+        planned costs (String)
+
+        Raises:
+        No exceptions planned"""
+        from matplotlib import pyplot
+        import pandas
+        path_to_illustration = os.path.join(settings.PDF_OUTPUT_ROOT + "project_costs_overview.svg")
+        data_frame = pandas.DataFrame()
+        for reporting_period in ReportingPeriod.objects.filter(project=self.id):
+            effective_costs = self.effective_costs(reporting_period=reporting_period)
+            planned_costs = self.planned_costs(reporting_period=reporting_period)
+            data_frame.append(pandas.DataFrame({'x': {reporting_period.title, },
+                                                'Budget': {planned_costs, },
+                                                'Estimation': {effective_costs, },
+                                                'Invoiced': {None, }}))
+        pyplot.style.use('seaborn-darkgrid')
+        pyplot.plot(data_frame['x'], data_frame.get("Agreed Budget"),
+                    marker=' ',
+                    color="red",
+                    linewidth=1,
+                    alpha=0.9,
+                    label="Agreed Budget")
+
+        pyplot.plot(data_frame['x'], data_frame.get("Estimation"),
+                    marker='o',
+                    color="red",
+                    linewidth=2,
+                    alpha=0.5,
+                    label="Estimation (accumulated)")
+
+        pyplot.plot(data_frame['x'], data_frame.get("Effective"),
+                    marker='o',
+                    color="orange",
+                    linewidth=2,
+                    alpha=0.5,
+                    label="Effective (accumulated)")
+        pyplot.fill_between(data_frame['x'],
+                            0, data_frame.get("Effective"),
+                            color="orange",
+                            alpha=.3)
+
+        pyplot.legend(loc=2, ncol=1)
+        pyplot.title("Project Costs Overview", loc='left', fontsize=12, fontweight=0, color='orange')
+        pyplot.xlabel("Date")
+        pyplot.ylabel("Costs")
+        pyplot.savefig(path_to_illustration)
+
+        return path_to_illustration
+
+    def effective_costs(self, reporting_period=None):
         effective_cost = 0
         for task in Task.objects.filter(project=self.id):
             effective_cost += task.effective_costs(reporting_period=reporting_period)
         self.default_currency.round(effective_cost)
         return effective_cost
+    effective_costs.short_description = _("Effective Accumulated costs")
+    effective_costs.tags = True
+
+    def effective_effort(self, reporting_period=None):
+        effective_effort = 0
+        for task in Task.objects.filter(project=self.id):
+            effective_effort += task.effective_effort(reporting_period=reporting_period)
+        return effective_effort
+    effective_costs.short_description = _("Effective Accumulated effort")
+    effective_costs.tags = True
 
     def planned_costs(self, reporting_period=None):
         """The function return the planned overall costs
@@ -403,7 +464,8 @@ class ProjectAdminView(admin.ModelAdmin):
                     'planned_duration',
                     'planned_costs',
                     'effective_duration',
-                    'effective_accumulated_costs'
+                    'effective_costs',
+                    'effective_effort'
                     )
 
     list_display_links = ('id',)
