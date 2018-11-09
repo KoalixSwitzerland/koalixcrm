@@ -28,11 +28,9 @@ deploy:
   api_key:
     secure: $HEROKU_API_KEY
 
-  app: koalix
+  app: koalix-crm
   on:
-    branch: Feature_Issue220
-    repo: willyudi/koalixcrm
+    repo: scaphilo/koalixcrm
   run:
-  - "heroku config:set DISABLE_COLLECTSTATIC=1"
   - "python manage.py collectstatic --settings=projectsettings.settings.heroku_settings --noinput"
   - "python manage.py migrate --settings=projectsettings.settings.heroku_settings"
