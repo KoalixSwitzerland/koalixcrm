@@ -20,107 +20,107 @@ msgid ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 #: koalixcrm/subscriptions/admin.py:29 koalixcrm/subscriptions/admin.py:48
 #: koalixcrm/subscriptions/admin.py:88
-msgid ""
+msgid "Basics"
 msgstr "Básicos"
 
 
 #: koalixcrm/subscriptions/admin.py:62
-msgid ""
+msgid "Create Invoice"
 msgstr "Criar Fatura"
 
 
 #: koalixcrm/subscriptions/admin.py:108
-msgid ""
+msgid "Create Subscription"
 msgstr "Criar Assinatura"
 
 
 #: koalixcrm/subscriptions/const/events.py:6
-msgid ""
+msgid "Offered"
 msgstr "Ofertado"
 
 
 #: koalixcrm/subscriptions/const/events.py:7
-msgid ""
+msgid "Canceled"
 msgstr "Cancelado"
 
 
 #: koalixcrm/subscriptions/const/events.py:8
-msgid ""
+msgid "Signed"
 msgstr "Assinado"
 
 
 #: koalixcrm/subscriptions/models.py:13 koalixcrm/subscriptions/models.py:14
 #: koalixcrm/subscriptions/models.py:100
-msgid ""
+msgid "Subscription Type"
 msgstr "Tipo de Assinatura"
 
 
 #: koalixcrm/subscriptions/models.py:50 koalixcrm/subscriptions/models.py:56
-msgid ""
+msgid "Subscription"
 msgstr "Assinatura"
 
 
 #: koalixcrm/subscriptions/models.py:51
-msgid ""
+msgid "Subscriptions"
 msgstr "Assinaturas"
 
 
 #: koalixcrm/subscriptions/models.py:57
-msgid ""
+msgid "Event Date"
 msgstr "Data do Evento"
 
 
 #: koalixcrm/subscriptions/models.py:60
-msgid ""
+msgid "Event"
 msgstr "Evento"
 
 
 #: koalixcrm/subscriptions/models.py:67
-msgid ""
+msgid "Subscription Event"
 msgstr "Assinatura do Evento"
 
 
 #: koalixcrm/subscriptions/models.py:68
-msgid ""
+msgid "Subscription Events"
 msgstr "Assinatura dos Eventos"
 
 
 #: koalixcrm/subscriptions/models.py:73
-msgid ""
+msgid "Product Type"
 msgstr "Tipo de Produto"
 
 
 #: koalixcrm/subscriptions/models.py:77
-msgid ""
+msgid "Cancellation Period (months)"
 msgstr "Período de Cancelamento (meses)"
 
 
 #: koalixcrm/subscriptions/models.py:80
-msgid ""
+msgid "Automatic Contract Extension (months)"
 msgstr "Extensão Automática do Contrato (meses)"
 
 
 #: koalixcrm/subscriptions/models.py:84
-msgid ""
+msgid "Automatic Contract Extension Reminder (days)"
 msgstr "Lembrete Extensão Automática de Contrato (dias)"
 
 
 #: koalixcrm/subscriptions/models.py:87
-msgid ""
+msgid "Minimum Contract Duration"
 msgstr "Duração Mínima do Contrato"
 
 
 #: koalixcrm/subscriptions/models.py:90
-msgid ""
+msgid "Payment Interval (days)"
 msgstr "Intervalo de Pagamento (dias)"
 
 
 #: koalixcrm/subscriptions/models.py:93
-msgid ""
+msgid "Contract Documents"
 msgstr "Documentos do Contrato"
 
 
 #: koalixcrm/subscriptions/models.py:101
-msgid ""
+msgid "Subscription Types"
 msgstr "Tipos de Assinatura"
 
