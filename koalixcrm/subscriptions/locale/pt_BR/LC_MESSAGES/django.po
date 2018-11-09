@@ -5,7 +5,8 @@
 #
 #, fuzzy
 msgid ""
-msgstr ""
+
+
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-19 20:32+0000\n"
@@ -19,86 +20,107 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 #: koalixcrm/subscriptions/admin.py:29 koalixcrm/subscriptions/admin.py:48
 #: koalixcrm/subscriptions/admin.py:88
-msgid "Básicos"
-msgstr ""
+msgid ""
+msgstr "Básicos"
+
 
 #: koalixcrm/subscriptions/admin.py:62
-msgid "Criar Fatura"
-msgstr ""
+msgid ""
+msgstr "Criar Fatura"
+
 
 #: koalixcrm/subscriptions/admin.py:108
-msgid "Criar Assinatura"
-msgstr ""
+msgid ""
+msgstr "Criar Assinatura"
+
 
 #: koalixcrm/subscriptions/const/events.py:6
-msgid "Ofertado"
-msgstr ""
+msgid ""
+msgstr "Ofertado"
+
 
 #: koalixcrm/subscriptions/const/events.py:7
-msgid "Cancelado"
-msgstr ""
+msgid ""
+msgstr "Cancelado"
+
 
 #: koalixcrm/subscriptions/const/events.py:8
-msgid "Assinado"
-msgstr ""
+msgid ""
+msgstr "Assinado"
+
 
 #: koalixcrm/subscriptions/models.py:13 koalixcrm/subscriptions/models.py:14
 #: koalixcrm/subscriptions/models.py:100
-msgid "Tipo de Assinatura"
-msgstr ""
+msgid ""
+msgstr "Tipo de Assinatura"
+
 
 #: koalixcrm/subscriptions/models.py:50 koalixcrm/subscriptions/models.py:56
-msgid "Assinatura"
-msgstr ""
+msgid ""
+msgstr "Assinatura"
+
 
 #: koalixcrm/subscriptions/models.py:51
-msgid "Assinaturas"
-msgstr ""
+msgid ""
+msgstr "Assinaturas"
+
 
 #: koalixcrm/subscriptions/models.py:57
-msgid "Data do Evento"
-msgstr ""
+msgid ""
+msgstr "Data do Evento"
+
 
 #: koalixcrm/subscriptions/models.py:60
-msgid "Evento"
-msgstr ""
+msgid ""
+msgstr "Evento"
+
 
 #: koalixcrm/subscriptions/models.py:67
-msgid "Assinatura do Evento"
-msgstr ""
+msgid ""
+msgstr "Assinatura do Evento"
+
 
 #: koalixcrm/subscriptions/models.py:68
-msgid "Assinatura dos Eventos"
-msgstr ""
+msgid ""
+msgstr "Assinatura dos Eventos"
+
 
 #: koalixcrm/subscriptions/models.py:73
-msgid "Tipo de Produto"
-msgstr ""
+msgid ""
+msgstr "Tipo de Produto"
+
 
 #: koalixcrm/subscriptions/models.py:77
-msgid "Período de Cancelamento (meses)"
-msgstr ""
+msgid ""
+msgstr "Período de Cancelamento (meses)"
+
 
 #: koalixcrm/subscriptions/models.py:80
-msgid "Extensão Automática do Contrato (meses)"
-msgstr ""
+msgid ""
+msgstr "Extensão Automática do Contrato (meses)"
+
 
 #: koalixcrm/subscriptions/models.py:84
-msgid "Lembrete Extensão Automática de Contrato (dias)"
-msgstr ""
+msgid ""
+msgstr "Lembrete Extensão Automática de Contrato (dias)"
+
 
 #: koalixcrm/subscriptions/models.py:87
-msgid "Duração Mínima do Contrato"
-msgstr ""
+msgid ""
+msgstr "Duração Mínima do Contrato"
+
 
 #: koalixcrm/subscriptions/models.py:90
-msgid "Intervalo de Pagamento (dias)"
-msgstr ""
+msgid ""
+msgstr "Intervalo de Pagamento (dias)"
+
 
 #: koalixcrm/subscriptions/models.py:93
-msgid "Documentos do Contrato"
-msgstr ""
+msgid ""
+msgstr "Documentos do Contrato"
+
 
 #: koalixcrm/subscriptions/models.py:101
-msgid "Tipos de Assinatura"
-msgstr ""
+msgid ""
+msgstr "Tipos de Assinatura"
+

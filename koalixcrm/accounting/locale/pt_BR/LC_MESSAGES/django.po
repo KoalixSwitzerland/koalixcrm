@@ -5,7 +5,8 @@
 #
 #, fuzzy
 msgid ""
-msgstr ""
+
+
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-19 20:32-0000\n"
@@ -18,225 +19,280 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 #: koalixcrm/accounting/accounting/account.py:13
-msgid "Número da Conta"
-msgstr ""
+msgid ""
+msgstr "Número da Conta"
+
 
 #: koalixcrm/accounting/accounting/account.py:14
-msgid "Título da Conta"
-msgstr ""
+msgid ""
+msgstr "Título da Conta"
+
 
 #: koalixcrm/accounting/accounting/account.py:16
-msgid "Tipo de Conta"
-msgstr ""
+msgid ""
+msgstr "Tipo de Conta"
+
 
 #: koalixcrm/accounting/accounting/account.py:19
 #: koalixcrm/accounting/accounting/booking.py:11
-msgid "Descrição"
-msgstr ""
+msgid ""
+msgstr "Descrição"
+
 
 #: koalixcrm/accounting/accounting/account.py:20
-msgid "É Uma Conta de Despesas"
-msgstr ""
+msgid ""
+msgstr "É Uma Conta de Despesas"
+
 
 #: koalixcrm/accounting/accounting/account.py:21
-msgid "É Uma Conta Remunerada"
-msgstr ""
+msgid ""
+msgstr "É Uma Conta Remunerada"
+
 
 #: koalixcrm/accounting/accounting/account.py:22
-msgid "É Uma Conta de Inventário"
-msgstr ""
+msgid ""
+msgstr "É Uma Conta de Inventário"
+
 
 #: koalixcrm/accounting/accounting/account.py:23
-msgid "É Uma Conta de Pagamento"
-msgstr ""
+msgid ""
+msgstr "É Uma Conta de Pagamento"
+
 
 #: koalixcrm/accounting/accounting/account.py:31
-msgid "Valor"
-msgstr ""
+msgid ""
+msgstr "Valor"
+
 
 #: koalixcrm/accounting/accounting/account.py:114
 #: koalixcrm/accounting/accounting/account.py:115
-msgid "Conta"
-msgstr ""
+msgid ""
+msgstr "Conta"
+
 
 #: koalixcrm/accounting/accounting/account.py:133
-msgid "A conta de despesas deve ser uma conta de passivo"
-msgstr ""
+msgid ""
+msgstr "A conta de despesas deve ser uma conta de passivo"
+
 
 #: koalixcrm/accounting/accounting/account.py:135
-msgid "Só pode haver uma conta de despesas no sistema"
-msgstr ""
+msgid ""
+msgstr "Só pode haver uma conta de despesas no sistema"
+
 
 #: koalixcrm/accounting/accounting/account.py:139
-msgid "A conta remunerada deve ser uma conta de ativo"
-msgstr ""
+msgid ""
+msgstr "A conta remunerada deve ser uma conta de ativo"
+
 
 #: koalixcrm/accounting/accounting/account.py:141
-msgid "Só pode haver uma conta remunerada no sistema"
-msgstr ""
+msgid ""
+msgstr "Só pode haver uma conta remunerada no sistema"
+
 
 #: koalixcrm/accounting/accounting/account.py:144
-msgid "A conta de pagamento deve ser uma conta de ativo"
-msgstr ""
+msgid ""
+msgstr "A conta de pagamento deve ser uma conta de ativo"
+
 
 #: koalixcrm/accounting/accounting/account.py:147
-msgid "A conta de inventário deve ser uma conta de ativo"
-msgstr ""
+msgid ""
+msgstr "A conta de inventário deve ser uma conta de ativo"
+
 
 #: koalixcrm/accounting/accounting/account.py:162
 #: koalixcrm/accounting/accounting/booking.py:42
-msgid "Básico"
-msgstr ""
+msgid ""
+msgstr "Básico"
+
 
 #: koalixcrm/accounting/accounting/accounting_period.py:19
-msgid "Título"
-msgstr ""
+msgid ""
+msgstr "Título"
+
 
 #: koalixcrm/accounting/accounting/accounting_period.py:20
-msgid "Início"
-msgstr ""
+msgid ""
+msgstr "Início"
+
 
 #: koalixcrm/accounting/accounting/accounting_period.py:21
-msgid "Fim"
-msgstr ""
+msgid ""
+msgstr "Fim"
+
 
 #: koalixcrm/accounting/accounting/accounting_period.py:23
-msgid "Modelo de referência para o balancete"
-msgstr ""
+msgid ""
+msgstr "Modelo de referência para o balancete"
+
 
 #: koalixcrm/accounting/accounting/accounting_period.py:28
-msgid "Modelo de referência para declaração de lucro ou perda"
-msgstr ""
+msgid ""
+msgstr "Modelo de referência para declaração de lucro ou perda"
+
 
 #: koalixcrm/accounting/accounting/accounting_period.py:38
-msgid "Conjunto de modelos para balancete está perdido no período contábil"
-msgstr ""
+msgid ""
+msgstr "Conjunto de modelos para balancete está perdido no período contábil"
+
 
 #: koalixcrm/accounting/accounting/accounting_period.py:44
-msgid "Conjunto de modelos para declaração de lucro ou perda está perdido no período contábil"
-msgstr ""
+msgid ""
+msgstr "Conjunto de modelos para declaração de lucro ou perda está perdido no período contábil"
+
 
 #: koalixcrm/accounting/accounting/accounting_period.py:163
-msgid "Período Contábil"
-msgstr ""
+msgid ""
+msgstr "Período Contábil"
+
 
 #: koalixcrm/accounting/accounting/accounting_period.py:164
-msgid "Períodos Contábeis"
-msgstr ""
+msgid ""
+msgstr "Períodos Contábeis"
+
 
 #: koalixcrm/accounting/accounting/accounting_period.py:180
-msgid "A data inicial não pode ser maior que a data final."
-msgstr ""
+msgid ""
+msgstr "A data inicial não pode ser maior que a data final."
+
 
 #: koalixcrm/accounting/accounting/accounting_period.py:182
-msgid "A data inicial e a final não podem ser vazias"
-msgstr ""
+msgid ""
+msgstr "A data inicial e a final não podem ser vazias"
+
 
 #: koalixcrm/accounting/accounting/accounting_period.py:200
 #: koalixcrm/accounting/accounting/product_category.py:37
-msgid "Básicos"
-msgstr ""
+msgid ""
+msgstr "Básicos"
+
 
 #: koalixcrm/accounting/accounting/accounting_period.py:233
-msgid "Criar PDF do Balancete"
-msgstr ""
+msgid ""
+msgstr "Criar PDF do Balancete"
+
 
 #: koalixcrm/accounting/accounting/accounting_period.py:245
-msgid "Criar PDF da Declaração de Lucro ou Perda"
-msgstr ""
+msgid ""
+msgstr "Criar PDF da Declaração de Lucro ou Perda"
+
 
 #: koalixcrm/accounting/accounting/booking.py:8
-msgid "Da Conta"
-msgstr ""
+msgid ""
+msgstr "Da Conta"
+
 
 #: koalixcrm/accounting/accounting/booking.py:9
-msgid "Para Conta"
-msgstr ""
+msgid ""
+msgstr "Para Conta"
+
 
 #: koalixcrm/accounting/accounting/booking.py:10
-msgid "Quantidade"
-msgstr ""
+msgid ""
+msgstr "Quantidade"
+
 
 #: koalixcrm/accounting/accounting/booking.py:12
-msgid "Referência de Reserva"
-msgstr ""
+msgid ""
+msgstr "Referência de Reserva"
+
 
 #: koalixcrm/accounting/accounting/booking.py:13
-msgid "Reserva em"
-msgstr ""
+msgid ""
+msgstr "Reserva em"
+
 
 #: koalixcrm/accounting/accounting/booking.py:14
-msgid "Peródo Contábil"
-msgstr ""
+msgid ""
+msgstr "Peródo Contábil"
+
 
 #: koalixcrm/accounting/accounting/booking.py:16
-msgid "Referência Pessoal"
-msgstr ""
+msgid ""
+msgstr "Referência Pessoal"
+
 
 #: koalixcrm/accounting/accounting/booking.py:17
-msgid "Criado em"
-msgstr ""
+msgid ""
+msgstr "Criado em"
+
 
 #: koalixcrm/accounting/accounting/booking.py:18
-msgid "Última modificação"
-msgstr ""
+msgid ""
+msgstr "Última modificação"
+
 
 #: koalixcrm/accounting/accounting/booking.py:20
-msgid "Última modificação por"
-msgstr ""
+msgid ""
+msgstr "Última modificação por"
+
 
 #: koalixcrm/accounting/accounting/booking.py:25
-msgid "Data"
-msgstr ""
+msgid ""
+msgstr "Data"
+
 
 #: koalixcrm/accounting/accounting/booking.py:32
-msgid "Reserva"
-msgstr ""
+msgid ""
+msgstr "Reserva"
+
 
 #: koalixcrm/accounting/accounting/booking.py:33
-msgid "Reservas"
-msgstr ""
+msgid ""
+msgstr "Reservas"
+
 
 #: koalixcrm/accounting/accounting/product_category.py:9
-msgid "Título Categoria de Produto"
-msgstr ""
+msgid ""
+msgstr "Título Categoria de Produto"
+
 
 #: koalixcrm/accounting/accounting/product_category.py:12
-msgid "Conta de Lucro"
-msgstr ""
+msgid ""
+msgstr "Conta de Lucro"
+
 
 #: koalixcrm/accounting/accounting/product_category.py:16
-msgid "Conta de Perda"
-msgstr ""
+msgid ""
+msgstr "Conta de Perda"
+
 
 #: koalixcrm/accounting/accounting/product_category.py:22
-msgid "Categoria de Produto"
-msgstr ""
+msgid ""
+msgstr "Categoria de Produto"
+
 
 #: koalixcrm/accounting/accounting/product_category.py:23
-msgid "Categorias de Produtos"
-msgstr ""
+msgid ""
+msgstr "Categorias de Produtos"
+
 
 #: koalixcrm/accounting/const/accountTypeChoices.py:6
-msgid "Ganhos"
-msgstr ""
+msgid ""
+msgstr "Ganhos"
+
 
 #: koalixcrm/accounting/const/accountTypeChoices.py:7
-msgid "Gastos"
-msgstr ""
+msgid ""
+msgstr "Gastos"
+
 
 #: koalixcrm/accounting/const/accountTypeChoices.py:8
-msgid "Responsabilidades"
-msgstr ""
+msgid ""
+msgstr "Responsabilidades"
+
 
 #: koalixcrm/accounting/const/accountTypeChoices.py:9
-msgid "Ativos"
-msgstr ""
+msgid ""
+msgstr "Ativos"
+
 
 #: koalixcrm/accounting/views.py:34 koalixcrm/accounting/views.py:69
-msgid "Perda de Extensão de Usuário"
-msgstr ""
+msgid ""
+msgstr "Perda de Extensão de Usuário"
+
 
 #: koalixcrm/accounting/views.py:37 koalixcrm/accounting/views.py:72
-msgid "Perda de Conjunto de Modelos"
-msgstr ""
+msgid ""
+msgstr "Perda de Conjunto de Modelos"
+
