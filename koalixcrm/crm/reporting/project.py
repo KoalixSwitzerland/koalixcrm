@@ -149,17 +149,37 @@ class Project(models.Model):
         No exceptions planned"""
         from matplotlib import pyplot
         import pandas
-        path_to_illustration = os.path.join(settings.PDF_OUTPUT_ROOT + "project_costs_overview.svg")
-        data_frame = pandas.DataFrame()
+        path_to_illustration = os.path.join(settings.PDF_OUTPUT_ROOT + "/project_costs_overview.svg")
+        data_frame = None
+        '''data_frame = pandas.DataFrame({'x': ('Sep 2019', 'Oct 2018', 'Nov 2018', 'Dec 2018', 'Jan 2019', 'Feb 2019'),
+                                       'Budget': (90000, 90000, 90000, 90000, 166320, 166320),
+                                       'Estimation': (0, 20274, 51024, 81774, 112524, 143274),
+                                       'Effective': (0, 20274, None, None, None, None)})'''
         for reporting_period in ReportingPeriod.objects.filter(project=self.id):
             effective_costs = self.effective_costs(reporting_period=reporting_period)
             planned_costs = self.planned_costs(reporting_period=reporting_period)
-            data_frame.append(pandas.DataFrame({'x': {reporting_period.title, },
-                                                'Budget': {planned_costs, },
-                                                'Estimation': {effective_costs, },
-                                                'Invoiced': {None, }}))
+            if data_frame is None:
+                data_frame = pandas.DataFrame([[reporting_period.title,
+                                                None,
+                                                int(planned_costs),
+                                                int(effective_costs)], ],
+                                              columns=('x',
+                                                       'Budget',
+                                                       'Estimation',
+                                                       'Effective'))
+            else:
+                data_frame_to_add = pandas.DataFrame([[reporting_period.title,
+                                                       None,
+                                                       int(planned_costs),
+                                                       int(effective_costs)], ],
+                                                     columns=('x',
+                                                              'Budget',
+                                                              'Estimation',
+                                                              'Effective'))
+                data_frame.append(data_frame_to_add, ignore_index=True)
+
         pyplot.style.use('seaborn-darkgrid')
-        pyplot.plot(data_frame['x'], data_frame.get("Agreed Budget"),
+        pyplot.plot(data_frame['x'], data_frame.get("Budget"),
                     marker=' ',
                     color="red",
                     linewidth=1,
@@ -187,8 +207,9 @@ class Project(models.Model):
         pyplot.legend(loc=2, ncol=1)
         pyplot.title("Project Costs Overview", loc='left', fontsize=12, fontweight=0, color='orange')
         pyplot.xlabel("Date")
-        pyplot.ylabel("Costs")
+        pyplot.ylabel("Costs in " + self.default_currency.__str__())
         pyplot.savefig(path_to_illustration)
+        pyplot.clf()
 
         return path_to_illustration
 
