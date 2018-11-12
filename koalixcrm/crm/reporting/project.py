@@ -155,28 +155,46 @@ class Project(models.Model):
                                        'Budget': (90000, 90000, 90000, 90000, 166320, 166320),
                                        'Estimation': (0, 20274, 51024, 81774, 112524, 143274),
                                        'Effective': (0, 20274, None, None, None, None)})'''
-        for reporting_period in ReportingPeriod.objects.filter(project=self.id):
+        accumulated_effective_costs = 0
+        accumulated_planned_costs = 0
+        for reporting_period in ReportingPeriod.objects.filter(project=self.id).order_by('begin'):
             effective_costs = self.effective_costs(reporting_period=reporting_period)
             planned_costs = self.planned_costs(reporting_period=reporting_period)
+            accumulated_effective_costs += effective_costs
+            accumulated_planned_costs += planned_costs
             if data_frame is None:
-                data_frame = pandas.DataFrame([[reporting_period.title,
+                data_frame = pandas.DataFrame([[reporting_period.begin,
                                                 None,
-                                                int(planned_costs),
-                                                int(effective_costs)], ],
+                                                0,
+                                                0],
+                                               [reporting_period.end,
+                                                None,
+                                                int(accumulated_planned_costs),
+                                                int(accumulated_effective_costs)], ],
                                               columns=('x',
                                                        'Budget',
                                                        'Estimation',
                                                        'Effective'))
             else:
-                data_frame_to_add = pandas.DataFrame([[reporting_period.title,
+                data_frame_to_add = pandas.DataFrame([[reporting_period.end,
                                                        None,
-                                                       int(planned_costs),
-                                                       int(effective_costs)], ],
+                                                       int(accumulated_planned_costs),
+                                                       int(accumulated_effective_costs)], ],
                                                      columns=('x',
                                                               'Budget',
                                                               'Estimation',
                                                               'Effective'))
-                data_frame.append(data_frame_to_add, ignore_index=True)
+                data_frame = data_frame.append(data_frame_to_add, ignore_index=False)
+        overall_planned_costs = self.planned_costs(reporting_period=None)
+        data_frame_to_add = pandas.DataFrame([[self.planned_end(),
+                                               None,
+                                               int(overall_planned_costs),
+                                               int(accumulated_effective_costs)], ],
+                                             columns=('x',
+                                                      'Budget',
+                                                      'Estimation',
+                                                      'Effective'))
+        data_frame = data_frame.append(data_frame_to_add, ignore_index=False)
 
         pyplot.style.use('seaborn-darkgrid')
         pyplot.plot(data_frame['x'], data_frame.get("Budget"),
@@ -199,10 +217,10 @@ class Project(models.Model):
                     linewidth=2,
                     alpha=0.5,
                     label="Effective (accumulated)")
-        pyplot.fill_between(data_frame['x'],
+        '''pyplot.fill_between(data_frame['x'],
                             0, data_frame.get("Effective"),
                             color="orange",
-                            alpha=.3)
+                            alpha=.3)'''
 
         pyplot.legend(loc=2, ncol=1)
         pyplot.title("Project Costs Overview", loc='left', fontsize=12, fontweight=0, color='orange')
