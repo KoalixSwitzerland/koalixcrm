@@ -5,6 +5,7 @@
 #
 #, fuzzy
 msgid ""
+msgstr ""
 
 
 "Project-Id-Version: PACKAGE VERSION\n"
@@ -110,12 +111,12 @@ msgstr "Modelos de Nota de Entrega"
 
 
 #: koalixcrm/djangoUserExtension/user_extension/document_template.py:75
-msgid "Payment reminder templates"
+msgid "Payment reminder template"
 msgstr "Payment reminder template"
 
 
 #: koalixcrm/djangoUserExtension/user_extension/document_template.py:76
-msgid "Purchase order template"
+msgid "Payment reminder templates"
 msgstr "Modelos de lembrete de pagamento"
 
 
@@ -209,7 +210,7 @@ msgstr "Características"
 
 
 #: koalixcrm/djangoUserExtension/user_extension/text_paragraph.py:13
-msgid ""
+msgid "Text"
 msgstr "Texto"
 
 

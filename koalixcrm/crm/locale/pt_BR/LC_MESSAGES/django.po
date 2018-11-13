@@ -979,7 +979,7 @@ msgstr "Arabia Saudita"
 
 
 #: koalixcrm/crm/const/country.py:198
-msgid "Saudi Arabia"
+msgid "Senegal"
 msgstr "Senegal"
 
 
@@ -2840,6 +2840,7 @@ msgstr "Recurso"
 #: koalixcrm/crm/reporting/resource_type.py:22
 #: koalixcrm/crm/reporting/resource_type.py:23
 msgid "Resource Link Type"
+msgstr "Resource Link Type"
 
 
 #: koalixcrm/crm/reporting/resource_type.py:32
@@ -2849,6 +2850,7 @@ msgstr "RecursoTipo"
 
 #: koalixcrm/crm/reporting/task.py:39
 msgid "Last Status Change"
+msgstr "Last Status Change"
 
 
 #: koalixcrm/crm/reporting/task.py:97
@@ -2868,6 +2870,7 @@ msgstr "Esforço Planejado"
 
 #: koalixcrm/crm/reporting/task.py:337
 msgid "Effective Effort [hrs]"
+msgstr "Effective Effort [hrs]"
 
 
 #: koalixcrm/crm/reporting/task.py:419
@@ -2892,6 +2895,7 @@ msgstr "TarefaLinkTipo"
 
 #: koalixcrm/crm/reporting/task_status.py:12
 msgid "Status represents task done"
+msgstr "Status represents task done"
 
 
 #: koalixcrm/crm/reporting/work.py:16
