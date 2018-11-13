@@ -24,7 +24,7 @@ msgstr "Afeghanistào"
 
 
 #: koalixcrm/crm/const/country.py:7
-msgid ""
+msgid "Aland Islands"
 msgstr "Ilhas Aland"
 
 
@@ -39,47 +39,47 @@ msgstr "Argélia"
 
 
 #: koalixcrm/crm/const/country.py:10
-msgid ""
+msgid "American Samoa"
 msgstr "Samoa Americana"
 
 
 #: koalixcrm/crm/const/country.py:11
-msgid ""
+msgid "Andorra"
 msgstr "Andorra"
 
 
 #: koalixcrm/crm/const/country.py:12
-msgid ""
+msgid "Angola"
 msgstr "Angola"
 
 
 #: koalixcrm/crm/const/country.py:13
-msgid ""
+msgid "Anguilla"
 msgstr "Anguila"
 
 
 #: koalixcrm/crm/const/country.py:14
-msgid ""
+msgid "Antarctica"
 msgstr "Antarctica"
 
 
 #: koalixcrm/crm/const/country.py:15
-msgid ""
+msgid "Antigua and Barbuda"
 msgstr "Antígua and Barbuda"
 
 
 #: koalixcrm/crm/const/country.py:16
-msgid ""
+msgid "Argentina"
 msgstr "Argentina"
 
 
 #: koalixcrm/crm/const/country.py:17
-msgid ""
+msgid "Armenia"
 msgstr "Armênia"
 
 
 #: koalixcrm/crm/const/country.py:18
-msgid ""
+msgid "Aruba"
 msgstr "Aruba"
 
 
@@ -99,42 +99,42 @@ msgstr "Azerbaijão"
 
 
 #: koalixcrm/crm/const/country.py:22
-msgid ""
+msgid "the Bahamas"
 msgstr "Bahamas"
 
 
 #: koalixcrm/crm/const/country.py:23
-msgid ""
+msgid "Bahrain"
 msgstr "Bahrain"
 
 
 #: koalixcrm/crm/const/country.py:24
-msgid ""
+msgid "Bangladesh"
 msgstr "Bangladesh"
 
 
 #: koalixcrm/crm/const/country.py:25
-msgid ""
+msgid "Barbados"
 msgstr "Barbados"
 
 
 #: koalixcrm/crm/const/country.py:26
-msgid ""
+msgid "Belarus"
 msgstr "Belarus"
 
 
 #: koalixcrm/crm/const/country.py:27
-msgid ""
+msgid "Belgium"
 msgstr "Bélgica"
 
 
 #: koalixcrm/crm/const/country.py:28
-msgid ""
+msgid "Belize"
 msgstr "Belize"
 
 
 #: koalixcrm/crm/const/country.py:29
-msgid ""
+msgid "Benin"
 msgstr "Benin"
 
 
@@ -154,7 +154,7 @@ msgstr "Bolívia"
 
 
 #: koalixcrm/crm/const/country.py:33
-msgid ""
+msgid "Bosnia and Herzegovina"
 msgstr "Bósnia and Herzegovina"
 
 
@@ -164,37 +164,37 @@ msgstr "Botsuana"
 
 
 #: koalixcrm/crm/const/country.py:35
-msgid ""
+msgid "Bouvet Island"
 msgstr "Ilha Bouvet"
 
 
 #: koalixcrm/crm/const/country.py:36
-msgid ""
+msgid "Brazil"
 msgstr "Brasil"
 
 
 #: koalixcrm/crm/const/country.py:37
-msgid ""
+msgid "British Indian Ocean Territory"
 msgstr "Território Britânico do Oceano Índico"
 
 
 #: koalixcrm/crm/const/country.py:38
-msgid ""
+msgid "Brunei Darussalam"
 msgstr "Brunei Darussalam"
 
 
 #: koalixcrm/crm/const/country.py:39
-msgid ""
+msgid "Bulgaria"
 msgstr "Bulgária"
 
 
 #: koalixcrm/crm/const/country.py:40
-msgid ""
+msgid "Burkina Faso"
 msgstr "Burkina Faso"
 
 
 #: koalixcrm/crm/const/country.py:41
-msgid ""
+msgid "Burundi"
 msgstr "Burundi"
 
 
@@ -214,202 +214,202 @@ msgstr "Canadá"
 
 
 #: koalixcrm/crm/const/country.py:45
-msgid ""
+msgid "Cape Verde"
 msgstr "Cabo Verde"
 
 
 #: koalixcrm/crm/const/country.py:46
-msgid ""
+msgid "Cayman Islands"
 msgstr "Ilhas Cayman"
 
 
 #: koalixcrm/crm/const/country.py:47
-msgid ""
+msgid "Central African Republic"
 msgstr "República Central da África"
 
 
 #: koalixcrm/crm/const/country.py:48
-msgid ""
+msgid "Chad"
 msgstr "Chade"
 
 
 #: koalixcrm/crm/const/country.py:49
-msgid ""
+msgid "Chile"
 msgstr "Chile"
 
 
 #: koalixcrm/crm/const/country.py:50
-msgid ""
+msgid "China"
 msgstr "China"
 
 
 #: koalixcrm/crm/const/country.py:51
-msgid ""
+msgid "Christmas Island"
 msgstr "Ilha Christmas"
 
 
 #: koalixcrm/crm/const/country.py:52
-msgid ""
+msgid "Cocos (Keeling) Islands"
 msgstr "Ilhas Cocos (Keeling)"
 
 
 #: koalixcrm/crm/const/country.py:53
-msgid ""
+msgid "Colombia"
 msgstr "Colômbia"
 
 
 #: koalixcrm/crm/const/country.py:54
-msgid ""
+msgid "Comoros"
 msgstr "Comores"
 
 
 #: koalixcrm/crm/const/country.py:55
-msgid ""
+msgid "Congo"
 msgstr "Congo"
 
 
 #: koalixcrm/crm/const/country.py:56
-msgid ""
+msgid "Democratic Republic of the Congo"
 msgstr "República Democrata do Congo"
 
 
 #: koalixcrm/crm/const/country.py:57
-msgid ""
+msgid "Cook Islands"
 msgstr "Ilhas Cook"
 
 
 #: koalixcrm/crm/const/country.py:58
-msgid ""
+msgid "Costa Rica"
 msgstr "Costa Rica"
 
 
 #: koalixcrm/crm/const/country.py:59
-msgid ""
+msgid "Cote d'Ivoire"
 msgstr "Costa do Marfim"
 
 
 #: koalixcrm/crm/const/country.py:60
-msgid ""
+msgid "Croatia"
 msgstr "Croácia"
 
 
 #: koalixcrm/crm/const/country.py:61
-msgid ""
+msgid "Cuba"
 msgstr "Cuba"
 
 
 #: koalixcrm/crm/const/country.py:62
-msgid ""
+msgid "Cyprus"
 msgstr "Chipre"
 
 
 #: koalixcrm/crm/const/country.py:63
-msgid ""
+msgid "Czech Republic"
 msgstr "República Checa"
 
 
 #: koalixcrm/crm/const/country.py:64
-msgid ""
+msgid "Denmark"
 msgstr "Dinamarca"
 
 
 #: koalixcrm/crm/const/country.py:65
-msgid ""
+msgid "Djibouti"
 msgstr "Djibouti"
 
 
 #: koalixcrm/crm/const/country.py:66
-msgid ""
+msgid "Dominica"
 msgstr "Dominica"
 
 
 #: koalixcrm/crm/const/country.py:67
-msgid ""
+msgid "Dominican Republic"
 msgstr "República Dominicana"
 
 
 #: koalixcrm/crm/const/country.py:68
-msgid ""
+msgid "Ecuador"
 msgstr "Equador"
 
 
 #: koalixcrm/crm/const/country.py:69
-msgid ""
+msgid "Egypt"
 msgstr "Egito"
 
 
 #: koalixcrm/crm/const/country.py:70
-msgid ""
+msgid "El Salvador"
 msgstr "El Salvador"
 
 
 #: koalixcrm/crm/const/country.py:71
-msgid ""
+msgid "Equatorial Guinea"
 msgstr "Guiné Equatorial"
 
 
 #: koalixcrm/crm/const/country.py:72
-msgid ""
+msgid "Eritrea"
 msgstr "Eritréia"
 
 
 #: koalixcrm/crm/const/country.py:73
-msgid ""
+msgid "Estonia"
 msgstr "Estônia"
 
 
 #: koalixcrm/crm/const/country.py:74
-msgid ""
+msgid "Ethiopia"
 msgstr "Etiópia"
 
 
 #: koalixcrm/crm/const/country.py:75
-msgid ""
+msgid "Falkland Islands (Malvinas)"
 msgstr "Ilhas Falkland (Malvinas)"
 
 
 #: koalixcrm/crm/const/country.py:76
-msgid ""
+msgid "Faroe Islands"
 msgstr "Ilhas Faroe"
 
 
 #: koalixcrm/crm/const/country.py:77
-msgid ""
+msgid "Fiji"
 msgstr "Fiji"
 
 
 #: koalixcrm/crm/const/country.py:78
-msgid ""
+msgid "Finland"
 msgstr "Finlândia"
 
 
 #: koalixcrm/crm/const/country.py:79
-msgid ""
+msgid "France"
 msgstr "França"
 
 
 #: koalixcrm/crm/const/country.py:80
-msgid ""
+msgid "French Guiana"
 msgstr "Guiana Francesa"
 
 
 #: koalixcrm/crm/const/country.py:81
-msgid ""
+msgid "French Polynesia"
 msgstr "Polinésia Francesa"
 
 
 #: koalixcrm/crm/const/country.py:82
-msgid ""
+msgid "French Southern and Antarctic Lands"
 msgstr "Terras Austrais e Antárticas Francesas"
 
 
 #: koalixcrm/crm/const/country.py:83
-msgid ""
+msgid "Gabon"
 msgstr "Gabão"
 
 
 #: koalixcrm/crm/const/country.py:84
-msgid ""
+msgid "Gambia"
 msgstr "Gambia"
 
 
@@ -429,12 +429,12 @@ msgstr "Gana"
 
 
 #: koalixcrm/crm/const/country.py:88
-msgid ""
+msgid "Gibraltar"
 msgstr "Gibraltar"
 
 
 #: koalixcrm/crm/const/country.py:89
-msgid ""
+msgid "Greece"
 msgstr "Grécia"
 
 
@@ -454,57 +454,57 @@ msgstr "Guadalupe"
 
 
 #: koalixcrm/crm/const/country.py:93
-msgid ""
+msgid "Guam"
 msgstr "Guam"
 
 
 #: koalixcrm/crm/const/country.py:94
-msgid ""
+msgid "Guatemala"
 msgstr "Guatemala"
 
 
 #: koalixcrm/crm/const/country.py:95
-msgid ""
+msgid "Guernsey"
 msgstr "Guernsey"
 
 
 #: koalixcrm/crm/const/country.py:96
-msgid ""
+msgid "Guinea"
 msgstr "Guiné"
 
 
 #: koalixcrm/crm/const/country.py:97
-msgid ""
+msgid "Guinea-Bissau"
 msgstr "Guiné-Bissau"
 
 
 #: koalixcrm/crm/const/country.py:98
-msgid ""
+msgid "Guyana"
 msgstr "Guiana"
 
 
 #: koalixcrm/crm/const/country.py:99
-msgid ""
+msgid "Haiti"
 msgstr "Haiti"
 
 
 #: koalixcrm/crm/const/country.py:100
-msgid ""
+msgid "Heard Island and McDonald Islands"
 msgstr "Ilha Heard e Ilhas McDonald"
 
 
 #: koalixcrm/crm/const/country.py:101
-msgid ""
+msgid "Vatican City Holy See"
 msgstr "Cidade do Vaticano, Santa Sé"
 
 
 #: koalixcrm/crm/const/country.py:102
-msgid ""
+msgid "Honduras"
 msgstr "Honduras"
 
 
 #: koalixcrm/crm/const/country.py:103
-msgid ""
+msgid "Hong Kong"
 msgstr "Hong Kong"
 
 
@@ -544,37 +544,37 @@ msgstr "Irlanda"
 
 
 #: koalixcrm/crm/const/country.py:111
-msgid ""
+msgid "Isle of Man"
 msgstr "Ilha de Man"
 
 
 #: koalixcrm/crm/const/country.py:112
-msgid ""
+msgid "Israel"
 msgstr "Israel"
 
 
 #: koalixcrm/crm/const/country.py:113
-msgid ""
+msgid "Italy"
 msgstr "Itália"
 
 
 #: koalixcrm/crm/const/country.py:114
-msgid ""
+msgid "Jamaica"
 msgstr "Jamaica"
 
 
 #: koalixcrm/crm/const/country.py:115
-msgid ""
+msgid "Japan"
 msgstr "Japão"
 
 
 #: koalixcrm/crm/const/country.py:116
-msgid ""
+msgid "Jersey"
 msgstr "Jersey"
 
 
 #: koalixcrm/crm/const/country.py:117
-msgid ""
+msgid "Jordan"
 msgstr "Jordânia"
 
 
@@ -589,17 +589,17 @@ msgstr "Quênia"
 
 
 #: koalixcrm/crm/const/country.py:120
-msgid ""
+msgid "Kiribati"
 msgstr "Kiribati"
 
 
 #: koalixcrm/crm/const/country.py:121
-msgid ""
+msgid "North Korea"
 msgstr "Coreia do Norte"
 
 
 #: koalixcrm/crm/const/country.py:122
-msgid ""
+msgid "South Korea"
 msgstr "Coreia do Sul"
 
 
@@ -749,12 +749,12 @@ msgstr "Mongólia"
 
 
 #: koalixcrm/crm/const/country.py:152
-msgid ""
+msgid "Montenegro"
 msgstr "Montenegro"
 
 
 #: koalixcrm/crm/const/country.py:153
-msgid ""
+msgid "Montserrat"
 msgstr "Montserrat"
 
 
@@ -769,7 +769,7 @@ msgstr "Moçambique"
 
 
 #: koalixcrm/crm/const/country.py:156
-msgid ""
+msgid "Myanmar"
 msgstr "Myanmar"
 
 
@@ -779,12 +779,12 @@ msgstr "Namíbia"
 
 
 #: koalixcrm/crm/const/country.py:158
-msgid ""
+msgid "Nauru"
 msgstr "Nauru"
 
 
 #: koalixcrm/crm/const/country.py:159
-msgid ""
+msgid "Nepal"
 msgstr "Nepal"
 
 
@@ -824,12 +824,12 @@ msgstr "Nigéria"
 
 
 #: koalixcrm/crm/const/country.py:167
-msgid ""
+msgid "Niue"
 msgstr "Niue"
 
 
 #: koalixcrm/crm/const/country.py:168
-msgid ""
+msgid "Norfolk Island Norfolk Island"
 msgstr "Ilha Norfolk Ilha Norfolk"
 
 
@@ -854,7 +854,7 @@ msgstr "Paquistão"
 
 
 #: koalixcrm/crm/const/country.py:173
-msgid ""
+msgid "Palau"
 msgstr "Palau"
 
 
@@ -869,7 +869,7 @@ msgstr "Panamá"
 
 
 #: koalixcrm/crm/const/country.py:176
-msgid ""
+msgid "Papua New Guinea"
 msgstr "Papua Nova Guiné"
 
 
@@ -889,22 +889,22 @@ msgstr "Filipinas"
 
 
 #: koalixcrm/crm/const/country.py:180
-msgid ""
+msgid "Pitcairn Islands"
 msgstr "Ilhas Pitcairn"
 
 
 #: koalixcrm/crm/const/country.py:181
-msgid ""
+msgid "Poland"
 msgstr "Polônia"
 
 
 #: koalixcrm/crm/const/country.py:182
-msgid ""
+msgid "Portugal"
 msgstr "Portugal"
 
 
 #: koalixcrm/crm/const/country.py:183
-msgid ""
+msgid "Puerto Rico"
 msgstr "Porto Rico"
 
 
@@ -934,12 +934,12 @@ msgstr "Ruanda"
 
 
 #: koalixcrm/crm/const/country.py:189
-msgid ""
+msgid "Saint Helena"
 msgstr "Saint Helena"
 
 
 #: koalixcrm/crm/const/country.py:190
-msgid ""
+msgid "Saint Kitts and Nevis"
 msgstr "São Cristóvão e Nevis"
 
 
@@ -949,7 +949,7 @@ msgstr "Santa Lúcia"
 
 
 #: koalixcrm/crm/const/country.py:192
-msgid ""
+msgid "Saint Pierre and Miquelon"
 msgstr "São Pedro e Miquelon"
 
 
@@ -959,12 +959,12 @@ msgstr "São Vicente e Granadinas"
 
 
 #: koalixcrm/crm/const/country.py:194
-msgid ""
+msgid "Samoa"
 msgstr "Samoa"
 
 
 #: koalixcrm/crm/const/country.py:195
-msgid ""
+msgid "San Marino"
 msgstr "San Marino"
 
 
@@ -974,12 +974,12 @@ msgstr "São Tomé e Príncipe"
 
 
 #: koalixcrm/crm/const/country.py:197
-msgid ""
+msgid "Saudi Arabia"
 msgstr "Arabia Saudita"
 
 
 #: koalixcrm/crm/const/country.py:198
-msgid ""
+msgid "Saudi Arabia"
 msgstr "Senegal"
 
 
@@ -989,7 +989,7 @@ msgstr "Sérvia"
 
 
 #: koalixcrm/crm/const/country.py:200
-msgid ""
+msgid "Seychelles"
 msgstr "Seychelles"
 
 
