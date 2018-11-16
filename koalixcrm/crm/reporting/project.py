@@ -286,8 +286,9 @@ class Project(models.Model):
         self.default_currency.round(planned_effort_accumulated['sum_costs'])
         return planned_effort_accumulated
 
-    def planned_costs(self):
-        return self.planned_costs_in_buckets(reporting_period=None, buckets=None)
+    def planned_costs(self, reporting_period=None):
+        planned_costs_in_buckets = self.planned_costs_in_buckets(reporting_period=reporting_period, buckets=None)
+        return planned_costs_in_buckets['sum_costs']
     planned_costs.short_description = _("Planned Costs")
     planned_costs.tags = True
 
