@@ -153,12 +153,64 @@ class Task(models.Model):
     planned_effort.short_description = _("Planned Effort")
     planned_effort.tags = True
 
-    def planned_costs(self, reporting_period=None):
+    def planned_costs_in_buckets(self, reporting_period=None, buckets=None):
         """The function returns the planned costs of resources which have been estimated for this task
          at a specific reporting period plus the costs of the effective effort before the provided reporting_period
-         When no reporting_period is provided, the last reporting period
+         When no reporting_period is provided. The costs are split into the provided buckets.
+         The passed argument reportin_period us used to specify the root of the estimation.
 
-        is selected.
+        Following example shall illustrate what to expect from this function:
+        The project started 01.01.2018,
+        1st reporting period ranged from 01.01.2018 to 31.01.2018
+        2nd reporting period ranged from 01.02.2018 to 28.02.2018
+        3rd reporting period range from 01.03.2018 to 31.03.2018
+        There are not further reporting periods defined
+        At the beginning of second reporting period an estimation was done. The estimation reached from
+        Beginning of 01.02.2018 until 31.12.2018 and the total cost was 100kUSD.
+        The function should be called this way: task.planned_costs_in_buckets(2nd ReportingPeriod,
+                                                                              list(2nd ReportingPeriod,
+                                                                                   3rd ReportingPeriod,))
+
+        Args:
+        bucket (list of ReportingPeriods)
+        reporting_period (ReportingPeriod)
+
+        Returns:
+        planned costs (Decimal), 0 if when no estimation or no reporting period is present
+
+        Raises:
+        No exceptions planned"""
+        try:
+            if not reporting_period:
+                reporting_period_internal = ReportingPeriod.get_latest_reporting_period(self.project)
+
+            else:
+                reporting_period_internal = ReportingPeriod.objects.get(id=reporting_period.id)
+            predecessor_reporting_periods = ReportingPeriod.get_all_predecessors(reporting_period_internal,
+                                                                                 self.project)
+            estimations_to_this_task = Estimation.objects.filter(task=self.id,
+                                                                 reporting_period=reporting_period_internal)
+            sum_costs = 0
+            if len(buckets) != 0:
+                f
+                planned_costs =
+            else
+            if len(estimations_to_this_task) != 0:
+                for estimation_to_this_task in estimations_to_this_task:
+                    for bucket in buckets:
+                        sum_costs += estimation_to_this_task.calculated_costs()
+            if len(predecessor_reporting_periods) != 0:
+                for predecessor_reporting_period in predecessor_reporting_periods:
+                    sum_costs += self.effective_costs(reporting_period=predecessor_reporting_period)
+        except ReportingPeriodNotFound:
+            sum_costs = 0
+        return sum_costs
+
+
+    def planned_costs(self, reporting_period=None):
+        """The function returns the planned overall costs of resources which have been estimated for this task
+         at a specific reporting period plus the costs of the effective effort before the provided reporting_period
+         When no reporting_period is provided, the last reporting period is selected.
 
         Args:
         no arguments
