@@ -170,6 +170,9 @@ class Task(models.Model):
         The function should be called this way: task.planned_costs_in_buckets(2nd ReportingPeriod,
                                                                               list(2nd ReportingPeriod,
                                                                                    3rd ReportingPeriod,))
+        the function will return a dict containing the accumulated planned costs for the list of provided
+        buckets and an additional bucked containing the overall sum (also containing the parts of the
+        estimations which did not fit into provided reporting periods)
 
         Args:
         bucket (list of ReportingPeriods)
@@ -180,6 +183,7 @@ class Task(models.Model):
 
         Raises:
         No exceptions planned"""
+        planned_costs = dict()
         try:
             if not reporting_period:
                 reporting_period_internal = ReportingPeriod.get_latest_reporting_period(self.project)
@@ -190,22 +194,26 @@ class Task(models.Model):
                                                                                  self.project)
             estimations_to_this_task = Estimation.objects.filter(task=self.id,
                                                                  reporting_period=reporting_period_internal)
-            sum_costs = 0
-            if len(buckets) != 0:
-                f
-                planned_costs =
-            else
+            if buckets:
+                for bucket in buckets:
+                    planned_costs[bucket] = 0
+            planned_costs['sum_costs'] = 0
             if len(estimations_to_this_task) != 0:
                 for estimation_to_this_task in estimations_to_this_task:
-                    for bucket in buckets:
-                        sum_costs += estimation_to_this_task.calculated_costs()
+                    if buckets:
+                        for bucket in buckets:
+                            planned_costs[bucket] += estimation_to_this_task.calculated_costs(start=bucket.begin,
+                                                                                              end=bucket.end)
+                    planned_costs['sum_costs'] += estimation_to_this_task.calculated_costs()
             if len(predecessor_reporting_periods) != 0:
                 for predecessor_reporting_period in predecessor_reporting_periods:
-                    sum_costs += self.effective_costs(reporting_period=predecessor_reporting_period)
+                    if buckets:
+                        for bucket in buckets:
+                            planned_costs[bucket] += self.effective_costs(reporting_period=predecessor_reporting_period)
+                    planned_costs['sum_costs'] += self.effective_costs(reporting_period=predecessor_reporting_period)
         except ReportingPeriodNotFound:
-            sum_costs = 0
-        return sum_costs
-
+            planned_costs['sum_costs'] = 0
+        return planned_costs
 
     def planned_costs(self, reporting_period=None):
         """The function returns the planned overall costs of resources which have been estimated for this task

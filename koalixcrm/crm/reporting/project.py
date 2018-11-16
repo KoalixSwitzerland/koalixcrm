@@ -155,13 +155,18 @@ class Project(models.Model):
                                        'Budget': (90000, 90000, 90000, 90000, 166320, 166320),
                                        'Estimation': (0, 20274, 51024, 81774, 112524, 143274),
                                        'Effective': (0, 20274, None, None, None, None)})'''
-        accumulated_effective_costs = 0
-        accumulated_planned_costs = 0
-        for reporting_period in ReportingPeriod.objects.filter(project=self.id).order_by('begin'):
+        effective_costs = 0
+        accumulated_effective_cost = 0
+        accumulated_effective_costs = dict()
+        accumulated_planned_costs = dict()
+        reporting_periods = ReportingPeriod.objects.filter(project=self.id).order_by('begin')
+        for reporting_period in reporting_periods:
             effective_costs = self.effective_costs(reporting_period=reporting_period)
-            planned_costs = self.planned_costs(reporting_period=reporting_period)
-            accumulated_effective_costs += effective_costs
-            accumulated_planned_costs += planned_costs
+            accumulated_planned_costs = self.planned_costs_in_buckets(reporting_period=reporting_period,
+                                                                      buckets=reporting_periods)
+            accumulated_effective_cost += effective_costs
+            accumulated_effective_costs[reporting_period] = accumulated_effective_cost
+        for reporting_period in reporting_periods:
             if data_frame is None:
                 data_frame = pandas.DataFrame([[reporting_period.begin,
                                                 None,
@@ -169,8 +174,8 @@ class Project(models.Model):
                                                 0],
                                                [reporting_period.end,
                                                 None,
-                                                int(accumulated_planned_costs),
-                                                int(accumulated_effective_costs)], ],
+                                                int(accumulated_planned_costs[reporting_period]),
+                                                int(accumulated_effective_costs[reporting_period])], ],
                                               columns=('x',
                                                        'Budget',
                                                        'Estimation',
@@ -178,18 +183,17 @@ class Project(models.Model):
             else:
                 data_frame_to_add = pandas.DataFrame([[reporting_period.end,
                                                        None,
-                                                       int(accumulated_planned_costs),
-                                                       int(accumulated_effective_costs)], ],
+                                                       int(accumulated_planned_costs[reporting_period]),
+                                                       int(accumulated_effective_costs[reporting_period])], ],
                                                      columns=('x',
                                                               'Budget',
                                                               'Estimation',
                                                               'Effective'))
                 data_frame = data_frame.append(data_frame_to_add, ignore_index=False)
-        overall_planned_costs = self.planned_costs(reporting_period=None)
         data_frame_to_add = pandas.DataFrame([[self.planned_end(),
                                                None,
-                                               int(overall_planned_costs),
-                                               int(accumulated_effective_costs)], ],
+                                               int(accumulated_planned_costs['sum_costs']),
+                                               None], ],
                                              columns=('x',
                                                       'Budget',
                                                       'Estimation',
@@ -248,7 +252,7 @@ class Project(models.Model):
     effective_costs.short_description = _("Effective Accumulated effort")
     effective_costs.tags = True
 
-    def planned_costs(self, reporting_period=None):
+    def planned_costs_in_buckets(self, reporting_period=None, buckets=None):
         """The function return the planned overall costs
 
         Args:
@@ -259,15 +263,31 @@ class Project(models.Model):
 
         Raises:
         No exceptions planned"""
-        planned_effort_accumulated = 0
+        planned_effort_accumulated = dict()
+        planned_effort_accumulated['sum_costs'] = 0
+        if buckets:
+            for bucket in buckets:
+                planned_effort_accumulated[bucket] = 0
         all_project_tasks = Task.objects.filter(project=self.id)
         if all_project_tasks:
             for task in all_project_tasks:
-                planned_effort_accumulated += task.planned_costs(reporting_period)
+                planned_effort_accumulated_per_task = task.planned_costs_in_buckets(reporting_period, buckets)
+                if buckets:
+                    for bucket in buckets:
+                        planned_effort_accumulated[bucket] += planned_effort_accumulated_per_task[bucket]
+                planned_effort_accumulated['sum_costs'] += planned_effort_accumulated_per_task['sum_costs']
+
         getcontext().prec = 5
-        planned_effort_accumulated = Decimal(planned_effort_accumulated)
-        self.default_currency.round(planned_effort_accumulated)
+        if buckets:
+            for bucket in buckets:
+                planned_effort_accumulated[bucket] = Decimal(planned_effort_accumulated[bucket])
+                self.default_currency.round(planned_effort_accumulated[bucket])
+        planned_effort_accumulated['sum_costs'] = Decimal(planned_effort_accumulated['sum_costs'])
+        self.default_currency.round(planned_effort_accumulated['sum_costs'])
         return planned_effort_accumulated
+
+    def planned_costs(self):
+        return self.planned_costs_in_buckets(reporting_period=None, buckets=None)
     planned_costs.short_description = _("Planned Costs")
     planned_costs.tags = True
 
