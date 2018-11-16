@@ -55,6 +55,30 @@ class ReportingPeriod(models.Model):
             raise ReportingPeriodNotFound("Reporting Period does not exist")
 
     @staticmethod
+    def get_latest_reporting_period(project):
+        """Returns the latest reporting period
+
+        Args:
+          no arguments
+
+        Returns:
+          reporting_period (ReportPeriod)
+
+        Raises:
+          ReportPeriodNotFound when there is no valid reporting Period"""
+        latest_reporting_period = None
+        reporting_periods = ReportingPeriod.objects.filter(project=project)
+        for reporting_period in reporting_periods:
+            if latest_reporting_period is None:
+                latest_reporting_period = reporting_period
+            else:
+                if latest_reporting_period.end <= reporting_period.begin:
+                    latest_reporting_period = reporting_period
+        if not latest_reporting_period:
+            raise ReportingPeriodNotFound("Reporting Period does not exist")
+        return latest_reporting_period
+
+    @staticmethod
     def get_predecessor(target_reporting_period, project):
         """Returns the reporting period which was valid right before the provided target_reporting_period
 
@@ -92,7 +116,8 @@ class ReportingPeriod(models.Model):
         Raises:
           ReportPeriodNotFound when there is no valid reporting Period"""
         predecessor_reporting_periods = list()
-        for reporting_period in ReportingPeriod.objects.filter(project=project):
+        reporting_periods = ReportingPeriod.objects.filter(project=project)
+        for reporting_period in reporting_periods:
             if reporting_period.end <= target_reporting_period.begin:
                 predecessor_reporting_periods.append(reporting_period)
         return predecessor_reporting_periods
