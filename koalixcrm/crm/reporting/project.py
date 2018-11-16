@@ -249,8 +249,8 @@ class Project(models.Model):
         for task in Task.objects.filter(project=self.id):
             effective_effort += task.effective_effort(reporting_period=reporting_period)
         return effective_effort
-    effective_costs.short_description = _("Effective Accumulated effort")
-    effective_costs.tags = True
+    effective_effort.short_description = _("Effective Accumulated effort")
+    effective_effort.tags = True
 
     def planned_costs_in_buckets(self, reporting_period=None, buckets=None):
         """The function return the planned overall costs
