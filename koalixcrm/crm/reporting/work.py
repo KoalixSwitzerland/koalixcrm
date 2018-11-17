@@ -125,7 +125,7 @@ class Work(models.Model):
         if self.reporting_period.status.is_done:
             raise ReportingPeriodDoneDeleteNotPossible("It was not possible to update the work")
         else:
-            super().save(*args, **kwargs)
+            super(Work, self).save(*args, **kwargs)
 
     class Meta:
         app_label = "crm"

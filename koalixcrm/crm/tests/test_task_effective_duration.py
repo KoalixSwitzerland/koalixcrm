@@ -1,9 +1,7 @@
 import datetime
 import pytest
 from django.test import TestCase
-from koalixcrm.djangoUserExtension.factories.factory_user_extension import StandardUserExtensionFactory
 from koalixcrm.crm.factories.factory_customer_billing_cycle import StandardCustomerBillingCycleFactory
-from koalixcrm.crm.factories.factory_user import AdminUserFactory
 from koalixcrm.crm.factories.factory_customer import StandardCustomerFactory
 from koalixcrm.crm.factories.factory_customer_group import StandardCustomerGroupFactory
 from koalixcrm.crm.factories.factory_currency import StandardCurrencyFactory
@@ -21,12 +19,11 @@ def freeze(monkeypatch):
     """ Now() manager patches date return a fixed, settable, value
         (freezes date)
     """
-    import datetime
     original = datetime.date
 
     class FreezeMeta(type):
         def __instancecheck__(self, instance):
-            if type(instance) == original or type(instance) == Freeze:
+            if instance.isinstance(original) or instance.isinstance(Freeze):
                 return True
 
     class Freeze(datetime.datetime):
