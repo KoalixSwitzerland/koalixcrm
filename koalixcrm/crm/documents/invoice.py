@@ -63,7 +63,7 @@ class Invoice(SalesDocument):
 
         for booking in accounting.models.Booking.objects.filter(accountingPeriod=current_valid_accounting_period):
             if booking.bookingReference == self:
-                raise InvoiceAlreadyRegistered()
+                raise InvoiceAlreadyRegistered("The invoice is already registered")
         for profit_account, amount in iter(dict_prices.items()):
             booking = accounting.models.Booking()
             booking.toAccount = activa_account[0]
