@@ -73,7 +73,7 @@ class TestWorkDelete(TestCase):
             task=self.test_1st_task,
             reporting_period=self.test_reporting_period
         )
-        work3 = StandardWorkFactory.create(
+        work_cannot_be_deleted = StandardWorkFactory.create(
             human_resource=self.human_resource,
             date=date_now,
             start_time=datetime_now,
@@ -81,7 +81,7 @@ class TestWorkDelete(TestCase):
             task=self.test_2nd_task,
             reporting_period=self.test_reporting_period
         )
-        work4 = StandardWorkFactory.create(
+        work_can_be_deleted = StandardWorkFactory.create(
             human_resource=self.human_resource,
             date=date_now,
             start_time=datetime_now,
@@ -93,7 +93,7 @@ class TestWorkDelete(TestCase):
             (self.test_1st_task.effective_effort(reporting_period=None)).__str__(), "3.5")
         self.assertEqual(
             (self.test_2nd_task.effective_effort(reporting_period=None)).__str__(), "12.0")
-        work4.delete()
+        work_can_be_deleted.delete()
         self.assertEqual(
             (self.test_1st_task.effective_effort(reporting_period=None)).__str__(), "3.5")
         self.assertEqual(
@@ -101,8 +101,8 @@ class TestWorkDelete(TestCase):
         status_done = DoneReportingPeriodStatusFactory.create()
         self.test_reporting_period.status = status_done
         with pytest.raises(ReportingPeriodDoneDeleteNotPossible):
-            work3.delete()
+            work_cannot_be_deleted.delete()
         with pytest.raises(ReportingPeriodDoneDeleteNotPossible):
-            work3.stop_time = self.datetime_later_3
-            work3.save()
+            work_cannot_be_deleted.stop_time = self.datetime_later_3
+            work_cannot_be_deleted.save()
 
