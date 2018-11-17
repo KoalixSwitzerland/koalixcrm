@@ -138,7 +138,7 @@ class Price(models.Model):
                 for customer_group in customer_groups:
                     if self.customer_group == customer_group:
                         customer_group_factor = 1
-                        """Stop for loop when a perfect match is found"""
+                        # Stop for loop when a perfect match is found
                         break
                     else:
                         customer_group_transform = CustomerGroupTransform.objects.get(

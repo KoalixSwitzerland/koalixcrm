@@ -244,7 +244,7 @@ class Project(models.Model):
     def effective_duration(self):
         """The function return the effective overall duration of a project as a string in days
         The function is reading the effective_starts and effective_ends of the project and
-        substract them from each other.
+        subtract them from each other.
 
         Args:
         no arguments
@@ -364,8 +364,7 @@ class Project(models.Model):
             return "n/a"
 
     def is_reporting_allowed(self):
-        from koalixcrm.crm.reporting.reporting_period import ReportingPeriod
-        """The function returns a boolean True when it is allowed to report on the project and 
+        """The function returns a boolean True when it is allowed to report on the project and
         on one of the reporting periods does also allow reporting
 
         Args:
@@ -376,6 +375,7 @@ class Project(models.Model):
 
         Raises:
           No exceptions planned"""
+        from koalixcrm.crm.reporting.reporting_period import ReportingPeriod
         reporting_periods = ReportingPeriod.objects.filter(project=self.id, status__is_done=False)
         if len(reporting_periods) != 0:
             if not self.project_status.is_done:

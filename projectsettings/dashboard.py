@@ -18,8 +18,6 @@ class CustomIndexDashboard(Dashboard):
     """
 
     def init_with_context(self, context):
-        site_name = get_admin_site_name(context)
-
         self.children.append(modules.Group(
             _('koalixcrm Version' + KOALIXCRM_VERSION),
             column=1,
