@@ -10,7 +10,7 @@ from selenium.webdriver.common.keys import Keys
 from koalixcrm.crm.factories.factory_user import AdminUserFactory
 
 
-class TimeTrackingWorkEntry(LiveServerTestCase):
+class TestProjectAdminView(LiveServerTestCase):
 
     def setUp(self):
         firefox_options = webdriver.firefox.options.Options()

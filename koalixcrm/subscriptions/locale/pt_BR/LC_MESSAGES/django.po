@@ -1,0 +1,127 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <aaron.riedener@koalix.ch>, 2018.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+
+
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-10-19 20:32+0000\n"
+"PO-Revision-Date: 2018-11-07 00:08-0300\n"
+"Last-Translator: WILLIANO SERPA <WILLYUDI@GMAIL.COM>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: Brazilian Portuguese\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+#: koalixcrm/subscriptions/admin.py:29 koalixcrm/subscriptions/admin.py:48
+#: koalixcrm/subscriptions/admin.py:88
+msgid "Basics"
+msgstr "Básicos"
+
+
+#: koalixcrm/subscriptions/admin.py:62
+msgid "Create Invoice"
+msgstr "Criar Fatura"
+
+
+#: koalixcrm/subscriptions/admin.py:108
+msgid "Create Subscription"
+msgstr "Criar Assinatura"
+
+
+#: koalixcrm/subscriptions/const/events.py:6
+msgid "Offered"
+msgstr "Ofertado"
+
+
+#: koalixcrm/subscriptions/const/events.py:7
+msgid "Canceled"
+msgstr "Cancelado"
+
+
+#: koalixcrm/subscriptions/const/events.py:8
+msgid "Signed"
+msgstr "Assinado"
+
+
+#: koalixcrm/subscriptions/models.py:13 koalixcrm/subscriptions/models.py:14
+#: koalixcrm/subscriptions/models.py:100
+msgid "Subscription Type"
+msgstr "Tipo de Assinatura"
+
+
+#: koalixcrm/subscriptions/models.py:50 koalixcrm/subscriptions/models.py:56
+msgid "Subscription"
+msgstr "Assinatura"
+
+
+#: koalixcrm/subscriptions/models.py:51
+msgid "Subscriptions"
+msgstr "Assinaturas"
+
+
+#: koalixcrm/subscriptions/models.py:57
+msgid "Event Date"
+msgstr "Data do Evento"
+
+
+#: koalixcrm/subscriptions/models.py:60
+msgid "Event"
+msgstr "Evento"
+
+
+#: koalixcrm/subscriptions/models.py:67
+msgid "Subscription Event"
+msgstr "Assinatura do Evento"
+
+
+#: koalixcrm/subscriptions/models.py:68
+msgid "Subscription Events"
+msgstr "Assinatura dos Eventos"
+
+
+#: koalixcrm/subscriptions/models.py:73
+msgid "Product Type"
+msgstr "Tipo de Produto"
+
+
+#: koalixcrm/subscriptions/models.py:77
+msgid "Cancellation Period (months)"
+msgstr "Período de Cancelamento (meses)"
+
+
+#: koalixcrm/subscriptions/models.py:80
+msgid "Automatic Contract Extension (months)"
+msgstr "Extensão Automática do Contrato (meses)"
+
+
+#: koalixcrm/subscriptions/models.py:84
+msgid "Automatic Contract Extension Reminder (days)"
+msgstr "Lembrete Extensão Automática de Contrato (dias)"
+
+
+#: koalixcrm/subscriptions/models.py:87
+msgid "Minimum Contract Duration"
+msgstr "Duração Mínima do Contrato"
+
+
+#: koalixcrm/subscriptions/models.py:90
+msgid "Payment Interval (days)"
+msgstr "Intervalo de Pagamento (dias)"
+
+
+#: koalixcrm/subscriptions/models.py:93
+msgid "Contract Documents"
+msgstr "Documentos do Contrato"
+
+
+#: koalixcrm/subscriptions/models.py:101
+msgid "Subscription Types"
+msgstr "Tipos de Assinatura"
+
