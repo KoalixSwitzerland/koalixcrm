@@ -22,7 +22,7 @@ pipeline {
             steps {
                 sh '''
                     . virtualenv/bin/activate
-                    pip install -r requirements/test_requirements.txt
+                    pip install -r requirements/heroku_requirements.txt
                     deactivate
                     wget https://github.com/mozilla/geckodriver/releases/download/v0.23.0/geckodriver-v0.23.0-linux64.tar.gz
                     mkdir geckodriver
