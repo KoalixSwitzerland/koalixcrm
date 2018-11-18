@@ -27,7 +27,6 @@ pipeline {
                     wget https://github.com/mozilla/geckodriver/releases/download/v0.23.0/geckodriver-v0.23.0-linux64.tar.gz
                     mkdir geckodriver
                     tar -xzf geckodriver*.tar.gz -C geckodriver
-                    export PATH=$PATH:$PWD/geckodriver
                    '''
             }
         }
@@ -40,6 +39,7 @@ pipeline {
             steps {
                 sh '''
                 . virtualenv/bin/activate
+                export PATH=$PATH:$PWD/geckodriver
                 pytest --cov=koalixcrm --cov-branch --cov-report xml:report/coverage.xml --cov-report term -m "not version_increase" '''
             }
             post {
