@@ -22,11 +22,6 @@ pipeline {
                 }
             }
         }
-        stage('Test') {
-            steps {
-                echo 'Should deploy jar file on Hetzner via SSH. Not implemented yet.'
-            }
-        }
         stage('Checkstyle + FindBugs') {
             steps {
                 echo 'Should deploy jar file on Hetzner via SSH. Not implemented yet.'
