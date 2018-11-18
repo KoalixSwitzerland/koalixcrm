@@ -5,15 +5,31 @@ pipeline {
         buildDiscarder(logRotator(numToKeepStr: '5'))
     }
     stages {
-        stage('Test') {
-            steps {
-                sh '''
+        def installed = fileExists 'bin/activate'
+
+            if (!installed) {
+                stage("Install Python Virtual Enviroment") {
+                    sh 'virtualenv --no-site-packages .'
+                }
+        }
+        stage ("Get Latest Code") {
+            checkout scm
+        }
+        stage ("Install Application Dependencies") {
+            sh '''
+                source bin/activate
+                pip install -r requirements/test_requirements.txt
+                deactivate
                 wget https://github.com/mozilla/geckodriver/releases/download/v0.23.0/geckodriver-v0.23.0-linux64.tar.gz
                 mkdir geckodriver
                 tar -xzf geckodriver*.tar.gz -C geckodriver
                 export PATH=$PATH:$PWD/geckodriver
-                python setup.py install
-                pip install -r requirements/heroku_requirements.txt
+               '''
+        }
+        stage('Test') {
+            steps {
+                sh '''
+                source ../bin/activate
                 pytest --cov=koalixcrm --cov-branch --cov-report xml --cov-report term -m "not version_increase"'''
             }
             post {
