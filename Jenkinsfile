@@ -8,17 +8,17 @@ pipeline {
         stage ("Prepare Virtual Environment"){
             steps {
                 sh '''
-                    if [ -f $bin/activate ]; then
+                    if [ -f $virtualenv/bin/activate ]; then
                         rm -rf bin
                     fi
-                    virtualenv --no-site-packages .
+                    virtualenv -p /usr/bin/python3.6 --no-site-packages virtualenv
                 '''
             }
         }
         stage ("Install Application Dependencies") {
             steps {
                 sh '''
-                    source bin/activate
+                    . virtualenv/bin/activate
                     pip install -r requirements/test_requirements.txt
                     deactivate
                     wget https://github.com/mozilla/geckodriver/releases/download/v0.23.0/geckodriver-v0.23.0-linux64.tar.gz
