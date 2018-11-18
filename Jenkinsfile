@@ -10,6 +10,7 @@ pipeline {
                 sh '''
                     if [ -f $bin/activate ]; then
                         rm -rf bin
+                    fi
                     virtualenv --no-site-packages .
                 '''
             }
