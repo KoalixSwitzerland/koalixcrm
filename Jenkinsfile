@@ -40,7 +40,7 @@ pipeline {
             steps {
                 sh '''
                 . virtualenv/bin/activate
-                pytest --cov=koalixcrm --cov-branch --cov-report xml --cov-report term -m "not version_increase" -o ./report/coverage.xml'''
+                pytest --cov=koalixcrm --cov-branch --cov-report xml:report/coverage.xml --cov-report term -m "not version_increase" '''
             }
             post {
                 always {
