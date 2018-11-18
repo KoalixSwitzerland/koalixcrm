@@ -12,6 +12,9 @@ pipeline {
                         rm -rf bin
                     fi
                     virtualenv -p /usr/bin/python3.6 --no-site-packages virtualenv
+                    if [ -f $geckodriver ]; then
+                        rm -rf geckodriver
+                    fi
                 '''
             }
         }
