@@ -6,25 +6,31 @@ pipeline {
     }
     stages {
         stage ("Prepare Virtual Environment"){
-            sh '''
-                if [ -f $bin/activate ]; then
-                    rm -rf bin
-                virtualenv --no-site-packages .
-            '''
-        }
-        stage ("Get Latest Code") {
-            checkout scm
+            steps {
+                sh '''
+                    if [ -f $bin/activate ]; then
+                        rm -rf bin
+                    virtualenv --no-site-packages .
+                '''
+            }
         }
         stage ("Install Application Dependencies") {
-            sh '''
-                source bin/activate
-                pip install -r requirements/test_requirements.txt
-                deactivate
-                wget https://github.com/mozilla/geckodriver/releases/download/v0.23.0/geckodriver-v0.23.0-linux64.tar.gz
-                mkdir geckodriver
-                tar -xzf geckodriver*.tar.gz -C geckodriver
-                export PATH=$PATH:$PWD/geckodriver
-               '''
+            steps {
+                sh '''
+                    source bin/activate
+                    pip install -r requirements/test_requirements.txt
+                    deactivate
+                    wget https://github.com/mozilla/geckodriver/releases/download/v0.23.0/geckodriver-v0.23.0-linux64.tar.gz
+                    mkdir geckodriver
+                    tar -xzf geckodriver*.tar.gz -C geckodriver
+                    export PATH=$PATH:$PWD/geckodriver
+                   '''
+            }
+        }
+        stage ("Get Latest Code") {
+            steps {
+                checkout scm
+            }
         }
         stage('Test') {
             steps {
