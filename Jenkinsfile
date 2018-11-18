@@ -39,12 +39,22 @@ pipeline {
         stage('Test') {
             steps {
                 sh '''
-                source ../bin/activate
-                pytest --cov=koalixcrm --cov-branch --cov-report xml --cov-report term -m "not version_increase"'''
+                . virtualenv/bin/activate
+                pytest --cov=koalixcrm --cov-branch --cov-report xml --cov-report term -m "not version_increase" -o ./report/coverage.xml'''
             }
             post {
                 always {
-                    junit '**/target/surefire-reports/*.xml'
+                    step([$class: 'CoberturaPublisher',
+                                   autoUpdateHealth: false,
+                                   autoUpdateStability: false,
+                                   coberturaReportFile: 'reports/coverage.xml',
+                                   failNoReports: false,
+                                   failUnhealthy: false,
+                                   failUnstable: false,
+                                   maxNumberOfBuilds: 10,
+                                   onlyStable: false,
+                                   sourceEncoding: 'ASCII',
+                                   zoomCoverageChart: false])
                 }
             }
         }
