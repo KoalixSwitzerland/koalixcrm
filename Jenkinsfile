@@ -40,7 +40,12 @@ pipeline {
                 sh '''
                 . virtualenv/bin/activate
                 export PATH=$PATH:$PWD/geckodriver
-                pytest --cov=koalixcrm --cov-branch --cov-report xml:report/coverage.xml --cov-report term -m "not version_increase" '''
+                if [ "${CHANGE_ID}" == "master" ] && [ -z "${CHANGE_ID}" ]; then {
+                    pytest --cov=koalixcrm --cov-branch --cov-report xml:reports/coverage.xml --cov-report term
+                }else{
+                    pytest --cov=koalixcrm --cov-branch --cov-report xml:reports/coverage.xml --cov-report term -m "not version_increase"
+                }
+                fi'''
             }
             post {
                 always {
