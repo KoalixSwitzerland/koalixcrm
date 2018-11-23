@@ -42,6 +42,8 @@ pipeline {
                 export PATH=$PATH:$PWD/geckodriver
                 if [ "${BRANCH_NAME}" == "master" ] && [ -z "${CHANGE_ID}" ]; then
                     pytest --cov=koalixcrm --cov-branch --cov-report xml:reports/coverage.xml --cov-report term
+                elif [ "${BRANCH_NAME}" == "development" ] && [ -z "${CHANGE_ID}" ]; then
+                    pytest --cov=koalixcrm --cov-branch --cov-report xml:reports/coverage.xml --cov-report term
                 else
                     pytest --cov=koalixcrm --cov-branch --cov-report xml:reports/coverage.xml --cov-report term -m "not version_increase"
                 fi'''
@@ -64,7 +66,7 @@ pipeline {
         }
         stage('Checkstyle + FindBugs') {
             steps {
-                echo 'Should deploy jar file on Hetzner via SSH. Not implemented yet.'
+                echo 'Should run a static code analysis.'
             }
         }
         stage('Archive') {
