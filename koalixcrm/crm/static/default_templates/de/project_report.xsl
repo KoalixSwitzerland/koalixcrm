@@ -231,7 +231,7 @@
                                     <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt"
                                                    padding="2.5pt">
                                         <fo:block text-align="end">
-                                            Act. Effort
+                                            Act. Costs
                                         </fo:block>
                                     </fo:table-cell>
                                 </xsl:when>
@@ -239,13 +239,13 @@
                             <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt"
                                            padding="2.5pt">
                                 <fo:block text-align="end">
-                                    Total Act.Effort
+                                    Total Act.Costs
                                 </fo:block>
                             </fo:table-cell>
                             <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt"
                                            padding="2.5pt">
                                 <fo:block text-align="end">
-                                    Planned Effort
+                                    Planned Costs
                                 </fo:block>
                             </fo:table-cell>
                         </fo:table-header>
@@ -355,14 +355,14 @@
                                                padding="2.5pt">
                                     <fo:block text-align="end">
                                         <xsl:value-of
-                                                select="format-number(object[@model='crm.project']/Effective_Effort_Overall,'#.##0,00', 'european')"/>
+                                                select="format-number(object[@model='crm.project']/Effective_Costs_Overall,'#.##0,00', 'european')"/>
                                     </fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt"
                                                padding="2.5pt">
                                     <fo:block text-align="end">
                                         <xsl:value-of
-                                                select="format-number(object[@model='crm.project']/Planned_Effort,'#.##0,00', 'european')"/>
+                                                select="format-number(object[@model='crm.project']/Planned_Costs,'#.##0,00', 'european')"/>
                                     </fo:block>
                                 </fo:table-cell>
                             </fo:table-row>
