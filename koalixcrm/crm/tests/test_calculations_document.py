@@ -342,7 +342,6 @@ class DocumentCalculationsTest(TestCase):
             overwrite_product_price=False,
             sales_document=quote_8
         )
-        groups = self.customer.is_member_of.all()
         datetime_now = make_date_utc(datetime.datetime(2024, 1, 1, 0, 00))
         date_now = datetime_now.date()
         Calculations.calculate_document_price(

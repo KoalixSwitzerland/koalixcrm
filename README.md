@@ -2,8 +2,10 @@
 ## Why koalixcrm
 <table><tr><th>Values:</th><th>Features:</th></tr>
 <tr><td><ul>
-  <li><b>Free and open</b></li>
- <li>REST interface to many entities - Open source - BSD license </li>
+ <li><b>Free and open</b></li>
+ <li>REST interface to many entities </li>
+ <li>Open source </li>
+ <li>BSD license </li>
 <li>Simple and beautiful user interface </li>
 <li>High quality output documents </li>
 <li>Small business <10 employees with access </li>
@@ -28,8 +30,10 @@
 [demo](http://koalixcrmdemoenglish.koalix.org/admin/).
 
 To be able to log in use the following credentials 
-  **user: guest**
-  **password: guestpassword**
+<ul>
+  <li><b>user: guest</b></li>
+  <li><b>password: guestpassword</b></li>
+ </ul>
 
 ## Documentation
 You can find the documentation of koalixcrm here: [doc](http://readthedocs.org/docs/koalixcrm/en/master/)

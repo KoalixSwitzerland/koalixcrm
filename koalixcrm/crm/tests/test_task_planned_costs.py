@@ -11,6 +11,8 @@ from koalixcrm.djangoUserExtension.factories.factory_user_extension import Stand
 from koalixcrm.crm.factories.factory_task import StandardTaskFactory
 from koalixcrm.crm.factories.factory_estimation import StandardEstimationToTaskFactory
 from koalixcrm.crm.factories.factory_human_resource import StandardHumanResourceFactory
+from koalixcrm.crm.factories.factory_resource_price import StandardResourcePriceFactory
+from koalixcrm.crm.factories.factory_unit import StandardUnitFactory
 from koalixcrm.crm.factories.factory_estimation import StandardHumanResourceEstimationToTaskFactory
 from koalixcrm.test_support_functions import make_date_utc
 
@@ -25,11 +27,19 @@ class TaskPlannedEffort(TestCase):
         self.test_billing_cycle = StandardCustomerBillingCycleFactory.create()
         self.test_user = AdminUserFactory.create()
         self.test_customer_group = StandardCustomerGroupFactory.create()
+        self.test_unit = StandardUnitFactory.create()
         self.test_customer = StandardCustomerFactory.create(is_member_of=(self.test_customer_group,))
         self.test_currency = StandardCurrencyFactory.create()
         self.test_user_extension = StandardUserExtensionFactory.create(user=self.test_user)
         self.test_reporting_period = StandardReportingPeriodFactory.create()
         self.test_human_resource = StandardHumanResourceFactory.create()
+        self.resource_price = StandardResourcePriceFactory.create(
+            resource=self.test_human_resource,
+            unit=self.test_unit,
+            currency=self.test_currency,
+            customer_group=self.test_customer_group,
+            price="120",
+        )
         self.test_1st_task = StandardTaskFactory.create(title="1st Test Task",
                                                         project=self.test_reporting_period.project)
         self.estimation_1st_task = StandardHumanResourceEstimationToTaskFactory(task=self.test_1st_task,
@@ -44,7 +54,7 @@ class TaskPlannedEffort(TestCase):
                                                                                 amount=0)
 
     @pytest.mark.back_end_tests
-    def test_task_planned_effort(self):
+    def test_task_planned_costs(self):
         self.assertEqual(
             (self.test_1st_task.planned_duration()).__str__(), "60")
         self.assertEqual(
@@ -55,53 +65,25 @@ class TaskPlannedEffort(TestCase):
             (self.test_2nd_task.planned_costs()).__str__(), "0")
         StandardEstimationToTaskFactory.create(resource=self.test_human_resource,
                                                amount="2.00",
-                                               task=self.test_1st_task)
+                                               task=self.test_1st_task,
+                                               reporting_period=self.test_reporting_period)
         StandardEstimationToTaskFactory.create(resource=self.test_human_resource,
                                                amount="1.50",
-                                               task=self.test_1st_task)
+                                               task=self.test_1st_task,
+                                               reporting_period=self.test_reporting_period)
         StandardEstimationToTaskFactory.create(resource=self.test_human_resource,
                                                amount="4.75",
-                                               task=self.test_2nd_task)
+                                               task=self.test_2nd_task,
+                                               reporting_period=self.test_reporting_period)
         StandardEstimationToTaskFactory.create(resource=self.test_human_resource,
                                                amount="3.25",
-                                               task=self.test_2nd_task)
+                                               task=self.test_2nd_task,
+                                               reporting_period=self.test_reporting_period)
         self.assertEqual(
             (self.test_1st_task.planned_effort()).__str__(), "3.50")
         self.assertEqual(
-            (self.test_1st_task.effective_effort(reporting_period=None)).__str__(), "0.0")
+            (self.test_1st_task.planned_costs(reporting_period=self.test_reporting_period)).__str__(), "420.00")
         self.assertEqual(
             (self.test_2nd_task.planned_effort()).__str__(), "8.00")
         self.assertEqual(
-            (self.test_2nd_task.effective_effort(reporting_period=None)).__str__(), "0.0")
-
-    @pytest.mark.back_end_tests
-    def test_task_planned_effort_old_reporting_period(self):
-        self.assertEqual(
-            (self.test_1st_task.planned_duration()).__str__(), "60")
-        self.assertEqual(
-            (self.test_1st_task.planned_costs()).__str__(), "0")
-        self.assertEqual(
-            (self.test_2nd_task.planned_duration()).__str__(), "90")
-        self.assertEqual(
-            (self.test_2nd_task.planned_costs()).__str__(), "0")
-        self.test_reporting_period.end = '2018-06-16'
-        StandardEstimationToTaskFactory.create(resource=self.test_human_resource,
-                                               amount="2.00",
-                                               task=self.test_1st_task)
-        StandardEstimationToTaskFactory.create(resource=self.test_human_resource,
-                                               amount="1.50",
-                                               task=self.test_1st_task)
-        StandardEstimationToTaskFactory.create(resource=self.test_human_resource,
-                                               amount="4.75",
-                                               task=self.test_2nd_task)
-        StandardEstimationToTaskFactory.create(resource=self.test_human_resource,
-                                               amount="3.25",
-                                               task=self.test_2nd_task)
-        self.assertEqual(
-            (self.test_1st_task.planned_effort()).__str__(), "3.50")
-        self.assertEqual(
-            (self.test_1st_task.effective_effort(reporting_period=None)).__str__(), "0.0")
-        self.assertEqual(
-            (self.test_2nd_task.planned_effort()).__str__(), "8.00")
-        self.assertEqual(
-            (self.test_2nd_task.effective_effort(reporting_period=None)).__str__(), "0.0")
+            (self.test_2nd_task.planned_costs(reporting_period=self.test_reporting_period)).__str__(), "960.00")

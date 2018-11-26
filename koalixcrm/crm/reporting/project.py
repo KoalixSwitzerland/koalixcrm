@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from decimal import *
 from datetime import *
 from django.db import models
 from django.contrib import admin
@@ -132,15 +133,19 @@ class Project(models.Model):
             all_project_tasks = Task.objects.filter(project=self.id)
             for task in all_project_tasks:
                 effective_accumulated_costs += float(task.effective_costs(reporting_period=single_reporting_period))
+        getcontext().prec = 5
+        effective_accumulated_costs = Decimal(effective_accumulated_costs)
+        self.default_currency.round(effective_accumulated_costs)
         return effective_accumulated_costs
 
-    effective_accumulated_costs.short_description = _("Effective Accumulated costs [hrs]")
+    effective_accumulated_costs.short_description = _("Effective Accumulated costs")
     effective_accumulated_costs.tags = True
 
     def effective_costs(self, reporting_period):
         effective_cost = 0
         for task in Task.objects.filter(project=self.id):
             effective_cost += task.effective_costs(reporting_period=reporting_period)
+        self.default_currency.round(effective_cost)
         return effective_cost
 
     def planned_costs(self, reporting_period=None):
@@ -159,6 +164,9 @@ class Project(models.Model):
         if all_project_tasks:
             for task in all_project_tasks:
                 planned_effort_accumulated += task.planned_costs(reporting_period)
+        getcontext().prec = 5
+        planned_effort_accumulated = Decimal(planned_effort_accumulated)
+        self.default_currency.round(planned_effort_accumulated)
         return planned_effort_accumulated
     planned_costs.short_description = _("Planned Costs")
     planned_costs.tags = True
@@ -236,7 +244,7 @@ class Project(models.Model):
     def effective_duration(self):
         """The function return the effective overall duration of a project as a string in days
         The function is reading the effective_starts and effective_ends of the project and
-        substract them from each other.
+        subtract them from each other.
 
         Args:
         no arguments
@@ -356,8 +364,7 @@ class Project(models.Model):
             return "n/a"
 
     def is_reporting_allowed(self):
-        from koalixcrm.crm.reporting.reporting_period import ReportingPeriod
-        """The function returns a boolean True when it is allowed to report on the project and 
+        """The function returns a boolean True when it is allowed to report on the project and
         on one of the reporting periods does also allow reporting
 
         Args:
@@ -368,6 +375,7 @@ class Project(models.Model):
 
         Raises:
           No exceptions planned"""
+        from koalixcrm.crm.reporting.reporting_period import ReportingPeriod
         reporting_periods = ReportingPeriod.objects.filter(project=self.id, status__is_done=False)
         if len(reporting_periods) != 0:
             if not self.project_status.is_done:

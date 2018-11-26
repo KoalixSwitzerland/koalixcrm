@@ -30,6 +30,17 @@ class Currency(models.Model):
         else:
             return self.rounding
 
+    def round(self, value):
+        """Rounds the input value to the rounding resolution which is defined in the variable "rounding"
+
+        Args: Decimal value value
+
+        Returns: Decimal value
+
+        Raises: should not return exceptions"""
+        rounded_value = int(value / self.get_rounding()) * self.get_rounding()
+        return rounded_value
+
     def __str__(self):
         return self.short_name
 

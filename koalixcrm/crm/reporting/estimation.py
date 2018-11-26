@@ -33,8 +33,14 @@ class Estimation(models.Model):
                                          null=False)
 
     def calculated_costs(self):
-        default_resource_price = ResourcePrice.objects.get(id=self.resource.id)
-        return self.amount*default_resource_price.price
+        default_resource_price = ResourcePrice.objects.filter(id=self.resource.id)
+        if len(default_resource_price) == 0:
+            costs = 0
+        else:
+            for resource_price in default_resource_price:
+                costs = self.amount*resource_price.price
+                break
+        return costs
 
     def __str__(self):
         return _("Estimation of Resource Consumption") + ": " + str(self.id)
