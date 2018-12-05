@@ -117,9 +117,15 @@ class Work(models.Model):
 
     def delete(self, using=None, keep_parents=False):
         if self.reporting_period.status.is_done:
-            raise ReportingPeriodDoneDeleteNotPossible()
+            raise ReportingPeriodDoneDeleteNotPossible("It was not possible to delete the work")
         else:
             super(Work, self).delete(using, keep_parents)
+
+    def save(self, *args, **kwargs):
+        if self.reporting_period.status.is_done:
+            raise ReportingPeriodDoneDeleteNotPossible("It was not possible to update the work")
+        else:
+            super(Work, self).save(*args, **kwargs)
 
     class Meta:
         app_label = "crm"

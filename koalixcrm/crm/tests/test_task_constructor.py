@@ -16,12 +16,11 @@ def freeze(monkeypatch):
     """ Now() manager patches date return a fixed, settable, value
         (freezes date)
     """
-    import datetime
     original = datetime.date
 
     class FreezeMeta(type):
         def __instancecheck__(self, instance):
-            if type(instance) == original or type(instance) == Freeze:
+            if instance.isinstance(original) or instance.isinstance(Freeze):
                 return True
 
     class Freeze(datetime.datetime):
