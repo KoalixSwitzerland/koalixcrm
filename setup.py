@@ -3,7 +3,8 @@ from koalixcrm.version import KOALIXCRM_VERSION
 
 setup(name='koalix-crm',
       version=KOALIXCRM_VERSION,
-      description='koalixcrm is a tiny and easy to use Customer-Relationship-Management Software (CRM) including tiny and easy to use Accounting Software',
+      description='koalixcrm is a tiny and easy to use Customer-Relationship-Management'
+                  ' Software (CRM) including tiny and easy to use Accounting Software',
       url='http://github.com/scaphilo/koalixcrm',
       author='Aaron Riedener',
       author_email='aaron.riedener@gmail.com',
@@ -20,10 +21,13 @@ setup(name='koalix-crm',
                         'djangorestframework==3.7.7',
                         'markdown==2.6.11',
                         'django-filter==1.1.0',
-                        'djangorestframework-xml==1.3.0'
+                        'djangorestframework-xml==1.3.0',
+                        'pandas==0.23.4',
+                        'matplotlib==3.0.1'
                         ],
       zip_safe=False,
-      classifiers=['Development Status :: 4 - Beta','Programming Language :: Python :: 3.4',],
+      classifiers=['Development Status :: 4 - Beta',
+                   'Programming Language :: Python :: 3.4', ],
       python_requires='~=3.5',
       include_package_data=True,
 )
