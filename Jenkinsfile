@@ -77,6 +77,10 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Should deploy jar file on Hetzner via SSH. Not implemented yet.'
+                sh '''
+                . virtualenv/bin/activate
+                python /usr/local/bin/server.py --branch_name=${BRANCH_NAME} --action=deploy
+                '''
             }
         }
     }
