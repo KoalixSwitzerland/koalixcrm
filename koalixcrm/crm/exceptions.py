@@ -83,7 +83,7 @@ class UserIsNoHumanResource(Exception):
 
 
 class ReportingPeriodDoneDeleteNotPossible(Exception):
-    def __init__(self, value):
+    def __init__(self, value=None):
         self.value = value
         self.view = "/koalixcrm/crm/reporting/reporting_period_done_delete_not_possible"
 
