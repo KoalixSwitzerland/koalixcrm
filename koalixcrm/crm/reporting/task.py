@@ -26,6 +26,7 @@ class Task(models.Model):
                              blank=True,
                              null=True)
     project = models.ForeignKey("Project",
+                                on_delete=models.CASCADE,
                                 verbose_name=_('Project'),
                                 related_name='tasks',
                                 blank=False,
@@ -33,7 +34,7 @@ class Task(models.Model):
     description = models.TextField(verbose_name=_("Description"),
                                    blank=True,
                                    null=True)
-    status = models.ForeignKey("TaskStatus", verbose_name=_('Status'),
+    status = models.ForeignKey("TaskStatus", on_delete=models.CASCADE, verbose_name=_('Status'),
                                blank=True,
                                null=True)
     last_status_change = models.DateField(verbose_name=_("Last Status Change"),

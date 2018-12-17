@@ -18,7 +18,7 @@ from koalixcrm.crm.documents.pdf_export import PDFExport
 
 
 class TextParagraphInSalesDocument(models.Model):
-    sales_document = models.ForeignKey("SalesDocument")
+    sales_document = models.ForeignKey("SalesDocument", on_delete=models.CASCADE)
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=2, choices=PURPOSESTEXTPARAGRAPHINDOCUMENTS)
     text_paragraph = models.TextField(verbose_name=_("Text"), blank=False, null=False)
 
@@ -40,6 +40,7 @@ class TextParagraphInSalesDocument(models.Model):
 
 class SalesDocument(models.Model):
     contract = models.ForeignKey("Contract",
+                                 on_delete=models.CASCADE,
                                  verbose_name=_('Contract'))
     external_reference = models.CharField(verbose_name=_("External Reference"),
                                           max_length=100,
@@ -67,14 +68,16 @@ class SalesDocument(models.Model):
                                               blank=True,
                                               null=True)
     customer = models.ForeignKey("Customer",
+                                 on_delete=models.CASCADE,
                                  verbose_name=_("Customer"))
     staff = models.ForeignKey('auth.User',
+                              on_delete=models.CASCADE,
                               limit_choices_to={'is_staff': True},
                               blank=True,
                               verbose_name=_("Staff"),
                               related_name="db_relscstaff",
                               null=True)
-    currency = models.ForeignKey("Currency", verbose_name=_("Currency"),
+    currency = models.ForeignKey("Currency", on_delete=models.CASCADE, verbose_name=_("Currency"),
                                  blank=False, null=False)
     date_of_creation = models.DateTimeField(verbose_name=_("Created at"),
                                             auto_now_add=True)
@@ -83,16 +86,18 @@ class SalesDocument(models.Model):
                                          null=True)
     last_modification = models.DateTimeField(verbose_name=_("Last modified"),
                                              auto_now=True)
-    last_modified_by = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True},
+    last_modified_by = models.ForeignKey('auth.User', on_delete=models.CASCADE, limit_choices_to={'is_staff': True},
                                          verbose_name=_("Last modified by"),
                                          related_name="db_lstscmodified",
                                          null=True,
                                          blank="True")
     template_set = models.ForeignKey("djangoUserExtension.DocumentTemplate",
+                                     on_delete=models.CASCADE,
                                      verbose_name=_("Referred Template"),
                                      null=True,
                                      blank=True)
     derived_from_sales_document = models.ForeignKey("SalesDocument",
+                                                    on_delete=models.CASCADE,
                                                     blank=True,
                                                     null=True)
     last_print_date = models.DateTimeField(verbose_name=_("Last printed"),
@@ -197,7 +202,7 @@ class SalesDocument(models.Model):
 
 class PostalAddressForSalesDocument(PostalAddress):
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT)
-    sales_document = models.ForeignKey("SalesDocument")
+    sales_document = models.ForeignKey("SalesDocument", on_delete=models.CASCADE)
 
     class Meta:
         app_label = "crm"
@@ -210,7 +215,7 @@ class PostalAddressForSalesDocument(PostalAddress):
 
 class EmailAddressForSalesDocument(EmailAddress):
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT)
-    sales_document = models.ForeignKey("SalesDocument")
+    sales_document = models.ForeignKey("SalesDocument", on_delete=models.CASCADE)
 
     class Meta:
         app_label = "crm"
@@ -223,7 +228,7 @@ class EmailAddressForSalesDocument(EmailAddress):
 
 class PhoneAddressForSalesDocument(PhoneAddress):
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT)
-    sales_document = models.ForeignKey("SalesDocument")
+    sales_document = models.ForeignKey("SalesDocument", on_delete=models.CASCADE)
 
     class Meta:
         app_label = "crm"

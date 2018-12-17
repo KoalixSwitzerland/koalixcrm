@@ -13,6 +13,7 @@ from koalixcrm.crm.documents.pdf_export import PDFExport
 
 class HumanResource(Resource):
     user = models.ForeignKey(UserExtension,
+                             on_delete=models.CASCADE,
                              verbose_name=_("User"))
 
     def __str__(self):

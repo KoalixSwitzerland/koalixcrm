@@ -10,10 +10,12 @@ from django.contrib.contenttypes.admin import GenericTabularInline
 
 class GenericProjectLink(models.Model):
     project = models.ForeignKey("Project",
+                                on_delete=models.CASCADE,
                                 verbose_name=_('Project'),
                                 blank=False,
                                 null=False)
     project_link_type = models.ForeignKey("ProjectLinkType",
+                                          on_delete=models.CASCADE,
                                           verbose_name=_('Project Link Type'),
                                           blank=True,
                                           null=True)
@@ -24,6 +26,7 @@ class GenericProjectLink(models.Model):
     date_of_creation = models.DateTimeField(verbose_name=_("Created at"),
                                             auto_now_add=True)
     last_modified_by = models.ForeignKey('auth.User',
+                                         on_delete=models.CASCADE,
                                          limit_choices_to={'is_staff': True},
                                          verbose_name=_("Last modified by"),
                                          related_name="db_project_link_last_modified")

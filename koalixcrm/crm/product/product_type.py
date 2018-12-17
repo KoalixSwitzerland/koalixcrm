@@ -20,13 +20,15 @@ class ProductType(models.Model):
                                                max_length=200,
                                                null=True,
                                                blank=True)
-    default_unit = models.ForeignKey("Unit", verbose_name=_("Unit"))
+    default_unit = models.ForeignKey("Unit", on_delete=models.CASCADE, verbose_name=_("Unit"))
     tax = models.ForeignKey("Tax",
+                            on_delete=models.CASCADE,
                             blank=False,
                             null=False)
     last_modification = models.DateTimeField(verbose_name=_("Last modified"),
                                              auto_now=True)
     last_modified_by = models.ForeignKey('auth.User',
+                                         on_delete=models.CASCADE,
                                          limit_choices_to={'is_staff': True},
                                          verbose_name=_("Last modified by"),
                                          null=True,
@@ -34,6 +36,7 @@ class ProductType(models.Model):
     date_of_creation = models.DateTimeField(verbose_name=_("Created at"),
                                             auto_now_add=True)
     accounting_product_category = models.ForeignKey('accounting.ProductCategory',
+                                                    on_delete=models.CASCADE,
                                                     verbose_name=_("Accounting Product Category"),
                                                     null=True,
                                                     blank=True)

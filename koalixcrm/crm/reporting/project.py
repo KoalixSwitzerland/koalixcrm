@@ -16,7 +16,7 @@ from rest_framework import serializers
 
 
 class Project(models.Model):
-    project_manager = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True},
+    project_manager = models.ForeignKey('auth.User', on_delete=models.CASCADE, limit_choices_to={'is_staff': True},
                                         verbose_name=_("Staff"),
                                         related_name="db_rel_project_staff",
                                         blank=True,
@@ -29,14 +29,17 @@ class Project(models.Model):
                                    null=True,
                                    blank=True)
     project_status = models.ForeignKey("ProjectStatus",
+                                       on_delete=models.CASCADE,
                                        verbose_name=_('Project Status'),
                                        blank=True,
                                        null=True)
     default_template_set = models.ForeignKey("djangoUserExtension.TemplateSet",
+                                             on_delete=models.CASCADE,
                                              verbose_name=_("Default Template Set"),
                                              null=True,
                                              blank=True)
     default_currency = models.ForeignKey("Currency",
+                                         on_delete=models.CASCADE,
                                          verbose_name=_("Default Currency"),
                                          null=False,
                                          blank=False)
@@ -45,6 +48,7 @@ class Project(models.Model):
     last_modification = models.DateTimeField(verbose_name=_("Last modified"),
                                              auto_now=True)
     last_modified_by = models.ForeignKey('auth.User',
+                                         on_delete=models.CASCADE,
                                          limit_choices_to={'is_staff': True},
                                          verbose_name=_("Last modified by"),
                                          related_name="db_project_last_modified")

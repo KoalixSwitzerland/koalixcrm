@@ -8,10 +8,11 @@ from koalixcrm.crm.reporting.resource_price import ResourcePrice
 
 class Estimation(models.Model):
     task = models.ForeignKey("Task",
+                             on_delete=models.CASCADE,
                              verbose_name=_('Task'),
                              blank=False,
                              null=False)
-    resource = models.ForeignKey("Resource")
+    resource = models.ForeignKey("Resource", on_delete=models.CASCADE)
     date_from = models.DateField(verbose_name=_("Estimation From"),
                                  blank=False,
                                  null=False)
@@ -24,10 +25,12 @@ class Estimation(models.Model):
                                  blank=True,
                                  null=True)
     status = models.ForeignKey("EstimationStatus",
+                               on_delete=models.CASCADE,
                                verbose_name=_('Status of the estimation'),
                                blank=False,
                                null=False)
     reporting_period = models.ForeignKey("ReportingPeriod",
+                                         on_delete=models.CASCADE,
                                          verbose_name=_('Reporting Period based on which the estimation was done'),
                                          blank=False,
                                          null=False)

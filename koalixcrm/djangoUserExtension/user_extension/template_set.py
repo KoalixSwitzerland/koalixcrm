@@ -12,30 +12,40 @@ class TemplateSet(models.Model):
     title = models.CharField(verbose_name=_("Title"),
                              max_length=100)
     invoice_template = models.ForeignKey("InvoiceTemplate",
+                                         on_delete=models.CASCADE,
                                          blank=True,
                                          null=True)
     quote_template = models.ForeignKey("QuoteTemplate",
+                                       on_delete=models.CASCADE,
                                        blank=True,
                                        null=True)
     delivery_note_template = models.ForeignKey("DeliveryNoteTemplate",
+                                               on_delete=models.CASCADE,
                                                blank=True, null=True)
     payment_reminder_template = models.ForeignKey("PaymentReminderTemplate",
+                                                  on_delete=models.CASCADE,
                                                   blank=True,
                                                   null=True)
     purchase_confirmation_template = models.ForeignKey("PurchaseConfirmationTemplate",
+                                                       on_delete=models.CASCADE,
                                                        blank=True, null=True)
     purchase_order_template = models.ForeignKey("PurchaseOrderTemplate",
+                                                on_delete=models.CASCADE,
                                                 blank=True,
                                                 null=True)
     profit_loss_statement_template = models.ForeignKey("ProfitLossStatementTemplate",
+                                                       on_delete=models.CASCADE,
                                                        blank=True, null=True)
     balance_sheet_statement_template = models.ForeignKey("BalanceSheetTemplate",
+                                                         on_delete=models.CASCADE,
                                                          blank=True,
                                                          null=True)
     monthly_project_summary_template = models.ForeignKey("MonthlyProjectSummaryTemplate",
+                                                         on_delete=models.CASCADE,
                                                          blank=True,
                                                          null=True)
     work_report_template = models.ForeignKey("WorkReportTemplate",
+                                             on_delete=models.CASCADE,
                                              blank=True,
                                              null=True)
 

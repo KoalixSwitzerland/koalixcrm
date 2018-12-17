@@ -19,10 +19,13 @@ class Position(models.Model):
                                    blank=True,
                                    null=True)
     product_type = models.ForeignKey("ProductType",
+                                     on_delete=models.CASCADE,
                                      verbose_name=_("Product"),
                                      blank=False,
                                      null=True)
-    unit = models.ForeignKey("Unit", verbose_name=_("Unit"),
+    unit = models.ForeignKey("Unit",
+                             on_delete=models.CASCADE,
+                             verbose_name=_("Unit"),
                              blank=True,
                              null=True)
     sent_on = models.DateField(verbose_name=_("Shipment on"),
@@ -57,7 +60,7 @@ class Position(models.Model):
 
 
 class SalesDocumentPosition(Position):
-    sales_document = models.ForeignKey("SalesDocument", verbose_name=_("Contract"))
+    sales_document = models.ForeignKey("SalesDocument", on_delete=models.CASCADE, verbose_name=_("Contract"))
 
     class Meta:
         app_label = "crm"

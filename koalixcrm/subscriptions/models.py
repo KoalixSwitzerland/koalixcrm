@@ -9,8 +9,8 @@ import koalixcrm.crm.documents
 
 
 class Subscription(models.Model):
-    contract = models.ForeignKey('crm.Contract', verbose_name=_('Subscription Type'))
-    subscription_type = models.ForeignKey('SubscriptionType', verbose_name=_('Subscription Type'), null=True)
+    contract = models.ForeignKey('crm.Contract', on_delete=models.CASCADE, verbose_name=_('Subscription Type'))
+    subscription_type = models.ForeignKey('SubscriptionType', on_delete=models.CASCADE, verbose_name=_('Subscription Type'), null=True)
 
     def create_subscription_from_contract(self, contract):
         self.contract = contract
@@ -52,6 +52,7 @@ class Subscription(models.Model):
 
 class SubscriptionEvent(models.Model):
     subscriptions = models.ForeignKey('Subscription',
+                                      on_delete=models.CASCADE,
                                       verbose_name=_('Subscription'))
     event_date = models.DateField(verbose_name=_("Event Date"),
                                   blank=True, null=True)

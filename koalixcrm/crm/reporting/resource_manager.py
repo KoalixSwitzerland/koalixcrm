@@ -8,6 +8,7 @@ from django.utils.translation import ugettext as _
 
 class ResourceManager(models.Model):
     user = models.ForeignKey(UserExtension,
+                             on_delete=models.CASCADE,
                              verbose_name=_("User"))
 
 
