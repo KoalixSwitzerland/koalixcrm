@@ -5,7 +5,6 @@ from django.db import models
 from django.utils.translation import ugettext as _
 from filebrowser.fields import FileBrowseField
 from koalixcrm.subscriptions.const.events import *
-from koalixcrm.crm.product.product_type import ProductType
 import koalixcrm.crm.documents
 
 

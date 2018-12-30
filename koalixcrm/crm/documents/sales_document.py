@@ -106,7 +106,6 @@ class SalesDocument(models.Model):
 
     def serialize_to_xml(self):
         from koalixcrm.crm.models import PostalAddressForContact
-        from koalixcrm.crm.models import PostalAddress
         from koalixcrm.crm.models import Currency
         from koalixcrm.crm.models import PurchaseOrder
         from koalixcrm.crm.models import SalesDocument

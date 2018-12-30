@@ -42,7 +42,7 @@ class Account(models.Model):
     def sum_of_all_bookings_before_accounting_period(self, current_accounting_period):
         try:
             accounting_periods = current_accounting_period.get_all_prior_accounting_periods()
-        except AccountingPeriodNotFound as e:
+        except AccountingPeriodNotFound:
             return 0
         sum_of_all_bookings = 0
         for accounting_period in accounting_periods:

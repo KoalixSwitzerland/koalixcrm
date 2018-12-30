@@ -149,26 +149,41 @@
                               color="black"
                               text-align="left"
                               font-weight="bold"
-                              margin-top="2cm">
+                              margin-top="1cm">
                         Project Report
                     </fo:block>
-                    <xsl:if test="object[@model='crm.reportingperiod']">
-                        <fo:block font-size="10pt"
-                                  font-family="BitstreamVeraSans"
-                                  color="black"
-                                  text-align="left"
-                                  font-weight="bold">
-                        Report Period: <xsl:value-of select="object[@model='crm.reportingperiod']/field[@name='title']"/>
-                        </fo:block>
-                    </xsl:if>
-                    <fo:block font-size="10pt"
-                              font-family="BitstreamVeraSans"
-                              color="black"
-                              text-align="left"
-                              font-weight="bold"
-                              margin-bottom="1cm">
-                        Project: <xsl:value-of select="object[@model='crm.project']/field[@name='project_name']"/>
-                    </fo:block>
+                    <fo:table table-layout="fixed" width="100%">
+                        <fo:table-column column-width="13.0cm"/>
+                        <fo:table-column column-width="13.0cm"/>
+                        <fo:table-body>
+                            <fo:table-row>
+                                <fo:table-cell>
+                                    <xsl:if test="object[@model='crm.reportingperiod']">
+                                        <fo:block font-size="10pt"
+                                                  font-family="BitstreamVeraSans"
+                                                  color="black"
+                                                  text-align="left"
+                                                  font-weight="bold">
+                                            Report Period: <xsl:value-of select="object[@model='crm.reportingperiod']/field[@name='title']"/>
+                                        </fo:block>
+                                    </xsl:if>
+                                    <fo:block font-size="10pt"
+                                              font-family="BitstreamVeraSans"
+                                              color="black"
+                                              text-align="left"
+                                              font-weight="bold"
+                                              margin-bottom="1cm">
+                                        Project: <xsl:value-of select="object[@model='crm.project']/field[@name='project_name']"/>
+                                    </fo:block>
+                                </fo:table-cell>
+                                <fo:table-cell>
+                                    <fo:block text-align="left">
+                                    </fo:block>
+                                </fo:table-cell>
+                            </fo:table-row>
+                        </fo:table-body>
+                    </fo:table>
+
                     <xsl:for-each select="object[@model='crm.textparagraphinsalesdocument']">
                         <xsl:choose>
                             <xsl:when test="field[@name='purpose']='AS'">
@@ -216,7 +231,7 @@
                                     <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt"
                                                    padding="2.5pt">
                                         <fo:block text-align="end">
-                                            Act. Effort
+                                            Act. Costs
                                         </fo:block>
                                     </fo:table-cell>
                                 </xsl:when>
@@ -224,13 +239,13 @@
                             <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt"
                                            padding="2.5pt">
                                 <fo:block text-align="end">
-                                    Total Act.Effort
+                                    Total Act.Costs
                                 </fo:block>
                             </fo:table-cell>
                             <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt"
                                            padding="2.5pt">
                                 <fo:block text-align="end">
-                                    Planned Effort
+                                    Planned Costs
                                 </fo:block>
                             </fo:table-cell>
                         </fo:table-header>
@@ -340,19 +355,26 @@
                                                padding="2.5pt">
                                     <fo:block text-align="end">
                                         <xsl:value-of
-                                                select="format-number(object[@model='crm.project']/Effective_Effort_Overall,'#.##0,00', 'european')"/>
+                                                select="format-number(object[@model='crm.project']/Effective_Costs_Overall,'#.##0,00', 'european')"/>
                                     </fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt"
                                                padding="2.5pt">
                                     <fo:block text-align="end">
                                         <xsl:value-of
-                                                select="format-number(object[@model='crm.project']/Planned_Effort,'#.##0,00', 'european')"/>
+                                                select="format-number(object[@model='crm.project']/Planned_Costs,'#.##0,00', 'european')"/>
                                     </fo:block>
                                 </fo:table-cell>
                             </fo:table-row>
                         </fo:table-body>
                     </fo:table>
+                    <fo:block text-align="left">
+                        <fo:external-graphic content-width="12.0cm">
+                            <xsl:attribute name="src">
+                                file:///home/aaron/IdeaProjects/koalixcrm/projectsettings/static/pdf/project_costs_overview.svg
+                            </xsl:attribute>
+                        </fo:external-graphic>
+                    </fo:block>
                     <fo:block id="last-page"></fo:block>
                 </fo:flow>
                 <xsl:apply-templates/>

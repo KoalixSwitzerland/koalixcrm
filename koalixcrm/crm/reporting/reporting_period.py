@@ -67,7 +67,8 @@ class ReportingPeriod(models.Model):
         Raises:
           ReportPeriodNotFound when there is no valid reporting Period"""
         latest_reporting_period = None
-        for reporting_period in ReportingPeriod.objects.filter(project=project):
+        reporting_periods = ReportingPeriod.objects.filter(project=project)
+        for reporting_period in reporting_periods:
             if latest_reporting_period is None:
                 latest_reporting_period = reporting_period
             else:
@@ -115,7 +116,8 @@ class ReportingPeriod(models.Model):
         Raises:
           ReportPeriodNotFound when there is no valid reporting Period"""
         predecessor_reporting_periods = list()
-        for reporting_period in ReportingPeriod.objects.filter(project=project):
+        reporting_periods = ReportingPeriod.objects.filter(project=project)
+        for reporting_period in reporting_periods:
             if reporting_period.end <= target_reporting_period.begin:
                 predecessor_reporting_periods.append(reporting_period)
         return predecessor_reporting_periods
@@ -177,7 +179,9 @@ class ReportingPeriod(models.Model):
 class ReportingPeriodAdminForm(ModelForm):
     def clean(self):
         """Check that the begin of the new reporting period is not located within an existing
-        reporting period, Checks that the begin is date earlier than the end"""
+        reporting period, Checks that the begin is date earlier than the end. Verify that in case there
+        is already a predecessor or a successor reporting period, the reporting periods are in direct contact
+        with each other"""
         cleaned_data = super().clean()
         project = cleaned_data['project']
         end = cleaned_data['end']
@@ -193,6 +197,14 @@ class ReportingPeriodAdminForm(ModelForm):
                                           'Reporting Period within the same project')
         if end < begin:
             raise ValidationError('Begin date must be earlier than end date')
+        if len(reporting_periods) != 0:
+            reporting_periods_direct_predecessor = ReportingPeriod.objects.filter(project=project,
+                                                                                  end=begin-timedelta(1))
+            reporting_periods_direct_successor = ReportingPeriod.objects.filter(project=project,
+                                                                                begin=end+timedelta(1))
+            if (len(reporting_periods_direct_predecessor) == 0) and (len(reporting_periods_direct_successor) == 0):
+                raise ValidationError('The new reporting period has to be directly following a previous reporting '
+                                      'period or it has to be directly before the following reporting period')
 
 
 class ReportingPeriodAdmin(admin.ModelAdmin):
