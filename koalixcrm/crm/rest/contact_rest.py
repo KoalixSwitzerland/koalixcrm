@@ -61,22 +61,24 @@ class ContactEmailAddressJSONSerializer(EmailAddressJSONSerializer):
 
 
 class ContactJSONSerializer(serializers.HyperlinkedModelSerializer):
-    offer = serializers.SerializerMethodField()
-    cartItem = serializers.SerializerMethodField('get_cart_item')
+    state = serializers.SerializerMethodField()
+    city = serializers.SerializerMethodField('get_town')
     stockDetails = serializers.SerializerMethodField('get_stock_details')
 
     class Meta:
         model = Contact
         fields = ('name',
-                  'offer',
-                  'cartItem',
-                  'stockDetails')
+                  'state',
+                  'city')
 
-    def get_offer(self, obj):
-        return 123
+    @staticmethod
+    def get_postal_address(obj):
+        return PostalAddressForContact.objects.filter(person=obj.id).first()
 
-    def get_cart_item(self, obj):
-        return 123
+    def get_state(self, obj):
+        address = self.get_postal_address(obj)
+        return address.state if address is not None else None
 
-    def get_stock_details(self, obj):
-        return 123
+    def get_town(self, obj):
+        address = self.get_postal_address(obj)
+        return address.town if address is not None else None
