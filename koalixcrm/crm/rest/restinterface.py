@@ -9,6 +9,7 @@ from rest_framework.decorators import authentication_classes
 from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
 from rest_framework_xml.renderers import XMLRenderer
 
+from koalixcrm.crm.contact.customer import Customer
 from koalixcrm.crm.contact.customer_billing_cycle import CustomerBillingCycle
 from koalixcrm.crm.contact.customer_group import CustomerGroup
 from koalixcrm.crm.documents.contract import Contract, ContractJSONSerializer
@@ -19,9 +20,11 @@ from koalixcrm.crm.product.unit import Unit
 from koalixcrm.crm.reporting.project import Project, ProjectJSONSerializer
 from koalixcrm.crm.reporting.task import Task, TaskSerializer
 from koalixcrm.crm.reporting.task_status import TaskStatus
+from koalixcrm.crm.rest.contact_rest import ContactJSONSerializer
 from koalixcrm.crm.rest.currency_rest import CurrencyJSONSerializer
 from koalixcrm.crm.rest.customer_billing_cycle_rest import CustomerBillingCycleJSONSerializer
 from koalixcrm.crm.rest.customer_group_rest import CustomerGroupJSONSerializer
+from koalixcrm.crm.rest.customer_rest import CustomerJSONSerializer
 from koalixcrm.crm.rest.product_rest import ProductJSONSerializer
 from koalixcrm.crm.rest.tax_rest import TaxJSONSerializer
 from koalixcrm.crm.rest.unit_rest import UnitJSONSerializer
@@ -169,3 +172,17 @@ class ProjectAsJSON(viewsets.ModelViewSet):
     @authentication_classes((SessionAuthentication, BasicAuthentication))
     def dispatch(self, *args, **kwargs):
         return super(ProjectAsJSON, self).dispatch(*args, **kwargs)
+
+
+class CustomerAsJSON(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed.
+    """
+    queryset = Customer.objects.all()
+    serializer_class = CustomerJSONSerializer
+    renderer_classes = (BrowsableAPIRenderer, JSONRenderer, XMLRenderer, XSLFORenderer)
+
+    @ConditionalMethodDecorator(method_decorator(login_required), settings.KOALIXCRM_REST_API_AUTH)
+    @authentication_classes((SessionAuthentication, BasicAuthentication))
+    def dispatch(self, *args, **kwargs):
+        return super(CustomerAsJSON, self).dispatch(*args, **kwargs)
