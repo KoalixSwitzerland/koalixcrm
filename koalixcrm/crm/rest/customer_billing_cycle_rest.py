@@ -1,8 +1,6 @@
 from rest_framework import serializers
 
 from koalixcrm.crm.contact.customer_billing_cycle import CustomerBillingCycle
-from koalixcrm.crm.contact.customer_group import CustomerGroup
-from koalixcrm.crm.product.unit import Unit
 
 
 class OptionCustomerBillingCycleJSONSerializer(serializers.HyperlinkedModelSerializer):

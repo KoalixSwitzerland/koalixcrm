@@ -20,7 +20,6 @@ from koalixcrm.crm.product.unit import Unit
 from koalixcrm.crm.reporting.project import Project, ProjectJSONSerializer
 from koalixcrm.crm.reporting.task import Task, TaskSerializer
 from koalixcrm.crm.reporting.task_status import TaskStatus
-from koalixcrm.crm.rest.contact_rest import ContactJSONSerializer
 from koalixcrm.crm.rest.currency_rest import CurrencyJSONSerializer
 from koalixcrm.crm.rest.customer_billing_cycle_rest import CustomerBillingCycleJSONSerializer
 from koalixcrm.crm.rest.customer_group_rest import CustomerGroupJSONSerializer

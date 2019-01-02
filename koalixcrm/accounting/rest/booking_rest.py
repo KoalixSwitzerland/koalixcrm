@@ -48,7 +48,6 @@ class BookingJSONSerializer(serializers.HyperlinkedModelSerializer):
         depth = 1
 
     def create(self, validated_data):
-
         booking = Booking()
         booking.description = validated_data['description']
         booking.amount = validated_data['amount']

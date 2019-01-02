@@ -30,7 +30,6 @@ class TaxJSONSerializer(serializers.HyperlinkedModelSerializer):
                   'liabilityAccount')
 
     def create(self, validated_data):
-
         tax = Tax()
         tax.tax_rate = validated_data['tax_rate']
         tax.name = validated_data['name']
