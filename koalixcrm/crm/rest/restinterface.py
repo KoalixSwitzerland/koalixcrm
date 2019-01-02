@@ -103,6 +103,20 @@ class CustomerBillingCycleAsJSON(viewsets.ModelViewSet):
         return super(CustomerBillingCycleAsJSON, self).dispatch(*args, **kwargs)
 
 
+class CustomerAsJSON(viewsets.ModelViewSet):
+    """
+    API endpoint that allows customers to be viewed.
+    """
+    queryset = Customer.objects.all()
+    serializer_class = CustomerJSONSerializer
+    renderer_classes = (BrowsableAPIRenderer, JSONRenderer, XMLRenderer, XSLFORenderer)
+
+    @ConditionalMethodDecorator(method_decorator(login_required), settings.KOALIXCRM_REST_API_AUTH)
+    @authentication_classes((SessionAuthentication, BasicAuthentication))
+    def dispatch(self, *args, **kwargs):
+        return super(CustomerAsJSON, self).dispatch(*args, **kwargs)
+
+
 class CustomerGroupAsJSON(viewsets.ModelViewSet):
     """
     API endpoint that allows customer groups to be viewed.
@@ -172,17 +186,3 @@ class ProjectAsJSON(viewsets.ModelViewSet):
     @authentication_classes((SessionAuthentication, BasicAuthentication))
     def dispatch(self, *args, **kwargs):
         return super(ProjectAsJSON, self).dispatch(*args, **kwargs)
-
-
-class CustomerAsJSON(viewsets.ModelViewSet):
-    """
-    API endpoint that allows users to be viewed.
-    """
-    queryset = Customer.objects.all()
-    serializer_class = CustomerJSONSerializer
-    renderer_classes = (BrowsableAPIRenderer, JSONRenderer, XMLRenderer, XSLFORenderer)
-
-    @ConditionalMethodDecorator(method_decorator(login_required), settings.KOALIXCRM_REST_API_AUTH)
-    @authentication_classes((SessionAuthentication, BasicAuthentication))
-    def dispatch(self, *args, **kwargs):
-        return super(CustomerAsJSON, self).dispatch(*args, **kwargs)
