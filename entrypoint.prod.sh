@@ -4,15 +4,15 @@
 pip install -r base_requirements.txt
 
 # Install FOP 2.2
-wget http://archive.apache.org/dist/xmlgraphics/fop/binaries/fop-2.2-bin.tar.gz
+wget https://storage.googleapis.com/server8koalixnet_backup/fop-2.2-bin.tar.gz
 tar -xzf fop-2.2-bin.tar.gz -C ../usr/bin
 rm -rf fop-2.2-bin.tar.gz
-chmod 755 ../usr/bin/fop-2.2/fop
+chmod 755 /usr/bin/fop-2.2/fop
 
 # Install Java 8
-wget --no-check-certificate -c --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u162-b12/0da788060d494f5095bf8624735fa2f1/jdk-8u162-linux-x64.tar.gz
-tar -xzf jdk-8u162-linux-x64.tar.gz -C ../usr/bin
-rm -rf jdk-8u162-linux-x64.tar.gz
+wget https://storage.googleapis.com/server8koalixnet_backup/jdk-8u181-linux-x64.tar.gz
+tar -xzf jdk-8u181-linux-x64.tar.gz -C ../usr/bin
+rm -rf jdk-8u181-linux-x64.tar.gz
 
 # Create /media/uploads/ directory which is required by django filebrowser
 mkdir -p projectsettings/media/uploads
