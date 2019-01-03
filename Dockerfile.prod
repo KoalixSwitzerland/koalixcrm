@@ -13,7 +13,7 @@ RUN pip install -r base_requirements.txt
 RUN wget https://storage.googleapis.com/server8koalixnet_backup/fop-2.2-bin.tar.gz
 RUN tar -xzf fop-2.2-bin.tar.gz -C ../usr/bin
 RUN rm -rf fop-2.2-bin.tar.gz
-RUN chmod 755 /usr/bin/fop-2.2/fop
+RUN chmod 755 /usr/bin/fop-2.2/fop/fop
 
 # Install Java 8
 RUN wget https://storage.googleapis.com/server8koalixnet_backup/jdk-8u181-linux-x64.tar.gz
