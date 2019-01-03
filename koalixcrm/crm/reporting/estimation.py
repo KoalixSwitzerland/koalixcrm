@@ -4,6 +4,7 @@ from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext as _
 from koalixcrm.crm.reporting.resource_price import ResourcePrice
+from decimal import *
 
 
 class Estimation(models.Model):
@@ -32,14 +33,47 @@ class Estimation(models.Model):
                                          blank=False,
                                          null=False)
 
-    def calculated_costs(self):
+    def duration_in_days(self):
+        duration_time_delta = self.date_until-self.date_from
+        duration = duration_time_delta.days
+        return duration
+
+    def calculated_costs(self, start=None, end=None):
+        """The function returns the calculated costs in total or the calculated costs within a specific start and
+        stop-frame.
+
+        Args:
+        start (datetime.date)
+        stop (datetime.date)
+
+        Returns:
+        planned costs (Decimal), 0 if no price can be found
+
+        Raises:
+        No exceptions planned"""
         default_resource_price = ResourcePrice.objects.filter(id=self.resource.id)
+        if start and end:
+            if start >= self.date_from and self.date_until <= end:
+                selected_duration_time_delta = end-start
+            elif start >= self.date_from and self.date_until > end:
+                selected_duration_time_delta = self.date_until-start
+            elif start < self.date_from and self.date_until <= end:
+                selected_duration_time_delta = end-self.date_from
+            else:
+                selected_duration_time_delta = end-end
+            selected_duration = selected_duration_time_delta.days
+        else:
+            selected_duration = self.duration_in_days()
         if len(default_resource_price) == 0:
-            costs = 0
+            overall_costs = 0
         else:
             for resource_price in default_resource_price:
-                costs = self.amount*resource_price.price
+                overall_costs = self.amount*resource_price.price
                 break
+        if self.duration_in_days() <= selected_duration:
+            costs = overall_costs
+        else:
+            costs = overall_costs * Decimal((selected_duration / self.duration_in_days()))
         return costs
 
     def __str__(self):
