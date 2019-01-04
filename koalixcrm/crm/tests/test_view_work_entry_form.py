@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import pytest
+import time
 import datetime
 from django.test import LiveServerTestCase
 from selenium import webdriver
@@ -90,6 +91,7 @@ class TimeTrackingWorkEntry(LiveServerTestCase):
         task.send_keys(self.test_1st_task.id.__str__())
         save_button = selenium.find_element_by_name('save')
         save_button.send_keys(Keys.RETURN)
+        time.sleep(1)
         try:
             element_present = expected_conditions.presence_of_element_located((By.ID, 'id_form-1-project'))
             WebDriverWait(selenium, timeout).until(element_present)

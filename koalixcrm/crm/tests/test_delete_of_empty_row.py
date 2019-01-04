@@ -91,7 +91,7 @@ class TimeTrackingWorkEntry(LiveServerTestCase):
         assert_when_element_does_not_exist(self, '//*[@id="id_form-1-project"]')
         add_more_button = selenium.find_element_by_xpath('//*[@id="add_more"]')
         add_more_button.send_keys(Keys.RETURN)
-        delete_form = selenium.find_element_by_xpath('//*[@id="id_form-1-DELETE"]')
+        delete_form = selenium.find_element_by_id('id_form-1-DELETE')
         if not delete_form.is_selected():
             delete_form.send_keys(Keys.SPACE)
         # check existence of a second form after pressing add more
@@ -119,5 +119,5 @@ class TimeTrackingWorkEntry(LiveServerTestCase):
         assert_when_element_does_not_exist(self, '//*[@id="id_form-1-task"]')
         assert_when_element_exists(self, '//*[@id="id_form-2-task"]')
         work = Work.objects.get(description="This is a test work entered through the front-end")
-        work.delete()
         self.assertEqual(type(work), Work)
+        work.delete()
