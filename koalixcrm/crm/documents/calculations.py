@@ -79,9 +79,8 @@ class Calculations:
             nominal_minus_discount = nominal_total * (1 - position.discount / 100)
         else:
             nominal_minus_discount = nominal_total
-        total_with_tax = nominal_minus_discount * ((100-position.product_type.get_tax_rate()) / 100)
         getcontext().prec = 5
-        total_with_tax = Decimal(total_with_tax)
+        total_with_tax = Decimal(nominal_minus_discount)
         position.last_calculated_price = currency.round(total_with_tax)
         position.last_pricing_date = pricing_date
         position.save()
