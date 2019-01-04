@@ -82,9 +82,10 @@ class WorkEntry(forms.Form):
                 raise forms.ValidationError('date is not within the selected range', code='invalid')
             elif self.to_date < date:
                 raise forms.ValidationError('date is not within the selected range', code='invalid')
-        if not cleaned_data["project"].is_reporting_allowed():
-            raise forms.ValidationError('The project is either closed or there is not '
-                                        'reporting period available', code='invalid')
+        if 'project' in cleaned_data:
+            if not cleaned_data["project"].is_reporting_allowed():
+                raise forms.ValidationError('The project is either closed or there is not '
+                                            'reporting period available', code='invalid')
         WorkEntry.check_working_hours(cleaned_data)
         return cleaned_data
 
@@ -94,7 +95,10 @@ class WorkEntry(forms.Form):
             if self.cleaned_data['work_id']:
                 work = Work.objects.get(id=self.cleaned_data['work_id'])
             else:
-                work = Work()
+                if not self.cleaned_data['DELETE']:
+                    work = Work()
+                else:
+                    return
             if self.cleaned_data['DELETE']:
                 work.delete()
             else:

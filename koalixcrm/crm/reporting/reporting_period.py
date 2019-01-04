@@ -197,7 +197,7 @@ class ReportingPeriodAdminForm(ModelForm):
                                           'Reporting Period within the same project')
         if end < begin:
             raise ValidationError('Begin date must be earlier than end date')
-        if len(reporting_periods) != 0:
+        if len(reporting_periods) > 1:
             reporting_periods_direct_predecessor = ReportingPeriod.objects.filter(project=project,
                                                                                   end=begin-timedelta(1))
             reporting_periods_direct_successor = ReportingPeriod.objects.filter(project=project,
