@@ -86,6 +86,7 @@ class TimeTrackingWorkEntry(LiveServerTestCase):
         assert_when_element_exists(self, '//*[@id="id_form-1-project"]')
         add_more_button = selenium.find_element_by_xpath('//*[@id="add_more"]')
         add_more_button.send_keys(Keys.RETURN)
+        time.sleep(1)
         # check existence of a second form after pressing add more
         assert_when_element_does_not_exist(self, '//*[@id="id_form-1-project"]')
         add_more_button = selenium.find_element_by_xpath('//*[@id="add_more"]')
