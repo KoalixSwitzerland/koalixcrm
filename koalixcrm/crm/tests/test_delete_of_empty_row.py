@@ -22,7 +22,6 @@ from koalixcrm.crm.factories.factory_human_resource import StandardHumanResource
 
 
 class TimeTrackingWorkEntry(StaticLiveServerTestCase):
-
     @classmethod
     def setUpClass(cls):
         super(TimeTrackingWorkEntry, cls).setUpClass()
@@ -33,11 +32,8 @@ class TimeTrackingWorkEntry(StaticLiveServerTestCase):
         cls.test_user = AdminUserFactory.create()
         cls.test_customer_group = StandardCustomerGroupFactory.create()
         cls.test_customer = StandardCustomerFactory.create(is_member_of=(cls.test_customer_group,))
-        cls.test_currency = StandardCurrencyFactory.create()
         cls.test_user_extension = StandardUserExtensionFactory.create(user=cls.test_user)
         cls.test_human_resource = StandardHumanResourceFactory.create(user=cls.test_user_extension)
-        cls.test_customer_group = StandardCustomerGroupFactory.create()
-        cls.test_customer = StandardCustomerFactory.create(is_member_of=(cls.test_customer_group,))
         cls.test_currency = StandardCurrencyFactory.create()
         cls.test_reporting_period = StandardReportingPeriodFactory.create()
         cls.test_1st_task = StandardTaskFactory.create(title="1st Test Task",
@@ -50,7 +46,7 @@ class TimeTrackingWorkEntry(StaticLiveServerTestCase):
         super(TimeTrackingWorkEntry, cls).tearDownClass()
 
     @pytest.mark.front_end_tests
-    def test_registration_of_work(self):
+    def test_delete_of_new_blank_row(self):
         selenium = self.selenium
         # login
         selenium.get('%s%s' % (self.live_server_url, '/koalixcrm/crm/reporting/time_tracking/'))
@@ -82,17 +78,31 @@ class TimeTrackingWorkEntry(StaticLiveServerTestCase):
         assert_when_element_does_not_exist(self, '//*[@id="id_form-0-worked_hours"]')
         assert_when_element_does_not_exist(self, '//*[@id="id_form-0-description"]')
         assert_when_element_does_not_exist(self, 'save')
-        project = selenium.find_element_by_xpath('//*[@id="id_form-0-project"]')
-        date = selenium.find_element_by_xpath('//*[@id="id_form-0-date"]')
-        start_time = selenium.find_element_by_xpath('//*[@id="id_form-0-start_time"]')
-        stop_time = selenium.find_element_by_xpath('//*[@id="id_form-0-stop_time"]')
-        description = selenium.find_element_by_xpath('//*[@id="id_form-0-description"]')
+        # check existence of a second form before pressing add more
+        assert_when_element_exists(self, '//*[@id="id_form-1-project"]')
+        add_more_button = selenium.find_element_by_xpath('//*[@id="add_more"]')
+        add_more_button.send_keys(Keys.RETURN)
+        time.sleep(1)
+        # check existence of a second form after pressing add more
+        assert_when_element_does_not_exist(self, '//*[@id="id_form-1-project"]')
+        add_more_button = selenium.find_element_by_xpath('//*[@id="add_more"]')
+        add_more_button.send_keys(Keys.RETURN)
+        delete_form = selenium.find_element_by_id('id_form-1-DELETE')
+        if not delete_form.is_selected():
+            delete_form.send_keys(Keys.SPACE)
+        # check existence of a second form after pressing add more
+        assert_when_element_does_not_exist(self, '//*[@id="id_form-2-project"]')
+        project = selenium.find_element_by_xpath('//*[@id="id_form-2-project"]')
+        date = selenium.find_element_by_xpath('//*[@id="id_form-2-date"]')
+        start_time = selenium.find_element_by_xpath('//*[@id="id_form-2-start_time"]')
+        stop_time = selenium.find_element_by_xpath('//*[@id="id_form-2-stop_time"]')
+        description = selenium.find_element_by_xpath('//*[@id="id_form-2-description"]')
         project.send_keys(self.test_reporting_period.project.id.__str__())
         date.send_keys(datetime.date.today().__str__())
         start_time.send_keys(datetime.time(11, 55).__str__())
         stop_time.send_keys(datetime.time(12, 55).__str__())
         description.send_keys("This is a test work entered through the front-end")
-        task = selenium.find_element_by_xpath('//*[@id="id_form-0-task"]/option[text()="'+self.test_1st_task.title+'"]')
+        task = selenium.find_element_by_xpath('//*[@id="id_form-2-task"]/option[text()="'+self.test_1st_task.title+'"]')
         task.click()
         save_button = selenium.find_element_by_name('save')
         save_button.send_keys(Keys.RETURN)
@@ -103,5 +113,7 @@ class TimeTrackingWorkEntry(StaticLiveServerTestCase):
         except TimeoutException:
             print("Timed out waiting for page to load")
         assert_when_element_does_not_exist(self, '//*[@id="id_form-1-task"]')
+        assert_when_element_exists(self, '//*[@id="id_form-2-task"]')
         work = Work.objects.get(description="This is a test work entered through the front-end")
         self.assertEqual(type(work), Work)
+        work.delete()

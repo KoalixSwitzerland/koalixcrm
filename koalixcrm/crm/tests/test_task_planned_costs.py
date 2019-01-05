@@ -82,8 +82,8 @@ class TaskPlannedEffort(TestCase):
         self.assertEqual(
             (self.test_1st_task.planned_effort()).__str__(), "3.50")
         self.assertEqual(
-            (self.test_1st_task.planned_costs(reporting_period=self.test_reporting_period)).__str__(), "420.00")
+            (self.test_1st_task.planned_costs(reporting_period=self.test_reporting_period)).__str__(), "0")
         self.assertEqual(
             (self.test_2nd_task.planned_effort()).__str__(), "8.00")
         self.assertEqual(
-            (self.test_2nd_task.planned_costs(reporting_period=self.test_reporting_period)).__str__(), "960.00")
+            (self.test_2nd_task.planned_costs(reporting_period=self.test_reporting_period)).__str__(), "0")
