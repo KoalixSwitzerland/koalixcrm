@@ -190,7 +190,7 @@ class DocumentCalculationsTest(TestCase):
             document=quote_1,
             pricing_date=date_now)
         self.assertEqual(
-            quote_1.last_calculated_price.__str__(), "90.00")
+            quote_1.last_calculated_price.__str__(), "100.00")
         self.assertEqual(
             quote_1.last_calculated_tax.__str__(), "10.00")
 
@@ -211,7 +211,7 @@ class DocumentCalculationsTest(TestCase):
             document=quote_2,
             pricing_date=date_now)
         self.assertEqual(
-            quote_2.last_calculated_price.__str__(), "45.00")
+            quote_2.last_calculated_price.__str__(), "50.00")
         self.assertEqual(
             quote_2.last_calculated_tax.__str__(), "5.00")
 
@@ -232,7 +232,7 @@ class DocumentCalculationsTest(TestCase):
             document=quote_3,
             pricing_date=date_now)
         self.assertEqual(
-            quote_3.last_calculated_price.__str__(), "117.00")
+            quote_3.last_calculated_price.__str__(), "130.00")
         self.assertEqual(
             quote_3.last_calculated_tax.__str__(), "13.00")
 
@@ -253,7 +253,7 @@ class DocumentCalculationsTest(TestCase):
             document=quote_4,
             pricing_date=date_now)
         self.assertEqual(
-            quote_4.last_calculated_price.__str__(), "72.00")
+            quote_4.last_calculated_price.__str__(), "80.00")
         self.assertEqual(
             quote_4.last_calculated_tax.__str__(), "8.00")
 
@@ -277,7 +277,7 @@ class DocumentCalculationsTest(TestCase):
             document=quote_5,
             pricing_date=date_now)
         self.assertEqual(
-            quote_5.last_calculated_price.__str__(), "27")
+            quote_5.last_calculated_price.__str__(), "30")
         self.assertEqual(
             quote_5.last_calculated_tax.__str__(), "3")
 
@@ -301,7 +301,7 @@ class DocumentCalculationsTest(TestCase):
             document=quote_6,
             pricing_date=date_now)
         self.assertEqual(
-            quote_6.last_calculated_price.__str__(), "20.80")
+            quote_6.last_calculated_price.__str__(), "23.10")
         self.assertEqual(
             quote_6.last_calculated_tax.__str__(), "2.30")
 
@@ -326,7 +326,7 @@ class DocumentCalculationsTest(TestCase):
             document=quote_7,
             pricing_date=date_now)
         self.assertEqual(
-            quote_7.last_calculated_price.__str__(), "18.70")
+            quote_7.last_calculated_price.__str__(), "20.75")
         self.assertEqual(
             quote_7.last_calculated_tax.__str__(), "2.05")
 
@@ -348,7 +348,7 @@ class DocumentCalculationsTest(TestCase):
             document=quote_8,
             pricing_date=date_now)
         self.assertEqual(
-            quote_8.last_calculated_price.__str__(), "36.00")
+            quote_8.last_calculated_price.__str__(), "40.00")
         self.assertEqual(
             quote_8.last_calculated_tax.__str__(), "4.00")
 
@@ -371,7 +371,7 @@ class DocumentCalculationsTest(TestCase):
             document=quote_9,
             pricing_date=date_now)
         self.assertEqual(
-            quote_9.last_calculated_price.__str__(), "36")
+            quote_9.last_calculated_price.__str__(), "40")
         self.assertEqual(
             quote_9.last_calculated_tax.__str__(), "4")
 
@@ -392,6 +392,6 @@ class DocumentCalculationsTest(TestCase):
             document=quote_10,
             pricing_date=date_now)
         self.assertEqual(
-            quote_10.last_calculated_price.__str__(), "36.00")
+            quote_10.last_calculated_price.__str__(), "40.00")
         self.assertEqual(
             quote_10.last_calculated_tax.__str__(), "4.00")
