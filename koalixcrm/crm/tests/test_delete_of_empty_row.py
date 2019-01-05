@@ -2,7 +2,7 @@
 import pytest
 import time
 import datetime
-from django.test import LiveServerTestCase
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
@@ -21,33 +21,29 @@ from koalixcrm.crm.reporting.work import Work
 from koalixcrm.crm.factories.factory_human_resource import StandardHumanResourceFactory
 
 
-class TimeTrackingWorkEntry(LiveServerTestCase):
-
-    def setUp(self):
+class TimeTrackingWorkEntry(StaticLiveServerTestCase):
+    @classmethod
+    def setUpClass(cls):
+        super(TimeTrackingWorkEntry, cls).setUpClass()
         firefox_options = webdriver.firefox.options.Options()
         firefox_options.set_headless(headless=True)
-        self.selenium = webdriver.Firefox(firefox_options=firefox_options)
-        self.test_user = AdminUserFactory.create()
-        self.test_customer_group = StandardCustomerGroupFactory.create()
-        self.test_customer = StandardCustomerFactory.create(is_member_of=(self.test_customer_group,))
-        self.test_user_extension = StandardUserExtensionFactory.create(user=self.test_user)
-        self.test_human_resource = StandardHumanResourceFactory.create(user=self.test_user_extension)
-        self.test_currency = StandardCurrencyFactory.create()
-        self.test_reporting_period = StandardReportingPeriodFactory.create()
-        self.test_1st_task = StandardTaskFactory.create(title="1st Test Task",
-                                                        project=self.test_reporting_period.project,
-                                                        )
+        cls.selenium = webdriver.Firefox(firefox_options=firefox_options)
+        cls.selenium.implicitly_wait(10)
+        cls.test_user = AdminUserFactory.create()
+        cls.test_customer_group = StandardCustomerGroupFactory.create()
+        cls.test_customer = StandardCustomerFactory.create(is_member_of=(cls.test_customer_group,))
+        cls.test_user_extension = StandardUserExtensionFactory.create(user=cls.test_user)
+        cls.test_human_resource = StandardHumanResourceFactory.create(user=cls.test_user_extension)
+        cls.test_currency = StandardCurrencyFactory.create()
+        cls.test_reporting_period = StandardReportingPeriodFactory.create()
+        cls.test_1st_task = StandardTaskFactory.create(title="1st Test Task",
+                                                       project=cls.test_reporting_period.project,
+                                                       )
 
-    def tearDown(self):
-        self.test_1st_task.delete()
-        self.test_reporting_period.delete()
-        self.test_currency.delete()
-        self.test_human_resource.delete()
-        self.test_user_extension.delete()
-        self.test_customer.delete()
-        self.test_customer_group.delete()
-        self.test_user.delete()
-        self.selenium.quit()
+    @classmethod
+    def tearDownClass(cls):
+        cls.selenium.quit()
+        super(TimeTrackingWorkEntry, cls).tearDownClass()
 
     @pytest.mark.front_end_tests
     def test_delete_of_new_blank_row(self):
@@ -97,7 +93,6 @@ class TimeTrackingWorkEntry(LiveServerTestCase):
         # check existence of a second form after pressing add more
         assert_when_element_does_not_exist(self, '//*[@id="id_form-2-project"]')
         project = selenium.find_element_by_xpath('//*[@id="id_form-2-project"]')
-        task = selenium.find_element_by_xpath('//*[@id="id_form-2-task"]')
         date = selenium.find_element_by_xpath('//*[@id="id_form-2-date"]')
         start_time = selenium.find_element_by_xpath('//*[@id="id_form-2-start_time"]')
         stop_time = selenium.find_element_by_xpath('//*[@id="id_form-2-stop_time"]')
@@ -107,7 +102,8 @@ class TimeTrackingWorkEntry(LiveServerTestCase):
         start_time.send_keys(datetime.time(11, 55).__str__())
         stop_time.send_keys(datetime.time(12, 55).__str__())
         description.send_keys("This is a test work entered through the front-end")
-        task.send_keys(self.test_1st_task.id.__str__())
+        task = selenium.find_element_by_xpath('//*[@id="id_form-2-task"]/option[text()="'+self.test_1st_task.title+'"]')
+        task.click()
         save_button = selenium.find_element_by_name('save')
         save_button.send_keys(Keys.RETURN)
         time.sleep(1)
