@@ -28,11 +28,7 @@ class GenericTaskLink(models.Model):
                                          related_name="db_task_link_last_modified")
 
     def __str__(self):
-        if not self.title:
-            string_to_return = str(self.id)
-        else:
-            string_to_return = str(self.id) + " " + str(self.title)
-        return string_to_return
+        return str(self.id)
 
     class Meta:
         app_label = "crm"
