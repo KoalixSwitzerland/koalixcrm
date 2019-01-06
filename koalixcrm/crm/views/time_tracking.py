@@ -19,8 +19,8 @@ from koalixcrm.crm.reporting.human_resource import HumanResource
 @login_required
 def work_report(request):
     try:
-        human_resource = HumanResource.objects.filter(user=UserExtension.get_user_extension(request.user))
-        if len(human_resource) == 0:
+        human_resource = HumanResource.objects.get(user=UserExtension.get_user_extension(request.user))
+        if not human_resource:
             error_message = "User "+request.user.__str__()+" is not registered as human resource"
             raise UserIsNoHumanResource(error_message)
         if request.POST.get('post'):

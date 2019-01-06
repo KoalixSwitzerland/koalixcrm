@@ -11,7 +11,7 @@ class BaseWorkEntryFormset(forms.BaseFormSet):
     @staticmethod
     def generate_initial_data(start_date, stop_date, human_resource):
         from koalixcrm.crm.reporting.work import Work
-        list_of_work = Work.objects.filter(human_resource=human_resource).filter(date__lte=stop_date).filter(date__gte=start_date).order_by("date")
+        list_of_work = Work.objects.filter(human_resource=human_resource, date__lte=stop_date, date__gte=start_date).order_by("date")
         initial = []
         for work in list_of_work:
             initial.append({'work_id': work.id,

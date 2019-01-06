@@ -83,7 +83,7 @@ Reporting
     </table>
     <br/>
     <div>
-        <table>
+        <table cellspacing="0" class="grp-table">
             {% for form in formset.forms %}
             {% if forloop.first %}
             <tr>
@@ -100,7 +100,7 @@ Reporting
                 <td colspan="7"> {{ form.non_field_errors }} </td>
             </tr>
             {% endif %}
-            <tr id='single_form' name="form-{{ forloop.counter0 }}">
+            <tr id='single_form' name="form-{{ forloop.counter0 }}" class="grp-row grp-row-even">
                 <td>
                     {{ form.project }}
                     {{ form.project.errors }}

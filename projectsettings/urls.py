@@ -53,8 +53,8 @@ urlpatterns = [
     path('', lambda _: redirect('admin:index'), name='index'),
     path('', include(router.urls)),
     path('admin/filebrowser/', site.urls),
-    path('grappelli/', include('grappelli.urls')), # grappelli URLS
-    path('koalixcrm/crm/reporting/', include('koalixcrm.crm.reporting.urls')), # koalixcrm crm reporting URLS
+    path('grappelli/', include('grappelli.urls')),
+    path('koalixcrm/crm/reporting/', include('koalixcrm.crm.reporting.urls')),
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
 ]
