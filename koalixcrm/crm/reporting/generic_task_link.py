@@ -8,8 +8,6 @@ from django.contrib import admin
 
 
 class GenericTaskLink(models.Model):
-    task = models.ForeignKey("Task", verbose_name=_('Task'), blank=False, null=False)
-    task_link_type = models.ForeignKey("TaskLinkType", verbose_name=_('Task Link Type'), blank=True, null=True)
     task = models.ForeignKey("Task", on_delete=models.CASCADE, verbose_name=_('Task'), blank=False, null=False)
     task_link_type = models.ForeignKey("TaskLinkType", on_delete=models.CASCADE, verbose_name=_('Task Link Type'), blank=True, null=True)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
@@ -20,7 +18,7 @@ class GenericTaskLink(models.Model):
                                          verbose_name=_("Last modified by"), related_name="db_task_link_last_modified")
 
     def __str__(self):
-        return str(self.id)
+        return str(self.id) + " " + str(self.title)
 
     class Meta:
         app_label = "crm"
@@ -30,11 +28,7 @@ class GenericTaskLink(models.Model):
 
 class InlineGenericTaskLink(admin.TabularInline):
     model = GenericTaskLink
-    readonly_fields = ('task_link_type',
-                       'content_type',
-                       'object_id',
-                       'date_of_creation',
-                       'last_modified_by')
+    readonly_fields = ('task_link_type', 'content_type', 'object_id', 'date_of_creation', 'last_modified_by')
     extra = 0
 
     def has_add_permission(self, request):
