@@ -1,5 +1,5 @@
 Django==2.1.5
-django-filebrowser==3.9.1
+django-filebrowser==3.11.1
 lxml==3.8.0
 olefile==0.44
 Pillow==4.2.1
