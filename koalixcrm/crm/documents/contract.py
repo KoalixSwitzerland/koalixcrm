@@ -25,7 +25,7 @@ from rest_framework import serializers
 
 class PostalAddressForContract(PostalAddress):
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT)
-    contract = models.ForeignKey('Contract')
+    contract = models.ForeignKey('Contract', on_delete=models.CASCADE)
 
     class Meta:
         app_label = "crm"
@@ -38,7 +38,7 @@ class PostalAddressForContract(PostalAddress):
 
 class PhoneAddressForContract(PhoneAddress):
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT)
-    contract = models.ForeignKey('Contract')
+    contract = models.ForeignKey('Contract', on_delete=models.CASCADE)
 
     class Meta:
         app_label = "crm"
@@ -51,7 +51,7 @@ class PhoneAddressForContract(PhoneAddress):
 
 class EmailAddressForContract(EmailAddress):
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT)
-    contract = models.ForeignKey('Contract')
+    contract = models.ForeignKey('Contract', on_delete=models.CASCADE)
 
     class Meta:
         app_label = "crm"
@@ -112,6 +112,7 @@ class ContractEmailAddress(admin.TabularInline):
 
 class Contract(models.Model):
     staff = models.ForeignKey('auth.User',
+                              on_delete=models.CASCADE,
                               limit_choices_to={'is_staff': True},
                               verbose_name=_("Staff"),
                               related_name="db_relcontractstaff",
@@ -119,24 +120,29 @@ class Contract(models.Model):
                               null=True)
     description = models.TextField(verbose_name=_("Description"))
     default_customer = models.ForeignKey("Customer",
+                                         on_delete=models.CASCADE,
                                          verbose_name=_("Default Customer"),
                                          null=True,
                                          blank=True)
     default_supplier = models.ForeignKey("Supplier",
+                                         on_delete=models.CASCADE,
                                          verbose_name=_("Default Supplier"),
                                          null=True,
                                          blank=True)
     default_currency = models.ForeignKey("Currency",
+                                         on_delete=models.CASCADE,
                                          verbose_name=_("Default Currency"),
                                          blank=False,
                                          null=False)
     default_template_set = models.ForeignKey("djangoUserExtension.TemplateSet",
+                                             on_delete=models.CASCADE,
                                              verbose_name=_("Default Template Set"), null=True, blank=True)
     date_of_creation = models.DateTimeField(verbose_name=_("Created at"),
                                             auto_now_add=True)
     last_modification = models.DateTimeField(verbose_name=_("Last modified"),
                                              auto_now=True)
     last_modified_by = models.ForeignKey('auth.User',
+                                         on_delete=models.CASCADE,
                                          limit_choices_to={'is_staff': True},
                                          verbose_name=_("Last modified by"),
                                          related_name="db_contractlstmodified")

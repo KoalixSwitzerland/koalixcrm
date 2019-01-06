@@ -12,13 +12,16 @@ from koalixcrm.crm.product.currency_transform import CurrencyTransform
 
 class Price(models.Model):
     unit = models.ForeignKey(Unit,
+                             on_delete=models.CASCADE,
                              blank=False,
                              verbose_name=_("Unit"))
     currency = models.ForeignKey(Currency,
+                                 on_delete=models.CASCADE,
                                  verbose_name='Currency',
                                  blank=False,
                                  null=False)
     customer_group = models.ForeignKey(CustomerGroup,
+                                       on_delete=models.CASCADE,
                                        verbose_name=_("Customer Group"),
                                        blank=True,
                                        null=True)

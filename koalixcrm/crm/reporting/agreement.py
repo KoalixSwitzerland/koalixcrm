@@ -8,14 +8,15 @@ from koalixcrm.crm.reporting.resource_price import ResourcePrice
 
 class Agreement(models.Model):
     task = models.ForeignKey("Task",
+                             on_delete=models.CASCADE,
                              verbose_name=_('Task'),
                              blank=False,
                              null=False)
-    resource = models.ForeignKey("Resource")
-    unit = models.ForeignKey("Unit")
-    costs = models.ForeignKey(ResourcePrice)
-    type = models.ForeignKey("AgreementType")
-    status = models.ForeignKey("AgreementStatus")
+    resource = models.ForeignKey("Resource", on_delete=models.CASCADE)
+    unit = models.ForeignKey("Unit", on_delete=models.CASCADE)
+    costs = models.ForeignKey(ResourcePrice, on_delete=models.CASCADE)
+    type = models.ForeignKey("AgreementType", on_delete=models.CASCADE)
+    status = models.ForeignKey("AgreementStatus", on_delete=models.CASCADE)
     date_from = models.DateField(verbose_name=_("Agreement From"),
                                  blank=False,
                                  null=False)

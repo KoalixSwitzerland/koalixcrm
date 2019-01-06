@@ -10,6 +10,7 @@ from koalixcrm.crm.const.status import *
 
 class Call(models.Model):
     staff = models.ForeignKey('auth.User',
+                              on_delete=models.CASCADE,
                               limit_choices_to={'is_staff': True},
                               verbose_name=_("Staff"),
                               related_name="db_relcallstaff",
@@ -24,6 +25,7 @@ class Call(models.Model):
     last_modification = models.DateTimeField(verbose_name=_("Last modified"),
                                              auto_now=True)
     last_modified_by = models.ForeignKey('auth.User',
+                                         on_delete=models.CASCADE,
                                          limit_choices_to={'is_staff': True},
                                          blank=True,
                                          null=True,
@@ -33,7 +35,7 @@ class Call(models.Model):
                               max_length=1,
                               choices=CALLSTATUS,
                               default="P")
-    
+
     def __str__(self):
         return _("Call") + " " + str(self.id)
 
