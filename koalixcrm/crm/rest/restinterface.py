@@ -9,6 +9,7 @@ from rest_framework.decorators import authentication_classes
 from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
 from rest_framework_xml.renderers import XMLRenderer
 
+from koalixcrm.crm.contact.contact import PostalAddressForContact
 from koalixcrm.crm.contact.customer import Customer
 from koalixcrm.crm.contact.customer_billing_cycle import CustomerBillingCycle
 from koalixcrm.crm.contact.customer_group import CustomerGroup
@@ -20,6 +21,7 @@ from koalixcrm.crm.product.unit import Unit
 from koalixcrm.crm.reporting.project import Project, ProjectJSONSerializer
 from koalixcrm.crm.reporting.task import Task, TaskSerializer
 from koalixcrm.crm.reporting.task_status import TaskStatus
+from koalixcrm.crm.rest.contact_rest import ContactPostalAddressJSONSerializer
 from koalixcrm.crm.rest.currency_rest import CurrencyJSONSerializer
 from koalixcrm.crm.rest.customer_billing_cycle_rest import CustomerBillingCycleJSONSerializer
 from koalixcrm.crm.rest.customer_group_rest import CustomerGroupJSONSerializer
@@ -128,6 +130,21 @@ class CustomerGroupAsJSON(viewsets.ModelViewSet):
     @authentication_classes((SessionAuthentication, BasicAuthentication))
     def dispatch(self, *args, **kwargs):
         return super(CustomerGroupAsJSON, self).dispatch(*args, **kwargs)
+
+
+class ContactPostalAddressAsJSON(viewsets.ModelViewSet):
+    """
+    API endpoint that allows customer postal addresses to be viewed.
+    """
+    queryset = PostalAddressForContact.objects.all()
+    serializer_class = ContactPostalAddressJSONSerializer
+    renderer_classes = (BrowsableAPIRenderer, JSONRenderer, XMLRenderer)
+    filter_fields = ('person',)
+
+    @ConditionalMethodDecorator(method_decorator(login_required), settings.KOALIXCRM_REST_API_AUTH)
+    @authentication_classes((SessionAuthentication, BasicAuthentication))
+    def dispatch(self, *args, **kwargs):
+        return super(ContactPostalAddressAsJSON, self).dispatch(*args, **kwargs)
 
 
 class TaxAsJSON(viewsets.ModelViewSet):
