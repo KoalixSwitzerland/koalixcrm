@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from django_filters import filters
 from rest_framework import serializers
 
 from koalixcrm.crm.contact.contact import Contact, PhoneAddressForContact, PostalAddressForContact, \
@@ -18,7 +17,7 @@ class PhoneNumberJSONSerializer(serializers.HyperlinkedModelSerializer):
 class ContactPhoneNumberJSONSerializer(PhoneNumberJSONSerializer):
     class Meta:
         model = PhoneAddressForContact
-        fields = PhoneNumberJSONSerializer.Meta.fields + ('purpose',)
+        fields = PhoneNumberJSONSerializer.Meta.fields + ('id', 'purpose',)
 
 
 class PostalAddressJSONSerializer(serializers.HyperlinkedModelSerializer):
@@ -41,7 +40,7 @@ class PostalAddressJSONSerializer(serializers.HyperlinkedModelSerializer):
                   'addressLine3',
                   'addressLine4',
                   'zipCode',
-                  'town',
+                  'city',
                   'state',
                   'country')
 
@@ -49,7 +48,7 @@ class PostalAddressJSONSerializer(serializers.HyperlinkedModelSerializer):
 class ContactPostalAddressJSONSerializer(PostalAddressJSONSerializer):
     class Meta:
         model = PostalAddressForContact
-        fields = PostalAddressJSONSerializer.Meta.fields + ('purpose', )
+        fields = PostalAddressJSONSerializer.Meta.fields + ('id', 'purpose', )
 
 
 class EmailAddressJSONSerializer(serializers.HyperlinkedModelSerializer):
@@ -61,7 +60,7 @@ class EmailAddressJSONSerializer(serializers.HyperlinkedModelSerializer):
 class ContactEmailAddressJSONSerializer(EmailAddressJSONSerializer):
     class Meta:
         model = EmailAddressForContact
-        fields = EmailAddressJSONSerializer.Meta.fields + ('purpose',)
+        fields = EmailAddressJSONSerializer.Meta.fields + ('id', 'purpose', )
 
 
 class ContactJSONSerializer(serializers.HyperlinkedModelSerializer):
