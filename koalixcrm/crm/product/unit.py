@@ -11,6 +11,7 @@ class Unit(models.Model):
     short_name = models.CharField(verbose_name=_("Displayed Name After Quantity In The Position"),
                                   max_length=3)
     is_a_fraction_of = models.ForeignKey('self',
+                                         on_delete=models.CASCADE,
                                          blank=True,
                                          null=True,
                                          verbose_name=_("Is A Fraction Of"))

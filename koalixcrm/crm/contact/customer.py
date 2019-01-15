@@ -13,6 +13,7 @@ from koalixcrm.crm.documents.contract import Contract
 
 class Customer(Contact):
     default_customer_billing_cycle = models.ForeignKey('CustomerBillingCycle',
+                                                       on_delete=models.CASCADE,
                                                        verbose_name=_('Default Billing Cycle'))
     is_member_of = models.ManyToManyField("CustomerGroup",
                                           verbose_name=_('Is member of'),
@@ -113,7 +114,7 @@ class OptionCustomer(admin.ModelAdmin):
         return obj.is_lead
 
     get_is_lead.short_description = _("Is Lead")
-    
+
     def create_contract(self, request, queryset):
         for obj in queryset:
             contract = obj.create_contract(request)

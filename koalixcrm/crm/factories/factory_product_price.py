@@ -26,8 +26,8 @@ class StandardPriceFactory(factory.django.DjangoModelFactory):
     currency = factory.SubFactory(StandardCurrencyFactory)
     customer_group = factory.SubFactory(StandardCustomerGroupFactory)
     price = "100.50"
-    valid_from = make_date_utc(datetime.datetime(2018, 6, 15, 00))
-    valid_until = make_date_utc(datetime.datetime(2024, 6, 15, 00))
+    valid_from = make_date_utc(datetime.datetime(2018, 6, 15, 00)).date()
+    valid_until = make_date_utc(datetime.datetime(2024, 6, 15, 00)).date()
 
 
 class HighPriceFactory(factory.django.DjangoModelFactory):
@@ -38,5 +38,5 @@ class HighPriceFactory(factory.django.DjangoModelFactory):
     currency = factory.SubFactory(StandardCurrencyFactory)
     customer_group = factory.SubFactory(StandardCustomerGroupFactory)
     price = "250.50"
-    valid_from = make_date_utc(datetime.datetime(2018, 6, 15, 00))
-    valid_until = make_date_utc(datetime.datetime(2024, 6, 15, 00))
+    valid_from = make_date_utc(datetime.datetime(2018, 6, 15, 00)).date()
+    valid_until = make_date_utc(datetime.datetime(2024, 6, 15, 00)).date()

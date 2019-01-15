@@ -143,8 +143,9 @@ class MigrateSalesContractToSalesDocument(Operation):
         # This is used to describe what the operation does in console output.
         return "Custom Operation"
 
-class Migration(migrations.Migration):
 
+class Migration(migrations.Migration):
+    atomic = False
     dependencies = [
         ('crm', '0014_auto_20180108_2048'),
     ]

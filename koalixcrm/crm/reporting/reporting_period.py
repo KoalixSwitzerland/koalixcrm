@@ -16,6 +16,7 @@ class ReportingPeriod(models.Model):
     """The reporting period is referred in the work, in the expenses and purchase orders, it is used as a
        supporting object to generate project reports"""
     project = models.ForeignKey("Project",
+                                on_delete=models.CASCADE,
                                 verbose_name=_("Project"),
                                 blank=False,
                                 null=False)
@@ -30,6 +31,7 @@ class ReportingPeriod(models.Model):
                            blank=False,
                            null=False)
     status = models.ForeignKey("ReportingPeriodStatus",
+                               on_delete=models.CASCADE,
                                verbose_name=_("Reporting Period Status"),
                                blank=True,
                                null=True)

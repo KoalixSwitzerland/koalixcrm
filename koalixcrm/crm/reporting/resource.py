@@ -6,10 +6,12 @@ from django.utils.translation import ugettext as _
 
 class Resource(models.Model):
     resource_manager = models.ForeignKey("ResourceManager",
+                                         on_delete=models.CASCADE,
                                          verbose_name=_("Manager"),
                                          blank=True,
                                          null=True)
     resource_type = models.ForeignKey("ResourceType",
+                                      on_delete=models.CASCADE,
                                       verbose_name=_("Resource Type"),
                                       blank=True,
                                       null=True)

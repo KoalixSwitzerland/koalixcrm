@@ -18,8 +18,8 @@ class StandardEstimationToTaskFactory(factory.django.DjangoModelFactory):
     amount = "112.50"
     task = factory.SubFactory(StandardTaskFactory)
     resource = factory.SubFactory(StandardResourceFactory)
-    date_from = make_date_utc(datetime.datetime(2018, 5, 2, 00))
-    date_until = make_date_utc(datetime.datetime(2018, 6, 15, 00))
+    date_from = make_date_utc(datetime.datetime(2018, 5, 2, 00)).date()
+    date_until = make_date_utc(datetime.datetime(2018, 6, 15, 00)).date()
     status = factory.SubFactory(StartedEstimationStatusFactory)
     reporting_period = factory.SubFactory(StandardReportingPeriodFactory)
 
@@ -31,7 +31,7 @@ class StandardHumanResourceEstimationToTaskFactory(factory.django.DjangoModelFac
     amount = "112.50"
     task = factory.SubFactory(StandardTaskFactory)
     resource = factory.SubFactory(StandardHumanResourceFactory)
-    date_from = make_date_utc(datetime.datetime(2018, 5, 2, 00))
-    date_until = make_date_utc(datetime.datetime(2018, 6, 15, 00))
+    date_from = make_date_utc(datetime.datetime(2018, 5, 2, 00)).date()
+    date_until = make_date_utc(datetime.datetime(2018, 6, 15, 00)).date()
     status = factory.SubFactory(StartedEstimationStatusFactory)
     reporting_period = factory.SubFactory(StandardReportingPeriodFactory)
