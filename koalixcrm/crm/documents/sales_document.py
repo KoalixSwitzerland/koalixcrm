@@ -370,9 +370,11 @@ class OptionSalesDocument(admin.ModelAdmin):
     def create_quote(self, request, queryset):
         from koalixcrm.crm.views.newdocument import CreateNewDocumentView
         for obj in queryset:
-            response = CreateNewDocumentView.create_new_document(self, request, obj,
-                                           koalixcrm.crm.documents.quote.Quote,
-                                           ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
+            response = CreateNewDocumentView.create_new_document(self,
+                                                                 request,
+                                                                 obj,
+                                                                 koalixcrm.crm.documents.quote.Quote,
+                                                                 ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
             return response
 
     create_quote.short_description = _("Create Quote")
@@ -380,9 +382,11 @@ class OptionSalesDocument(admin.ModelAdmin):
     def create_invoice(self, request, queryset):
         from koalixcrm.crm.views.newdocument import CreateNewDocumentView
         for obj in queryset:
-            response = CreateNewDocumentView.create_new_document(self, request, obj,
-                                           koalixcrm.crm.documents.invoice.Invoice,
-                                           ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
+            response = CreateNewDocumentView.create_new_document(self,
+                                                                 request,
+                                                                 obj,
+                                                                 koalixcrm.crm.documents.invoice.Invoice,
+                                                                 ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
             return response
 
     create_invoice.short_description = _("Create Invoice")
@@ -390,9 +394,11 @@ class OptionSalesDocument(admin.ModelAdmin):
     def create_purchase_confirmation(self, request, queryset):
         from koalixcrm.crm.views.newdocument import CreateNewDocumentView
         for obj in queryset:
-            response = CreateNewDocumentView.create_new_document(self, request, obj,
-                                           koalixcrm.crm.documents.purchaseconfirmation.PurchaseConfirmation,
-                                           ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
+            response = CreateNewDocumentView.create_new_document(self,
+                                                                 request,
+                                                                 obj,
+                                                                 koalixcrm.crm.documents.purchase_confirmation.PurchaseConfirmation,
+                                                                 ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
             return response
 
     create_purchase_confirmation.short_description = _("Create Purchase Confirmation")
@@ -400,9 +406,11 @@ class OptionSalesDocument(admin.ModelAdmin):
     def create_delivery_note(self, request, queryset):
         from koalixcrm.crm.views.newdocument import CreateNewDocumentView
         for obj in queryset:
-            response = CreateNewDocumentView.create_new_document(self, request, obj,
-                                           koalixcrm.crm.documents.deliverynote.DeliveryNote,
-                                           ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
+            response = CreateNewDocumentView.create_new_document(self,
+                                                                 request,
+                                                                 obj,
+                                                                 koalixcrm.crm.documents.delivery_note.DeliveryNote,
+                                                                 ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
             return response
 
     create_delivery_note.short_description = _("Create Delivery note")
@@ -410,9 +418,11 @@ class OptionSalesDocument(admin.ModelAdmin):
     def create_payment_reminder(self, request, queryset):
         from koalixcrm.crm.views.newdocument import CreateNewDocumentView
         for obj in queryset:
-            response = CreateNewDocumentView.create_new_document(self, request, obj,
-                                           koalixcrm.crm.documents.paymentreminder.PaymentReminder,
-                                           ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
+            response = CreateNewDocumentView.create_new_document(self,
+                                                                 request,
+                                                                 obj,
+                                                                 koalixcrm.crm.documents.payment_reminder.PaymentReminder,
+                                                                 ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
             return response
 
     create_payment_reminder.short_description = _("Create Payment Reminder")
@@ -420,9 +430,11 @@ class OptionSalesDocument(admin.ModelAdmin):
     def create_purchase_order(self, request, queryset):
         from koalixcrm.crm.views.newdocument import CreateNewDocumentView
         for obj in queryset:
-            response = CreateNewDocumentView.create_new_document(self, request, obj,
-                                           koalixcrm.crm.documents.purchaseorder.PurchaseOrder,
-                                           ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
+            response = CreateNewDocumentView.create_new_document(self,
+                                                                 request,
+                                                                 obj,
+                                                                 koalixcrm.crm.documents.purchase_order.PurchaseOrder,
+                                                                 ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
             return response
 
     create_purchase_order.short_description = _("Create Purchase Order")

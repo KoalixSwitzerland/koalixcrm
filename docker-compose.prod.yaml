@@ -4,7 +4,7 @@ services:
   db:
     image: postgres
   koalixcrm:
-    image: koalixswitzerland/koalixcrm:1.12dev5
+    image: koalixswitzerland/koalixcrm:1.13dev1
     environment:
       - DJANGO_SETTINGS_MODULE=projectsettings.settings.docker_production_settings
       - JAVA_HOME=/usr/bin/jdk1.8.0_181/jre
