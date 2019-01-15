@@ -70,10 +70,8 @@ class CreateQuoteThroughUI(StaticLiveServerTestCase):
         ok_button.send_keys(Keys.RETURN)
         time.sleep(1)
         try:
-            element_present = expected_conditions.presence_of_element_located((By.ID, 'id_form-1-project'))
+            element_present = expected_conditions.presence_of_element_located((By.ID, 'id_title'))
             WebDriverWait(selenium, timeout).until(element_present)
         except TimeoutException:
             print("Timed out waiting for page to load")
-        assert_when_element_does_not_exist(self, '//*[@id="id_form-1-task"]')
-        work = Work.objects.get(description="This is a test work entered through the front-end")
-        self.assertEqual(type(work), Work)
+        assert_when_element_does_not_exist(self, '/html/body/div/article/ul/li')
