@@ -71,14 +71,13 @@ pipeline {
         }
         stage('Build Docker image') {
             steps {
-                application = docker.build("koalixswitzerland/koalixcrm")
+            sh 'docker build -f "Dockerfile.prod" -t koalixswitzerland/koalixcrm:latest .'
             }
         }
         stage('Push Docker image') {
             steps {
-                docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
-                    // app.push("${env.BUILD_NUMBER}")
-                    app.push("latest")
+                withDockerRegistry([ credentialsId: "8c45eee4-1162-466b-84c5-5f86a52a44cd", url: "" ]) {
+                    sh 'docker push koalixswitzerland/koalixcrm:latest'
                 }
             }
         }
