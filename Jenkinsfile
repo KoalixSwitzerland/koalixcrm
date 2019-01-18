@@ -1,4 +1,6 @@
 pipeline {
+    def application
+
     agent any
     options {
         disableConcurrentBuilds()
@@ -67,9 +69,15 @@ pipeline {
                 echo 'Should deploy jar file on Hetzner via SSH. Not implemented yet.'
             }
         }
-        stage('Archive') {
+        stage('Build Docker image') {
+            application = docker.build("koalixswitzerland/koalixcrm")
+        }
+        stage('Push Docker image') {
             steps {
-                echo 'Should upload artefacts to Nexus. Not implemented yet.'
+                docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
+                    // app.push("${env.BUILD_NUMBER}")
+                    app.push("latest")
+                }
             }
         }
         stage('Deploy') {
