@@ -1,6 +1,6 @@
-pipeline {
-    def application
+def application
 
+pipeline {
     agent any
     options {
         disableConcurrentBuilds()
@@ -70,7 +70,9 @@ pipeline {
             }
         }
         stage('Build Docker image') {
-            application = docker.build("koalixswitzerland/koalixcrm")
+            steps {
+                application = docker.build("koalixswitzerland/koalixcrm")
+            }
         }
         stage('Push Docker image') {
             steps {
