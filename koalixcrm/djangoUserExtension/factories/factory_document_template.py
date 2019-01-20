@@ -35,7 +35,7 @@ class StandardDeliveryNoteTemplateFactory(factory.django.DjangoModelFactory):
     logo = FileObject("~/path/to/logo_file.jpg")
 
 
-class PaymentReminderTemplateFactory(factory.django.DjangoModelFactory):
+class StandardPaymentReminderTemplateFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = PaymentReminderTemplate
 

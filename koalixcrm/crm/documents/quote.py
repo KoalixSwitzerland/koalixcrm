@@ -61,6 +61,7 @@ class OptionQuote(OptionSalesDocument):
 
     actions = ['create_purchase_confirmation',
                'create_invoice',
+               'create_quote',
                'create_delivery_note',
                'create_purchase_order',
                'create_project',
