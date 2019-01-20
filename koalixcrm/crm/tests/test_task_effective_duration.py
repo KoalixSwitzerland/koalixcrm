@@ -43,10 +43,6 @@ class TaskEffectiveDuration(TestCase):
     @pytest.mark.back_end_tests
     def test_effective_duration(self):
         datetime_now = make_date_utc(datetime.datetime.now())
-        datetime_later_1 = datetime_now+datetime.timedelta(days=1, hours=2)
-        datetime_later_2 = datetime_now+datetime.timedelta(days=1, hours=3, minutes=30)
-        datetime_later_3 = datetime_now+datetime.timedelta(days=3, hours=5, minutes=45)
-        datetime_later_4 = datetime_now+datetime.timedelta(days=3, hours=6, minutes=15)
         self.assertEqual(
             (self.test_1st_task.planned_duration()).__str__(), "60")
         self.assertEqual(
@@ -71,35 +67,43 @@ class TaskEffectiveDuration(TestCase):
         self.assertEqual(
             (self.test_2nd_task.effective_duration()).__str__(), "60")
 
+        start = datetime_now+datetime.timedelta(minutes=60)
+        stop = datetime_now+datetime.timedelta(minutes=240)
         StandardWorkFactory.create(
             human_resource=self.human_resource,
-            date=datetime_now,
-            start_time=datetime_now,
-            stop_time=datetime_later_1,
+            date=start,
+            start_time=start,
+            stop_time=stop,
             task=self.test_1st_task,
             reporting_period=self.test_reporting_period
         )
+        start = datetime_now+datetime.timedelta(days=1, minutes=60)
+        stop = datetime_now+datetime.timedelta(days=1, minutes=240)
         StandardWorkFactory.create(
             human_resource=self.human_resource,
-            date=datetime_later_2,
-            start_time=datetime_later_1,
-            stop_time=datetime_later_2,
+            date=start,
+            start_time=start,
+            stop_time=stop,
             task=self.test_1st_task,
             reporting_period=self.test_reporting_period
         )
+        start = datetime_now+datetime.timedelta(minutes=60)
+        stop = datetime_now+datetime.timedelta(minutes=240)
         StandardWorkFactory.create(
             human_resource=self.human_resource,
-            date=datetime_now,
-            start_time=datetime_now,
-            stop_time=datetime_later_3,
+            date=start,
+            start_time=start,
+            stop_time=stop,
             task=self.test_2nd_task,
             reporting_period=self.test_reporting_period
         )
+        start = datetime_now+datetime.timedelta(days=3, minutes=60)
+        stop = datetime_now+datetime.timedelta(days=3, minutes=240)
         StandardWorkFactory.create(
             human_resource=self.human_resource,
-            date=datetime_later_4,
-            start_time=datetime_now,
-            stop_time=datetime_later_4,
+            date=start,
+            start_time=start,
+            stop_time=stop,
             task=self.test_2nd_task,
             reporting_period=self.test_reporting_period
         )
@@ -107,8 +111,8 @@ class TaskEffectiveDuration(TestCase):
         self.assertEqual(
             (self.test_1st_task.planned_duration()).__str__(), "60")
         self.assertEqual(
-            (self.test_1st_task.effective_duration()).__str__(), "2")
+            (self.test_1st_task.effective_duration()).__str__(), "1")
         self.assertEqual(
             (self.test_2nd_task.planned_duration()).__str__(), "120")
         self.assertEqual(
-            (self.test_2nd_task.effective_duration()).__str__(), "4")
+            (self.test_2nd_task.effective_duration()).__str__(), "3")
