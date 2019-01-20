@@ -14,6 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 
+from django.urls import path
 from django.conf.urls.static import *
 from django.contrib.staticfiles.urls import static
 from django.contrib import admin
@@ -25,7 +26,8 @@ from rest_framework import routers
 from koalixcrm.accounting.rest.restinterface import AccountAsJSON, AccountingPeriodAsJSON, BookingAsJSON, \
     ProductCategoryAsJSON
 from koalixcrm.crm.rest.restinterface import ContractAsJSON, CurrencyAsJSON, ProductAsJSON, ProjectAsJSON, TaskAsJSON, \
-    TaskStatusAsJSON, TaxAsJSON, UnitAsJSON
+    TaskStatusAsJSON, TaxAsJSON, UnitAsJSON, CustomerGroupAsJSON, CustomerBillingCycleAsJSON, \
+    CustomerAsJSON
 
 router = routers.DefaultRouter()
 router.register(r'accounts', AccountAsJSON)
@@ -33,26 +35,28 @@ router.register(r'accountingPeriods', AccountingPeriodAsJSON)
 router.register(r'bookings', BookingAsJSON)
 router.register(r'contracts', ContractAsJSON)
 router.register(r'currencies', CurrencyAsJSON)
+router.register(r'customers', CustomerAsJSON)
+router.register(r'customerBillingCycles', CustomerBillingCycleAsJSON)
+router.register(r'customerGroups', CustomerGroupAsJSON)
 router.register(r'products', ProductAsJSON)
 router.register(r'productCategories', ProductCategoryAsJSON)
-router.register(r'project', ProjectAsJSON)
+router.register(r'projects', ProjectAsJSON)
 router.register(r'tasks', TaskAsJSON)
 router.register(r'taskstatus', TaskStatusAsJSON)
 router.register(r'taxes', TaxAsJSON)
-router.register(r'units', UnitAsJSON)
 router.register(r'units', UnitAsJSON)
 
 
 admin.autodiscover()
 
 urlpatterns = [
-    url(r'^$', lambda _: redirect('admin:index'), name='index'),
-    url(r'^', include(router.urls)),
-    url(r'^admin/filebrowser/', include(site.urls)),
-    url(r'^grappelli/', include('grappelli.urls')), # grappelli URLS
-    url(r'^koalixcrm/crm/reporting/', include('koalixcrm.crm.reporting.urls')), # koalixcrm crm reporting URLS
-    url(r'^admin/', admin.site.urls),
-    url(r'^api-auth/', include('rest_framework.urls')),
+    path('', lambda _: redirect('admin:index'), name='index'),
+    path('', include(router.urls)),
+    path('admin/filebrowser/', site.urls),
+    path('grappelli/', include('grappelli.urls')),
+    path('koalixcrm/crm/reporting/', include('koalixcrm.crm.reporting.urls')),
+    path('admin/', admin.site.urls),
+    path('api-auth/', include('rest_framework.urls')),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

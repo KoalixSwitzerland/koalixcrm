@@ -23,6 +23,8 @@ def work_report(request):
         if len(human_resource) == 0:
             error_message = "User "+request.user.__str__()+" is not registered as human resource"
             raise UserIsNoHumanResource(error_message)
+        else:
+            human_resource = HumanResource.objects.get(user=UserExtension.get_user_extension(request.user))
         if request.POST.get('post'):
             if 'cancel' in request.POST:
                 return HttpResponseRedirect('/admin/')

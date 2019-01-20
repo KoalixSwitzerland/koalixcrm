@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import datetime
-from django.http import HttpResponseRedirect, Http404
+from django.http import Http404
 from django.shortcuts import render
 from django.contrib.admin.widgets import *
 from django.contrib.admin import helpers

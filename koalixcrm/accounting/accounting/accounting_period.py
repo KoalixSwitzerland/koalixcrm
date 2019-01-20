@@ -20,11 +20,13 @@ class AccountingPeriod(models.Model):
     begin = models.DateField(verbose_name=_("Begin"))
     end = models.DateField(verbose_name=_("End"))
     template_set_balance_sheet = models.ForeignKey("djangoUserExtension.DocumentTemplate",
+                                                   on_delete=models.CASCADE,
                                                    verbose_name=_("Referred template for balance sheet"),
                                                    related_name='db_balancesheet_template_set',
                                                    null=True,
                                                    blank=True)
     template_profit_loss_statement = models.ForeignKey("djangoUserExtension.DocumentTemplate",
+                                                       on_delete=models.CASCADE,
                                                        verbose_name=_("Referred template for profit, loss statement"),
                                                        related_name='db_profit_loss_statement_template_set',
                                                        null=True,
@@ -81,7 +83,7 @@ class AccountingPeriod(models.Model):
         return assets
 
     def overall_liabilities(self):
-        liabilities = 0;
+        liabilities = 0
         accounts = Account.objects.all()
         for account in list(accounts):
             if account.account_type == "L":
@@ -131,7 +133,7 @@ class AccountingPeriod(models.Model):
             if accounting_period.begin < date.today() and accounting_period.end > date.today():
                 return accounting_period
         if not current_valid_accounting_period:
-            raise AccountingPeriodNotFound()
+            raise AccountingPeriodNotFound("The accounting period was not found")
 
     def get_all_prior_accounting_periods(self):
         """Returns the accounting period that is currently valid. Valid is an accountingPeriod when the current date

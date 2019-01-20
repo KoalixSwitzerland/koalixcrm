@@ -66,7 +66,7 @@ class DocumentSalesDocumentPosition(TestCase):
             document=quote_1,
             pricing_date=date_now)
         self.assertEqual(
-            quote_1.last_calculated_price.__str__(), "81.00")
+            quote_1.last_calculated_price.__str__(), "90.00")
         self.assertEqual(
             quote_1.last_calculated_tax.__str__(), "9.00")
 

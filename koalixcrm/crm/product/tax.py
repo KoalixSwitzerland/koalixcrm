@@ -12,11 +12,13 @@ class Tax(models.Model):
     name = models.CharField(verbose_name=_("Taxname"),
                             max_length=100)
     account_activa = models.ForeignKey('accounting.Account',
+                                       on_delete=models.CASCADE,
                                        verbose_name=_("Activa Account"),
                                        related_name="db_relaccountactiva",
                                        null=True,
                                        blank=True)
     account_passiva = models.ForeignKey('accounting.Account',
+                                        on_delete=models.CASCADE,
                                         verbose_name=_("Passiva Account"),
                                         related_name="db_relaccountpassiva",
                                         null=True,

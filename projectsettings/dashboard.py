@@ -18,8 +18,6 @@ class CustomIndexDashboard(Dashboard):
     """
 
     def init_with_context(self, context):
-        site_name = get_admin_site_name(context)
-
         self.children.append(modules.Group(
             _('koalixcrm Version' + KOALIXCRM_VERSION),
             column=1,
@@ -31,10 +29,10 @@ class CustomIndexDashboard(Dashboard):
                     css_classes=('collapse closed',),
                     models=('koalixcrm.crm.documents.contract.Contract',
                             'koalixcrm.crm.documents.quote.Quote',
-                            'koalixcrm.crm.documents.purchaseconfirmation.PurchaseConfirmation',
-                            'koalixcrm.crm.documents.deliverynote.DeliveryNote',
+                            'koalixcrm.crm.documents.purchase_confirmation.PurchaseConfirmation',
+                            'koalixcrm.crm.documents.delivery_note.DeliveryNote',
                             'koalixcrm.crm.documents.invoice.Invoice',
-                            'koalixcrm.crm.documents.paymentreminder.PaymentReminder',),
+                            'koalixcrm.crm.documents.payment_reminder.PaymentReminder',),
                     ),
                     modules.ModelList(
                         _('Scheduler'),
@@ -68,7 +66,7 @@ class CustomIndexDashboard(Dashboard):
                         column=1,
                         css_classes=('collapse closed',),
                         models=('koalixcrm.crm.reporting.*',
-                                'koalixcrm.crm.documents.purchaseorder.PurchaseOrder',),
+                                'koalixcrm.crm.documents.purchase_order.PurchaseOrder',),
                     ),
                     modules.LinkList(
                         _('Report Work And Expenses'),
@@ -97,8 +95,8 @@ class CustomIndexDashboard(Dashboard):
                     _('koalixcrm Settings'),
                     column=1,
                     css_classes=('collapse closed',),
-                    models=('koalixcrm.crm.contact.customerbillingcycle.CustomerBillingCycle',
-                            'koalixcrm.crm.contact.customergroup.CustomerGroup',
+                    models=('koalixcrm.crm.contact.customer_billing_cycle.CustomerBillingCycle',
+                            'koalixcrm.crm.contact.customer_group.CustomerGroup',
                             'koalixcrm.crm.product.tax.Tax',
                             'koalixcrm.crm.product.unit.Unit',
                             'koalixcrm.crm.product.currency.Currency',

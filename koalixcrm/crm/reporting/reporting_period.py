@@ -16,6 +16,7 @@ class ReportingPeriod(models.Model):
     """The reporting period is referred in the work, in the expenses and purchase orders, it is used as a
        supporting object to generate project reports"""
     project = models.ForeignKey("Project",
+                                on_delete=models.CASCADE,
                                 verbose_name=_("Project"),
                                 blank=False,
                                 null=False)
@@ -30,6 +31,7 @@ class ReportingPeriod(models.Model):
                            blank=False,
                            null=False)
     status = models.ForeignKey("ReportingPeriodStatus",
+                               on_delete=models.CASCADE,
                                verbose_name=_("Reporting Period Status"),
                                blank=True,
                                null=True)
@@ -197,7 +199,7 @@ class ReportingPeriodAdminForm(ModelForm):
                                           'Reporting Period within the same project')
         if end < begin:
             raise ValidationError('Begin date must be earlier than end date')
-        if len(reporting_periods) != 0:
+        if len(reporting_periods) > 1:
             reporting_periods_direct_predecessor = ReportingPeriod.objects.filter(project=project,
                                                                                   end=begin-timedelta(1))
             reporting_periods_direct_successor = ReportingPeriod.objects.filter(project=project,

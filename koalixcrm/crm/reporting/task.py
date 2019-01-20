@@ -26,6 +26,7 @@ class Task(models.Model):
                              blank=True,
                              null=True)
     project = models.ForeignKey("Project",
+                                on_delete=models.CASCADE,
                                 verbose_name=_('Project'),
                                 related_name='tasks',
                                 blank=False,
@@ -33,7 +34,7 @@ class Task(models.Model):
     description = models.TextField(verbose_name=_("Description"),
                                    blank=True,
                                    null=True)
-    status = models.ForeignKey("TaskStatus", verbose_name=_('Status'),
+    status = models.ForeignKey("TaskStatus", on_delete=models.CASCADE, verbose_name=_('Status'),
                                blank=True,
                                null=True)
     last_status_change = models.DateField(verbose_name=_("Last Status Change"),
@@ -51,7 +52,7 @@ class Task(models.Model):
                 self.last_status_change = global_support_functions.get_today_date()
         elif self.last_status_change is None:
             self.last_status_change = global_support_functions.get_today_date()
-        super().save(*args, **kwargs)
+        super(Task, self).save(*args, **kwargs)
 
     def link_to_task(self):
         if self.id:
@@ -157,7 +158,7 @@ class Task(models.Model):
         """The function returns the planned costs of resources which have been estimated for this task
          at a specific reporting period plus the costs of the effective effort before the provided reporting_period
          When no reporting_period is provided. The costs are split into the provided buckets.
-         The passed argument reportin_period us used to specify the root of the estimation.
+         The passed argument reporting_period is used to specify the root of the estimation.
 
         Following example shall illustrate what to expect from this function:
         The project started 01.01.2018,

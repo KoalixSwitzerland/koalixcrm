@@ -12,7 +12,7 @@ from django.contrib import messages
 
 
 class Work(models.Model):
-    human_resource = models.ForeignKey("HumanResource")
+    human_resource = models.ForeignKey("HumanResource", on_delete=models.CASCADE)
     date = models.DateField(verbose_name=_("Date"),
                             blank=False,
                             null=False)
@@ -35,10 +35,12 @@ class Work(models.Model):
                                    blank=True,
                                    null=True)
     task = models.ForeignKey("Task",
+                             on_delete=models.CASCADE,
                              verbose_name=_('Task'),
                              blank=False,
                              null=False)
     reporting_period = models.ForeignKey("ReportingPeriod",
+                                         on_delete=models.CASCADE,
                                          verbose_name=_('Reporting Period'),
                                          blank=False,
                                          null=False)
@@ -117,9 +119,15 @@ class Work(models.Model):
 
     def delete(self, using=None, keep_parents=False):
         if self.reporting_period.status.is_done:
-            raise ReportingPeriodDoneDeleteNotPossible()
+            raise ReportingPeriodDoneDeleteNotPossible("It was not possible to delete the work")
         else:
             super(Work, self).delete(using, keep_parents)
+
+    def save(self, *args, **kwargs):
+        if self.reporting_period.status.is_done:
+            raise ReportingPeriodDoneDeleteNotPossible("It was not possible to update the work")
+        else:
+            super(Work, self).save(*args, **kwargs)
 
     class Meta:
         app_label = "crm"

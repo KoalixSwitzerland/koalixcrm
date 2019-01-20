@@ -18,7 +18,7 @@ from rest_framework import serializers
 
 
 class Project(models.Model):
-    project_manager = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True},
+    project_manager = models.ForeignKey('auth.User', on_delete=models.CASCADE, limit_choices_to={'is_staff': True},
                                         verbose_name=_("Staff"),
                                         related_name="db_rel_project_staff",
                                         blank=True,
@@ -31,14 +31,17 @@ class Project(models.Model):
                                    null=True,
                                    blank=True)
     project_status = models.ForeignKey("ProjectStatus",
+                                       on_delete=models.CASCADE,
                                        verbose_name=_('Project Status'),
                                        blank=True,
                                        null=True)
     default_template_set = models.ForeignKey("djangoUserExtension.TemplateSet",
+                                             on_delete=models.CASCADE,
                                              verbose_name=_("Default Template Set"),
                                              null=True,
                                              blank=True)
     default_currency = models.ForeignKey("Currency",
+                                         on_delete=models.CASCADE,
                                          verbose_name=_("Default Currency"),
                                          null=False,
                                          blank=False)
@@ -47,6 +50,7 @@ class Project(models.Model):
     last_modification = models.DateTimeField(verbose_name=_("Last modified"),
                                              auto_now=True)
     last_modified_by = models.ForeignKey('auth.User',
+                                         on_delete=models.CASCADE,
                                          limit_choices_to={'is_staff': True},
                                          verbose_name=_("Last modified by"),
                                          related_name="db_project_last_modified")
@@ -365,7 +369,7 @@ class Project(models.Model):
     def effective_duration(self):
         """The function return the effective overall duration of a project as a string in days
         The function is reading the effective_starts and effective_ends of the project and
-        substract them from each other.
+        subtract them from each other.
 
         Args:
         no arguments
@@ -485,8 +489,7 @@ class Project(models.Model):
             return "n/a"
 
     def is_reporting_allowed(self):
-        from koalixcrm.crm.reporting.reporting_period import ReportingPeriod
-        """The function returns a boolean True when it is allowed to report on the project and 
+        """The function returns a boolean True when it is allowed to report on the project and
         on one of the reporting periods does also allow reporting
 
         Args:
@@ -497,6 +500,7 @@ class Project(models.Model):
 
         Raises:
           No exceptions planned"""
+        from koalixcrm.crm.reporting.reporting_period import ReportingPeriod
         reporting_periods = ReportingPeriod.objects.filter(project=self.id, status__is_done=False)
         if len(reporting_periods) != 0:
             if not self.project_status.is_done:

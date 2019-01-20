@@ -7,16 +7,19 @@ from django.utils.translation import ugettext as _
 
 class CustomerGroupTransform(models.Model):
     from_customer_group = models.ForeignKey('CustomerGroup',
+                                            on_delete=models.CASCADE,
                                             verbose_name=_("From Customer Group"),
                                             related_name="db_reltransfromfromcustomergroup",
                                             blank=False,
                                             null=False)
     to_customer_group = models.ForeignKey('CustomerGroup',
+                                          on_delete=models.CASCADE,
                                           verbose_name=_("To Customer Group"),
                                           related_name="db_reltransfromtocustomergroup",
                                           blank=False,
                                           null=False)
     product_type = models.ForeignKey('ProductType',
+                                     on_delete=models.CASCADE,
                                      verbose_name=_("Product Type"),
                                      blank=False,
                                      null=False)

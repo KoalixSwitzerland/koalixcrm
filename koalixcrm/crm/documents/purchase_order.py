@@ -8,7 +8,7 @@ from koalixcrm.plugin import *
 
 
 class PurchaseOrder(SalesDocument):
-    supplier = models.ForeignKey("Supplier", verbose_name=_("Supplier"), null=True)
+    supplier = models.ForeignKey("Supplier", on_delete=models.CASCADE, verbose_name=_("Supplier"), null=True)
     status = models.CharField(max_length=1, choices=PURCHASEORDERSTATUS)
 
     def create_from_reference(self, calling_model):

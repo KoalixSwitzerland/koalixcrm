@@ -8,5 +8,5 @@ class Product(models.Model):
                                   max_length=200,
                                   null=True,
                                   blank=True)
-    product_type = models.ForeignKey("ProductType", verbose_name=_("Product Type"))
+    product_type = models.ForeignKey("ProductType", on_delete=models.CASCADE, verbose_name=_("Product Type"))
 
