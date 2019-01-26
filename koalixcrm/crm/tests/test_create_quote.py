@@ -21,7 +21,7 @@ class CreateQuoteThroughUI(StaticLiveServerTestCase):
     def setUpClass(cls):
         super(CreateQuoteThroughUI, cls).setUpClass()
         firefox_options = webdriver.firefox.options.Options()
-        firefox_options.set_headless(headless=False)
+        firefox_options.set_headless(headless=True)
         cls.selenium = webdriver.Firefox(firefox_options=firefox_options)
         cls.selenium.implicitly_wait(10)
         cls.test_user = AdminUserFactory.create()
