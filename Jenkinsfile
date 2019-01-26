@@ -80,7 +80,7 @@ pipeline {
                 . virtualenv/bin/activate
                 mkdir koalixcrm_deploy
                 cd koalixcrm_deploy
-                git clone git@bitbucket.org/scaphilo/hetzner_jenkins_start_script.git
+                git clone git@bitbucket.org:scaphilo/hetzner_jenkins_start_script.git
                 python koalixcrm_deploy/hetzner_jenkins_start_script/server.py --branch_name=${BRANCH_NAME} --action=deploy
                 '''
             }
