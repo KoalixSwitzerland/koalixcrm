@@ -76,10 +76,12 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                echo 'Should deploy jar file on Hetzner via SSH. Not implemented yet.'
                 sh '''
                 . virtualenv/bin/activate
-                python /usr/local/bin/server.py --branch_name=${BRANCH_NAME} --action=deploy
+                mkdir koalixcrm_deploy
+                cd koalixcrm_deploy
+                git clone git@bitbucket.org/scaphilo/hetzner_jenkins_start_script.git
+                python koalixcrm_deploy/hetzner_jenkins_start_script/server.py --branch_name=${BRANCH_NAME} --action=deploy
                 '''
             }
         }
