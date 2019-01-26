@@ -7,6 +7,7 @@ pipeline {
     environment {
         HETZNER_API_KEY = credentials('HETZNER_API_KEY')
         GOOGLE_STORAGE = credentials('GOOGLE_STORAGE ')
+        CLOUD_FLARE_API_KEY = credentials('CLOUD_FLARE_API_KEY')
     }
     stages {
         stage ("Prepare Virtual Environment"){
