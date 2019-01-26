@@ -4,6 +4,10 @@ pipeline {
         disableConcurrentBuilds()
         buildDiscarder(logRotator(numToKeepStr: '5'))
     }
+    environment {
+        HETZNER_API_KEY = credentials('HETZNER_API_KEY')
+        GOOGLE_STORAGE = credentials('GOOGLE_STORAGE ')
+    }
     stages {
         stage ("Prepare Virtual Environment"){
             steps {
