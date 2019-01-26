@@ -78,7 +78,7 @@ pipeline {
             steps {
                 sh '''
                 . virtualenv/bin/activate
-                rm koalixcrm_deploy
+                rm -r koalixcrm_deploy
                 mkdir koalixcrm_deploy
                 cd koalixcrm_deploy
                 git clone git@bitbucket.org:scaphilo/hetzner_jenkins_start_script.git
