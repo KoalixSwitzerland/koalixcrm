@@ -83,7 +83,7 @@ pipeline {
             steps {
                 sh '''
                 . virtualenv/bin/activate
-                if [ -f koalixcrm_deploy ]; then
+                if [ -d "koalixcrm_deploy" ]; then
                     rm -rf koalixcrm_deploy
                 fi
                 mkdir koalixcrm_deploy
