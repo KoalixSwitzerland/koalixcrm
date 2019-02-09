@@ -7,6 +7,7 @@ pipeline {
     environment {
         HETZNER_API_KEY = credentials('HETZNER_API_KEY')
         GOOGLE_APPLICATION_CREDENTIALS = credentials('GOOGLE_APPLICATION_CREDENTIALS')
+        PATH_TO_ROOT_SERVER_PRIV_KEY = credentials('PATH_TO_ROOT_SERVER_PRIV_KEY')
         CLOUD_FLARE_API_KEY = credentials('CLOUD_FLARE_API_KEY')
     }
     stages {
