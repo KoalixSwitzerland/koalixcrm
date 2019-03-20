@@ -92,7 +92,8 @@ pipeline {
                 cd koalixcrm_deploy
                 git clone git@bitbucket.org:scaphilo/hetzner_jenkins_start_script.git
                 pip install -r hetzner_jenkins_start_script/deployment_requirements.txt
-                python hetzner_jenkins_start_script/server.py --branch_name=${BRANCH_NAME} --action=deploy
+                cd hetzner_jenkins_start_script
+                python server.py --branch_name=${BRANCH_NAME} --action=deploy
                 '''
             }
         }
