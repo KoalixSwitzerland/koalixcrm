@@ -4,6 +4,13 @@ pipeline {
         disableConcurrentBuilds()
         buildDiscarder(logRotator(numToKeepStr: '5'))
     }
+    environment {
+        HETZNER_API_KEY = credentials('HETZNER_API_KEY')
+        GOOGLE_APPLICATION_CREDENTIALS = credentials('GOOGLE_APPLICATION_CREDENTIALS')
+        PATH_TO_ROOT_SERVER_PRIV_KEY = credentials('PATH_TO_ROOT_SERVER_PRIV_KEY')
+        CLOUD_FLARE_API_KEY = credentials('CLOUD_FLARE_API_KEY')
+        PASSPHRASE_ROOT_SERVER_PRIV_KEY = credentials('PASSPHRASE_ROOT_SERVER_PRIV_KEY')
+    }
     stages {
         stage ("Prepare Virtual Environment"){
             steps {
@@ -42,6 +49,8 @@ pipeline {
                 export PATH=$PATH:$PWD/geckodriver
                 if [ "${BRANCH_NAME}" == "master" ] && [ -z "${CHANGE_ID}" ]; then
                     pytest --cov=koalixcrm --cov-branch --cov-report xml:reports/coverage.xml --cov-report term
+                elif [ "${BRANCH_NAME}" == "development" ] && [ -z "${CHANGE_ID}" ]; then
+                    pytest --cov=koalixcrm --cov-branch --cov-report xml:reports/coverage.xml --cov-report term
                 else
                     pytest --cov=koalixcrm --cov-branch --cov-report xml:reports/coverage.xml --cov-report term -m "not version_increase"
                 fi'''
@@ -64,7 +73,7 @@ pipeline {
         }
         stage('Checkstyle + FindBugs') {
             steps {
-                echo 'Should deploy jar file on Hetzner via SSH. Not implemented yet.'
+                echo 'Should run a static code analysis.'
             }
         }
         stage('Archive') {
@@ -74,7 +83,18 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                echo 'Should deploy jar file on Hetzner via SSH. Not implemented yet.'
+                sh '''
+                . virtualenv/bin/activate
+                if [ -d "koalixcrm_deploy" ]; then
+                    rm -rf koalixcrm_deploy
+                fi
+                mkdir koalixcrm_deploy
+                cd koalixcrm_deploy
+                git clone git@bitbucket.org:scaphilo/hetzner_jenkins_start_script.git
+                pip install -r hetzner_jenkins_start_script/deployment_requirements.txt
+                cd hetzner_jenkins_start_script
+                python server.py --branch_name=${BRANCH_NAME} --action=deploy
+                '''
             }
         }
     }
