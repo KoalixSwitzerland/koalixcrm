@@ -353,13 +353,21 @@ class Task(models.Model):
             main_xml = PDFExport.merge_xml(main_xml, work_xml)
         main_xml = PDFExport.append_element_to_pattern(main_xml,
                                                        "object/[@model='crm.task']",
-                                                       "Effective_Effort_Overall",
+                                                       "Effective_Costs_Overall",
                                                        self.effective_costs(reporting_period=None))
+        main_xml = PDFExport.append_element_to_pattern(main_xml,
+                                                       "object/[@model='crm.task']",
+                                                       "Effective_Effort_Overall",
+                                                       self.effective_effort(reporting_period=None))
         if reporting_period:
             main_xml = PDFExport.append_element_to_pattern(main_xml,
                                                            "object/[@model='crm.task']",
-                                                           "Effective_Effort_InPeriod",
+                                                           "Effective_Costs_InPeriod",
                                                            self.effective_costs(reporting_period=reporting_period))
+            main_xml = PDFExport.append_element_to_pattern(main_xml,
+                                                           "object/[@model='crm.task']",
+                                                           "Effective_Effort_InPeriod",
+                                                           self.effective_effort(reporting_period=reporting_period))
         main_xml = PDFExport.append_element_to_pattern(main_xml,
                                                        "object/[@model='crm.task']",
                                                        "Planned_Effort",
