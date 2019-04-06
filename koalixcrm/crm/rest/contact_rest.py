@@ -8,16 +8,39 @@ from koalixcrm.crm.contact.phone_address import PhoneAddress
 from koalixcrm.crm.contact.postal_address import PostalAddress
 
 
-class PhoneNumberJSONSerializer(serializers.HyperlinkedModelSerializer):
+class PhoneAddressJSONSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = PhoneAddress
         fields = ('phone',)
 
 
-class ContactPhoneNumberJSONSerializer(PhoneNumberJSONSerializer):
+class ContactPhoneAddressJSONSerializer(PhoneAddressJSONSerializer):
+    contactId = serializers.PrimaryKeyRelatedField(source='person_id', queryset=Contact.objects.all())
+
     class Meta:
         model = PhoneAddressForContact
-        fields = PhoneNumberJSONSerializer.Meta.fields + ('id', 'purpose',)
+        fields = PhoneAddressJSONSerializer.Meta.fields + ('id', 'purpose', 'contactId')
+
+    def create(self, validated_data):
+        contact_phone_address = PhoneAddressForContact()
+
+        contact = validated_data.pop('person_id')
+        contact_phone_address.person_id = contact.id
+        contact_phone_address.purpose = validated_data['purpose']
+        contact_phone_address.phone = validated_data['phone']
+
+        contact_phone_address.save()
+        return contact_phone_address
+
+    def update(self, contact_phone_address, validated_data):
+        contact = validated_data.pop('person_id')
+        contact_phone_address.person_id = contact.id
+        contact_phone_address.purpose = validated_data['purpose']
+        contact_phone_address.prefix = validated_data['phone']
+
+        contact_phone_address.save()
+
+        return contact_phone_address
 
 
 class EmailAddressJSONSerializer(serializers.HyperlinkedModelSerializer):
@@ -27,9 +50,32 @@ class EmailAddressJSONSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class ContactEmailAddressJSONSerializer(EmailAddressJSONSerializer):
+    contactId = serializers.PrimaryKeyRelatedField(source='person_id', queryset=Contact.objects.all())
+
     class Meta:
         model = EmailAddressForContact
-        fields = EmailAddressJSONSerializer.Meta.fields + ('id', 'purpose', )
+        fields = EmailAddressJSONSerializer.Meta.fields + ('id', 'purpose', 'contactId')
+
+    def create(self, validated_data):
+        contact_email_address = EmailAddressForContact()
+
+        contact = validated_data.pop('person_id')
+        contact_email_address.person_id = contact.id
+        contact_email_address.purpose = validated_data['purpose']
+        contact_email_address.email = validated_data['email']
+
+        contact_email_address.save()
+        return contact_email_address
+
+    def update(self, contact_email_address, validated_data):
+        contact = validated_data.pop('person_id')
+        contact_email_address.person_id = contact.id
+        contact_email_address.purpose = validated_data['purpose']
+        contact_email_address.email = validated_data['email']
+
+        contact_email_address.save()
+
+        return contact_email_address
 
 
 class ContactJSONSerializer(serializers.HyperlinkedModelSerializer):
@@ -108,23 +154,23 @@ class ContactPostalAddressJSONSerializer(PostalAddressJSONSerializer):
         contact_postal_address.save()
         return contact_postal_address
 
-    def update(self, customer, validated_data):
+    def update(self, contact_postal_address, validated_data):
         contact = validated_data.pop('person_id')
-        customer.person_id = contact.id
-        customer.purpose = validated_data['purpose']
-        customer.prefix = validated_data['prefix']
-        customer.name = validated_data['name']
-        customer.pre_name = validated_data['pre_name']
-        customer.address_line_1 = validated_data['address_line_1']
-        customer.address_line_2 = validated_data['address_line_2']
-        customer.address_line_3 = validated_data['address_line_3']
-        customer.address_line_4 = validated_data['address_line_4']
-        customer.zip_code = validated_data['zip_code']
-        customer.town = validated_data['town']
-        customer.state = validated_data['state']
-        customer.country = validated_data['country']
+        contact_postal_address.person_id = contact.id
+        contact_postal_address.purpose = validated_data['purpose']
+        contact_postal_address.prefix = validated_data['prefix']
+        contact_postal_address.name = validated_data['name']
+        contact_postal_address.pre_name = validated_data['pre_name']
+        contact_postal_address.address_line_1 = validated_data['address_line_1']
+        contact_postal_address.address_line_2 = validated_data['address_line_2']
+        contact_postal_address.address_line_3 = validated_data['address_line_3']
+        contact_postal_address.address_line_4 = validated_data['address_line_4']
+        contact_postal_address.zip_code = validated_data['zip_code']
+        contact_postal_address.town = validated_data['town']
+        contact_postal_address.state = validated_data['state']
+        contact_postal_address.country = validated_data['country']
 
-        customer.save()
+        contact_postal_address.save()
 
-        return customer
+        return contact_postal_address
 
