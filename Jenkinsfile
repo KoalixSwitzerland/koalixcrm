@@ -93,8 +93,7 @@ pipeline {
                 git clone git@bitbucket.org:scaphilo/hetzner_jenkins_start_script.git
                 pip install -r hetzner_jenkins_start_script/deployment_requirements.txt
                 cd hetzner_jenkins_start_script
-                python server.py --branch_name=${BRANCH_NAME} --action=deploy --restore_backup=master
-                '''
+                python server.py --branch_name=${BRANCH_NAME} --action=deploy
             }
         }
     }
