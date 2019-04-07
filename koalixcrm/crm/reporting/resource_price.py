@@ -9,6 +9,7 @@ from koalixcrm.crm.reporting.resource import Resource
 
 class ResourcePrice(Price):
     resource = models.ForeignKey(Resource,
+                                 on_delete=models.CASCADE,
                                  verbose_name=_('Resource'),
                                  blank=False,
                                  null=False)

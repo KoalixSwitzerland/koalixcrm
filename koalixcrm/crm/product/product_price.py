@@ -8,6 +8,7 @@ from koalixcrm.crm.product.price import Price
 
 class ProductPrice(Price):
     product_type = models.ForeignKey("ProductType",
+                                     on_delete=models.CASCADE,
                                      verbose_name=_("Product Type"))
 
     def __str__(self):

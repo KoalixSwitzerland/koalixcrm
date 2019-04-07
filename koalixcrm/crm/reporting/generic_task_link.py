@@ -9,20 +9,23 @@ from django.contrib import admin
 
 class GenericTaskLink(models.Model):
     task = models.ForeignKey("Task",
+                             on_delete=models.CASCADE,
                              verbose_name=_('Task'),
-                             blank=False,
-                             null=False)
+                             blank=False, null=False)
     task_link_type = models.ForeignKey("TaskLinkType",
+                                       on_delete=models.CASCADE,
                                        verbose_name=_('Task Link Type'),
                                        blank=True,
                                        null=True)
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    content_type = models.ForeignKey(ContentType,
+                                     on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     generic_crm_object = GenericForeignKey('content_type',
                                            'object_id')
     date_of_creation = models.DateTimeField(verbose_name=_("Created at"),
                                             auto_now_add=True)
     last_modified_by = models.ForeignKey('auth.User',
+                                         on_delete=models.CASCADE,
                                          limit_choices_to={'is_staff': True},
                                          verbose_name=_("Last modified by"),
                                          related_name="db_task_link_last_modified")

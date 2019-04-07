@@ -20,11 +20,13 @@ class AccountingPeriod(models.Model):
     begin = models.DateField(verbose_name=_("Begin"))
     end = models.DateField(verbose_name=_("End"))
     template_set_balance_sheet = models.ForeignKey("djangoUserExtension.DocumentTemplate",
+                                                   on_delete=models.CASCADE,
                                                    verbose_name=_("Referred template for balance sheet"),
                                                    related_name='db_balancesheet_template_set',
                                                    null=True,
                                                    blank=True)
     template_profit_loss_statement = models.ForeignKey("djangoUserExtension.DocumentTemplate",
+                                                       on_delete=models.CASCADE,
                                                        verbose_name=_("Referred template for profit, loss statement"),
                                                        related_name='db_profit_loss_statement_template_set',
                                                        null=True,

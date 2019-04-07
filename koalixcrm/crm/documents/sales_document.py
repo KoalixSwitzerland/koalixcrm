@@ -18,7 +18,7 @@ from koalixcrm.crm.documents.pdf_export import PDFExport
 
 
 class TextParagraphInSalesDocument(models.Model):
-    sales_document = models.ForeignKey("SalesDocument")
+    sales_document = models.ForeignKey("SalesDocument", on_delete=models.CASCADE)
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=2, choices=PURPOSESTEXTPARAGRAPHINDOCUMENTS)
     text_paragraph = models.TextField(verbose_name=_("Text"), blank=False, null=False)
 
@@ -40,6 +40,7 @@ class TextParagraphInSalesDocument(models.Model):
 
 class SalesDocument(models.Model):
     contract = models.ForeignKey("Contract",
+                                 on_delete=models.CASCADE,
                                  verbose_name=_('Contract'))
     external_reference = models.CharField(verbose_name=_("External Reference"),
                                           max_length=100,
@@ -67,14 +68,16 @@ class SalesDocument(models.Model):
                                               blank=True,
                                               null=True)
     customer = models.ForeignKey("Customer",
+                                 on_delete=models.CASCADE,
                                  verbose_name=_("Customer"))
     staff = models.ForeignKey('auth.User',
+                              on_delete=models.CASCADE,
                               limit_choices_to={'is_staff': True},
                               blank=True,
                               verbose_name=_("Staff"),
                               related_name="db_relscstaff",
                               null=True)
-    currency = models.ForeignKey("Currency", verbose_name=_("Currency"),
+    currency = models.ForeignKey("Currency", on_delete=models.CASCADE, verbose_name=_("Currency"),
                                  blank=False, null=False)
     date_of_creation = models.DateTimeField(verbose_name=_("Created at"),
                                             auto_now_add=True)
@@ -83,16 +86,18 @@ class SalesDocument(models.Model):
                                          null=True)
     last_modification = models.DateTimeField(verbose_name=_("Last modified"),
                                              auto_now=True)
-    last_modified_by = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True},
+    last_modified_by = models.ForeignKey('auth.User', on_delete=models.CASCADE, limit_choices_to={'is_staff': True},
                                          verbose_name=_("Last modified by"),
                                          related_name="db_lstscmodified",
                                          null=True,
                                          blank="True")
     template_set = models.ForeignKey("djangoUserExtension.DocumentTemplate",
+                                     on_delete=models.CASCADE,
                                      verbose_name=_("Referred Template"),
                                      null=True,
                                      blank=True)
     derived_from_sales_document = models.ForeignKey("SalesDocument",
+                                                    on_delete=models.CASCADE,
                                                     blank=True,
                                                     null=True)
     last_print_date = models.DateTimeField(verbose_name=_("Last printed"),
@@ -197,7 +202,7 @@ class SalesDocument(models.Model):
 
 class PostalAddressForSalesDocument(PostalAddress):
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT)
-    sales_document = models.ForeignKey("SalesDocument")
+    sales_document = models.ForeignKey("SalesDocument", on_delete=models.CASCADE)
 
     class Meta:
         app_label = "crm"
@@ -210,7 +215,7 @@ class PostalAddressForSalesDocument(PostalAddress):
 
 class EmailAddressForSalesDocument(EmailAddress):
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT)
-    sales_document = models.ForeignKey("SalesDocument")
+    sales_document = models.ForeignKey("SalesDocument", on_delete=models.CASCADE)
 
     class Meta:
         app_label = "crm"
@@ -223,7 +228,7 @@ class EmailAddressForSalesDocument(EmailAddress):
 
 class PhoneAddressForSalesDocument(PhoneAddress):
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT)
-    sales_document = models.ForeignKey("SalesDocument")
+    sales_document = models.ForeignKey("SalesDocument", on_delete=models.CASCADE)
 
     class Meta:
         app_label = "crm"
@@ -365,9 +370,11 @@ class OptionSalesDocument(admin.ModelAdmin):
     def create_quote(self, request, queryset):
         from koalixcrm.crm.views.newdocument import CreateNewDocumentView
         for obj in queryset:
-            response = CreateNewDocumentView.create_new_document(self, request, obj,
-                                           koalixcrm.crm.documents.quote.Quote,
-                                           ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
+            response = CreateNewDocumentView.create_new_document(self,
+                                                                 request,
+                                                                 obj,
+                                                                 koalixcrm.crm.documents.quote.Quote,
+                                                                 ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
             return response
 
     create_quote.short_description = _("Create Quote")
@@ -375,9 +382,11 @@ class OptionSalesDocument(admin.ModelAdmin):
     def create_invoice(self, request, queryset):
         from koalixcrm.crm.views.newdocument import CreateNewDocumentView
         for obj in queryset:
-            response = CreateNewDocumentView.create_new_document(self, request, obj,
-                                           koalixcrm.crm.documents.invoice.Invoice,
-                                           ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
+            response = CreateNewDocumentView.create_new_document(self,
+                                                                 request,
+                                                                 obj,
+                                                                 koalixcrm.crm.documents.invoice.Invoice,
+                                                                 ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
             return response
 
     create_invoice.short_description = _("Create Invoice")
@@ -385,9 +394,11 @@ class OptionSalesDocument(admin.ModelAdmin):
     def create_purchase_confirmation(self, request, queryset):
         from koalixcrm.crm.views.newdocument import CreateNewDocumentView
         for obj in queryset:
-            response = CreateNewDocumentView.create_new_document(self, request, obj,
-                                           koalixcrm.crm.documents.purchaseconfirmation.PurchaseConfirmation,
-                                           ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
+            response = CreateNewDocumentView.create_new_document(self,
+                                                                 request,
+                                                                 obj,
+                                                                 koalixcrm.crm.documents.purchase_confirmation.PurchaseConfirmation,
+                                                                 ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
             return response
 
     create_purchase_confirmation.short_description = _("Create Purchase Confirmation")
@@ -395,9 +406,11 @@ class OptionSalesDocument(admin.ModelAdmin):
     def create_delivery_note(self, request, queryset):
         from koalixcrm.crm.views.newdocument import CreateNewDocumentView
         for obj in queryset:
-            response = CreateNewDocumentView.create_new_document(self, request, obj,
-                                           koalixcrm.crm.documents.deliverynote.DeliveryNote,
-                                           ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
+            response = CreateNewDocumentView.create_new_document(self,
+                                                                 request,
+                                                                 obj,
+                                                                 koalixcrm.crm.documents.delivery_note.DeliveryNote,
+                                                                 ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
             return response
 
     create_delivery_note.short_description = _("Create Delivery note")
@@ -405,9 +418,11 @@ class OptionSalesDocument(admin.ModelAdmin):
     def create_payment_reminder(self, request, queryset):
         from koalixcrm.crm.views.newdocument import CreateNewDocumentView
         for obj in queryset:
-            response = CreateNewDocumentView.create_new_document(self, request, obj,
-                                           koalixcrm.crm.documents.paymentreminder.PaymentReminder,
-                                           ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
+            response = CreateNewDocumentView.create_new_document(self,
+                                                                 request,
+                                                                 obj,
+                                                                 koalixcrm.crm.documents.payment_reminder.PaymentReminder,
+                                                                 ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
             return response
 
     create_payment_reminder.short_description = _("Create Payment Reminder")
@@ -415,9 +430,11 @@ class OptionSalesDocument(admin.ModelAdmin):
     def create_purchase_order(self, request, queryset):
         from koalixcrm.crm.views.newdocument import CreateNewDocumentView
         for obj in queryset:
-            response = CreateNewDocumentView.create_new_document(self, request, obj,
-                                           koalixcrm.crm.documents.purchaseorder.PurchaseOrder,
-                                           ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
+            response = CreateNewDocumentView.create_new_document(self,
+                                                                 request,
+                                                                 obj,
+                                                                 koalixcrm.crm.documents.purchase_order.PurchaseOrder,
+                                                                 ("/admin/crm/"+obj.__class__.__name__.lower()+"/"))
             return response
 
     create_purchase_order.short_description = _("Create Purchase Order")

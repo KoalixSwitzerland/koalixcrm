@@ -9,10 +9,12 @@ class ProductCategory(models.Model):
     title = models.CharField(verbose_name=_("Product Category Title"),
                              max_length=50)
     profit_account = models.ForeignKey(Account,
+                                       on_delete=models.CASCADE,
                                        verbose_name=_("Profit Account"),
                                        limit_choices_to={"account_type": "E"},
                                        related_name="db_profit_account")
     loss_account = models.ForeignKey(Account,
+                                     on_delete=models.CASCADE,
                                      verbose_name=_("Loss Account"),
                                      limit_choices_to={"account_type": "S"},
                                      related_name="db_loss_account")
