@@ -1,3 +1,5 @@
+def application
+
 pipeline {
     agent any
     options {
@@ -76,9 +78,16 @@ pipeline {
                 echo 'Should run a static code analysis.'
             }
         }
-        stage('Archive') {
+        stage('Build Docker image') {
             steps {
-                echo 'Should upload artefacts to Nexus. Not implemented yet.'
+            sh 'docker build -f "Dockerfile.prod" -t koalixswitzerland/koalixcrm:latest .'
+            }
+        }
+        stage('Push Docker image') {
+            steps {
+                withDockerRegistry([ credentialsId: "8c45eee4-1162-466b-84c5-5f86a52a44cd", url: "" ]) {
+                    sh 'docker push koalixswitzerland/koalixcrm:latest'
+                }
             }
         }
         stage('Deploy') {
