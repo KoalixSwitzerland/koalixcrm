@@ -65,7 +65,12 @@ class CustomIndexDashboard(Dashboard):
                         _('Projects'),
                         column=1,
                         css_classes=('collapse closed',),
-                        models=('koalixcrm.crm.reporting.*',
+                        models=('koalixcrm.crm.reporting.project.Project',
+                                'koalixcrm.crm.reporting.reporting_period.ReportingPeriod',
+                                'koalixcrm.crm.reporting.task.Task',
+                                'koalixcrm.crm.reporting.agreement.Agreement',
+                                'koalixcrm.crm.reporting.estimation.Estimation',
+                                'koalixcrm.crm.reporting.human_resource.HumanResource',
                                 'koalixcrm.crm.documents.purchase_order.PurchaseOrder',),
                     ),
                     modules.LinkList(
@@ -81,7 +86,7 @@ class CustomIndexDashboard(Dashboard):
 
         # append a group for "Administration" & "Applications"
         self.children.append(modules.Group(
-            _('Group: Administration & Applications'),
+            _('Users, Access Rights and Application Settings'),
             column=1,
             collapsible=True,
             children=[
@@ -92,15 +97,45 @@ class CustomIndexDashboard(Dashboard):
                     models=('django.contrib.*',),
                 ),
                 modules.ModelList(
-                    _('koalixcrm Settings'),
+                    _('Contact settings'),
                     column=1,
                     css_classes=('collapse closed',),
                     models=('koalixcrm.crm.contact.customer_billing_cycle.CustomerBillingCycle',
-                            'koalixcrm.crm.contact.customer_group.CustomerGroup',
-                            'koalixcrm.crm.product.tax.Tax',
+                            'koalixcrm.crm.contact.customer_group.CustomerGroup',),
+                ),
+                modules.ModelList(
+                    _('Product settings'),
+                    column=1,
+                    css_classes=('collapse closed',),
+                    models=('koalixcrm.crm.product.tax.Tax',
                             'koalixcrm.crm.product.unit.Unit',
-                            'koalixcrm.crm.product.currency.Currency',
-                            'koalixcrm.djangoUserExtension.*'),
+                            'koalixcrm.crm.product.currency.Currency'),
+                ),
+                modules.ModelList(
+                    _('Reporting settings'),
+                    column=1,
+                    css_classes=('collapse closed',),
+                    models=('koalixcrm.crm.reporting.agreement_status.AgreementStatus',
+                            'koalixcrm.crm.reporting.agreement_type.AgreementType',
+                            'koalixcrm.crm.reporting.estimation_status.EstimationStatus',
+                            'koalixcrm.crm.reporting.generic_project_link.GenericProjectLink',
+                            'koalixcrm.crm.reporting.generic_task_link.GenericTaskLink',
+                            'koalixcrm.crm.reporting.project_link_type.ProjectLinkType',
+                            'koalixcrm.crm.reporting.project_status.ProjectStatus',
+                            'koalixcrm.crm.reporting.reporting_period_status.ReportingPeriodStatus',
+                            'koalixcrm.crm.reporting.resource.Resource',
+                            'koalixcrm.crm.reporting.resource_manager.ResourceManager',
+                            'koalixcrm.crm.reporting.resource_type.ResourceType',
+                            'koalixcrm.crm.reporting.task_link_type.TaskLinkType',
+                            'koalixcrm.crm.reporting.task_status.TaskStatus',),
+                ),
+                modules.ModelList(
+                    _('PDF document settings'),
+                    column=1,
+                    css_classes=('collapse closed',),
+                    models=('koalixcrm.djangoUserExtension.user_extension.document_template.*',
+                            'koalixcrm.djangoUserExtension.user_extension.template_set.TemplateSet',
+                            'koalixcrm.djangoUserExtension.user_extension.user_extension.*',),
                 ),
             ]
         ))
