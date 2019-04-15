@@ -66,7 +66,7 @@ ROOT_URLCONF = 'projectsettings.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['./koalixcrm/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
