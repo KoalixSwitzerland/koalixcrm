@@ -80,13 +80,22 @@ pipeline {
         }
         stage('Build Docker image') {
             steps {
-            sh 'docker build -f "Dockerfile.prod" -t koalixswitzerland/koalixcrm:latest .'
+                if [ "${BRANCH_NAME}" == "master" ] && [ -z "${CHANGE_ID}" ]; then
+                    sh 'docker build -f "Dockerfile.prod" -t koalixswitzerland/koalixcrm:latest .'
+                elif [ "${BRANCH_NAME}" == "development" ] && [ -z "${CHANGE_ID}" ]; then
+                    sh 'docker build -f "Dockerfile.prod" -t koalixswitzerland/koalixcrm:latest .'
+                fi
             }
         }
         stage('Push Docker image') {
             steps {
-                withDockerRegistry([ credentialsId: "8c45eee4-1162-466b-84c5-5f86a52a44cd", url: "" ]) {
-                    sh 'docker push koalixswitzerland/koalixcrm:latest'
+                if [ "${BRANCH_NAME}" == "master" ] && [ -z "${CHANGE_ID}" ]; then
+                    withDockerRegistry([ credentialsId: "DOCKER_HUB", url: "" ]) {
+                        sh 'docker push koalixswitzerland/koalixcrm:latest'
+                elif [ "${BRANCH_NAME}" == "development" ] && [ -z "${CHANGE_ID}" ]; then
+                    withDockerRegistry([ credentialsId: "DOCKER_HUB", url: "" ]) {
+                        sh 'docker push koalixswitzerland/koalixcrm:latest'
+                fi
                 }
             }
         }
