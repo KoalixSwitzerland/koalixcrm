@@ -90,13 +90,15 @@ pipeline {
         }
         stage('Push Docker image') {
             steps {
-                docker.withRegistry("https://registry.hub.docker.com", 'DOCKER_HUB') {
-                sh '''
-                if [ "${BRANCH_NAME}" == "master" ] && [ -z "${CHANGE_ID}" ]; then
-                        sh 'docker push koalixswitzerland/koalixcrm:latest'
-                elif [ "${BRANCH_NAME}" == "development" ] && [ -z "${CHANGE_ID}" ]; then
-                        sh 'docker push koalixswitzerland/koalixcrm:latest'
-                fi'''
+                script {
+                    docker.withRegistry("https://registry.hub.docker.com", 'DOCKER_HUB') {
+                    sh '''
+                    if [ "${BRANCH_NAME}" == "master" ] && [ -z "${CHANGE_ID}" ]; then
+                            sh 'docker push koalixswitzerland/koalixcrm:latest'
+                    elif [ "${BRANCH_NAME}" == "development" ] && [ -z "${CHANGE_ID}" ]; then
+                            sh 'docker push koalixswitzerland/koalixcrm:latest'
+                    fi'''
+                    }
                 }
             }
         }
