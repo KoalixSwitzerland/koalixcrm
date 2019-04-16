@@ -90,7 +90,7 @@ pipeline {
         }
         stage('Push Docker image') {
             steps {
-                withDockerRegistry([ credentialsId: "DOCKER_HUB", url: "" ])
+                withDockerRegistry([ credentialsId: "DOCKER_HUB", url: "" ]){
                 sh '''
                 if [ "${BRANCH_NAME}" == "master" ] && [ -z "${CHANGE_ID}" ]; then
                         sh 'docker push koalixswitzerland/koalixcrm:latest'
