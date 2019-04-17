@@ -12,6 +12,7 @@ pipeline {
         PATH_TO_ROOT_SERVER_PRIV_KEY = credentials('PATH_TO_ROOT_SERVER_PRIV_KEY')
         CLOUD_FLARE_API_KEY = credentials('CLOUD_FLARE_API_KEY')
         PASSPHRASE_ROOT_SERVER_PRIV_KEY = credentials('PASSPHRASE_ROOT_SERVER_PRIV_KEY')
+        DOCKER_HUB = credentials('DOCKER_HUB')
     }
     stages {
         stage ("Prepare Virtual Environment"){
@@ -90,16 +91,13 @@ pipeline {
         }
         stage('Push Docker image') {
             steps {
-                script {
-                    docker.withRegistry(" ", 'DOCKER_HUB') {
-                    sh '''
-                    if [ "${BRANCH_NAME}" == "master" ] && [ -z "${CHANGE_ID}" ]; then
-                        docker push koalixswitzerland/koalixcrm:latest
-                    elif [ "${BRANCH_NAME}" == "development" ] && [ -z "${CHANGE_ID}" ]; then
-                        docker push koalixswitzerland/koalixcrm:latest
-                    fi'''
-                    }
-                }
+                sh '''
+                if [ "${BRANCH_NAME}" == "master" ] && [ -z "${CHANGE_ID}" ]; then
+                    docker login -u ${DOCKER_HUB} -p ${DOCKER_HUB_PSW}
+                    docker push koalixswitzerland/koalixcrm:latest
+                elif [ "${BRANCH_NAME}" == "development" ] && [ -z "${CHANGE_ID}" ]; then
+                    docker push koalixswitzerland/koalixcrm:latest
+                fi'''
             }
         }
         stage('Deploy') {
