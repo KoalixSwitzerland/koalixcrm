@@ -92,8 +92,10 @@ pipeline {
                 mv hetzner_jenkins_start_script/koalixcrm.conf .
                 mv hetzner_jenkins_start_script/entrypoint.sh .
                 if [ "${BRANCH_NAME}" == "master" ] && [ -z "${CHANGE_ID}" ]; then
+                    docker login -u ${DOCKER_HUB} -p ${DOCKER_HUB_PSW}
                     docker build -f "Dockerfile.prod" -t koalixswitzerland/koalixcrm:latest .
                 elif [ "${BRANCH_NAME}" == "development" ] && [ -z "${CHANGE_ID}" ]; then
+                    docker login -u ${DOCKER_HUB} -p ${DOCKER_HUB_PSW}
                     docker build -f "Dockerfile.prod" -t koalixswitzerland/koalixcrm:latest .
                 fi'''
             }
@@ -105,6 +107,7 @@ pipeline {
                     docker login -u ${DOCKER_HUB} -p ${DOCKER_HUB_PSW}
                     docker push koalixswitzerland/koalixcrm:latest
                 elif [ "${BRANCH_NAME}" == "development" ] && [ -z "${CHANGE_ID}" ]; then
+                    docker login -u ${DOCKER_HUB} -p ${DOCKER_HUB_PSW}
                     docker push koalixswitzerland/koalixcrm:latest
                 fi'''
             }
