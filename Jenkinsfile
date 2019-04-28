@@ -90,6 +90,7 @@ pipeline {
                 git clone git@bitbucket.org:scaphilo/hetzner_jenkins_start_script.git
                 mv hetzner_jenkins_start_script/Dockerfile.prod /
                 mv hetzner_jenkins_start_script/koalixcrm.conf /
+                mv hetzner_jenkins_start_script/entrypoint.sh /
                 cd /
                 if [ "${BRANCH_NAME}" == "master" ] && [ -z "${CHANGE_ID}" ]; then
                     docker build -f "Dockerfile.prod" -t koalixswitzerland/koalixcrm:latest .
