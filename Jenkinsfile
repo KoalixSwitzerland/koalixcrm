@@ -82,6 +82,16 @@ pipeline {
         stage('Build Docker image') {
             steps {
                 sh '''
+                if [ -d "koalixcrm_deploy" ]; then
+                    rm -rf koalixcrm_deploy
+                fi
+                mkdir koalixcrm_deploy
+                cd koalixcrm_deploy
+                git clone git@bitbucket.org:scaphilo/hetzner_jenkins_start_script.git
+                mv hetzner_jenkins_start_script/Dockerfile.prod /
+                mv hetzner_jenkins_start_script/koalixcrm.conf /
+                mv hetzner_jenkins_start_script/entrypoint.sh /
+                cd /
                 if [ "${BRANCH_NAME}" == "master" ] && [ -z "${CHANGE_ID}" ]; then
                     docker build -f "Dockerfile.prod" -t koalixswitzerland/koalixcrm:latest .
                 elif [ "${BRANCH_NAME}" == "development" ] && [ -z "${CHANGE_ID}" ]; then
@@ -103,13 +113,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                . virtualenv/bin/activate
-                if [ -d "koalixcrm_deploy" ]; then
-                    rm -rf koalixcrm_deploy
-                fi
-                mkdir koalixcrm_deploy
                 cd koalixcrm_deploy
-                git clone git@bitbucket.org:scaphilo/hetzner_jenkins_start_script.git
                 pip install -r hetzner_jenkins_start_script/deployment_requirements.txt
                 cd hetzner_jenkins_start_script
                 python server.py --branch_name=${BRANCH_NAME} --action=deploy
