@@ -116,6 +116,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
+                . virtualenv/bin/activate
                 cd koalixcrm_deploy
                 pip install -r hetzner_jenkins_start_script/deployment_requirements.txt
                 cd hetzner_jenkins_start_script
