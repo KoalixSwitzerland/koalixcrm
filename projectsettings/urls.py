@@ -19,9 +19,11 @@ from django.conf.urls.static import *
 from django.contrib.staticfiles.urls import static
 from django.contrib import admin
 from django.shortcuts import redirect
-from django.conf.urls import include
+from django.conf.urls import include, url
 from filebrowser.sites import site
 from rest_framework import routers
+from rest_framework.renderers import JSONOpenAPIRenderer
+from rest_framework.schemas import get_schema_view
 
 from koalixcrm.accounting.rest.restinterface import AccountAsJSON, AccountingPeriodAsJSON, BookingAsJSON, \
     ProductCategoryAsJSON
@@ -48,6 +50,11 @@ router.register(r'tasks', TaskAsJSON)
 router.register(r'taskstatus', TaskStatusAsJSON)
 router.register(r'taxes', TaxAsJSON)
 router.register(r'units', UnitAsJSON)
+schema_view = get_schema_view(
+    title='Server Monitoring API',
+    url='https://www.example.org/api/',
+    renderer_classes=[JSONOpenAPIRenderer]
+)
 
 
 admin.autodiscover()
@@ -60,6 +67,7 @@ urlpatterns = [
     path('koalixcrm/crm/reporting/', include('koalixcrm.crm.reporting.urls')),
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
+    url(r'test/', schema_view)
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
