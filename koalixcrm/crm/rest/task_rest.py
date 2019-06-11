@@ -3,8 +3,8 @@ from rest_framework import serializers
 from koalixcrm.crm.reporting.task import Task
 from koalixcrm.crm.reporting.project import Project
 from koalixcrm.crm.reporting.task_status import TaskStatus
-from koalixcrm.crm.reporting.rest.project_rest import OptionProjectJSONSerializer
-from koalixcrm.crm.reporting.rest.task_status_rest import OptionTaskStatusJSONSerializer
+from koalixcrm.crm.rest.project_rest import OptionProjectJSONSerializer
+from koalixcrm.crm.rest.task_status_rest import OptionTaskStatusJSONSerializer
 
 
 class OptionTaskJSONSerializer(serializers.HyperlinkedModelSerializer):
