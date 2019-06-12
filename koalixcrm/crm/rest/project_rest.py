@@ -9,14 +9,14 @@ from koalixcrm.djangoUserExtension.rest.template_set_rest import OptionTemplateS
 from koalixcrm.djangoUserExtension.user_extension.template_set import TemplateSet
 
 
-class OptionProjectJSONSerializer(serializers.HyperlinkedModelSerializer):
+class OptionProjectJSONSerializer(serializers.ModelSerializer):
     projectStatus = OptionProjectStatusJSONSerializer(source='project_status', read_only=True)
     projectName = serializers.CharField(source='project_name', read_only=True)
     defaultCurrency = CurrencyJSONSerializer(source='default_currency', read_only=True)
     defaultTemplateSet = OptionTemplateSetJSONSerializer(source='default_template_set', read_only=True)
-    is_reporting_allowed = serializers.SerializerMethodField()
+    isReportingAllowed = serializers.SerializerMethodField()
 
-    def get_is_reporting_allowed(self, obj):
+    def get_isReportingAllowed(self, obj):
         if obj.is_reporting_allowed():
             return "True"
         else:
@@ -29,10 +29,11 @@ class OptionProjectJSONSerializer(serializers.HyperlinkedModelSerializer):
                   'projectName',
                   'description',
                   'defaultCurrency',
-                  'defaultTemplateSet',)
+                  'defaultTemplateSet',
+                  'isReportingAllowed')
 
 
-class ProjectJSONSerializer(serializers.HyperlinkedModelSerializer):
+class ProjectJSONSerializer(serializers.ModelSerializer):
     projectStatus = OptionProjectStatusJSONSerializer(source='project_status')
     projectName = serializers.CharField(source='project_name')
     defaultCurrency = CurrencyJSONSerializer(source='default_currency')
@@ -46,9 +47,9 @@ class ProjectJSONSerializer(serializers.HyperlinkedModelSerializer):
                   'projectName',
                   'description',
                   'defaultCurrency',
-                  'defaultTemplateSet',)
+                  'defaultTemplateSet')
 
-    def isReportingAllowed(self, obj):
+    def get_isReportingAllowed(self, obj):
         if obj.is_reporting_allowed():
             return "True"
         else:

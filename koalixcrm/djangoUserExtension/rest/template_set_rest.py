@@ -24,7 +24,6 @@ from koalixcrm.djangoUserExtension.user_extension.document_template import WorkR
 
 
 class OptionTemplateSetJSONSerializer(serializers.HyperlinkedModelSerializer):
-    title = serializers.CharField(source='title', read_only=True)
     invoiceTemplate = OptionInvoiceTemplateJSONSerializer(source='invoice_template', read_only=True)
     quoteTemplate = OptionQuoteTemplateJSONSerializer(source='quote_template', read_only=True)
     deliveryNoteTemplate = OptionDeliveryNoteTemplateJSONSerializer(source='delivery_note_template', read_only=True)
@@ -39,20 +38,19 @@ class OptionTemplateSetJSONSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = TemplateSet
         fields = ('title',
-                  'invoice_template',
-                  'quote_template',
-                  'delivery_note_template',
-                  'payment_reminder_template',
-                  'purchase_confirmation_template',
-                  'purchase_order_template',
-                  'profit_loss_statement_template',
-                  'balance_sheet_statement_template',
-                  'monthly_project_summary_template',
-                  'work_report_template')
+                  'invoiceTemplate',
+                  'quoteTemplate',
+                  'deliveryNoteTemplate',
+                  'paymentReminderTemplate',
+                  'purchaseConfirmation_template',
+                  'purchaseOrderTemplate',
+                  'profitLossStatementTemplate',
+                  'balanceSheetStatementTemplate',
+                  'monthlyProjectSummaryTemplate',
+                  'workReportTemplate')
 
 
 class TemplateSetJSONSerializer(serializers.HyperlinkedModelSerializer):
-    title = serializers.CharField(source='title')
     invoiceTemplate = OptionInvoiceTemplateJSONSerializer(source='invoice_template')
     quoteTemplate = OptionQuoteTemplateJSONSerializer(source='quote_template')
     deliveryNoteTemplate = OptionDeliveryNoteTemplateJSONSerializer(source='delivery_note_template')
@@ -67,16 +65,16 @@ class TemplateSetJSONSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = TemplateSet
         fields = ('title',
-                  'invoice_template',
-                  'quote_template',
-                  'delivery_note_template',
-                  'payment_reminder_template',
-                  'purchase_confirmation_template',
-                  'purchase_order_template',
-                  'profit_loss_statement_template',
-                  'balance_sheet_statement_template',
-                  'monthly_project_summary_template',
-                  'work_report_template')
+                  'invoiceTemplate',
+                  'quoteTemplate',
+                  'deliveryNoteTemplate',
+                  'paymentReminderTemplate',
+                  'purchaseConfirmation_template',
+                  'purchaseOrderTemplate',
+                  'profitLossStatementTemplate',
+                  'balanceSheetStatementTemplate',
+                  'monthlyProjectSummaryTemplate',
+                  'workReportTemplate')
 
     def create(self, validated_data):
         template_set = TemplateSet()

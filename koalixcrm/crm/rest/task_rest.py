@@ -8,22 +8,22 @@ from koalixcrm.crm.rest.task_status_rest import OptionTaskStatusJSONSerializer
 
 
 class OptionTaskJSONSerializer(serializers.HyperlinkedModelSerializer):
-    title = serializers.CharField(source='title', read_only=True)
-    description = serializers.CharField(source='title', read_only=True)
+    project = OptionProjectJSONSerializer(allow_null=False, read_only=True)
+    status = OptionTaskStatusJSONSerializer(allow_null=False, read_only=True)
     lastStatusChange = serializers.DateField(source='last_status_change', read_only=True)
 
     class Meta:
         model = Task
         fields = ('title',
+                  'project',
                   'description',
-                  'last_status_change',)
+                  'status',
+                  'lastStatusChange',)
 
 
 class TaskJSONSerializer(serializers.HyperlinkedModelSerializer):
-    title = serializers.CharField(source='title')
-    project = OptionProjectJSONSerializer(source='project', allow_null=False)
-    description = serializers.CharField(source='title')
-    status = OptionTaskStatusJSONSerializer(source='status', allow_null=False)
+    project = OptionProjectJSONSerializer(allow_null=False)
+    status = OptionTaskStatusJSONSerializer(allow_null=False)
     lastStatusChange = serializers.DateField(source='last_status_change')
 
     class Meta:
@@ -32,7 +32,7 @@ class TaskJSONSerializer(serializers.HyperlinkedModelSerializer):
                   'project',
                   'description',
                   'status',
-                  'last_status_change',)
+                  'lastStatusChange',)
 
     def create(self, validated_data):
         task = Task()

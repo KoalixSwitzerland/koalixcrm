@@ -19,7 +19,7 @@ from koalixcrm.crm.product.product_type import ProductType
 from koalixcrm.crm.product.tax import Tax
 from koalixcrm.crm.product.unit import Unit
 from koalixcrm.crm.reporting.project import Project
-from koalixcrm.crm.reporting.task import Task, TaskSerializer
+from koalixcrm.crm.reporting.task import Task
 from koalixcrm.crm.reporting.task_status import TaskStatus
 from koalixcrm.crm.rest.contact_rest import ContactPostalAddressJSONSerializer, ContactEmailAddressJSONSerializer, \
     ContactPhoneAddressJSONSerializer
@@ -31,6 +31,8 @@ from koalixcrm.crm.rest.product_rest import ProductJSONSerializer
 from koalixcrm.crm.rest.tax_rest import TaxJSONSerializer
 from koalixcrm.crm.rest.unit_rest import UnitJSONSerializer
 from koalixcrm.crm.rest.project_rest import ProjectJSONSerializer
+from koalixcrm.crm.rest.task_rest import TaskJSONSerializer
+from koalixcrm.crm.rest.task_status_rest import TaskStatusJSONSerializer
 from koalixcrm.crm.views.renderer import XSLFORenderer
 from koalixcrm.global_support_functions import ConditionalMethodDecorator
 
@@ -40,7 +42,7 @@ class TaskAsJSON(viewsets.ModelViewSet):
     API endpoint that allows users to be viewed.
     """
     queryset = Task.objects.all()
-    serializer_class = TaskSerializer
+    serializer_class = TaskJSONSerializer
     renderer_classes = (BrowsableAPIRenderer, JSONRenderer, XMLRenderer)
     filter_fields = ('project',)
 
@@ -69,7 +71,7 @@ class TaskStatusAsJSON(viewsets.ModelViewSet):
     API endpoint that allows users to be viewed.
     """
     queryset = TaskStatus.objects.all()
-    serializer_class = TaskSerializer
+    serializer_class = TaskStatusJSONSerializer
     renderer_classes = (BrowsableAPIRenderer, JSONRenderer, XMLRenderer)
 
     @ConditionalMethodDecorator(method_decorator(login_required), settings.KOALIXCRM_REST_API_AUTH)
