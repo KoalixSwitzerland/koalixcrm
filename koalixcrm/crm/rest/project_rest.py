@@ -5,45 +5,54 @@ from koalixcrm.crm.product.currency import Currency
 from koalixcrm.crm.reporting.project_status import ProjectStatus
 from koalixcrm.crm.rest.project_status_rest import OptionProjectStatusJSONSerializer
 from koalixcrm.crm.rest.currency_rest import CurrencyJSONSerializer
-from koalixcrm.djangoUserExtension.rest.user_extension_rest import OptionUserExtensionJSONSerializer
 from koalixcrm.djangoUserExtension.rest.template_set_rest import OptionTemplateSetJSONSerializer
 from koalixcrm.djangoUserExtension.user_extension.template_set import TemplateSet
 
 
 class OptionProjectJSONSerializer(serializers.HyperlinkedModelSerializer):
     projectStatus = OptionProjectStatusJSONSerializer(source='project_status', read_only=True)
-    projectManager = OptionUserExtensionJSONSerializer(source='project_manager', read_only=True)
     projectName = serializers.CharField(source='project_name', read_only=True)
-    description = serializers.CharField(source='description', read_only=True)
     defaultCurrency = CurrencyJSONSerializer(source='default_currency', read_only=True)
     defaultTemplateSet = OptionTemplateSetJSONSerializer(source='default_template_set', read_only=True)
+    is_reporting_allowed = serializers.SerializerMethodField()
+
+    def get_is_reporting_allowed(self, obj):
+        if obj.is_reporting_allowed():
+            return "True"
+        else:
+            return "False"
 
     class Meta:
         model = Project
-        fields = ('project_status',
+        fields = ('projectStatus',
                   'project_manager',
-                  'project_name',
+                  'projectName',
                   'description',
-                  'default_currency',
-                  'default_template_set',)
+                  'defaultCurrency',
+                  'defaultTemplateSet',)
 
 
 class ProjectJSONSerializer(serializers.HyperlinkedModelSerializer):
     projectStatus = OptionProjectStatusJSONSerializer(source='project_status')
-    projectManager = OptionUserExtensionJSONSerializer(source='project_manager')
     projectName = serializers.CharField(source='project_name')
-    description = serializers.CharField(source='description')
     defaultCurrency = CurrencyJSONSerializer(source='default_currency')
     defaultTemplateSet = OptionTemplateSetJSONSerializer(source='default_template_set')
+    isReportingAllowed = serializers.SerializerMethodField()
 
     class Meta:
         model = Project
-        fields = ('project_status',
+        fields = ('projectStatus',
                   'project_manager',
-                  'project_name',
+                  'projectName',
                   'description',
-                  'default_currency',
-                  'default_template_set',)
+                  'defaultCurrency',
+                  'defaultTemplateSet',)
+
+    def isReportingAllowed(self, obj):
+        if obj.is_reporting_allowed():
+            return "True"
+        else:
+            return "False"
 
     def create(self, validated_data):
         project = Project()

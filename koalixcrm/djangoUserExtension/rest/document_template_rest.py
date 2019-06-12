@@ -14,9 +14,9 @@ from koalixcrm.djangoUserExtension.user_extension.document_template import WorkR
 
 class OptionDocumentTemplateJSONSerializer(serializers.HyperlinkedModelSerializer):
     title = serializers.CharField(source='title', required=False, read_only=True)
-    xsl_file = serializers.FilePathField(source='xsl_file', read_only=True)
-    fop_config_file = serializers.FilePathField(source='user',read_only=True)
-    logo = serializers.FilePathField(source='logo', read_only=True)
+    xsl_file = serializers.FileField(source='xsl_file', read_only=True)
+    fop_config_file = serializers.FileField(source='user',read_only=True)
+    logo = serializers.FileField(source='logo', read_only=True)
 
 
 class OptionInvoiceTemplateJSONSerializer(OptionDocumentTemplateJSONSerializer):

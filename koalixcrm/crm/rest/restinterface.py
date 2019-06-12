@@ -18,7 +18,7 @@ from koalixcrm.crm.product.currency import Currency
 from koalixcrm.crm.product.product_type import ProductType
 from koalixcrm.crm.product.tax import Tax
 from koalixcrm.crm.product.unit import Unit
-from koalixcrm.crm.reporting.project import Project, ProjectJSONSerializer
+from koalixcrm.crm.reporting.project import Project
 from koalixcrm.crm.reporting.task import Task, TaskSerializer
 from koalixcrm.crm.reporting.task_status import TaskStatus
 from koalixcrm.crm.rest.contact_rest import ContactPostalAddressJSONSerializer, ContactEmailAddressJSONSerializer, \
@@ -30,6 +30,7 @@ from koalixcrm.crm.rest.customer_rest import CustomerJSONSerializer
 from koalixcrm.crm.rest.product_rest import ProductJSONSerializer
 from koalixcrm.crm.rest.tax_rest import TaxJSONSerializer
 from koalixcrm.crm.rest.unit_rest import UnitJSONSerializer
+from koalixcrm.crm.rest.project_rest import ProjectJSONSerializer
 from koalixcrm.crm.views.renderer import XSLFORenderer
 from koalixcrm.global_support_functions import ConditionalMethodDecorator
 
