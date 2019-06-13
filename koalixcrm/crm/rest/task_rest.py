@@ -11,28 +11,46 @@ class OptionTaskJSONSerializer(serializers.HyperlinkedModelSerializer):
     project = OptionProjectJSONSerializer(allow_null=False, read_only=True)
     status = OptionTaskStatusJSONSerializer(allow_null=False, read_only=True)
     lastStatusChange = serializers.DateField(source='last_status_change', read_only=True)
+    isReportingAllowed = serializers.SerializerMethodField()
 
     class Meta:
         model = Task
-        fields = ('title',
+        fields = ('id',
+                  'title',
                   'project',
                   'description',
                   'status',
-                  'lastStatusChange',)
+                  'lastStatusChange',
+                  'isReportingAllowed',)
+
+    def get_isReportingAllowed(self, obj):
+        if obj.is_reporting_allowed():
+            return "True"
+        else:
+            return "False"
 
 
 class TaskJSONSerializer(serializers.HyperlinkedModelSerializer):
     project = OptionProjectJSONSerializer(allow_null=False)
     status = OptionTaskStatusJSONSerializer(allow_null=False)
     lastStatusChange = serializers.DateField(source='last_status_change')
+    isReportingAllowed = serializers.SerializerMethodField()
 
     class Meta:
         model = Task
-        fields = ('title',
+        fields = ('id',
+                  'title',
                   'project',
                   'description',
                   'status',
-                  'lastStatusChange',)
+                  'lastStatusChange',
+                  'isReportingAllowed',)
+
+    def get_isReportingAllowed(self, obj):
+        if obj.is_reporting_allowed():
+            return "True"
+        else:
+            return "False"
 
     def create(self, validated_data):
         task = Task()

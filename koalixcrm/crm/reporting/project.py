@@ -595,24 +595,3 @@ class ProjectInlineAdminView(admin.TabularInline):
 
     def has_delete_permission(self, request, obj=None):
         return False
-
-
-class ProjectJSONSerializer(serializers.ModelSerializer):
-    from koalixcrm.crm.reporting.task import TaskSerializer
-    tasks = TaskSerializer(many=True, read_only=True)
-
-    is_reporting_allowed = serializers.SerializerMethodField()
-
-    def get_is_reporting_allowed(self, obj):
-        if obj.is_reporting_allowed():
-            return "True"
-        else:
-            return "False"
-
-    class Meta:
-        model = Project
-        fields = ('id',
-                  'project_manager',
-                  'project_name',
-                  'tasks',
-                  'is_reporting_allowed')

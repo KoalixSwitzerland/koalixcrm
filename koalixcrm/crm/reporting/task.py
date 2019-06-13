@@ -577,24 +577,3 @@ class TaskInlineAdminView(admin.TabularInline):
 
     def has_delete_permission(self, request, obj=None):
         return False
-
-
-class TaskSerializer(serializers.ModelSerializer):
-    is_reporting_allowed = serializers.SerializerMethodField()
-
-    def get_is_reporting_allowed(self, obj):
-        if obj.is_reporting_allowed():
-            return "True"
-        else:
-            return "False"
-
-    class Meta:
-        model = Task
-        fields = ('id',
-                  'title',
-                  'planned_end',
-                  'planned_start',
-                  'project',
-                  'description',
-                  'status',
-                  'is_reporting_allowed')

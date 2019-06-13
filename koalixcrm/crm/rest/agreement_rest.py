@@ -22,9 +22,6 @@ class AgreementJSONSerializer(serializers.HyperlinkedModelSerializer):
     type = OptionAgreementTypeJSONSerializer(source='type', allow_null=False)
     status = OptionAgreementStatusJSONSerializer(source='status', allow_null=False)
     costs = OptionResourcePriceJSONSerializer(source='costs', allow_null=False)
-    dateFrom = serializers.DateField(source='date_from')
-    dateUntil = serializers.DateField(source='date_until')
-    amount = serializers.DecimalField(source='amount')
 
     class Meta:
         model = Agreement

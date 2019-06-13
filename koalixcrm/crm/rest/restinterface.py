@@ -18,6 +18,7 @@ from koalixcrm.crm.product.currency import Currency
 from koalixcrm.crm.product.product_type import ProductType
 from koalixcrm.crm.product.tax import Tax
 from koalixcrm.crm.product.unit import Unit
+from koalixcrm.crm.reporting.agreement import Agreement
 from koalixcrm.crm.reporting.project import Project
 from koalixcrm.crm.reporting.task import Task
 from koalixcrm.crm.reporting.task_status import TaskStatus
@@ -33,6 +34,7 @@ from koalixcrm.crm.rest.unit_rest import UnitJSONSerializer
 from koalixcrm.crm.rest.project_rest import ProjectJSONSerializer
 from koalixcrm.crm.rest.task_rest import TaskJSONSerializer
 from koalixcrm.crm.rest.task_status_rest import TaskStatusJSONSerializer
+from koalixcrm.crm.rest.agreement_rest import AgreementJSONSerializer
 from koalixcrm.crm.views.renderer import XSLFORenderer
 from koalixcrm.global_support_functions import ConditionalMethodDecorator
 
@@ -230,9 +232,22 @@ class ProjectAsJSON(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectJSONSerializer
     renderer_classes = (BrowsableAPIRenderer, JSONRenderer, XMLRenderer, XSLFORenderer)
-    file_name = "this_is_the_ProjectList.xml"
 
     @ConditionalMethodDecorator(method_decorator(login_required), settings.KOALIXCRM_REST_API_AUTH)
     @authentication_classes((SessionAuthentication, BasicAuthentication))
     def dispatch(self, *args, **kwargs):
         return super(ProjectAsJSON, self).dispatch(*args, **kwargs)
+
+
+class AgreementAsJSON(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed.
+    """
+    queryset = Agreement.objects.all()
+    serializer_class = AgreementJSONSerializer
+    renderer_classes = (BrowsableAPIRenderer, JSONRenderer, XMLRenderer, XSLFORenderer)
+
+    @ConditionalMethodDecorator(method_decorator(login_required), settings.KOALIXCRM_REST_API_AUTH)
+    @authentication_classes((SessionAuthentication, BasicAuthentication))
+    def dispatch(self, *args, **kwargs):
+        return super(AgreementAsJSON, self).dispatch(*args, **kwargs)

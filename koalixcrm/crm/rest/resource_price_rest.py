@@ -10,7 +10,7 @@ from koalixcrm.crm.rest.unit_rest import OptionUnitJSONSerializer
 
 
 class OptionResourcePriceJSONSerializer(serializers.HyperlinkedModelSerializer):
-    price = serializers.DecimalField(source='price')
+    price = serializers.DecimalField(source='price', decimal_places=2, max_digits=5)
     unit = OptionUnitJSONSerializer(source='unit')
     customerGroup = OptionCustomerGroupJSONSerializer(source='customer_group')
     currency = CurrencyJSONSerializer(source='currency', allow_null=False)
@@ -28,7 +28,7 @@ class OptionResourcePriceJSONSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class ResourcePricesSONSerializer(serializers.HyperlinkedModelSerializer):
-    price = serializers.DecimalField(source='price')
+    price = serializers.DecimalField(source='price', decimal_places=2, max_digits=5)
     currency = CurrencyJSONSerializer(source='currency', allow_null=False)
     unit = OptionUnitJSONSerializer(source='unit')
     validFrom = serializers.DateField(source='valid_from', allow_null=False)

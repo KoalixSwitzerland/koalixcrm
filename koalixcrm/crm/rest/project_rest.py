@@ -5,12 +5,15 @@ from koalixcrm.crm.product.currency import Currency
 from koalixcrm.crm.reporting.project_status import ProjectStatus
 from koalixcrm.crm.rest.project_status_rest import OptionProjectStatusJSONSerializer
 from koalixcrm.crm.rest.currency_rest import CurrencyJSONSerializer
+from koalixcrm.djangoUserExtension.rest.user_rest import UserSerializer
 from koalixcrm.djangoUserExtension.rest.template_set_rest import OptionTemplateSetJSONSerializer
 from koalixcrm.djangoUserExtension.user_extension.template_set import TemplateSet
+import koalixcrm
 
 
 class OptionProjectJSONSerializer(serializers.ModelSerializer):
     projectStatus = OptionProjectStatusJSONSerializer(source='project_status', read_only=True)
+    projectManager = UserSerializer(source='project_manager', read_only=True)
     projectName = serializers.CharField(source='project_name', read_only=True)
     defaultCurrency = CurrencyJSONSerializer(source='default_currency', read_only=True)
     defaultTemplateSet = OptionTemplateSetJSONSerializer(source='default_template_set', read_only=True)
@@ -25,7 +28,7 @@ class OptionProjectJSONSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = ('projectStatus',
-                  'project_manager',
+                  'projectManager',
                   'projectName',
                   'description',
                   'defaultCurrency',
@@ -34,20 +37,25 @@ class OptionProjectJSONSerializer(serializers.ModelSerializer):
 
 
 class ProjectJSONSerializer(serializers.ModelSerializer):
+    from koalixcrm.crm.rest.task_rest import TaskJSONSerializer
     projectStatus = OptionProjectStatusJSONSerializer(source='project_status')
+    projectManager = UserSerializer(source='project_manager', read_only=True)
     projectName = serializers.CharField(source='project_name')
     defaultCurrency = CurrencyJSONSerializer(source='default_currency')
     defaultTemplateSet = OptionTemplateSetJSONSerializer(source='default_template_set')
     isReportingAllowed = serializers.SerializerMethodField()
+    tasks = TaskJSONSerializer(many=True, read_only=True)
 
     class Meta:
         model = Project
         fields = ('projectStatus',
-                  'project_manager',
+                  'projectManager',
                   'projectName',
                   'description',
                   'defaultCurrency',
-                  'defaultTemplateSet')
+                  'defaultTemplateSet',
+                  'isReportingAllowed',
+                  'tasks')
 
     def get_isReportingAllowed(self, obj):
         if obj.is_reporting_allowed():
