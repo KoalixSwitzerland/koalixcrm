@@ -59,7 +59,6 @@ urlpatterns = [
     path('koalixcrm/crm/reporting/', include('koalixcrm.crm.reporting.urls')),
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
-    url(r'test/', schema_view)
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
