@@ -22,8 +22,6 @@ from django.shortcuts import redirect
 from django.conf.urls import include, url
 from filebrowser.sites import site
 from rest_framework import routers
-from rest_framework.renderers import JSONOpenAPIRenderer
-from rest_framework.schemas import get_schema_view
 
 from koalixcrm.accounting.rest.restinterface import AccountAsJSON, AccountingPeriodAsJSON, BookingAsJSON, \
     ProductCategoryAsJSON
@@ -50,12 +48,6 @@ router.register(r'tasks', TaskAsJSON)
 router.register(r'taskstatus', TaskStatusAsJSON)
 router.register(r'taxes', TaxAsJSON)
 router.register(r'units', UnitAsJSON)
-schema_view = get_schema_view(
-    title='Server Monitoring API',
-    url='https://www.example.org/api/',
-    renderer_classes=[JSONOpenAPIRenderer]
-)
-
 
 admin.autodiscover()
 
