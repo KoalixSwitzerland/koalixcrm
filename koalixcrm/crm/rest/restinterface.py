@@ -245,7 +245,6 @@ class AgreementAsJSON(viewsets.ModelViewSet):
     serializer_class = AgreementJSONSerializer
     renderer_classes = (BrowsableAPIRenderer, JSONRenderer, XMLRenderer, XSLFORenderer)
 
-    @ConditionalMethodDecorator(method_decorator(login_required), settings.KOALIXCRM_REST_API_AUTH)
     @authentication_classes((SessionAuthentication, BasicAuthentication))
     def dispatch(self, *args, **kwargs):
         return super(AgreementAsJSON, self).dispatch(*args, **kwargs)
