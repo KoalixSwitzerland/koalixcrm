@@ -14,5 +14,5 @@ class StandardReportingPeriodFactory(factory.django.DjangoModelFactory):
     project = factory.SubFactory(StandardProjectFactory)
     title = "This is a test project"
     begin = '2018-06-15'
-    end = '2019-06-15'
+    end = '2044-06-15'
     status = factory.SubFactory(ReportingReportingPeriodStatusFactory)
