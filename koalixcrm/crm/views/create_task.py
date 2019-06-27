@@ -33,7 +33,7 @@ class CreateTaskView:
             task = Task.objects.filter(id=task_id).update(
                 title=task_title,
                 planned_start_date=date_now,
-                project=project,
+                reporting_period=project,
                 description=sales_document_position.description,
                 last_status_change=date_now
             )

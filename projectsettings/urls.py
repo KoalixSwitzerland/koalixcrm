@@ -19,7 +19,7 @@ from django.conf.urls.static import *
 from django.contrib.staticfiles.urls import static
 from django.contrib import admin
 from django.shortcuts import redirect
-from django.conf.urls import include
+from django.conf.urls import include, url
 from filebrowser.sites import site
 from rest_framework import routers
 
@@ -48,7 +48,6 @@ router.register(r'tasks', TaskAsJSON)
 router.register(r'taskstatus', TaskStatusAsJSON)
 router.register(r'taxes', TaxAsJSON)
 router.register(r'units', UnitAsJSON)
-
 
 admin.autodiscover()
 

@@ -7,7 +7,6 @@ from django.utils.translation import ugettext as _
 from koalixcrm.crm.contact.postal_address import PostalAddress
 from koalixcrm.crm.contact.phone_address import PhoneAddress
 from koalixcrm.crm.contact.email_address import EmailAddress
-from koalixcrm.crm.documents.pdf_export import PDFExport
 from koalixcrm.djangoUserExtension.const.purpose import *
 from koalixcrm.djangoUserExtension.exceptions import *
 from koalixcrm.global_support_functions import xstr

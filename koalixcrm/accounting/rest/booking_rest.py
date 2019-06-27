@@ -88,47 +88,47 @@ class BookingJSONSerializer(serializers.HyperlinkedModelSerializer):
         booking.save()
         return booking
 
-    def update(self, instance, validated_data):
-        instance.description = validated_data['description']
-        instance.amount = validated_data['amount']
-        instance.booking_date = validated_data['booking_date']
-        instance.booking_reference = validated_data['booking_reference']
+    def update(self, booking, validated_data):
+        booking.description = validated_data['description']
+        booking.amount = validated_data['amount']
+        booking.booking_date = validated_data['booking_date']
+        booking.booking_reference = validated_data['booking_reference']
 
         # Deserialize from staff
         request = self.context.get('request')
         koalixcrm_user = request.META.get('HTTP_KOALIXCRM_USER')
         user = User.objects.get(username=koalixcrm_user)
-        instance.staff = user
+        booking.staff = user
 
         # Deserialize from account
         from_account = validated_data.pop('from_account')
         if from_account:
-            if from_account.get('id', instance.from_account):
-                instance.from_account = Account.objects.get(id=from_account.get('id', None))
+            if from_account.get('id', booking.from_account):
+                booking.from_account = Account.objects.get(id=from_account.get('id', None))
             else:
-                instance.from_account = instance.from_account_id
+                booking.from_account = booking.from_account_id
         else:
-            instance.from_account = None
+            booking.from_account = None
 
         # Deserialize to account
         to_account = validated_data.pop('to_account')
         if to_account:
-            if to_account.get('id', instance.to_account):
-                instance.to_account = Account.objects.get(id=to_account.get('id', None))
+            if to_account.get('id', booking.to_account):
+                booking.to_account = Account.objects.get(id=to_account.get('id', None))
             else:
-                instance.to_account = instance.to_account_id
+                booking.to_account = booking.to_account_id
         else:
-            instance.to_account = None
+            booking.to_account = None
 
         # Deserialize to accounting period
         accounting_period = validated_data.pop('accounting_period')
         if accounting_period:
-            if accounting_period.get('id', instance.accounting_period):
-                instance.accounting_period = AccountingPeriod.objects.get(id=accounting_period.get('id', None))
+            if accounting_period.get('id', booking.accounting_period):
+                booking.accounting_period = AccountingPeriod.objects.get(id=accounting_period.get('id', None))
             else:
-                instance.accounting_period = instance.accounting_period_id
+                booking.accounting_period = booking.accounting_period_id
         else:
-            instance.accounting_period = None
+            booking.accounting_period = None
 
-        instance.save()
-        return instance
+        booking.save()
+        return booking
