@@ -18,7 +18,7 @@ setup(name='koalix-crm',
                         'psycopg2_binary>=2.7.5',
                         'pytz==2017.2',
                         'django-grappelli==2.10.1',
-                        'djangorestframework==3.7.7',
+                        'djangorestframework>=3.9.1',
                         'markdown==2.6.11',
                         'django-filter==1.1.0',
                         'djangorestframework-xml==1.3.0'
