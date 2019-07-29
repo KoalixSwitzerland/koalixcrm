@@ -181,7 +181,7 @@ class ReportingPeriod(models.Model):
 class ReportingPeriodAdminForm(ModelForm):
     def clean(self):
         """Check that the begin of the new reporting period is not located within an existing
-        reporting period, Checks that the begin is date earlier than the end. Verify that in case there
+        reporting period, Checks that the begin date earlier than the end date. Verify that in case there
         is already a predecessor or a successor reporting period, the reporting periods are in direct contact
         with each other"""
         cleaned_data = super().clean()

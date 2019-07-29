@@ -138,16 +138,18 @@ class Task(models.Model):
         Raises:
         no exceptions expected"""
         try:
-            if not reporting_period:
-                reporting_period_internal = ReportingPeriod.get_latest_reporting_period(
-                    self.project)
-            else:
-                reporting_period_internal = reporting_period
-            estimations_to_this_task = Estimation.objects.filter(task=self.id,
-                                                                 reporting_period=reporting_period_internal)
-            effort = 0
-            for estimation_to_this_task in estimations_to_this_task:
-                effort += estimation_to_this_task.amount
+            estimations = Estimation.objects.filter(task=self.id)
+            latest_estimation = None
+            for estimation in estimations:
+                if not latest_estimation:
+                    latest_estimation = estimation
+                else:
+                    if latest_estimation.reporting_period.end < estimation.reporting_period.begin:
+                        latest_estimation = estimation
+            predecessor_reporting_period = estimation.reporting_period.get_predecessor(estimation.reporting_period,
+                                                                                       estimation.reporting_period.project)
+            effort = self.effective_effort(reporting_period=predecessor_reporting_period)
+            effort += latest_estimation.amount
         except ReportingPeriodNotFound:
             effort = 0
         return effort
@@ -180,7 +182,7 @@ class Task(models.Model):
         reporting_period (ReportingPeriod)
 
         Returns:
-        planned costs (Decimal), 0 if when no estimation or no reporting period is present
+        planned costs (Decimal), 0 if when no estimation or no reporting period is attached to the task
 
         Raises:
         No exceptions planned"""
@@ -188,7 +190,6 @@ class Task(models.Model):
         try:
             if not reporting_period:
                 reporting_period_internal = ReportingPeriod.get_latest_reporting_period(self.project)
-
             else:
                 reporting_period_internal = ReportingPeriod.objects.get(id=reporting_period.id)
             predecessor_reporting_periods = ReportingPeriod.get_all_predecessors(reporting_period_internal,
@@ -230,7 +231,7 @@ class Task(models.Model):
         Raises:
         No exceptions planned"""
         planned_costs_in_buckets = self.planned_costs_in_buckets(reporting_period=reporting_period, buckets=None)
-        return planned_costs_in_buckets['sum_costs']
+        return self.planned_effort()
     planned_costs.short_description = _("Planned Costs")
     planned_costs.tags = True
 
@@ -400,7 +401,7 @@ class Task(models.Model):
         for work_object in work_objects:
             sum_effort += work_object.effort_seconds()
         sum_effort_in_hours = sum_effort / 3600
-        return sum_effort_in_hours
+        return Decimal(sum_effort_in_hours)
 
     def effective_costs(self, reporting_period=None):
         """Returns the effective costs on a task
