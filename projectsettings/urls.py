@@ -19,7 +19,7 @@ from django.conf.urls.static import *
 from django.contrib.staticfiles.urls import static
 from django.contrib import admin
 from django.shortcuts import redirect
-from django.conf.urls import include
+from django.conf.urls import include, url
 from filebrowser.sites import site
 from rest_framework import routers
 
@@ -27,7 +27,7 @@ from koalixcrm.accounting.rest.restinterface import AccountAsJSON, AccountingPer
     ProductCategoryAsJSON
 from koalixcrm.crm.rest.restinterface import ContractAsJSON, CurrencyAsJSON, ProductAsJSON, ProjectAsJSON, TaskAsJSON, \
     TaskStatusAsJSON, TaxAsJSON, UnitAsJSON, CustomerGroupAsJSON, CustomerBillingCycleAsJSON, \
-    CustomerAsJSON
+    CustomerAsJSON, ContactPostalAddressAsJSON, ContactEmailAddressAsJSON, ContactPhoneAddressAsJSON
 
 router = routers.DefaultRouter()
 router.register(r'accounts', AccountAsJSON)
@@ -37,6 +37,9 @@ router.register(r'contracts', ContractAsJSON)
 router.register(r'currencies', CurrencyAsJSON)
 router.register(r'customers', CustomerAsJSON)
 router.register(r'customerBillingCycles', CustomerBillingCycleAsJSON)
+router.register(r'contactPostalAddresses', ContactPostalAddressAsJSON)
+router.register(r'contactPhoneNumbers', ContactPhoneAddressAsJSON)
+router.register(r'contactEmailAddresses', ContactEmailAddressAsJSON)
 router.register(r'customerGroups', CustomerGroupAsJSON)
 router.register(r'products', ProductAsJSON)
 router.register(r'productCategories', ProductCategoryAsJSON)
@@ -45,7 +48,6 @@ router.register(r'tasks', TaskAsJSON)
 router.register(r'taskstatus', TaskStatusAsJSON)
 router.register(r'taxes', TaxAsJSON)
 router.register(r'units', UnitAsJSON)
-
 
 admin.autodiscover()
 

@@ -203,13 +203,15 @@
                         <fo:table-column column-width="4.5cm"/>
                         <xsl:choose>
                             <xsl:when test="object[@model='crm.project']/Effective_Effort_InPeriod">
-                                <fo:table-column column-width="12.2cm"/>
+                                <fo:table-column column-width="6.2cm"/>
+                                <fo:table-column column-width="3cm"/>
                                 <fo:table-column column-width="3cm"/>
                             </xsl:when>
                             <xsl:otherwise>
-                                <fo:table-column column-width="15.2cm"/>
+                                <fo:table-column column-width="12.2cm"/>
                             </xsl:otherwise>
                         </xsl:choose>
+                        <fo:table-column column-width="3cm"/>
                         <fo:table-column column-width="3cm"/>
                         <fo:table-column column-width="3cm"/>
                         <fo:table-header font-size="8pt" line-height="9pt" font-weight="bold"
@@ -228,6 +230,22 @@
                             </fo:table-cell>
                             <xsl:choose>
                                 <xsl:when test="object[@model='crm.project']/Effective_Effort_InPeriod">
+                                    <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt"
+                                                   padding="2.5pt">
+                                        <fo:block text-align="end">
+                                            Act. Effort
+                                        </fo:block>
+                                    </fo:table-cell>
+                                </xsl:when>
+                            </xsl:choose>
+                            <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt"
+                                           padding="2.5pt">
+                                <fo:block text-align="end">
+                                    Total Act.Effort
+                                </fo:block>
+                            </fo:table-cell>
+                            <xsl:choose>
+                                <xsl:when test="object[@model='crm.project']/Effective_Costs_InPeriod">
                                     <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt"
                                                    padding="2.5pt">
                                         <fo:block text-align="end">
@@ -321,6 +339,24 @@
                                                     select="format-number(Effective_Effort_Overall,'#.##0,00', 'european')"/>
                                         </fo:block>
                                     </fo:table-cell>
+                                    <xsl:choose>
+                                        <xsl:when test="../object[@model='crm.project']/Effective_Costs_InPeriod">
+                                            <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt"
+                                                           padding="2.5pt">
+                                                <fo:block text-align="end">
+                                                    <xsl:value-of
+                                                            select="format-number(Effective_Costs_InPeriod,'#.##0,00', 'european')"/>
+                                                </fo:block>
+                                            </fo:table-cell>
+                                        </xsl:when>
+                                    </xsl:choose>
+                                    <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt"
+                                                   padding="2.5pt">
+                                        <fo:block text-align="end">
+                                            <xsl:value-of
+                                                    select="format-number(Effective_Costs_Overall,'#.##0,00', 'european')"/>
+                                        </fo:block>
+                                    </fo:table-cell>
                                     <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt"
                                                    padding="2.5pt">
                                         <fo:block text-align="end">
@@ -347,6 +383,24 @@
                                             <fo:block text-align="end">
                                                 <xsl:value-of
                                                         select="format-number(object[@model='crm.project']/Effective_Effort_InPeriod,'#.##0,00', 'european')"/>
+                                            </fo:block>
+                                        </fo:table-cell>
+                                    </xsl:when>
+                                </xsl:choose>
+                                <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt"
+                                               padding="2.5pt">
+                                    <fo:block text-align="end">
+                                        <xsl:value-of
+                                                select="format-number(object[@model='crm.project']/Effective_Effort_Overall,'#.##0,00', 'european')"/>
+                                    </fo:block>
+                                </fo:table-cell>
+                                <xsl:choose>
+                                    <xsl:when test="object[@model='crm.project']/Effective_Costs_InPeriod">
+                                        <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt"
+                                                       padding="2.5pt">
+                                            <fo:block text-align="end">
+                                                <xsl:value-of
+                                                        select="format-number(object[@model='crm.project']/Effective_Costs_InPeriod,'#.##0,00', 'european')"/>
                                             </fo:block>
                                         </fo:table-cell>
                                     </xsl:when>

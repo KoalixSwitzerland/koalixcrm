@@ -353,13 +353,21 @@ class Task(models.Model):
             main_xml = PDFExport.merge_xml(main_xml, work_xml)
         main_xml = PDFExport.append_element_to_pattern(main_xml,
                                                        "object/[@model='crm.task']",
-                                                       "Effective_Effort_Overall",
+                                                       "Effective_Costs_Overall",
                                                        self.effective_costs(reporting_period=None))
+        main_xml = PDFExport.append_element_to_pattern(main_xml,
+                                                       "object/[@model='crm.task']",
+                                                       "Effective_Effort_Overall",
+                                                       self.effective_effort(reporting_period=None))
         if reporting_period:
             main_xml = PDFExport.append_element_to_pattern(main_xml,
                                                            "object/[@model='crm.task']",
-                                                           "Effective_Effort_InPeriod",
+                                                           "Effective_Costs_InPeriod",
                                                            self.effective_costs(reporting_period=reporting_period))
+            main_xml = PDFExport.append_element_to_pattern(main_xml,
+                                                           "object/[@model='crm.task']",
+                                                           "Effective_Effort_InPeriod",
+                                                           self.effective_effort(reporting_period=reporting_period))
         main_xml = PDFExport.append_element_to_pattern(main_xml,
                                                        "object/[@model='crm.task']",
                                                        "Planned_Effort",
@@ -569,24 +577,3 @@ class TaskInlineAdminView(admin.TabularInline):
 
     def has_delete_permission(self, request, obj=None):
         return False
-
-
-class TaskSerializer(serializers.ModelSerializer):
-    is_reporting_allowed = serializers.SerializerMethodField()
-
-    def get_is_reporting_allowed(self, obj):
-        if obj.is_reporting_allowed():
-            return "True"
-        else:
-            return "False"
-
-    class Meta:
-        model = Task
-        fields = ('id',
-                  'title',
-                  'planned_end',
-                  'planned_start',
-                  'project',
-                  'description',
-                  'status',
-                  'is_reporting_allowed')

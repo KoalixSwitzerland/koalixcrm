@@ -23,7 +23,7 @@
                 $.getJSON("/tasks/?format=json", {project: $(this).val()}, function (tasks) {
                     var options = '<option value="">--------&nbsp;</option>';
                     for (var i = 0; i < tasks.length; i++) {
-                        if (tasks[i].is_reporting_allowed === "True") {
+                        if (tasks[i].isReportingAllowed === "True") {
                             options += '<option value="' + tasks[i].id + '">' + tasks[i].title + '</option>';
                         }
                     }
