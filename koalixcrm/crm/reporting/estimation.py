@@ -76,14 +76,16 @@ class Estimation(models.Model):
         default_resource_price = ResourcePrice.objects.filter(resource=self.resource)
         overall_costs = 0
         if start and end:
-            if start >= self.date_from and self.date_until <= end:
-                selected_duration_time_delta = end-start
-            elif start >= self.date_from and self.date_until > end:
-                selected_duration_time_delta = self.date_until-start
-            elif start < self.date_from and self.date_until <= end:
+            if start <= self.date_from and self.date_until <= end:
                 selected_duration_time_delta = end-self.date_from
+            elif start <= self.date_from and self.date_until > end:
+                selected_duration_time_delta = self.date_until-self.date_from
+            elif self.date_from < start and self.date_until <= start:
+                selected_duration_time_delta = start-start
+            elif start > self.date_from and self.date_until <= end:
+                selected_duration_time_delta = self.date_until-start
             else:
-                selected_duration_time_delta = end-end
+                selected_duration_time_delta = end-start
             selected_duration = selected_duration_time_delta.days
         else:
             selected_duration = self.duration_in_days()

@@ -98,8 +98,8 @@ class ReportingPeriod(models.Model):
             if reporting_period.end <= target_reporting_period.begin and\
                     predecessor_reporting_period is None:
                 predecessor_reporting_period = reporting_period
-            elif reporting_period.end <= target_reporting_period.begin and\
-                    reporting_period.end <= predecessor_reporting_period.begin:
+            elif reporting_period.end <= target_reporting_period.begin and \
+                    predecessor_reporting_period.end <= reporting_period.begin:
                 predecessor_reporting_period = reporting_period
         if predecessor_reporting_period is None:
             raise ReportingPeriodNotFound("Reporting Period does not exist")

@@ -138,17 +138,25 @@ class Task(models.Model):
         Raises:
         no exceptions expected"""
         latest_estimation = self.get_latest_estimation()
+        effort = 0
         if latest_estimation:
             try:
                 predecessor_reporting_period = latest_estimation.reporting_period.get_predecessor(latest_estimation.reporting_period,
                                                                                                   latest_estimation.reporting_period.project)
-                if remaining:
-                    effort = 0
-                else:
-                    effort = self.effective_effort(reporting_period=predecessor_reporting_period)
-                effort += latest_estimation.amount
             except ReportingPeriodNotFound:
                 effort = 0
+                predecessor_reporting_period = None
+            if remaining:
+                effort = 0
+            else:
+                while predecessor_reporting_period:
+                    effort += self.effective_effort(reporting_period=predecessor_reporting_period)
+                    try:
+                        predecessor_reporting_period = predecessor_reporting_period.get_predecessor(predecessor_reporting_period,
+                                                                                                    predecessor_reporting_period.project)
+                    except ReportingPeriodNotFound:
+                        predecessor_reporting_period = None
+            effort += latest_estimation.amount
         else:
             effort = 0
         return effort
