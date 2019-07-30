@@ -117,14 +117,19 @@ class Work(models.Model):
         self.check_working_hours()
         return cleaned_data
 
+    def confirmed(self):
+        return self.reporting_period.status.is_done
+    confirmed.short_description = _("Confirmed")
+    confirmed.tags = True
+
     def delete(self, using=None, keep_parents=False):
-        if self.reporting_period.status.is_done:
+        if self.confirmed():
             raise ReportingPeriodDoneDeleteNotPossible("It was not possible to delete the work")
         else:
             super(Work, self).delete(using, keep_parents)
 
     def save(self, *args, **kwargs):
-        if self.reporting_period.status.is_done:
+        if self.confirmed():
             raise ReportingPeriodDoneDeleteNotPossible("It was not possible to update the work")
         else:
             super(Work, self).save(*args, **kwargs)
@@ -142,7 +147,8 @@ class WorkAdminView(admin.ModelAdmin):
                     'get_short_description',
                     'date',
                     'reporting_period',
-                    'effort_as_string')
+                    'effort_as_string',
+                    'confirmed')
 
     list_filter = ('task', 'date')
     ordering = ('-id',)
@@ -157,7 +163,7 @@ class WorkAdminView(admin.ModelAdmin):
                        'short_description',
                        'description',
                        'task',
-                       'reporting_period',)
+                       'reporting_period')
         }),
     )
     save_as = True
@@ -183,14 +189,20 @@ class WorkInlineAdminView(admin.TabularInline):
                        'get_short_description',
                        'human_resource',
                        'date',
-                       'effort_as_string',)
+                       'effort_as_string',
+                       'confirmed',
+                       'task',
+                       'reporting_period',)
     fieldsets = (
         (_('Work'), {
             'fields': ('link_to_work',
                        'get_short_description',
                        'human_resource',
                        'date',
-                       'effort_as_string',)
+                       'effort_as_string',
+                       'confirmed',
+                       'task',
+                       'reporting_period',)
         }),
     )
     extra = 0

@@ -113,29 +113,35 @@ class EstimationAdminForm(BaseInlineFormSet):
         """Check that the estimation is only attached to a reporting period which is not yet closed,
         also check that the date_from is at least one day before the date_until"""
         for f in self.forms:
-            date_from = f.cleaned_data['date_from']
-            date_until = f.cleaned_data['date_until']
-            reporting_period = f.cleaned_data['reporting_period']
-            task = f.cleaned_data['task']
-            if f.cleaned_data['id']:
-                limit_of_acceptable_estimations = 1
-            else:
-                limit_of_acceptable_estimations = 0
-            existing_estimations = Estimation.objects.filter(reporting_period=reporting_period, task=task)
-            if len(existing_estimations) > limit_of_acceptable_estimations:
-                raise ValidationError('There may only be one estimation per reporting period per task')
-            try:
-                predecessor_reporting_period = reporting_period.get_predecessor(reporting_period,
-                                                                                reporting_period.project)
-                if not predecessor_reporting_period.status.is_done:
-                    raise ValidationError('Please select a reporting period which has a predecessor'
-                                          ' reporting period which is already in state "done"')
-            except ReportingPeriodNotFound:
+            if any(f.errors):
                 pass
-            if reporting_period.status.is_done:
-                raise ValidationError('Please select a reporting period which is not yet in state "done"')
-            if date_from >= date_until:
-                raise ValidationError('The date until must be at least one day after date from')
+            else:
+                if 'date_from' in f.cleaned_data:
+                    date_from = f.cleaned_data['date_from']
+                else:
+                    break
+                date_until = f.cleaned_data['date_until']
+                reporting_period = f.cleaned_data['reporting_period']
+                task = f.cleaned_data['task']
+                if f.cleaned_data['id']:
+                    limit_of_acceptable_estimations = 1
+                else:
+                    limit_of_acceptable_estimations = 0
+                existing_estimations = Estimation.objects.filter(reporting_period=reporting_period, task=task)
+                if len(existing_estimations) > limit_of_acceptable_estimations:
+                    raise ValidationError('There may only be one estimation per reporting period per task')
+                try:
+                    predecessor_reporting_period = reporting_period.get_predecessor(reporting_period,
+                                                                                    reporting_period.project)
+                    if not predecessor_reporting_period.status.is_done:
+                        raise ValidationError('Please select a reporting period which has a predecessor'
+                                              ' reporting period which is already in state "done"')
+                except ReportingPeriodNotFound:
+                    pass
+                if reporting_period.status.is_done:
+                    raise ValidationError('Please select a reporting period which is not yet in state "done"')
+                if date_from >= date_until:
+                    raise ValidationError('The date until must be at least one day after date from')
 
 
 class EstimationInlineAdminView(admin.TabularInline):
