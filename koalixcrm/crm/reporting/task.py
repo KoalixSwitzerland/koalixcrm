@@ -137,16 +137,19 @@ class Task(models.Model):
 
         Raises:
         no exceptions expected"""
-        try:
-            latest_estimation = self.get_latest_estimation()
-            predecessor_reporting_period = latest_estimation.reporting_period.get_predecessor(latest_estimation.reporting_period,
-                                                                                              latest_estimation.reporting_period.project)
-            if remaining:
+        latest_estimation = self.get_latest_estimation()
+        if latest_estimation:
+            try:
+                predecessor_reporting_period = latest_estimation.reporting_period.get_predecessor(latest_estimation.reporting_period,
+                                                                                                  latest_estimation.reporting_period.project)
+                if remaining:
+                    effort = 0
+                else:
+                    effort = self.effective_effort(reporting_period=predecessor_reporting_period)
+                effort += latest_estimation.amount
+            except ReportingPeriodNotFound:
                 effort = 0
-            else:
-                effort = self.effective_effort(reporting_period=predecessor_reporting_period)
-            effort += latest_estimation.amount
-        except ReportingPeriodNotFound:
+        else:
             effort = 0
         return effort
     planned_effort.short_description = _("Planned Effort")
@@ -194,34 +197,27 @@ class Task(models.Model):
         Raises:
         No exceptions planned"""
         planned_costs = dict()
-        try:
-            if not reporting_period:
-                reporting_period_internal = ReportingPeriod.get_latest_reporting_period(self.project)
-            else:
-                reporting_period_internal = ReportingPeriod.objects.get(id=reporting_period.id)
-            predecessor_reporting_periods = ReportingPeriod.get_all_predecessors(reporting_period_internal,
-                                                                                 self.project)
-            estimations_to_this_task = Estimation.objects.filter(task=self.id,
-                                                                 reporting_period=reporting_period_internal)
+
+        latest_estimation = self.get_latest_estimation()
+        if buckets:
+            for bucket in buckets:
+                planned_costs[bucket] = 0
+        planned_costs['sum_costs'] = 0
+        if latest_estimation:
             if buckets:
                 for bucket in buckets:
-                    planned_costs[bucket] = 0
-            planned_costs['sum_costs'] = 0
-            if len(estimations_to_this_task) != 0:
-                for estimation_to_this_task in estimations_to_this_task:
-                    if buckets:
-                        for bucket in buckets:
-                            planned_costs[bucket] += estimation_to_this_task.calculated_costs(start=bucket.begin,
-                                                                                              end=bucket.end)
-                    planned_costs['sum_costs'] += estimation_to_this_task.calculated_costs()
-            if len(predecessor_reporting_periods) != 0:
-                for predecessor_reporting_period in predecessor_reporting_periods:
-                    if buckets:
-                        for bucket in buckets:
-                            planned_costs[bucket] += self.effective_costs(reporting_period=predecessor_reporting_period)
-                    planned_costs['sum_costs'] += self.effective_costs(reporting_period=predecessor_reporting_period)
-        except ReportingPeriodNotFound:
-            planned_costs['sum_costs'] = 0
+                    if bucket.end < latest_estimation.reporting_period.begin:
+                        planned_costs[bucket] += planned_costs['sum_costs']
+                        planned_costs[bucket] += self.effective_costs(reporting_period=bucket)
+                        planned_costs['sum_costs'] += self.effective_costs(reporting_period=bucket)
+                    else:
+                        planned_costs[bucket] += planned_costs['sum_costs']
+                        planned_costs[bucket] += latest_estimation.calculated_costs(start=bucket.begin,
+                                                                                    end=bucket.end)
+                        planned_costs['sum_costs'] += latest_estimation.calculated_costs(start=bucket.begin,
+                                                                                         end=bucket.end)
+        else:
+            planned_costs = 0
         return planned_costs
 
     def planned_costs(self, reporting_period=None, remaining=False):
@@ -245,12 +241,16 @@ class Task(models.Model):
         else:
             planned_effort = self.planned_effort(remaining=remaining)
             latest_estimation = self.get_latest_estimation()
-            resource_prices = ResourcePrice.objects.filter(resource=latest_estimation.resource)
-            if len(resource_prices) != 0:
-                for resource_price in resource_prices:
-                    price = resource_price.price
-                    break
-            planned_costs = planned_effort*price
+            if latest_estimation:
+                resource_prices = ResourcePrice.objects.filter(resource=latest_estimation.resource)
+                price = 0
+                if len(resource_prices) != 0:
+                    for resource_price in resource_prices:
+                        price = resource_price.price
+                        break
+                planned_costs = planned_effort*price
+            else:
+                planned_costs = 0
         return planned_costs
     planned_costs.short_description = _("Planned Costs")
     planned_costs.tags = True

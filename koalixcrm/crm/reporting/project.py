@@ -154,10 +154,6 @@ class Project(models.Model):
         import pandas
         path_to_illustration = os.path.join(settings.PDF_OUTPUT_ROOT + "/project_costs_overview.svg")
         data_frame = None
-        '''data_frame = pandas.DataFrame({'x': ('Sep 2019', 'Oct 2018', 'Nov 2018', 'Dec 2018', 'Jan 2019', 'Feb 2019'),
-                                       'Budget': (90000, 90000, 90000, 90000, 166320, 166320),
-                                       'Estimation': (0, 20274, 51024, 81774, 112524, 143274),
-                                       'Effective': (0, 20274, None, None, None, None)})'''
         effective_costs = 0
         accumulated_effective_cost = 0
         accumulated_effective_costs = dict()
@@ -174,34 +170,30 @@ class Project(models.Model):
                 data_frame = pandas.DataFrame([[reporting_period.begin,
                                                 None,
                                                 0,
+                                                0,
                                                 0],
                                                [reporting_period.end,
                                                 None,
                                                 int(accumulated_planned_costs[reporting_period]),
+                                                int(accumulated_effective_costs[reporting_period]),
                                                 int(accumulated_effective_costs[reporting_period])], ],
                                               columns=('x',
                                                        'Budget',
                                                        'Estimation',
-                                                       'Effective'))
+                                                       'Effective confirmed',
+                                                       'Effective not confirmed'))
             else:
                 data_frame_to_add = pandas.DataFrame([[reporting_period.end,
                                                        None,
                                                        int(accumulated_planned_costs[reporting_period]),
+                                                       int(accumulated_effective_costs[reporting_period]),
                                                        int(accumulated_effective_costs[reporting_period])], ],
                                                      columns=('x',
                                                               'Budget',
                                                               'Estimation',
-                                                              'Effective'))
+                                                              'Effective confirmed',
+                                                              'Effective not confirmed'))
                 data_frame = data_frame.append(data_frame_to_add, ignore_index=False)
-        data_frame_to_add = pandas.DataFrame([[self.planned_end(),
-                                               None,
-                                               int(accumulated_planned_costs['sum_costs']),
-                                               None], ],
-                                             columns=('x',
-                                                      'Budget',
-                                                      'Estimation',
-                                                      'Effective'))
-        data_frame = data_frame.append(data_frame_to_add, ignore_index=False)
 
         pyplot.style.use('seaborn-darkgrid')
         pyplot.plot(data_frame['x'], data_frame.get("Budget"),
@@ -218,12 +210,12 @@ class Project(models.Model):
                     alpha=0.5,
                     label="Estimation (accumulated)")
 
-        pyplot.plot(data_frame['x'], data_frame.get("Effective"),
+        pyplot.plot(data_frame['x'], data_frame.get("Effective confirmed"),
                     marker='o',
                     color="orange",
                     linewidth=2,
                     alpha=0.5,
-                    label="Effective (accumulated)")
+                    label="Effective confirmed (accumulated)")
         '''pyplot.fill_between(data_frame['x'],
                             0, data_frame.get("Effective"),
                             color="orange",

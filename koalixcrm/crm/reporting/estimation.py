@@ -73,7 +73,7 @@ class Estimation(models.Model):
 
         Raises:
         No exceptions planned"""
-        default_resource_price = ResourcePrice.objects.filter(id=self.resource.id)
+        default_resource_price = ResourcePrice.objects.filter(resource=self.resource)
         overall_costs = 0
         if start and end:
             if start >= self.date_from and self.date_until <= end:
