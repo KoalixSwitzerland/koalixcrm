@@ -14,7 +14,6 @@ from koalixcrm.crm.reporting.task import TaskInlineAdminView
 from koalixcrm.crm.documents.pdf_export import PDFExport
 from koalixcrm.crm.exceptions import TemplateSetMissingInContract
 from koalixcrm.crm.models import Task
-from rest_framework import serializers
 
 
 class Project(models.Model):
@@ -239,14 +238,22 @@ class Project(models.Model):
 
         return path_to_illustration
 
-    def effective_costs(self, reporting_period=None):
+    def effective_costs(self, reporting_period=None, confirmed=False):
         effective_cost = 0
         for task in Task.objects.filter(project=self.id):
-            effective_cost += task.effective_costs(reporting_period=reporting_period)
+            effective_cost += task.effective_costs(reporting_period=reporting_period, confirmed=confirmed)
         self.default_currency.round(effective_cost)
         return effective_cost
-    effective_costs.short_description = _("Effective Accumulated costs")
-    effective_costs.tags = True
+
+    def effective_costs_confirmed(self):
+        return self.effective_costs(confirmed=True)
+    effective_costs_confirmed.short_description = _("Effective Confirmed Costs")
+    effective_costs_confirmed.tags = True
+
+    def effective_costs_not_confirmed(self):
+        return self.effective_costs(confirmed=False)
+    effective_costs_not_confirmed.short_description = _("Effective Not Confirmed Costs")
+    effective_costs_not_confirmed.tags = True
 
     def effective_effort(self, reporting_period=None):
         effective_effort = 0
@@ -290,11 +297,18 @@ class Project(models.Model):
         self.default_currency.round(planned_effort_accumulated['sum_costs'])
         return planned_effort_accumulated
 
-    def planned_costs(self, reporting_period=None):
-        planned_costs_in_buckets = self.planned_costs_in_buckets(reporting_period=reporting_period, buckets=None)
-        return planned_costs_in_buckets['sum_costs']
-    planned_costs.short_description = _("Planned Costs")
-    planned_costs.tags = True
+    def planned_costs(self, reporting_period=None, remaining=True):
+        all_project_tasks = Task.objects.filter(project=self.id)
+        planned_costs = 0
+        if all_project_tasks:
+            for task in all_project_tasks:
+                planned_costs += task.planned_costs(reporting_period=reporting_period, remaining=remaining)
+        return planned_costs
+
+    def planned_total_costs(self):
+        return self.planned_costs(remaining=False)
+    planned_total_costs.short_description = _("Planned Total Costs")
+    planned_total_costs.tags = True
 
     def effective_start(self):
         """The function return the effective start of a project as a date
@@ -526,10 +540,11 @@ class ProjectAdminView(admin.ModelAdmin):
                     'project_manager',
                     'default_currency',
                     'planned_duration',
-                    'planned_costs',
+                    'planned_total_costs',
                     'effective_duration',
-                    'effective_costs',
-                    'effective_effort'
+                    'effective_effort',
+                    'effective_costs_confirmed',
+                    'effective_costs_not_confirmed'
                     )
 
     list_display_links = ('id',)

@@ -260,11 +260,6 @@ class Task(models.Model):
     planned_total_costs.short_description = _("Planned Total Costs")
     planned_total_costs.tags = True
 
-    def planned_remaining_costs(self):
-        return self.planned_costs(remaining=True)
-    planned_remaining_costs.short_description = _("Planned Remaining Costs")
-    planned_remaining_costs.tags = True
-
     def effective_start(self):
         """The function return the effective start of a task as a date. The
         function return the effective start of a task as a date based on the reported work
@@ -566,7 +561,6 @@ class TaskAdminView(admin.ModelAdmin):
                     'status',
                     'last_status_change',
                     'planned_duration',
-                    'planned_remaining_costs',
                     'planned_total_costs',
                     'effective_duration',
                     'effective_effort_overall',
@@ -598,7 +592,6 @@ class TaskInlineAdminView(admin.TabularInline):
                        'planned_start',
                        'planned_end',
                        'planned_duration',
-                       'planned_remaining_costs',
                        'planned_total_costs',
                        'effective_duration',
                        'effective_effort_overall',
@@ -613,7 +606,6 @@ class TaskInlineAdminView(admin.TabularInline):
                        'status',
                        'last_status_change',
                        'planned_duration',
-                       'planned_remaining_costs',
                        'planned_total_costs',
                        'effective_duration',
                        'effective_effort_overall',
