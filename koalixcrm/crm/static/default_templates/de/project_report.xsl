@@ -203,14 +203,15 @@
                         <fo:table-column column-width="4.5cm"/>
                         <xsl:choose>
                             <xsl:when test="object[@model='crm.project']/Effective_Effort_InPeriod">
-                                <fo:table-column column-width="6.2cm"/>
+                                <fo:table-column column-width="3.2cm"/>
                                 <fo:table-column column-width="3cm"/>
                                 <fo:table-column column-width="3cm"/>
                             </xsl:when>
                             <xsl:otherwise>
-                                <fo:table-column column-width="12.2cm"/>
+                                <fo:table-column column-width="9.2cm"/>
                             </xsl:otherwise>
                         </xsl:choose>
+                        <fo:table-column column-width="3cm"/>
                         <fo:table-column column-width="3cm"/>
                         <fo:table-column column-width="3cm"/>
                         <fo:table-column column-width="3cm"/>
@@ -257,7 +258,13 @@
                             <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt"
                                            padding="2.5pt">
                                 <fo:block text-align="end">
-                                    Total Act.Costs
+                                    Total Act.Costs confirmed
+                                </fo:block>
+                            </fo:table-cell>
+                            <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt"
+                                           padding="2.5pt">
+                                <fo:block text-align="end">
+                                    Total Act.Costs not confirmed
                                 </fo:block>
                             </fo:table-cell>
                             <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt"
@@ -354,7 +361,14 @@
                                                    padding="2.5pt">
                                         <fo:block text-align="end">
                                             <xsl:value-of
-                                                    select="format-number(Effective_Costs_Overall,'#.##0,00', 'european')"/>
+                                                    select="format-number(Effective_Costs_Confirmed_Overall,'#.##0,00', 'european')"/>
+                                        </fo:block>
+                                    </fo:table-cell>
+                                    <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt"
+                                                   padding="2.5pt">
+                                        <fo:block text-align="end">
+                                            <xsl:value-of
+                                                    select="format-number(Effective_Costs_Not_Confirmed_Overall,'#.##0,00', 'european')"/>
                                         </fo:block>
                                     </fo:table-cell>
                                     <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt"
@@ -409,23 +423,30 @@
                                                padding="2.5pt">
                                     <fo:block text-align="end">
                                         <xsl:value-of
-                                                select="format-number(object[@model='crm.project']/Effective_Costs_Overall,'#.##0,00', 'european')"/>
+                                                select="format-number(object[@model='crm.project']/Effective_Costs_Confirmed,'#.##0,00', 'european')"/>
                                     </fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt"
                                                padding="2.5pt">
                                     <fo:block text-align="end">
                                         <xsl:value-of
-                                                select="format-number(object[@model='crm.project']/Planned_Costs,'#.##0,00', 'european')"/>
+                                                select="format-number(object[@model='crm.project']/Effective_Costs_Not_Confirmed,'#.##0,00', 'european')"/>
+                                    </fo:block>
+                                </fo:table-cell>
+                                <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt"
+                                               padding="2.5pt">
+                                    <fo:block text-align="end">
+                                        <xsl:value-of
+                                                select="format-number(object[@model='crm.project']/Planned_Total_Costs,'#.##0,00', 'european')"/>
                                     </fo:block>
                                 </fo:table-cell>
                             </fo:table-row>
                         </fo:table-body>
                     </fo:table>
                     <fo:block text-align="left">
-                        <fo:external-graphic content-width="12.0cm">
+                        <fo:external-graphic content-width="18.0cm">
                             <xsl:attribute name="src">
-                                file:///home/aaron/IdeaProjects/koalixcrm/projectsettings/static/pdf/project_costs_overview.svg
+                                <xsl:value-of select="object[@model='crm.project']/project_cost_overview"/>
                             </xsl:attribute>
                         </fo:external-graphic>
                     </fo:block>

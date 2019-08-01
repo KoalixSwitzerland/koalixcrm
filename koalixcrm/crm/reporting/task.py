@@ -217,15 +217,12 @@ class Task(models.Model):
                     if bucket.end < latest_estimation.reporting_period.begin:
                         planned_costs[bucket] += planned_costs['sum_costs']
                         planned_costs[bucket] += self.effective_costs(reporting_period=bucket)
-                        planned_costs['sum_costs'] += self.effective_costs(reporting_period=bucket)
+                        planned_costs['sum_costs'] = planned_costs[bucket]
                     else:
                         planned_costs[bucket] += planned_costs['sum_costs']
-                        planned_costs[bucket] += latest_estimation.calculated_costs(start=bucket.begin,
-                                                                                    end=bucket.end)
-                        planned_costs['sum_costs'] += latest_estimation.calculated_costs(start=bucket.begin,
-                                                                                         end=bucket.end)
-        else:
-            planned_costs = 0
+                        planned_costs[bucket] += latest_estimation.calculated_costs(bucket_start=bucket.begin,
+                                                                                    bucket_end=bucket.end)
+                        planned_costs['sum_costs'] = planned_costs[bucket]
         return planned_costs
 
     def planned_costs(self, reporting_period=None, remaining=False):
@@ -387,8 +384,12 @@ class Task(models.Model):
             main_xml = PDFExport.merge_xml(main_xml, work_xml)
         main_xml = PDFExport.append_element_to_pattern(main_xml,
                                                        "object/[@model='crm.task']",
-                                                       "Effective_Costs_Overall",
-                                                       self.effective_costs(reporting_period=None))
+                                                       "Effective_Costs_Confirmed_Overall",
+                                                       self.effective_costs_confirmed())
+        main_xml = PDFExport.append_element_to_pattern(main_xml,
+                                                       "object/[@model='crm.task']",
+                                                       "Effective_Costs_Not_Confirmed_Overall",
+                                                       self.effective_costs_not_confirmed())
         main_xml = PDFExport.append_element_to_pattern(main_xml,
                                                        "object/[@model='crm.task']",
                                                        "Effective_Effort_Overall",

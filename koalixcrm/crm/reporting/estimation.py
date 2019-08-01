@@ -60,7 +60,7 @@ class Estimation(models.Model):
         duration = duration_time_delta.days
         return duration
 
-    def calculated_costs(self, start=None, end=None):
+    def calculated_costs(self, bucket_start=None, bucket_end=None):
         """The function returns the calculated costs in total or the calculated costs within a specific start and
         stop-frame.
 
@@ -75,20 +75,24 @@ class Estimation(models.Model):
         No exceptions planned"""
         default_resource_price = ResourcePrice.objects.filter(resource=self.resource)
         overall_costs = 0
-        if start and end:
-            if start <= self.date_from and self.date_until <= end:
-                selected_duration_time_delta = end-self.date_from
-            elif start <= self.date_from and self.date_until > end:
-                selected_duration_time_delta = self.date_until-self.date_from
-            elif self.date_from < start and self.date_until <= start:
-                selected_duration_time_delta = start-start
-            elif start > self.date_from and self.date_until <= end:
-                selected_duration_time_delta = self.date_until-start
-            else:
-                selected_duration_time_delta = end-start
-            selected_duration = selected_duration_time_delta.days
+        estimation_lies_outside_bucket = (bucket_end <= self.date_from) or bucket_start >= self.date_until
+        if bucket_start >= self.date_from:
+            later_start_date = bucket_start
         else:
-            selected_duration = self.duration_in_days()
+            later_start_date = self.date_from
+        if bucket_end <= self.date_until:
+            earlier_end_date = bucket_end
+        else:
+            earlier_end_date = self.date_until
+
+        if estimation_lies_outside_bucket:
+            selected_duration = 0
+        else:
+            selected_duration_time_delta = earlier_end_date - later_start_date
+            selected_duration = selected_duration_time_delta.days
+            # Add one day because the buckets may not overlap each other. By this fact we always loose one day
+            selected_duration += 1
+
         if len(default_resource_price) == 0:
             overall_costs = 0
         else:
