@@ -241,8 +241,8 @@ class Task(models.Model):
         planned_costs = 0
         if reporting_period:
             planned_costs_in_buckets = self.planned_costs_in_buckets(reporting_period=reporting_period, buckets=None)
-            for bucket in planned_costs_in_buckets:
-                planned_costs += bucket
+            for key in planned_costs_in_buckets.keys():
+                planned_costs += planned_costs_in_buckets[key]
         else:
             planned_effort = self.planned_effort(remaining=remaining)
             latest_estimation = self.get_latest_estimation()
