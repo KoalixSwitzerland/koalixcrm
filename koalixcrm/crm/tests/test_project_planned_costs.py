@@ -66,7 +66,7 @@ class TaskPlannedEffort(TestCase):
             price="120",
         )
         self.assertEqual(
-            (self.test_project.planned_costs()).__str__(), "0")
+            (self.test_project.planned_costs()).__str__(), "0.00")
         StandardEstimationToTaskFactory.create(resource=self.test_human_resource,
                                                amount="2.00",
                                                task=self.test_1st_task,

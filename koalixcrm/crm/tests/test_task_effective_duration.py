@@ -48,11 +48,11 @@ class TaskEffectiveDuration(TestCase):
         self.assertEqual(
             (self.test_1st_task.planned_duration()).__str__(), "60")
         self.assertEqual(
-            (self.test_1st_task.effective_duration()).__str__(), "0")
+            (self.test_1st_task.effective_duration()).__str__(), "Task has not yet ended")
         self.assertEqual(
             (self.test_2nd_task.planned_duration()).__str__(), "120")
         self.assertEqual(
-            (self.test_2nd_task.effective_duration()).__str__(), "0")
+            (self.test_2nd_task.effective_duration()).__str__(), "Task has not yet ended")
 
         new_status = DoneTaskStatusFactory.create()
         self.test_1st_task.status = new_status

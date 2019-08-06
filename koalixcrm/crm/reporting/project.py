@@ -14,7 +14,9 @@ from koalixcrm.crm.reporting.task import TaskInlineAdminView
 from koalixcrm.crm.documents.pdf_export import PDFExport
 from koalixcrm.crm.exceptions import TemplateSetMissingInContract
 from koalixcrm.crm.models import Task
-from rest_framework import serializers
+import matplotlib.dates as mdates
+from matplotlib import pyplot
+import pandas
 
 
 class Project(models.Model):
@@ -107,8 +109,12 @@ class Project(models.Model):
             main_xml = PDFExport.merge_xml(main_xml, task_xml)
         main_xml = PDFExport.append_element_to_pattern(main_xml,
                                                        "object/[@model='crm.project']",
-                                                       "Effective_Costs_Overall",
-                                                       self.effective_costs(reporting_period=None))
+                                                       "Effective_Costs_Confirmed",
+                                                       self.effective_costs_confirmed())
+        main_xml = PDFExport.append_element_to_pattern(main_xml,
+                                                       "object/[@model='crm.project']",
+                                                       "Effective_Costs_Not_Confirmed",
+                                                       self.effective_costs_not_confirmed())
         main_xml = PDFExport.append_element_to_pattern(main_xml,
                                                        "object/[@model='crm.project']",
                                                        "Effective_Effort_Overall",
@@ -124,8 +130,8 @@ class Project(models.Model):
                                                            self.effective_effort(reporting_period=reporting_period))
         main_xml = PDFExport.append_element_to_pattern(main_xml,
                                                        "object/[@model='crm.project']",
-                                                       "Planned_Costs",
-                                                       self.planned_costs())
+                                                       "Planned_Total_Costs",
+                                                       self.planned_total_costs())
         main_xml = PDFExport.append_element_to_pattern(main_xml,
                                                        "object/[@model='crm.project']",
                                                        "Effective_Duration",
@@ -151,14 +157,8 @@ class Project(models.Model):
 
         Raises:
         No exceptions planned"""
-        from matplotlib import pyplot
-        import pandas
         path_to_illustration = os.path.join(settings.PDF_OUTPUT_ROOT + "/project_costs_overview.svg")
         data_frame = None
-        '''data_frame = pandas.DataFrame({'x': ('Sep 2019', 'Oct 2018', 'Nov 2018', 'Dec 2018', 'Jan 2019', 'Feb 2019'),
-                                       'Budget': (90000, 90000, 90000, 90000, 166320, 166320),
-                                       'Estimation': (0, 20274, 51024, 81774, 112524, 143274),
-                                       'Effective': (0, 20274, None, None, None, None)})'''
         effective_costs = 0
         accumulated_effective_cost = 0
         accumulated_effective_costs = dict()
@@ -166,87 +166,102 @@ class Project(models.Model):
         reporting_periods = ReportingPeriod.objects.filter(project=self.id).order_by('begin')
         for reporting_period in reporting_periods:
             effective_costs = self.effective_costs(reporting_period=reporting_period)
-            accumulated_planned_costs = self.planned_costs_in_buckets(reporting_period=reporting_period,
-                                                                      buckets=reporting_periods)
             accumulated_effective_cost += effective_costs
             accumulated_effective_costs[reporting_period] = accumulated_effective_cost
+        accumulated_planned_costs = self.planned_costs_in_buckets(reporting_period=reporting_period,
+                                                                  buckets=reporting_periods)
         for reporting_period in reporting_periods:
+            if reporting_period.status.is_done:
+                effective_confirmed_costs_this_bucket = int(accumulated_effective_costs[reporting_period])
+                effective_not_confirmed_costs_this_bucket = int(accumulated_effective_costs[reporting_period])
+            else:
+                effective_confirmed_costs_this_bucket = None
+                effective_not_confirmed_costs_this_bucket = int(accumulated_effective_costs[reporting_period])
             if data_frame is None:
                 data_frame = pandas.DataFrame([[reporting_period.begin,
                                                 None,
+                                                0,
                                                 0,
                                                 0],
                                                [reporting_period.end,
                                                 None,
                                                 int(accumulated_planned_costs[reporting_period]),
-                                                int(accumulated_effective_costs[reporting_period])], ],
+                                                effective_confirmed_costs_this_bucket,
+                                                effective_not_confirmed_costs_this_bucket], ],
                                               columns=('x',
                                                        'Budget',
                                                        'Estimation',
-                                                       'Effective'))
+                                                       'Effective confirmed',
+                                                       'Effective not confirmed'))
             else:
                 data_frame_to_add = pandas.DataFrame([[reporting_period.end,
                                                        None,
                                                        int(accumulated_planned_costs[reporting_period]),
-                                                       int(accumulated_effective_costs[reporting_period])], ],
+                                                       effective_confirmed_costs_this_bucket,
+                                                       effective_not_confirmed_costs_this_bucket], ],
                                                      columns=('x',
                                                               'Budget',
                                                               'Estimation',
-                                                              'Effective'))
+                                                              'Effective confirmed',
+                                                              'Effective not confirmed'))
                 data_frame = data_frame.append(data_frame_to_add, ignore_index=False)
-        data_frame_to_add = pandas.DataFrame([[self.planned_end(),
-                                               None,
-                                               int(accumulated_planned_costs['sum_costs']),
-                                               None], ],
-                                             columns=('x',
-                                                      'Budget',
-                                                      'Estimation',
-                                                      'Effective'))
-        data_frame = data_frame.append(data_frame_to_add, ignore_index=False)
 
         pyplot.style.use('seaborn-darkgrid')
-        pyplot.plot(data_frame['x'], data_frame.get("Budget"),
-                    marker=' ',
-                    color="red",
-                    linewidth=1,
-                    alpha=0.9,
-                    label="Agreed Budget")
+        figure, axis = pyplot.subplots()
+        axis.plot(data_frame['x'], data_frame.get("Budget"),
+                  marker=' ',
+                  color="red",
+                  linewidth=1,
+                  alpha=0.9,
+                  label="Agreed Budget")
 
-        pyplot.plot(data_frame['x'], data_frame.get("Estimation"),
-                    marker='o',
-                    color="red",
-                    linewidth=2,
-                    alpha=0.5,
-                    label="Estimation (accumulated)")
+        axis.plot(data_frame['x'], data_frame.get("Estimation"),
+                  marker='o',
+                  color="orangered",
+                  linewidth=2,
+                  alpha=0.5,
+                  label="Estimation (accumulated)")
 
-        pyplot.plot(data_frame['x'], data_frame.get("Effective"),
-                    marker='o',
-                    color="orange",
-                    linewidth=2,
-                    alpha=0.5,
-                    label="Effective (accumulated)")
-        '''pyplot.fill_between(data_frame['x'],
-                            0, data_frame.get("Effective"),
-                            color="orange",
-                            alpha=.3)'''
+        axis.plot(data_frame['x'], data_frame.get("Effective confirmed"),
+                  marker='o',
+                  color="orange",
+                  linewidth=2,
+                  alpha=0.5,
+                  label="Effective confirmed (accumulated)")
+        axis.plot(data_frame['x'], data_frame.get("Effective not confirmed"),
+                  marker='o',
+                  color="gold",
+                  linewidth=2,
+                  alpha=0.5,
+                  label="Effective not confirmed (accumulated)")
 
-        pyplot.legend(loc=2, ncol=1)
-        pyplot.title("Project Costs Overview", loc='left', fontsize=12, fontweight=0, color='orange')
-        pyplot.xlabel("Date")
-        pyplot.ylabel("Costs in " + self.default_currency.__str__())
-        pyplot.savefig(path_to_illustration)
-        pyplot.clf()
+        axis.legend(loc=2, ncol=1)
+        figure.autofmt_xdate()
+        axis.fmt_xdata = mdates.DateFormatter('%Y-%m-%d')
+        axis.set_title("Project Costs Overview", loc='left', fontsize=12, fontweight=0, color='orange')
+        axis.set_xlabel("Date")
+        axis.set_ylabel("Costs in " + self.default_currency.__str__())
+        figure.savefig(path_to_illustration)
+        figure.clf()
 
         return path_to_illustration
 
-    def effective_costs(self, reporting_period=None):
+    def effective_costs(self, reporting_period=None, confirmed=False):
         effective_cost = 0
         for task in Task.objects.filter(project=self.id):
-            effective_cost += task.effective_costs(reporting_period=reporting_period)
+            effective_cost += task.effective_costs(reporting_period=reporting_period, confirmed=confirmed)
         self.default_currency.round(effective_cost)
         return effective_cost
-    effective_costs.short_description = _("Effective Accumulated costs")
-    effective_costs.tags = True
+
+    def effective_costs_confirmed(self):
+        return self.effective_costs(confirmed=True)
+    effective_costs_confirmed.short_description = _("Effective Confirmed Costs")
+    effective_costs_confirmed.tags = True
+
+    def effective_costs_not_confirmed(self):
+        return self.effective_costs(confirmed=False)
+    effective_costs_not_confirmed.short_description = _("Effective Not Confirmed Costs")
+    effective_costs_not_confirmed.tags = True
 
     def effective_effort(self, reporting_period=None):
         effective_effort = 0
@@ -281,7 +296,6 @@ class Project(models.Model):
                         planned_effort_accumulated[bucket] += planned_effort_accumulated_per_task[bucket]
                 planned_effort_accumulated['sum_costs'] += planned_effort_accumulated_per_task['sum_costs']
 
-        getcontext().prec = 5
         if buckets:
             for bucket in buckets:
                 planned_effort_accumulated[bucket] = Decimal(planned_effort_accumulated[bucket])
@@ -290,11 +304,18 @@ class Project(models.Model):
         self.default_currency.round(planned_effort_accumulated['sum_costs'])
         return planned_effort_accumulated
 
-    def planned_costs(self, reporting_period=None):
-        planned_costs_in_buckets = self.planned_costs_in_buckets(reporting_period=reporting_period, buckets=None)
-        return planned_costs_in_buckets['sum_costs']
-    planned_costs.short_description = _("Planned Costs")
-    planned_costs.tags = True
+    def planned_costs(self, reporting_period=None, remaining=True):
+        all_project_tasks = Task.objects.filter(project=self.id)
+        planned_costs = 0
+        if all_project_tasks:
+            for task in all_project_tasks:
+                planned_costs += task.planned_costs(reporting_period=reporting_period, remaining=remaining)
+        return planned_costs
+
+    def planned_total_costs(self):
+        return self.planned_costs(remaining=False)
+    planned_total_costs.short_description = _("Planned Total Costs")
+    planned_total_costs.tags = True
 
     def effective_start(self):
         """The function return the effective start of a project as a date
@@ -526,10 +547,11 @@ class ProjectAdminView(admin.ModelAdmin):
                     'project_manager',
                     'default_currency',
                     'planned_duration',
-                    'planned_costs',
+                    'planned_total_costs',
                     'effective_duration',
-                    'effective_costs',
-                    'effective_effort'
+                    'effective_effort',
+                    'effective_costs_confirmed',
+                    'effective_costs_not_confirmed'
                     )
 
     list_display_links = ('id',)

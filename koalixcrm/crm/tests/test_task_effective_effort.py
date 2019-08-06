@@ -50,11 +50,11 @@ class TaskEffectiveEffort(TestCase):
         self.assertEqual(
             (self.test_1st_task.planned_duration()).__str__(), "60")
         self.assertEqual(
-            (self.test_1st_task.planned_costs()).__str__(), "0")
+            (self.test_1st_task.planned_costs()).__str__(), "0.00")
         self.assertEqual(
             (self.test_2nd_task.planned_duration()).__str__(), "90")
         self.assertEqual(
-            (self.test_2nd_task.planned_costs()).__str__(), "0")
+            (self.test_2nd_task.planned_costs()).__str__(), "0.00")
         StandardWorkFactory.create(
             human_resource=self.human_resource,
             date=date_now,
@@ -90,4 +90,4 @@ class TaskEffectiveEffort(TestCase):
         self.assertEqual(
             (self.test_1st_task.effective_effort(reporting_period=None)).__str__(), "3.5")
         self.assertEqual(
-            (self.test_2nd_task.effective_effort(reporting_period=None)).__str__(), "12.0")
+            (self.test_2nd_task.effective_effort(reporting_period=None)).__str__(), "12")

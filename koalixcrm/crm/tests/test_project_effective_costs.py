@@ -92,7 +92,7 @@ class TaskEffectiveCostsWithAgreement(TestCase):
         datetime_later_4 = make_date_utc(datetime.datetime(2024, 1, 1, 6, 15))
         date_now = datetime_now.date()
         self.assertEqual(
-            (self.test_project.planned_costs()).__str__(), "4500.0")
+            (self.test_project.planned_costs()).__str__(), "6000.0000")
         StandardWorkFactory.create(
             human_resource=self.human_resource,
             date=date_now,
@@ -126,4 +126,4 @@ class TaskEffectiveCostsWithAgreement(TestCase):
             reporting_period=self.test_reporting_period
         )
         self.assertEqual(
-            (self.test_project.effective_costs(reporting_period=None)).__str__(), "1755.0")
+            (self.test_project.effective_costs(reporting_period=None, confirmed=False)).__str__(), "1755.00")
