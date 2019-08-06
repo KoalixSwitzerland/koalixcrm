@@ -228,10 +228,6 @@ class Project(models.Model):
                   linewidth=2,
                   alpha=0.5,
                   label="Effective confirmed (accumulated)")
-#        pyplot.fill_between(data_frame['x'],
-#                            0, data_frame.get("Effective confirmed"),
-#                            color="orange",
-#                            alpha=.3)
         axis.plot(data_frame['x'], data_frame.get("Effective not confirmed"),
                   marker='o',
                   color="gold",
@@ -300,7 +296,6 @@ class Project(models.Model):
                         planned_effort_accumulated[bucket] += planned_effort_accumulated_per_task[bucket]
                 planned_effort_accumulated['sum_costs'] += planned_effort_accumulated_per_task['sum_costs']
 
-        getcontext().prec = 2
         if buckets:
             for bucket in buckets:
                 planned_effort_accumulated[bucket] = Decimal(planned_effort_accumulated[bucket])

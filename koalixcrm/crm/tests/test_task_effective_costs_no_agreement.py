@@ -114,4 +114,4 @@ class TaskEffectiveCostsWithoutAgreement(TestCase):
         self.assertEqual(
             (self.test_2nd_task.effective_effort(reporting_period=None)).__str__(), "12")
         self.assertEqual(
-            (self.test_2nd_task.effective_costs(reporting_period=None, confirmed=False)).__str__(), "1440.0")
+            (self.test_2nd_task.effective_costs(reporting_period=None, confirmed=False)).__str__(), "1440.00")

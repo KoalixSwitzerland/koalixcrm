@@ -462,7 +462,7 @@ class Task(models.Model):
         else:
             all_work_in_task = Work.objects.filter(task=self.id,
                                                    reporting_period__status__is_done=True)
-        sum_costs = 0
+        sum_costs = Decimal(0)
         work_with_agreement = list()
         work_without_agreement = list()
         work_calculated = list()
@@ -490,7 +490,6 @@ class Task(models.Model):
                         if work in work_with_agreement:
                             if (agreement_remaining_amount - work.worked_hours) > 0:
                                 agreement_remaining_amount -= work.worked_hours
-                                getcontext().prec = 5
                                 sum_costs += Decimal(work.effort_hours())*agreement.costs.price
                                 work_calculated.append(work)
         for work in all_work_in_task:
@@ -501,10 +500,9 @@ class Task(models.Model):
             default_resource_prices = ResourcePrice.objects.filter(resource=work.human_resource.id).order_by('price')
             if default_resource_prices:
                 default_resource_price = default_resource_prices[0]
-                getcontext().prec = 5
                 sum_costs += Decimal(work.effort_hours())*default_resource_price.price
             else:
-                sum_costs = 0
+                sum_costs = Decimal(0)
                 break
         sum_costs = self.project.default_currency.round(sum_costs)
         return sum_costs
