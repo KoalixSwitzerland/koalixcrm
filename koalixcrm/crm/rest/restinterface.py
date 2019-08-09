@@ -19,6 +19,7 @@ from koalixcrm.crm.product.tax import Tax
 from koalixcrm.crm.product.unit import Unit
 from koalixcrm.crm.reporting.agreement import Agreement
 from koalixcrm.crm.reporting.project import Project
+from koalixcrm.crm.reporting.project_status import ProjectStatus
 from koalixcrm.crm.reporting.task import Task
 from koalixcrm.crm.reporting.task_status import TaskStatus
 from koalixcrm.crm.rest.contact_rest import ContactPostalAddressJSONSerializer, ContactEmailAddressJSONSerializer, \
@@ -31,6 +32,7 @@ from koalixcrm.crm.rest.product_rest import ProductJSONSerializer
 from koalixcrm.crm.rest.tax_rest import TaxJSONSerializer
 from koalixcrm.crm.rest.unit_rest import UnitJSONSerializer
 from koalixcrm.crm.rest.project_rest import ProjectJSONSerializer
+from koalixcrm.crm.rest.project_status_rest import ProjectStatusJSONSerializer
 from koalixcrm.crm.rest.task_rest import TaskJSONSerializer
 from koalixcrm.crm.rest.task_status_rest import TaskStatusJSONSerializer
 from koalixcrm.crm.rest.agreement_rest import AgreementJSONSerializer
@@ -235,6 +237,20 @@ class ProjectAsJSON(viewsets.ModelViewSet):
     @permission_classes((IsAuthenticated,))
     def dispatch(self, *args, **kwargs):
         return super(ProjectAsJSON, self).dispatch(*args, **kwargs)
+
+
+class ProjectStatusAsJSON(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed.
+    """
+    queryset = ProjectStatus.objects.all()
+    serializer_class = ProjectStatusJSONSerializer
+    renderer_classes = (BrowsableAPIRenderer, JSONRenderer, XMLRenderer, XSLFORenderer)
+
+    @authentication_classes((SessionAuthentication, BasicAuthentication))
+    @permission_classes((IsAuthenticated,))
+    def dispatch(self, *args, **kwargs):
+        return super(ProjectStatusAsJSON, self).dispatch(*args, **kwargs)
 
 
 class AgreementAsJSON(viewsets.ModelViewSet):

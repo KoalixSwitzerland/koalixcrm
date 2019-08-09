@@ -27,7 +27,8 @@ from koalixcrm.accounting.rest.restinterface import AccountAsJSON, AccountingPer
     ProductCategoryAsJSON
 from koalixcrm.crm.rest.restinterface import ContractAsJSON, CurrencyAsJSON, ProductAsJSON, ProjectAsJSON, TaskAsJSON, \
     TaskStatusAsJSON, TaxAsJSON, UnitAsJSON, CustomerGroupAsJSON, CustomerBillingCycleAsJSON, \
-    CustomerAsJSON, ContactPostalAddressAsJSON, ContactEmailAddressAsJSON, ContactPhoneAddressAsJSON
+    CustomerAsJSON, ContactPostalAddressAsJSON, ContactEmailAddressAsJSON, ContactPhoneAddressAsJSON, \
+    ProjectStatusAsJSON
 
 router = routers.DefaultRouter()
 router.register(r'accounts', AccountAsJSON)
@@ -44,6 +45,7 @@ router.register(r'customerGroups', CustomerGroupAsJSON)
 router.register(r'products', ProductAsJSON)
 router.register(r'productCategories', ProductCategoryAsJSON)
 router.register(r'projects', ProjectAsJSON)
+router.register(r'projectStatus', ProjectStatusAsJSON)
 router.register(r'tasks', TaskAsJSON)
 router.register(r'taskstatus', TaskStatusAsJSON)
 router.register(r'taxes', TaxAsJSON)
