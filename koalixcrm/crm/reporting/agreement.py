@@ -7,6 +7,7 @@ from koalixcrm.crm.reporting.resource_price import ResourcePrice
 
 
 class Agreement(models.Model):
+    """The Agreement describes the contract between the steer-co or the customer with the project manager"""
     task = models.ForeignKey("Task",
                              on_delete=models.CASCADE,
                              verbose_name=_('Task'),

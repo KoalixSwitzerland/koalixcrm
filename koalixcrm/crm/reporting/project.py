@@ -542,12 +542,11 @@ class Project(models.Model):
 
 class ProjectAdminView(admin.ModelAdmin):
     list_display = ('id',
-                    'project_status',
                     'project_name',
                     'project_manager',
-                    'default_currency',
-                    'planned_duration',
+                    'project_status',
                     'planned_total_costs',
+                    'planned_duration',
                     'effective_duration',
                     'effective_effort',
                     'effective_costs_confirmed',
@@ -559,10 +558,10 @@ class ProjectAdminView(admin.ModelAdmin):
 
     fieldsets = (
         (_('Project'), {
-            'fields': ('project_status',
-                       'project_manager',
-                       'project_name',
+            'fields': ('project_name',
                        'description',
+                       'project_status',
+                       'project_manager',
                        'default_currency',
                        'default_template_set',)
         }),
@@ -597,16 +596,18 @@ class ProjectAdminView(admin.ModelAdmin):
 class ProjectInlineAdminView(admin.TabularInline):
     model = Project
     readonly_fields = ('link_to_project',
+                       'project_name',
+                       'description',
                        'project_status',
                        'project_manager',
-                       'description',
                        'default_template_set')
     fieldsets = (
         (_('Project'), {
             'fields': ('link_to_project',
+                       'project_name',
+                       'description',
                        'project_status',
                        'project_manager',
-                       'description',
                        'default_template_set')
         }),
     )
