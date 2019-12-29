@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import pytest
+import sys
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from koalixcrm.test_support_functions import *
@@ -20,7 +21,7 @@ class CreateSalesDocumentFromContract(StaticLiveServerTestCase):
     def setUpClass(cls):
         super(CreateSalesDocumentFromContract, cls).setUpClass()
         firefox_options = webdriver.firefox.options.Options()
-        firefox_options.set_headless(headless=True)
+        firefox_options.set_headless(headless=False)
         cls.selenium = webdriver.Firefox(firefox_options=firefox_options)
         cls.selenium.implicitly_wait(10)
         cls.test_user = AdminUserFactory.create()
@@ -32,6 +33,8 @@ class CreateSalesDocumentFromContract(StaticLiveServerTestCase):
 
     @classmethod
     def tearDownClass(cls):
+        if sys.exc_info()[0]:
+            cls.selenium.driver.save_screenshot("Screenshots/%s.png" % "test_name")
         cls.selenium.quit()
         super(CreateSalesDocumentFromContract, cls).tearDownClass()
 

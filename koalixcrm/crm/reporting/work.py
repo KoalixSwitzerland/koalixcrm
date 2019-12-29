@@ -168,9 +168,9 @@ class WorkAdminView(admin.ModelAdmin):
     )
     save_as = True
 
-    actions = ['delete_selected', ]
+    actions = ['delete_work', ]
 
-    def delete_selected(self, request, queryset):
+    def delete_work(self, request, queryset):
         for obj in queryset:
             if obj.reporting_period.status.is_done:
                 self.message_user(request, _("Delete is not allowed because the work"
@@ -180,7 +180,7 @@ class WorkAdminView(admin.ModelAdmin):
             else:
                 obj.delete()
 
-    delete_selected.short_description = _("Delete Selected Work")
+    delete_work.short_description = _("Delete Selected Work")
 
 
 class WorkInlineAdminView(admin.TabularInline):
