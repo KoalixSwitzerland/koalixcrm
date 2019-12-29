@@ -12,6 +12,7 @@ from koalixcrm.crm.factories.factory_customer_group import StandardCustomerGroup
 from koalixcrm.crm.factories.factory_tax import StandardTaxFactory
 from koalixcrm.crm.factories.factory_unit import StandardUnitFactory, SmallUnitFactory
 from koalixcrm.test_support_functions import make_date_utc
+from koalixcrm.crm.models import SalesDocumentPosition
 
 
 class DocumentSalesDocumentPosition(TestCase):
@@ -84,10 +85,11 @@ class DocumentSalesDocumentPosition(TestCase):
         )
         datetime_now = make_date_utc(datetime.datetime(2024, 1, 1, 0, 00))
         date_now = datetime_now.date()
-        Calculations.calculate_document_price(
-            document=quote_2,
-            pricing_date=date_now)
-        self.assertEqual(
-            quote_2.last_calculated_price.__str__(), "0.00")
-        self.assertEqual(
-            quote_2.last_calculated_tax.__str__(), "0.00")
+        try:
+            Calculations.calculate_document_price(
+                document=quote_2,
+                pricing_date=date_now)
+        except SalesDocumentPosition.NoPriceFound as e:
+            self.assertEqual(
+                e.__str__(), "There is no Price set for the sales document position"
+            )
