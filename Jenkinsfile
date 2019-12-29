@@ -39,6 +39,7 @@ pipeline {
                     wget https://github.com/mozilla/geckodriver/releases/download/v0.23.0/geckodriver-v0.23.0-linux64.tar.gz
                     mkdir geckodriver
                     tar -xzf geckodriver*.tar.gz -C geckodriver
+                    deactivate
                    '''
             }
         }
@@ -58,7 +59,8 @@ pipeline {
                     pytest --cov=koalixcrm --cov-branch --cov-report xml:reports/coverage.xml --cov-report term
                 else
                     pytest --cov=koalixcrm --cov-branch --cov-report xml:reports/coverage.xml --cov-report term -m "not version_increase"
-                fi'''
+                fi
+                deactivate'''
             }
             post {
                 always {
@@ -84,9 +86,11 @@ pipeline {
         stage('Build and Push PiPy package') {
             steps {
                 sh '''
+                    . virtualenv/bin/activate
                     pip install --upgrade setuptools wheel twine
                     python setup.py sdist bdist_wheel
                     twine upload --username PYPI_TST_USR --password PYPI_TST_PSW --repository-url https://test.pypi.org/legacy/ dist/*'''
+                    deactivate
             }
         }
         stage('Build Docker image') {
