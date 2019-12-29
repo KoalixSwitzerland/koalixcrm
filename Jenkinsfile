@@ -13,6 +13,8 @@ pipeline {
         CLOUD_FLARE_API_KEY = credentials('CLOUD_FLARE_API_KEY')
         PASSPHRASE_ROOT_SERVER_PRIV_KEY = credentials('PASSPHRASE_ROOT_SERVER_PRIV_KEY')
         DOCKER_HUB = credentials('DOCKER_HUB')
+        PYPI = credentials('PYPI')
+        PYPI_TST = credentials('PYPI_TST')
     }
     stages {
         stage ("Prepare Virtual Environment"){
@@ -56,7 +58,8 @@ pipeline {
                     pytest --cov=koalixcrm --cov-branch --cov-report xml:reports/coverage.xml --cov-report term
                 else
                     pytest --cov=koalixcrm --cov-branch --cov-report xml:reports/coverage.xml --cov-report term -m "not version_increase"
-                fi'''
+                fi
+                deactivate'''
             }
             post {
                 always {
@@ -77,6 +80,22 @@ pipeline {
         stage('Checkstyle + FindBugs') {
             steps {
                 echo 'Should run a static code analysis.'
+            }
+        }
+        stage('Build and Push PiPy package') {
+            steps {
+                sh '''
+                    . virtualenv/bin/activate
+                    pip install --upgrade setuptools wheel twine
+                    python setup.py sdist bdist_wheel
+                    if [ "${BRANCH_NAME}" == "master" ] && [ -z "${CHANGE_ID}" ]; then
+                        twine upload --verbose --username ${PYPI_USR} --password ${PYPI_PSW} --repository-url https://test.pypi.org/legacy/ dist/*
+                    elif [ "${BRANCH_NAME}" == "development" ] && [ -z "${CHANGE_ID}" ]; then
+                       twine upload --verbose --username ${PYPI_USR} --password ${PYPI_PSW} --repository-url https://test.pypi.org/legacy/ dist/*
+                    else
+                        twine upload --verbose --username ${PYPI_TST_USR} --password ${PYPI_TST_PSW} --repository-url https://test.pypi.org/legacy/ dist/*
+                    fi
+                    deactivate'''
             }
         }
         stage('Build Docker image') {
