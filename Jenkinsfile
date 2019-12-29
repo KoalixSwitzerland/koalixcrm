@@ -83,9 +83,10 @@ pipeline {
         }
         stage('Build and Push PiPy package') {
             steps {
-                pip install --upgrade setuptools wheel twine
-                python setup.py sdist bdist_wheel
-                twine upload --verbose --username PYPI_TST_USR --password PYPI_TST_PSW --repository-url https://test.pypi.org/legacy/ dist/*
+                sh '''
+                    pip install --upgrade setuptools wheel twine
+                    python setup.py sdist bdist_wheel
+                    twine upload --username PYPI_TST_USR --password PYPI_TST_PSW --repository-url https://test.pypi.org/legacy/ dist/*'''
             }
         }
         stage('Build Docker image') {
