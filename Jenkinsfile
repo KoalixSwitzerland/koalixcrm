@@ -13,6 +13,8 @@ pipeline {
         CLOUD_FLARE_API_KEY = credentials('CLOUD_FLARE_API_KEY')
         PASSPHRASE_ROOT_SERVER_PRIV_KEY = credentials('PASSPHRASE_ROOT_SERVER_PRIV_KEY')
         DOCKER_HUB = credentials('DOCKER_HUB')
+        PYPI = credentials('PYPI')
+        PYPI_TST = credentials('PYPI_TST')
     }
     stages {
         stage ("Prepare Virtual Environment"){
@@ -77,6 +79,13 @@ pipeline {
         stage('Checkstyle + FindBugs') {
             steps {
                 echo 'Should run a static code analysis.'
+            }
+        }
+        stage('Build and Push PiPy package') {
+            steps {
+                pip install --upgrade setuptools wheel twine
+                python setup.py sdist bdist_wheel
+                twine upload --verbose --username PYPI_TST_USR --password PYPI_TST_PSW --repository-url https://test.pypi.org/legacy/ dist/*
             }
         }
         stage('Build Docker image') {
