@@ -39,7 +39,6 @@ pipeline {
                     wget https://github.com/mozilla/geckodriver/releases/download/v0.23.0/geckodriver-v0.23.0-linux64.tar.gz
                     mkdir geckodriver
                     tar -xzf geckodriver*.tar.gz -C geckodriver
-                    deactivate
                    '''
             }
         }
