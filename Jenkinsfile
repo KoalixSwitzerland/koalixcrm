@@ -88,7 +88,7 @@ pipeline {
                     . virtualenv/bin/activate
                     pip install --upgrade setuptools wheel twine
                     python setup.py sdist bdist_wheel
-                    twine upload --username PYPI_TST_USR --password PYPI_TST_PSW --repository-url https://test.pypi.org/legacy/ dist/*
+                    twine upload --verbose --username PYPI_TST_USR --password PYPI_TST_PSW --repository-url https://test.pypi.org/legacy/ dist/*
                     deactivate'''
             }
         }

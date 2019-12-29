@@ -21,7 +21,8 @@ class Calculations:
             or raises exception
 
         Raises:
-            Can trow Product.NoPriceFound when Product Price could not be found"""
+            Can trow Product.NoPriceFound when Product Price was overwritten but the price was not set
+            Can trow Position.NoPriceFound when Position Price has no value but overwrite price is set """
 
         price = 0
         tax = 0
@@ -66,8 +67,11 @@ class Calculations:
             or raises exception
 
         Raises:
-            Can trow Product.NoPriceFound when Product Price could not be found"""
+            Can trow Product.NoPriceFound when Product Price was overwritten but the price was not set
+            Can trow Position.NoPriceFound when Position Price has no value but overwrite price is set """
 
+        if not position.position_price_per_unit:
+            raise SalesDocumentPosition.NoPriceFound
         if not position.overwrite_product_price:
             position.position_price_per_unit = position.product_type.get_price(pricing_date,
                                                                                position.unit,

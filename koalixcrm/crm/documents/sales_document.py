@@ -355,7 +355,7 @@ class OptionSalesDocument(admin.ModelAdmin):
         try:
             koalixcrm.crm.documents.calculations.Calculations.calculate_document_price(obj, date.today())
             self.message_user(request, "Successfully calculated Prices")
-        except ProductType.NoPriceFound as e:
+        except (ProductType.NoPriceFound, SalesDocumentPosition.NoPriceFound) as e:
             self.message_user(request, "Unsuccessful in updating the Prices " + e.__str__(), level=messages.ERROR)
         return obj
 

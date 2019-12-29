@@ -101,6 +101,10 @@ class SalesDocumentPosition(Position):
     def __str__(self):
         return _("Sales Document Position") + ": " + str(self.id)
 
+    class NoPriceFound(Exception):
+        def __str__(self):
+            return _("There is no Price set for the sales document position")
+
 
 class SalesDocumentInlinePosition(admin.TabularInline):
     model = SalesDocumentPosition
