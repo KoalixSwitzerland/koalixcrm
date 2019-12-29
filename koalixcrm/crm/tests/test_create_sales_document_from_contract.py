@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import pytest
+import os
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from koalixcrm.test_support_functions import *
@@ -15,7 +16,6 @@ from koalixcrm.crm.documents.purchase_order import PurchaseOrder
 
 
 class CreateSalesDocumentFromContract(StaticLiveServerTestCase):
-
     @classmethod
     def setUpClass(cls):
         super(CreateSalesDocumentFromContract, cls).setUpClass()
@@ -34,6 +34,14 @@ class CreateSalesDocumentFromContract(StaticLiveServerTestCase):
     def tearDownClass(cls):
         cls.selenium.quit()
         super(CreateSalesDocumentFromContract, cls).tearDownClass()
+
+    def tearDown(self):
+        if len(self._outcome.errors) > 0:
+            directory = os.getcwd() + "/test_results/Screenshots/"
+            if not os.path.exists(directory):
+                os.makedirs(directory)
+            self.selenium.save_screenshot(directory + "%s.png" % "test_name")
+        super(CreateSalesDocumentFromContract, self).tearDown()
 
     @pytest.mark.front_end_tests
     def test_create_sales_document_from_contract(self):
