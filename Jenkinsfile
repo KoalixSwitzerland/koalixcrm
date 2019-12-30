@@ -89,9 +89,9 @@ pipeline {
                     pip install --upgrade setuptools wheel twine
                     python setup.py sdist bdist_wheel
                     if [ "${BRANCH_NAME}" == "master" ] && [ -z "${CHANGE_ID}" ]; then
-                        twine upload --verbose --username ${PYPI_USR} --password ${PYPI_PSW} --repository-url https://test.pypi.org/legacy/ dist/*
+                        twine upload --verbose --username ${PYPI_USR} --password ${PYPI_PSW} --repository-url https://pypi.org/legacy/ dist/*
                     elif [ "${BRANCH_NAME}" == "development" ] && [ -z "${CHANGE_ID}" ]; then
-                       twine upload --verbose --username ${PYPI_USR} --password ${PYPI_PSW} --repository-url https://test.pypi.org/legacy/ dist/*
+                       twine upload --verbose --username ${PYPI_USR} --password ${PYPI_PSW} --repository-url https://pypi.org/legacy/ dist/*
                     else
                         twine upload --verbose --username ${PYPI_TST_USR} --password ${PYPI_TST_PSW} --repository-url https://test.pypi.org/legacy/ dist/*
                     fi
