@@ -134,6 +134,7 @@ pipeline {
                     docker login -u ${DOCKER_HUB_USR} -p ${DOCKER_HUB_PSW}
                     docker push koalixswitzerland/koalixcrm:latest
                 fi'''
+                docker system prune -a -f
             }
         }
         stage('Deploy') {
