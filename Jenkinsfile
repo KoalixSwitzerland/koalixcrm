@@ -87,9 +87,17 @@ pipeline {
                     pip install --upgrade setuptools wheel twine
                     python setup.py sdist bdist_wheel
                     if [ "${BRANCH_NAME}" == "master" ] && [ -z "${CHANGE_ID}" ]; then
-                        twine upload --verbose --username ${PYPI_USR} --password ${PYPI_PSW} dist/*
+                        if twine upload --verbose --username ${PYPI_USR} --password ${PYPI_PSW} dist/*; then
+                           echo "twine upload succeeded"
+                        else
+                           echo "twine upload did not succeed"
+                        fi
                     elif [ "${BRANCH_NAME}" == "development" ] && [ -z "${CHANGE_ID}" ]; then
-                       twine upload --verbose --username ${PYPI_USR} --password ${PYPI_PSW} dist/*
+                       if twine upload --verbose --username ${PYPI_USR} --password ${PYPI_PSW} dist/*; then
+                         echo "twine upload succeeded"
+                       else
+                         echo "twine upload did not succeed"
+                       fi
                     fi
                     deactivate'''
             }
