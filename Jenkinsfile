@@ -1,5 +1,3 @@
-def application
-
 pipeline {
     agent any
     options {
@@ -36,7 +34,7 @@ pipeline {
                     . virtualenv/bin/activate
                     pip install -r requirements/heroku_requirements.txt
                     deactivate
-                    wget https://github.com/mozilla/geckodriver/releases/download/v0.23.0/geckodriver-v0.23.0-linux64.tar.gz
+                    wget https://github.com/mozilla/geckodriver/releases/download/v0.23.0/geckodriver-v0.23.0-linux64.tar.gz -q
                     mkdir geckodriver
                     tar -xzf geckodriver*.tar.gz -C geckodriver
                    '''
@@ -89,11 +87,17 @@ pipeline {
                     pip install --upgrade setuptools wheel twine
                     python setup.py sdist bdist_wheel
                     if [ "${BRANCH_NAME}" == "master" ] && [ -z "${CHANGE_ID}" ]; then
-                        twine upload --verbose --username ${PYPI_USR} --password ${PYPI_PSW} dist/*
+                        if twine upload --verbose --username ${PYPI_USR} --password ${PYPI_PSW} dist/*; then
+                           echo "twine upload succeeded"
+                        else
+                           echo "twine upload did not succeed"
+                        fi
                     elif [ "${BRANCH_NAME}" == "development" ] && [ -z "${CHANGE_ID}" ]; then
-                       twine upload --verbose --username ${PYPI_USR} --password ${PYPI_PSW} dist/*
-                    else
-                        twine upload --verbose --username ${PYPI_TST_USR} --password ${PYPI_TST_PSW} --repository-url https://test.pypi.org/legacy/ dist/*
+                       if twine upload --verbose --username ${PYPI_USR} --password ${PYPI_PSW} dist/*; then
+                         echo "twine upload succeeded"
+                       else
+                         echo "twine upload did not succeed"
+                       fi
                     fi
                     deactivate'''
             }
