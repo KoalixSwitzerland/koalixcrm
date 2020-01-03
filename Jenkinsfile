@@ -133,7 +133,9 @@ pipeline {
                 elif [ "${BRANCH_NAME}" == "development" ] && [ -z "${CHANGE_ID}" ]; then
                     docker login -u ${DOCKER_HUB_USR} -p ${DOCKER_HUB_PSW}
                     docker push koalixswitzerland/koalixcrm:latest
-                fi'''
+                fi
+                docker system prune -a -f
+                '''
             }
         }
         stage('Deploy') {
