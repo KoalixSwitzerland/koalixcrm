@@ -7,7 +7,7 @@ from koalixcrm.crm.factories.factory_product import StandardProductFactory
 from koalixcrm.crm.factories.factory_unit import StandardUnitFactory
 from koalixcrm.crm.factories.factory_currency import StandardCurrencyFactory
 from koalixcrm.crm.factories.factory_customer_group import StandardCustomerGroupFactory
-from koalixcrm.test_support_functions import make_date_utc
+from koalixcrm.global_support_functions import make_date_utc
 
 
 class StandardPriceFactory(factory.django.DjangoModelFactory):

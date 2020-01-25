@@ -2,6 +2,8 @@
 
 import datetime
 
+import pytz
+
 
 def limit_string_length(input_string, maximum_length):
     if len(input_string) > maximum_length:
@@ -43,3 +45,8 @@ class ConditionalMethodDecorator(object):
             # Return the function unchanged, not decorated.
             return func
         return self.decorator(func)
+
+
+def make_date_utc(input_date):
+    output_date = pytz.timezone("UTC").localize(input_date, is_dst=None)
+    return output_date

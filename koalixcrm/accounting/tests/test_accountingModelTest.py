@@ -5,7 +5,7 @@ from koalixcrm.accounting.models import Account
 from koalixcrm.accounting.models import AccountingPeriod
 from koalixcrm.accounting.models import Booking
 from koalixcrm.crm.documents.pdf_export import PDFExport
-from koalixcrm.test_support_functions import make_date_utc
+from koalixcrm.global_support_functions import make_date_utc
 
 
 class AccountingModelTest(TestCase):

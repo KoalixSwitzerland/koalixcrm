@@ -15,12 +15,11 @@ from koalixcrm.crm.factories.factory_resource_price import StandardResourcePrice
 from koalixcrm.crm.factories.factory_project import StandardProjectFactory
 from koalixcrm.crm.factories.factory_unit import StandardUnitFactory
 from koalixcrm.crm.factories.factory_estimation import StandardHumanResourceEstimationToTaskFactory
-from koalixcrm.test_support_functions import make_date_utc
+from koalixcrm.global_support_functions import make_date_utc
 
 
 class TaskPlannedEffort(TestCase):
     def setUp(self):
-
         self.test_billing_cycle = StandardCustomerBillingCycleFactory.create()
         self.test_user = AdminUserFactory.create()
         self.test_customer_group = StandardCustomerGroupFactory.create()

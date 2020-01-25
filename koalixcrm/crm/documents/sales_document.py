@@ -5,7 +5,7 @@ from django.db import models
 from django.contrib import admin, messages
 from django.utils.translation import ugettext as _
 from koalixcrm.crm.const.purpose import *
-from koalixcrm.global_support_functions import xstr
+from koalixcrm.global_support_functions import xstr, make_date_utc
 from koalixcrm.crm.contact.phone_address import PhoneAddress
 from koalixcrm.crm.contact.email_address import EmailAddress
 from koalixcrm.crm.contact.postal_address import PostalAddress
@@ -178,7 +178,7 @@ class SalesDocument(models.Model):
                 new_position.create_position(sales_document_position, self)
 
     def create_pdf(self, template_set, printed_by):
-        self.last_print_date = datetime.now()
+        self.last_print_date = make_date_utc(datetime.now())
         self.save()
         return koalixcrm.crm.documents.pdf_export.PDFExport.create_pdf(self, template_set, printed_by)
 
