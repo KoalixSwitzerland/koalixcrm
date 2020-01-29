@@ -11,17 +11,10 @@ from koalixcrm.djangoUserExtension.factories.factory_user_extension import Stand
 from koalixcrm.crm.factories.factory_task import StandardTaskFactory
 from koalixcrm.crm.factories.factory_estimation import StandardEstimationToTaskFactory
 from koalixcrm.crm.factories.factory_human_resource import StandardHumanResourceFactory
-from koalixcrm.crm.factories.factory_estimation import StandardHumanResourceEstimationToTaskFactory
-from koalixcrm.test_support_functions import make_date_utc
 
 
 class TaskPlannedEffort(TestCase):
     def setUp(self):
-        datetime_now = make_date_utc(datetime.datetime(2024, 1, 1, 0, 00))
-        start_date = (datetime_now - datetime.timedelta(days=30)).date()
-        end_date_first_task = (datetime_now + datetime.timedelta(days=30)).date()
-        end_date_second_task = (datetime_now + datetime.timedelta(days=60)).date()
-
         self.test_billing_cycle = StandardCustomerBillingCycleFactory.create()
         self.test_user = AdminUserFactory.create()
         self.test_customer_group = StandardCustomerGroupFactory.create()

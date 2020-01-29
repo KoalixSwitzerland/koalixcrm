@@ -11,7 +11,7 @@ from koalixcrm.crm.factories.factory_customer import StandardCustomerFactory
 from koalixcrm.crm.factories.factory_customer_group import StandardCustomerGroupFactory, AdvancedCustomerGroupFactory
 from koalixcrm.crm.factories.factory_tax import StandardTaxFactory
 from koalixcrm.crm.factories.factory_unit import StandardUnitFactory, SmallUnitFactory
-from koalixcrm.test_support_functions import make_date_utc
+from koalixcrm.global_support_functions import make_date_utc
 from koalixcrm.crm.models import SalesDocumentPosition
 
 

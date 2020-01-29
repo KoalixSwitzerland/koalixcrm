@@ -8,7 +8,7 @@ from koalixcrm.crm.factories.factory_human_resource import StandardHumanResource
 from koalixcrm.crm.factories.factory_reporting_period import StandardReportingPeriodFactory
 from koalixcrm.crm.factories.factory_estimation_status import StartedEstimationStatusFactory
 from koalixcrm.crm.factories.factory_task import StandardTaskFactory
-from koalixcrm.test_support_functions import make_date_utc
+from koalixcrm.global_support_functions import make_date_utc
 
 
 class StandardEstimationToTaskFactory(factory.django.DjangoModelFactory):
