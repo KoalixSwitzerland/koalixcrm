@@ -17,9 +17,8 @@ class BaseWorkEntryFormset(forms.BaseFormSet):
             initial.append({'work_id': work.id,
                             'task': work.task,
                             'project': work.task.project,
-                            'date': work.date,
-                            'start_time': work.start_time,
-                            'stop_time': work.stop_time,
+                            'datetime_start': work.start_time,
+                            'datetime_stop': work.stop_time,
                             'worked_hours': work.worked_hours,
                             'description': work.description})
         return initial

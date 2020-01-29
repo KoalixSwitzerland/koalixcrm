@@ -75,6 +75,7 @@ Reporting
 {% endblock %}
 
 {% block content %}
+{% load tz %}
 <form action="" method="post">{% csrf_token %}
     {{ formset.management_form }}
     <div style="font-weight: bold;">Selected Range</div>
@@ -88,8 +89,7 @@ Reporting
             {% if forloop.first %}
             <tr>
                 <th>{{form.project.label}}, {{form.task.label}} </th>
-                <th>{{form.date.label}}</th>
-                <th>{{form.start_time.label}}, {{form.stop_time.label}}</th>
+                <th>{{form.datetime_start.label}}<br/>{{form.datetime_stop.label}}</th>
                 <th>{{form.worked_hours.label}}</th>
                 <th>{{form.description.label}}</th>
                 <th>{{form.DELETE.label}}</th>
@@ -109,15 +109,11 @@ Reporting
                     {{ form.task.errors }}
                 </td>
                 <td>
-                    {{ form.date }}
-                    {{ form.date.errors }}
-                </td>
-                <td>
-                    {{ form.start_time }}
-                    {{ form.start_time.errors }}
-                    <br/><br/>
-                    {{ form.stop_time }}
-                    {{ form.stop_time.errors }}
+                    {{ form.datetime_start }}
+                    {{ form.datetime_start.errors }}
+                <br/>
+                    {{ form.datetime_stop }}
+                    {{ form.datetime_stop.errors }}
                 </td>
                 <td>
                     {{ form.worked_hours }}

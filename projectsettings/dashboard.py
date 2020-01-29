@@ -78,6 +78,9 @@ class CustomIndexDashboard(Dashboard):
                         column=1,
                         children=[{'title': _('Time Tracking'),
                                    'url': '/koalixcrm/crm/reporting/time_tracking/',
+                                   'external': False},
+                                  {'title': _('Set Timezone'),
+                                   'url': '/koalixcrm/crm/reporting/set_timezone/',
                                    'external': False}]
                     )
 
