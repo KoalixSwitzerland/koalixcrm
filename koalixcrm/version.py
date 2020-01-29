@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*-
 
-KOALIXCRM_VERSION = "1.13dev7"
+KOALIXCRM_VERSION = "1.13dev8"

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import datetime
 from django.forms import NumberInput
 from koalixcrm.crm.reporting.task import Task
 from koalixcrm.crm.reporting.project import Project
@@ -20,12 +19,10 @@ class WorkEntry(forms.Form):
                                      required=True)
     task = forms.ModelChoiceField(queryset=Task.objects.filter(status__is_done=False),
                                   required=True)
-    date = forms.DateField(widget=AdminDateWidget,
-                           required=True)
-    start_time = forms.TimeField(widget=AdminTimeWidget,
-                                 required=False)
-    stop_time = forms.TimeField(widget=AdminTimeWidget,
-                                required=False)
+    datetime_start = forms.SplitDateTimeField(widget=AdminSplitDateTime,
+                                              required=True)
+    datetime_stop = forms.SplitDateTimeField(widget=AdminSplitDateTime,
+                                             required=False)
     worked_hours = forms.DecimalField(widget=NumberInput(attrs={'step': 0.1,
                                                                 'min': 0,
                                                                 'max': 24}),
@@ -56,10 +53,10 @@ class WorkEntry(forms.Form):
 
         Raises:
           may raise ValidationError exception"""
-        if ("start_time" in cleaned_data) & ("stop_time" in cleaned_data) & ("worked_hours" in cleaned_data):
-            start_stop_pattern_complete = bool(cleaned_data["start_time"]) & bool(cleaned_data["stop_time"])
-            start_stop_pattern_stop_missing = bool(cleaned_data["start_time"]) & (not bool(cleaned_data["stop_time"]))
-            start_stop_pattern_start_missing = (not bool(cleaned_data["start_time"])) & bool(cleaned_data["stop_time"])
+        if ("datetime_start" in cleaned_data) & ("datetime_stop" in cleaned_data) & ("worked_hours" in cleaned_data):
+            start_stop_pattern_complete = bool(cleaned_data["datetime_start"]) & bool(cleaned_data["datetime_stop"])
+            start_stop_pattern_stop_missing = bool(cleaned_data["datetime_start"]) & (not bool(cleaned_data["datetime_stop"]))
+            start_stop_pattern_start_missing = (not bool(cleaned_data["datetime_start"])) & bool(cleaned_data["datetime_stop"])
             worked_hours_pattern = bool(cleaned_data["worked_hours"])
         else:
             raise forms.ValidationError('Programming error', code='invalid')
@@ -104,14 +101,12 @@ class WorkEntry(forms.Form):
             else:
                 work.task = self.cleaned_data['task']
                 work.reporting_period = ReportingPeriod.get_reporting_period(project=self.cleaned_data['task'].project,
-                                                                             search_date=self.cleaned_data['date'])
+                                                                             search_date=self.cleaned_data['datetime_start'].date())
                 work.human_resource = HumanResource.objects.get(user=UserExtension.get_user_extension(request.user))
-                work.date = self.cleaned_data['date']
-                if bool(self.cleaned_data['start_time']) & bool(self.cleaned_data['stop_time']):
-                    work.start_time = datetime.datetime.combine(self.cleaned_data['date'],
-                                                                self.cleaned_data['start_time'])
-                    work.stop_time = datetime.datetime.combine(self.cleaned_data['date'],
-                                                               self.cleaned_data['stop_time'])
+                work.date = self.cleaned_data['datetime_start'].date()
+                if bool(self.cleaned_data['datetime_start']) & bool(self.cleaned_data['datetime_stop']):
+                    work.start_time = self.cleaned_data['datetime_start']
+                    work.stop_time = self.cleaned_data['datetime_stop']
                 else:
                     work.worked_hours = self.cleaned_data['worked_hours']
                 work.description = self.cleaned_data['description']
