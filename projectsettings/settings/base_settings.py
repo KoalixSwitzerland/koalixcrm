@@ -59,6 +59,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'koalixcrm.auth.keycloak_middleware.KeycloakMiddleware',
 ]
 
 ROOT_URLCONF = 'projectsettings.urls'
@@ -81,7 +82,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'projectsettings.wsgi.application'
 
-
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
 
@@ -100,7 +100,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
@@ -113,7 +112,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
@@ -148,4 +146,27 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     )
+}
+
+# Keycloak configuration
+# Excempt list - URL paths that doesn't need Keycloak Authorization
+KEYCLOAK_BEARER_AUTHENTICATION_EXEMPT_PATHS = [
+    'admin', 'accounts',
+]
+
+CONFIG_DIR = os.path.join(os.path.dirname(__file__), os.pardir)
+
+KEYCLOAK_CLIENT_PUBLIC_KEY = """-----BEGIN PUBLIC KEY-----
+...Your public key here...
+-----END PUBLIC KEY-----"""
+
+KEYCLOAK_CONFIG = {
+    'KEYCLOAK_REALM': 'koalixcrm_test',
+    'KEYCLOAK_CLIENT_ID': 'django-backend',
+    'KEYCLOAK_DEFAULT_ACCESS': 'DENY',  # DENY or ALLOW
+    'KEYCLOAK_AUTHORIZATION_CONFIG': os.path.join(CONFIG_DIR, 'authorization-config.json'),
+    'KEYCLOAK_METHOD_VALIDATE_TOKEN': 'DECODE',
+    'KEYCLOAK_SERVER_URL': 'auth.koalix.dscloud.biz/auth/',
+    'KEYCLOAK_CLIENT_SECRET_KEY': 'your-secret-key',
+    'KEYCLOAK_CLIENT_PUBLIC_KEY': KEYCLOAK_CLIENT_PUBLIC_KEY,
 }
