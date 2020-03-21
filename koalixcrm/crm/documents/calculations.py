@@ -76,8 +76,6 @@ class Calculations:
                                                                                position.unit,
                                                                                contact,
                                                                                currency)
-        elif not position.position_price_per_unit:
-            raise SalesDocumentPosition.NoPriceFound
         nominal_total = position.position_price_per_unit * position.quantity
         if isinstance(position.discount, Decimal):
             nominal_minus_discount = nominal_total * (1 - position.discount / 100)
