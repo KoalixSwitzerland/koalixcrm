@@ -145,7 +145,7 @@ pipeline {
                 cd koalixcrm_deploy
                 pip install -r hetzner_jenkins_start_script/deployment_requirements.txt
                 cd hetzner_jenkins_start_script
-                python server.py --branch_name=${BRANCH_NAME} --action=deploy
+                python server_setup.py --branch_name=${BRANCH_NAME} --action=deploy
                 '''
             }
         }
