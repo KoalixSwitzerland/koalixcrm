@@ -48,9 +48,7 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    env.VERSION = sh '''
-                        grep 'VERSION' koalixcrm/version.py | sed -e 's/KOALIXCRM_VERSION = "//' | sed -e 's/"//'
-                    '''
+                    env.VERSION = sh(script:grep 'VERSION' koalixcrm/version.py | sed -e 's/KOALIXCRM_VERSION = "//' | sed -e 's/"//', returnStdout:true)
                 }
                 sh '''
                 . virtualenv/bin/activate
