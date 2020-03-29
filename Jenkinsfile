@@ -43,6 +43,8 @@ pipeline {
         stage ("Get Latest Code") {
             steps {
                 checkout scm
+            }
+            steps {
                 env.VERSION = sh '''
                     grep 'VERSION' version.py | sed -e 's/KOALIXCRM_VERSION = "//' | sed -e 's/"//'
                 '''
