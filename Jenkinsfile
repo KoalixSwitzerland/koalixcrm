@@ -49,7 +49,7 @@ pipeline {
             steps {
                 script {
                     env.VERSION = sh '''
-                        grep 'VERSION' koalixcrm/version.py | sed -e 's/KOALIXCRM_VERSION = "//' | sed -e 's/"//', returnStdout:true)
+                        grep 'VERSION' koalixcrm/version.py | sed -e 's/KOALIXCRM_VERSION = "//' | sed -e 's/"//'
                     '''
                 }
                 sh '''
