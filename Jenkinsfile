@@ -44,6 +44,7 @@ pipeline {
             steps {
                 checkout scm
             }
+        }
         stage('Test') {
             steps {
                 env.VERSION = sh '''
