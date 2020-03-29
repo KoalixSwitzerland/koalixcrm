@@ -43,6 +43,9 @@ pipeline {
         stage ("Get Latest Code") {
             steps {
                 checkout scm
+                script {
+                    env.VERSION = sh(grep 'VERSION' version.py | sed -e 's/KOALIXCRM_VERSION = "//' | sed -e 's/"//')
+                }
             }
         }
         stage('Test') {
@@ -120,7 +123,7 @@ pipeline {
                     docker build -f "Dockerfile.prod" -t koalixswitzerland/koalixcrm:latest . --force-rm
                 elif [ "${BRANCH_NAME}" == "development" ] && [ -z "${CHANGE_ID}" ]; then
                     docker login -u ${DOCKER_HUB_USR} -p ${DOCKER_HUB_PSW}
-                    docker build -f "Dockerfile.prod" -t koalixswitzerland/koalixcrm:latest . --force-rm
+                    docker build -f "Dockerfile.prod" -t koalixswitzerland/koalixcrm:${PYPI_USR} . --force-rm
                 fi'''
             }
         }
@@ -132,7 +135,7 @@ pipeline {
                     docker push koalixswitzerland/koalixcrm:latest
                 elif [ "${BRANCH_NAME}" == "development" ] && [ -z "${CHANGE_ID}" ]; then
                     docker login -u ${DOCKER_HUB_USR} -p ${DOCKER_HUB_PSW}
-                    docker push koalixswitzerland/koalixcrm:latest
+                    docker push koalixswitzerland/koalixcrm:${PYPI_USR}
                 fi
                 docker system prune -a -f
                 '''
