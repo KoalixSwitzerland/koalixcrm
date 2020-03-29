@@ -47,9 +47,11 @@ pipeline {
         }
         stage('Test') {
             steps {
-                env.VERSION = sh '''
-                    grep 'VERSION' koalixcrm/version.py | sed -e 's/KOALIXCRM_VERSION = "//' | sed -e 's/"//'
-                '''
+                script {
+                    env.VERSION = sh '''
+                        grep 'VERSION' koalixcrm/version.py | sed -e 's/KOALIXCRM_VERSION = "//' | sed -e 's/"//'
+                    '''
+                }
                 sh '''
                 . virtualenv/bin/activate
                 export PATH=$PATH:$PWD/geckodriver
