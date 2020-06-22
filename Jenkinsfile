@@ -47,6 +47,9 @@ pipeline {
         }
         stage('Test') {
             steps {
+                script {
+                    env.VERSION = sh(script:'grep \'VERSION\' koalixcrm/version.py | sed -e \'s/KOALIXCRM_VERSION = "//\' | sed -e \'s/"//\'', returnStdout: true)
+                }
                 sh '''
                 . virtualenv/bin/activate
                 export PATH=$PATH:$PWD/geckodriver
@@ -120,7 +123,7 @@ pipeline {
                     docker build -f "Dockerfile.prod" -t koalixswitzerland/koalixcrm:latest . --force-rm
                 elif [ "${BRANCH_NAME}" == "development" ] && [ -z "${CHANGE_ID}" ]; then
                     docker login -u ${DOCKER_HUB_USR} -p ${DOCKER_HUB_PSW}
-                    docker build -f "Dockerfile.prod" -t koalixswitzerland/koalixcrm:latest . --force-rm
+                    docker build -f "Dockerfile.prod" -t koalixswitzerland/koalixcrm:${VERSION} . --force-rm
                 fi'''
             }
         }
@@ -132,7 +135,7 @@ pipeline {
                     docker push koalixswitzerland/koalixcrm:latest
                 elif [ "${BRANCH_NAME}" == "development" ] && [ -z "${CHANGE_ID}" ]; then
                     docker login -u ${DOCKER_HUB_USR} -p ${DOCKER_HUB_PSW}
-                    docker push koalixswitzerland/koalixcrm:latest
+                    docker push koalixswitzerland/koalixcrm:${VERSION}
                 fi
                 docker system prune -a -f
                 '''
@@ -145,7 +148,7 @@ pipeline {
                 cd koalixcrm_deploy
                 pip install -r hetzner_jenkins_start_script/deployment_requirements.txt
                 cd hetzner_jenkins_start_script
-                python server_setup.py --branch_name=${BRANCH_NAME} --action=deploy
+                python server_setup.py --branch_name=${BRANCH_NAME} --action=deploy --component koalixcrm-django
                 '''
             }
         }

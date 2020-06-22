@@ -35,7 +35,6 @@ class Calculations:
                                                                contact_for_price_calculation,
                                                                document.currency)
                 tax += Calculations.calculate_position_tax(position, document.currency)
-
             if document.discount is not None:
                 discount = Decimal(document.discount)
                 total_price = price * (1 - discount / 100)
@@ -44,6 +43,9 @@ class Calculations:
                 total_tax = Decimal(total_tax)
                 price = document.currency.round(total_price)
                 tax = document.currency.round(total_tax)
+            else:
+                tax = document.currency.round(tax)
+                price = document.currency.round(price)
         document.last_calculated_price = price
         document.last_calculated_tax = tax
         document.last_pricing_date = pricing_date
@@ -70,20 +72,21 @@ class Calculations:
             Can trow Product.NoPriceFound when Product Price was overwritten but the price was not set
             Can trow Position.NoPriceFound when Position Price has no value but overwrite price is set """
 
-        if not position.position_price_per_unit:
-            raise SalesDocumentPosition.NoPriceFound
+
         if not position.overwrite_product_price:
             position.position_price_per_unit = position.product_type.get_price(pricing_date,
                                                                                position.unit,
                                                                                contact,
                                                                                currency)
+        elif position.position_price_per_unit is None:
+            raise SalesDocumentPosition.NoPriceFound
         nominal_total = position.position_price_per_unit * position.quantity
         if isinstance(position.discount, Decimal):
             nominal_minus_discount = nominal_total * (1 - position.discount / 100)
         else:
             nominal_minus_discount = nominal_total
         total_with_tax = Decimal(nominal_minus_discount)
-        position.last_calculated_price = currency.round(total_with_tax)
+        position.last_calculated_price = total_with_tax
         position.last_pricing_date = pricing_date
         position.save()
         return position.last_calculated_price
@@ -110,6 +113,6 @@ class Calculations:
             nominal_minus_discount = nominal_total
         total_tax = nominal_minus_discount * position.product_type.get_tax_rate() / 100
         total_tax = Decimal(total_tax)
-        position.last_calculated_tax = currency.round(total_tax)
+        position.last_calculated_tax = total_tax
         position.save()
         return position.last_calculated_tax
