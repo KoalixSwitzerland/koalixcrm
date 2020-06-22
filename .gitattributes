@@ -1,0 +1,5 @@
+# Configuration fiel for GIT
+
+# Configures line endings
+* text=auto
+*.sh text eol=lf
