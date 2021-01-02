@@ -1,14 +1,20 @@
-version: '2.0'
+version: '3'
 
 services:
   db:
     image: postgres
+    environment:
+      POSTGRES_PASSWORD: postgres
+    
   koalixcrm:
     build: .
     environment:
       - DJANGO_SETTINGS_MODULE=projectsettings.settings.development_settings
-      - JAVA_HOME=/usr/bin/jdk1.8.0_162/jre
+      - JAVA_HOME=/usr/bin/jdk1.8.0_181/jre
+    command: bash -c "python manage.py migrate --settings=projectsettings.settings.development_settings && python manage.py runserver 0.0.0.0:8000 --settings=projectsettings.settings.development_settings"
+    volumes: 
+      - .:/app/
     ports:
       - "8000:8000"
-    depends_on:
+    depends_on: 
       - db

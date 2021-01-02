@@ -13,7 +13,7 @@ Please note we have a code of conduct, please follow it in all your interactions
    variables, exposed ports, useful file locations and container parameters.
 3. Increase the version numbers in all version.py files to the new version that this
    Pull Request would represent. The versioning scheme (see next section)
-4. Crate a Pull Request towards the "development" branch, ensure that your pull-request 
+4. Create a Pull Request towards the "development" branch, ensure that your pull-request 
    has at least 80% test-coverage and the Pull Request does not show issues in Travis 
 5. Once the Pull Request is reviewed it will be merged by one of the core developers
 
