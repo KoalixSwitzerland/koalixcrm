@@ -6,8 +6,8 @@ services:
   koalixcrm:
     image: koalixswitzerland/koalixcrm:1.12.dev6
     environment:
-      - DJANGO_SETTINGS_MODULE=projectsettings.settings.production_settings
-      - JAVA_HOME=/usr/bin/jdk1.8.0_162/jre
+      - DJANGO_SETTINGS_MODULE=projectsettings.settings.development_sqlite_settings
+      - JAVA_HOME=/usr/bin/jdk1.8.0_181/jre
     ports:
       - "8000:8000"
     depends_on:

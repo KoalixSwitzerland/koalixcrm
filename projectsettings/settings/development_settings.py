@@ -9,12 +9,13 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'postgres',
         'USER': 'postgres',
+        'PASSWORD':'postgres',
         'HOST': 'db',
         'PORT': 5432,
     }
 }
 
-FOP_EXECUTABLE = "/usr/bin/fop"
+FOP_EXECUTABLE = "/usr/bin/fop-2.2/fop/fop"
 GRAPPELLI_INDEX_DASHBOARD = 'projectsettings.dashboard.CustomIndexDashboard'
 
 KOALIXCRM_REST_API_AUTH = False
