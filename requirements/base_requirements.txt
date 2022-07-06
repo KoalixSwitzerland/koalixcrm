@@ -1,6 +1,6 @@
 Django==1.11.21
 django-filebrowser==3.9.1
-lxml==3.8.0
+lxml==4.9.1
 olefile==0.44
 Pillow==6.2.0
 psycopg2-binary==2.7.5
