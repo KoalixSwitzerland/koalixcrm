@@ -6,7 +6,7 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-    atomic = False
+    atomic = True
 
     dependencies = [
         ('crm', '0017_auto_20180111_2022'),
