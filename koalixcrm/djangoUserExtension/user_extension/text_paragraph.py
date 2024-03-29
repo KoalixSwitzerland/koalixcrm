@@ -8,6 +8,7 @@ from koalixcrm.crm.const.purpose import *
 
 
 class TextParagraphInDocumentTemplate(models.Model):
+    id = models.BigAutoField(primary_key=True)
     document_template = models.ForeignKey("djangoUserExtension.DocumentTemplate", on_delete=models.CASCADE)
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=2, choices=PURPOSESTEXTPARAGRAPHINDOCUMENTS)
     text_paragraph = models.TextField(verbose_name=_("Text"), blank=False, null=False)

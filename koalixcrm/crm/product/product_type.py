@@ -12,6 +12,7 @@ from koalixcrm.crm.product.currency_transform import CurrencyTransformInlineAdmi
 
 
 class ProductType(models.Model):
+    id = models.BigAutoField(primary_key=True)
     description = models.TextField(verbose_name=_("Description"),
                                    null=True,
                                    blank=True)

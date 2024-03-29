@@ -6,6 +6,7 @@ from django.utils.translation import ugettext as _
 
 
 class UnitTransform(models.Model):
+    id = models.BigAutoField(primary_key=True)
     from_unit = models.ForeignKey('Unit',
                                   on_delete=models.CASCADE,
                                   verbose_name=_("From Unit"),

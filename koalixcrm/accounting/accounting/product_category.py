@@ -6,6 +6,7 @@ from koalixcrm.accounting.models import Account
 
 
 class ProductCategory(models.Model):
+    id = models.BigAutoField(primary_key=True)
     title = models.CharField(verbose_name=_("Product Category Title"),
                              max_length=50)
     profit_account = models.ForeignKey(Account,

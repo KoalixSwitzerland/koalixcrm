@@ -12,6 +12,7 @@ from django.contrib import messages
 
 
 class Work(models.Model):
+    id = models.BigAutoField(primary_key=True)
     human_resource = models.ForeignKey("HumanResource", on_delete=models.CASCADE)
     date = models.DateField(verbose_name=_("Date"),
                             blank=False,

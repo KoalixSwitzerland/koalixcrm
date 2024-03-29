@@ -7,6 +7,7 @@ from django.utils.translation import ugettext as _
 
 
 class Position(models.Model):
+    id = models.BigAutoField(primary_key=True)
     position_number = models.PositiveIntegerField(verbose_name=_("Position Number"),
                                                   validators=[MinValueValidator(1)])
     quantity = models.DecimalField(verbose_name=_("Quantity"),

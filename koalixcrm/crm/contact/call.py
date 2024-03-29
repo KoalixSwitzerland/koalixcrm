@@ -9,6 +9,7 @@ from koalixcrm.crm.const.status import *
 
 
 class Call(models.Model):
+    id = models.BigAutoField(primary_key=True)
     staff = models.ForeignKey('auth.User',
                               on_delete=models.CASCADE,
                               limit_choices_to={'is_staff': True},

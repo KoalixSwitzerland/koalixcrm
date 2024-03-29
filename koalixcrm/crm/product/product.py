@@ -4,6 +4,7 @@ from django.utils.translation import ugettext as _
 
 
 class Product(models.Model):
+    id = models.BigAutoField(primary_key=True)
     identifier = models.CharField(verbose_name=_("Product Number"),
                                   max_length=200,
                                   null=True,

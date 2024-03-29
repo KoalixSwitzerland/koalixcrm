@@ -10,6 +10,7 @@ from koalixcrm.crm.documents.pdf_export import PDFExport
 
 
 class Account(models.Model):
+    id = models.BigAutoField(primary_key=True)
     account_number = models.IntegerField(verbose_name=_("Account Number"))
     title = models.CharField(verbose_name=_("Account Title"),
                              max_length=50)

@@ -11,11 +11,11 @@ ALLOWED_HOSTS = ['*']
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, 'db_20240308.sqlite3'),
     }
 }
 
-FOP_EXECUTABLE = "/usr/bin/fop-2.2/fop/fop"
+FOP_EXECUTABLE = "/usr/bin/fop"
 GRAPPELLI_INDEX_DASHBOARD = 'projectsettings.dashboard.CustomIndexDashboard'
 
 KOALIXCRM_REST_API_AUTH = True

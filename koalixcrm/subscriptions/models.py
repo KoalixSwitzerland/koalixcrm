@@ -9,6 +9,7 @@ import koalixcrm.crm.documents
 
 
 class Subscription(models.Model):
+    id = models.BigAutoField(primary_key=True)
     contract = models.ForeignKey('crm.Contract', on_delete=models.CASCADE, verbose_name=_('Subscription Type'))
     subscription_type = models.ForeignKey('SubscriptionType', on_delete=models.CASCADE, verbose_name=_('Subscription Type'), null=True)
 
@@ -51,6 +52,7 @@ class Subscription(models.Model):
 
 
 class SubscriptionEvent(models.Model):
+    id = models.BigAutoField(primary_key=True)
     subscriptions = models.ForeignKey('Subscription',
                                       on_delete=models.CASCADE,
                                       verbose_name=_('Subscription'))
@@ -69,6 +71,7 @@ class SubscriptionEvent(models.Model):
 
 
 class SubscriptionType(models.Model):
+    id = models.BigAutoField(primary_key=True)
     product_type = models.ForeignKey('crm.ProductType',
                                      verbose_name=_('Product Type'),
                                      on_delete=models.deletion.SET_NULL,

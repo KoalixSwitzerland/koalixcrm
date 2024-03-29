@@ -13,6 +13,7 @@ from koalixcrm.global_support_functions import xstr
 
 
 class UserExtension(models.Model):
+    id = models.BigAutoField(primary_key=True)
     user = models.ForeignKey("auth.User",
                              on_delete=models.CASCADE,
                              blank=False,

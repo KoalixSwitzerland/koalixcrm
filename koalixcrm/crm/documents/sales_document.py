@@ -18,6 +18,7 @@ from koalixcrm.crm.documents.pdf_export import PDFExport
 
 
 class TextParagraphInSalesDocument(models.Model):
+    id = models.BigAutoField(primary_key=True)
     sales_document = models.ForeignKey("SalesDocument", on_delete=models.CASCADE)
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=2, choices=PURPOSESTEXTPARAGRAPHINDOCUMENTS)
     text_paragraph = models.TextField(verbose_name=_("Text"), blank=False, null=False)
@@ -39,6 +40,7 @@ class TextParagraphInSalesDocument(models.Model):
 
 
 class SalesDocument(models.Model):
+    id = models.BigAutoField(primary_key=True)
     contract = models.ForeignKey("Contract",
                                  on_delete=models.CASCADE,
                                  verbose_name=_('Contract'))

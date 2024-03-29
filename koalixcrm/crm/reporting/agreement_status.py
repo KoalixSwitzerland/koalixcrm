@@ -7,6 +7,7 @@ from rest_framework import serializers
 
 
 class AgreementStatus(models.Model):
+    id = models.BigAutoField(primary_key=True)
     title = models.CharField(verbose_name=_("Title"),
                              max_length=250,
                              blank=False,

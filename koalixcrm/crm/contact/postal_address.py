@@ -7,6 +7,7 @@ from koalixcrm.crm.const.postaladdressprefix import *
 
 
 class PostalAddress(models.Model):
+    id = models.BigAutoField(primary_key=True)
     prefix = models.CharField(max_length=1,
                               choices=POSTALADDRESSPREFIX,
                               verbose_name=_("Prefix"), blank=True,

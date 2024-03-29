@@ -21,6 +21,7 @@ from koalixcrm import global_support_functions
 
 class Task(models.Model):
     """ The Task model"""
+    id = models.BigAutoField(primary_key=True)
     title = models.CharField(verbose_name=_("Title"),
                              max_length=100,
                              blank=True,
@@ -622,7 +623,7 @@ class TaskInlineAdminView(admin.TabularInline):
     )
     extra = 1
 
-    def has_add_permission(self, request):
+    def has_add_permission(self, request, obj=None):
         return True
 
     def has_delete_permission(self, request, obj=None):

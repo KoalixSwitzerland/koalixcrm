@@ -9,6 +9,7 @@ from django.contrib.contenttypes.admin import GenericTabularInline
 
 
 class GenericProjectLink(models.Model):
+    id = models.BigAutoField(primary_key=True)
     project = models.ForeignKey("Project",
                                 on_delete=models.CASCADE,
                                 verbose_name=_('Project'),
@@ -49,7 +50,7 @@ class GenericLinkInlineAdminView(admin.TabularInline):
                        'last_modified_by')
     extra = 0
 
-    def has_add_permission(self, request):
+    def has_add_permission(self, request, obj=None):
         return False
 
     def has_delete_permission(self, request, obj=None):
@@ -65,7 +66,7 @@ class InlineGenericProjectLink(GenericTabularInline):
                        'last_modified_by')
     extra = 0
 
-    def has_add_permission(self, request):
+    def has_add_permission(self, request, obj=None):
         return False
 
     def has_delete_permission(self, request, obj=None):

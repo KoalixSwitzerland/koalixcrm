@@ -5,6 +5,7 @@ from django.utils.translation import ugettext as _
 
 
 class Booking(models.Model):
+    id = models.BigAutoField(primary_key=True)
     from_account = models.ForeignKey('Account', on_delete=models.CASCADE, verbose_name=_("From Account"), related_name="db_booking_fromaccount")
     to_account = models.ForeignKey('Account', on_delete=models.CASCADE, verbose_name=_("To Account"), related_name="db_booking_toaccount")
     amount = models.DecimalField(max_digits=20, decimal_places=2, verbose_name=_("Amount"))

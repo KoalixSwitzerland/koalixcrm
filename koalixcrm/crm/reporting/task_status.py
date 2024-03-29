@@ -7,6 +7,7 @@ from rest_framework import serializers
 
 
 class TaskStatus(models.Model):
+    id = models.BigAutoField(primary_key=True)
     title = models.CharField(verbose_name=_("Title"), max_length=250, blank=False, null=False)
     description = models.TextField(verbose_name=_("Text"), blank=True, null=True)
     is_done = models.BooleanField(verbose_name=_("Status represents task done"),)

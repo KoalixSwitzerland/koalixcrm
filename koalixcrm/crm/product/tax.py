@@ -6,6 +6,7 @@ from django.utils.translation import ugettext as _
 
 
 class Tax(models.Model):
+    id = models.BigAutoField(primary_key=True)
     tax_rate = models.DecimalField(max_digits=5,
                                    decimal_places=2,
                                    verbose_name=_("Taxrate in Percentage"))

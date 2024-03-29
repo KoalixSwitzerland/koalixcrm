@@ -6,6 +6,7 @@ from django.utils.translation import ugettext as _
 
 
 class CustomerGroupTransform(models.Model):
+    id = models.BigAutoField(primary_key=True)
     from_customer_group = models.ForeignKey('CustomerGroup',
                                             on_delete=models.CASCADE,
                                             verbose_name=_("From Customer Group"),

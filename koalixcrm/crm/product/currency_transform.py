@@ -6,6 +6,7 @@ from django.utils.translation import ugettext as _
 
 
 class CurrencyTransform(models.Model):
+    id = models.BigAutoField(primary_key=True)
     from_currency = models.ForeignKey('Currency',
                                       on_delete=models.CASCADE,
                                       blank=False,

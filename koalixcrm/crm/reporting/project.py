@@ -20,6 +20,7 @@ import pandas
 
 
 class Project(models.Model):
+    id = models.BigAutoField(primary_key=True)
     project_manager = models.ForeignKey('auth.User', on_delete=models.CASCADE, limit_choices_to={'is_staff': True},
                                         verbose_name=_("Staff"),
                                         related_name="db_rel_project_staff",
