@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib import admin
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from koalixcrm.crm.contact.phone_address import PhoneAddress
 from koalixcrm.crm.contact.email_address import EmailAddress
 from koalixcrm.crm.contact.postal_address import PostalAddress

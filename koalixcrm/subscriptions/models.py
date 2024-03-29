@@ -2,7 +2,7 @@
 
 from datetime import *
 from django.db import models
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from filebrowser.fields import FileBrowseField
 from koalixcrm.subscriptions.const.events import *
 import koalixcrm.crm.documents

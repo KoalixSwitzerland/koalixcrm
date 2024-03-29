@@ -3,7 +3,7 @@
 from datetime import *
 from django.db import models
 from django.contrib import admin, messages
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from koalixcrm.crm.const.purpose import *
 from koalixcrm.global_support_functions import xstr, make_date_utc
 from koalixcrm.crm.contact.phone_address import PhoneAddress

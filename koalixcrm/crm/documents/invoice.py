@@ -5,7 +5,7 @@ from django import forms
 from django.db import models
 from django.contrib import admin
 from django.http import HttpResponseRedirect
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django.utils.html import format_html
 from django.contrib.admin import helpers
 from django.shortcuts import render

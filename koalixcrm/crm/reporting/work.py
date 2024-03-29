@@ -4,7 +4,7 @@ from django.db import models
 from django.forms import ValidationError
 from django.contrib import admin
 from django.utils.html import format_html
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from koalixcrm.crm.documents.pdf_export import PDFExport
 from koalixcrm.global_support_functions import *
 from koalixcrm.crm.exceptions import ReportingPeriodDoneDeleteNotPossible

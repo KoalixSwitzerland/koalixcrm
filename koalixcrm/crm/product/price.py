@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from koalixcrm.crm.product.currency import Currency
 from koalixcrm.crm.product.unit import Unit
 from koalixcrm.crm.contact.customer_group import CustomerGroup

@@ -3,7 +3,7 @@
 from datetime import *
 from django.db import models
 from django.contrib import admin
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django import forms
 from koalixcrm.accounting.models import Account
 from koalixcrm.crm.documents.pdf_export import PDFExport

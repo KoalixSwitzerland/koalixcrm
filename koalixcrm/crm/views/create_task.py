@@ -3,7 +3,7 @@ from django.http import Http404
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django.contrib.contenttypes.models import ContentType
 from koalixcrm.crm.exceptions import *
 from koalixcrm.djangoUserExtension.exceptions import *

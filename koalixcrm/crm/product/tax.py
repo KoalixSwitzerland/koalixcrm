@@ -2,7 +2,7 @@
 
 from django.db import models
 from django.contrib import admin
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 
 class Tax(models.Model):
