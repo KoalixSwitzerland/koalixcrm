@@ -18,6 +18,16 @@ class Migration(migrations.Migration):
             options={'verbose_name': 'Text Paragraph In Sales Document', 'verbose_name_plural': 'Text Paragraphs In Sales Documents'},
         ),
         migrations.RenameField(
+            model_name='quote',
+            old_name='salescontract_ptr',
+            new_name='salesdocument_ptr',
+        ),
+        migrations.RenameField(
+            model_name='invoice',
+            old_name='salescontract_ptr',
+            new_name='salesdocument_ptr',
+        ),
+        migrations.RenameField(
             model_name='deliverynote',
             old_name='salescontract_ptr',
             new_name='salesdocument_ptr',
@@ -26,11 +36,6 @@ class Migration(migrations.Migration):
             model_name='emailaddressforsalesdocument',
             old_name='contract',
             new_name='sales_document',
-        ),
-        migrations.RenameField(
-            model_name='invoice',
-            old_name='salescontract_ptr',
-            new_name='salesdocument_ptr',
         ),
         migrations.RenameField(
             model_name='paymentreminder',
@@ -48,16 +53,6 @@ class Migration(migrations.Migration):
             new_name='sales_document',
         ),
         migrations.RenameField(
-            model_name='purchaseconfirmation',
-            old_name='salescontract_ptr',
-            new_name='salesdocument_ptr',
-        ),
-        migrations.RenameField(
-            model_name='quote',
-            old_name='salescontract_ptr',
-            new_name='salesdocument_ptr',
-        ),
-        migrations.RenameField(
             model_name='salesdocumentposition',
             old_name='contract',
             new_name='sales_document',
@@ -66,5 +61,10 @@ class Migration(migrations.Migration):
             model_name='textparagraphinsalesdocument',
             old_name='sales_contract',
             new_name='sales_document',
+        ),
+        migrations.RenameField(
+            model_name='purchaseconfirmation',
+            old_name='salescontract_ptr',
+            new_name='salesdocument_ptr',
         ),
     ]

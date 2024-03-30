@@ -15,8 +15,8 @@ class TestSupplierAdminView(LiveServerTestCase):
 
     def setUp(self):
         firefox_options = webdriver.firefox.options.Options()
-        firefox_options.set_headless(headless=True)
-        self.selenium = webdriver.Firefox(firefox_options=firefox_options)
+        firefox_options.add_argument("--headless")
+        self.selenium = webdriver.Firefox(options=firefox_options)
         self.test_user = AdminUserFactory.create()
 
     def tearDown(self):
@@ -28,15 +28,15 @@ class TestSupplierAdminView(LiveServerTestCase):
         # login
         selenium.get('%s%s' % (self.live_server_url, '/admin/crm/supplier/'))
         # the browser will be redirected to the login page
-        timeout = 5
+        timeout = 10
         try:
             element_present = expected_conditions.presence_of_element_located((By.ID, 'id_username'))
             WebDriverWait(selenium, timeout).until(element_present)
         except TimeoutException:
             print("Timed out waiting for page to load")
-        username = selenium.find_element_by_xpath('//*[@id="id_username"]')
-        password = selenium.find_element_by_xpath('//*[@id="id_password"]')
-        submit_button = selenium.find_element_by_xpath('/html/body/div/article/div/div/form/div/ul/li/input')
+        username = selenium.find_element('xpath', '//*[@id="id_username"]')
+        password = selenium.find_element('xpath', '//*[@id="id_password"]')
+        submit_button = selenium.find_element('xpath', '/html/body/div/article/div/div/form/div/ul/li/input')
         username.send_keys("admin")
         password.send_keys("admin")
         submit_button.send_keys(Keys.RETURN)
@@ -54,9 +54,9 @@ class TestSupplierAdminView(LiveServerTestCase):
             WebDriverWait(selenium, timeout).until(element_present)
         except TimeoutException:
             print("Timed out waiting for page to load")
-        name = selenium.find_element_by_xpath('//*[@id="id_name"]')
+        name = selenium.find_element('xpath', '//*[@id="id_name"]')
         name.send_keys("This is the name of a supplier")
-        submit_button = selenium.find_element_by_xpath('/html/body/div/article/div/form/div/footer/ul/li[1]/input')
+        submit_button = selenium.find_element('xpath', '/html/body/div/article/div/form/div/footer/ul/li[1]/input')
         submit_button.send_keys(Keys.RETURN)
         try:
             element_present = expected_conditions.presence_of_element_located((By.ID,

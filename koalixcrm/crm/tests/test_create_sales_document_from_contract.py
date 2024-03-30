@@ -20,8 +20,8 @@ class CreateSalesDocumentFromContract(StaticLiveServerTestCase):
     def setUpClass(cls):
         super(CreateSalesDocumentFromContract, cls).setUpClass()
         firefox_options = webdriver.firefox.options.Options()
-        firefox_options.set_headless(headless=True)
-        cls.selenium = webdriver.Firefox(firefox_options=firefox_options)
+        firefox_options.add_argument("--headless")
+        cls.selenium = webdriver.Firefox(options=firefox_options)
         cls.selenium.implicitly_wait(10)
         cls.test_user = AdminUserFactory.create()
         cls.test_customer_group = StandardCustomerGroupFactory.create()
@@ -55,9 +55,9 @@ class CreateSalesDocumentFromContract(StaticLiveServerTestCase):
             WebDriverWait(selenium, timeout).until(element_present)
         except TimeoutException:
             print("Timed out waiting for page to load")
-        username = selenium.find_element_by_xpath('//*[@id="id_username"]')
-        password = selenium.find_element_by_xpath('//*[@id="id_password"]')
-        submit_button = selenium.find_element_by_xpath('/html/body/div/article/div/div/form/div/ul/li/input')
+        username = selenium.find_element('xpath', '//*[@id="id_username"]')
+        password = selenium.find_element('xpath', '//*[@id="id_password"]')
+        submit_button = selenium.find_element('xpath', '/html/body/div/article/div/div/form/div/ul/li/input')
         username.send_keys("admin")
         password.send_keys("admin")
         submit_button.send_keys(Keys.RETURN)

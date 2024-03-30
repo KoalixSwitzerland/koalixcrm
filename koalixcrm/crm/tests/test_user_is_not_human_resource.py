@@ -14,8 +14,8 @@ class TimeTrackingAddRow(LiveServerTestCase):
 
     def setUp(self):
         firefox_options = webdriver.firefox.options.Options()
-        firefox_options.set_headless(headless=True)
-        self.selenium = webdriver.Firefox(firefox_options=firefox_options)
+        firefox_options.add_argument("--headless")
+        self.selenium = webdriver.Firefox(options=firefox_options)
         self.test_user = AdminUserFactory.create()
         self.test_customer_group = StandardCustomerGroupFactory.create()
         self.test_customer = StandardCustomerFactory.create(is_member_of=(self.test_customer_group,))
@@ -37,9 +37,9 @@ class TimeTrackingAddRow(LiveServerTestCase):
             WebDriverWait(selenium, timeout).until(element_present)
         except TimeoutException:
             print("Timed out waiting for page to load")
-        username = selenium.find_element_by_xpath('//*[@id="id_username"]')
-        password = selenium.find_element_by_xpath('//*[@id="id_password"]')
-        submit_button = selenium.find_element_by_xpath('/html/body/div/article/div/div/form/div/ul/li/input')
+        username = selenium.find_element('xpath', '//*[@id="id_username"]')
+        password = selenium.find_element('xpath', '//*[@id="id_password"]')
+        submit_button = selenium.find_element('xpath', '/html/body/div/article/div/div/form/div/ul/li/input')
         username.send_keys("admin")
         password.send_keys("admin")
         submit_button.send_keys(Keys.RETURN)
@@ -57,8 +57,8 @@ class TimeTrackingAddRow(LiveServerTestCase):
 
         assert_when_element_does_not_exist(self, '//*[@id="id_next_steps"]')
         assert_when_element_does_not_exist(self, 'confirm_selection')
-        submit_button = selenium.find_element_by_xpath('/html/body/div/article/div/form/table/tbody/tr[3]/td/input[2]')
-        selection = Select(selenium.find_element_by_xpath('//*[@id="id_next_steps"]'))
+        submit_button = selenium.find_element('xpath', '/html/body/div/article/div/form/table/tbody/tr[3]/td/input[2]')
+        selection = Select(selenium.find_element('xpath', '//*[@id="id_next_steps"]'))
         selection.select_by_value("return_to_start")
         submit_button.send_keys(Keys.RETURN)
         try:
@@ -81,8 +81,8 @@ class TimeTrackingAddRow(LiveServerTestCase):
             print("Timed out waiting for page to load")
         assert_when_element_does_not_exist(self, '//*[@id="id_next_steps"]')
         assert_when_element_does_not_exist(self, 'confirm_selection')
-        submit_button = selenium.find_element_by_xpath('/html/body/div/article/div/form/table/tbody/tr[3]/td/input[2]')
-        selection = Select(selenium.find_element_by_xpath('//*[@id="id_next_steps"]'))
+        submit_button = selenium.find_element('xpath', '/html/body/div/article/div/form/table/tbody/tr[3]/td/input[2]')
+        selection = Select(selenium.find_element('xpath', '//*[@id="id_next_steps"]'))
         selection.select_by_value("create_human_resource")
         submit_button.send_keys(Keys.RETURN)
         try:
