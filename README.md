@@ -27,7 +27,8 @@
 | [![Django CI](https://github.com/KoalixSwitzerland/koalixcrm/actions/workflows/django.yml/badge.svg)](https://github.com/KoalixSwitzerland/koalixcrm/actions/workflows/django.yml) | [![Codacy Badge](https://app.codacy.com/project/badge/Grade/cfae578b5c174f438786c935fa425002)](https://app.codacy.com/gh/KoalixSwitzerland/koalixcrm/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade) </br> [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/cfae578b5c174f438786c935fa425002)](https://app.codacy.com/gh/KoalixSwitzerland/koalixcrm/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage)| [![Docker Automated build](https://img.shields.io/docker/automated/koalixswitzerland/koalixcrm.svg)]() <br/> [![Docker Stars](https://img.shields.io/docker/stars/koalixswitzerland/koalixcrm.svg)]() [![Docker Pulls](https://img.shields.io/docker/pulls/koalixswitzerland/koalixcrm.svg)]() | [![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/koalix-crm/Lobby) |
 
 ## Demos
-[demo](http://koalixcrmdemoenglish.koalix.org/admin/).
+The demo-branch is automatically deployed and can be found here:
+[Demo-Deployment](https://demo.koalixcrm.koalix.net/admin/).
 
 To be able to log in use the following credentials 
 <ul>
