@@ -1,8 +1,7 @@
 import pytest
-from django.test import LiveServerTestCase
-from selenium import webdriver
 from selenium.webdriver.support.ui import Select
-from koalixcrm.test_support_functions import *
+from koalixcrm.test.test_support_functions import *
+from koalixcrm.test.UITests import UITests
 from koalixcrm.crm.factories.factory_user import AdminUserFactory
 from koalixcrm.crm.factories.factory_customer import StandardCustomerFactory
 from koalixcrm.crm.factories.factory_customer_group import StandardCustomerGroupFactory
@@ -10,12 +9,10 @@ from koalixcrm.crm.factories.factory_currency import StandardCurrencyFactory
 from koalixcrm.djangoUserExtension.factories.factory_user_extension import StandardUserExtensionFactory
 
 
-class TimeTrackingAddRow(LiveServerTestCase):
+class TimeTrackingAddRow(UITests):
 
     def setUp(self):
-        firefox_options = webdriver.firefox.options.Options()
-        firefox_options.add_argument("--headless")
-        self.selenium = webdriver.Firefox(options=firefox_options)
+        super().setUp()
         self.test_user = AdminUserFactory.create()
         self.test_customer_group = StandardCustomerGroupFactory.create()
         self.test_customer = StandardCustomerFactory.create(is_member_of=(self.test_customer_group,))
@@ -23,7 +20,7 @@ class TimeTrackingAddRow(LiveServerTestCase):
         self.test_user_extension = StandardUserExtensionFactory.create(user=self.test_user)
 
     def tearDown(self):
-        self.selenium.quit()
+        super().tearDown()
 
     @pytest.mark.front_end_tests
     def test_add_new_row(self):
@@ -55,8 +52,8 @@ class TimeTrackingAddRow(LiveServerTestCase):
         # In this test_step it is checked whether the form contains the required fields. the test will then select
         # to return to the start page instead of defining a new human resource
 
-        assert_when_element_does_not_exist(self, '//*[@id="id_next_steps"]')
-        assert_when_element_does_not_exist(self, 'confirm_selection')
+        fail_when_element_does_not_exist(self, '//*[@id="id_next_steps"]')
+        fail_when_element_does_not_exist(self, 'confirm_selection')
         submit_button = selenium.find_element('xpath', '/html/body/div/article/div/form/table/tbody/tr[3]/td/input[2]')
         selection = Select(selenium.find_element('xpath', '//*[@id="id_next_steps"]'))
         selection.select_by_value("return_to_start")
@@ -79,8 +76,8 @@ class TimeTrackingAddRow(LiveServerTestCase):
             WebDriverWait(selenium, timeout).until(element_present)
         except TimeoutException:
             print("Timed out waiting for page to load")
-        assert_when_element_does_not_exist(self, '//*[@id="id_next_steps"]')
-        assert_when_element_does_not_exist(self, 'confirm_selection')
+        fail_when_element_does_not_exist(self, '//*[@id="id_next_steps"]')
+        fail_when_element_does_not_exist(self, 'confirm_selection')
         submit_button = selenium.find_element('xpath', '/html/body/div/article/div/form/table/tbody/tr[3]/td/input[2]')
         selection = Select(selenium.find_element('xpath', '//*[@id="id_next_steps"]'))
         selection.select_by_value("create_human_resource")
