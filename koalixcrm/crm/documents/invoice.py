@@ -5,7 +5,7 @@ from django import forms
 from django.db import models
 from django.contrib import admin
 from django.http import HttpResponseRedirect
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django.utils.html import format_html
 from django.contrib.admin import helpers
 from django.shortcuts import render
@@ -120,13 +120,13 @@ class OptionInvoice(OptionSalesDocument):
             for obj in queryset:
                 obj.register_invoice_in_accounting(request)
             self.message_user(request, _("Successfully registered Invoice in the Accounting"))
-            return;
+            return
         except OpenInterestAccountMissing as e:
             self.message_user(request, "Did not register Invoice in Accounting: " + e.__str__(), level=messages.ERROR)
-            return;
+            return
         except IncompleteInvoice as e:
             self.message_user(request, "Did not register Invoice in Accounting: " + e.__str__(), level=messages.ERROR)
-            return;
+            return
 
     register_invoice_in_accounting.short_description = _("Register Invoice in Accounting")
 

@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.contrib import admin
 
 
 class GenericTaskLink(models.Model):
+    id = models.BigAutoField(primary_key=True)
     task = models.ForeignKey("Task",
                              on_delete=models.CASCADE,
                              verbose_name=_('Task'),
@@ -48,7 +49,7 @@ class InlineGenericTaskLink(admin.TabularInline):
                        'last_modified_by')
     extra = 0
 
-    def has_add_permission(self, request):
+    def has_add_permission(self, request, obj=None):
         return False
 
     def has_delete_permission(self, request, obj=None):

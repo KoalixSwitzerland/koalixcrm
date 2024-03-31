@@ -2,7 +2,7 @@
 
 from django.contrib import admin
 from django.db import models
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 from koalixcrm.crm.product.product_price import ProductPrice
 from koalixcrm.crm.product.product_price import ProductPriceInlineAdminView
@@ -12,6 +12,7 @@ from koalixcrm.crm.product.currency_transform import CurrencyTransformInlineAdmi
 
 
 class ProductType(models.Model):
+    id = models.BigAutoField(primary_key=True)
     description = models.TextField(verbose_name=_("Description"),
                                    null=True,
                                    blank=True)

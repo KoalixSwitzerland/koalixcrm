@@ -4,7 +4,7 @@ import datetime
 from django.http import HttpResponseRedirect, Http404
 from django.contrib import messages
 from django.shortcuts import render
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django.template.context_processors import csrf
 from django.contrib.auth.decorators import login_required
 from koalixcrm.djangoUserExtension.models import UserExtension

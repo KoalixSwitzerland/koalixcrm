@@ -2,10 +2,11 @@
 
 from django.db import models
 from django.contrib import admin
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 
 class CustomerGroup(models.Model):
+    id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=300)
 
     def __str__(self):

@@ -1,14 +1,10 @@
-version: '2.0'
+version: '3.8'
 
 services:
-  db:
-    image: postgres
-  koalixcrm:
-    build: .
-    environment:
-      - DJANGO_SETTINGS_MODULE=projectsettings.settings.docker_development_settings
-      - JAVA_HOME=/usr/bin/jdk1.8.0_181/jre
+  web:
+    image: ghcr.io/koalixswitzerland/koalixcrm-dev-container:main
     ports:
       - "8000:8000"
-    depends_on:
-      - db
+    volumes:
+      - .:/usr/src/app
+      - ./data:/usr/src/app/data

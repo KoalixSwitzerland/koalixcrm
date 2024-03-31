@@ -2,10 +2,11 @@
 
 from django.db import models
 from django.contrib import admin
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 
 class Tax(models.Model):
+    id = models.BigAutoField(primary_key=True)
     tax_rate = models.DecimalField(max_digits=5,
                                    decimal_places=2,
                                    verbose_name=_("Taxrate in Percentage"))

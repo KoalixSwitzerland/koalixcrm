@@ -3,7 +3,7 @@
 from datetime import *
 from django.db import models
 from django.contrib import admin
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from koalixcrm.crm.documents.pdf_export import PDFExport
 from koalixcrm.crm.exceptions import ReportingPeriodNotFound
 from koalixcrm.crm.reporting.work import WorkInlineAdminView
@@ -15,6 +15,7 @@ from django.forms import ModelForm
 class ReportingPeriod(models.Model):
     """The reporting period is referred in the work, in the expenses and purchase orders, it is used as a
        supporting object to generate project reports"""
+    id = models.BigAutoField(primary_key=True)
     project = models.ForeignKey("Project",
                                 on_delete=models.CASCADE,
                                 verbose_name=_("Project"),
@@ -267,7 +268,7 @@ class ReportingPeriodInlineAdminView(admin.TabularInline):
         }),
     )
 
-    def has_add_permission(self, request):
+    def has_add_permission(self, request, obj=None):
         return False
 
     def has_delete_permission(self, request, obj=None):

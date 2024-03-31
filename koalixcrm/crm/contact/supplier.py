@@ -2,7 +2,7 @@
 
 from django.db import models
 from django.contrib import admin
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from koalixcrm.crm.contact.contact import Contact
 from koalixcrm.crm.contact.contact import ContactPostalAddress
 from koalixcrm.crm.contact.contact import ContactPhoneAddress

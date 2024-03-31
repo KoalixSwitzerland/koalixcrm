@@ -3,7 +3,7 @@
 from datetime import *
 from django.db import models
 from django.contrib import admin
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django import forms
 from koalixcrm.accounting.models import Account
 from koalixcrm.crm.documents.pdf_export import PDFExport
@@ -16,6 +16,7 @@ class AccountingPeriod(models.Model):
     """Accounting period represents the equivalent of the business logic element of a fiscal year
     the accounting period is referred in the booking and is used as a supporting object to generate
     balance sheets and profit/loss statements"""
+    id = models.BigAutoField(primary_key=True)
     title = models.CharField(max_length=200, verbose_name=_("Title"))  # For example "Year 2009", "1st Quarter 2009"
     begin = models.DateField(verbose_name=_("Begin"))
     end = models.DateField(verbose_name=_("End"))

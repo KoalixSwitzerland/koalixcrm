@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib import admin
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from koalixcrm.crm.contact.phone_address import PhoneAddress
 from koalixcrm.crm.contact.email_address import EmailAddress
 from koalixcrm.crm.contact.postal_address import PostalAddress
@@ -13,6 +13,7 @@ from koalixcrm.crm.inlinemixin import LimitedAdminInlineMixin
 
 
 class Contact(models.Model):
+    id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=300,
                             verbose_name=_("Name"))
     date_of_creation = models.DateTimeField(verbose_name=_("Created at"),
@@ -128,6 +129,7 @@ class ContactEmailAddress(admin.TabularInline):
 
 
 class ContactPersonAssociation(models.Model):
+    id = models.BigAutoField(primary_key=True)
     contact = models.ForeignKey(Contact, on_delete=models.CASCADE, related_name='person_association', blank=True, null=True)
     person = models.ForeignKey(Person, on_delete=models.CASCADE, related_name='contact_association', blank=True, null=True)
 

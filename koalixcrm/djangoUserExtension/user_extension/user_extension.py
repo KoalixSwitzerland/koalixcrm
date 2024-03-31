@@ -2,7 +2,7 @@
 
 from django.db import models
 from django.contrib import admin
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 from koalixcrm.crm.contact.postal_address import PostalAddress
 from koalixcrm.crm.contact.phone_address import PhoneAddress
@@ -13,6 +13,7 @@ from koalixcrm.global_support_functions import xstr
 
 
 class UserExtension(models.Model):
+    id = models.BigAutoField(primary_key=True)
     user = models.ForeignKey("auth.User",
                              on_delete=models.CASCADE,
                              blank=False,

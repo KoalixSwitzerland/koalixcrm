@@ -2,10 +2,11 @@
 
 from django.db import models
 from django.contrib import admin
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 
 class CustomerGroupTransform(models.Model):
+    id = models.BigAutoField(primary_key=True)
     from_customer_group = models.ForeignKey('CustomerGroup',
                                             on_delete=models.CASCADE,
                                             verbose_name=_("From Customer Group"),

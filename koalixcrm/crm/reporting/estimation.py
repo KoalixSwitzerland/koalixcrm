@@ -2,7 +2,7 @@
 
 from django.db import models
 from django.contrib import admin
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from koalixcrm.crm.reporting.resource_price import ResourcePrice
 from decimal import *
 from django.core.exceptions import ValidationError
@@ -14,7 +14,7 @@ class Estimation(models.Model):
     """The estimation describes the estimated amount of resources which is still required to finish a task
     the estimation is done within a reporting period that is not yet closed. The estimation is done only considering
     all effective efforts that was reported in the previous and closed reporting periods"""
-
+    id = models.BigAutoField(primary_key=True)
     task = models.ForeignKey("Task",
                              on_delete=models.CASCADE,
                              verbose_name=_('Task'),

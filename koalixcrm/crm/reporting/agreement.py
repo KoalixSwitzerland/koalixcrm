@@ -2,12 +2,13 @@
 
 from django.db import models
 from django.contrib import admin
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from koalixcrm.crm.reporting.resource_price import ResourcePrice
 
 
 class Agreement(models.Model):
     """The Agreement describes the contract between the steer-co or the customer with the project manager"""
+    id = models.BigAutoField(primary_key=True)
     task = models.ForeignKey("Task",
                              on_delete=models.CASCADE,
                              verbose_name=_('Task'),

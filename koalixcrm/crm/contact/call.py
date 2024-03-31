@@ -3,12 +3,13 @@
 from datetime import *
 from django.db import models
 from django.contrib import admin
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django.utils import timezone
 from koalixcrm.crm.const.status import *
 
 
 class Call(models.Model):
+    id = models.BigAutoField(primary_key=True)
     staff = models.ForeignKey('auth.User',
                               on_delete=models.CASCADE,
                               limit_choices_to={'is_staff': True},

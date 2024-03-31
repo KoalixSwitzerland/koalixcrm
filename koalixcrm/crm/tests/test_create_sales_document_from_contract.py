@@ -1,47 +1,32 @@
 # -*- coding: utf-8 -*-
 import pytest
 import os
-from django.contrib.staticfiles.testing import StaticLiveServerTestCase
-from selenium import webdriver
-from koalixcrm.test_support_functions import *
+from koalixcrm.test.test_support_functions import *
 from koalixcrm.crm.factories.factory_contract import StandardContractFactory
 from koalixcrm.crm.factories.factory_user import AdminUserFactory
 from koalixcrm.crm.factories.factory_customer_group import StandardCustomerGroupFactory
 from koalixcrm.djangoUserExtension.factories.factory_document_template import StandardQuoteTemplateFactory
 from koalixcrm.djangoUserExtension.factories.factory_document_template import StandardInvoiceTemplateFactory
 from koalixcrm.djangoUserExtension.factories.factory_document_template import StandardPurchaseOrderTemplateFactory
+from koalixcrm.test.UITests import UITests
 from koalixcrm.crm.documents.quote import Quote
 from koalixcrm.crm.documents.invoice import Invoice
 from koalixcrm.crm.documents.purchase_order import PurchaseOrder
 
 
-class CreateSalesDocumentFromContract(StaticLiveServerTestCase):
-    @classmethod
-    def setUpClass(cls):
-        super(CreateSalesDocumentFromContract, cls).setUpClass()
-        firefox_options = webdriver.firefox.options.Options()
-        firefox_options.set_headless(headless=True)
-        cls.selenium = webdriver.Firefox(firefox_options=firefox_options)
-        cls.selenium.implicitly_wait(10)
-        cls.test_user = AdminUserFactory.create()
-        cls.test_customer_group = StandardCustomerGroupFactory.create()
-        cls.test_contract = StandardContractFactory.create()
-        cls.test_quote_template = StandardQuoteTemplateFactory.create()
-        cls.test_invoice_template = StandardInvoiceTemplateFactory.create()
-        cls.test_purchase_order_template = StandardPurchaseOrderTemplateFactory.create()
+class CreateSalesDocumentFromContract(UITests):
 
-    @classmethod
-    def tearDownClass(cls):
-        cls.selenium.quit()
-        super(CreateSalesDocumentFromContract, cls).tearDownClass()
+    def setUp(self):
+        super().setUp()
+        self.test_user = AdminUserFactory.create()
+        self.test_customer_group = StandardCustomerGroupFactory.create()
+        self.test_contract = StandardContractFactory.create()
+        self.test_quote_template = StandardQuoteTemplateFactory.create()
+        self.test_invoice_template = StandardInvoiceTemplateFactory.create()
+        self.test_purchase_order_template = StandardPurchaseOrderTemplateFactory.create()
 
     def tearDown(self):
-        if len(self._outcome.errors) > 0:
-            directory = os.getcwd() + "/test_results/Screenshots/"
-            if not os.path.exists(directory):
-                os.makedirs(directory)
-            self.selenium.save_screenshot(directory + "%s.png" % "test_name")
-        super(CreateSalesDocumentFromContract, self).tearDown()
+        super().tearDown()
 
     @pytest.mark.front_end_tests
     def test_create_sales_document_from_contract(self):
@@ -55,9 +40,9 @@ class CreateSalesDocumentFromContract(StaticLiveServerTestCase):
             WebDriverWait(selenium, timeout).until(element_present)
         except TimeoutException:
             print("Timed out waiting for page to load")
-        username = selenium.find_element_by_xpath('//*[@id="id_username"]')
-        password = selenium.find_element_by_xpath('//*[@id="id_password"]')
-        submit_button = selenium.find_element_by_xpath('/html/body/div/article/div/div/form/div/ul/li/input')
+        username = selenium.find_element('xpath', '//*[@id="id_username"]')
+        password = selenium.find_element('xpath', '//*[@id="id_password"]')
+        submit_button = selenium.find_element('xpath', '/html/body/div/article/div/div/form/div/ul/li/input')
         username.send_keys("admin")
         password.send_keys("admin")
         submit_button.send_keys(Keys.RETURN)

@@ -6,7 +6,7 @@ from datetime import *
 from django.conf import settings
 from django.db import models
 from django.contrib import admin
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django.utils.html import format_html
 from koalixcrm.crm.reporting.generic_project_link import GenericLinkInlineAdminView
 from koalixcrm.crm.reporting.reporting_period import ReportingPeriodInlineAdminView, ReportingPeriod
@@ -20,6 +20,7 @@ import pandas
 
 
 class Project(models.Model):
+    id = models.BigAutoField(primary_key=True)
     project_manager = models.ForeignKey('auth.User', on_delete=models.CASCADE, limit_choices_to={'is_staff': True},
                                         verbose_name=_("Staff"),
                                         related_name="db_rel_project_staff",

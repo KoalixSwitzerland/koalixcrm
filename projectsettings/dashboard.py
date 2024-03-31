@@ -1,12 +1,12 @@
 """
-This file was generated with the customdashboard management command and
+This file was generated with the custom dashboard management command and
 contains the class for the main dashboard.
 
 To activate your index dashboard add the following to your settings.py::
     GRAPPELLI_INDEX_DASHBOARD = 'koalixcrm.dashboard.CustomIndexDashboard'
 """
 
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from grappelli.dashboard import modules, Dashboard
 from grappelli.dashboard.utils import get_admin_site_name
 from koalixcrm.version import KOALIXCRM_VERSION

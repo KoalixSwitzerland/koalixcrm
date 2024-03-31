@@ -3,10 +3,11 @@
 from django.db import models
 from django.contrib import admin
 from django.core.validators import MinValueValidator
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 
 class Position(models.Model):
+    id = models.BigAutoField(primary_key=True)
     position_number = models.PositiveIntegerField(verbose_name=_("Position Number"),
                                                   validators=[MinValueValidator(1)])
     quantity = models.DecimalField(verbose_name=_("Quantity"),

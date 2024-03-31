@@ -2,10 +2,11 @@
 
 from django.db import models
 from django.contrib import admin
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 
 class Unit(models.Model):
+    id = models.BigAutoField(primary_key=True)
     description = models.CharField(verbose_name=_("Description"),
                                    max_length=100)
     short_name = models.CharField(verbose_name=_("Displayed Name After Quantity In The Position"),

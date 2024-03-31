@@ -2,7 +2,7 @@
 
 from django.db import models
 from django.contrib import admin
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 from koalixcrm.plugin import *
 from koalixcrm.crm.contact.phone_address import PhoneAddress
@@ -111,6 +111,7 @@ class ContractEmailAddress(admin.TabularInline):
 
 
 class Contract(models.Model):
+    id = models.BigAutoField(primary_key=True)
     staff = models.ForeignKey('auth.User',
                               on_delete=models.CASCADE,
                               limit_choices_to={'is_staff': True},

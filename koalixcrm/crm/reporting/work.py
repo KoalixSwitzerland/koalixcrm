@@ -4,7 +4,7 @@ from django.db import models
 from django.forms import ValidationError
 from django.contrib import admin
 from django.utils.html import format_html
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from koalixcrm.crm.documents.pdf_export import PDFExport
 from koalixcrm.global_support_functions import *
 from koalixcrm.crm.exceptions import ReportingPeriodDoneDeleteNotPossible
@@ -12,6 +12,7 @@ from django.contrib import messages
 
 
 class Work(models.Model):
+    id = models.BigAutoField(primary_key=True)
     human_resource = models.ForeignKey("HumanResource", on_delete=models.CASCADE)
     date = models.DateField(verbose_name=_("Date"),
                             blank=False,
