@@ -41,6 +41,8 @@ class TimeTrackingAddRow(UITests):
         username.send_keys("admin")
         password.send_keys("admin")
         submit_button.send_keys(Keys.RETURN)
+        time.sleep(5)
+        selenium.get('%s%s' % (self.live_server_url, '/koalixcrm/crm/reporting/time_tracking/'))
         # after the login, the browser is redirected to the target url /koalixcrm/crm/reporting/time_tracking
         try:
             element_present = expected_conditions.presence_of_element_located((By.ID, 'id_form-0-project'))
@@ -50,11 +52,13 @@ class TimeTrackingAddRow(UITests):
         # find the form element
         fail_when_element_does_not_exist(self, '//*[@id="id_form-0-project"]')
         fail_when_element_does_not_exist(self, '//*[@id="id_form-0-task"]')
-        fail_when_element_does_not_exist(self, '//*[@id="id_form-0-date"]')
-        fail_when_element_does_not_exist(self, '//*[@id="id_form-0-start_time"]')
-        fail_when_element_does_not_exist(self, '//*[@id="id_form-0-stop_time"]')
+        fail_when_element_does_not_exist(self, '//*[@id="id_form-0-datetime_start_0"]')
+        fail_when_element_does_not_exist(self, '//*[@id="id_form-0-datetime_start_1"]')
+        fail_when_element_does_not_exist(self, '//*[@id="id_form-0-datetime_stop_0"]')
+        fail_when_element_does_not_exist(self, '//*[@id="id_form-0-datetime_stop_1"]')
+        fail_when_element_does_not_exist(self, '//*[@id="id_form-0-worked_hours"]')
         fail_when_element_does_not_exist(self, '//*[@id="id_form-0-description"]')
-        fail_when_element_does_not_exist(self, 'save')
+        fail_when_element_does_not_exist(self, '//*[@name="save"]')
         # check existence of a second form before pressing add more
         fail_when_element_exists(self, '//*[@id="id_form-1-project"]')
         add_more_button = selenium.find_element('xpath', '//*[@id="add_more"]')

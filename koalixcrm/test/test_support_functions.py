@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-
-from selenium.common.exceptions import NoSuchElementException
 import time
+from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions
@@ -14,6 +13,7 @@ def fail_when_element_does_not_exist(testcase, xpath):
         testcase.selenium.find_element('xpath', xpath)
     except NoSuchElementException:
         testcase.assertTrue(False, xpath+" should exist but it does not")
+        pass
 
 
 def fail_when_element_exists(testcase, xpath):
@@ -22,8 +22,6 @@ def fail_when_element_exists(testcase, xpath):
         testcase.assertTrue(False, xpath+" should not exist but it does")
     except NoSuchElementException:
         pass
-
-
 
 def assert_when_element_is_not_equal_to(testcase, xpath, string):
     try:

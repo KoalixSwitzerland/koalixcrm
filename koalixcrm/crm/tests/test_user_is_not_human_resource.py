@@ -40,6 +40,8 @@ class TimeTrackingAddRow(UITests):
         username.send_keys("admin")
         password.send_keys("admin")
         submit_button.send_keys(Keys.RETURN)
+        time.sleep(5)
+        selenium.get('%s%s' % (self.live_server_url, '/koalixcrm/crm/reporting/time_tracking/'))
         # after the login, the browser is redirected to the target url /koalixcrm/crm/reporting/time_tracking
         try:
             element_present = expected_conditions.presence_of_element_located((By.ID, 'id_next_steps'))
@@ -53,7 +55,7 @@ class TimeTrackingAddRow(UITests):
         # to return to the start page instead of defining a new human resource
 
         fail_when_element_does_not_exist(self, '//*[@id="id_next_steps"]')
-        fail_when_element_does_not_exist(self, 'confirm_selection')
+        fail_when_element_does_not_exist(self, '//*[@name="confirm_selection"]')
         submit_button = selenium.find_element('xpath', '/html/body/div/article/div/form/table/tbody/tr[3]/td/input[2]')
         selection = Select(selenium.find_element('xpath', '//*[@id="id_next_steps"]'))
         selection.select_by_value("return_to_start")
@@ -77,7 +79,7 @@ class TimeTrackingAddRow(UITests):
         except TimeoutException:
             print("Timed out waiting for page to load")
         fail_when_element_does_not_exist(self, '//*[@id="id_next_steps"]')
-        fail_when_element_does_not_exist(self, 'confirm_selection')
+        fail_when_element_does_not_exist(self, '//*[@name="confirm_selection"]')
         submit_button = selenium.find_element('xpath', '/html/body/div/article/div/form/table/tbody/tr[3]/td/input[2]')
         selection = Select(selenium.find_element('xpath', '//*[@id="id_next_steps"]'))
         selection.select_by_value("create_human_resource")

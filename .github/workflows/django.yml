@@ -5,6 +5,10 @@ on:
     branches: [ "master", "development"]
   pull_request:
     branches: [ "master", "development" ]
+    inputs:
+      project-token:
+        required: false
+        description: "API project token to authenticate on the Codacy API while uploading the coverage data"
 
 jobs:
   build:
@@ -17,8 +21,11 @@ jobs:
       run: docker-compose build web
       
     - name: Run Tests in Docker
-      run: docker-compose run --service-ports web pytest --cov=koalixcrm --cov-branch --cov-report xml:test_results/coverage.xml --cov-report term
-
+      run: | 
+        docker-compose run --service-ports web coverage run -m pytest  --cov=koalixcrm --cov-branch --cov-report xml:reports/coverage.xml --cov-report term
+        bash <(curl -Ls https://coverage.codacy.com/get.sh)
+      env:
+        CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
     - name: Upload Coverage Report
       uses: actions/upload-artifact@v2
       with:

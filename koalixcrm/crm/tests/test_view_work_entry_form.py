@@ -32,7 +32,6 @@ class TimeTrackingWorkEntry(UITests):
             title="1st Test Task",
             project=self.test_reporting_period.project)
 
-    @classmethod
     def tearDown(self):
         super().tearDown()
 
@@ -54,7 +53,8 @@ class TimeTrackingWorkEntry(UITests):
         username.send_keys("admin")
         password.send_keys("admin")
         submit_button.send_keys(Keys.RETURN)
-        # after the login, the browser is redirected to the target url /koalixcrm/crm/reporting/time_tracking
+        time.sleep(5)
+        selenium.get('%s%s' % (self.live_server_url, '/koalixcrm/crm/reporting/time_tracking/'))
         try:
             element_present = expected_conditions.presence_of_element_located((By.ID, 'id_form-0-project'))
             WebDriverWait(selenium, timeout).until(element_present)
@@ -69,7 +69,7 @@ class TimeTrackingWorkEntry(UITests):
         fail_when_element_does_not_exist(self, '//*[@id="id_form-0-datetime_stop_1"]')
         fail_when_element_does_not_exist(self, '//*[@id="id_form-0-worked_hours"]')
         fail_when_element_does_not_exist(self, '//*[@id="id_form-0-description"]')
-        fail_when_element_does_not_exist(self, 'save')
+        fail_when_element_does_not_exist(self, '//*[@name="save"]')
         project = selenium.find_element('xpath', '//*[@id="id_form-0-project"]')
         datetime_start_date = selenium.find_element('xpath', '//*[@id="id_form-0-datetime_start_0"]')
         datetime_start_time = selenium.find_element('xpath', '//*[@id="id_form-0-datetime_start_1"]')
