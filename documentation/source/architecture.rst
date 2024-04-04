@@ -1,7 +1,7 @@
 .. highlight:: rst
 
 Architecture
-========
+============
 
 Standard installation with docker, postgres
 -------------------------------------------
