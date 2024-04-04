@@ -1,3 +1,4 @@
+from os import open
 from setuptools import setup, find_packages
 from koalixcrm.version import KOALIXCRM_VERSION
 
@@ -5,6 +6,8 @@ setup(name='koalix-crm',
       version=KOALIXCRM_VERSION,
       description='koalixcrm is a tiny and easy to use Customer-Relationship-Management'
                   ' Software (CRM) including tiny and easy to use Accounting Software',
+      long_description=open('README.md').read(),
+      long_description_content_type='text/markdown',
       url='http://github.com/scaphilo/koalixcrm',
       author='Aaron Riedener',
       author_email='aaron.riedener@gmail.com',
