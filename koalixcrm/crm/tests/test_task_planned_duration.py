@@ -10,7 +10,7 @@ from koalixcrm.crm.factories.factory_reporting_period import StandardReportingPe
 from koalixcrm.djangoUserExtension.factories.factory_user_extension import StandardUserExtensionFactory
 from koalixcrm.crm.factories.factory_task import StandardTaskFactory
 from koalixcrm.crm.factories.factory_estimation import StandardHumanResourceEstimationToTaskFactory
-from koalixcrm.test_support_functions import make_date_utc
+from koalixcrm.global_support_functions import make_date_utc
 
 
 class TaskPlannedDuration(TestCase):
@@ -43,8 +43,8 @@ class TaskPlannedDuration(TestCase):
         self.assertEqual(
             (self.test_1st_task.planned_duration()).__str__(), "60")
         self.assertEqual(
-            (self.test_1st_task.planned_costs()).__str__(), "0")
+            (self.test_1st_task.planned_costs()).__str__(), "0.00")
         self.assertEqual(
             (self.test_2nd_task.planned_duration()).__str__(), "90")
         self.assertEqual(
-            (self.test_2nd_task.planned_costs()).__str__(), "0")
+            (self.test_2nd_task.planned_costs()).__str__(), "0.00")

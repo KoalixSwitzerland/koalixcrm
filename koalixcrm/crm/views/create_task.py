@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 from django.http import Http404
 from django.http import HttpResponseRedirect
+from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django.contrib.contenttypes.models import ContentType
 from koalixcrm.crm.exceptions import *
 from koalixcrm.djangoUserExtension.exceptions import *
@@ -32,7 +33,7 @@ class CreateTaskView:
             task = Task.objects.filter(id=task_id).update(
                 title=task_title,
                 planned_start_date=date_now,
-                project=project,
+                reporting_period=project,
                 description=sales_document_position.description,
                 last_status_change=date_now
             )
@@ -87,7 +88,6 @@ class CreateTaskView:
               redirect_to (str): String that describes to where the method should redirect in case of an error
 
             Returns:
-              HTTpResponse with a PDF when successful
               HTTpResponseRedirect when not successful
 
             Raises:
@@ -95,9 +95,9 @@ class CreateTaskView:
         try:
             project = CreateTaskView.create_project_from_document(request.user, document)
             calling_model_admin.message_user(request, _("Successfully created Project and Tasks for this contract"))
-            response = HttpResponseRedirect('/admin/crm/'+
-                                            project.__class__.__name__.lower()+
-                                            '/'+
+            response = HttpResponseRedirect('/admin/crm/' +
+                                            project.__class__.__name__.lower() +
+                                            '/' +
                                             str(project.id))
         except (TemplateSetMissing,
                 UserExtensionMissing,

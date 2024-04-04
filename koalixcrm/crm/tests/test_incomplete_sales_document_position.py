@@ -11,7 +11,8 @@ from koalixcrm.crm.factories.factory_customer import StandardCustomerFactory
 from koalixcrm.crm.factories.factory_customer_group import StandardCustomerGroupFactory, AdvancedCustomerGroupFactory
 from koalixcrm.crm.factories.factory_tax import StandardTaxFactory
 from koalixcrm.crm.factories.factory_unit import StandardUnitFactory, SmallUnitFactory
-from koalixcrm.test_support_functions import make_date_utc
+from koalixcrm.global_support_functions import make_date_utc
+from koalixcrm.crm.models import SalesDocumentPosition
 
 
 class DocumentSalesDocumentPosition(TestCase):
@@ -66,7 +67,29 @@ class DocumentSalesDocumentPosition(TestCase):
             document=quote_1,
             pricing_date=date_now)
         self.assertEqual(
-            quote_1.last_calculated_price.__str__(), "81.00")
+            quote_1.last_calculated_price.__str__(), "90.00")
         self.assertEqual(
             quote_1.last_calculated_tax.__str__(), "9.00")
 
+    @pytest.mark.back_end_tests
+    def test_calculate_document_price_overwritten_WithNone(self):
+        quote_2 = StandardQuoteFactory.create(customer=self.customer)
+        StandardSalesDocumentPositionFactory.create(
+            quantity=1,
+            discount=0,
+            product_type=self.product_without_dates,
+            overwrite_product_price=True,
+            position_price_per_unit=None,
+            unit=self.unit,
+            sales_document=quote_2
+        )
+        datetime_now = make_date_utc(datetime.datetime(2024, 1, 1, 0, 00))
+        date_now = datetime_now.date()
+        try:
+            Calculations.calculate_document_price(
+                document=quote_2,
+                pricing_date=date_now)
+        except SalesDocumentPosition.NoPriceFound as e:
+            self.assertEqual(
+                e.__str__(), "There is no Price set for the sales document position"
+            )

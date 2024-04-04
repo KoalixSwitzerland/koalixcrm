@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib import admin
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from koalixcrm.crm.contact.phone_address import PhoneAddress
 from koalixcrm.crm.contact.email_address import EmailAddress
 from koalixcrm.crm.contact.postal_address import PostalAddress
@@ -13,13 +13,16 @@ from koalixcrm.crm.inlinemixin import LimitedAdminInlineMixin
 
 
 class Contact(models.Model):
+    id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=300,
                             verbose_name=_("Name"))
     date_of_creation = models.DateTimeField(verbose_name=_("Created at"),
                                             auto_now_add=True)
     last_modification = models.DateTimeField(verbose_name=_("Last modified"),
                                              auto_now=True)
-    last_modified_by = models.ForeignKey('auth.User', limit_choices_to={'is_staff': True},
+    last_modified_by = models.ForeignKey('auth.User',
+                                         on_delete=models.CASCADE,
+                                         limit_choices_to={'is_staff': True},
                                          blank=True,
                                          verbose_name=_("Last modified by"),
                                          editable=True)
@@ -37,7 +40,7 @@ class PhoneAddressForContact(PhoneAddress):
     purpose = models.CharField(verbose_name=_("Purpose"),
                                max_length=1,
                                choices=PURPOSESADDRESSINCUSTOMER)
-    person = models.ForeignKey(Contact)
+    person = models.ForeignKey(Contact, on_delete=models.CASCADE)
 
     class Meta:
         app_label = "crm"
@@ -52,7 +55,7 @@ class EmailAddressForContact(EmailAddress):
     purpose = models.CharField(verbose_name=_("Purpose"),
                                max_length=1,
                                choices=PURPOSESADDRESSINCUSTOMER)
-    person = models.ForeignKey(Contact)
+    person = models.ForeignKey(Contact, on_delete=models.CASCADE)
 
     class Meta:
         app_label = "crm"
@@ -67,7 +70,7 @@ class PostalAddressForContact(PostalAddress):
     purpose = models.CharField(verbose_name=_("Purpose"),
                                max_length=1,
                                choices=PURPOSESADDRESSINCUSTOMER)
-    person = models.ForeignKey(Contact)
+    person = models.ForeignKey(Contact, on_delete=models.CASCADE)
 
     class Meta:
         app_label = "crm"
@@ -126,8 +129,9 @@ class ContactEmailAddress(admin.TabularInline):
 
 
 class ContactPersonAssociation(models.Model):
-    contact = models.ForeignKey(Contact, related_name='person_association', blank=True, null=True)
-    person = models.ForeignKey(Person, related_name='contact_association', blank=True, null=True)
+    id = models.BigAutoField(primary_key=True)
+    contact = models.ForeignKey(Contact, on_delete=models.CASCADE, related_name='person_association', blank=True, null=True)
+    person = models.ForeignKey(Person, on_delete=models.CASCADE, related_name='contact_association', blank=True, null=True)
 
     class Meta:
         app_label = "crm"
@@ -171,19 +175,19 @@ class OptionPerson(admin.ModelAdmin):
         for c in obj.companies.all():
             items.append(c.name)
         return ','.join(items)
-    
+
     get_companies.short_description = _("Works at")
 
 
 class CallForContact(Call):
-    company = models.ForeignKey(Contact)
-    cperson = models.ForeignKey(Person, verbose_name=_("Person"),
+    company = models.ForeignKey(Contact, on_delete=models.CASCADE)
+    cperson = models.ForeignKey(Person, on_delete=models.CASCADE, verbose_name=_("Person"),
                                 blank=True,
                                 null=True)
     purpose = models.CharField(verbose_name=_("Purpose"),
                                max_length=1,
                                choices=PURPOSECALLINCUSTOMER)
-    
+
     class Meta:
         app_label = "crm"
         verbose_name = _('Call')
@@ -194,8 +198,9 @@ class CallForContact(Call):
 
 
 class VisitForContact(Call):
-    company = models.ForeignKey(Contact)
+    company = models.ForeignKey(Contact, on_delete=models.CASCADE)
     cperson = models.ForeignKey(Person,
+                                on_delete=models.CASCADE,
                                 verbose_name=_("Person"),
                                 blank=True,
                                 null=True)
@@ -203,10 +208,11 @@ class VisitForContact(Call):
                                max_length=1,
                                choices=PURPOSEVISITINCUSTOMER)
     ref_call = models.ForeignKey(CallForContact,
+                                 on_delete=models.CASCADE,
                                  verbose_name=_("Reference Call"),
                                  blank=True,
                                  null=True)
-    
+
     class Meta:
         app_label = "crm"
         verbose_name = _('Visit')
@@ -252,7 +258,7 @@ class ContactVisit(LimitedAdminInlineMixin, admin.StackedInline):
         }),
     )
     allow_add = True
-    
+
     def get_filters(self, request, obj):
         return getattr(self, 'filters', ()) if obj is None else (('cperson', dict(companies=obj.id)),('ref_call', dict(company=obj.id, status='S')))
 

@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from koalixcrm.crm.const.status import *
 from koalixcrm.crm.documents.sales_document import SalesDocument, OptionSalesDocument
 from koalixcrm.plugin import *
 
 
 class PurchaseOrder(SalesDocument):
-    supplier = models.ForeignKey("Supplier", verbose_name=_("Supplier"), null=True)
+    supplier = models.ForeignKey("Supplier", on_delete=models.CASCADE, verbose_name=_("Supplier"), null=True)
     status = models.CharField(max_length=1, choices=PURCHASEORDERSTATUS)
 
     def create_from_reference(self, calling_model):

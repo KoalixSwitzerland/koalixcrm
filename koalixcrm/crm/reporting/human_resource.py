@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import datetime
+from dateutil.relativedelta import *
 from django.db import models
 from django.contrib import admin
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from koalixcrm.djangoUserExtension.user_extension.user_extension import UserExtension
 from koalixcrm.crm.reporting.resource import Resource
 from koalixcrm.crm.reporting.resource_price import ResourcePriceInlineAdminView
@@ -13,6 +14,7 @@ from koalixcrm.crm.documents.pdf_export import PDFExport
 
 class HumanResource(Resource):
     user = models.ForeignKey(UserExtension,
+                             on_delete=models.CASCADE,
                              verbose_name=_("User"))
 
     def __str__(self):
@@ -22,8 +24,8 @@ class HumanResource(Resource):
         date_from = kwargs.get('date_from', datetime.date.today()-datetime.timedelta(days=60))
         date_to = kwargs.get('date_to', datetime.date.today())
         date_first_of_the_month = date_from.replace(day=1)
-        date_to_month = date_to.month
-        date_end_of_the_month = date_from.replace(day=1).replace(month=date_to_month+1) - datetime.timedelta(days=1)
+        date_first_of_next_month = date_from.replace(day=1) + relativedelta(months=+1)
+        date_end_of_the_month = date_first_of_next_month - datetime.timedelta(days=1)
         date = date_first_of_the_month
         days = dict()
         weeks = dict()

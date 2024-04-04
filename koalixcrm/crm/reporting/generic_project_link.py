@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.contrib import admin
@@ -9,11 +9,14 @@ from django.contrib.contenttypes.admin import GenericTabularInline
 
 
 class GenericProjectLink(models.Model):
+    id = models.BigAutoField(primary_key=True)
     project = models.ForeignKey("Project",
+                                on_delete=models.CASCADE,
                                 verbose_name=_('Project'),
                                 blank=False,
                                 null=False)
     project_link_type = models.ForeignKey("ProjectLinkType",
+                                          on_delete=models.CASCADE,
                                           verbose_name=_('Project Link Type'),
                                           blank=True,
                                           null=True)
@@ -24,6 +27,7 @@ class GenericProjectLink(models.Model):
     date_of_creation = models.DateTimeField(verbose_name=_("Created at"),
                                             auto_now_add=True)
     last_modified_by = models.ForeignKey('auth.User',
+                                         on_delete=models.CASCADE,
                                          limit_choices_to={'is_staff': True},
                                          verbose_name=_("Last modified by"),
                                          related_name="db_project_link_last_modified")
@@ -46,7 +50,7 @@ class GenericLinkInlineAdminView(admin.TabularInline):
                        'last_modified_by')
     extra = 0
 
-    def has_add_permission(self, request):
+    def has_add_permission(self, request, obj=None):
         return False
 
     def has_delete_permission(self, request, obj=None):
@@ -62,7 +66,7 @@ class InlineGenericProjectLink(GenericTabularInline):
                        'last_modified_by')
     extra = 0
 
-    def has_add_permission(self, request):
+    def has_add_permission(self, request, obj=None):
         return False
 
     def has_delete_permission(self, request, obj=None):

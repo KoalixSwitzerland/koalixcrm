@@ -5,7 +5,7 @@ from django import forms
 from django.db import models
 from django.contrib import admin
 from django.http import HttpResponseRedirect
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django.utils.html import format_html
 from django.contrib.admin import helpers
 from django.shortcuts import render
@@ -120,13 +120,13 @@ class OptionInvoice(OptionSalesDocument):
             for obj in queryset:
                 obj.register_invoice_in_accounting(request)
             self.message_user(request, _("Successfully registered Invoice in the Accounting"))
-            return;
+            return
         except OpenInterestAccountMissing as e:
             self.message_user(request, "Did not register Invoice in Accounting: " + e.__str__(), level=messages.ERROR)
-            return;
+            return
         except IncompleteInvoice as e:
             self.message_user(request, "Did not register Invoice in Accounting: " + e.__str__(), level=messages.ERROR)
-            return;
+            return
 
     register_invoice_in_accounting.short_description = _("Register Invoice in Accounting")
 
@@ -164,9 +164,15 @@ class OptionInvoice(OptionSalesDocument):
     save_as = OptionSalesDocument.save_as
     inlines = OptionSalesDocument.inlines
 
-    actions = ['create_purchase_confirmation', 'create_quote',
-               'create_delivery_note', 'create_purchase_order', 'create_pdf', 'create_payment_reminder',
-               'register_invoice_in_accounting', 'register_payment_in_accounting',]
+    actions = ['create_purchase_confirmation',
+               'create_quote',
+               'create_invoice',
+               'create_delivery_note',
+               'create_purchase_order',
+               'create_payment_reminder',
+               'create_pdf',
+               'register_invoice_in_accounting',
+               'register_payment_in_accounting',]
 
     pluginProcessor = PluginProcessor()
     actions.extend(pluginProcessor.getPluginAdditions("invoiceActions"))

@@ -112,7 +112,7 @@ class Migration(migrations.Migration):
                                                 max_length=200,
                                                 null=True,
                                                 blank=True)),
-                ('product_type', models.ForeignKey("ProductType", verbose_name='Product Type')),
+                ('product_type', models.ForeignKey("ProductType", on_delete=django.db.models.deletion.CASCADE, verbose_name='Product Type')),
             ],
             options={
                 'verbose_name': 'Product',

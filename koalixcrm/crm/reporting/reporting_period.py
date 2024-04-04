@@ -3,7 +3,7 @@
 from datetime import *
 from django.db import models
 from django.contrib import admin
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from koalixcrm.crm.documents.pdf_export import PDFExport
 from koalixcrm.crm.exceptions import ReportingPeriodNotFound
 from koalixcrm.crm.reporting.work import WorkInlineAdminView
@@ -15,7 +15,9 @@ from django.forms import ModelForm
 class ReportingPeriod(models.Model):
     """The reporting period is referred in the work, in the expenses and purchase orders, it is used as a
        supporting object to generate project reports"""
+    id = models.BigAutoField(primary_key=True)
     project = models.ForeignKey("Project",
+                                on_delete=models.CASCADE,
                                 verbose_name=_("Project"),
                                 blank=False,
                                 null=False)
@@ -30,6 +32,7 @@ class ReportingPeriod(models.Model):
                            blank=False,
                            null=False)
     status = models.ForeignKey("ReportingPeriodStatus",
+                               on_delete=models.CASCADE,
                                verbose_name=_("Reporting Period Status"),
                                blank=True,
                                null=True)
@@ -96,8 +99,8 @@ class ReportingPeriod(models.Model):
             if reporting_period.end <= target_reporting_period.begin and\
                     predecessor_reporting_period is None:
                 predecessor_reporting_period = reporting_period
-            elif reporting_period.end <= target_reporting_period.begin and\
-                    reporting_period.end <= predecessor_reporting_period.begin:
+            elif reporting_period.end <= target_reporting_period.begin and \
+                    predecessor_reporting_period.end <= reporting_period.begin:
                 predecessor_reporting_period = reporting_period
         if predecessor_reporting_period is None:
             raise ReportingPeriodNotFound("Reporting Period does not exist")
@@ -179,7 +182,9 @@ class ReportingPeriod(models.Model):
 class ReportingPeriodAdminForm(ModelForm):
     def clean(self):
         """Check that the begin of the new reporting period is not located within an existing
-        reporting period, Checks that the begin is date earlier than the end"""
+        reporting period, Checks that the begin date earlier than the end date. Verify that in case there
+        is already a predecessor or a successor reporting period, the reporting periods are in direct contact
+        with each other"""
         cleaned_data = super().clean()
         project = cleaned_data['project']
         end = cleaned_data['end']
@@ -195,6 +200,14 @@ class ReportingPeriodAdminForm(ModelForm):
                                           'Reporting Period within the same project')
         if end < begin:
             raise ValidationError('Begin date must be earlier than end date')
+        if len(reporting_periods) > 1:
+            reporting_periods_direct_predecessor = ReportingPeriod.objects.filter(project=project,
+                                                                                  end=begin-timedelta(1))
+            reporting_periods_direct_successor = ReportingPeriod.objects.filter(project=project,
+                                                                                begin=end+timedelta(1))
+            if (len(reporting_periods_direct_predecessor) == 0) and (len(reporting_periods_direct_successor) == 0):
+                raise ValidationError('The new reporting period has to be directly following a previous reporting '
+                                      'period or it has to be directly before the following reporting period')
 
 
 class ReportingPeriodAdmin(admin.ModelAdmin):
@@ -255,7 +268,7 @@ class ReportingPeriodInlineAdminView(admin.TabularInline):
         }),
     )
 
-    def has_add_permission(self, request):
+    def has_add_permission(self, request, obj=None):
         return False
 
     def has_delete_permission(self, request, obj=None):

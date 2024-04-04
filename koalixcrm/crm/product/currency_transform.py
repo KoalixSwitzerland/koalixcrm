@@ -2,21 +2,25 @@
 
 from django.db import models
 from django.contrib import admin
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 
 class CurrencyTransform(models.Model):
+    id = models.BigAutoField(primary_key=True)
     from_currency = models.ForeignKey('Currency',
+                                      on_delete=models.CASCADE,
                                       blank=False,
                                       null=False,
                                       verbose_name=_("From Currency"),
                                       related_name="db_reltransformfromcurrency")
     to_currency = models.ForeignKey('Currency',
+                                    on_delete=models.CASCADE,
                                     blank=False,
                                     null=False,
                                     verbose_name=_("To Currency"),
                                     related_name="db_reltransformtocurrency")
     product_type = models.ForeignKey('ProductType',
+                                     on_delete=models.CASCADE,
                                      blank=False,
                                      null=False,
                                      verbose_name=_("Product"))

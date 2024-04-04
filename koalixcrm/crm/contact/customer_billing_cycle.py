@@ -2,10 +2,11 @@
 
 from django.db import models
 from django.contrib import admin
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 
 class CustomerBillingCycle(models.Model):
+    id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=300,
                             verbose_name=_("Name"))
     time_to_payment_date = models.IntegerField(verbose_name=_("Days To Payment Date"))

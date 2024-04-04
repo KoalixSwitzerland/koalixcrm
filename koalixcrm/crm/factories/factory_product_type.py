@@ -6,7 +6,7 @@ from koalixcrm.crm.models import ProductType
 from koalixcrm.crm.factories.factory_unit import StandardUnitFactory
 from koalixcrm.crm.factories.factory_user import StaffUserFactory
 from koalixcrm.crm.factories.factory_tax import StandardTaxFactory
-from koalixcrm.test_support_functions import make_date_utc
+from koalixcrm.global_support_functions import make_date_utc
 
 
 class StandardProductTypeFactory(factory.django.DjangoModelFactory):

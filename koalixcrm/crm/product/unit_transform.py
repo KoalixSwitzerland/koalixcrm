@@ -2,21 +2,25 @@
 
 from django.db import models
 from django.contrib import admin
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 
 class UnitTransform(models.Model):
+    id = models.BigAutoField(primary_key=True)
     from_unit = models.ForeignKey('Unit',
+                                  on_delete=models.CASCADE,
                                   verbose_name=_("From Unit"),
                                   blank=False,
                                   null=False,
                                   related_name="db_reltransfromfromunit")
     to_unit = models.ForeignKey('Unit',
+                                on_delete=models.CASCADE,
                                 verbose_name=_("To Unit"),
                                 blank=False,
                                 null=False,
                                 related_name="db_reltransfromtounit")
     product_type = models.ForeignKey('ProductType',
+                                     on_delete=models.CASCADE,
                                      blank=False,
                                      null=False,
                                      verbose_name=_("Product Type"))

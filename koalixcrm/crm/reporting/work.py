@@ -4,7 +4,7 @@ from django.db import models
 from django.forms import ValidationError
 from django.contrib import admin
 from django.utils.html import format_html
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from koalixcrm.crm.documents.pdf_export import PDFExport
 from koalixcrm.global_support_functions import *
 from koalixcrm.crm.exceptions import ReportingPeriodDoneDeleteNotPossible
@@ -12,7 +12,8 @@ from django.contrib import messages
 
 
 class Work(models.Model):
-    human_resource = models.ForeignKey("HumanResource")
+    id = models.BigAutoField(primary_key=True)
+    human_resource = models.ForeignKey("HumanResource", on_delete=models.CASCADE)
     date = models.DateField(verbose_name=_("Date"),
                             blank=False,
                             null=False)
@@ -35,10 +36,12 @@ class Work(models.Model):
                                    blank=True,
                                    null=True)
     task = models.ForeignKey("Task",
+                             on_delete=models.CASCADE,
                              verbose_name=_('Task'),
                              blank=False,
                              null=False)
     reporting_period = models.ForeignKey("ReportingPeriod",
+                                         on_delete=models.CASCADE,
                                          verbose_name=_('Reporting Period'),
                                          blank=False,
                                          null=False)
@@ -115,14 +118,19 @@ class Work(models.Model):
         self.check_working_hours()
         return cleaned_data
 
+    def confirmed(self):
+        return self.reporting_period.status.is_done
+    confirmed.short_description = _("Confirmed")
+    confirmed.tags = True
+
     def delete(self, using=None, keep_parents=False):
-        if self.reporting_period.status.is_done:
+        if self.confirmed():
             raise ReportingPeriodDoneDeleteNotPossible("It was not possible to delete the work")
         else:
             super(Work, self).delete(using, keep_parents)
 
     def save(self, *args, **kwargs):
-        if self.reporting_period.status.is_done:
+        if self.confirmed():
             raise ReportingPeriodDoneDeleteNotPossible("It was not possible to update the work")
         else:
             super(Work, self).save(*args, **kwargs)
@@ -140,7 +148,8 @@ class WorkAdminView(admin.ModelAdmin):
                     'get_short_description',
                     'date',
                     'reporting_period',
-                    'effort_as_string')
+                    'effort_as_string',
+                    'confirmed')
 
     list_filter = ('task', 'date')
     ordering = ('-id',)
@@ -155,14 +164,14 @@ class WorkAdminView(admin.ModelAdmin):
                        'short_description',
                        'description',
                        'task',
-                       'reporting_period',)
+                       'reporting_period')
         }),
     )
     save_as = True
 
-    actions = ['delete_selected', ]
+    actions = ['delete_work', ]
 
-    def delete_selected(self, request, queryset):
+    def delete_work(self, request, queryset):
         for obj in queryset:
             if obj.reporting_period.status.is_done:
                 self.message_user(request, _("Delete is not allowed because the work"
@@ -172,7 +181,7 @@ class WorkAdminView(admin.ModelAdmin):
             else:
                 obj.delete()
 
-    delete_selected.short_description = _("Delete Selected Work")
+    delete_work.short_description = _("Delete Selected Work")
 
 
 class WorkInlineAdminView(admin.TabularInline):
@@ -181,14 +190,20 @@ class WorkInlineAdminView(admin.TabularInline):
                        'get_short_description',
                        'human_resource',
                        'date',
-                       'effort_as_string',)
+                       'effort_as_string',
+                       'confirmed',
+                       'task',
+                       'reporting_period',)
     fieldsets = (
         (_('Work'), {
             'fields': ('link_to_work',
                        'get_short_description',
                        'human_resource',
                        'date',
-                       'effort_as_string',)
+                       'effort_as_string',
+                       'confirmed',
+                       'task',
+                       'reporting_period',)
         }),
     )
     extra = 0

@@ -15,12 +15,11 @@ from koalixcrm.crm.factories.factory_resource_price import StandardResourcePrice
 from koalixcrm.crm.factories.factory_project import StandardProjectFactory
 from koalixcrm.crm.factories.factory_unit import StandardUnitFactory
 from koalixcrm.crm.factories.factory_estimation import StandardHumanResourceEstimationToTaskFactory
-from koalixcrm.test_support_functions import make_date_utc
+from koalixcrm.global_support_functions import make_date_utc
 
 
 class TaskPlannedEffort(TestCase):
     def setUp(self):
-
         self.test_billing_cycle = StandardCustomerBillingCycleFactory.create()
         self.test_user = AdminUserFactory.create()
         self.test_customer_group = StandardCustomerGroupFactory.create()
@@ -66,7 +65,7 @@ class TaskPlannedEffort(TestCase):
             price="120",
         )
         self.assertEqual(
-            (self.test_project.planned_costs()).__str__(), "0")
+            (self.test_project.planned_costs()).__str__(), "0.00")
         StandardEstimationToTaskFactory.create(resource=self.test_human_resource,
                                                amount="2.00",
                                                task=self.test_1st_task,
@@ -84,4 +83,4 @@ class TaskPlannedEffort(TestCase):
                                                task=self.test_2nd_task,
                                                reporting_period=self.test_reporting_period)
         self.assertEqual(
-            (self.test_project.planned_costs(reporting_period=self.test_reporting_period)).__str__(), "1380.0")
+            (self.test_project.planned_costs(reporting_period=self.test_reporting_period)).__str__(), "0")

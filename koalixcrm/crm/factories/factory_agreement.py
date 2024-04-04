@@ -10,7 +10,7 @@ from koalixcrm.crm.factories.factory_unit import StandardUnitFactory
 from koalixcrm.crm.factories.factory_resource_price import StandardResourcePriceFactory
 from koalixcrm.crm.factories.factory_agreement_type import StandardAgreementTypeFactory
 from koalixcrm.crm.factories.factory_agreement_status import AgreedAgreementStatusFactory
-from koalixcrm.test_support_functions import make_date_utc
+from koalixcrm.global_support_functions import make_date_utc
 
 
 class StandardAgreementToTaskFactory(factory.django.DjangoModelFactory):

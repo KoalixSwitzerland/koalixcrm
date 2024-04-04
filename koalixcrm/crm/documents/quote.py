@@ -3,7 +3,7 @@
 from datetime import *
 from django.db import models
 from django.contrib import admin
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django.utils.html import format_html
 from koalixcrm.crm.const.status import *
 from koalixcrm.plugin import *
@@ -61,6 +61,7 @@ class OptionQuote(OptionSalesDocument):
 
     actions = ['create_purchase_confirmation',
                'create_invoice',
+               'create_quote',
                'create_delivery_note',
                'create_purchase_order',
                'create_project',

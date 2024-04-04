@@ -2,7 +2,7 @@
 
 from decimal import *
 from django.db import models
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django.contrib import admin
 from django.utils.html import format_html
 from koalixcrm.crm.reporting.agreement import Agreement
@@ -21,11 +21,13 @@ from koalixcrm import global_support_functions
 
 class Task(models.Model):
     """ The Task model"""
+    id = models.BigAutoField(primary_key=True)
     title = models.CharField(verbose_name=_("Title"),
                              max_length=100,
                              blank=True,
                              null=True)
     project = models.ForeignKey("Project",
+                                on_delete=models.CASCADE,
                                 verbose_name=_('Project'),
                                 related_name='tasks',
                                 blank=False,
@@ -33,7 +35,7 @@ class Task(models.Model):
     description = models.TextField(verbose_name=_("Description"),
                                    blank=True,
                                    null=True)
-    status = models.ForeignKey("TaskStatus", verbose_name=_('Status'),
+    status = models.ForeignKey("TaskStatus", on_delete=models.CASCADE, verbose_name=_('Status'),
                                blank=True,
                                null=True)
     last_status_change = models.DateField(verbose_name=_("Last Status Change"),
@@ -123,42 +125,111 @@ class Task(models.Model):
     planned_end.short_description = _("Planned End")
     planned_end.tags = True
 
-    def planned_effort(self, reporting_period=None):
+    def planned_effort(self, reporting_period=None, remaining=False):
         """The function return the planned effort of resources which have been estimated for this task
         at a specific reporting period. When no reporting_period is provided, the last reporting period
         is selected
 
         Args:
-        no arguments
+        remaining (Boolean)
 
         Returns:
         planned effort (Decimal) [hrs], 0 if when no estimation are present
 
         Raises:
         no exceptions expected"""
-        try:
-            if not reporting_period:
-                reporting_period_internal = ReportingPeriod.get_latest_reporting_period(
-                    self.project)
+        latest_estimation = self.get_latest_estimation()
+        effort = 0
+        if latest_estimation:
+            try:
+                predecessor_reporting_period = latest_estimation.reporting_period.get_predecessor(latest_estimation.reporting_period,
+                                                                                                  latest_estimation.reporting_period.project)
+            except ReportingPeriodNotFound:
+                effort = 0
+                predecessor_reporting_period = None
+            if remaining:
+                effort = 0
             else:
-                reporting_period_internal = reporting_period
-            estimations_to_this_task = Estimation.objects.filter(task=self.id,
-                                                                 reporting_period=reporting_period_internal)
-            effort = 0
-            for estimation_to_this_task in estimations_to_this_task:
-                effort += estimation_to_this_task.amount
-        except ReportingPeriodNotFound:
+                while predecessor_reporting_period:
+                    effort += self.effective_effort(reporting_period=predecessor_reporting_period)
+                    try:
+                        predecessor_reporting_period = predecessor_reporting_period.get_predecessor(predecessor_reporting_period,
+                                                                                                    predecessor_reporting_period.project)
+                    except ReportingPeriodNotFound:
+                        predecessor_reporting_period = None
+            effort += latest_estimation.amount
+        else:
             effort = 0
         return effort
     planned_effort.short_description = _("Planned Effort")
     planned_effort.tags = True
 
-    def planned_costs(self, reporting_period=None):
+    def get_latest_estimation(self):
+        estimations = Estimation.objects.filter(task=self.id)
+        latest_estimation = None
+        for estimation in estimations:
+            if not latest_estimation:
+                latest_estimation = estimation
+            else:
+                if latest_estimation.reporting_period.end < estimation.reporting_period.begin:
+                    latest_estimation = estimation
+        return latest_estimation
+
+    def planned_costs_in_buckets(self, reporting_period=None, buckets=None):
         """The function returns the planned costs of resources which have been estimated for this task
          at a specific reporting period plus the costs of the effective effort before the provided reporting_period
-         When no reporting_period is provided, the last reporting period
+         When no reporting_period is provided. The costs are split into the provided buckets.
+         The passed argument reporting_period is used to specify the root of the estimation.
 
-        is selected.
+        Following example shall illustrate what to expect from this function:
+        The project started 01.01.2018,
+        1st reporting period ranged from 01.01.2018 to 31.01.2018
+        2nd reporting period ranged from 01.02.2018 to 28.02.2018
+        3rd reporting period range from 01.03.2018 to 31.03.2018
+        There are not further reporting periods defined
+        At the beginning of second reporting period an estimation was done. The estimation reached from
+        Beginning of 01.02.2018 until 31.12.2018 and the total cost was 100kUSD.
+        The function should be called this way: task.planned_costs_in_buckets(2nd ReportingPeriod,
+                                                                              list(2nd ReportingPeriod,
+                                                                                   3rd ReportingPeriod,))
+        the function will return a dict containing the accumulated planned costs for the list of provided
+        buckets and an additional bucked containing the overall sum (also containing the parts of the
+        estimations which did not fit into provided reporting periods)
+
+        Args:
+        bucket (list of ReportingPeriods)
+        reporting_period (ReportingPeriod)
+
+        Returns:
+        planned costs (Decimal), 0 if when no estimation or no reporting period is attached to the task
+
+        Raises:
+        No exceptions planned"""
+        planned_costs = dict()
+
+        latest_estimation = self.get_latest_estimation()
+        if buckets:
+            for bucket in buckets:
+                planned_costs[bucket] = 0
+        planned_costs['sum_costs'] = 0
+        if latest_estimation:
+            if buckets:
+                for bucket in buckets:
+                    if bucket.end < latest_estimation.reporting_period.begin:
+                        planned_costs[bucket] += planned_costs['sum_costs']
+                        planned_costs[bucket] += self.effective_costs(reporting_period=bucket)
+                        planned_costs['sum_costs'] = planned_costs[bucket]
+                    else:
+                        planned_costs[bucket] += planned_costs['sum_costs']
+                        planned_costs[bucket] += latest_estimation.calculated_costs(bucket_start=bucket.begin,
+                                                                                    bucket_end=bucket.end)
+                        planned_costs['sum_costs'] = planned_costs[bucket]
+        return planned_costs
+
+    def planned_costs(self, reporting_period=None, remaining=False):
+        """The function returns the planned overall costs of resources which have been estimated for this task
+         at a specific reporting period plus the costs of the effective effort before the provided reporting_period
+         When no reporting_period is provided, the last reporting period is selected.
 
         Args:
         no arguments
@@ -168,28 +239,32 @@ class Task(models.Model):
 
         Raises:
         No exceptions planned"""
-        try:
-            if not reporting_period:
-                reporting_period_internal = ReportingPeriod.get_latest_reporting_period(self.project)
-
+        planned_costs = 0
+        if reporting_period:
+            planned_costs_in_buckets = self.planned_costs_in_buckets(reporting_period=reporting_period, buckets=None)
+            for key in planned_costs_in_buckets.keys():
+                planned_costs += planned_costs_in_buckets[key]
+        else:
+            planned_effort = self.planned_effort(remaining=remaining)
+            latest_estimation = self.get_latest_estimation()
+            if latest_estimation:
+                resource_prices = ResourcePrice.objects.filter(resource=latest_estimation.resource)
+                price = 0
+                if len(resource_prices) != 0:
+                    for resource_price in resource_prices:
+                        price = resource_price.price
+                        break
+                planned_costs = planned_effort*price
             else:
-                reporting_period_internal = ReportingPeriod.objects.get(id=reporting_period.id)
-            predecessor_reporting_periods = ReportingPeriod.get_all_predecessors(reporting_period_internal,
-                                                                                 self.project)
-            estimations_to_this_task = Estimation.objects.filter(task=self.id,
-                                                                 reporting_period=reporting_period_internal)
-            sum_costs = 0
-            if len(estimations_to_this_task) != 0:
-                for estimation_to_this_task in estimations_to_this_task:
-                    sum_costs += estimation_to_this_task.calculated_costs()
-            if len(predecessor_reporting_periods) != 0:
-                for predecessor_reporting_period in predecessor_reporting_periods:
-                    sum_costs += self.effective_costs(reporting_period=predecessor_reporting_period)
-        except ReportingPeriodNotFound:
-            sum_costs = 0
-        return sum_costs
+                planned_costs = 0
+        return planned_costs
     planned_costs.short_description = _("Planned Costs")
     planned_costs.tags = True
+
+    def planned_total_costs(self):
+        return self.planned_costs(remaining=False)
+    planned_total_costs.short_description = _("Planned Total Costs")
+    planned_total_costs.tags = True
 
     def effective_start(self):
         """The function return the effective start of a task as a date. The
@@ -286,12 +361,12 @@ class Task(models.Model):
         No exceptions planned"""
         effective_end = self.effective_end()
         effective_start = self.effective_start()
-        if effective_start is None:
-            duration_as_string = 0
-        elif effective_end is None:
-            duration_as_string = 0
+        if not effective_start:
+            duration_as_string = "Task has not yet started"
+        elif not effective_end:
+            duration_as_string = "Task has not yet ended"
         else:
-            duration_as_date = effective_end-effective_start
+            duration_as_date = self.effective_end()-self.effective_start()
             duration_as_string = duration_as_date.days.__str__()
         return duration_as_string
     effective_duration.short_description = _("Effective Duration [dys]")
@@ -310,13 +385,25 @@ class Task(models.Model):
             main_xml = PDFExport.merge_xml(main_xml, work_xml)
         main_xml = PDFExport.append_element_to_pattern(main_xml,
                                                        "object/[@model='crm.task']",
+                                                       "Effective_Costs_Confirmed_Overall",
+                                                       self.effective_costs_confirmed())
+        main_xml = PDFExport.append_element_to_pattern(main_xml,
+                                                       "object/[@model='crm.task']",
+                                                       "Effective_Costs_Not_Confirmed_Overall",
+                                                       self.effective_costs_not_confirmed())
+        main_xml = PDFExport.append_element_to_pattern(main_xml,
+                                                       "object/[@model='crm.task']",
                                                        "Effective_Effort_Overall",
-                                                       self.effective_costs(reporting_period=None))
+                                                       self.effective_effort(reporting_period=None))
         if reporting_period:
             main_xml = PDFExport.append_element_to_pattern(main_xml,
                                                            "object/[@model='crm.task']",
-                                                           "Effective_Effort_InPeriod",
+                                                           "Effective_Costs_InPeriod",
                                                            self.effective_costs(reporting_period=reporting_period))
+            main_xml = PDFExport.append_element_to_pattern(main_xml,
+                                                           "object/[@model='crm.task']",
+                                                           "Effective_Effort_InPeriod",
+                                                           self.effective_effort(reporting_period=reporting_period))
         main_xml = PDFExport.append_element_to_pattern(main_xml,
                                                        "object/[@model='crm.task']",
                                                        "Planned_Effort",
@@ -349,9 +436,9 @@ class Task(models.Model):
         for work_object in work_objects:
             sum_effort += work_object.effort_seconds()
         sum_effort_in_hours = sum_effort / 3600
-        return sum_effort_in_hours
+        return Decimal(sum_effort_in_hours)
 
-    def effective_costs(self, reporting_period=None):
+    def effective_costs(self, reporting_period=None, confirmed=True):
         """Returns the effective costs on a task
         when reporting_period is None, the effective costs overall is calculated
         when reporting_period is specified, the effective effort in this period is calculated
@@ -370,9 +457,13 @@ class Task(models.Model):
         if reporting_period:
             all_work_in_task = Work.objects.filter(task=self.id,
                                                    reporting_period=reporting_period)
+        elif not confirmed:
+            all_work_in_task = Work.objects.filter(task=self.id,
+                                                   reporting_period__status__is_done=False)
         else:
-            all_work_in_task = Work.objects.filter(task=self.id)
-        sum_costs = 0
+            all_work_in_task = Work.objects.filter(task=self.id,
+                                                   reporting_period__status__is_done=True)
+        sum_costs = Decimal(0)
         work_with_agreement = list()
         work_without_agreement = list()
         work_calculated = list()
@@ -400,7 +491,6 @@ class Task(models.Model):
                         if work in work_with_agreement:
                             if (agreement_remaining_amount - work.worked_hours) > 0:
                                 agreement_remaining_amount -= work.worked_hours
-                                getcontext().prec = 5
                                 sum_costs += Decimal(work.effort_hours())*agreement.costs.price
                                 work_calculated.append(work)
         for work in all_work_in_task:
@@ -411,15 +501,24 @@ class Task(models.Model):
             default_resource_prices = ResourcePrice.objects.filter(resource=work.human_resource.id).order_by('price')
             if default_resource_prices:
                 default_resource_price = default_resource_prices[0]
-                getcontext().prec = 5
                 sum_costs += Decimal(work.effort_hours())*default_resource_price.price
             else:
-                sum_costs = 0
+                sum_costs = Decimal(0)
                 break
         sum_costs = self.project.default_currency.round(sum_costs)
         return sum_costs
-    effective_costs.short_description = _("Effective costs")
-    effective_costs.tags = True
+
+    def effective_costs_confirmed(self):
+        return self.effective_costs()
+
+    effective_costs_confirmed.short_description = _("Effective costs confirmed")
+    effective_costs_confirmed.tags = True
+
+    def effective_costs_not_confirmed(self):
+        return self.effective_costs(confirmed=False)
+
+    effective_costs_not_confirmed.short_description = _("Effective costs not confirmed")
+    effective_costs_not_confirmed.tags = True
 
     def is_reporting_allowed(self):
         """Returns True when the task is available for reporting,
@@ -470,10 +569,11 @@ class TaskAdminView(admin.ModelAdmin):
                     'status',
                     'last_status_change',
                     'planned_duration',
-                    'planned_costs',
+                    'planned_total_costs',
                     'effective_duration',
                     'effective_effort_overall',
-                    'effective_costs')
+                    'effective_costs_confirmed',
+                    'effective_costs_not_confirmed')
     list_display_links = ('link_to_task',)
     list_filter = ('project',)
     ordering = ('-id',)
@@ -500,10 +600,11 @@ class TaskInlineAdminView(admin.TabularInline):
                        'planned_start',
                        'planned_end',
                        'planned_duration',
-                       'planned_costs',
+                       'planned_total_costs',
                        'effective_duration',
                        'effective_effort_overall',
-                       'effective_costs')
+                       'effective_costs_confirmed',
+                       'effective_costs_not_confirmed')
     fieldsets = (
         (_('Task'), {
             'fields': ('link_to_task',
@@ -513,37 +614,17 @@ class TaskInlineAdminView(admin.TabularInline):
                        'status',
                        'last_status_change',
                        'planned_duration',
-                       'planned_costs',
+                       'planned_total_costs',
                        'effective_duration',
                        'effective_effort_overall',
-                       'effective_costs')
+                       'effective_costs_confirmed',
+                       'effective_costs_not_confirmed')
         }),
     )
     extra = 1
 
-    def has_add_permission(self, request):
+    def has_add_permission(self, request, obj=None):
         return True
 
     def has_delete_permission(self, request, obj=None):
         return False
-
-
-class TaskSerializer(serializers.ModelSerializer):
-    is_reporting_allowed = serializers.SerializerMethodField()
-
-    def get_is_reporting_allowed(self, obj):
-        if obj.is_reporting_allowed():
-            return "True"
-        else:
-            return "False"
-
-    class Meta:
-        model = Task
-        fields = ('id',
-                  'title',
-                  'planned_end',
-                  'planned_start',
-                  'project',
-                  'description',
-                  'status',
-                  'is_reporting_allowed')

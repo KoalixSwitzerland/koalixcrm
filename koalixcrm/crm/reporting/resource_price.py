@@ -2,13 +2,14 @@
 
 from django.db import models
 from django.contrib import admin
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from koalixcrm.crm.product.price import Price
 from koalixcrm.crm.reporting.resource import Resource
 
 
 class ResourcePrice(Price):
     resource = models.ForeignKey(Resource,
+                                 on_delete=models.CASCADE,
                                  verbose_name=_('Resource'),
                                  blank=False,
                                  null=False)

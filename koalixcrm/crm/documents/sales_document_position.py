@@ -3,10 +3,11 @@
 from django.db import models
 from django.contrib import admin
 from django.core.validators import MinValueValidator
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 
 class Position(models.Model):
+    id = models.BigAutoField(primary_key=True)
     position_number = models.PositiveIntegerField(verbose_name=_("Position Number"),
                                                   validators=[MinValueValidator(1)])
     quantity = models.DecimalField(verbose_name=_("Quantity"),
@@ -19,10 +20,13 @@ class Position(models.Model):
                                    blank=True,
                                    null=True)
     product_type = models.ForeignKey("ProductType",
+                                     on_delete=models.CASCADE,
                                      verbose_name=_("Product"),
                                      blank=False,
                                      null=True)
-    unit = models.ForeignKey("Unit", verbose_name=_("Unit"),
+    unit = models.ForeignKey("Unit",
+                             on_delete=models.CASCADE,
+                             verbose_name=_("Unit"),
                              blank=True,
                              null=True)
     sent_on = models.DateField(verbose_name=_("Shipment on"),
@@ -57,7 +61,7 @@ class Position(models.Model):
 
 
 class SalesDocumentPosition(Position):
-    sales_document = models.ForeignKey("SalesDocument", verbose_name=_("Contract"))
+    sales_document = models.ForeignKey("SalesDocument", on_delete=models.CASCADE, verbose_name=_("Contract"))
 
     class Meta:
         app_label = "crm"
@@ -97,6 +101,10 @@ class SalesDocumentPosition(Position):
 
     def __str__(self):
         return _("Sales Document Position") + ": " + str(self.id)
+
+    class NoPriceFound(Exception):
+        def __str__(self):
+            return _("There is no Price set for the sales document position")
 
 
 class SalesDocumentInlinePosition(admin.TabularInline):

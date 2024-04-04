@@ -39,11 +39,11 @@ class MigrateSalesContractToSalesDocument(Operation):
         old_remote_model = '%s.%s' % ("crm", "salescontract")
         new_remote_model = '%s.%s' % ("crm", "SalesDocument")
         to_reload = []
-        for (model_app_label, model_name), model_state in state.models.items():
+        for (model_app_label, model_name), model_state in list(state.models.items()):
             if model_name != "salescontract" and model_name != "salesdocument":
                 new_model_state = model_state
                 model_with_new_base = state.models[model_app_label, model_name]
-                for index, (name, field) in enumerate(model_state.fields):
+                for index, (name, field) in enumerate(model_state.fields.items()):
                     changed_field = None
                     remote_field = field.remote_field
                     if remote_field:
@@ -65,7 +65,7 @@ class MigrateSalesContractToSalesDocument(Operation):
                                 changed_field.remote_field.through = new_remote_model
                     if changed_field:
                         new_model_state = model_state.clone()
-                        new_model_state.fields[index] = name, changed_field
+                        new_model_state.fields[name] = changed_field
                         model_changed = True
                         if old_remote_model in model_state.bases:
                             new_bases = []
@@ -143,8 +143,9 @@ class MigrateSalesContractToSalesDocument(Operation):
         # This is used to describe what the operation does in console output.
         return "Custom Operation"
 
-class Migration(migrations.Migration):
 
+class Migration(migrations.Migration):
+    atomic = False
     dependencies = [
         ('crm', '0014_auto_20180108_2048'),
     ]

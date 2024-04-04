@@ -1,26 +1,18 @@
 import pytest
-from django.test import LiveServerTestCase
-from selenium import webdriver
-from selenium.common.exceptions import TimeoutException
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from koalixcrm.test_support_functions import *
+from koalixcrm.test.test_support_functions import *
 from koalixcrm.crm.factories.factory_user import AdminUserFactory
 from koalixcrm.crm.factories.factory_customer import StandardCustomerFactory
 from koalixcrm.crm.factories.factory_customer_group import StandardCustomerGroupFactory
 from koalixcrm.crm.factories.factory_currency import StandardCurrencyFactory
 from koalixcrm.crm.factories.factory_human_resource import StandardHumanResourceFactory
 from koalixcrm.djangoUserExtension.factories.factory_user_extension import StandardUserExtensionFactory
+from koalixcrm.test.UITests import UITests
 
 
-class TimeTrackingAddRow(LiveServerTestCase):
+class TimeTrackingAddRow(UITests):
 
     def setUp(self):
-        firefox_options = webdriver.firefox.options.Options()
-        firefox_options.set_headless(headless=True)
-        self.selenium = webdriver.Firefox(firefox_options=firefox_options)
+        super().setUp()
         self.test_user = AdminUserFactory.create()
         self.test_customer_group = StandardCustomerGroupFactory.create()
         self.test_customer = StandardCustomerFactory.create(is_member_of=(self.test_customer_group,))
@@ -29,7 +21,7 @@ class TimeTrackingAddRow(LiveServerTestCase):
         self.test_human_resource = StandardHumanResourceFactory.create(user=self.test_user_extension)
 
     def tearDown(self):
-        self.selenium.quit()
+        super().tearDown()
 
     @pytest.mark.front_end_tests
     def test_add_new_row(self):
@@ -43,12 +35,14 @@ class TimeTrackingAddRow(LiveServerTestCase):
             WebDriverWait(selenium, timeout).until(element_present)
         except TimeoutException:
             print("Timed out waiting for page to load")
-        username = selenium.find_element_by_xpath('//*[@id="id_username"]')
-        password = selenium.find_element_by_xpath('//*[@id="id_password"]')
-        submit_button = selenium.find_element_by_xpath('/html/body/div/article/div/div/form/div/ul/li/input')
+        username = selenium.find_element('xpath', '//*[@id="id_username"]')
+        password = selenium.find_element('xpath', '//*[@id="id_password"]')
+        submit_button = selenium.find_element('xpath', '/html/body/div/article/div/div/form/div/ul/li/input')
         username.send_keys("admin")
         password.send_keys("admin")
         submit_button.send_keys(Keys.RETURN)
+        time.sleep(5)
+        selenium.get('%s%s' % (self.live_server_url, '/koalixcrm/crm/reporting/time_tracking/'))
         # after the login, the browser is redirected to the target url /koalixcrm/crm/reporting/time_tracking
         try:
             element_present = expected_conditions.presence_of_element_located((By.ID, 'id_form-0-project'))
@@ -56,16 +50,18 @@ class TimeTrackingAddRow(LiveServerTestCase):
         except TimeoutException:
             print("Timed out waiting for page to load")
         # find the form element
-        assert_when_element_does_not_exist(self, '//*[@id="id_form-0-project"]')
-        assert_when_element_does_not_exist(self, '//*[@id="id_form-0-task"]')
-        assert_when_element_does_not_exist(self, '//*[@id="id_form-0-date"]')
-        assert_when_element_does_not_exist(self, '//*[@id="id_form-0-start_time"]')
-        assert_when_element_does_not_exist(self, '//*[@id="id_form-0-stop_time"]')
-        assert_when_element_does_not_exist(self, '//*[@id="id_form-0-description"]')
-        assert_when_element_does_not_exist(self, 'save')
+        fail_when_element_does_not_exist(self, '//*[@id="id_form-0-project"]')
+        fail_when_element_does_not_exist(self, '//*[@id="id_form-0-task"]')
+        fail_when_element_does_not_exist(self, '//*[@id="id_form-0-datetime_start_0"]')
+        fail_when_element_does_not_exist(self, '//*[@id="id_form-0-datetime_start_1"]')
+        fail_when_element_does_not_exist(self, '//*[@id="id_form-0-datetime_stop_0"]')
+        fail_when_element_does_not_exist(self, '//*[@id="id_form-0-datetime_stop_1"]')
+        fail_when_element_does_not_exist(self, '//*[@id="id_form-0-worked_hours"]')
+        fail_when_element_does_not_exist(self, '//*[@id="id_form-0-description"]')
+        fail_when_element_does_not_exist(self, '//*[@name="save"]')
         # check existence of a second form before pressing add more
-        assert_when_element_exists(self, '//*[@id="id_form-1-project"]')
-        add_more_button = selenium.find_element_by_xpath('//*[@id="add_more"]')
+        fail_when_element_exists(self, '//*[@id="id_form-1-project"]')
+        add_more_button = selenium.find_element('xpath', '//*[@id="add_more"]')
         add_more_button.send_keys(Keys.RETURN)
         # check existence of a second form after pressing add more
-        assert_when_element_does_not_exist(self, '//*[@id="id_form-1-project"]')
+        fail_when_element_does_not_exist(self, '//*[@id="id_form-1-project"]')

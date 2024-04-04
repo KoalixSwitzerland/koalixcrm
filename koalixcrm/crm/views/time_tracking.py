@@ -4,7 +4,7 @@ import datetime
 from django.http import HttpResponseRedirect, Http404
 from django.contrib import messages
 from django.shortcuts import render
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django.template.context_processors import csrf
 from django.contrib.auth.decorators import login_required
 from koalixcrm.djangoUserExtension.models import UserExtension
@@ -23,6 +23,8 @@ def work_report(request):
         if len(human_resource) == 0:
             error_message = "User "+request.user.__str__()+" is not registered as human resource"
             raise UserIsNoHumanResource(error_message)
+        else:
+            human_resource = HumanResource.objects.get(user=UserExtension.get_user_extension(request.user))
         if request.POST.get('post'):
             if 'cancel' in request.POST:
                 return HttpResponseRedirect('/admin/')

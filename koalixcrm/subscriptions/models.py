@@ -2,15 +2,16 @@
 
 from datetime import *
 from django.db import models
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from filebrowser.fields import FileBrowseField
 from koalixcrm.subscriptions.const.events import *
 import koalixcrm.crm.documents
 
 
 class Subscription(models.Model):
-    contract = models.ForeignKey('crm.Contract', verbose_name=_('Subscription Type'))
-    subscription_type = models.ForeignKey('SubscriptionType', verbose_name=_('Subscription Type'), null=True)
+    id = models.BigAutoField(primary_key=True)
+    contract = models.ForeignKey('crm.Contract', on_delete=models.CASCADE, verbose_name=_('Subscription Type'))
+    subscription_type = models.ForeignKey('SubscriptionType', on_delete=models.CASCADE, verbose_name=_('Subscription Type'), null=True)
 
     def create_subscription_from_contract(self, contract):
         self.contract = contract
@@ -51,7 +52,9 @@ class Subscription(models.Model):
 
 
 class SubscriptionEvent(models.Model):
+    id = models.BigAutoField(primary_key=True)
     subscriptions = models.ForeignKey('Subscription',
+                                      on_delete=models.CASCADE,
                                       verbose_name=_('Subscription'))
     event_date = models.DateField(verbose_name=_("Event Date"),
                                   blank=True, null=True)
@@ -68,6 +71,7 @@ class SubscriptionEvent(models.Model):
 
 
 class SubscriptionType(models.Model):
+    id = models.BigAutoField(primary_key=True)
     product_type = models.ForeignKey('crm.ProductType',
                                      verbose_name=_('Product Type'),
                                      on_delete=models.deletion.SET_NULL,

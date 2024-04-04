@@ -2,7 +2,7 @@
 
 from django.db import models
 from django.contrib import admin
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 from filebrowser.fields import FileBrowseField
 
@@ -12,6 +12,7 @@ from koalixcrm.crm.exceptions import *
 
 
 class DocumentTemplate(models.Model):
+    id = models.BigAutoField(primary_key=True)
     title = models.CharField(verbose_name=_("Title"),
                              max_length=100,
                              blank=True,

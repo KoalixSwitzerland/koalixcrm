@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from django.contrib import admin
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django import forms
 
 from koalixcrm.accounting.const.accountTypeChoices import *
@@ -10,6 +10,7 @@ from koalixcrm.crm.documents.pdf_export import PDFExport
 
 
 class Account(models.Model):
+    id = models.BigAutoField(primary_key=True)
     account_number = models.IntegerField(verbose_name=_("Account Number"))
     title = models.CharField(verbose_name=_("Account Title"),
                              max_length=50)

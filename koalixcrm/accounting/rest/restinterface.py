@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
-from django.conf import settings
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
 from rest_framework import viewsets
+from rest_framework.authentication import BasicAuthentication, SessionAuthentication
+from rest_framework.decorators import authentication_classes
+from rest_framework.decorators import permission_classes
+from rest_framework.permissions import IsAuthenticated
 
 from koalixcrm.accounting.models import Account, AccountingPeriod, Booking, ProductCategory
 from koalixcrm.accounting.rest.account_rest import AccountJSONSerializer
 from koalixcrm.accounting.rest.accounting_period_rest import AccountingPeriodJSONSerializer
 from koalixcrm.accounting.rest.booking_rest import BookingJSONSerializer
 from koalixcrm.accounting.rest.product_categorie_rest import ProductCategoryJSONSerializer
-from koalixcrm.global_support_functions import ConditionalMethodDecorator
 
 
 class AccountAsJSON(viewsets.ModelViewSet):
@@ -20,7 +20,8 @@ class AccountAsJSON(viewsets.ModelViewSet):
     serializer_class = AccountJSONSerializer
     filter_fields = ('account_type',)
 
-    @ConditionalMethodDecorator(method_decorator(login_required), settings.KOALIXCRM_REST_API_AUTH)
+    @authentication_classes((SessionAuthentication, BasicAuthentication))
+    @permission_classes((IsAuthenticated,))
     def dispatch(self, *args, **kwargs):
         return super(AccountAsJSON, self).dispatch(*args, **kwargs)
 
@@ -32,7 +33,8 @@ class AccountingPeriodAsJSON(viewsets.ModelViewSet):
     queryset = AccountingPeriod.objects.all()
     serializer_class = AccountingPeriodJSONSerializer
 
-    @ConditionalMethodDecorator(method_decorator(login_required), settings.KOALIXCRM_REST_API_AUTH)
+    @authentication_classes((SessionAuthentication, BasicAuthentication))
+    @permission_classes((IsAuthenticated,))
     def dispatch(self, *args, **kwargs):
         return super(AccountingPeriodAsJSON, self).dispatch(*args, **kwargs)
 
@@ -44,7 +46,8 @@ class BookingAsJSON(viewsets.ModelViewSet):
     queryset = Booking.objects.all()
     serializer_class = BookingJSONSerializer
 
-    @ConditionalMethodDecorator(method_decorator(login_required), settings.KOALIXCRM_REST_API_AUTH)
+    @authentication_classes((SessionAuthentication, BasicAuthentication))
+    @permission_classes((IsAuthenticated,))
     def dispatch(self, *args, **kwargs):
         return super(BookingAsJSON, self).dispatch(*args, **kwargs)
 
@@ -56,6 +59,7 @@ class ProductCategoryAsJSON(viewsets.ModelViewSet):
     queryset = ProductCategory.objects.all()
     serializer_class = ProductCategoryJSONSerializer
 
-    @ConditionalMethodDecorator(method_decorator(login_required), settings.KOALIXCRM_REST_API_AUTH)
+    @authentication_classes((SessionAuthentication, BasicAuthentication))
+    @permission_classes((IsAuthenticated,))
     def dispatch(self, *args, **kwargs):
         return super(ProductCategoryAsJSON, self).dispatch(*args, **kwargs)

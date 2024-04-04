@@ -5,7 +5,7 @@ import datetime
 from koalixcrm.crm.models import Task
 from koalixcrm.crm.factories.factory_project import StandardProjectFactory
 from koalixcrm.crm.factories.factory_task_status import StartedTaskStatusFactory
-from koalixcrm.test_support_functions import make_date_utc
+from koalixcrm.global_support_functions import make_date_utc
 
 
 class StandardTaskFactory(factory.django.DjangoModelFactory):

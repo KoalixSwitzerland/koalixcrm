@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  web:
+    image: ghcr.io/koalixswitzerland/koalixcrm-dev-container:main
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/usr/src/app
+      - ./data:/usr/src/app/data

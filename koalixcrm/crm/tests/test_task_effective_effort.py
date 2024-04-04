@@ -11,7 +11,7 @@ from koalixcrm.crm.factories.factory_human_resource import StandardHumanResource
 from koalixcrm.crm.factories.factory_work import StandardWorkFactory
 from koalixcrm.crm.factories.factory_task import StandardTaskFactory
 from koalixcrm.crm.factories.factory_estimation import StandardHumanResourceEstimationToTaskFactory
-from koalixcrm.test_support_functions import make_date_utc
+from koalixcrm.global_support_functions import make_date_utc
 
 
 class TaskEffectiveEffort(TestCase):
@@ -50,11 +50,11 @@ class TaskEffectiveEffort(TestCase):
         self.assertEqual(
             (self.test_1st_task.planned_duration()).__str__(), "60")
         self.assertEqual(
-            (self.test_1st_task.planned_costs()).__str__(), "0")
+            (self.test_1st_task.planned_costs()).__str__(), "0.00")
         self.assertEqual(
             (self.test_2nd_task.planned_duration()).__str__(), "90")
         self.assertEqual(
-            (self.test_2nd_task.planned_costs()).__str__(), "0")
+            (self.test_2nd_task.planned_costs()).__str__(), "0.00")
         StandardWorkFactory.create(
             human_resource=self.human_resource,
             date=date_now,
@@ -90,4 +90,4 @@ class TaskEffectiveEffort(TestCase):
         self.assertEqual(
             (self.test_1st_task.effective_effort(reporting_period=None)).__str__(), "3.5")
         self.assertEqual(
-            (self.test_2nd_task.effective_effort(reporting_period=None)).__str__(), "12.0")
+            (self.test_2nd_task.effective_effort(reporting_period=None)).__str__(), "12")

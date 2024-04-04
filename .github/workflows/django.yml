@@ -1,0 +1,29 @@
+name: Django CI
+
+on:
+  push:
+    branches: [ "master", "development"]
+  pull_request:
+    branches: [ "master", "development" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Build Docker Image
+      run: docker-compose build web
+      
+    - name: Run Tests in Docker
+      run: | 
+        docker-compose run --service-ports web coverage run -m pytest  --cov=koalixcrm --cov-branch --cov-report xml:test_report/coverage.xml --cov-report term
+        bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r test_report/coverage.xml
+      env:
+        CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
+    - name: Upload Coverage Report
+      uses: actions/upload-artifact@v2
+      with:
+        name: coverage-report
+        path: test_results/coverage.xml

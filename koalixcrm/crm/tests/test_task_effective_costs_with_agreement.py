@@ -14,7 +14,7 @@ from koalixcrm.crm.factories.factory_task import StandardTaskFactory
 from koalixcrm.crm.factories.factory_resource_price import StandardResourcePriceFactory
 from koalixcrm.crm.factories.factory_estimation import StandardHumanResourceEstimationToTaskFactory
 from koalixcrm.crm.factories.factory_agreement import StandardAgreementToTaskFactory
-from koalixcrm.test_support_functions import make_date_utc
+from koalixcrm.global_support_functions import make_date_utc
 
 
 class TaskEffectiveCostsWithAgreement(TestCase):
@@ -90,11 +90,11 @@ class TaskEffectiveCostsWithAgreement(TestCase):
         self.assertEqual(
             (self.test_1st_task.planned_duration()).__str__(), "60")
         self.assertEqual(
-            (self.test_1st_task.planned_costs()).__str__(), "2400.0")
+            (self.test_1st_task.planned_costs()).__str__(), "2400.0000")
         self.assertEqual(
             (self.test_2nd_task.planned_duration()).__str__(), "90")
         self.assertEqual(
-            (self.test_2nd_task.planned_costs()).__str__(), "3600.0")
+            (self.test_2nd_task.planned_costs()).__str__(), "3600.0000")
         StandardWorkFactory.create(
             human_resource=self.human_resource,
             date=date_now,
@@ -130,8 +130,8 @@ class TaskEffectiveCostsWithAgreement(TestCase):
         self.assertEqual(
             (self.test_1st_task.effective_effort(reporting_period=None)).__str__(), "3.5")
         self.assertEqual(
-            (self.test_1st_task.effective_costs(reporting_period=None)).__str__(), "315.00")
+            (self.test_1st_task.effective_costs(reporting_period=None, confirmed=False)).__str__(), "315.00")
         self.assertEqual(
-            (self.test_2nd_task.effective_effort(reporting_period=None)).__str__(), "12.0")
+            (self.test_2nd_task.effective_effort(reporting_period=None)).__str__(), "12")
         self.assertEqual(
-            (self.test_2nd_task.effective_costs(reporting_period=None)).__str__(), "1440.0")
+            (self.test_2nd_task.effective_costs(reporting_period=None, confirmed=False)).__str__(), "1440.00")
