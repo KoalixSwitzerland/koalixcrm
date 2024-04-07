@@ -1,9 +1,9 @@
-Django==3.2.20
+Django==3.2.25
 django-filebrowser==3.14.3
 lxml==5.1.0
 olefile==0.46
-Pillow==7.1.2
-psycopg2-binary==2.8.4
+Pillow==10.3.0
+psycopg2-binary==2.9.9
 pytz==2022.4
 django-grappelli==2.15.7
 djangorestframework==3.14.0

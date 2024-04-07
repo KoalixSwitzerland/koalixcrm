@@ -1,1 +1,1 @@
--r requirements/prod_requirements.txt
+-r requirements/development_requirements.txt

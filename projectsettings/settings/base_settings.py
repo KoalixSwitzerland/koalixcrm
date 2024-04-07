@@ -94,7 +94,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR)
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 PROJECT_ROOT = BASE_DIR
 
@@ -102,7 +102,7 @@ PROJECT_ROOT = BASE_DIR
 PDF_OUTPUT_ROOT = os.path.join(STATIC_ROOT, 'pdf')
 
 # Settings specific for filebrowser
-FILEBROWSER_DIRECTORY = 'media/uploads/'
+FILEBROWSER_DIRECTORY = 'uploads/'
 FILEBROWSER_EXTENSIONS = {
     'XML': ['.xml'],
     'XSL': ['.xsl'],
