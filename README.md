@@ -34,7 +34,14 @@ You can find the documentation of koalixcrm here: [doc](http://readthedocs.org/d
 Some information about the installation of koalixcrm: [installation](https://github.com/scaphilo/koalixcrm/wiki/Installation)
 
 ## Development environment setup
-Information about the development environment setup for this and similar projects can be found here: [Development environment setup](https://github.com/scaphilo/koalixcrm/wiki/Development-Environment-Setup)
+To set up the development environment for KoalixCRM, you can use Docker with the following commands:
+
+docker-compose pull
+docker-compose up
+
+To run the application, use:
+
+docker compose run --service-ports web python manage.py runserver 0.0.0.0:8000 --settings=projectsettings.settings.development_docker_sqlite_settings.py
 
 ## Release Process
 Information about the release process: [Release Process](https://github.com/scaphilo/koalixcrm/wiki/Release-Process)
