@@ -46,5 +46,5 @@ docker compose run --service-ports web python manage.py runserver 0.0.0.0:8000 -
 ## Release Process
 Information about the release process: [Release Process](https://github.com/scaphilo/koalixcrm/wiki/Release-Process)
 
-## Update from version 1.11 to 1.12
-Some information about the update procedure from Version 1.11 to Version 1.12: [update](https://github.com/scaphilo/koalixcrm/wiki/Update) 
+## Update from version 1.12 to 1.14
+Some information about the update procedure from Version 1.12 to Version 1.14: [update](https://github.com/scaphilo/koalixcrm/wiki/Update) 
