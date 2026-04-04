@@ -1,5 +1,5 @@
 import datetime
-import pytz
+from zoneinfo import ZoneInfo
 from django.test import TestCase
 from koalixcrm.crm.factories.factory_user import AdminUserFactory
 from koalixcrm.crm.factories.factory_customer_billing_cycle import StandardCustomerBillingCycleFactory
@@ -17,7 +17,7 @@ class TaskUpdateLastStatusUpdate(TestCase):
 
     def setUp(self):
         datetime_now = datetime.datetime(2024, 1, 1, 0, 00)
-        datetime_now = pytz.timezone("UTC").localize(datetime_now, is_dst=None)
+        datetime_now = datetime_now.replace(tzinfo=ZoneInfo("UTC"))
         start_date = (datetime_now - datetime.timedelta(days=30)).date()
         end_date_first_task = (datetime_now + datetime.timedelta(days=30)).date()
         end_date_second_task = (datetime_now + datetime.timedelta(days=60)).date()

@@ -27,3 +27,6 @@ pip-log.txt
 
 #VSCODE
 .vscode
+
+# Virtual environment
+venv_linux/
