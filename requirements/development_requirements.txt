@@ -11,6 +11,7 @@ markdown==3.8
 django-filter==25.1
 pandas==2.2.3
 matplotlib==3.10.3
+PyJWT[crypto]>=2.8.0
 pytest>=8.0.0
 pytest-cov>=5.0.0
 pytest-django>=4.7.0
