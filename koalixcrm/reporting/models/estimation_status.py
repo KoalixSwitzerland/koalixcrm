@@ -2,7 +2,6 @@
 
 from django.db import models
 from django.utils.translation import gettext as _
-from django.contrib import admin
 from rest_framework import serializers
 
 
@@ -25,22 +24,6 @@ class EstimationStatus(models.Model):
 
     def __str__(self):
         return str(self.id) + " " + str(self.title)
-
-
-class EstimationStatusAdminView(admin.ModelAdmin):
-    list_display = ('id',
-                    'title',
-                    'description',
-                    'is_obsolete')
-
-    fieldsets = (
-        (_('Agreement Status'), {
-            'fields': ('title',
-                       'description',
-                       'is_obsolete')
-        }),
-    )
-    save_as = True
 
 
 class EstimationStatusJSONSerializer(serializers.HyperlinkedModelSerializer):

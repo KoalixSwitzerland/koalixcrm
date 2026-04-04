@@ -3,11 +3,9 @@
 import datetime
 from dateutil.relativedelta import *
 from django.db import models
-from django.contrib import admin
 from django.utils.translation import gettext as _
 from koalixcrm.djangoUserExtension.models.user_extension import UserExtension
 from koalixcrm.reporting.models.resource import Resource
-from koalixcrm.reporting.models.resource_price import ResourcePriceInlineAdminView
 from koalixcrm.reporting.models.work import Work
 from koalixcrm.shared.pdf_export import PDFExport
 
@@ -198,34 +196,3 @@ class HumanResource(Resource):
     class Meta:
         app_label = "reporting"
         db_table = "crm_humanresource"
-
-
-class HumanResourceAdminView(admin.ModelAdmin):
-    list_display = ('id',
-                    'user',
-                    'resource_manager',
-                    'resource_type')
-    list_display_links = ('id',
-                          'user')
-    list_filter = ('user',)
-    ordering = ('id',)
-    search_fields = ('id',
-                     'user')
-    fieldsets = (
-        (_('Basics'), {
-            'fields': ('user',
-                       'resource_manager',
-                       'resource_type')
-        }),
-    )
-
-    def create_work_report_pdf(self, request, queryset):
-        from koalixcrm.crm.views.create_work_report import create_work_report
-
-        return create_work_report(self, request, queryset)
-
-    create_work_report_pdf.short_description = _("Work Report PDF")
-
-    save_as = True
-    actions = [create_work_report_pdf]
-    inlines = [ResourcePriceInlineAdminView]

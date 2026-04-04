@@ -1,14 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from django.contrib import admin
 from django.db import models
 from django.utils.translation import gettext as _
 
 from koalixcrm.products.models.product_price import ProductPrice
-from koalixcrm.products.models.product_price import ProductPriceInlineAdminView
-from koalixcrm.products.models.unit_transform import UnitTransformInlineAdminView
-from koalixcrm.products.models.customer_group_transform import CustomerGroupTransformInlineAdminView
-from koalixcrm.products.models.currency_transform import CurrencyTransformInlineAdminView
 
 
 class ProductType(models.Model):
@@ -107,28 +102,3 @@ class ProductType(models.Model):
                 "that matches the date") + ": " + self.date.__str__() + " ," + _(
                 "customer") + ": " + self.customer.__str__() + " ," + _(
                 "currency") + ": " + self.currency.__str__() + _(" and unit") + ":" + self.unit.__str__()
-
-
-class ProductTypeAdminView(admin.ModelAdmin):
-    list_display = (
-        'product_type_identifier',
-        'title',
-        'default_unit',
-        'tax',
-        'accounting_product_category')
-    list_display_links = ('product_type_identifier',)
-    fieldsets = (
-        (_('Basics'), {
-            'fields': (
-                'product_type_identifier',
-                'title',
-                'description',
-                'default_unit',
-                'tax',
-                'accounting_product_category')
-        }),
-    )
-    inlines = [ProductPriceInlineAdminView,
-               UnitTransformInlineAdminView,
-               CurrencyTransformInlineAdminView,
-               CustomerGroupTransformInlineAdminView]

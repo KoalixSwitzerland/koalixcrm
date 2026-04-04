@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from django.contrib import admin
 from django.utils.translation import gettext as _
 
 
@@ -47,17 +46,3 @@ class UnitTransform(models.Model):
         db_table = "crm_unittransform"
         verbose_name = _('Unit Transform')
         verbose_name_plural = _('Unit Transforms')
-
-
-class UnitTransformInlineAdminView(admin.TabularInline):
-    model = UnitTransform
-    extra = 1
-    classes = ['collapse']
-    fieldsets = (
-        ('', {
-            'fields': ('from_unit',
-                       'to_unit',
-                       'factor',)
-        }),
-    )
-    allow_add = True

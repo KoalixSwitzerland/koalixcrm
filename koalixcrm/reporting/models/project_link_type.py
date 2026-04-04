@@ -2,7 +2,6 @@
 
 from django.db import models
 from django.utils.translation import gettext as _
-from django.contrib import admin
 
 
 class ProjectLinkType(models.Model):
@@ -18,17 +17,3 @@ class ProjectLinkType(models.Model):
 
     def __str__(self):
         return str(self.id) + " " + str(self.title)
-
-
-class OptionProjectLinkType(admin.ModelAdmin):
-    list_display = ('id',
-                    'title',
-                    'description')
-
-    fieldsets = (
-        (_('ProjectLinkType'), {
-            'fields': ('title',
-                       'description')
-        }),
-    )
-    save_as = True

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from django.contrib import admin
 from django.utils.translation import gettext as _
 
 
@@ -21,13 +20,3 @@ class CustomerBillingCycle(models.Model):
         return self.id.__str__() + ' ' + self.name
 
 
-class OptionCustomerBillingCycle(admin.ModelAdmin):
-    list_display = ('id',
-                    'name',
-                    'time_to_payment_date',
-                    'payment_reminder_time_to_payment')
-    fieldsets = (('', {'fields': ('name',
-                                  'time_to_payment_date',
-                                  'payment_reminder_time_to_payment',
-                                  )}),)
-    allow_add = True

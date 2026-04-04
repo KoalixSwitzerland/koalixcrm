@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from django.contrib import admin
 from django.utils.translation import gettext as _
 
 
@@ -41,17 +40,3 @@ class CurrencyTransform(models.Model):
         db_table = "crm_currencytransform"
         verbose_name = _('Currency Transform')
         verbose_name_plural = _('Currency Transforms')
-
-
-class CurrencyTransformInlineAdminView(admin.TabularInline):
-    model = CurrencyTransform
-    extra = 1
-    classes = ['collapse']
-    fieldsets = (
-        ('', {
-            'fields': ('from_currency',
-                       'to_currency',
-                       'factor',)
-        }),
-    )
-    allow_add = True

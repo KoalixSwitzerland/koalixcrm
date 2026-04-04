@@ -4,8 +4,6 @@ from django.db import models
 from django.utils.translation import gettext as _
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
-from django.contrib import admin
-from django.contrib.contenttypes.admin import GenericTabularInline
 
 
 class GenericProjectLink(models.Model):
@@ -40,35 +38,3 @@ class GenericProjectLink(models.Model):
         db_table = "crm_genericprojectlink"
         verbose_name = _('Project Link')
         verbose_name_plural = _('Project Links')
-
-
-class GenericLinkInlineAdminView(admin.TabularInline):
-    model = GenericProjectLink
-    readonly_fields = ('project_link_type',
-                       'content_type',
-                       'object_id',
-                       'date_of_creation',
-                       'last_modified_by')
-    extra = 0
-
-    def has_add_permission(self, request, obj=None):
-        return False
-
-    def has_delete_permission(self, request, obj=None):
-        return False
-
-
-class InlineGenericProjectLink(GenericTabularInline):
-    model = GenericProjectLink
-    readonly_fields = ('project_link_type',
-                       'content_type',
-                       'object_id',
-                       'date_of_creation',
-                       'last_modified_by')
-    extra = 0
-
-    def has_add_permission(self, request, obj=None):
-        return False
-
-    def has_delete_permission(self, request, obj=None):
-        return False

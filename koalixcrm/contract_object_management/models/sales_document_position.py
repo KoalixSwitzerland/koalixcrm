@@ -107,24 +107,3 @@ class SalesDocumentPosition(Position):
     class NoPriceFound(Exception):
         def __str__(self):
             return _("There is no Price set for the sales document position")
-
-
-class SalesDocumentInlinePosition(admin.TabularInline):
-    model = SalesDocumentPosition
-    extra = 1
-    classes = ['expand']
-    fieldsets = (
-        ('', {
-            'fields': (
-                'position_number',
-                'quantity',
-                'unit',
-                'product_type',
-                'description',
-                'discount',
-                'overwrite_product_price',
-                'position_price_per_unit',
-                'sent_on')
-        }),
-    )
-    allow_add = True

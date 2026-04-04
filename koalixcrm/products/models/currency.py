@@ -2,7 +2,6 @@
 
 from decimal import Decimal
 from django.db import models
-from django.contrib import admin
 from django.utils.translation import gettext as _
 
 
@@ -50,14 +49,3 @@ class Currency(models.Model):
         db_table = "crm_currency"
         verbose_name = _('Currency')
         verbose_name_plural = _('Currency')
-
-
-class OptionCurrency(admin.ModelAdmin):
-    list_display = ('id',
-                    'description',
-                    'short_name',
-                    'rounding')
-    fieldsets = (('', {'fields': ('description',
-                                  'short_name',
-                                  'rounding')}),)
-    allow_add = True

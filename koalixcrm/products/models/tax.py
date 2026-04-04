@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from django.contrib import admin
 from django.utils.translation import gettext as _
 
 
@@ -36,18 +35,4 @@ class Tax(models.Model):
         db_table = "crm_tax"
         verbose_name = _('Tax')
         verbose_name_plural = _('Taxes')
-
-
-class OptionTax(admin.ModelAdmin):
-    list_display = ('id',
-                    'tax_rate',
-                    'name',
-                    'account_activa',
-                    'account_passiva')
-    fieldsets = (('', {'fields': ('tax_rate',
-                                  'name',
-                                  'account_activa',
-                                  'account_passiva')}),)
-    allow_add = True
-
 

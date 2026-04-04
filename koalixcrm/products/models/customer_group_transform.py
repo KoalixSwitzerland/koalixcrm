@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from django.contrib import admin
 from django.utils.translation import gettext as _
 
 
@@ -60,17 +59,3 @@ class CustomerGroupTransform(models.Model):
         db_table = "crm_customergrouptransform"
         verbose_name = _('Customer Group Price Transform')
         verbose_name_plural = _('Customer Group Price Transforms')
-
-
-class CustomerGroupTransformInlineAdminView(admin.TabularInline):
-    model = CustomerGroupTransform
-    extra = 1
-    classes = ['collapse']
-    fieldsets = (
-        ('', {
-            'fields': ('from_customer_group',
-                       'to_customer_group',
-                       'factor',)
-        }),
-    )
-    allow_add = True

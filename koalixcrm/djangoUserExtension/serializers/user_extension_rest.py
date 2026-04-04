@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from koalixcrm.djangoUserExtension.models.user_extension import UserExtension
-from koalixcrm.crm.serializers.currency_rest import CurrencyJSONSerializer
+from koalixcrm.products.serializers.currency_serializer import CurrencyJSONSerializer
 from koalixcrm.djangoUserExtension.serializers.template_set_rest import TemplateSetJSONSerializer
 
 

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from django.contrib import admin
 from django.utils.translation import gettext as _
 from koalixcrm.products.models.price import Price
 
@@ -19,20 +18,3 @@ class ProductPrice(Price):
         db_table = "crm_productprice"
         verbose_name = _('Product Price')
         verbose_name_plural = _('Product Prices')
-
-
-class ProductPriceInlineAdminView(admin.TabularInline):
-    model = ProductPrice
-    extra = 1
-    classes = ['collapse']
-    fieldsets = (
-        ('', {
-            'fields': ('price',
-                       'currency',
-                       'unit',
-                       'valid_from',
-                       'valid_until',
-                       'customer_group')
-        }),
-    )
-    allow_add = True

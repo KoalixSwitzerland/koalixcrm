@@ -3,7 +3,7 @@
 from django.db import models
 from django.utils.translation import gettext as _
 from koalixcrm.crm.const.status import *
-from koalixcrm.contract_object_management.models.sales_document import SalesDocument, OptionSalesDocument
+from koalixcrm.contract_object_management.models.sales_document import SalesDocument
 
 
 class DeliveryNote(SalesDocument):
@@ -26,19 +26,3 @@ class DeliveryNote(SalesDocument):
         db_table = "crm_deliverynote"
         verbose_name = _('Delivery Note')
         verbose_name_plural = _('Delivery Notes')
-
-
-class OptionDeliveryNote(OptionSalesDocument):
-    list_display = OptionSalesDocument.list_display + ('status',)
-    list_filter = OptionSalesDocument.list_filter + ('status',)
-    ordering = OptionSalesDocument.ordering
-    search_fields = OptionSalesDocument.search_fields
-    fieldsets = OptionSalesDocument.fieldsets + (
-        (_('Delivery Note specific'), {
-            'fields': ('status', )
-        }),
-    )
-
-    save_as = OptionSalesDocument.save_as
-    inlines = OptionSalesDocument.inlines
-    actions = ['create_purchase_confirmation', 'create_invoice','create_pdf']

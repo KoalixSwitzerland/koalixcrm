@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from django.contrib import admin
 from django.utils.translation import gettext as _
 from koalixcrm.reporting.models.resource_price import ResourcePrice
 from decimal import *
@@ -149,20 +148,3 @@ class EstimationAdminForm(BaseInlineFormSet):
                     raise ValidationError('Please select a reporting period which is not yet in state "done"')
                 if date_from >= date_until:
                     raise ValidationError('The date until must be at least one day after date from')
-
-
-class EstimationInlineAdminView(admin.TabularInline):
-    model = Estimation
-    formset = EstimationAdminForm
-    fieldsets = (
-        (_('Work'), {
-            'fields': ('task',
-                       'amount',
-                       'resource',
-                       'date_from',
-                       'date_until',
-                       'status',
-                       'reporting_period')
-        }),
-    )
-    extra = 1

@@ -4,8 +4,6 @@ from django.db import models
 from django.utils.translation import gettext as _
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
-from django.contrib import admin
-
 
 class GenericTaskLink(models.Model):
     id = models.BigAutoField(primary_key=True)
@@ -39,19 +37,3 @@ class GenericTaskLink(models.Model):
         db_table = "crm_generictasklink"
         verbose_name = _('Task Link')
         verbose_name_plural = _('Task Links')
-
-
-class InlineGenericTaskLink(admin.TabularInline):
-    model = GenericTaskLink
-    readonly_fields = ('task_link_type',
-                       'content_type',
-                       'object_id',
-                       'date_of_creation',
-                       'last_modified_by')
-    extra = 0
-
-    def has_add_permission(self, request, obj=None):
-        return False
-
-    def has_delete_permission(self, request, obj=None):
-        return False

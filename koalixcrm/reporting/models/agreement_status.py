@@ -2,7 +2,6 @@
 
 from django.db import models
 from django.utils.translation import gettext as _
-from django.contrib import admin
 from rest_framework import serializers
 
 
@@ -25,22 +24,6 @@ class AgreementStatus(models.Model):
 
     def __str__(self):
         return str(self.id) + " " + str(self.title)
-
-
-class AgreementStatusAdminView(admin.ModelAdmin):
-    list_display = ('id',
-                    'title',
-                    'description',
-                    'is_agreed')
-
-    fieldsets = (
-        (_('Agreement Status'), {
-            'fields': ('title',
-                       'description',
-                       'is_agreed')
-        }),
-    )
-    save_as = True
 
 
 class AgreementStatusJSONSerializer(serializers.HyperlinkedModelSerializer):

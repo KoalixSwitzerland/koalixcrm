@@ -5,8 +5,7 @@ from django.db import models
 from django.utils.translation import gettext as _
 from koalixcrm.crm.const.status import *
 from django.core.validators import MaxValueValidator, MinValueValidator
-from koalixcrm.contract_object_management.models.sales_document import SalesDocument, OptionSalesDocument
-from koalixcrm.plugin import *
+from koalixcrm.contract_object_management.models.sales_document import SalesDocument
 
 
 class PaymentReminder(SalesDocument):
@@ -44,33 +43,3 @@ class PaymentReminder(SalesDocument):
         db_table = "crm_paymentreminder"
         verbose_name = _('Payment Reminder')
         verbose_name_plural = _('Payment Reminders')
-
-
-class OptionPaymentReminder(OptionSalesDocument):
-    list_display = OptionSalesDocument.list_display + ('payable_until',
-                                                       'status',
-                                                       'iteration_number')
-    list_filter = OptionSalesDocument.list_filter + ('status',)
-    ordering = OptionSalesDocument.ordering
-    search_fields = OptionSalesDocument.search_fields
-    fieldsets = OptionSalesDocument.fieldsets + (
-        (_('Quote specific'), {
-            'fields': ('payable_until',
-                       'status',
-                       'payment_bank_reference',
-                       'iteration_number')
-        }),
-    )
-
-    save_as = OptionSalesDocument.save_as
-    inlines = OptionSalesDocument.inlines
-    actions = ['create_purchase_confirmation',
-               'create_invoice',
-               'create_quote',
-               'create_delivery_note',
-               'create_pdf',
-               'register_invoice_in_accounting',
-               'register_payment_in_accounting']
-
-    pluginProcessor = PluginProcessor()
-    inlines.extend(pluginProcessor.getPluginAdditions("quoteInlines"))

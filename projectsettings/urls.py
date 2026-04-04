@@ -1,25 +1,10 @@
-"""test_koalixcrm URL Configuration
+"""koalixcrm URL Configuration"""
 
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/1.11/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  url(r'^$', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  url(r'^$', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.conf.urls import url, include
-    2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
-"""
-
-from django.urls import path
+from django.urls import path, include
 from django.conf.urls.static import *
 from django.contrib.staticfiles.urls import static
 from django.contrib import admin
 from django.shortcuts import redirect
-from django.urls import include
 from filebrowser.sites import site
 from rest_framework import routers
 
@@ -27,32 +12,45 @@ from accounting_api import (
     AccountAsJSON, AccountingPeriodAsJSON, BookingAsJSON, ProductCategoryAsJSON,
 )
 from crm_api import (
-    ContractAsJSON, CurrencyAsJSON, ProductAsJSON, ProjectAsJSON, TaskAsJSON,
-    TaskStatusAsJSON, TaxAsJSON, UnitAsJSON, CustomerGroupAsJSON, CustomerBillingCycleAsJSON,
-    CustomerAsJSON, ContactPostalAddressAsJSON, ContactEmailAddressAsJSON, ContactPhoneAddressAsJSON,
-    ProjectStatusAsJSON,
+    CustomerViewSet, CustomerGroupViewSet, CustomerBillingCycleViewSet,
+    ContactPostalAddressViewSet, ContactEmailAddressViewSet, ContactPhoneAddressViewSet,
+)
+from products_api import (
+    CurrencyViewSet, TaxViewSet, UnitViewSet, ProductTypeViewSet,
+)
+from contract_object_management_api import (
+    ContractViewSet,
+)
+from reporting_api import (
+    TaskViewSet, TaskStatusViewSet, ProjectViewSet, ProjectStatusViewSet, AgreementViewSet,
 )
 
 router = routers.DefaultRouter()
+# Accounting
 router.register(r'accounts', AccountAsJSON)
 router.register(r'accountingPeriods', AccountingPeriodAsJSON)
 router.register(r'bookings', BookingAsJSON)
-router.register(r'contracts', ContractAsJSON)
-router.register(r'currencies', CurrencyAsJSON)
-router.register(r'customers', CustomerAsJSON)
-router.register(r'customerBillingCycles', CustomerBillingCycleAsJSON)
-router.register(r'contactPostalAddresses', ContactPostalAddressAsJSON)
-router.register(r'contactPhoneNumbers', ContactPhoneAddressAsJSON)
-router.register(r'contactEmailAddresses', ContactEmailAddressAsJSON)
-router.register(r'customerGroups', CustomerGroupAsJSON)
-router.register(r'products', ProductAsJSON)
 router.register(r'productCategories', ProductCategoryAsJSON)
-router.register(r'projects', ProjectAsJSON)
-router.register(r'projectStatus', ProjectStatusAsJSON)
-router.register(r'tasks', TaskAsJSON)
-router.register(r'taskstatus', TaskStatusAsJSON)
-router.register(r'taxes', TaxAsJSON)
-router.register(r'units', UnitAsJSON)
+# CRM (contacts)
+router.register(r'customers', CustomerViewSet)
+router.register(r'customerBillingCycles', CustomerBillingCycleViewSet)
+router.register(r'contactPostalAddresses', ContactPostalAddressViewSet)
+router.register(r'contactPhoneNumbers', ContactPhoneAddressViewSet)
+router.register(r'contactEmailAddresses', ContactEmailAddressViewSet)
+router.register(r'customerGroups', CustomerGroupViewSet)
+# Products
+router.register(r'currencies', CurrencyViewSet)
+router.register(r'products', ProductTypeViewSet)
+router.register(r'taxes', TaxViewSet)
+router.register(r'units', UnitViewSet)
+# Contract Object Management
+router.register(r'contracts', ContractViewSet)
+# Reporting
+router.register(r'projects', ProjectViewSet)
+router.register(r'projectStatus', ProjectStatusViewSet)
+router.register(r'tasks', TaskViewSet)
+router.register(r'taskstatus', TaskStatusViewSet)
+router.register(r'agreements', AgreementViewSet)
 
 admin.autodiscover()
 
@@ -66,4 +64,3 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-

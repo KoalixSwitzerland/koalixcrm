@@ -3,13 +3,9 @@
 from decimal import *
 from django.db import models
 from django.utils.translation import gettext as _
-from django.contrib import admin
 from django.utils.html import format_html
 from koalixcrm.reporting.models.agreement import Agreement
-from koalixcrm.reporting.models.agreement import AgreementInlineAdminView
-from koalixcrm.reporting.models.estimation import EstimationInlineAdminView
-from koalixcrm.reporting.models.generic_task_link import InlineGenericTaskLink
-from koalixcrm.reporting.models.work import WorkInlineAdminView, Work
+from koalixcrm.reporting.models.work import Work
 from koalixcrm.reporting.models.reporting_period import ReportingPeriod
 from koalixcrm.reporting.models.resource_price import ResourcePrice
 from koalixcrm.reporting.models.estimation import Estimation
@@ -530,72 +526,3 @@ class Task(models.Model):
         db_table = "crm_task"
         verbose_name = _('Task')
         verbose_name_plural = _('Tasks')
-
-
-class TaskAdminView(admin.ModelAdmin):
-    list_display = ('link_to_task',
-                    'planned_start',
-                    'planned_end',
-                    'project',
-                    'status',
-                    'last_status_change',
-                    'planned_duration',
-                    'planned_total_costs',
-                    'effective_duration',
-                    'effective_effort_overall',
-                    'effective_costs_confirmed',
-                    'effective_costs_not_confirmed')
-    list_display_links = ('link_to_task',)
-    list_filter = ('project',)
-    ordering = ('-id',)
-
-    fieldsets = (
-        (_('Work'), {
-            'fields': ('title',
-                       'project',
-                       'description',
-                       'status')
-        }),
-    )
-    save_as = True
-    inlines = [AgreementInlineAdminView,
-               EstimationInlineAdminView,
-               InlineGenericTaskLink,
-               WorkInlineAdminView]
-
-
-class TaskInlineAdminView(admin.TabularInline):
-    model = Task
-    readonly_fields = ('link_to_task',
-                       'last_status_change',
-                       'planned_start',
-                       'planned_end',
-                       'planned_duration',
-                       'planned_total_costs',
-                       'effective_duration',
-                       'effective_effort_overall',
-                       'effective_costs_confirmed',
-                       'effective_costs_not_confirmed')
-    fieldsets = (
-        (_('Task'), {
-            'fields': ('link_to_task',
-                       'title',
-                       'planned_start',
-                       'planned_end',
-                       'status',
-                       'last_status_change',
-                       'planned_duration',
-                       'planned_total_costs',
-                       'effective_duration',
-                       'effective_effort_overall',
-                       'effective_costs_confirmed',
-                       'effective_costs_not_confirmed')
-        }),
-    )
-    extra = 1
-
-    def has_add_permission(self, request, obj=None):
-        return True
-
-    def has_delete_permission(self, request, obj=None):
-        return False

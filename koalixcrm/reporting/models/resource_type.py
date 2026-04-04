@@ -2,7 +2,6 @@
 
 from django.db import models
 from django.utils.translation import gettext as _
-from django.contrib import admin
 
 
 class ResourceType(models.Model):
@@ -23,17 +22,3 @@ class ResourceType(models.Model):
         db_table = "crm_resourcetype"
         verbose_name = _('Resource Link Type')
         verbose_name_plural = _('Resource Link Type')
-
-
-class ResourceTypeAdminView(admin.ModelAdmin):
-    list_display = ('id',
-                    'title',
-                    'description')
-
-    fieldsets = (
-        (_('ResourceType'), {
-            'fields': ('title',
-                       'description')
-        }),
-    )
-    save_as = True

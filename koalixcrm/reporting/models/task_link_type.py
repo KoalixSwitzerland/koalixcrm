@@ -2,7 +2,6 @@
 
 from django.db import models
 from django.utils.translation import gettext as _
-from django.contrib import admin
 
 
 class TaskLinkType(models.Model):
@@ -18,17 +17,3 @@ class TaskLinkType(models.Model):
 
     def __str__(self):
         return str(self.id) + " " + str(self.title)
-
-
-class OptionTaskLinkType(admin.ModelAdmin):
-    list_display = ('id',
-                    'title',
-                    'description')
-
-    fieldsets = (
-        (_('TaskLinkType'), {
-            'fields': ('title',
-                       'description')
-        }),
-    )
-    save_as = True

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.utils.translation import gettext as _
-from koalixcrm.contract_object_management.models.sales_document import SalesDocument, OptionSalesDocument
+from koalixcrm.contract_object_management.models.sales_document import SalesDocument
 
 
 class PurchaseConfirmation(SalesDocument):
@@ -21,16 +21,3 @@ class PurchaseConfirmation(SalesDocument):
         db_table = "crm_purchaseconfirmation"
         verbose_name = _('Purchase Confirmation')
         verbose_name_plural = _('Purchase Confirmations')
-
-
-class OptionPurchaseConfirmation(OptionSalesDocument):
-    list_display = OptionSalesDocument.list_display
-    list_filter = OptionSalesDocument.list_filter
-    ordering = OptionSalesDocument.ordering
-    search_fields = OptionSalesDocument.search_fields
-    fieldsets = OptionSalesDocument.fieldsets
-
-    save_as = OptionSalesDocument.save_as
-    inlines = OptionSalesDocument.inlines
-    actions = ['create_invoice', 'create_quote',
-               'create_delivery_note', 'create_purchase_order', 'create_', 'create_pdf']

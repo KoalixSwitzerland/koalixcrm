@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from django.contrib import admin
 from django.utils.translation import gettext as _
 
 
@@ -31,16 +30,4 @@ class Unit(models.Model):
         verbose_name = _('Unit')
         verbose_name_plural = _('Units')
 
-
-class OptionUnit(admin.ModelAdmin):
-    list_display = ('id',
-                    'description',
-                    'short_name',
-                    'is_a_fraction_of',
-                    'fraction_factor_to_next_higher_unit')
-    fieldsets = (('', {'fields': ('description',
-                                  'short_name',
-                                  'is_a_fraction_of',
-                                  'fraction_factor_to_next_higher_unit')}),)
-    allow_add = True
 

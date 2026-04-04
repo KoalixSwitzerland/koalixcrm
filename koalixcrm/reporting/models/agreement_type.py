@@ -2,7 +2,6 @@
 
 from django.db import models
 from django.utils.translation import gettext as _
-from django.contrib import admin
 
 
 class AgreementType(models.Model):
@@ -18,17 +17,3 @@ class AgreementType(models.Model):
 
     def __str__(self):
         return str(self.id) + " " + str(self.title)
-
-
-class AgreementTypeAdminView(admin.ModelAdmin):
-    list_display = ('id',
-                    'title',
-                    'description')
-
-    fieldsets = (
-        (_('AgreementType'), {
-            'fields': ('title',
-                       'description')
-        }),
-    )
-    save_as = True

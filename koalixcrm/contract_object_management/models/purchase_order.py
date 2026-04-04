@@ -3,8 +3,7 @@
 from django.db import models
 from django.utils.translation import gettext as _
 from koalixcrm.crm.const.status import *
-from koalixcrm.contract_object_management.models.sales_document import SalesDocument, OptionSalesDocument
-from koalixcrm.plugin import *
+from koalixcrm.contract_object_management.models.sales_document import SalesDocument
 
 
 class PurchaseOrder(SalesDocument):
@@ -28,24 +27,3 @@ class PurchaseOrder(SalesDocument):
         db_table = "crm_purchaseorder"
         verbose_name = _('Purchase Order')
         verbose_name_plural = _('Purchase Orders')
-
-
-class OptionPurchaseOrder(OptionSalesDocument):
-    list_display = OptionSalesDocument.list_display + ('supplier', 'status',)
-    list_filter = OptionSalesDocument.list_filter + ('status',)
-    ordering = OptionSalesDocument.ordering
-    search_fields = OptionSalesDocument.search_fields
-    fieldsets = OptionSalesDocument.fieldsets + (
-        (_('Purchase Order specific'), {
-            'fields': ('supplier', 'status',)
-        }),
-    )
-
-    save_as = OptionSalesDocument.save_as
-    inlines = OptionSalesDocument.inlines
-    actions = ['create_purchase_confirmation', 'create_invoice', 'create_quote',
-               'create_delivery_note', 'create_pdf',
-               'register_invoice_in_accounting', 'register_payment_in_accounting',]
-
-    pluginProcessor = PluginProcessor()
-    inlines.extend(pluginProcessor.getPluginAdditions("quoteInlines"))
