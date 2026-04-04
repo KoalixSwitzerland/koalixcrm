@@ -117,7 +117,24 @@ LOGIN_URL = "/admin/login"
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication',
+        'koalixcrm.auth.oidc_token_authentication.OIDCAccessTokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
-    )
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
 }
+
+# OIDC Configuration (from environment variables)
+OIDC_ISSUER = os.environ.get('OIDC_ISSUER')
+OIDC_ACCEPTED_AUDIENCES = [
+    aud.strip() for aud in
+    os.environ.get('OIDC_ACCEPTED_AUDIENCES', '').split(',')
+    if aud.strip()
+]
+
+AUTHENTICATION_BACKENDS = [
+    'koalixcrm.auth.oidc_backend.OIDCAuthenticationBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]

@@ -23,12 +23,15 @@ from django.conf.urls import include, url
 from filebrowser.sites import site
 from rest_framework import routers
 
-from koalixcrm.accounting.serializers.restinterface import AccountAsJSON, AccountingPeriodAsJSON, BookingAsJSON, \
-    ProductCategoryAsJSON
-from koalixcrm.crm.serializers.restinterface import ContractAsJSON, CurrencyAsJSON, ProductAsJSON, ProjectAsJSON, TaskAsJSON, \
-    TaskStatusAsJSON, TaxAsJSON, UnitAsJSON, CustomerGroupAsJSON, CustomerBillingCycleAsJSON, \
-    CustomerAsJSON, ContactPostalAddressAsJSON, ContactEmailAddressAsJSON, ContactPhoneAddressAsJSON, \
-    ProjectStatusAsJSON
+from accounting_api import (
+    AccountAsJSON, AccountingPeriodAsJSON, BookingAsJSON, ProductCategoryAsJSON,
+)
+from crm_api import (
+    ContractAsJSON, CurrencyAsJSON, ProductAsJSON, ProjectAsJSON, TaskAsJSON,
+    TaskStatusAsJSON, TaxAsJSON, UnitAsJSON, CustomerGroupAsJSON, CustomerBillingCycleAsJSON,
+    CustomerAsJSON, ContactPostalAddressAsJSON, ContactEmailAddressAsJSON, ContactPhoneAddressAsJSON,
+    ProjectStatusAsJSON,
+)
 
 router = routers.DefaultRouter()
 router.register(r'accounts', AccountAsJSON)
