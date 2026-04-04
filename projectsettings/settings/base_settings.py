@@ -22,6 +22,9 @@ PREREQUISITE_APPS = [
 ]
 
 PROJECT_APPS = [
+    'koalixcrm.products',
+    'koalixcrm.contract_object_management',
+    'koalixcrm.reporting',
     'koalixcrm.crm',
     'koalixcrm.accounting',
     'koalixcrm.djangoUserExtension',

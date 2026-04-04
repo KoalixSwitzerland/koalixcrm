@@ -12,16 +12,16 @@ from koalixcrm.crm.contact.contact import PostalAddressForContact, EmailAddressF
 from koalixcrm.crm.contact.customer import Customer
 from koalixcrm.crm.contact.customer_billing_cycle import CustomerBillingCycle
 from koalixcrm.crm.contact.customer_group import CustomerGroup
-from koalixcrm.crm.documents.contract import Contract, ContractJSONSerializer
-from koalixcrm.crm.product.currency import Currency
-from koalixcrm.crm.product.product_type import ProductType
-from koalixcrm.crm.product.tax import Tax
-from koalixcrm.crm.product.unit import Unit
-from koalixcrm.crm.reporting.agreement import Agreement
-from koalixcrm.crm.reporting.project import Project
-from koalixcrm.crm.reporting.project_status import ProjectStatus
-from koalixcrm.crm.reporting.task import Task
-from koalixcrm.crm.reporting.task_status import TaskStatus
+from koalixcrm.contract_object_management.models.contract import Contract, ContractJSONSerializer
+from koalixcrm.products.models.currency import Currency
+from koalixcrm.products.models.product_type import ProductType
+from koalixcrm.products.models.tax import Tax
+from koalixcrm.products.models.unit import Unit
+from koalixcrm.reporting.models.agreement import Agreement
+from koalixcrm.reporting.models.project import Project
+from koalixcrm.reporting.models.project_status import ProjectStatus
+from koalixcrm.reporting.models.task import Task
+from koalixcrm.reporting.models.task_status import TaskStatus
 from koalixcrm.crm.serializers.contact_rest import ContactPostalAddressJSONSerializer, ContactEmailAddressJSONSerializer, \
     ContactPhoneAddressJSONSerializer
 from koalixcrm.crm.serializers.currency_rest import CurrencyJSONSerializer

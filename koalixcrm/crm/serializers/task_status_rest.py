@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from koalixcrm.crm.reporting.task_status import TaskStatus
+from koalixcrm.reporting.models.task_status import TaskStatus
 
 
 class OptionTaskStatusJSONSerializer(serializers.HyperlinkedModelSerializer):

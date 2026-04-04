@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
-from koalixcrm.crm.documents.quote import Quote, OptionQuote
-from koalixcrm.crm.documents.purchase_confirmation import PurchaseConfirmation, OptionPurchaseConfirmation
-from koalixcrm.crm.documents.delivery_note import DeliveryNote, OptionDeliveryNote
-from koalixcrm.crm.documents.invoice import Invoice, OptionInvoice
-from koalixcrm.crm.documents.payment_reminder import PaymentReminder, OptionPaymentReminder
-from koalixcrm.crm.documents.purchase_order import PurchaseOrder, OptionPurchaseOrder
-from koalixcrm.crm.documents.contract import Contract, OptionContract
+from koalixcrm.contract_object_management.models.quote import Quote, OptionQuote
+from koalixcrm.contract_object_management.models.purchase_confirmation import PurchaseConfirmation, OptionPurchaseConfirmation
+from koalixcrm.contract_object_management.models.delivery_note import DeliveryNote, OptionDeliveryNote
+from koalixcrm.contract_object_management.models.invoice import Invoice, OptionInvoice
+from koalixcrm.contract_object_management.models.payment_reminder import PaymentReminder, OptionPaymentReminder
+from koalixcrm.contract_object_management.models.purchase_order import PurchaseOrder, OptionPurchaseOrder
+from koalixcrm.contract_object_management.models.contract import Contract, OptionContract
 
 admin.site.register(Contract, OptionContract)
 admin.site.register(Quote, OptionQuote)

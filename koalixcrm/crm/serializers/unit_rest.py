@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from koalixcrm.crm.product.unit import Unit
+from koalixcrm.products.models.unit import Unit
 
 
 class OptionUnitJSONSerializer(serializers.HyperlinkedModelSerializer):

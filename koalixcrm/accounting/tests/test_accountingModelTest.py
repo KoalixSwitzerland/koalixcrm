@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from koalixcrm.accounting.models import Account
 from koalixcrm.accounting.models import AccountingPeriod
 from koalixcrm.accounting.models import Booking
-from koalixcrm.crm.documents.pdf_export import PDFExport
+from koalixcrm.shared.pdf_export import PDFExport
 from koalixcrm.global_support_functions import make_date_utc
 
 

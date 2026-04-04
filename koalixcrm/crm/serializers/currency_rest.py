@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from koalixcrm.crm.product.currency import Currency
+from koalixcrm.products.models.currency import Currency
 
 
 class CurrencyJSONSerializer(serializers.HyperlinkedModelSerializer):

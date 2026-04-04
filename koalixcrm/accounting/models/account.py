@@ -6,7 +6,7 @@ from django import forms
 
 from koalixcrm.accounting.const.accountTypeChoices import *
 from koalixcrm.accounting.exceptions import AccountingPeriodNotFound
-from koalixcrm.crm.documents.pdf_export import PDFExport
+from koalixcrm.shared.pdf_export import PDFExport
 
 
 class Account(models.Model):

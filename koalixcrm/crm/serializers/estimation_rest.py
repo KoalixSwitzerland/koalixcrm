@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from rest_framework import serializers
-from koalixcrm.crm.reporting.estimation import Estimation
-from koalixcrm.crm.reporting.estimation_status import EstimationStatus
-from koalixcrm.crm.reporting.resource import Resource
-from koalixcrm.crm.reporting.task import Task
+from koalixcrm.reporting.models.estimation import Estimation
+from koalixcrm.reporting.models.estimation_status import EstimationStatus
+from koalixcrm.reporting.models.resource import Resource
+from koalixcrm.reporting.models.task import Task
 from koalixcrm.crm.serializers.task_rest import OptionTaskJSONSerializer
 from koalixcrm.crm.serializers.estimation_status_rest import OptionEstimationStatusJSONSerializer
 from koalixcrm.crm.serializers.resource_rest import OptionResourceJSONSerializer

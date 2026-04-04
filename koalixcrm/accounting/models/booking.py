@@ -10,7 +10,7 @@ class Booking(models.Model):
     to_account = models.ForeignKey('Account', on_delete=models.CASCADE, verbose_name=_("To Account"), related_name="db_booking_toaccount")
     amount = models.DecimalField(max_digits=20, decimal_places=2, verbose_name=_("Amount"))
     description = models.CharField(verbose_name=_("Description"), max_length=120, null=True, blank=True)
-    booking_reference = models.ForeignKey('crm.Invoice', on_delete=models.CASCADE, verbose_name=_("Booking Reference"), null=True, blank=True)
+    booking_reference = models.ForeignKey('contract_object_management.Invoice', on_delete=models.CASCADE, verbose_name=_("Booking Reference"), null=True, blank=True)
     booking_date = models.DateTimeField(verbose_name=_("Booking at"))
     accounting_period = models.ForeignKey('AccountingPeriod', on_delete=models.CASCADE, verbose_name=_("AccountingPeriod"))
     staff = models.ForeignKey('auth.User', on_delete=models.CASCADE, limit_choices_to={'is_staff': True}, blank=True,

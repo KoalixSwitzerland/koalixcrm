@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from koalixcrm.crm.reporting.project_status import ProjectStatus
+from koalixcrm.reporting.models.project_status import ProjectStatus
 
 
 class OptionProjectStatusJSONSerializer(serializers.HyperlinkedModelSerializer):

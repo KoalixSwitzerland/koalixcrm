@@ -6,7 +6,7 @@ from filebrowser.fields import FileBrowseField
 
 class SubscriptionType(models.Model):
     id = models.BigAutoField(primary_key=True)
-    product_type = models.ForeignKey('crm.ProductType',
+    product_type = models.ForeignKey('products.ProductType',
                                      verbose_name=_('Product Type'),
                                      on_delete=models.deletion.SET_NULL,
                                      null=True,

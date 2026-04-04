@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import factory
-from koalixcrm.crm.product.customer_group_transform import CustomerGroupTransform
+from koalixcrm.products.models.customer_group_transform import CustomerGroupTransform
 from koalixcrm.crm.factories.factory_product_type import StandardProductTypeFactory
 from koalixcrm.crm.factories.factory_customer_group import AdvancedCustomerGroupFactory
 from koalixcrm.crm.factories.factory_customer_group import StandardCustomerGroupFactory

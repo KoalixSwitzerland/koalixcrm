@@ -11,9 +11,9 @@ from koalixcrm.crm.factories.factory_customer_group import StandardCustomerGroup
 from koalixcrm.djangoUserExtension.factories.factory_document_template import StandardQuoteTemplateFactory
 from koalixcrm.djangoUserExtension.factories.factory_document_template import StandardInvoiceTemplateFactory
 from koalixcrm.djangoUserExtension.factories.factory_document_template import StandardPurchaseOrderTemplateFactory
-from koalixcrm.crm.documents.quote import Quote
-from koalixcrm.crm.documents.invoice import Invoice
-from koalixcrm.crm.documents.purchase_order import PurchaseOrder
+from koalixcrm.contract_object_management.models.quote import Quote
+from koalixcrm.contract_object_management.models.invoice import Invoice
+from koalixcrm.contract_object_management.models.purchase_order import PurchaseOrder
 
 
 class CreateSalesDocumentFromContract(StaticLiveServerTestCase):

@@ -8,7 +8,7 @@ from koalixcrm.crm.factories.factory_customer_group import StandardCustomerGroup
 from koalixcrm.crm.factories.factory_currency import StandardCurrencyFactory
 from koalixcrm.crm.factories.factory_reporting_period import StandardReportingPeriodFactory
 from koalixcrm.djangoUserExtension.factories.factory_user_extension import StandardUserExtensionFactory
-from koalixcrm.crm.reporting.task import Task
+from koalixcrm.reporting.models.task import Task
 
 
 @pytest.fixture()

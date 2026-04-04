@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from rest_framework import serializers
-from koalixcrm.crm.reporting.resource_price import ResourcePrice
-from koalixcrm.crm.product.currency import Currency
-from koalixcrm.crm.product.unit import Unit
+from koalixcrm.reporting.models.resource_price import ResourcePrice
+from koalixcrm.products.models.currency import Currency
+from koalixcrm.products.models.unit import Unit
 from koalixcrm.crm.contact.customer_group import CustomerGroup
 from koalixcrm.crm.serializers.customer_group_rest import OptionCustomerGroupJSONSerializer
 from koalixcrm.crm.serializers.currency_rest import CurrencyJSONSerializer

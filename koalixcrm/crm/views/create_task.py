@@ -7,11 +7,11 @@ from django.utils.translation import gettext as _
 from django.contrib.contenttypes.models import ContentType
 from koalixcrm.crm.exceptions import *
 from koalixcrm.djangoUserExtension.exceptions import *
-from koalixcrm.crm.documents.sales_document import SalesDocument
-from koalixcrm.crm.documents.sales_document_position import SalesDocumentPosition
-from koalixcrm.crm.reporting.task import Task
-from koalixcrm.crm.reporting.generic_task_link import GenericTaskLink
-from koalixcrm.crm.reporting.project import Project
+from koalixcrm.contract_object_management.models.sales_document import SalesDocument
+from koalixcrm.contract_object_management.models.sales_document_position import SalesDocumentPosition
+from koalixcrm.reporting.models.task import Task
+from koalixcrm.reporting.models.generic_task_link import GenericTaskLink
+from koalixcrm.reporting.models.project import Project
 from koalixcrm.global_support_functions import *
 from datetime import date
 
@@ -95,7 +95,7 @@ class CreateTaskView:
         try:
             project = CreateTaskView.create_project_from_document(request.user, document)
             calling_model_admin.message_user(request, _("Successfully created Project and Tasks for this contract"))
-            response = HttpResponseRedirect('/admin/crm/' +
+            response = HttpResponseRedirect('/admin/reporting/' +
                                             project.__class__.__name__.lower() +
                                             '/' +
                                             str(project.id))

@@ -1,7 +1,7 @@
 import pytest
 import datetime
 from django.test import TestCase
-from koalixcrm.crm.documents.calculations import Calculations
+from koalixcrm.contract_object_management.models.calculations import Calculations
 from koalixcrm.crm.factories.factory_currency import StandardCurrencyFactory
 from koalixcrm.crm.factories.factory_quote import StandardQuoteFactory
 from koalixcrm.crm.factories.factory_sales_document_position import StandardSalesDocumentPositionFactory

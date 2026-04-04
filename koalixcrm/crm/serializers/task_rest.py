@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from rest_framework import serializers
-from koalixcrm.crm.reporting.task import Task
-from koalixcrm.crm.reporting.project import Project
-from koalixcrm.crm.reporting.task_status import TaskStatus
+from koalixcrm.reporting.models.task import Task
+from koalixcrm.reporting.models.project import Project
+from koalixcrm.reporting.models.task_status import TaskStatus
 from koalixcrm.crm.serializers.project_rest import OptionProjectJSONSerializer
 from koalixcrm.crm.serializers.task_status_rest import OptionTaskStatusJSONSerializer
 

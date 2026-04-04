@@ -13,11 +13,11 @@ from koalixcrm.djangoUserExtension.factories.factory_document_template import St
 from koalixcrm.djangoUserExtension.factories.factory_document_template import StandardPurchaseOrderTemplateFactory
 from koalixcrm.djangoUserExtension.factories.factory_document_template import StandardDeliveryNoteTemplateFactory
 from koalixcrm.djangoUserExtension.factories.factory_document_template import StandardPaymentReminderTemplateFactory
-from koalixcrm.crm.documents.quote import Quote
-from koalixcrm.crm.documents.invoice import Invoice
-from koalixcrm.crm.documents.purchase_order import PurchaseOrder
-from koalixcrm.crm.documents.delivery_note import DeliveryNote
-from koalixcrm.crm.documents.payment_reminder import PaymentReminder
+from koalixcrm.contract_object_management.models.quote import Quote
+from koalixcrm.contract_object_management.models.invoice import Invoice
+from koalixcrm.contract_object_management.models.purchase_order import PurchaseOrder
+from koalixcrm.contract_object_management.models.delivery_note import DeliveryNote
+from koalixcrm.contract_object_management.models.payment_reminder import PaymentReminder
 
 
 class CreateSalesDocumentFromContract(StaticLiveServerTestCase):

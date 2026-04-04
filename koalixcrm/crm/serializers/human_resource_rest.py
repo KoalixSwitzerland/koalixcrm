@@ -1,9 +1,9 @@
 from rest_framework import serializers
 
 from koalixcrm.djangoUserExtension.models.user_extension import UserExtension
-from koalixcrm.crm.reporting.human_resource import HumanResource
-from koalixcrm.crm.reporting.resource_type import ResourceType
-from koalixcrm.crm.reporting.resource_manager import ResourceManager
+from koalixcrm.reporting.models.human_resource import HumanResource
+from koalixcrm.reporting.models.resource_type import ResourceType
+from koalixcrm.reporting.models.resource_manager import ResourceManager
 from koalixcrm.djangoUserExtension.serializers.user_extension_rest import OptionUserExtensionJSONSerializer
 from koalixcrm.crm.serializers.resource_manager_rest import OptionResourceManagerJSONSerializer
 from koalixcrm.crm.serializers.resource_type_rest import OptionResourceTypeJSONSerializer

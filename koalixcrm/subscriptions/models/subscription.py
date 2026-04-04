@@ -7,7 +7,7 @@ import koalixcrm.crm.documents
 
 class Subscription(models.Model):
     id = models.BigAutoField(primary_key=True)
-    contract = models.ForeignKey('crm.Contract', on_delete=models.CASCADE, verbose_name=_('Subscription Type'))
+    contract = models.ForeignKey('contract_object_management.Contract', on_delete=models.CASCADE, verbose_name=_('Subscription Type'))
     subscription_type = models.ForeignKey('SubscriptionType', on_delete=models.CASCADE, verbose_name=_('Subscription Type'), null=True)
 
     def create_subscription_from_contract(self, contract):

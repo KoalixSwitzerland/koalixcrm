@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from rest_framework import serializers
-from koalixcrm.crm.reporting.project import Project
-from koalixcrm.crm.reporting.reporting_period import ReportingPeriod
-from koalixcrm.crm.reporting.reporting_period_status import ReportingPeriodStatus
+from koalixcrm.reporting.models.project import Project
+from koalixcrm.reporting.models.reporting_period import ReportingPeriod
+from koalixcrm.reporting.models.reporting_period_status import ReportingPeriodStatus
 from koalixcrm.crm.serializers.reporting_period_status_rest import OptionReportingPeriodStatusJSONSerializer
 from koalixcrm.crm.serializers.project_rest import OptionProjectJSONSerializer
 

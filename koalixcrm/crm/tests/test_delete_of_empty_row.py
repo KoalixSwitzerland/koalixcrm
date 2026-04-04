@@ -9,7 +9,7 @@ from koalixcrm.crm.factories.factory_currency import StandardCurrencyFactory
 from koalixcrm.djangoUserExtension.factories.factory_user_extension import StandardUserExtensionFactory
 from koalixcrm.crm.factories.factory_reporting_period import StandardReportingPeriodFactory
 from koalixcrm.crm.factories.factory_task import StandardTaskFactory
-from koalixcrm.crm.reporting.work import Work
+from koalixcrm.reporting.models.work import Work
 from koalixcrm.test.UITests import UITests
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.common.by import By

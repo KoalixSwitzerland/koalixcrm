@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from koalixcrm.crm.reporting.agreement_type import AgreementType
+from koalixcrm.reporting.models.agreement_type import AgreementType
 
 
 class OptionAgreementTypeJSONSerializer(serializers.HyperlinkedModelSerializer):

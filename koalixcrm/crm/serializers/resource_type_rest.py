@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from koalixcrm.crm.reporting.resource_type import ResourceType
+from koalixcrm.reporting.models.resource_type import ResourceType
 
 
 class OptionResourceTypeJSONSerializer(serializers.HyperlinkedModelSerializer):

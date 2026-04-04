@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from koalixcrm.crm.reporting.estimation_status import EstimationStatus
+from koalixcrm.reporting.models.estimation_status import EstimationStatus
 
 
 class OptionEstimationStatusJSONSerializer(serializers.HyperlinkedModelSerializer):

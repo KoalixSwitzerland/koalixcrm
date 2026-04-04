@@ -19,7 +19,7 @@ from django.conf.urls.static import *
 from django.contrib.staticfiles.urls import static
 from django.contrib import admin
 from django.shortcuts import redirect
-from django.conf.urls import include, url
+from django.urls import include
 from filebrowser.sites import site
 from rest_framework import routers
 

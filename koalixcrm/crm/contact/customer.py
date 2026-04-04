@@ -8,9 +8,6 @@ from koalixcrm.plugin import *
 from koalixcrm.crm.contact.contact import Contact, ContactCall, ContactVisit,\
     PeopleInlineAdmin, PostalAddressForContact, ContactPostalAddress, \
     ContactPhoneAddress, ContactEmailAddress, CityFilter, StateFilter
-from koalixcrm.crm.documents.contract import Contract
-
-
 class Customer(Contact):
     default_customer_billing_cycle = models.ForeignKey('CustomerBillingCycle',
                                                        on_delete=models.CASCADE,
@@ -21,6 +18,7 @@ class Customer(Contact):
     is_lead = models.BooleanField(default=True)
 
     def create_contract(self, request):
+        from koalixcrm.contract_object_management.models.contract import Contract
         contract = Contract()
         contract.create_from_reference(self, request.user)
         return contract
@@ -118,7 +116,7 @@ class OptionCustomer(admin.ModelAdmin):
     def create_contract(self, request, queryset):
         for obj in queryset:
             contract = obj.create_contract(request)
-            response = HttpResponseRedirect('/admin/crm/contract/' + str(contract.id))
+            response = HttpResponseRedirect('/admin/contract_object_management/contract/' + str(contract.id))
             return response
 
     create_contract.short_description = _("Create Contract")
@@ -127,7 +125,7 @@ class OptionCustomer(admin.ModelAdmin):
     def create_quote(self, request, queryset):
         for obj in queryset:
             quote = obj.create_quote(request)
-            response = HttpResponseRedirect('/admin/crm/quote/' + str(quote.id))
+            response = HttpResponseRedirect('/admin/contract_object_management/quote/' + str(quote.id))
         return response
 
     create_quote.short_description = _("Create Quote")
@@ -136,7 +134,7 @@ class OptionCustomer(admin.ModelAdmin):
     def create_invoice(self, request, queryset):
         for obj in queryset:
             invoice = obj.create_invoice(request)
-            response = HttpResponseRedirect('/admin/crm/invoice/' + str(invoice.id))
+            response = HttpResponseRedirect('/admin/contract_object_management/invoice/' + str(invoice.id))
         return response
 
     create_invoice.short_description = _("Create Invoice")

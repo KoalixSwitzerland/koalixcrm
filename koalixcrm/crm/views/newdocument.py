@@ -23,13 +23,13 @@ class CreateNewDocumentView:
 
             Raises:
               raises Http404 exception if anything goes wrong"""
-        from koalixcrm.crm.documents.contract import Contract
+        from koalixcrm.contract_object_management.models.contract import Contract
         try:
             new_document = requested_document_type()
             new_document.create_from_reference(calling_model)
             calling_model_admin.message_user(request, _(str(new_document) +
                                                         " created"))
-            response = HttpResponseRedirect('/admin/crm/'+
+            response = HttpResponseRedirect('/admin/contract_object_management/'+
                                             new_document.__class__.__name__.lower()+
                                             '/'+
                                             str(new_document.id))
@@ -39,7 +39,7 @@ class CreateNewDocumentView:
             else:
                 contract = calling_model.contract
             if isinstance(e, TemplateSetMissingInContract):
-                response = HttpResponseRedirect('/admin/crm/contract/'+
+                response = HttpResponseRedirect('/admin/contract_object_management/contract/'+
                                                 str(contract.id))
                 calling_model_admin.message_user(request, _("Missing Templateset "),
                                                  level=messages.ERROR)

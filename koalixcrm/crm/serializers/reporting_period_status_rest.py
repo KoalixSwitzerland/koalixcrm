@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from koalixcrm.crm.reporting.reporting_period_status import ReportingPeriodStatus
+from koalixcrm.reporting.models.reporting_period_status import ReportingPeriodStatus
 
 
 class OptionReportingPeriodStatusJSONSerializer(serializers.HyperlinkedModelSerializer):
