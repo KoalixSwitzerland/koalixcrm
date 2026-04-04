@@ -5,7 +5,7 @@ from dateutil.relativedelta import *
 from django.db import models
 from django.contrib import admin
 from django.utils.translation import gettext as _
-from koalixcrm.djangoUserExtension.user_extension.user_extension import UserExtension
+from koalixcrm.djangoUserExtension.models.user_extension import UserExtension
 from koalixcrm.crm.reporting.resource import Resource
 from koalixcrm.crm.reporting.resource_price import ResourcePriceInlineAdminView
 from koalixcrm.crm.reporting.work import Work

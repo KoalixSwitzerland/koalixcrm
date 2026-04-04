@@ -5,7 +5,7 @@ from koalixcrm.djangoUserExtension.models import (
     MonthlyProjectSummaryTemplate,
     WorkReportTemplate,
 )
-from koalixcrm.djangoUserExtension.user_extension.document_template import (
+from koalixcrm.djangoUserExtension.models.document_template import (
     InvoiceTemplate,
     QuoteTemplate,
     DeliveryNoteTemplate,

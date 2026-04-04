@@ -135,9 +135,9 @@ class CustomIndexDashboard(Dashboard):
                     _('PDF document settings'),
                     column=1,
                     css_classes=('collapse closed',),
-                    models=('koalixcrm.djangoUserExtension.user_extension.document_template.*',
-                            'koalixcrm.djangoUserExtension.user_extension.template_set.TemplateSet',
-                            'koalixcrm.djangoUserExtension.user_extension.user_extension.*',),
+                    models=('koalixcrm.djangoUserExtension.models.document_template.*',
+                            'koalixcrm.djangoUserExtension.models.template_set.TemplateSet',
+                            'koalixcrm.djangoUserExtension.models.user_extension.*',),
                 ),
             ]
         ))

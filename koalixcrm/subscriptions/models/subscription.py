@@ -1,0 +1,48 @@
+# -*- coding: utf-8 -*-
+from datetime import *
+from django.db import models
+from django.utils.translation import gettext as _
+import koalixcrm.crm.documents
+
+
+class Subscription(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    contract = models.ForeignKey('crm.Contract', on_delete=models.CASCADE, verbose_name=_('Subscription Type'))
+    subscription_type = models.ForeignKey('SubscriptionType', on_delete=models.CASCADE, verbose_name=_('Subscription Type'), null=True)
+
+    def create_subscription_from_contract(self, contract):
+        self.contract = contract
+        self.save()
+        return self
+
+    def create_quote(self):
+        quote = koalixcrm.crm.documents.quote.Quote()
+        quote.contract = self.contract
+        quote.discount = 0
+        quote.staff = self.contract.staff
+        quote.customer = self.contract.defaultcustomer
+        quote.status = 'C'
+        quote.currency = self.contract.defaultcurrency
+        quote.valid_until = date.today().__str__()
+        quote.date_of_creation = date.today().__str__()
+        quote.save()
+        return quote
+
+    def create_invoice(self):
+        invoice = koalixcrm.crm.documents.invoice.Invoice()
+        invoice.contract = self.contract
+        invoice.discount = 0
+        invoice.staff = self.contract.staff
+        invoice.customer = self.contract.default_customer
+        invoice.status = 'C'
+        invoice.currency = self.contract.default_currency
+        invoice.payable_until = date.today() + timedelta(
+            days=self.contract.defaultcustomer.defaultCustomerBillingCycle.timeToPaymentDate)
+        invoice.date_of_creation = date.today().__str__()
+        invoice.save()
+        return invoice
+
+    class Meta:
+        app_label = "subscriptions"
+        verbose_name = _('Subscription')
+        verbose_name_plural = _('Subscriptions')
