@@ -16,7 +16,7 @@ class OptionWorkJSONSerializer(serializers.HyperlinkedModelSerializer):
     date = serializers.DateField(source='date')
     startTime = serializers.TimeField(source='start_time')
     stopTime = serializers.TimeField(source='stop_time')
-    workedHours = serializers.DecimalField(source='worked_hours')
+    workedHours = serializers.DecimalField(source='worked_hours', max_digits=10, decimal_places=2)
     shortDescription = serializers.CharField(source='short_description')
     description = serializers.CharField(source='description')
 
@@ -40,7 +40,7 @@ class WorkJSONSerializer(serializers.HyperlinkedModelSerializer):
     date = serializers.DateField(source='date')
     startTime = serializers.TimeField(source='start_time')
     stopTime = serializers.TimeField(source='stop_time')
-    workedHours = serializers.DecimalField(source='worked_hours')
+    workedHours = serializers.DecimalField(source='worked_hours', max_digits=10, decimal_places=2)
     shortDescription = serializers.CharField(source='short_description')
     description = serializers.CharField(source='description')
 

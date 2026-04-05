@@ -1,16 +1,16 @@
 import pytest
 import datetime
 from django.test import TestCase
-from koalixcrm.contract_object_management.models.calculations import Calculations
-from koalixcrm.crm.factories.factory_currency import StandardCurrencyFactory
-from koalixcrm.crm.factories.factory_quote import StandardQuoteFactory
-from koalixcrm.crm.factories.factory_sales_document_position import StandardSalesDocumentPositionFactory
-from koalixcrm.crm.factories.factory_product_type import StandardProductTypeFactory
-from koalixcrm.crm.factories.factory_product_price import StandardPriceFactory
-from koalixcrm.crm.factories.factory_customer import StandardCustomerFactory
-from koalixcrm.crm.factories.factory_customer_group import StandardCustomerGroupFactory, AdvancedCustomerGroupFactory
-from koalixcrm.crm.factories.factory_tax import StandardTaxFactory
-from koalixcrm.crm.factories.factory_unit import StandardUnitFactory, SmallUnitFactory
+from koalixcrm.contracts.models.calculations import Calculations
+from koalixcrm.products.factory.currency_factory import StandardCurrencyFactory
+from koalixcrm.contracts.factory.quote_factory import StandardQuoteFactory
+from koalixcrm.contracts.factory.sales_document_position_factory import StandardSalesDocumentPositionFactory
+from koalixcrm.products.factory.product_type_factory import StandardProductTypeFactory
+from koalixcrm.products.factory.product_price_factory import StandardPriceFactory
+from koalixcrm.crm.factory.customer_factory import StandardCustomerFactory
+from koalixcrm.crm.factory.customer_group_factory import StandardCustomerGroupFactory, AdvancedCustomerGroupFactory
+from koalixcrm.products.factory.tax_factory import StandardTaxFactory
+from koalixcrm.products.factory.unit_factory import StandardUnitFactory, SmallUnitFactory
 from koalixcrm.global_support_functions import make_date_utc
 from koalixcrm.crm.models import SalesDocumentPosition
 

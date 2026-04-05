@@ -1,10 +1,10 @@
 import pytest
 from koalixcrm.test.test_support_functions import *
-from koalixcrm.crm.factories.factory_user import AdminUserFactory
-from koalixcrm.crm.factories.factory_customer import StandardCustomerFactory
-from koalixcrm.crm.factories.factory_customer_group import StandardCustomerGroupFactory
-from koalixcrm.crm.factories.factory_currency import StandardCurrencyFactory
-from koalixcrm.crm.factories.factory_human_resource import StandardHumanResourceFactory
+from koalixcrm.crm.factory.user_factory import AdminUserFactory
+from koalixcrm.crm.factory.customer_factory import StandardCustomerFactory
+from koalixcrm.crm.factory.customer_group_factory import StandardCustomerGroupFactory
+from koalixcrm.products.factory.currency_factory import StandardCurrencyFactory
+from koalixcrm.reporting.factory.human_resource_factory import StandardHumanResourceFactory
 from koalixcrm.djangoUserExtension.factories.factory_user_extension import StandardUserExtensionFactory
 from koalixcrm.test.UITests import UITests
 

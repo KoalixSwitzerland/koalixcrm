@@ -1,16 +1,16 @@
 import datetime
 import pytest
 from django.test import TestCase
-from koalixcrm.crm.factories.factory_user import AdminUserFactory
-from koalixcrm.crm.factories.factory_customer_billing_cycle import StandardCustomerBillingCycleFactory
-from koalixcrm.crm.factories.factory_customer import StandardCustomerFactory
-from koalixcrm.crm.factories.factory_customer_group import StandardCustomerGroupFactory
-from koalixcrm.crm.factories.factory_currency import StandardCurrencyFactory
-from koalixcrm.crm.factories.factory_reporting_period import StandardReportingPeriodFactory
-from koalixcrm.crm.factories.factory_human_resource import StandardHumanResourceFactory
-from koalixcrm.crm.factories.factory_work import StandardWorkFactory
-from koalixcrm.crm.factories.factory_task import StandardTaskFactory
-from koalixcrm.crm.factories.factory_estimation import StandardHumanResourceEstimationToTaskFactory
+from koalixcrm.crm.factory.user_factory import AdminUserFactory
+from koalixcrm.crm.factory.customer_billing_cycle_factory import StandardCustomerBillingCycleFactory
+from koalixcrm.crm.factory.customer_factory import StandardCustomerFactory
+from koalixcrm.crm.factory.customer_group_factory import StandardCustomerGroupFactory
+from koalixcrm.products.factory.currency_factory import StandardCurrencyFactory
+from koalixcrm.reporting.factory.reporting_period_factory import StandardReportingPeriodFactory
+from koalixcrm.reporting.factory.human_resource_factory import StandardHumanResourceFactory
+from koalixcrm.reporting.factory.work_factory import StandardWorkFactory
+from koalixcrm.reporting.factory.task_factory import StandardTaskFactory
+from koalixcrm.reporting.factory.estimation_factory import StandardHumanResourceEstimationToTaskFactory
 from koalixcrm.global_support_functions import make_date_utc
 
 

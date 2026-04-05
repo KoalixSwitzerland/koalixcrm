@@ -1,0 +1,9 @@
+from koalixcrm.products.factory.currency_factory import StandardCurrencyFactory, SecondStandardCurrencyFactory
+from koalixcrm.products.factory.currency_transform_factory import StandardCurrencyTransformFactory
+from koalixcrm.products.factory.tax_factory import StandardTaxFactory
+from koalixcrm.products.factory.unit_factory import StandardUnitFactory, SmallUnitFactory
+from koalixcrm.products.factory.unit_transform_factory import StandardUnitTransformFactory
+from koalixcrm.products.factory.product_factory import StandardProductFactory
+from koalixcrm.products.factory.product_type_factory import StandardProductTypeFactory
+from koalixcrm.products.factory.product_price_factory import StandardPriceFactory, HighPriceFactory
+from koalixcrm.products.factory.customer_group_transform_factory import StandardCustomerGroupTransformFactory

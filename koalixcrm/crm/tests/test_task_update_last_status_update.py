@@ -1,16 +1,16 @@
 import datetime
 from zoneinfo import ZoneInfo
 from django.test import TestCase
-from koalixcrm.crm.factories.factory_user import AdminUserFactory
-from koalixcrm.crm.factories.factory_customer_billing_cycle import StandardCustomerBillingCycleFactory
-from koalixcrm.crm.factories.factory_customer import StandardCustomerFactory
-from koalixcrm.crm.factories.factory_customer_group import StandardCustomerGroupFactory
-from koalixcrm.crm.factories.factory_currency import StandardCurrencyFactory
-from koalixcrm.crm.factories.factory_reporting_period import StandardReportingPeriodFactory
+from koalixcrm.crm.factory.user_factory import AdminUserFactory
+from koalixcrm.crm.factory.customer_billing_cycle_factory import StandardCustomerBillingCycleFactory
+from koalixcrm.crm.factory.customer_factory import StandardCustomerFactory
+from koalixcrm.crm.factory.customer_group_factory import StandardCustomerGroupFactory
+from koalixcrm.products.factory.currency_factory import StandardCurrencyFactory
+from koalixcrm.reporting.factory.reporting_period_factory import StandardReportingPeriodFactory
 from koalixcrm.djangoUserExtension.factories.factory_user_extension import StandardUserExtensionFactory
-from koalixcrm.crm.factories.factory_task_status import DoneTaskStatusFactory
-from koalixcrm.crm.factories.factory_task import StandardTaskFactory
-from koalixcrm.crm.factories.factory_estimation import StandardHumanResourceEstimationToTaskFactory
+from koalixcrm.reporting.factory.task_status_factory import DoneTaskStatusFactory
+from koalixcrm.reporting.factory.task_factory import StandardTaskFactory
+from koalixcrm.reporting.factory.estimation_factory import StandardHumanResourceEstimationToTaskFactory
 
 
 class TaskUpdateLastStatusUpdate(TestCase):

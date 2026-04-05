@@ -51,8 +51,8 @@ admin.site.register(ReportingPeriod, ReportingPeriodAdmin)
 admin.site.register(ReportingPeriodStatus, OptionReportingPeriodStatus)
 
 # Extend Contract admin to include reporting inlines
-from koalixcrm.contract_object_management.models.contract import Contract
-from koalixcrm.contract_object_management.admin.contract_admin import OptionContract
+from koalixcrm.contracts.models.contract import Contract
+from koalixcrm.contracts.admin.contract_admin import OptionContract
 from koalixcrm.reporting.admin.generic_project_link_admin import InlineGenericProjectLinkAdmin
 
 admin.site.unregister(Contract)

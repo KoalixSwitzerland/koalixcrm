@@ -7,8 +7,8 @@ from django.utils.translation import gettext as _
 from django.contrib.contenttypes.models import ContentType
 from koalixcrm.crm.exceptions import *
 from koalixcrm.djangoUserExtension.exceptions import *
-from koalixcrm.contract_object_management.models.sales_document import SalesDocument
-from koalixcrm.contract_object_management.models.sales_document_position import SalesDocumentPosition
+from koalixcrm.contracts.models.sales_document import SalesDocument
+from koalixcrm.contracts.models.sales_document_position import SalesDocumentPosition
 from koalixcrm.reporting.models.task import Task
 from koalixcrm.reporting.models.generic_task_link import GenericTaskLink
 from koalixcrm.reporting.models.project import Project

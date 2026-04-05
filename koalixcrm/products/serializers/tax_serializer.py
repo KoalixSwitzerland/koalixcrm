@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from koalixcrm.accounting.models.account import Account
-from koalixcrm.accounting.serializers.account_rest import OptionAccountJSONSerializer
+from koalixcrm.accounting.serializers.account_serializer import OptionAccountJSONSerializer
 from koalixcrm.products.models.tax import Tax
 
 

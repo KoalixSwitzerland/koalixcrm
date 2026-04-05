@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from koalixcrm.accounting.models.product_category import ProductCategory
-from koalixcrm.accounting.serializers.product_categorie_rest import ProductCategoryMinimalJSONSerializer
+from koalixcrm.accounting.serializers.product_category_serializer import ProductCategoryMinimalJSONSerializer
 from koalixcrm.products.models.product_type import ProductType
 from koalixcrm.products.models.tax import Tax
 from koalixcrm.products.models.unit import Unit

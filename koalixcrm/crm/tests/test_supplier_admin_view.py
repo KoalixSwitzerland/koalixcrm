@@ -6,7 +6,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from koalixcrm.crm.factories.factory_user import AdminUserFactory
+from koalixcrm.crm.factory.user_factory import AdminUserFactory
 from koalixcrm.crm.contact.supplier import Supplier
 from koalixcrm.test.UITests import UITests
 

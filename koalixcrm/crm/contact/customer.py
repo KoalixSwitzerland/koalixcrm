@@ -15,7 +15,7 @@ class Customer(Contact):
     is_lead = models.BooleanField(default=True)
 
     def create_contract(self, request):
-        from koalixcrm.contract_object_management.models.contract import Contract
+        from koalixcrm.contracts.models.contract import Contract
         contract = Contract()
         contract.create_from_reference(self, request.user)
         return contract
@@ -43,5 +43,3 @@ class Customer(Contact):
 
     def __str__(self):
         return str(self.id) + ' ' + self.name
-
-

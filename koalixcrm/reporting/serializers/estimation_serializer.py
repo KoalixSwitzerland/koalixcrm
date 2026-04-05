@@ -15,7 +15,7 @@ class EstimationJSONSerializer(serializers.HyperlinkedModelSerializer):
     status = OptionEstimationStatusJSONSerializer(source='status', allow_null=False)
     dateFrom = serializers.DateField(source='date_from')
     dateUntil = serializers.DateField(source='date_until')
-    amount = serializers.DecimalField(source='amount')
+    amount = serializers.DecimalField(source='amount', max_digits=10, decimal_places=2)
 
     class Meta:
         model = Estimation

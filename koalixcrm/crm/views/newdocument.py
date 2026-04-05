@@ -23,7 +23,7 @@ class CreateNewDocumentView:
 
             Raises:
               raises Http404 exception if anything goes wrong"""
-        from koalixcrm.contract_object_management.models.contract import Contract
+        from koalixcrm.contracts.models.contract import Contract
         try:
             new_document = requested_document_type()
             new_document.create_from_reference(calling_model)

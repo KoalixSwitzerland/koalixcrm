@@ -4,20 +4,20 @@ import os
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from koalixcrm.test.test_support_functions import *
-from koalixcrm.crm.factories.factory_contract import StandardContractFactory
-from koalixcrm.crm.factories.factory_invoice import StandardInvoiceFactory
-from koalixcrm.crm.factories.factory_user import AdminUserFactory
-from koalixcrm.crm.factories.factory_customer_group import StandardCustomerGroupFactory
+from koalixcrm.contracts.factory.contract_factory import StandardContractFactory
+from koalixcrm.contracts.factory.invoice_factory import StandardInvoiceFactory
+from koalixcrm.crm.factory.user_factory import AdminUserFactory
+from koalixcrm.crm.factory.customer_group_factory import StandardCustomerGroupFactory
 from koalixcrm.djangoUserExtension.factories.factory_document_template import StandardQuoteTemplateFactory
 from koalixcrm.djangoUserExtension.factories.factory_document_template import StandardInvoiceTemplateFactory
 from koalixcrm.djangoUserExtension.factories.factory_document_template import StandardPurchaseOrderTemplateFactory
 from koalixcrm.djangoUserExtension.factories.factory_document_template import StandardDeliveryNoteTemplateFactory
 from koalixcrm.djangoUserExtension.factories.factory_document_template import StandardPaymentReminderTemplateFactory
-from koalixcrm.contract_object_management.models.quote import Quote
-from koalixcrm.contract_object_management.models.invoice import Invoice
-from koalixcrm.contract_object_management.models.purchase_order import PurchaseOrder
-from koalixcrm.contract_object_management.models.delivery_note import DeliveryNote
-from koalixcrm.contract_object_management.models.payment_reminder import PaymentReminder
+from koalixcrm.contracts.models.quote import Quote
+from koalixcrm.contracts.models.invoice import Invoice
+from koalixcrm.contracts.models.purchase_order import PurchaseOrder
+from koalixcrm.contracts.models.delivery_note import DeliveryNote
+from koalixcrm.contracts.models.payment_reminder import PaymentReminder
 
 
 class CreateSalesDocumentFromContract(StaticLiveServerTestCase):
