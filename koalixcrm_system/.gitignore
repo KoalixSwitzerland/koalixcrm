@@ -1,0 +1,8 @@
+# Developer-specific env files (each dev has their own)
+.env
+.env.*
+!.env.example
+
+# Secrets (never commit)
+secrets.env
+secrets.env.local

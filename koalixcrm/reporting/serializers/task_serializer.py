@@ -10,8 +10,8 @@ from koalixcrm.reporting.serializers.task_status_serializer import OptionTaskSta
 class OptionTaskJSONSerializer(serializers.HyperlinkedModelSerializer):
     project = OptionProjectJSONSerializer(allow_null=False, read_only=True)
     status = OptionTaskStatusJSONSerializer(allow_null=False, read_only=True)
-    lastStatusChange = serializers.DateField(source='last_status_change', read_only=True)
-    isReportingAllowed = serializers.SerializerMethodField()
+    last_status_change = serializers.DateField(read_only=True)
+    is_reporting_allowed = serializers.SerializerMethodField()
 
     class Meta:
         model = Task
@@ -20,10 +20,10 @@ class OptionTaskJSONSerializer(serializers.HyperlinkedModelSerializer):
                   'project',
                   'description',
                   'status',
-                  'lastStatusChange',
-                  'isReportingAllowed',)
+                  'last_status_change',
+                  'is_reporting_allowed',)
 
-    def get_isReportingAllowed(self, obj):
+    def get_is_reporting_allowed(self, obj):
         if obj.is_reporting_allowed():
             return "True"
         else:
@@ -33,8 +33,8 @@ class OptionTaskJSONSerializer(serializers.HyperlinkedModelSerializer):
 class TaskJSONSerializer(serializers.HyperlinkedModelSerializer):
     project = OptionProjectJSONSerializer(allow_null=False)
     status = OptionTaskStatusJSONSerializer(allow_null=False)
-    lastStatusChange = serializers.DateField(source='last_status_change')
-    isReportingAllowed = serializers.SerializerMethodField()
+    last_status_change = serializers.DateField()
+    is_reporting_allowed = serializers.SerializerMethodField()
 
     class Meta:
         model = Task
@@ -43,10 +43,10 @@ class TaskJSONSerializer(serializers.HyperlinkedModelSerializer):
                   'project',
                   'description',
                   'status',
-                  'lastStatusChange',
-                  'isReportingAllowed',)
+                  'last_status_change',
+                  'is_reporting_allowed',)
 
-    def get_isReportingAllowed(self, obj):
+    def get_is_reporting_allowed(self, obj):
         if obj.is_reporting_allowed():
             return "True"
         else:
@@ -70,7 +70,7 @@ class TaskJSONSerializer(serializers.HyperlinkedModelSerializer):
                 task.status = None
         task.title = validated_data['title']
         task.description = validated_data['description']
-        task.last_status_change = validated_data['lastStatusChange']
+        task.last_status_change = validated_data['last_status_change']
         task.save()
         return task
 
@@ -95,9 +95,6 @@ class TaskJSONSerializer(serializers.HyperlinkedModelSerializer):
             task.status = None
         task.title = validated_data['title']
         task.description = validated_data['description']
-        task.last_status_change = validated_data['lastStatusChange']
+        task.last_status_change = validated_data['last_status_change']
         task.save()
         return task
-
-
-

@@ -8,8 +8,8 @@ from koalixcrm.reporting.serializers.resource_type_serializer import OptionResou
 
 
 class OptionResourceJSONSerializer(serializers.HyperlinkedModelSerializer):
-    resourceType = OptionResourceTypeJSONSerializer(required=False, read_only=True)
-    resourceManager = OptionResourceManagerJSONSerializer(read_only=True)
+    resource_type = OptionResourceTypeJSONSerializer(required=False, read_only=True)
+    resource_manager = OptionResourceManagerJSONSerializer(read_only=True)
 
     class Meta:
         model = Resource
@@ -18,8 +18,8 @@ class OptionResourceJSONSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class ResourceJSONSerializer(serializers.HyperlinkedModelSerializer):
-    resourceType = OptionResourceTypeJSONSerializer()
-    resourceManager = OptionResourceManagerJSONSerializer()
+    resource_type = OptionResourceTypeJSONSerializer()
+    resource_manager = OptionResourceManagerJSONSerializer()
 
     class Meta:
         model = Resource
@@ -36,7 +36,7 @@ class ResourceJSONSerializer(serializers.HyperlinkedModelSerializer):
             else:
                 resource.resource_type = None
         # Deserialize resource_manager
-        resource_manager = validated_data.pop('resourceManager')
+        resource_manager = validated_data.pop('resource_manager')
         if resource_manager:
             if resource_manager.get('id', None):
                 resource.resource_manager = ResourceManager.objects.get(id=resource_manager.get('id', None))
@@ -54,7 +54,7 @@ class ResourceJSONSerializer(serializers.HyperlinkedModelSerializer):
         else:
             resource.resource_type = None
         # Deserialize resource_manager
-        resource_manager = validated_data.pop('resourceManager')
+        resource_manager = validated_data.pop('resource_manager')
         if resource_manager:
             if resource_manager.get('id', resource.resource_manager):
                 resource.resource_manager = ResourceManager.objects.get(id=resource.get('id', None))

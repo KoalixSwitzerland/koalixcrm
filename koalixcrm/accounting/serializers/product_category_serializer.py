@@ -17,15 +17,15 @@ class ProductCategoryMinimalJSONSerializer(serializers.HyperlinkedModelSerialize
 
 
 class ProductCategoryJSONSerializer(serializers.HyperlinkedModelSerializer):
-    profitAccount = OptionAccountJSONSerializer(source='profit_account')
-    lossAccount = OptionAccountJSONSerializer(source='loss_account')
+    profit_account = OptionAccountJSONSerializer()
+    loss_account = OptionAccountJSONSerializer()
 
     class Meta:
         model = ProductCategory
         fields = ('id',
                   'title',
-                  'profitAccount',
-                  'lossAccount')
+                  'profit_account',
+                  'loss_account')
         depth = 1
 
     def create(self, validated_data):

@@ -40,8 +40,8 @@ class CustomerBillingCycleAPITest(LiveServerTestCase):
     def test_write(self):
         data = {
             "name": "New API Billing Cycle",
-            "time_to_payment_date": 60,
-            "payment_reminder_time_to_payment": 45,
+            "daysToPaymentDate": 60,
+            "paymentReminderDaysToPayment": 45,
         }
         created = self.api_client.create_customer_billing_cycle(data)
         self.assertIsNotNone(created)

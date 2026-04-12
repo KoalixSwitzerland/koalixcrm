@@ -43,9 +43,9 @@ class CustomerAPITest(LiveServerTestCase):
     def test_write(self):
         data = {
             "name": "New API Customer",
-            "default_customer_billing_cycle": self.billing_cycle.id,
-            "is_lead": False,
-            "last_modified_by": self.admin_user.id,
+            "defaultCustomerBillingCycle": {"id": self.billing_cycle.id},
+            "isMemberOf": [],
+            "isLead": False,
         }
         created = self.api_client.create_customer(data)
         self.assertIsNotNone(created)

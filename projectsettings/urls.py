@@ -27,6 +27,9 @@ from koalixcrm.contracts_api_py.contracts_api import (
     DeliveryNoteViewSet, PaymentReminderViewSet,
     SalesDocumentPositionViewSet,
 )
+from koalixcrm.auth.oidc_views import (
+    LoginSelectionView, OAuthLoginView, OAuthCallbackView, MultiProviderLogoutView,
+)
 from koalixcrm.reporting_api_py.reporting_api import (
     TaskViewSet, TaskStatusViewSet, ProjectViewSet, ProjectStatusViewSet, AgreementViewSet,
     WorkViewSet, EstimationViewSet, EstimationStatusViewSet,
@@ -41,16 +44,16 @@ from koalixcrm.reporting_api_py.reporting_api import (
 router = routers.DefaultRouter()
 # Accounting
 router.register(r'accounts', AccountViewSet)
-router.register(r'accountingPeriods', AccountingPeriodViewSet)
+router.register(r'accounting_periods', AccountingPeriodViewSet)
 router.register(r'bookings', BookingViewSet)
-router.register(r'productCategories', ProductCategoryViewSet)
+router.register(r'product_categories', ProductCategoryViewSet)
 # CRM (contacts)
 router.register(r'customers', CustomerViewSet)
-router.register(r'customerBillingCycles', CustomerBillingCycleViewSet)
-router.register(r'contactPostalAddresses', ContactPostalAddressViewSet)
-router.register(r'contactPhoneNumbers', ContactPhoneAddressViewSet)
-router.register(r'contactEmailAddresses', ContactEmailAddressViewSet)
-router.register(r'customerGroups', CustomerGroupViewSet)
+router.register(r'customer_billing_cycles', CustomerBillingCycleViewSet)
+router.register(r'contact_postal_addresses', ContactPostalAddressViewSet)
+router.register(r'contact_phone_numbers', ContactPhoneAddressViewSet)
+router.register(r'contact_email_addresses', ContactEmailAddressViewSet)
+router.register(r'customer_groups', CustomerGroupViewSet)
 router.register(r'suppliers', SupplierViewSet)
 router.register(r'persons', PersonViewSet)
 router.register(r'contacts', ContactViewSet)
@@ -59,44 +62,46 @@ router.register(r'currencies', CurrencyViewSet)
 router.register(r'products', ProductTypeViewSet)
 router.register(r'taxes', TaxViewSet)
 router.register(r'units', UnitViewSet)
-router.register(r'productItems', ProductViewSet)
-router.register(r'productPrices', ProductPriceViewSet)
-router.register(r'currencyTransforms', CurrencyTransformViewSet)
-router.register(r'unitTransforms', UnitTransformViewSet)
-router.register(r'customerGroupTransforms', CustomerGroupTransformViewSet)
+router.register(r'product_items', ProductViewSet)
+router.register(r'product_prices', ProductPriceViewSet)
+router.register(r'currency_transforms', CurrencyTransformViewSet)
+router.register(r'unit_transforms', UnitTransformViewSet)
+router.register(r'customer_group_transforms', CustomerGroupTransformViewSet)
 # Contract Object Management
 router.register(r'contracts', ContractViewSet)
 router.register(r'invoices', InvoiceViewSet)
 router.register(r'quotes', QuoteViewSet)
-router.register(r'purchaseOrders', PurchaseOrderViewSet)
-router.register(r'purchaseConfirmations', PurchaseConfirmationViewSet)
-router.register(r'deliveryNotes', DeliveryNoteViewSet)
-router.register(r'paymentReminders', PaymentReminderViewSet)
-router.register(r'salesDocumentPositions', SalesDocumentPositionViewSet)
+router.register(r'purchase_orders', PurchaseOrderViewSet)
+router.register(r'purchase_confirmations', PurchaseConfirmationViewSet)
+router.register(r'delivery_notes', DeliveryNoteViewSet)
+router.register(r'payment_reminders', PaymentReminderViewSet)
+router.register(r'sales_document_positions', SalesDocumentPositionViewSet)
 # Reporting
 router.register(r'projects', ProjectViewSet)
-router.register(r'projectStatus', ProjectStatusViewSet)
+router.register(r'project_status', ProjectStatusViewSet)
 router.register(r'tasks', TaskViewSet)
-router.register(r'taskstatus', TaskStatusViewSet)
+router.register(r'task_status', TaskStatusViewSet)
 router.register(r'agreements', AgreementViewSet)
 router.register(r'works', WorkViewSet)
 router.register(r'estimations', EstimationViewSet)
-router.register(r'estimationStatus', EstimationStatusViewSet)
-router.register(r'humanResources', HumanResourceViewSet)
+router.register(r'estimation_status', EstimationStatusViewSet)
+router.register(r'human_resources', HumanResourceViewSet)
 router.register(r'resources', ResourceViewSet)
-router.register(r'resourceTypes', ResourceTypeViewSet)
-router.register(r'resourceManagers', ResourceManagerViewSet)
-router.register(r'resourcePrices', ResourcePriceViewSet)
-router.register(r'reportingPeriods', ReportingPeriodViewSet)
-router.register(r'reportingPeriodStatus', ReportingPeriodStatusViewSet)
-router.register(r'agreementStatus', AgreementStatusViewSet)
-router.register(r'agreementTypes', AgreementTypeViewSet)
-router.register(r'projectLinkTypes', ProjectLinkTypeViewSet)
-router.register(r'taskLinkTypes', TaskLinkTypeViewSet)
-router.register(r'genericProjectLinks', GenericProjectLinkViewSet)
-router.register(r'genericTaskLinks', GenericTaskLinkViewSet)
+router.register(r'resource_types', ResourceTypeViewSet)
+router.register(r'resource_managers', ResourceManagerViewSet)
+router.register(r'resource_prices', ResourcePriceViewSet)
+router.register(r'reporting_periods', ReportingPeriodViewSet)
+router.register(r'reporting_period_status', ReportingPeriodStatusViewSet)
+router.register(r'agreement_status', AgreementStatusViewSet)
+router.register(r'agreement_types', AgreementTypeViewSet)
+router.register(r'project_link_types', ProjectLinkTypeViewSet)
+router.register(r'task_link_types', TaskLinkTypeViewSet)
+router.register(r'generic_project_links', GenericProjectLinkViewSet)
+router.register(r'generic_task_links', GenericTaskLinkViewSet)
 
 admin.autodiscover()
+# Override Django admin login to redirect to OIDC
+admin.site.login = LoginSelectionView.as_view()
 
 urlpatterns = [
     path('', lambda _: redirect('admin:index'), name='index'),
@@ -104,6 +109,11 @@ urlpatterns = [
     path('admin/filebrowser/', site.urls),
     path('grappelli/', include('grappelli.urls')),
     path('koalixcrm/crm/reporting/', include('koalixcrm.crm.reporting.urls')),
+    # OIDC auth (admin login via Keycloak)
+    path('auth/login/', LoginSelectionView.as_view(), name='login-selection'),
+    path('auth/login/<str:provider>/', OAuthLoginView.as_view(), name='oauth-login'),
+    path('auth/callback/<str:provider>/', OAuthCallbackView.as_view(), name='oauth-callback'),
+    path('auth/logout/', MultiProviderLogoutView.as_view(), name='logout'),
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
 ]

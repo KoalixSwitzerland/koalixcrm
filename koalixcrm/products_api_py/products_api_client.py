@@ -107,17 +107,17 @@ class KoalixCRMProductsAPIClient(BaseAPIClient):
         return self._put_full_update(ProductType, "/products", object_id, data)
 
     # ------------------------------------------------------------------
-    # Product (endpoint: /productItems)
+    # Product (endpoint: /product_items)
     # ------------------------------------------------------------------
 
     def get_product(self, object_id: int) -> Optional[Product]:
-        return self._get_object(Product, "/productItems", object_id)
+        return self._get_object(Product, "/product_items", object_id)
 
     def get_product_list(self) -> List[Product]:
-        return self._get_object_list(Product, "/productItems/")
+        return self._get_object_list(Product, "/product_items/")
 
     def create_product(self, data: Dict[str, Any]) -> Optional[Product]:
-        response_data = self._make_request("/productItems/", method="POST", data=data)
+        response_data = self._make_request("/product_items/", method="POST", data=data)
         if response_data:
             obj = Product(response_data, self)
             self._cache.set(Product, obj.id, obj)
@@ -125,20 +125,20 @@ class KoalixCRMProductsAPIClient(BaseAPIClient):
         return None
 
     def update_product(self, object_id: int, data: Dict[str, Any]) -> Optional[Product]:
-        return self._put_full_update(Product, "/productItems", object_id, data)
+        return self._put_full_update(Product, "/product_items", object_id, data)
 
     # ------------------------------------------------------------------
-    # ProductPrice (endpoint: /productPrices)
+    # ProductPrice (endpoint: /product_prices)
     # ------------------------------------------------------------------
 
     def get_product_price(self, object_id: int) -> Optional[ProductPrice]:
-        return self._get_object(ProductPrice, "/productPrices", object_id)
+        return self._get_object(ProductPrice, "/product_prices", object_id)
 
     def get_product_price_list(self) -> List[ProductPrice]:
-        return self._get_object_list(ProductPrice, "/productPrices/")
+        return self._get_object_list(ProductPrice, "/product_prices/")
 
     def create_product_price(self, data: Dict[str, Any]) -> Optional[ProductPrice]:
-        response_data = self._make_request("/productPrices/", method="POST", data=data)
+        response_data = self._make_request("/product_prices/", method="POST", data=data)
         if response_data:
             obj = ProductPrice(response_data, self)
             self._cache.set(ProductPrice, obj.id, obj)
@@ -146,20 +146,20 @@ class KoalixCRMProductsAPIClient(BaseAPIClient):
         return None
 
     def update_product_price(self, object_id: int, data: Dict[str, Any]) -> Optional[ProductPrice]:
-        return self._put_full_update(ProductPrice, "/productPrices", object_id, data)
+        return self._put_full_update(ProductPrice, "/product_prices", object_id, data)
 
     # ------------------------------------------------------------------
-    # CurrencyTransform (endpoint: /currencyTransforms)
+    # CurrencyTransform (endpoint: /currency_transforms)
     # ------------------------------------------------------------------
 
     def get_currency_transform(self, object_id: int) -> Optional[CurrencyTransform]:
-        return self._get_object(CurrencyTransform, "/currencyTransforms", object_id)
+        return self._get_object(CurrencyTransform, "/currency_transforms", object_id)
 
     def get_currency_transform_list(self) -> List[CurrencyTransform]:
-        return self._get_object_list(CurrencyTransform, "/currencyTransforms/")
+        return self._get_object_list(CurrencyTransform, "/currency_transforms/")
 
     def create_currency_transform(self, data: Dict[str, Any]) -> Optional[CurrencyTransform]:
-        response_data = self._make_request("/currencyTransforms/", method="POST", data=data)
+        response_data = self._make_request("/currency_transforms/", method="POST", data=data)
         if response_data:
             obj = CurrencyTransform(response_data, self)
             self._cache.set(CurrencyTransform, obj.id, obj)
@@ -167,20 +167,20 @@ class KoalixCRMProductsAPIClient(BaseAPIClient):
         return None
 
     def update_currency_transform(self, object_id: int, data: Dict[str, Any]) -> Optional[CurrencyTransform]:
-        return self._put_full_update(CurrencyTransform, "/currencyTransforms", object_id, data)
+        return self._put_full_update(CurrencyTransform, "/currency_transforms", object_id, data)
 
     # ------------------------------------------------------------------
-    # UnitTransform (endpoint: /unitTransforms)
+    # UnitTransform (endpoint: /unit_transforms)
     # ------------------------------------------------------------------
 
     def get_unit_transform(self, object_id: int) -> Optional[UnitTransform]:
-        return self._get_object(UnitTransform, "/unitTransforms", object_id)
+        return self._get_object(UnitTransform, "/unit_transforms", object_id)
 
     def get_unit_transform_list(self) -> List[UnitTransform]:
-        return self._get_object_list(UnitTransform, "/unitTransforms/")
+        return self._get_object_list(UnitTransform, "/unit_transforms/")
 
     def create_unit_transform(self, data: Dict[str, Any]) -> Optional[UnitTransform]:
-        response_data = self._make_request("/unitTransforms/", method="POST", data=data)
+        response_data = self._make_request("/unit_transforms/", method="POST", data=data)
         if response_data:
             obj = UnitTransform(response_data, self)
             self._cache.set(UnitTransform, obj.id, obj)
@@ -188,20 +188,20 @@ class KoalixCRMProductsAPIClient(BaseAPIClient):
         return None
 
     def update_unit_transform(self, object_id: int, data: Dict[str, Any]) -> Optional[UnitTransform]:
-        return self._put_full_update(UnitTransform, "/unitTransforms", object_id, data)
+        return self._put_full_update(UnitTransform, "/unit_transforms", object_id, data)
 
     # ------------------------------------------------------------------
-    # CustomerGroupTransform (endpoint: /customerGroupTransforms)
+    # CustomerGroupTransform (endpoint: /customer_group_transforms)
     # ------------------------------------------------------------------
 
     def get_customer_group_transform(self, object_id: int) -> Optional[CustomerGroupTransform]:
-        return self._get_object(CustomerGroupTransform, "/customerGroupTransforms", object_id)
+        return self._get_object(CustomerGroupTransform, "/customer_group_transforms", object_id)
 
     def get_customer_group_transform_list(self) -> List[CustomerGroupTransform]:
-        return self._get_object_list(CustomerGroupTransform, "/customerGroupTransforms/")
+        return self._get_object_list(CustomerGroupTransform, "/customer_group_transforms/")
 
     def create_customer_group_transform(self, data: Dict[str, Any]) -> Optional[CustomerGroupTransform]:
-        response_data = self._make_request("/customerGroupTransforms/", method="POST", data=data)
+        response_data = self._make_request("/customer_group_transforms/", method="POST", data=data)
         if response_data:
             obj = CustomerGroupTransform(response_data, self)
             self._cache.set(CustomerGroupTransform, obj.id, obj)
@@ -209,4 +209,4 @@ class KoalixCRMProductsAPIClient(BaseAPIClient):
         return None
 
     def update_customer_group_transform(self, object_id: int, data: Dict[str, Any]) -> Optional[CustomerGroupTransform]:
-        return self._put_full_update(CustomerGroupTransform, "/customerGroupTransforms", object_id, data)
+        return self._put_full_update(CustomerGroupTransform, "/customer_group_transforms", object_id, data)

@@ -12,14 +12,14 @@ import koalixcrm
 
 
 class OptionProjectJSONSerializer(serializers.ModelSerializer):
-    projectStatus = OptionProjectStatusJSONSerializer(source='project_status', read_only=True)
-    projectManager = UserSerializer(source='project_manager', read_only=True)
-    projectName = serializers.CharField(source='project_name', read_only=True)
-    defaultCurrency = CurrencyJSONSerializer(source='default_currency', read_only=True)
-    defaultTemplateSet = OptionTemplateSetJSONSerializer(source='default_template_set', read_only=True)
-    isReportingAllowed = serializers.SerializerMethodField()
+    project_status = OptionProjectStatusJSONSerializer(read_only=True)
+    project_manager = UserSerializer(read_only=True)
+    project_name = serializers.CharField(read_only=True)
+    default_currency = CurrencyJSONSerializer(read_only=True)
+    default_template_set = OptionTemplateSetJSONSerializer(read_only=True)
+    is_reporting_allowed = serializers.SerializerMethodField()
 
-    def get_isReportingAllowed(self, obj):
+    def get_is_reporting_allowed(self, obj):
         if obj.is_reporting_allowed():
             return "True"
         else:
@@ -27,33 +27,33 @@ class OptionProjectJSONSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = ('projectStatus',
-                  'projectManager',
-                  'projectName',
+        fields = ('project_status',
+                  'project_manager',
+                  'project_name',
                   'description',
-                  'defaultCurrency',
-                  'defaultTemplateSet',
-                  'isReportingAllowed')
+                  'default_currency',
+                  'default_template_set',
+                  'is_reporting_allowed')
 
 
 class ProjectJSONSerializer(serializers.ModelSerializer):
-    projectStatus = OptionProjectStatusJSONSerializer(source='project_status')
-    projectManager = UserSerializer(source='project_manager', read_only=True)
-    projectName = serializers.CharField(source='project_name')
-    defaultCurrency = CurrencyJSONSerializer(source='default_currency')
-    defaultTemplateSet = OptionTemplateSetJSONSerializer(source='default_template_set')
-    isReportingAllowed = serializers.SerializerMethodField()
+    project_status = OptionProjectStatusJSONSerializer()
+    project_manager = UserSerializer(read_only=True)
+    project_name = serializers.CharField()
+    default_currency = CurrencyJSONSerializer()
+    default_template_set = OptionTemplateSetJSONSerializer()
+    is_reporting_allowed = serializers.SerializerMethodField()
     tasks = serializers.SerializerMethodField()
 
     class Meta:
         model = Project
-        fields = ('projectStatus',
-                  'projectManager',
-                  'projectName',
+        fields = ('project_status',
+                  'project_manager',
+                  'project_name',
                   'description',
-                  'defaultCurrency',
-                  'defaultTemplateSet',
-                  'isReportingAllowed',
+                  'default_currency',
+                  'default_template_set',
+                  'is_reporting_allowed',
                   'tasks')
 
     def get_tasks(self, obj):
@@ -61,7 +61,7 @@ class ProjectJSONSerializer(serializers.ModelSerializer):
         tasks = obj.task_set.all()
         return TaskJSONSerializer(tasks, many=True, context=self.context).data
 
-    def get_isReportingAllowed(self, obj):
+    def get_is_reporting_allowed(self, obj):
         if obj.is_reporting_allowed():
             return "True"
         else:
@@ -70,21 +70,21 @@ class ProjectJSONSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         project = Project()
         # Deserialize default currency
-        default_currency = validated_data.pop('defaultCurrency')
+        default_currency = validated_data.pop('default_currency')
         if default_currency:
             if default_currency.get('id', None):
                 project.default_currency = Currency.objects.get(id=default_currency.get('id', None))
             else:
                 project.default_currency = None
         # Deserialize status
-        project_status = validated_data.pop('ProjectStatus')
+        project_status = validated_data.pop('project_status')
         if project_status:
             if project_status.get('id', None):
                 project.project_status = ProjectStatus.objects.get(id=project_status.get('id', None))
             else:
                 project.project_status = None
         # Deserialize default template set
-        default_template_set = validated_data.pop('defaultTemplateSet')
+        default_template_set = validated_data.pop('default_template_set')
         if default_template_set:
             if default_template_set.get('id', None):
                 project.default_template_set = TemplateSet.objects.get(id=default_template_set.get('id', None))
@@ -97,7 +97,7 @@ class ProjectJSONSerializer(serializers.ModelSerializer):
 
     def update(self, project, validated_data):
         # Deserialize default currency
-        default_currency = validated_data.pop('defaultCurrency')
+        default_currency = validated_data.pop('default_currency')
         if default_currency:
             if default_currency.get('id', project.project):
                 project.default_currency = Project.objects.get(id=default_currency.get('id', None))
@@ -106,16 +106,16 @@ class ProjectJSONSerializer(serializers.ModelSerializer):
         else:
             project.default_currency = None
         # Deserialize status
-        project_status = validated_data.pop('status')
+        project_status = validated_data.pop('project_status')
         if project_status:
-            if project_status.get('id', project.status):
+            if project_status.get('id', project.project_status):
                 project.project_status = ProjectStatus.objects.get(id=project_status.get('id', None))
             else:
                 project.project_status = project.project_status_id
         else:
             project.project_status = None
         # Deserialize default template set
-        default_template_set = validated_data.pop('status')
+        default_template_set = validated_data.pop('default_template_set')
         if default_template_set:
             if default_template_set.get('id', project.default_template_set):
                 project.default_template_set = TemplateSet.objects.get(id=default_template_set.get('id', None))
@@ -127,6 +127,3 @@ class ProjectJSONSerializer(serializers.ModelSerializer):
         project.description = validated_data['description']
         project.save()
         return project
-
-
-

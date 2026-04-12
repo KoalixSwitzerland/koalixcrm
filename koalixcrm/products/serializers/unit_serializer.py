@@ -6,22 +6,20 @@ from koalixcrm.products.models.unit import Unit
 class OptionUnitJSONSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.IntegerField(required=False)
     description = serializers.CharField(read_only=True)
-    shortName = serializers.CharField(source='short_name', read_only=True)
+    short_name = serializers.CharField(read_only=True)
 
     class Meta:
         model = Unit
         fields = ('id',
                   'description',
-                  'shortName')
+                  'short_name')
 
 
 class UnitJSONSerializer(serializers.HyperlinkedModelSerializer):
-    shortName = serializers.CharField(source='short_name')
+    short_name = serializers.CharField()
     description = serializers.CharField()
-    isFractionOf = OptionUnitJSONSerializer(source='is_a_fraction_of',
-                                            allow_null=True)
-    fractionFactor = serializers.DecimalField(source='fraction_factor_to_next_higher_unit',
-                                              max_digits=20,
+    is_a_fraction_of = OptionUnitJSONSerializer(allow_null=True)
+    fraction_factor_to_next_higher_unit = serializers.DecimalField(max_digits=20,
                                               decimal_places=10,
                                               required=False,
                                               allow_null=True)
@@ -30,9 +28,9 @@ class UnitJSONSerializer(serializers.HyperlinkedModelSerializer):
         model = Unit
         fields = ('id',
                   'description',
-                  'shortName',
-                  'isFractionOf',
-                  'fractionFactor')
+                  'short_name',
+                  'is_a_fraction_of',
+                  'fraction_factor_to_next_higher_unit')
         depth = 1
 
     def create(self, validated_data):

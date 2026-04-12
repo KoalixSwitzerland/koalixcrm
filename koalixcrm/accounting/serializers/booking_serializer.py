@@ -12,39 +12,39 @@ from koalixcrm.accounting.serializers.accounting_period_serializer import Option
 class UserJSONSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.IntegerField(required=False)
     username = serializers.CharField(read_only=True)
-    firstName = serializers.CharField(source='first_name', read_only=True)
-    lastName = serializers.CharField(source='last_name', read_only=True)
+    first_name = serializers.CharField(read_only=True)
+    last_name = serializers.CharField(read_only=True)
 
     class Meta:
         model = User
         fields = (
             'id',
             'username',
-            'firstName',
-            'lastName')
+            'first_name',
+            'last_name')
 
 
 class BookingJSONSerializer(serializers.HyperlinkedModelSerializer):
 
-    fromAccount = OptionAccountJSONSerializer(source='from_account', allow_null=False)
-    toAccount = OptionAccountJSONSerializer(source='to_account', allow_null=False)
-    bookingDate = serializers.DateTimeField(source='booking_date', format="%Y-%m-%dT%H:%M", input_formats=None,
+    from_account = OptionAccountJSONSerializer(allow_null=False)
+    to_account = OptionAccountJSONSerializer(allow_null=False)
+    booking_date = serializers.DateTimeField(format="%Y-%m-%dT%H:%M", input_formats=None,
                                             allow_null=False)
-    bookingReference = serializers.CharField(source='booking_reference', allow_null=True)
-    accountingPeriod = OptionAccountingPeriodJSONSerializer(source='accounting_period', allow_null=False)
+    booking_reference = serializers.CharField(allow_null=True)
+    accounting_period = OptionAccountingPeriodJSONSerializer(allow_null=False)
     staff = UserJSONSerializer(required=False, allow_null=True)
 
     class Meta:
         model = Booking
         fields = ('id',
-                  'fromAccount',
-                  'toAccount',
+                  'from_account',
+                  'to_account',
                   'description',
                   'amount',
-                  'bookingDate',
+                  'booking_date',
                   'staff',
-                  'bookingReference',
-                  'accountingPeriod')
+                  'booking_reference',
+                  'accounting_period')
         depth = 1
 
     def create(self, validated_data):

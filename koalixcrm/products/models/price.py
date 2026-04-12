@@ -11,7 +11,6 @@ from koalixcrm.products.models.currency_transform import CurrencyTransform
 
 
 class Price(models.Model):
-    id = models.BigAutoField(primary_key=True)
     unit = models.ForeignKey(Unit,
                              on_delete=models.CASCADE,
                              blank=False,

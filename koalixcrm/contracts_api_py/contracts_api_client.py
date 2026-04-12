@@ -87,13 +87,13 @@ class KoalixCRMContractsAPIClient(BaseAPIClient):
     # ------------------------------------------------------------------
 
     def get_purchase_order(self, object_id: int) -> Optional[PurchaseOrder]:
-        return self._get_object(PurchaseOrder, "/purchaseOrders", object_id)
+        return self._get_object(PurchaseOrder, "/purchase_orders", object_id)
 
     def get_purchase_order_list(self) -> List[PurchaseOrder]:
-        return self._get_object_list(PurchaseOrder, "/purchaseOrders/")
+        return self._get_object_list(PurchaseOrder, "/purchase_orders/")
 
     def create_purchase_order(self, data: Dict[str, Any]) -> Optional[PurchaseOrder]:
-        response_data = self._make_request("/purchaseOrders/", method="POST", data=data)
+        response_data = self._make_request("/purchase_orders/", method="POST", data=data)
         if response_data:
             obj = PurchaseOrder(response_data, self)
             self._cache.set(PurchaseOrder, obj.id, obj)
@@ -101,20 +101,20 @@ class KoalixCRMContractsAPIClient(BaseAPIClient):
         return None
 
     def update_purchase_order(self, object_id: int, data: Dict[str, Any]) -> Optional[PurchaseOrder]:
-        return self._put_full_update(PurchaseOrder, "/purchaseOrders", object_id, data)
+        return self._put_full_update(PurchaseOrder, "/purchase_orders", object_id, data)
 
     # ------------------------------------------------------------------
     # Purchase Confirmations
     # ------------------------------------------------------------------
 
     def get_purchase_confirmation(self, object_id: int) -> Optional[PurchaseConfirmation]:
-        return self._get_object(PurchaseConfirmation, "/purchaseConfirmations", object_id)
+        return self._get_object(PurchaseConfirmation, "/purchase_confirmations", object_id)
 
     def get_purchase_confirmation_list(self) -> List[PurchaseConfirmation]:
-        return self._get_object_list(PurchaseConfirmation, "/purchaseConfirmations/")
+        return self._get_object_list(PurchaseConfirmation, "/purchase_confirmations/")
 
     def create_purchase_confirmation(self, data: Dict[str, Any]) -> Optional[PurchaseConfirmation]:
-        response_data = self._make_request("/purchaseConfirmations/", method="POST", data=data)
+        response_data = self._make_request("/purchase_confirmations/", method="POST", data=data)
         if response_data:
             obj = PurchaseConfirmation(response_data, self)
             self._cache.set(PurchaseConfirmation, obj.id, obj)
@@ -122,20 +122,20 @@ class KoalixCRMContractsAPIClient(BaseAPIClient):
         return None
 
     def update_purchase_confirmation(self, object_id: int, data: Dict[str, Any]) -> Optional[PurchaseConfirmation]:
-        return self._put_full_update(PurchaseConfirmation, "/purchaseConfirmations", object_id, data)
+        return self._put_full_update(PurchaseConfirmation, "/purchase_confirmations", object_id, data)
 
     # ------------------------------------------------------------------
     # Delivery Notes
     # ------------------------------------------------------------------
 
     def get_delivery_note(self, object_id: int) -> Optional[DeliveryNote]:
-        return self._get_object(DeliveryNote, "/deliveryNotes", object_id)
+        return self._get_object(DeliveryNote, "/delivery_notes", object_id)
 
     def get_delivery_note_list(self) -> List[DeliveryNote]:
-        return self._get_object_list(DeliveryNote, "/deliveryNotes/")
+        return self._get_object_list(DeliveryNote, "/delivery_notes/")
 
     def create_delivery_note(self, data: Dict[str, Any]) -> Optional[DeliveryNote]:
-        response_data = self._make_request("/deliveryNotes/", method="POST", data=data)
+        response_data = self._make_request("/delivery_notes/", method="POST", data=data)
         if response_data:
             obj = DeliveryNote(response_data, self)
             self._cache.set(DeliveryNote, obj.id, obj)
@@ -143,20 +143,20 @@ class KoalixCRMContractsAPIClient(BaseAPIClient):
         return None
 
     def update_delivery_note(self, object_id: int, data: Dict[str, Any]) -> Optional[DeliveryNote]:
-        return self._put_full_update(DeliveryNote, "/deliveryNotes", object_id, data)
+        return self._put_full_update(DeliveryNote, "/delivery_notes", object_id, data)
 
     # ------------------------------------------------------------------
     # Payment Reminders
     # ------------------------------------------------------------------
 
     def get_payment_reminder(self, object_id: int) -> Optional[PaymentReminder]:
-        return self._get_object(PaymentReminder, "/paymentReminders", object_id)
+        return self._get_object(PaymentReminder, "/payment_reminders", object_id)
 
     def get_payment_reminder_list(self) -> List[PaymentReminder]:
-        return self._get_object_list(PaymentReminder, "/paymentReminders/")
+        return self._get_object_list(PaymentReminder, "/payment_reminders/")
 
     def create_payment_reminder(self, data: Dict[str, Any]) -> Optional[PaymentReminder]:
-        response_data = self._make_request("/paymentReminders/", method="POST", data=data)
+        response_data = self._make_request("/payment_reminders/", method="POST", data=data)
         if response_data:
             obj = PaymentReminder(response_data, self)
             self._cache.set(PaymentReminder, obj.id, obj)
@@ -164,20 +164,20 @@ class KoalixCRMContractsAPIClient(BaseAPIClient):
         return None
 
     def update_payment_reminder(self, object_id: int, data: Dict[str, Any]) -> Optional[PaymentReminder]:
-        return self._put_full_update(PaymentReminder, "/paymentReminders", object_id, data)
+        return self._put_full_update(PaymentReminder, "/payment_reminders", object_id, data)
 
     # ------------------------------------------------------------------
     # Sales Document Positions
     # ------------------------------------------------------------------
 
     def get_sales_document_position(self, object_id: int) -> Optional[SalesDocumentPosition]:
-        return self._get_object(SalesDocumentPosition, "/salesDocumentPositions", object_id)
+        return self._get_object(SalesDocumentPosition, "/sales_document_positions", object_id)
 
     def get_sales_document_position_list(self) -> List[SalesDocumentPosition]:
-        return self._get_object_list(SalesDocumentPosition, "/salesDocumentPositions/")
+        return self._get_object_list(SalesDocumentPosition, "/sales_document_positions/")
 
     def create_sales_document_position(self, data: Dict[str, Any]) -> Optional[SalesDocumentPosition]:
-        response_data = self._make_request("/salesDocumentPositions/", method="POST", data=data)
+        response_data = self._make_request("/sales_document_positions/", method="POST", data=data)
         if response_data:
             obj = SalesDocumentPosition(response_data, self)
             self._cache.set(SalesDocumentPosition, obj.id, obj)
@@ -185,4 +185,4 @@ class KoalixCRMContractsAPIClient(BaseAPIClient):
         return None
 
     def update_sales_document_position(self, object_id: int, data: Dict[str, Any]) -> Optional[SalesDocumentPosition]:
-        return self._put_full_update(SalesDocumentPosition, "/salesDocumentPositions", object_id, data)
+        return self._put_full_update(SalesDocumentPosition, "/sales_document_positions", object_id, data)

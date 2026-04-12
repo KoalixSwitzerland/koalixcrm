@@ -106,17 +106,17 @@ class KoalixCRMContactsAPIClient(BaseAPIClient):
         return self._put_full_update(Contact, "/contacts", object_id, data)
 
     # ------------------------------------------------------------------
-    # CustomerGroup (endpoint: /customerGroups)
+    # CustomerGroup (endpoint: /customer_groups)
     # ------------------------------------------------------------------
 
     def get_customer_group(self, object_id: int) -> Optional[CustomerGroup]:
-        return self._get_object(CustomerGroup, "/customerGroups", object_id)
+        return self._get_object(CustomerGroup, "/customer_groups", object_id)
 
     def get_customer_group_list(self) -> List[CustomerGroup]:
-        return self._get_object_list(CustomerGroup, "/customerGroups/")
+        return self._get_object_list(CustomerGroup, "/customer_groups/")
 
     def create_customer_group(self, data: Dict[str, Any]) -> Optional[CustomerGroup]:
-        response_data = self._make_request("/customerGroups/", method="POST", data=data)
+        response_data = self._make_request("/customer_groups/", method="POST", data=data)
         if response_data:
             obj = CustomerGroup(response_data, self)
             self._cache.set(CustomerGroup, obj.id, obj)
@@ -124,20 +124,20 @@ class KoalixCRMContactsAPIClient(BaseAPIClient):
         return None
 
     def update_customer_group(self, object_id: int, data: Dict[str, Any]) -> Optional[CustomerGroup]:
-        return self._put_full_update(CustomerGroup, "/customerGroups", object_id, data)
+        return self._put_full_update(CustomerGroup, "/customer_groups", object_id, data)
 
     # ------------------------------------------------------------------
-    # CustomerBillingCycle (endpoint: /customerBillingCycles)
+    # CustomerBillingCycle (endpoint: /customer_billing_cycles)
     # ------------------------------------------------------------------
 
     def get_customer_billing_cycle(self, object_id: int) -> Optional[CustomerBillingCycle]:
-        return self._get_object(CustomerBillingCycle, "/customerBillingCycles", object_id)
+        return self._get_object(CustomerBillingCycle, "/customer_billing_cycles", object_id)
 
     def get_customer_billing_cycle_list(self) -> List[CustomerBillingCycle]:
-        return self._get_object_list(CustomerBillingCycle, "/customerBillingCycles/")
+        return self._get_object_list(CustomerBillingCycle, "/customer_billing_cycles/")
 
     def create_customer_billing_cycle(self, data: Dict[str, Any]) -> Optional[CustomerBillingCycle]:
-        response_data = self._make_request("/customerBillingCycles/", method="POST", data=data)
+        response_data = self._make_request("/customer_billing_cycles/", method="POST", data=data)
         if response_data:
             obj = CustomerBillingCycle(response_data, self)
             self._cache.set(CustomerBillingCycle, obj.id, obj)
@@ -145,20 +145,20 @@ class KoalixCRMContactsAPIClient(BaseAPIClient):
         return None
 
     def update_customer_billing_cycle(self, object_id: int, data: Dict[str, Any]) -> Optional[CustomerBillingCycle]:
-        return self._put_full_update(CustomerBillingCycle, "/customerBillingCycles", object_id, data)
+        return self._put_full_update(CustomerBillingCycle, "/customer_billing_cycles", object_id, data)
 
     # ------------------------------------------------------------------
-    # ContactPostalAddress (endpoint: /contactPostalAddresses)
+    # ContactPostalAddress (endpoint: /contact_postal_addresses)
     # ------------------------------------------------------------------
 
     def get_contact_postal_address(self, object_id: int) -> Optional[PostalAddress]:
-        return self._get_object(PostalAddress, "/contactPostalAddresses", object_id)
+        return self._get_object(PostalAddress, "/contact_postal_addresses", object_id)
 
     def get_contact_postal_address_list(self) -> List[PostalAddress]:
-        return self._get_object_list(PostalAddress, "/contactPostalAddresses/")
+        return self._get_object_list(PostalAddress, "/contact_postal_addresses/")
 
     def create_contact_postal_address(self, data: Dict[str, Any]) -> Optional[PostalAddress]:
-        response_data = self._make_request("/contactPostalAddresses/", method="POST", data=data)
+        response_data = self._make_request("/contact_postal_addresses/", method="POST", data=data)
         if response_data:
             obj = PostalAddress(response_data, self)
             self._cache.set(PostalAddress, obj.id, obj)
@@ -166,20 +166,20 @@ class KoalixCRMContactsAPIClient(BaseAPIClient):
         return None
 
     def update_contact_postal_address(self, object_id: int, data: Dict[str, Any]) -> Optional[PostalAddress]:
-        return self._put_full_update(PostalAddress, "/contactPostalAddresses", object_id, data)
+        return self._put_full_update(PostalAddress, "/contact_postal_addresses", object_id, data)
 
     # ------------------------------------------------------------------
-    # ContactEmailAddress (endpoint: /contactEmailAddresses)
+    # ContactEmailAddress (endpoint: /contact_email_addresses)
     # ------------------------------------------------------------------
 
     def get_contact_email_address(self, object_id: int) -> Optional[EmailAddress]:
-        return self._get_object(EmailAddress, "/contactEmailAddresses", object_id)
+        return self._get_object(EmailAddress, "/contact_email_addresses", object_id)
 
     def get_contact_email_address_list(self) -> List[EmailAddress]:
-        return self._get_object_list(EmailAddress, "/contactEmailAddresses/")
+        return self._get_object_list(EmailAddress, "/contact_email_addresses/")
 
     def create_contact_email_address(self, data: Dict[str, Any]) -> Optional[EmailAddress]:
-        response_data = self._make_request("/contactEmailAddresses/", method="POST", data=data)
+        response_data = self._make_request("/contact_email_addresses/", method="POST", data=data)
         if response_data:
             obj = EmailAddress(response_data, self)
             self._cache.set(EmailAddress, obj.id, obj)
@@ -187,20 +187,20 @@ class KoalixCRMContactsAPIClient(BaseAPIClient):
         return None
 
     def update_contact_email_address(self, object_id: int, data: Dict[str, Any]) -> Optional[EmailAddress]:
-        return self._put_full_update(EmailAddress, "/contactEmailAddresses", object_id, data)
+        return self._put_full_update(EmailAddress, "/contact_email_addresses", object_id, data)
 
     # ------------------------------------------------------------------
-    # ContactPhoneAddress (endpoint: /contactPhoneNumbers)
+    # ContactPhoneAddress (endpoint: /contact_phone_numbers)
     # ------------------------------------------------------------------
 
     def get_contact_phone_address(self, object_id: int) -> Optional[PhoneAddress]:
-        return self._get_object(PhoneAddress, "/contactPhoneNumbers", object_id)
+        return self._get_object(PhoneAddress, "/contact_phone_numbers", object_id)
 
     def get_contact_phone_address_list(self) -> List[PhoneAddress]:
-        return self._get_object_list(PhoneAddress, "/contactPhoneNumbers/")
+        return self._get_object_list(PhoneAddress, "/contact_phone_numbers/")
 
     def create_contact_phone_address(self, data: Dict[str, Any]) -> Optional[PhoneAddress]:
-        response_data = self._make_request("/contactPhoneNumbers/", method="POST", data=data)
+        response_data = self._make_request("/contact_phone_numbers/", method="POST", data=data)
         if response_data:
             obj = PhoneAddress(response_data, self)
             self._cache.set(PhoneAddress, obj.id, obj)
@@ -208,4 +208,4 @@ class KoalixCRMContactsAPIClient(BaseAPIClient):
         return None
 
     def update_contact_phone_address(self, object_id: int, data: Dict[str, Any]) -> Optional[PhoneAddress]:
-        return self._put_full_update(PhoneAddress, "/contactPhoneNumbers", object_id, data)
+        return self._put_full_update(PhoneAddress, "/contact_phone_numbers", object_id, data)

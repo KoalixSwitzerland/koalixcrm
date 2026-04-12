@@ -12,7 +12,6 @@ from koalixcrm.crm.exceptions import *
 
 
 class DocumentTemplate(models.Model):
-    id = models.BigAutoField(primary_key=True)
     title = models.CharField(verbose_name=_("Title"),
                              max_length=100,
                              blank=True,

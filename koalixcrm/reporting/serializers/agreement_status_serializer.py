@@ -3,9 +3,9 @@ from koalixcrm.reporting.models.agreement_status import AgreementStatus
 
 
 class OptionAgreementStatusJSONSerializer(serializers.HyperlinkedModelSerializer):
-    title = serializers.CharField(source='title', read_only=True)
-    description = serializers.CharField(source='description', read_only=True)
-    isAgreed = serializers.BooleanField(source='is_agreed', read_only=True)
+    title = serializers.CharField(read_only=True)
+    description = serializers.CharField(read_only=True)
+    is_agreed = serializers.BooleanField(read_only=True)
 
     class Meta:
         model = AgreementStatus
@@ -15,9 +15,9 @@ class OptionAgreementStatusJSONSerializer(serializers.HyperlinkedModelSerializer
 
 
 class AgreementStatusJSONSerializer(serializers.HyperlinkedModelSerializer):
-    title = serializers.CharField(source='title')
-    description = serializers.CharField(source='description')
-    isAgreed = serializers.BooleanField(source='is_agreed')
+    title = serializers.CharField()
+    description = serializers.CharField()
+    is_agreed = serializers.BooleanField()
 
     class Meta:
         model = AgreementStatus

@@ -3,20 +3,20 @@ from koalixcrm.reporting.models.task_status import TaskStatus
 
 
 class OptionTaskStatusJSONSerializer(serializers.HyperlinkedModelSerializer):
-    isDone = serializers.BooleanField(source='is_done', read_only=True)
+    is_done = serializers.BooleanField(read_only=True)
 
     class Meta:
         model = TaskStatus
         fields = ('title',
                   'description',
-                  'isDone')
+                  'is_done')
 
 
 class TaskStatusJSONSerializer(serializers.HyperlinkedModelSerializer):
-    isDone = serializers.BooleanField(source='is_done')
+    is_done = serializers.BooleanField()
 
     class Meta:
         model = TaskStatus
         fields = ('title',
                   'description',
-                  'isDone')
+                  'is_done')

@@ -4,11 +4,11 @@ from koalixcrm.products.models.currency import Currency
 
 
 class CurrencyJSONSerializer(serializers.HyperlinkedModelSerializer):
-    shortName = serializers.CharField(source='short_name')
+    short_name = serializers.CharField()
 
     class Meta:
         model = Currency
         fields = ('id',
                   'description',
-                  'shortName',
+                  'short_name',
                   'rounding')

@@ -15,11 +15,11 @@ class PhoneAddressJSONSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class ContactPhoneAddressJSONSerializer(PhoneAddressJSONSerializer):
-    contactId = serializers.PrimaryKeyRelatedField(source='person_id', queryset=Contact.objects.all())
+    person_id = serializers.PrimaryKeyRelatedField(queryset=Contact.objects.all())
 
     class Meta:
         model = PhoneAddressForContact
-        fields = PhoneAddressJSONSerializer.Meta.fields + ('id', 'purpose', 'contactId')
+        fields = PhoneAddressJSONSerializer.Meta.fields + ('id', 'purpose', 'person_id')
 
     def create(self, validated_data):
         contact_phone_address = PhoneAddressForContact()
@@ -50,11 +50,11 @@ class EmailAddressJSONSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class ContactEmailAddressJSONSerializer(EmailAddressJSONSerializer):
-    contactId = serializers.PrimaryKeyRelatedField(source='person_id', queryset=Contact.objects.all())
+    person_id = serializers.PrimaryKeyRelatedField(queryset=Contact.objects.all())
 
     class Meta:
         model = EmailAddressForContact
-        fields = EmailAddressJSONSerializer.Meta.fields + ('id', 'purpose', 'contactId')
+        fields = EmailAddressJSONSerializer.Meta.fields + ('id', 'purpose', 'person_id')
 
     def create(self, validated_data):
         contact_email_address = EmailAddressForContact()
@@ -102,36 +102,36 @@ class ContactJSONSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class PostalAddressJSONSerializer(serializers.HyperlinkedModelSerializer):
-    givenName = serializers.CharField(source='pre_name', allow_null=True)
-    familyName = serializers.CharField(source='name', allow_null=True)
-    addressLine1 = serializers.CharField(source='address_line_1', allow_null=True)
-    addressLine2 = serializers.CharField(source='address_line_2', allow_null=True)
-    addressLine3 = serializers.CharField(source='address_line_3', allow_null=True)
-    addressLine4 = serializers.CharField(source='address_line_4', allow_null=True)
-    zipCode = serializers.IntegerField(source='zip_code',  allow_null=True)
-    city = serializers.CharField(source='town',  allow_null=True)
+    pre_name = serializers.CharField(allow_null=True)
+    name = serializers.CharField(allow_null=True)
+    address_line_1 = serializers.CharField(allow_null=True)
+    address_line_2 = serializers.CharField(allow_null=True)
+    address_line_3 = serializers.CharField(allow_null=True)
+    address_line_4 = serializers.CharField(allow_null=True)
+    zip_code = serializers.IntegerField(allow_null=True)
+    town = serializers.CharField(allow_null=True)
 
     class Meta:
         model = PostalAddress
         fields = ('prefix',
-                  'familyName',
-                  'givenName',
-                  'addressLine1',
-                  'addressLine2',
-                  'addressLine3',
-                  'addressLine4',
-                  'zipCode',
-                  'city',
+                  'name',
+                  'pre_name',
+                  'address_line_1',
+                  'address_line_2',
+                  'address_line_3',
+                  'address_line_4',
+                  'zip_code',
+                  'town',
                   'state',
                   'country')
 
 
 class ContactPostalAddressJSONSerializer(PostalAddressJSONSerializer):
-    contactId = serializers.PrimaryKeyRelatedField(source='person_id', queryset=Contact.objects.all())
+    person_id = serializers.PrimaryKeyRelatedField(queryset=Contact.objects.all())
 
     class Meta:
         model = PostalAddressForContact
-        fields = PostalAddressJSONSerializer.Meta.fields + ('id', 'purpose', 'contactId')
+        fields = PostalAddressJSONSerializer.Meta.fields + ('id', 'purpose', 'person_id')
 
     def create(self, validated_data):
         contact_postal_address = PostalAddressForContact()
@@ -173,4 +173,3 @@ class ContactPostalAddressJSONSerializer(PostalAddressJSONSerializer):
         contact_postal_address.save()
 
         return contact_postal_address
-

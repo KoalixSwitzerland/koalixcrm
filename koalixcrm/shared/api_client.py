@@ -436,15 +436,8 @@ class BaseAPIClient:
         payload.pop('created_at', None)
         payload.pop('updated_at', None)
 
-        flattened_payload = {}
-        for key, value in payload.items():
-            if isinstance(value, dict) and 'id' in value:
-                flattened_payload[key] = value['id']
-            else:
-                flattened_payload[key] = value
-
         response_data = self._make_request(
-            f"{endpoint_base}/{object_id}/", method="PUT", data=flattened_payload
+            f"{endpoint_base}/{object_id}/", method="PUT", data=payload
         )
         if response_data:
             obj = model_class(response_data, self)
@@ -458,15 +451,8 @@ class BaseAPIClient:
         cache = self._require_cache()
         payload = {k: v for k, v in data.items() if k not in ['id', 'created_at', 'updated_at']}
 
-        flattened_payload = {}
-        for key, value in payload.items():
-            if isinstance(value, dict) and 'id' in value:
-                flattened_payload[key] = value['id']
-            else:
-                flattened_payload[key] = value
-
         response_data = self._make_request(
-            f"{endpoint_base}/{object_id}/", method="PATCH", data=flattened_payload
+            f"{endpoint_base}/{object_id}/", method="PATCH", data=payload
         )
         if response_data:
             obj = model_class(response_data, self)

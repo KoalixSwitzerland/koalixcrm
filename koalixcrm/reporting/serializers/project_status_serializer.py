@@ -3,20 +3,20 @@ from koalixcrm.reporting.models.project_status import ProjectStatus
 
 
 class OptionProjectStatusJSONSerializer(serializers.HyperlinkedModelSerializer):
-    isDone = serializers.BooleanField(source='is_done', read_only=True)
+    is_done = serializers.BooleanField(read_only=True)
 
     class Meta:
         model = ProjectStatus
         fields = ('title',
                   'description',
-                  'isDone')
+                  'is_done')
 
 
 class ProjectStatusJSONSerializer(serializers.HyperlinkedModelSerializer):
-    isDone = serializers.BooleanField(source='is_done')
+    is_done = serializers.BooleanField()
 
     class Meta:
         model = ProjectStatus
         fields = ('title',
                   'description',
-                  'isDone')
+                  'is_done')

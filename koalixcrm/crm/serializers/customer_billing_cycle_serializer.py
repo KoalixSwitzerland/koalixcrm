@@ -14,12 +14,12 @@ class OptionCustomerBillingCycleJSONSerializer(serializers.HyperlinkedModelSeria
 
 
 class CustomerBillingCycleJSONSerializer(serializers.HyperlinkedModelSerializer):
-    daysToPaymentDate = serializers.IntegerField(source='time_to_payment_date', allow_null=False)
-    paymentReminderDaysToPayment = serializers.IntegerField(source='payment_reminder_time_to_payment', allow_null=True)
+    time_to_payment_date = serializers.IntegerField(allow_null=False)
+    payment_reminder_time_to_payment = serializers.IntegerField(allow_null=True)
 
     class Meta:
         model = CustomerBillingCycle
         fields = ('id',
                   'name',
-                  'daysToPaymentDate',
-                  'paymentReminderDaysToPayment')
+                  'time_to_payment_date',
+                  'payment_reminder_time_to_payment')

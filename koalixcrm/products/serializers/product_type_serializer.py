@@ -10,19 +10,19 @@ from koalixcrm.products.serializers.unit_serializer import OptionUnitJSONSeriali
 
 
 class ProductJSONSerializer(serializers.HyperlinkedModelSerializer):
-    productNumber = serializers.IntegerField(source='product_number', allow_null=False)
-    unit = OptionUnitJSONSerializer(source='default_unit', allow_null=False)
+    product_number = serializers.IntegerField(allow_null=False)
+    default_unit = OptionUnitJSONSerializer(allow_null=False)
     tax = OptionTaxJSONSerializer(allow_null=False)
-    productCategory = ProductCategoryMinimalJSONSerializer(source='accounting_product_categorie', allow_null=False)
+    accounting_product_categorie = ProductCategoryMinimalJSONSerializer(allow_null=False)
 
     class Meta:
         model = ProductType
         fields = ('id',
-                  'productNumber',
+                  'product_number',
                   'title',
-                  'unit',
+                  'default_unit',
                   'tax',
-                  'productCategory')
+                  'accounting_product_categorie')
         depth = 1
 
     def create(self, validated_data):

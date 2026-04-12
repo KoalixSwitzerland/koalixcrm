@@ -14,8 +14,8 @@ from koalixcrm.djangoUserExtension.models.document_template import WorkReportTem
 
 class OptionDocumentTemplateJSONSerializer(serializers.HyperlinkedModelSerializer):
     title = serializers.CharField(required=False, read_only=True)
-    xslFile = serializers.FileField(source='xsl_file', read_only=True)
-    fopConfigFile = serializers.FileField(source='user', read_only=True)
+    xsl_file = serializers.FileField(read_only=True)
+    fop_config_file = serializers.FileField(read_only=True)
     logo = serializers.FileField(read_only=True)
 
 
@@ -23,8 +23,8 @@ class OptionInvoiceTemplateJSONSerializer(OptionDocumentTemplateJSONSerializer):
     class Meta:
         model = InvoiceTemplate
         fields = ('title',
-                  'xslFile',
-                  'fopConfigFile',
+                  'xsl_file',
+                  'fop_config_file',
                   'logo')
 
 
@@ -32,8 +32,8 @@ class OptionQuoteTemplateJSONSerializer(OptionDocumentTemplateJSONSerializer):
     class Meta:
         model = QuoteTemplate
         fields = ('title',
-                  'xslFile',
-                  'fopConfigFile',
+                  'xsl_file',
+                  'fop_config_file',
                   'logo')
 
 
@@ -41,8 +41,8 @@ class OptionDeliveryNoteTemplateJSONSerializer(OptionDocumentTemplateJSONSeriali
     class Meta:
         model = DeliveryNoteTemplate
         fields = ('title',
-                  'xslFile',
-                  'fopConfigFile',
+                  'xsl_file',
+                  'fop_config_file',
                   'logo')
 
 
@@ -50,8 +50,8 @@ class OptionPaymentReminderTemplateJSONSerializer(OptionDocumentTemplateJSONSeri
     class Meta:
         model = PaymentReminderTemplate
         fields = ('title',
-                  'xslFile',
-                  'fopConfigFile',
+                  'xsl_file',
+                  'fop_config_file',
                   'logo')
 
 
@@ -59,8 +59,8 @@ class OptionPurchaseOrderTemplateJSONSerializer(OptionDocumentTemplateJSONSerial
     class Meta:
         model = PurchaseOrderTemplate
         fields = ('title',
-                  'xslFile',
-                  'fopConfigFile',
+                  'xsl_file',
+                  'fop_config_file',
                   'logo')
 
 
@@ -68,8 +68,8 @@ class OptionPurchaseConfirmationTemplateJSONSerializer(OptionDocumentTemplateJSO
     class Meta:
         model = PurchaseConfirmationTemplate
         fields = ('title',
-                  'xslFile',
-                  'fopConfigFile',
+                  'xsl_file',
+                  'fop_config_file',
                   'logo')
 
 
@@ -77,8 +77,8 @@ class OptionProfitLossStatementTemplateJSONSerializer(OptionDocumentTemplateJSON
     class Meta:
         model = ProfitLossStatementTemplate
         fields = ('title',
-                  'xslFile',
-                  'fopConfigFile',
+                  'xsl_file',
+                  'fop_config_file',
                   'logo')
 
 
@@ -86,8 +86,8 @@ class OptionBalanceSheetTemplateJSONSerializer(OptionDocumentTemplateJSONSeriali
     class Meta:
         model = BalanceSheetTemplate
         fields = ('title',
-                  'xslFile',
-                  'fopConfigFile',
+                  'xsl_file',
+                  'fop_config_file',
                   'logo')
 
 
@@ -95,8 +95,8 @@ class OptionMonthlyProjectSummaryTemplateTemplateJSONSerializer(OptionDocumentTe
     class Meta:
         model = MonthlyProjectSummaryTemplate
         fields = ('title',
-                  'xslFile',
-                  'fopConfigFile',
+                  'xsl_file',
+                  'fop_config_file',
                   'logo')
 
 
@@ -104,6 +104,6 @@ class OptionWorkReportTemplateJSONSerializer(OptionDocumentTemplateJSONSerialize
     class Meta:
         model = WorkReportTemplate
         fields = ('title',
-                  'xslFile',
-                  'fopConfigFile',
+                  'xsl_file',
+                  'fop_config_file',
                   'logo')

@@ -8,11 +8,11 @@ from koalixcrm.reporting.serializers.project_serializer import OptionProjectJSON
 
 
 class OptionReportingPeriodJSONSerializer(serializers.HyperlinkedModelSerializer):
-    project = OptionProjectJSONSerializer(source='project', read_only=True)
-    title = serializers.CharField(source='title', read_only=True)
-    begin = serializers.DateField(source='begin', read_only=True)
-    end = serializers.DateField(source='end', read_only=True)
-    status = OptionReportingPeriodStatusJSONSerializer(source='status', read_only=True)
+    project = OptionProjectJSONSerializer(read_only=True)
+    title = serializers.CharField(read_only=True)
+    begin = serializers.DateField(read_only=True)
+    end = serializers.DateField(read_only=True)
+    status = OptionReportingPeriodStatusJSONSerializer(read_only=True)
 
     class Meta:
         model = ReportingPeriod
@@ -24,11 +24,11 @@ class OptionReportingPeriodJSONSerializer(serializers.HyperlinkedModelSerializer
 
 
 class ReportingPeriodJSONSerializer(serializers.HyperlinkedModelSerializer):
-    project = OptionProjectJSONSerializer(source='project')
-    title = serializers.CharField(source='title')
-    begin = serializers.DateField(source='begin')
-    end = serializers.DateField(source='end')
-    status = OptionReportingPeriodStatusJSONSerializer(source='status')
+    project = OptionProjectJSONSerializer()
+    title = serializers.CharField()
+    begin = serializers.DateField()
+    end = serializers.DateField()
+    status = OptionReportingPeriodStatusJSONSerializer()
 
     class Meta:
         model = ReportingPeriod

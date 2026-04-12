@@ -8,3 +8,4 @@ from koalixcrm.crm.contact.customer_billing_cycle import *
 from koalixcrm.crm.contact.email_address import *
 from koalixcrm.crm.contact.phone_address import *
 from koalixcrm.crm.contact.supplier import *
+from koalixcrm.crm.models.pdf_export_process import PDFExportProcess

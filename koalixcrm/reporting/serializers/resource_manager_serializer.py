@@ -6,8 +6,7 @@ from koalixcrm.djangoUserExtension.serializers.user_extension_rest import Option
 
 
 class OptionResourceManagerJSONSerializer(serializers.HyperlinkedModelSerializer):
-    user = OptionUserExtensionJSONSerializer(source='user',
-                                             read_only=True)
+    user = OptionUserExtensionJSONSerializer(read_only=True)
 
     class Meta:
         model = ResourceManager
@@ -15,7 +14,7 @@ class OptionResourceManagerJSONSerializer(serializers.HyperlinkedModelSerializer
 
 
 class ResourceManagerJSONSerializer(serializers.HyperlinkedModelSerializer):
-    user = OptionUserExtensionJSONSerializer(source='user')
+    user = OptionUserExtensionJSONSerializer()
 
     class Meta:
         model = ResourceManager

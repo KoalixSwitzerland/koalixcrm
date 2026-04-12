@@ -10,17 +10,17 @@ from koalixcrm.crm.serializers.customer_group_serializer import OptionCustomerGr
 
 
 class CustomerJSONSerializer(ContactJSONSerializer):
-    defaultCustomerBillingCycle = OptionCustomerBillingCycleJSONSerializer(source='default_customer_billing_cycle')
-    isMemberOf = OptionCustomerGroupJSONSerializer(source='is_member_of', many=True)
-    isLead = serializers.BooleanField(source='is_lead')
+    default_customer_billing_cycle = OptionCustomerBillingCycleJSONSerializer()
+    is_member_of = OptionCustomerGroupJSONSerializer(many=True)
+    is_lead = serializers.BooleanField()
 
     class Meta:
         model = Customer
         fields = ContactJSONSerializer.Meta.fields + (
             'id',
-            'defaultCustomerBillingCycle',
-            'isMemberOf',
-            'isLead', )
+            'default_customer_billing_cycle',
+            'is_member_of',
+            'is_lead', )
 
     def create(self, validated_data):
         customer = Customer()

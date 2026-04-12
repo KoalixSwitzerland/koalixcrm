@@ -54,13 +54,13 @@ class KoalixCRMReportingAPIClient(BaseAPIClient):
     # --- ProjectStatus ---
 
     def get_project_status(self, object_id: int) -> Optional[ProjectStatus]:
-        return self._get_object(ProjectStatus, "/projectStatus", object_id)
+        return self._get_object(ProjectStatus, "/project_status", object_id)
 
     def get_project_status_list(self) -> List[ProjectStatus]:
-        return self._get_object_list(ProjectStatus, "/projectStatus/")
+        return self._get_object_list(ProjectStatus, "/project_status/")
 
     def create_project_status(self, data: Dict[str, Any]) -> Optional[ProjectStatus]:
-        response_data = self._make_request("/projectStatus/", method="POST", data=data)
+        response_data = self._make_request("/project_status/", method="POST", data=data)
         if response_data:
             obj = ProjectStatus(response_data, self)
             self._cache.set(ProjectStatus, obj.id, obj)
@@ -68,7 +68,7 @@ class KoalixCRMReportingAPIClient(BaseAPIClient):
         return None
 
     def update_project_status(self, object_id: int, data: Dict[str, Any]) -> Optional[ProjectStatus]:
-        return self._put_full_update(ProjectStatus, "/projectStatus", object_id, data)
+        return self._put_full_update(ProjectStatus, "/project_status", object_id, data)
 
     # --- Task ---
 
@@ -92,13 +92,13 @@ class KoalixCRMReportingAPIClient(BaseAPIClient):
     # --- TaskStatus ---
 
     def get_task_status(self, object_id: int) -> Optional[TaskStatus]:
-        return self._get_object(TaskStatus, "/taskstatus", object_id)
+        return self._get_object(TaskStatus, "/task_status", object_id)
 
     def get_task_status_list(self) -> List[TaskStatus]:
-        return self._get_object_list(TaskStatus, "/taskstatus/")
+        return self._get_object_list(TaskStatus, "/task_status/")
 
     def create_task_status(self, data: Dict[str, Any]) -> Optional[TaskStatus]:
-        response_data = self._make_request("/taskstatus/", method="POST", data=data)
+        response_data = self._make_request("/task_status/", method="POST", data=data)
         if response_data:
             obj = TaskStatus(response_data, self)
             self._cache.set(TaskStatus, obj.id, obj)
@@ -106,7 +106,7 @@ class KoalixCRMReportingAPIClient(BaseAPIClient):
         return None
 
     def update_task_status(self, object_id: int, data: Dict[str, Any]) -> Optional[TaskStatus]:
-        return self._put_full_update(TaskStatus, "/taskstatus", object_id, data)
+        return self._put_full_update(TaskStatus, "/task_status", object_id, data)
 
     # --- Work ---
 
@@ -149,13 +149,13 @@ class KoalixCRMReportingAPIClient(BaseAPIClient):
     # --- AgreementStatus ---
 
     def get_agreement_status(self, object_id: int) -> Optional[AgreementStatus]:
-        return self._get_object(AgreementStatus, "/agreementStatus", object_id)
+        return self._get_object(AgreementStatus, "/agreement_status", object_id)
 
     def get_agreement_status_list(self) -> List[AgreementStatus]:
-        return self._get_object_list(AgreementStatus, "/agreementStatus/")
+        return self._get_object_list(AgreementStatus, "/agreement_status/")
 
     def create_agreement_status(self, data: Dict[str, Any]) -> Optional[AgreementStatus]:
-        response_data = self._make_request("/agreementStatus/", method="POST", data=data)
+        response_data = self._make_request("/agreement_status/", method="POST", data=data)
         if response_data:
             obj = AgreementStatus(response_data, self)
             self._cache.set(AgreementStatus, obj.id, obj)
@@ -163,18 +163,18 @@ class KoalixCRMReportingAPIClient(BaseAPIClient):
         return None
 
     def update_agreement_status(self, object_id: int, data: Dict[str, Any]) -> Optional[AgreementStatus]:
-        return self._put_full_update(AgreementStatus, "/agreementStatus", object_id, data)
+        return self._put_full_update(AgreementStatus, "/agreement_status", object_id, data)
 
     # --- AgreementType ---
 
     def get_agreement_type(self, object_id: int) -> Optional[AgreementType]:
-        return self._get_object(AgreementType, "/agreementTypes", object_id)
+        return self._get_object(AgreementType, "/agreement_types", object_id)
 
     def get_agreement_type_list(self) -> List[AgreementType]:
-        return self._get_object_list(AgreementType, "/agreementTypes/")
+        return self._get_object_list(AgreementType, "/agreement_types/")
 
     def create_agreement_type(self, data: Dict[str, Any]) -> Optional[AgreementType]:
-        response_data = self._make_request("/agreementTypes/", method="POST", data=data)
+        response_data = self._make_request("/agreement_types/", method="POST", data=data)
         if response_data:
             obj = AgreementType(response_data, self)
             self._cache.set(AgreementType, obj.id, obj)
@@ -182,7 +182,7 @@ class KoalixCRMReportingAPIClient(BaseAPIClient):
         return None
 
     def update_agreement_type(self, object_id: int, data: Dict[str, Any]) -> Optional[AgreementType]:
-        return self._put_full_update(AgreementType, "/agreementTypes", object_id, data)
+        return self._put_full_update(AgreementType, "/agreement_types", object_id, data)
 
     # --- Estimation ---
 
@@ -206,13 +206,13 @@ class KoalixCRMReportingAPIClient(BaseAPIClient):
     # --- EstimationStatus ---
 
     def get_estimation_status(self, object_id: int) -> Optional[EstimationStatus]:
-        return self._get_object(EstimationStatus, "/estimationStatus", object_id)
+        return self._get_object(EstimationStatus, "/estimation_status", object_id)
 
     def get_estimation_status_list(self) -> List[EstimationStatus]:
-        return self._get_object_list(EstimationStatus, "/estimationStatus/")
+        return self._get_object_list(EstimationStatus, "/estimation_status/")
 
     def create_estimation_status(self, data: Dict[str, Any]) -> Optional[EstimationStatus]:
-        response_data = self._make_request("/estimationStatus/", method="POST", data=data)
+        response_data = self._make_request("/estimation_status/", method="POST", data=data)
         if response_data:
             obj = EstimationStatus(response_data, self)
             self._cache.set(EstimationStatus, obj.id, obj)
@@ -220,18 +220,18 @@ class KoalixCRMReportingAPIClient(BaseAPIClient):
         return None
 
     def update_estimation_status(self, object_id: int, data: Dict[str, Any]) -> Optional[EstimationStatus]:
-        return self._put_full_update(EstimationStatus, "/estimationStatus", object_id, data)
+        return self._put_full_update(EstimationStatus, "/estimation_status", object_id, data)
 
     # --- HumanResource ---
 
     def get_human_resource(self, object_id: int) -> Optional[HumanResource]:
-        return self._get_object(HumanResource, "/humanResources", object_id)
+        return self._get_object(HumanResource, "/human_resources", object_id)
 
     def get_human_resource_list(self) -> List[HumanResource]:
-        return self._get_object_list(HumanResource, "/humanResources/")
+        return self._get_object_list(HumanResource, "/human_resources/")
 
     def create_human_resource(self, data: Dict[str, Any]) -> Optional[HumanResource]:
-        response_data = self._make_request("/humanResources/", method="POST", data=data)
+        response_data = self._make_request("/human_resources/", method="POST", data=data)
         if response_data:
             obj = HumanResource(response_data, self)
             self._cache.set(HumanResource, obj.id, obj)
@@ -239,7 +239,7 @@ class KoalixCRMReportingAPIClient(BaseAPIClient):
         return None
 
     def update_human_resource(self, object_id: int, data: Dict[str, Any]) -> Optional[HumanResource]:
-        return self._put_full_update(HumanResource, "/humanResources", object_id, data)
+        return self._put_full_update(HumanResource, "/human_resources", object_id, data)
 
     # --- Resource ---
 
@@ -263,13 +263,13 @@ class KoalixCRMReportingAPIClient(BaseAPIClient):
     # --- ResourceType ---
 
     def get_resource_type(self, object_id: int) -> Optional[ResourceType]:
-        return self._get_object(ResourceType, "/resourceTypes", object_id)
+        return self._get_object(ResourceType, "/resource_types", object_id)
 
     def get_resource_type_list(self) -> List[ResourceType]:
-        return self._get_object_list(ResourceType, "/resourceTypes/")
+        return self._get_object_list(ResourceType, "/resource_types/")
 
     def create_resource_type(self, data: Dict[str, Any]) -> Optional[ResourceType]:
-        response_data = self._make_request("/resourceTypes/", method="POST", data=data)
+        response_data = self._make_request("/resource_types/", method="POST", data=data)
         if response_data:
             obj = ResourceType(response_data, self)
             self._cache.set(ResourceType, obj.id, obj)
@@ -277,18 +277,18 @@ class KoalixCRMReportingAPIClient(BaseAPIClient):
         return None
 
     def update_resource_type(self, object_id: int, data: Dict[str, Any]) -> Optional[ResourceType]:
-        return self._put_full_update(ResourceType, "/resourceTypes", object_id, data)
+        return self._put_full_update(ResourceType, "/resource_types", object_id, data)
 
     # --- ResourceManager ---
 
     def get_resource_manager(self, object_id: int) -> Optional[ResourceManager]:
-        return self._get_object(ResourceManager, "/resourceManagers", object_id)
+        return self._get_object(ResourceManager, "/resource_managers", object_id)
 
     def get_resource_manager_list(self) -> List[ResourceManager]:
-        return self._get_object_list(ResourceManager, "/resourceManagers/")
+        return self._get_object_list(ResourceManager, "/resource_managers/")
 
     def create_resource_manager(self, data: Dict[str, Any]) -> Optional[ResourceManager]:
-        response_data = self._make_request("/resourceManagers/", method="POST", data=data)
+        response_data = self._make_request("/resource_managers/", method="POST", data=data)
         if response_data:
             obj = ResourceManager(response_data, self)
             self._cache.set(ResourceManager, obj.id, obj)
@@ -296,18 +296,18 @@ class KoalixCRMReportingAPIClient(BaseAPIClient):
         return None
 
     def update_resource_manager(self, object_id: int, data: Dict[str, Any]) -> Optional[ResourceManager]:
-        return self._put_full_update(ResourceManager, "/resourceManagers", object_id, data)
+        return self._put_full_update(ResourceManager, "/resource_managers", object_id, data)
 
     # --- ResourcePrice ---
 
     def get_resource_price(self, object_id: int) -> Optional[ResourcePrice]:
-        return self._get_object(ResourcePrice, "/resourcePrices", object_id)
+        return self._get_object(ResourcePrice, "/resource_prices", object_id)
 
     def get_resource_price_list(self) -> List[ResourcePrice]:
-        return self._get_object_list(ResourcePrice, "/resourcePrices/")
+        return self._get_object_list(ResourcePrice, "/resource_prices/")
 
     def create_resource_price(self, data: Dict[str, Any]) -> Optional[ResourcePrice]:
-        response_data = self._make_request("/resourcePrices/", method="POST", data=data)
+        response_data = self._make_request("/resource_prices/", method="POST", data=data)
         if response_data:
             obj = ResourcePrice(response_data, self)
             self._cache.set(ResourcePrice, obj.id, obj)
@@ -315,18 +315,18 @@ class KoalixCRMReportingAPIClient(BaseAPIClient):
         return None
 
     def update_resource_price(self, object_id: int, data: Dict[str, Any]) -> Optional[ResourcePrice]:
-        return self._put_full_update(ResourcePrice, "/resourcePrices", object_id, data)
+        return self._put_full_update(ResourcePrice, "/resource_prices", object_id, data)
 
     # --- ReportingPeriod ---
 
     def get_reporting_period(self, object_id: int) -> Optional[ReportingPeriod]:
-        return self._get_object(ReportingPeriod, "/reportingPeriods", object_id)
+        return self._get_object(ReportingPeriod, "/reporting_periods", object_id)
 
     def get_reporting_period_list(self) -> List[ReportingPeriod]:
-        return self._get_object_list(ReportingPeriod, "/reportingPeriods/")
+        return self._get_object_list(ReportingPeriod, "/reporting_periods/")
 
     def create_reporting_period(self, data: Dict[str, Any]) -> Optional[ReportingPeriod]:
-        response_data = self._make_request("/reportingPeriods/", method="POST", data=data)
+        response_data = self._make_request("/reporting_periods/", method="POST", data=data)
         if response_data:
             obj = ReportingPeriod(response_data, self)
             self._cache.set(ReportingPeriod, obj.id, obj)
@@ -334,18 +334,18 @@ class KoalixCRMReportingAPIClient(BaseAPIClient):
         return None
 
     def update_reporting_period(self, object_id: int, data: Dict[str, Any]) -> Optional[ReportingPeriod]:
-        return self._put_full_update(ReportingPeriod, "/reportingPeriods", object_id, data)
+        return self._put_full_update(ReportingPeriod, "/reporting_periods", object_id, data)
 
     # --- ReportingPeriodStatus ---
 
     def get_reporting_period_status(self, object_id: int) -> Optional[ReportingPeriodStatus]:
-        return self._get_object(ReportingPeriodStatus, "/reportingPeriodStatus", object_id)
+        return self._get_object(ReportingPeriodStatus, "/reporting_period_status", object_id)
 
     def get_reporting_period_status_list(self) -> List[ReportingPeriodStatus]:
-        return self._get_object_list(ReportingPeriodStatus, "/reportingPeriodStatus/")
+        return self._get_object_list(ReportingPeriodStatus, "/reporting_period_status/")
 
     def create_reporting_period_status(self, data: Dict[str, Any]) -> Optional[ReportingPeriodStatus]:
-        response_data = self._make_request("/reportingPeriodStatus/", method="POST", data=data)
+        response_data = self._make_request("/reporting_period_status/", method="POST", data=data)
         if response_data:
             obj = ReportingPeriodStatus(response_data, self)
             self._cache.set(ReportingPeriodStatus, obj.id, obj)
@@ -353,18 +353,18 @@ class KoalixCRMReportingAPIClient(BaseAPIClient):
         return None
 
     def update_reporting_period_status(self, object_id: int, data: Dict[str, Any]) -> Optional[ReportingPeriodStatus]:
-        return self._put_full_update(ReportingPeriodStatus, "/reportingPeriodStatus", object_id, data)
+        return self._put_full_update(ReportingPeriodStatus, "/reporting_period_status", object_id, data)
 
     # --- ProjectLinkType ---
 
     def get_project_link_type(self, object_id: int) -> Optional[ProjectLinkType]:
-        return self._get_object(ProjectLinkType, "/projectLinkTypes", object_id)
+        return self._get_object(ProjectLinkType, "/project_link_types", object_id)
 
     def get_project_link_type_list(self) -> List[ProjectLinkType]:
-        return self._get_object_list(ProjectLinkType, "/projectLinkTypes/")
+        return self._get_object_list(ProjectLinkType, "/project_link_types/")
 
     def create_project_link_type(self, data: Dict[str, Any]) -> Optional[ProjectLinkType]:
-        response_data = self._make_request("/projectLinkTypes/", method="POST", data=data)
+        response_data = self._make_request("/project_link_types/", method="POST", data=data)
         if response_data:
             obj = ProjectLinkType(response_data, self)
             self._cache.set(ProjectLinkType, obj.id, obj)
@@ -372,18 +372,18 @@ class KoalixCRMReportingAPIClient(BaseAPIClient):
         return None
 
     def update_project_link_type(self, object_id: int, data: Dict[str, Any]) -> Optional[ProjectLinkType]:
-        return self._put_full_update(ProjectLinkType, "/projectLinkTypes", object_id, data)
+        return self._put_full_update(ProjectLinkType, "/project_link_types", object_id, data)
 
     # --- TaskLinkType ---
 
     def get_task_link_type(self, object_id: int) -> Optional[TaskLinkType]:
-        return self._get_object(TaskLinkType, "/taskLinkTypes", object_id)
+        return self._get_object(TaskLinkType, "/task_link_types", object_id)
 
     def get_task_link_type_list(self) -> List[TaskLinkType]:
-        return self._get_object_list(TaskLinkType, "/taskLinkTypes/")
+        return self._get_object_list(TaskLinkType, "/task_link_types/")
 
     def create_task_link_type(self, data: Dict[str, Any]) -> Optional[TaskLinkType]:
-        response_data = self._make_request("/taskLinkTypes/", method="POST", data=data)
+        response_data = self._make_request("/task_link_types/", method="POST", data=data)
         if response_data:
             obj = TaskLinkType(response_data, self)
             self._cache.set(TaskLinkType, obj.id, obj)
@@ -391,18 +391,18 @@ class KoalixCRMReportingAPIClient(BaseAPIClient):
         return None
 
     def update_task_link_type(self, object_id: int, data: Dict[str, Any]) -> Optional[TaskLinkType]:
-        return self._put_full_update(TaskLinkType, "/taskLinkTypes", object_id, data)
+        return self._put_full_update(TaskLinkType, "/task_link_types", object_id, data)
 
     # --- GenericProjectLink ---
 
     def get_generic_project_link(self, object_id: int) -> Optional[GenericProjectLink]:
-        return self._get_object(GenericProjectLink, "/genericProjectLinks", object_id)
+        return self._get_object(GenericProjectLink, "/generic_project_links", object_id)
 
     def get_generic_project_link_list(self) -> List[GenericProjectLink]:
-        return self._get_object_list(GenericProjectLink, "/genericProjectLinks/")
+        return self._get_object_list(GenericProjectLink, "/generic_project_links/")
 
     def create_generic_project_link(self, data: Dict[str, Any]) -> Optional[GenericProjectLink]:
-        response_data = self._make_request("/genericProjectLinks/", method="POST", data=data)
+        response_data = self._make_request("/generic_project_links/", method="POST", data=data)
         if response_data:
             obj = GenericProjectLink(response_data, self)
             self._cache.set(GenericProjectLink, obj.id, obj)
@@ -410,18 +410,18 @@ class KoalixCRMReportingAPIClient(BaseAPIClient):
         return None
 
     def update_generic_project_link(self, object_id: int, data: Dict[str, Any]) -> Optional[GenericProjectLink]:
-        return self._put_full_update(GenericProjectLink, "/genericProjectLinks", object_id, data)
+        return self._put_full_update(GenericProjectLink, "/generic_project_links", object_id, data)
 
     # --- GenericTaskLink ---
 
     def get_generic_task_link(self, object_id: int) -> Optional[GenericTaskLink]:
-        return self._get_object(GenericTaskLink, "/genericTaskLinks", object_id)
+        return self._get_object(GenericTaskLink, "/generic_task_links", object_id)
 
     def get_generic_task_link_list(self) -> List[GenericTaskLink]:
-        return self._get_object_list(GenericTaskLink, "/genericTaskLinks/")
+        return self._get_object_list(GenericTaskLink, "/generic_task_links/")
 
     def create_generic_task_link(self, data: Dict[str, Any]) -> Optional[GenericTaskLink]:
-        response_data = self._make_request("/genericTaskLinks/", method="POST", data=data)
+        response_data = self._make_request("/generic_task_links/", method="POST", data=data)
         if response_data:
             obj = GenericTaskLink(response_data, self)
             self._cache.set(GenericTaskLink, obj.id, obj)
@@ -429,4 +429,4 @@ class KoalixCRMReportingAPIClient(BaseAPIClient):
         return None
 
     def update_generic_task_link(self, object_id: int, data: Dict[str, Any]) -> Optional[GenericTaskLink]:
-        return self._put_full_update(GenericTaskLink, "/genericTaskLinks", object_id, data)
+        return self._put_full_update(GenericTaskLink, "/generic_task_links", object_id, data)

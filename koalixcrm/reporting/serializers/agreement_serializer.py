@@ -16,12 +16,12 @@ from koalixcrm.reporting.serializers.resource_serializer import OptionResourceJS
 
 
 class AgreementJSONSerializer(serializers.HyperlinkedModelSerializer):
-    task = OptionTaskJSONSerializer(source='task', allow_null=False)
-    resource = OptionResourceJSONSerializer(source='resource', allow_null=False)
-    unit = OptionUnitJSONSerializer(source='unit', allow_null=False)
-    type = OptionAgreementTypeJSONSerializer(source='type', allow_null=False)
-    status = OptionAgreementStatusJSONSerializer(source='status', allow_null=False)
-    costs = OptionResourcePriceJSONSerializer(source='costs', allow_null=False)
+    task = OptionTaskJSONSerializer(allow_null=False)
+    resource = OptionResourceJSONSerializer(allow_null=False)
+    unit = OptionUnitJSONSerializer(allow_null=False)
+    type = OptionAgreementTypeJSONSerializer(allow_null=False)
+    status = OptionAgreementStatusJSONSerializer(allow_null=False)
+    costs = OptionResourcePriceJSONSerializer(allow_null=False)
 
     class Meta:
         model = Agreement
@@ -38,8 +38,8 @@ class AgreementJSONSerializer(serializers.HyperlinkedModelSerializer):
     def create(self, validated_data):
         agreement = Agreement()
         agreement.amount = validated_data['amount']
-        agreement.date_from = validated_data['dateFrom']
-        agreement.date_until = validated_data['dateUntil']
+        agreement.date_from = validated_data['date_from']
+        agreement.date_until = validated_data['date_until']
         # Deserialize task
         task = validated_data.pop('task')
         if task:
@@ -88,8 +88,8 @@ class AgreementJSONSerializer(serializers.HyperlinkedModelSerializer):
 
     def update(self, agreement, validated_data):
         agreement.amount = validated_data['amount']
-        agreement.date_from = validated_data['dateFrom']
-        agreement.date_until = validated_data['dateUntil']
+        agreement.date_from = validated_data['date_from']
+        agreement.date_until = validated_data['date_until']
         task = validated_data.pop('task')
         if task:
             if task.get('id', agreement.task):
@@ -147,6 +147,3 @@ class AgreementJSONSerializer(serializers.HyperlinkedModelSerializer):
         agreement.save()
 
         return agreement
-
-
-

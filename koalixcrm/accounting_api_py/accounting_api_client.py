@@ -41,13 +41,13 @@ class KoalixCRMAccountingAPIClient(BaseAPIClient):
     # ------------------------------------------------------------------
 
     def get_accounting_period(self, object_id: int) -> Optional[AccountingPeriod]:
-        return self._get_object(AccountingPeriod, "/accountingPeriods", object_id)
+        return self._get_object(AccountingPeriod, "/accounting_periods", object_id)
 
     def get_accounting_period_list(self) -> List[AccountingPeriod]:
-        return self._get_object_list(AccountingPeriod, "/accountingPeriods/")
+        return self._get_object_list(AccountingPeriod, "/accounting_periods/")
 
     def create_accounting_period(self, data: Dict[str, Any]) -> Optional[AccountingPeriod]:
-        response_data = self._make_request("/accountingPeriods/", method="POST", data=data)
+        response_data = self._make_request("/accounting_periods/", method="POST", data=data)
         if response_data:
             obj = AccountingPeriod(response_data, self)
             self._cache.set(AccountingPeriod, obj.id, obj)
@@ -55,7 +55,7 @@ class KoalixCRMAccountingAPIClient(BaseAPIClient):
         return None
 
     def update_accounting_period(self, object_id: int, data: Dict[str, Any]) -> Optional[AccountingPeriod]:
-        return self._put_full_update(AccountingPeriod, "/accountingPeriods", object_id, data)
+        return self._put_full_update(AccountingPeriod, "/accounting_periods", object_id, data)
 
     # ------------------------------------------------------------------
     # Bookings
@@ -83,13 +83,13 @@ class KoalixCRMAccountingAPIClient(BaseAPIClient):
     # ------------------------------------------------------------------
 
     def get_product_category(self, object_id: int) -> Optional[ProductCategory]:
-        return self._get_object(ProductCategory, "/productCategories", object_id)
+        return self._get_object(ProductCategory, "/product_categories", object_id)
 
     def get_product_category_list(self) -> List[ProductCategory]:
-        return self._get_object_list(ProductCategory, "/productCategories/")
+        return self._get_object_list(ProductCategory, "/product_categories/")
 
     def create_product_category(self, data: Dict[str, Any]) -> Optional[ProductCategory]:
-        response_data = self._make_request("/productCategories/", method="POST", data=data)
+        response_data = self._make_request("/product_categories/", method="POST", data=data)
         if response_data:
             obj = ProductCategory(response_data, self)
             self._cache.set(ProductCategory, obj.id, obj)
@@ -97,4 +97,4 @@ class KoalixCRMAccountingAPIClient(BaseAPIClient):
         return None
 
     def update_product_category(self, object_id: int, data: Dict[str, Any]) -> Optional[ProductCategory]:
-        return self._put_full_update(ProductCategory, "/productCategories", object_id, data)
+        return self._put_full_update(ProductCategory, "/product_categories", object_id, data)

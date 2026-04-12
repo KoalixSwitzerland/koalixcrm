@@ -7,27 +7,27 @@ from koalixcrm.products.models.tax import Tax
 
 class OptionTaxJSONSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.IntegerField(required=False)
-    description = serializers.CharField(source='name', read_only=True)
+    name = serializers.CharField(read_only=True)
 
     class Meta:
         model = Tax
         fields = ('id',
-                  'description')
+                  'name')
 
 
 class TaxJSONSerializer(serializers.HyperlinkedModelSerializer):
-    rate = serializers.CharField(source='tax_rate')
-    description = serializers.CharField(source='name')
-    assetAccount = OptionAccountJSONSerializer(source='account_activa', allow_null=True)
-    liabilityAccount = OptionAccountJSONSerializer(source='account_passiva', allow_null=True)
+    tax_rate = serializers.CharField()
+    name = serializers.CharField()
+    account_activa = OptionAccountJSONSerializer(allow_null=True)
+    account_passiva = OptionAccountJSONSerializer(allow_null=True)
 
     class Meta:
         model = Tax
         fields = ('id',
-                  'rate',
-                  'description',
-                  'assetAccount',
-                  'liabilityAccount')
+                  'tax_rate',
+                  'name',
+                  'account_activa',
+                  'account_passiva')
 
     def create(self, validated_data):
         tax = Tax()

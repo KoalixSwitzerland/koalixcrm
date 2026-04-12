@@ -10,13 +10,10 @@ from koalixcrm.reporting.serializers.resource_type_serializer import OptionResou
 
 
 class OptionHumanResourceJSONSerializer(serializers.HyperlinkedModelSerializer):
-    resourceType = OptionResourceTypeJSONSerializer(source='resource_type',
-                                                    required=False,
-                                                    read_only=True)
-    resourceManager = OptionResourceManagerJSONSerializer(source='resource_manager',
-                                                          read_only=True)
-    user = OptionResourceManagerJSONSerializer(source='user',
-                                               read_only=True)
+    resource_type = OptionResourceTypeJSONSerializer(required=False,
+                                                     read_only=True)
+    resource_manager = OptionResourceManagerJSONSerializer(read_only=True)
+    user = OptionResourceManagerJSONSerializer(read_only=True)
 
     class Meta:
         model = HumanResource
@@ -26,9 +23,9 @@ class OptionHumanResourceJSONSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class HumanResourceJSONSerializer(serializers.HyperlinkedModelSerializer):
-    resourceType = OptionResourceTypeJSONSerializer(source='resource_type')
-    resourceManager = OptionResourceManagerJSONSerializer(source='resource_manager')
-    user = OptionResourceManagerJSONSerializer(source='user')
+    resource_type = OptionResourceTypeJSONSerializer()
+    resource_manager = OptionResourceManagerJSONSerializer()
+    user = OptionResourceManagerJSONSerializer()
 
     class Meta:
         model = HumanResource
@@ -39,14 +36,14 @@ class HumanResourceJSONSerializer(serializers.HyperlinkedModelSerializer):
     def create(self, validated_data):
         resource = HumanResource()
         # Deserialize resource_type
-        resource_type = validated_data.pop('resourceType')
+        resource_type = validated_data.pop('resource_type')
         if resource_type:
             if resource_type.get('id', None):
                 resource.resource_type = ResourceType.objects.get(id=resource_type.get('id', None))
             else:
                 resource.resource_type = None
         # Deserialize resource_manager
-        resource_manager = validated_data.pop('resourceManager')
+        resource_manager = validated_data.pop('resource_manager')
         if resource_manager:
             if resource_manager.get('id', None):
                 resource.resource_manager = ResourceManager.objects.get(id=resource_manager.get('id', None))
@@ -62,7 +59,7 @@ class HumanResourceJSONSerializer(serializers.HyperlinkedModelSerializer):
 
     def update(self, resource, validated_data):
         # Deserialize resource_type
-        resource_type = validated_data.pop('resourceType')
+        resource_type = validated_data.pop('resource_type')
         if resource_type:
             if resource_type.get('id', resource.resource_type):
                 resource.resource_type = ResourceType.objects.get(id=resource_type.get('id', None))
@@ -71,7 +68,7 @@ class HumanResourceJSONSerializer(serializers.HyperlinkedModelSerializer):
         else:
             resource.resource_type = None
         # Deserialize resource_manager
-        resource_manager = validated_data.pop('resourceManager')
+        resource_manager = validated_data.pop('resource_manager')
         if resource_manager:
             if resource_manager.get('id', resource.resource_manager):
                 resource.resource_manager = ResourceManager.objects.get(id=resource.get('id', None))

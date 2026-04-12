@@ -37,14 +37,14 @@ class AccountAPITest(LiveServerTestCase):
 
     def test_write(self):
         data = {
-            "account_number": 3000,
+            "accountNumber": 3000,
             "title": "New API Account",
-            "account_type": "A",
+            "accountType": "A",
             "description": "Created via API test",
-            "is_open_reliabilities_account": False,
-            "is_open_interest_account": False,
-            "is_product_inventory_activa": False,
-            "is_a_customer_payment_account": False,
+            "isOpenReliabilitiesAccount": False,
+            "isOpenInterestAccount": False,
+            "isProductInventoryActiva": False,
+            "isCustomerPaymentAccount": False,
         }
         created = self.api_client.create_account(data)
         self.assertIsNotNone(created)

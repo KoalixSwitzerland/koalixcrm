@@ -227,6 +227,23 @@ class OptionSalesDocument(admin.ModelAdmin):
 
     create_pdf.short_description = _("Create PDF")
 
+    def create_pdf_async(self, request, queryset):
+        from koalixcrm.crm.models.pdf_export_process import PDFExportProcess
+        for obj in queryset:
+            PDFExportProcess.objects.create(
+                source_model=obj.__class__.__name__,
+                source_id=obj.id,
+                template_set=obj.template_set,
+                triggered_by=request.user,
+            )
+        self.message_user(
+            request,
+            _("PDF export job(s) queued. Check PDF Export Processes for status."),
+            level=messages.SUCCESS,
+        )
+
+    create_pdf_async.short_description = _("Create PDF (async)")
+
     def create_project(self, request, queryset):
         from koalixcrm.crm.views.create_task import CreateTaskView
         for obj in queryset:

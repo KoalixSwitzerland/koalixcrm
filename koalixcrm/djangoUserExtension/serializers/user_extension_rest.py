@@ -5,12 +5,12 @@ from koalixcrm.djangoUserExtension.serializers.template_set_rest import Template
 
 
 class OptionUserExtensionJSONSerializer(serializers.HyperlinkedModelSerializer):
-    defaultTemplateSet = TemplateSetJSONSerializer(source='default_template_set')
-    defaultCurrency = CurrencyJSONSerializer(source='default_currency')
+    default_template_set = TemplateSetJSONSerializer()
+    default_currency = CurrencyJSONSerializer()
 
     class Meta:
         model = UserExtension
         fields = ('id',
                   'user',
-                  'defaultTemplateSet',
-                  'defaultCurrency')
+                  'default_template_set',
+                  'default_currency')

@@ -1,0 +1,522 @@
+# =============================================================================
+# docker-compose.yml — Unified test & dev environment for KoalixCRM
+#
+# Single entrypoint for all testing and development.
+#
+# Local service replacements:
+#   S3   -> MinIO      (API ${MINIO_API_PORT:-9010}, console ${MINIO_CONSOLE_PORT:-9011})
+#   SQS  -> ElasticMQ  (API 9324, UI 9325)
+#   DB   -> PostgreSQL (port ${POSTGRES_PORT:-5432})
+#   OIDC -> Disabled locally (no Keycloak — see ADR: internal/external URL mismatch
+#           in safety-critical auth code makes local Keycloak unreliable)
+#
+# Profiles:
+#   unit-django     — Django backend unit tests (SQLite, mocked externals)
+#   unit-celery     — Celery microservice unit tests (mocked externals)
+#   integration     — Backend + Celery + infra (PostgreSQL, MinIO, ElasticMQ)
+#   e2e             — Full stack + Selenium + allure report
+#   dev             — Long-running dev environment with auto-reload
+#
+# Environment variables (set in .env.<yourname>):
+#   KOALIXCRM_DIR     — Absolute path to koalixcrm repo      (shell-readable)
+#   KOALIXCRM_DB_DIR  — Absolute path to DB/secrets directory (shell-readable)
+#   KOALIXCRM_SYSTEM_DIR — Absolute path to this repo        (shell-readable, default: .)
+#
+# Optional daemon-side overrides (only set if your shell and Docker daemon
+# see different filesystem paths — e.g. WSL shell + Docker Desktop on Windows):
+#   KOALIXCRM_HOST_DIR        — defaults to KOALIXCRM_DIR
+#   KOALIXCRM_DB_HOST_DIR     — defaults to KOALIXCRM_DB_DIR
+#   KOALIXCRM_SYSTEM_HOST_DIR — defaults to KOALIXCRM_SYSTEM_DIR
+#
+# Secrets:
+#   All secrets (OIDC credentials if needed for cloud, API keys) are loaded
+#   from ${KOALIXCRM_DB_DIR}/secrets.env — see docker/secrets.env.example.
+#   This is the ONLY place where secrets live; everything else is inlined.
+#
+# Developer env files:
+#   Each developer maintains their own .env.<name> file (gitignored).
+#   Copy .env.example to .env.<yourname> and adjust paths for your machine.
+#   Always pass --env-file so docker compose knows which config to use.
+#
+# Usage:
+#   # Unit tests (selective: append pytest command to override CMD)
+#   docker compose --env-file .env.aaron --profile unit-django run --rm unit-django-runner
+#   docker compose --env-file .env.aaron --profile unit-django run --rm unit-django-runner pytest tests/accounting -v
+#   docker compose --env-file .env.aaron --profile unit-celery run --rm unit-celery-runner
+#
+#   # Integration tests
+#   docker compose --env-file .env.aaron --profile integration run --rm integration-runner
+#   docker compose --env-file .env.aaron --profile integration run --rm integration-runner pytest tests/crm_api_py -v
+#
+#   # E2E tests
+#   docker compose --env-file .env.aaron --profile e2e run --rm e2e-runner
+#   docker compose --env-file .env.aaron --profile e2e run --rm e2e-runner pytest tests/e2e/test_create_sales_document_from_quote.py -v
+#
+#   # Dev (manual testing with auto-reload)
+#   docker compose --env-file .env.aaron --profile dev up --build
+#
+#   # Teardown any profile
+#   docker compose --env-file .env.aaron --profile <profile> down -v
+# =============================================================================
+
+
+# --- Infrastructure services (shared by integration, e2e, dev) ---------------
+
+services:
+
+  # --- PostgreSQL (application database) ---
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: koalixcrm
+      POSTGRES_USER: koalixcrm
+      POSTGRES_PASSWORD: koalixcrm
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - koalixcrm-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U koalixcrm"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    profiles: [integration, e2e, dev]
+
+  # --- MinIO (S3-compatible object storage) ---
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin123
+    ports:
+      - "${MINIO_API_PORT:-9010}:9000"
+      - "${MINIO_CONSOLE_PORT:-9011}:9001"
+    volumes:
+      - minio_data:/data
+    networks:
+      - koalixcrm-net
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    profiles: [integration, e2e, dev]
+
+  # --- MinIO bucket setup (runs once, creates buckets, exits) ---
+  minio-setup:
+    image: minio/mc:latest
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: >
+      sh -c "
+        mc alias set local http://minio:9000 minioadmin minioadmin123 &&
+        mc mb --ignore-existing local/koalixcrm-pdf-exports &&
+        echo 'Buckets created successfully.'
+      "
+    networks:
+      - koalixcrm-net
+    profiles: [integration, e2e, dev]
+
+  # --- ElasticMQ (SQS-compatible message broker) ---
+  elasticmq:
+    image: softwaremill/elasticmq-native:latest
+    ports:
+      - "9324:9324"   # SQS API
+      - "9325:9325"   # Web UI
+    volumes:
+      - ${KOALIXCRM_SYSTEM_HOST_DIR:-${KOALIXCRM_SYSTEM_DIR:-.}}/docker/elasticmq.conf:/opt/elasticmq.conf:ro
+    networks:
+      - koalixcrm-net
+    profiles: [integration, e2e, dev]
+
+
+# --- Application services ----------------------------------------------------
+
+  # --- Django backend server ---
+  backend:
+    image: ghcr.io/koalixswitzerland/koalixcrm-dev-container:main
+    command: >
+      sh -c "
+        pip install --no-cache-dir -r requirements/celery_requirements.txt &&
+        python manage.py migrate --noinput &&
+        python manage.py collectstatic --noinput &&
+        if [ \"$${DJANGO_AUTORELOAD:-0}\" = '1' ]; then
+          exec python manage.py runserver 0.0.0.0:8000
+        else
+          exec python manage.py runserver --noreload 0.0.0.0:8000
+        fi
+      "
+    env_file:
+      - path: ${KOALIXCRM_DB_DIR:-./../koalixcrm_data}/secrets.env
+        required: true
+    environment:
+      # --- Django Core ---
+      - DJANGO_SETTINGS_MODULE=projectsettings.settings.development_docker_settings
+      - DJANGO_DEBUG=True
+      - DJANGO_SECRET_KEY=django-insecure-local-dev-key-DO-NOT-USE-IN-PRODUCTION
+      - ALLOWED_HOSTS=localhost,backend,host.docker.internal,127.0.0.1
+      - PYTHONUNBUFFERED=1
+      # --- Database (PostgreSQL) ---
+      - DB_CHOICE=postgresql
+      - POSTGRES_DB=koalixcrm
+      - POSTGRES_USER=koalixcrm
+      - POSTGRES_PASSWORD=koalixcrm
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      # --- Local S3 (MinIO) ---
+      - S3_ENDPOINT_URL=http://minio:9000
+      - AWS_ACCESS_KEY_ID=minioadmin
+      - AWS_SECRET_ACCESS_KEY=minioadmin123
+      - AWS_REGION=us-east-1
+      - S3_PDF_BUCKET=koalixcrm-pdf-exports
+      # --- Local SQS (ElasticMQ) ---
+      - SQS_ENDPOINT_URL=http://elasticmq:9324
+      - KOALIXCRM_MICROSERVICE_SQS=koalixcrm-microservice-sqs
+      - CELERY_SQS=koalixcrm-celery-sqs
+      - CELERY_BROKER_URL=sqs://dummy:dummy@elasticmq:9324
+      - POLL_SLEEP_SECONDS=2
+      - ENABLE_SQS_POLLER=true
+      # --- Auth (no local Keycloak — use Django ModelBackend) ---
+      - KOALIXCRM_REST_API_AUTH=False
+      # --- E2E test-only routes ---
+      - E2E_TESTING=true
+      - E2E_SECRET=local-e2e-secret
+    expose:
+      - "8000"
+    ports:
+      - "8000:8000"
+    volumes:
+      - ${KOALIXCRM_HOST_DIR:-${KOALIXCRM_DIR:-./../koalixcrm}}:/usr/src/app
+      - ${KOALIXCRM_DB_HOST_DIR:-${KOALIXCRM_DB_DIR:-./../koalixcrm_data}}/db:/db
+    working_dir: /usr/src/app
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio-setup:
+        condition: service_completed_successfully
+      elasticmq:
+        condition: service_started
+    networks:
+      koalixcrm-net:
+        aliases:
+          - backend
+    profiles: [integration, e2e, dev]
+
+  # --- Celery worker ---
+  celery:
+    build:
+      context: ${KOALIXCRM_DIR:-./../koalixcrm}
+      dockerfile: Dockerfile-Celery
+    env_file:
+      - path: ${KOALIXCRM_DB_DIR:-./../koalixcrm_data}/secrets.env
+        required: true
+    environment:
+      # --- Django Core (Celery loads Django settings) ---
+      - DJANGO_SETTINGS_MODULE=projectsettings.settings.development_docker_settings
+      - DJANGO_SECRET_KEY=django-insecure-local-dev-key-DO-NOT-USE-IN-PRODUCTION
+      - PYTHONUNBUFFERED=1
+      # --- Database (PostgreSQL) ---
+      - DB_CHOICE=postgresql
+      - POSTGRES_DB=koalixcrm
+      - POSTGRES_USER=koalixcrm
+      - POSTGRES_PASSWORD=koalixcrm
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      # --- Local S3 (MinIO) ---
+      - S3_ENDPOINT_URL=http://minio:9000
+      - AWS_ACCESS_KEY_ID=minioadmin
+      - AWS_SECRET_ACCESS_KEY=minioadmin123
+      - AWS_REGION=us-east-1
+      - S3_PDF_BUCKET=koalixcrm-pdf-exports
+      # --- Local SQS (ElasticMQ) ---
+      - SQS_ENDPOINT_URL=http://elasticmq:9324
+      - KOALIXCRM_MICROSERVICE_SQS=koalixcrm-microservice-sqs
+      - CELERY_SQS=koalixcrm-celery-sqs
+      - CELERY_BROKER_URL=sqs://dummy:dummy@elasticmq:9324
+      - POLL_SLEEP_SECONDS=2
+      - ENABLE_SQS_POLLER=true
+    volumes:
+      - ${KOALIXCRM_HOST_DIR:-${KOALIXCRM_DIR:-./../koalixcrm}}:/usr/src/app
+      - ${KOALIXCRM_DB_HOST_DIR:-${KOALIXCRM_DB_DIR:-./../koalixcrm_data}}/db:/db
+    working_dir: /usr/src/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio-setup:
+        condition: service_completed_successfully
+      elasticmq:
+        condition: service_started
+    networks:
+      - koalixcrm-net
+    profiles: [integration, e2e, dev]
+
+  # --- Nginx reverse proxy (e2e — serves Django + allure reports) ---
+  nginx:
+    image: nginx:1.27-alpine
+    volumes:
+      - ${KOALIXCRM_SYSTEM_HOST_DIR:-${KOALIXCRM_SYSTEM_DIR:-.}}/docker/nginx-e2e.conf:/etc/nginx/nginx.conf:ro
+      - allure_report:/usr/share/nginx/allure-report:ro
+    ports:
+      - "${NGINX_PORT:-5000}:80"
+      - "${ALLURE_PORT:-5001}:8080"
+    depends_on:
+      - backend
+    networks:
+      koalixcrm-net:
+        aliases:
+          - frontend
+    profiles: [e2e]
+
+  # --- Nginx reverse proxy (integration — no browser needed) ---
+  nginx-integration:
+    image: nginx:1.27-alpine
+    volumes:
+      - ${KOALIXCRM_SYSTEM_HOST_DIR:-${KOALIXCRM_SYSTEM_DIR:-.}}/docker/nginx-e2e.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "${NGINX_PORT:-5000}:80"
+    depends_on:
+      - backend
+    networks:
+      koalixcrm-net:
+        aliases:
+          - frontend
+    profiles: [integration]
+
+  # --- Nginx reverse proxy (dev — auto-reload support) ---
+  nginx-dev:
+    image: nginx:1.27-alpine
+    volumes:
+      - ${KOALIXCRM_SYSTEM_HOST_DIR:-${KOALIXCRM_SYSTEM_DIR:-.}}/docker/nginx-dev.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "${NGINX_PORT:-5000}:80"
+    depends_on:
+      - backend
+    networks:
+      koalixcrm-net:
+        aliases:
+          - frontend
+    restart: unless-stopped
+    profiles: [dev]
+
+
+# --- Test runners -------------------------------------------------------------
+
+  # --- Django unit test runner (fast, SQLite, no infrastructure) ---
+  # Default CMD runs full suite. Override by appending command after service name:
+  #   docker compose --profile unit-django run --rm unit-django-runner pytest tests/accounting -v
+  unit-django-runner:
+    image: ghcr.io/koalixswitzerland/koalixcrm-dev-container:main
+    command: >
+      sh -c "
+        pip install --no-cache-dir -r requirements/celery_requirements.txt &&
+        pytest
+        -m 'not front_end_tests'
+        -v --tb=short --disable-warnings
+        --cov=koalixcrm --cov-report=xml:test_report/coverage.xml
+      "
+    working_dir: /usr/src/app
+    environment:
+      - DJANGO_SETTINGS_MODULE=projectsettings.settings.development_docker_sqlite_settings
+      - DJANGO_DEBUG=True
+      - DJANGO_SECRET_KEY=django-insecure-unit-test-key
+      - DB_CHOICE=sqlite3
+      - SQLITE_DB_FILE=/tmp/unit-test.sqlite3
+      - ALLOWED_HOSTS=localhost
+      - PYTHONUNBUFFERED=1
+      - KOALIXCRM_REST_API_AUTH=False
+      - AWS_REGION=us-east-1
+      - S3_PDF_BUCKET=test-bucket
+      - S3_ENDPOINT_URL=http://localhost:9000
+      - SQS_ENDPOINT_URL=http://localhost:9324
+      - KOALIXCRM_MICROSERVICE_SQS=koalixcrm-microservice-sqs
+      - CELERY_SQS=koalixcrm-celery-sqs
+    volumes:
+      - ${KOALIXCRM_HOST_DIR:-${KOALIXCRM_DIR:-./../koalixcrm}}:/usr/src/app
+    profiles: [unit-django]
+
+  # --- Celery unit test runner (mocked interfaces, no infrastructure) ---
+  # Default CMD runs full suite. Override by appending command after service name.
+  unit-celery-runner:
+    build:
+      context: ${KOALIXCRM_DIR:-./../koalixcrm}
+      dockerfile: Dockerfile-Celery
+    command: >
+      pytest
+      -m "not front_end_tests"
+      -v --tb=short --disable-warnings
+      --cov=koalixcrm_microservices --cov-report=xml:test_report/coverage-celery.xml
+    working_dir: /usr/src/app
+    environment:
+      - DJANGO_SETTINGS_MODULE=projectsettings.settings.development_docker_sqlite_settings
+      - DJANGO_DEBUG=True
+      - DJANGO_SECRET_KEY=django-insecure-unit-test-key
+      - DB_CHOICE=sqlite3
+      - SQLITE_DB_FILE=/tmp/unit-test.sqlite3
+      - ALLOWED_HOSTS=localhost
+      - PYTHONUNBUFFERED=1
+      - KOALIXCRM_REST_API_AUTH=False
+      - AWS_REGION=us-east-1
+      - S3_PDF_BUCKET=test-bucket
+      - S3_ENDPOINT_URL=http://localhost:9000
+      - SQS_ENDPOINT_URL=http://localhost:9324
+      - KOALIXCRM_MICROSERVICE_SQS=koalixcrm-microservice-sqs
+      - CELERY_SQS=koalixcrm-celery-sqs
+    volumes:
+      - ${KOALIXCRM_HOST_DIR:-${KOALIXCRM_DIR:-./../koalixcrm}}:/usr/src/app
+    profiles: [unit-celery]
+
+  # --- Integration test runner ---
+  # Default CMD runs full suite. Override by appending command after service name.
+  integration-runner:
+    image: ghcr.io/koalixswitzerland/koalixcrm-dev-container:main
+    command: >
+      sh -c "
+        pip install --no-cache-dir -r requirements/celery_requirements.txt &&
+        pytest
+        -m 'not front_end_tests'
+        -v --tb=short --disable-warnings
+        --cov=koalixcrm --cov-report=xml:test_report/coverage.xml
+      "
+    env_file:
+      - path: ${KOALIXCRM_DB_DIR:-./../koalixcrm_data}/secrets.env
+        required: true
+    environment:
+      # --- Django Core ---
+      - DJANGO_SETTINGS_MODULE=projectsettings.settings.development_docker_settings
+      - DJANGO_DEBUG=True
+      - DJANGO_SECRET_KEY=django-insecure-local-dev-key-DO-NOT-USE-IN-PRODUCTION
+      - ALLOWED_HOSTS=localhost,backend,host.docker.internal,127.0.0.1
+      - PYTHONUNBUFFERED=1
+      # --- Database (PostgreSQL) ---
+      - DB_CHOICE=postgresql
+      - POSTGRES_DB=koalixcrm
+      - POSTGRES_USER=koalixcrm
+      - POSTGRES_PASSWORD=koalixcrm
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      # --- Local S3 (MinIO) ---
+      - S3_ENDPOINT_URL=http://minio:9000
+      - AWS_ACCESS_KEY_ID=minioadmin
+      - AWS_SECRET_ACCESS_KEY=minioadmin123
+      - AWS_REGION=us-east-1
+      - S3_PDF_BUCKET=koalixcrm-pdf-exports
+      # --- Local SQS (ElasticMQ) ---
+      - SQS_ENDPOINT_URL=http://elasticmq:9324
+      - KOALIXCRM_MICROSERVICE_SQS=koalixcrm-microservice-sqs
+      - CELERY_SQS=koalixcrm-celery-sqs
+      - CELERY_BROKER_URL=sqs://dummy:dummy@elasticmq:9324
+      # --- Auth disabled locally ---
+      - KOALIXCRM_REST_API_AUTH=False
+    volumes:
+      - ${KOALIXCRM_HOST_DIR:-${KOALIXCRM_DIR:-./../koalixcrm}}:/usr/src/app
+      - ${KOALIXCRM_DB_HOST_DIR:-${KOALIXCRM_DB_DIR:-./../koalixcrm_data}}/db:/db
+    working_dir: /usr/src/app
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - backend
+      - celery
+    networks:
+      - koalixcrm-net
+    profiles: [integration]
+
+  # --- E2E test runner (Selenium + allure) ---
+  # Default CMD runs full suite. Override by appending command after service name:
+  #   docker compose --profile e2e run --rm e2e-runner pytest tests/e2e/test_create_sales_document_from_quote.py -v
+  e2e-runner:
+    image: ghcr.io/koalixswitzerland/koalixcrm-dev-container:main
+    command: >
+      sh -c "
+        pip install --no-cache-dir -r requirements/celery_requirements.txt &&
+        pip install --no-cache-dir allure-pytest selenium &&
+        echo 'Waiting for backend...' &&
+        for i in $$(seq 1 30); do
+          if python -c \"import urllib.request; urllib.request.urlopen('http://backend:8000/admin/')\" 2>/dev/null; then
+            echo 'Backend is ready.';
+            break;
+          fi;
+          echo \"  Attempt $$i/30...\";
+          sleep 2;
+        done &&
+        pytest tests/e2e/ -m 'front_end_tests' -v --tb=short --alluredir=/allure-results
+      "
+    env_file:
+      - path: ${KOALIXCRM_DB_DIR:-./../koalixcrm_data}/secrets.env
+        required: true
+    environment:
+      # --- Django Core ---
+      - DJANGO_SETTINGS_MODULE=projectsettings.settings.development_docker_settings
+      - DJANGO_DEBUG=True
+      - DJANGO_SECRET_KEY=django-insecure-local-dev-key-DO-NOT-USE-IN-PRODUCTION
+      - ALLOWED_HOSTS=localhost,backend,host.docker.internal,127.0.0.1
+      - PYTHONUNBUFFERED=1
+      # --- Database (PostgreSQL) ---
+      - DB_CHOICE=postgresql
+      - POSTGRES_DB=koalixcrm
+      - POSTGRES_USER=koalixcrm
+      - POSTGRES_PASSWORD=koalixcrm
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      # --- Local S3 (MinIO) ---
+      - S3_ENDPOINT_URL=http://minio:9000
+      - AWS_ACCESS_KEY_ID=minioadmin
+      - AWS_SECRET_ACCESS_KEY=minioadmin123
+      - AWS_REGION=us-east-1
+      - S3_PDF_BUCKET=koalixcrm-pdf-exports
+      # --- Local SQS (ElasticMQ) ---
+      - SQS_ENDPOINT_URL=http://elasticmq:9324
+      - KOALIXCRM_MICROSERVICE_SQS=koalixcrm-microservice-sqs
+      - CELERY_SQS=koalixcrm-celery-sqs
+      - CELERY_BROKER_URL=sqs://dummy:dummy@elasticmq:9324
+      # --- Auth disabled locally ---
+      - KOALIXCRM_REST_API_AUTH=False
+      # --- E2E specific ---
+      - E2E_BACKEND_URL=http://backend:8000
+      - E2E_FRONTEND_URL=http://localhost:5000
+      - E2E_TESTING=true
+      - E2E_SECRET=local-e2e-secret
+      # --- Selenium (Firefox headless inside container) ---
+      - SELENIUM_HEADLESS=true
+    volumes:
+      - ${KOALIXCRM_HOST_DIR:-${KOALIXCRM_DIR:-./../koalixcrm}}:/usr/src/app
+      - ${KOALIXCRM_DB_HOST_DIR:-${KOALIXCRM_DB_DIR:-./../koalixcrm_data}}/db:/db
+      - allure_results:/allure-results
+      - allure_report:/allure-report
+    working_dir: /usr/src/app
+    # Share nginx's network namespace so Selenium can reach localhost:5000
+    network_mode: "service:nginx"
+    depends_on:
+      - backend
+      - nginx
+    profiles: [e2e]
+
+  # --- Allure report generator (runs after e2e tests, generates HTML) ---
+  allure-report-generator:
+    image: frankescobar/allure-docker-service:latest
+    environment:
+      CHECK_RESULTS_EVERY_SECONDS: 5
+      KEEP_HISTORY: "TRUE"
+    volumes:
+      - allure_results:/app/allure-results
+      - allure_report:/app/default-reports
+    networks:
+      - koalixcrm-net
+    profiles: [e2e]
+
+
+# --- Volumes & networks ------------------------------------------------------
+
+volumes:
+  postgres_data:
+  minio_data:
+  allure_results:
+  allure_report:
+
+networks:
+  koalixcrm-net:

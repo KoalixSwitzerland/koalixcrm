@@ -3,9 +3,9 @@ from koalixcrm.reporting.models.reporting_period_status import ReportingPeriodSt
 
 
 class OptionReportingPeriodStatusJSONSerializer(serializers.HyperlinkedModelSerializer):
-    title = serializers.CharField(source='title', read_only=True)
-    description = serializers.CharField(source='description', read_only=True)
-    isDone = serializers.BooleanField(source='is_done', read_only=True)
+    title = serializers.CharField(read_only=True)
+    description = serializers.CharField(read_only=True)
+    is_done = serializers.BooleanField(read_only=True)
 
     class Meta:
         model = ReportingPeriodStatus
@@ -15,9 +15,9 @@ class OptionReportingPeriodStatusJSONSerializer(serializers.HyperlinkedModelSeri
 
 
 class ReportingPeriodStatusJSONSerializer(serializers.HyperlinkedModelSerializer):
-    title = serializers.CharField(source='title')
-    description = serializers.CharField(source='description')
-    isDone = serializers.BooleanField(source='is_done')
+    title = serializers.CharField()
+    description = serializers.CharField()
+    is_done = serializers.BooleanField()
 
     class Meta:
         model = ReportingPeriodStatus

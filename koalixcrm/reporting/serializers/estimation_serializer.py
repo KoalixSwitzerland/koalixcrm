@@ -10,12 +10,12 @@ from koalixcrm.reporting.serializers.resource_serializer import OptionResourceJS
 
 
 class EstimationJSONSerializer(serializers.HyperlinkedModelSerializer):
-    task = OptionTaskJSONSerializer(source='task', allow_null=False)
-    resource = OptionResourceJSONSerializer(source='resource', allow_null=False)
-    status = OptionEstimationStatusJSONSerializer(source='status', allow_null=False)
-    dateFrom = serializers.DateField(source='date_from')
-    dateUntil = serializers.DateField(source='date_until')
-    amount = serializers.DecimalField(source='amount', max_digits=10, decimal_places=2)
+    task = OptionTaskJSONSerializer(allow_null=False)
+    resource = OptionResourceJSONSerializer(allow_null=False)
+    status = OptionEstimationStatusJSONSerializer(allow_null=False)
+    date_from = serializers.DateField()
+    date_until = serializers.DateField()
+    amount = serializers.DecimalField(max_digits=10, decimal_places=2)
 
     class Meta:
         model = Estimation
@@ -30,8 +30,8 @@ class EstimationJSONSerializer(serializers.HyperlinkedModelSerializer):
     def create(self, validated_data):
         estimation = Estimation()
         estimation.amount = validated_data['amount']
-        estimation.date_from = validated_data['dateFrom']
-        estimation.date_until = validated_data['dateUntil']
+        estimation.date_from = validated_data['date_from']
+        estimation.date_until = validated_data['date_until']
         # Deserialize task
         task = validated_data.pop('task')
         if task:
@@ -59,8 +59,8 @@ class EstimationJSONSerializer(serializers.HyperlinkedModelSerializer):
 
     def update(self, estimation, validated_data):
         estimation.amount = validated_data['amount']
-        estimation.date_from = validated_data['dateFrom']
-        estimation.date_until = validated_data['dateUntil']
+        estimation.date_from = validated_data['date_from']
+        estimation.date_until = validated_data['date_until']
         task = validated_data.pop('task')
         if task:
             if task.get('id', estimation.task):
@@ -91,6 +91,3 @@ class EstimationJSONSerializer(serializers.HyperlinkedModelSerializer):
         estimation.save()
 
         return estimation
-
-
-

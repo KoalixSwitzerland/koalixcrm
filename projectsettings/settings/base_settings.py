@@ -115,11 +115,12 @@ FILEBROWSER_EXTENSIONS = {
     'TTF': ['.ttf'],
 }
 
-LOGIN_URL = "/admin/login"
+LOGIN_URL = "/auth/login/"
 
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'koalixcrm.auth.m2m_authentication.CeleryWorkerM2MAuthentication',
         'koalixcrm.auth.oidc_token_authentication.OIDCAccessTokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',

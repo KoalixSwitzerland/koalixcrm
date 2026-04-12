@@ -6,33 +6,33 @@ from koalixcrm.accounting.models.account import Account
 
 class OptionAccountJSONSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.IntegerField(required=False)
-    accountNumber = serializers.IntegerField(source='account_number', read_only=True)
+    account_number = serializers.IntegerField(read_only=True)
     title = serializers.CharField(read_only=True)
 
     class Meta:
         model = Account
         fields = ('id',
-                  'accountNumber',
+                  'account_number',
                   'title')
 
 
 class AccountJSONSerializer(serializers.HyperlinkedModelSerializer):
-    accountNumber = serializers.IntegerField(source='account_number', allow_null=False)
-    accountType = serializers.CharField(source='account_type', allow_null=False)
-    isOpenReliabilitiesAccount = serializers.BooleanField(source='is_open_reliabilities_account')
-    isOpenInterestAccount = serializers.BooleanField(source='is_open_interest_account')
-    isProductInventoryActiva = serializers.BooleanField(source='is_product_inventory_activa')
-    isCustomerPaymentAccount = serializers.BooleanField(source='is_a_customer_payment_account')
+    account_number = serializers.IntegerField(allow_null=False)
+    account_type = serializers.CharField(allow_null=False)
+    is_open_reliabilities_account = serializers.BooleanField()
+    is_open_interest_account = serializers.BooleanField()
+    is_product_inventory_activa = serializers.BooleanField()
+    is_a_customer_payment_account = serializers.BooleanField()
 
     class Meta:
         model = Account
         fields = ('id',
-                  'accountNumber',
+                  'account_number',
                   'title',
-                  'accountType',
+                  'account_type',
                   'description',
-                  'isOpenReliabilitiesAccount',
-                  'isOpenInterestAccount',
-                  'isProductInventoryActiva',
-                  'isCustomerPaymentAccount')
+                  'is_open_reliabilities_account',
+                  'is_open_interest_account',
+                  'is_product_inventory_activa',
+                  'is_a_customer_payment_account')
         depth = 1

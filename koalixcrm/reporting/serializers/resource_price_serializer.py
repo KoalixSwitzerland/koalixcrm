@@ -10,12 +10,12 @@ from koalixcrm.products.serializers.unit_serializer import OptionUnitJSONSeriali
 
 
 class OptionResourcePriceJSONSerializer(serializers.HyperlinkedModelSerializer):
-    price = serializers.DecimalField(source='price', decimal_places=2, max_digits=5)
-    unit = OptionUnitJSONSerializer(source='unit')
-    customerGroup = OptionCustomerGroupJSONSerializer(source='customer_group')
-    currency = CurrencyJSONSerializer(source='currency', allow_null=False)
-    validFrom = serializers.DateField(source='valid_from', allow_null=False)
-    validUntil = serializers.DateField(source='valid_until')
+    price = serializers.DecimalField(decimal_places=2, max_digits=5)
+    unit = OptionUnitJSONSerializer()
+    customer_group = OptionCustomerGroupJSONSerializer()
+    currency = CurrencyJSONSerializer(allow_null=False)
+    valid_from = serializers.DateField(allow_null=False)
+    valid_until = serializers.DateField()
 
     class Meta:
         model = ResourcePrice
@@ -28,12 +28,12 @@ class OptionResourcePriceJSONSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class ResourcePricesSONSerializer(serializers.HyperlinkedModelSerializer):
-    price = serializers.DecimalField(source='price', decimal_places=2, max_digits=5)
-    currency = CurrencyJSONSerializer(source='currency', allow_null=False)
-    unit = OptionUnitJSONSerializer(source='unit')
-    validFrom = serializers.DateField(source='valid_from', allow_null=False)
-    validUntil = serializers.DateField(source='valid_until')
-    customerGroup = OptionCustomerGroupJSONSerializer(source='customer_group')
+    price = serializers.DecimalField(decimal_places=2, max_digits=5)
+    currency = CurrencyJSONSerializer(allow_null=False)
+    unit = OptionUnitJSONSerializer()
+    valid_from = serializers.DateField(allow_null=False)
+    valid_until = serializers.DateField()
+    customer_group = OptionCustomerGroupJSONSerializer()
 
     class Meta:
         model = ResourcePrice
@@ -102,6 +102,3 @@ class ResourcePricesSONSerializer(serializers.HyperlinkedModelSerializer):
             resource_price.customer_group = None
         resource_price.save()
         return resource_price
-
-
-

@@ -10,15 +10,15 @@ from koalixcrm.reporting.serializers.task_serializer import OptionTaskJSONSerial
 
 
 class OptionWorkJSONSerializer(serializers.HyperlinkedModelSerializer):
-    humanResource = OptionHumanResourceJSONSerializer(required=False, read_only=True)
-    reportingPeriod = OptionReportingPeriodJSONSerializer(required=False, read_only=True)
+    human_resource = OptionHumanResourceJSONSerializer(required=False, read_only=True)
+    reporting_period = OptionReportingPeriodJSONSerializer(required=False, read_only=True)
     task = OptionTaskJSONSerializer(required=False, read_only=True)
-    date = serializers.DateField(source='date')
-    startTime = serializers.TimeField(source='start_time')
-    stopTime = serializers.TimeField(source='stop_time')
-    workedHours = serializers.DecimalField(source='worked_hours', max_digits=10, decimal_places=2)
-    shortDescription = serializers.CharField(source='short_description')
-    description = serializers.CharField(source='description')
+    date = serializers.DateField()
+    start_time = serializers.TimeField()
+    stop_time = serializers.TimeField()
+    worked_hours = serializers.DecimalField(max_digits=10, decimal_places=2)
+    short_description = serializers.CharField()
+    description = serializers.CharField()
 
     class Meta:
         model = Work
@@ -34,15 +34,15 @@ class OptionWorkJSONSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class WorkJSONSerializer(serializers.HyperlinkedModelSerializer):
-    humanResource = OptionHumanResourceJSONSerializer(source='human_resource')
-    reportingPeriod = OptionReportingPeriodJSONSerializer(source='reporting_period',)
-    task = OptionTaskJSONSerializer(source='task')
-    date = serializers.DateField(source='date')
-    startTime = serializers.TimeField(source='start_time')
-    stopTime = serializers.TimeField(source='stop_time')
-    workedHours = serializers.DecimalField(source='worked_hours', max_digits=10, decimal_places=2)
-    shortDescription = serializers.CharField(source='short_description')
-    description = serializers.CharField(source='description')
+    human_resource = OptionHumanResourceJSONSerializer()
+    reporting_period = OptionReportingPeriodJSONSerializer()
+    task = OptionTaskJSONSerializer()
+    date = serializers.DateField()
+    start_time = serializers.TimeField()
+    stop_time = serializers.TimeField()
+    worked_hours = serializers.DecimalField(max_digits=10, decimal_places=2)
+    short_description = serializers.CharField()
+    description = serializers.CharField()
 
     class Meta:
         model = Work

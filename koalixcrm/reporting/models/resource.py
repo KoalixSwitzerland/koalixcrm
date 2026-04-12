@@ -5,7 +5,6 @@ from django.utils.translation import gettext as _
 
 
 class Resource(models.Model):
-    id = models.BigAutoField(primary_key=True)
     resource_manager = models.ForeignKey("ResourceManager",
                                          on_delete=models.CASCADE,
                                          verbose_name=_("Manager"),
