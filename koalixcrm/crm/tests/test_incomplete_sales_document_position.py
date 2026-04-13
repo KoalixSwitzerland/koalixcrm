@@ -12,7 +12,7 @@ from koalixcrm.crm.factory.customer_group_factory import StandardCustomerGroupFa
 from koalixcrm.products.factory.tax_factory import StandardTaxFactory
 from koalixcrm.products.factory.unit_factory import StandardUnitFactory, SmallUnitFactory
 from koalixcrm.global_support_functions import make_date_utc
-from koalixcrm.crm.models import SalesDocumentPosition
+from koalixcrm.contracts.models.sales_document_position import SalesDocumentPosition
 
 
 class DocumentSalesDocumentPosition(TestCase):

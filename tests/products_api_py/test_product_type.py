@@ -7,7 +7,7 @@ from koalixcrm.products_api_py.products_api_client import KoalixCRMProductsAPICl
 from koalixcrm.products.factory.product_type_factory import StandardProductTypeFactory
 from koalixcrm.products.factory.unit_factory import StandardUnitFactory
 from koalixcrm.products.factory.tax_factory import StandardTaxFactory
-from koalixcrm.crm.models import ProductType
+from koalixcrm.products.models.product_type import ProductType
 
 
 class ProductTypeAPITest(LiveServerTestCase):
@@ -44,13 +44,26 @@ class ProductTypeAPITest(LiveServerTestCase):
         self.assertEqual(retrieved.id, self.product_type.id)
 
     def test_write(self):
+        from koalixcrm.accounting.models import ProductCategory, Account
+        profit_account = Account.objects.create(
+            account_number=4100, title="Profit", account_type="E",
+            is_open_reliabilities_account=False, is_open_interest_account=False,
+            is_product_inventory_activa=False, is_a_customer_payment_account=False,
+        )
+        loss_account = Account.objects.create(
+            account_number=5100, title="Loss", account_type="S",
+            is_open_reliabilities_account=False, is_open_interest_account=False,
+            is_product_inventory_activa=False, is_a_customer_payment_account=False,
+        )
+        category = ProductCategory.objects.create(
+            title="Test Cat", profit_account=profit_account, loss_account=loss_account,
+        )
         data = {
             "title": "New API Product Type",
-            "description": "A product type created via API",
             "product_type_identifier": "API-001",
-            "default_unit": self.unit.id,
-            "tax": self.tax.id,
-            "last_modified_by": self.admin_user.id,
+            "default_unit": {"id": self.unit.id},
+            "tax": {"id": self.tax.id},
+            "accounting_product_category": {"id": category.id},
         }
         created = self.api_client.create_product_type(data)
         self.assertIsNotNone(created)

@@ -15,7 +15,7 @@ from koalixcrm.reporting.serializers.agreement_status_serializer import OptionAg
 from koalixcrm.reporting.serializers.resource_serializer import OptionResourceJSONSerializer
 
 
-class AgreementJSONSerializer(serializers.HyperlinkedModelSerializer):
+class AgreementJSONSerializer(serializers.ModelSerializer):
     task = OptionTaskJSONSerializer(allow_null=False)
     resource = OptionResourceJSONSerializer(allow_null=False)
     unit = OptionUnitJSONSerializer(allow_null=False)
@@ -25,7 +25,8 @@ class AgreementJSONSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Agreement
-        fields = ('amount',
+        fields = ('id',
+                  'amount',
                   'date_from',
                   'date_until',
                   'task',
@@ -128,8 +129,8 @@ class AgreementJSONSerializer(serializers.HyperlinkedModelSerializer):
         # Deserialize type
         type = validated_data.pop('type')
         if type:
-            if type.get('id', agreement.type):
-                agreement.type = Task.objects.get(id=type.get('id', None))
+            if type.get('id', None):
+                agreement.type = AgreementType.objects.get(id=type.get('id', None))
             else:
                 agreement.type = agreement.type_id
         else:

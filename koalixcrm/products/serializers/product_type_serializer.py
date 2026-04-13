@@ -9,25 +9,25 @@ from koalixcrm.products.serializers.tax_serializer import OptionTaxJSONSerialize
 from koalixcrm.products.serializers.unit_serializer import OptionUnitJSONSerializer
 
 
-class ProductJSONSerializer(serializers.HyperlinkedModelSerializer):
-    product_number = serializers.IntegerField(allow_null=False)
-    default_unit = OptionUnitJSONSerializer(allow_null=False)
-    tax = OptionTaxJSONSerializer(allow_null=False)
-    accounting_product_categorie = ProductCategoryMinimalJSONSerializer(allow_null=False)
+class ProductJSONSerializer(serializers.ModelSerializer):
+    product_type_identifier = serializers.CharField(allow_null=True, required=False)
+    default_unit = OptionUnitJSONSerializer(allow_null=True, required=False)
+    tax = OptionTaxJSONSerializer(allow_null=True, required=False)
+    accounting_product_category = ProductCategoryMinimalJSONSerializer(allow_null=True, required=False)
 
     class Meta:
         model = ProductType
         fields = ('id',
-                  'product_number',
+                  'product_type_identifier',
                   'title',
                   'default_unit',
                   'tax',
-                  'accounting_product_categorie')
+                  'accounting_product_category')
         depth = 1
 
     def create(self, validated_data):
         product = ProductType()
-        product.product_number = validated_data['product_number']
+        product.product_type_identifier = validated_data.get('product_type_identifier')
         product.title = validated_data['title']
 
         # Deserialize default_unit
@@ -47,7 +47,7 @@ class ProductJSONSerializer(serializers.HyperlinkedModelSerializer):
                 product.tax = None
 
         # Deserialize product category
-        product_category = validated_data.pop('accounting_product_categorie')
+        product_category = validated_data.pop('accounting_product_category')
         if product_category:
             if product_category.get('id', None):
                 product.accounting_product_category = ProductCategory.objects.get(id=product_category.get('id', None))
@@ -58,13 +58,13 @@ class ProductJSONSerializer(serializers.HyperlinkedModelSerializer):
         return product
 
     def update(self, instance, validated_data):
-        instance.title = validated_data['title']
-        instance.product_number = validated_data['product_number']
+        instance.title = validated_data.get('title', instance.title)
+        instance.product_type_identifier = validated_data.get('product_type_identifier', instance.product_type_identifier)
 
         # Deserialize default_unit
-        default_unit = validated_data.pop('default_unit')
+        default_unit = validated_data.pop('default_unit', None)
         if default_unit:
-            if default_unit.get('id', instance.default_unit):
+            if default_unit.get('id', None):
                 instance.default_unit = Unit.objects.get(id=default_unit.get('id', None))
             else:
                 instance.default_unit = instance.default_unit
@@ -72,9 +72,9 @@ class ProductJSONSerializer(serializers.HyperlinkedModelSerializer):
             instance.default_unit = None
 
         # Deserialize tax
-        tax = validated_data.pop('tax')
+        tax = validated_data.pop('tax', None)
         if tax:
-            if tax.get('id', instance.default_unit):
+            if tax.get('id', None):
                 instance.tax = Tax.objects.get(id=tax.get('id', None))
             else:
                 instance.tax = instance.tax
@@ -82,15 +82,15 @@ class ProductJSONSerializer(serializers.HyperlinkedModelSerializer):
             instance.tax = None
 
         # Deserialize product category
-        product_category = validated_data.pop('accounting_product_categorie')
+        product_category = validated_data.pop('accounting_product_category', None)
         if product_category:
-            if product_category.get('id', instance.accounting_product_categorie):
-                instance.accounting_product_categorie = ProductCategory.objects.get(
+            if product_category.get('id', None):
+                instance.accounting_product_category = ProductCategory.objects.get(
                     id=product_category.get('id', None))
             else:
-                instance.accounting_product_categorie = instance.accounting_product_categorie
+                instance.accounting_product_category = instance.accounting_product_category
         else:
-            instance.accounting_product_categorie = None
+            instance.accounting_product_category = None
 
         instance.save()
         return instance

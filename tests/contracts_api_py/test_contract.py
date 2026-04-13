@@ -8,7 +8,7 @@ from koalixcrm.contracts.factory.contract_factory import StandardContractFactory
 from koalixcrm.crm.factory.customer_factory import StandardCustomerFactory
 from koalixcrm.crm.factory.customer_billing_cycle_factory import StandardCustomerBillingCycleFactory
 from koalixcrm.products.factory.currency_factory import StandardCurrencyFactory
-from koalixcrm.crm.models import Contract
+from koalixcrm.contracts.models.contract import Contract
 
 
 class ContractAPITest(LiveServerTestCase):

@@ -23,7 +23,9 @@ from koalixcrm.djangoUserExtension.models.document_template import MonthlyProjec
 from koalixcrm.djangoUserExtension.models.document_template import WorkReportTemplate
 
 
-class OptionTemplateSetJSONSerializer(serializers.HyperlinkedModelSerializer):
+class OptionTemplateSetJSONSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False)
+    title = serializers.CharField(required=False)
     invoice_template = OptionInvoiceTemplateJSONSerializer(read_only=True)
     quote_template = OptionQuoteTemplateJSONSerializer(read_only=True)
     delivery_note_template = OptionDeliveryNoteTemplateJSONSerializer(read_only=True)
@@ -37,7 +39,8 @@ class OptionTemplateSetJSONSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = TemplateSet
-        fields = ('title',
+        fields = ('id',
+                  'title',
                   'invoice_template',
                   'quote_template',
                   'delivery_note_template',
@@ -50,21 +53,23 @@ class OptionTemplateSetJSONSerializer(serializers.HyperlinkedModelSerializer):
                   'work_report_template')
 
 
-class TemplateSetJSONSerializer(serializers.HyperlinkedModelSerializer):
-    invoice_template = OptionInvoiceTemplateJSONSerializer()
-    quote_template = OptionQuoteTemplateJSONSerializer()
-    delivery_note_template = OptionDeliveryNoteTemplateJSONSerializer()
-    payment_reminder_template = OptionPaymentReminderTemplateJSONSerializer()
-    purchase_confirmation_template = OptionPurchaseConfirmationTemplateJSONSerializer()
-    purchase_order_template = OptionPurchaseOrderTemplateJSONSerializer()
-    profit_loss_statement_template = OptionProfitLossStatementTemplateJSONSerializer()
-    balance_sheet_statement_template = OptionBalanceSheetTemplateJSONSerializer()
-    monthly_project_summary_template = OptionMonthlyProjectSummaryTemplateTemplateJSONSerializer()
-    work_report_template = OptionWorkReportTemplateJSONSerializer()
+class TemplateSetJSONSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False)
+    invoice_template = OptionInvoiceTemplateJSONSerializer(required=False, allow_null=True)
+    quote_template = OptionQuoteTemplateJSONSerializer(required=False, allow_null=True)
+    delivery_note_template = OptionDeliveryNoteTemplateJSONSerializer(required=False, allow_null=True)
+    payment_reminder_template = OptionPaymentReminderTemplateJSONSerializer(required=False, allow_null=True)
+    purchase_confirmation_template = OptionPurchaseConfirmationTemplateJSONSerializer(required=False, allow_null=True)
+    purchase_order_template = OptionPurchaseOrderTemplateJSONSerializer(required=False, allow_null=True)
+    profit_loss_statement_template = OptionProfitLossStatementTemplateJSONSerializer(required=False, allow_null=True)
+    balance_sheet_statement_template = OptionBalanceSheetTemplateJSONSerializer(required=False, allow_null=True)
+    monthly_project_summary_template = OptionMonthlyProjectSummaryTemplateTemplateJSONSerializer(required=False, allow_null=True)
+    work_report_template = OptionWorkReportTemplateJSONSerializer(required=False, allow_null=True)
 
     class Meta:
         model = TemplateSet
-        fields = ('title',
+        fields = ('id',
+                  'title',
                   'invoice_template',
                   'quote_template',
                   'delivery_note_template',

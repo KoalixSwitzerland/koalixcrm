@@ -37,8 +37,8 @@ class EstimationAPITest(LiveServerTestCase):
         reporting_period = StandardReportingPeriodFactory.create()
         data = {
             "amount": "75.00",
-            "dateFrom": "2024-01-01",
-            "dateUntil": "2024-06-30",
+            "date_from": "2024-01-01",
+            "date_until": "2024-06-30",
             "task": {"id": task.id},
             "resource": {"id": resource.id},
             "status": {"id": status.id},

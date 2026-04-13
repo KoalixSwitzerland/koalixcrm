@@ -8,7 +8,7 @@ from koalixcrm.crm.contact.phone_address import PhoneAddress
 from koalixcrm.crm.contact.postal_address import PostalAddress
 
 
-class PhoneAddressJSONSerializer(serializers.HyperlinkedModelSerializer):
+class PhoneAddressJSONSerializer(serializers.ModelSerializer):
     class Meta:
         model = PhoneAddress
         fields = ('phone',)
@@ -43,7 +43,7 @@ class ContactPhoneAddressJSONSerializer(PhoneAddressJSONSerializer):
         return contact_phone_address
 
 
-class EmailAddressJSONSerializer(serializers.HyperlinkedModelSerializer):
+class EmailAddressJSONSerializer(serializers.ModelSerializer):
     class Meta:
         model = EmailAddress
         fields = ('email',)
@@ -78,7 +78,7 @@ class ContactEmailAddressJSONSerializer(EmailAddressJSONSerializer):
         return contact_email_address
 
 
-class ContactJSONSerializer(serializers.HyperlinkedModelSerializer):
+class ContactJSONSerializer(serializers.ModelSerializer):
     state = serializers.SerializerMethodField()
     city = serializers.SerializerMethodField('get_town')
 
@@ -101,7 +101,7 @@ class ContactJSONSerializer(serializers.HyperlinkedModelSerializer):
         return address.town if address is not None else None
 
 
-class PostalAddressJSONSerializer(serializers.HyperlinkedModelSerializer):
+class PostalAddressJSONSerializer(serializers.ModelSerializer):
     pre_name = serializers.CharField(allow_null=True)
     name = serializers.CharField(allow_null=True)
     address_line_1 = serializers.CharField(allow_null=True)

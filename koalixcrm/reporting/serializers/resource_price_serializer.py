@@ -9,17 +9,19 @@ from koalixcrm.products.serializers.currency_serializer import CurrencyJSONSeria
 from koalixcrm.products.serializers.unit_serializer import OptionUnitJSONSerializer
 
 
-class OptionResourcePriceJSONSerializer(serializers.HyperlinkedModelSerializer):
-    price = serializers.DecimalField(decimal_places=2, max_digits=5)
-    unit = OptionUnitJSONSerializer()
-    customer_group = OptionCustomerGroupJSONSerializer()
-    currency = CurrencyJSONSerializer(allow_null=False)
-    valid_from = serializers.DateField(allow_null=False)
-    valid_until = serializers.DateField()
+class OptionResourcePriceJSONSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False)
+    price = serializers.DecimalField(decimal_places=2, max_digits=5, required=False)
+    unit = OptionUnitJSONSerializer(required=False)
+    customer_group = OptionCustomerGroupJSONSerializer(required=False)
+    currency = CurrencyJSONSerializer(allow_null=False, required=False)
+    valid_from = serializers.DateField(allow_null=False, required=False)
+    valid_until = serializers.DateField(required=False)
 
     class Meta:
         model = ResourcePrice
-        fields = ('price',
+        fields = ('id',
+                  'price',
                   'currency',
                   'unit',
                   'valid_from',
@@ -27,7 +29,7 @@ class OptionResourcePriceJSONSerializer(serializers.HyperlinkedModelSerializer):
                   'customer_group')
 
 
-class ResourcePricesSONSerializer(serializers.HyperlinkedModelSerializer):
+class ResourcePricesSONSerializer(serializers.ModelSerializer):
     price = serializers.DecimalField(decimal_places=2, max_digits=5)
     currency = CurrencyJSONSerializer(allow_null=False)
     unit = OptionUnitJSONSerializer()

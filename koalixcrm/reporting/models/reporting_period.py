@@ -209,7 +209,7 @@ class ReportingPeriodAdminForm(ModelForm):
                                       'period or it has to be directly before the following reporting period')
 
 
-class ProjectJSONSerializer(serializers.HyperlinkedModelSerializer):
+class ProjectJSONSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReportingPeriod
         fields = ('id',

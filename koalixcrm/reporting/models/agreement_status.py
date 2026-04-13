@@ -26,7 +26,7 @@ class AgreementStatus(models.Model):
         return str(self.id) + " " + str(self.title)
 
 
-class AgreementStatusJSONSerializer(serializers.HyperlinkedModelSerializer):
+class AgreementStatusJSONSerializer(serializers.ModelSerializer):
     class Meta:
         model = AgreementStatus
         fields = ('id',

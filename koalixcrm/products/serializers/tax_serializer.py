@@ -5,7 +5,7 @@ from koalixcrm.accounting.serializers.account_serializer import OptionAccountJSO
 from koalixcrm.products.models.tax import Tax
 
 
-class OptionTaxJSONSerializer(serializers.HyperlinkedModelSerializer):
+class OptionTaxJSONSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)
     name = serializers.CharField(read_only=True)
 
@@ -15,7 +15,7 @@ class OptionTaxJSONSerializer(serializers.HyperlinkedModelSerializer):
                   'name')
 
 
-class TaxJSONSerializer(serializers.HyperlinkedModelSerializer):
+class TaxJSONSerializer(serializers.ModelSerializer):
     tax_rate = serializers.CharField()
     name = serializers.CharField()
     account_activa = OptionAccountJSONSerializer(allow_null=True)

@@ -7,7 +7,8 @@ from koalixcrm.reporting.serializers.project_serializer import OptionProjectJSON
 from koalixcrm.reporting.serializers.task_status_serializer import OptionTaskStatusJSONSerializer
 
 
-class OptionTaskJSONSerializer(serializers.HyperlinkedModelSerializer):
+class OptionTaskJSONSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False)
     project = OptionProjectJSONSerializer(allow_null=False, read_only=True)
     status = OptionTaskStatusJSONSerializer(allow_null=False, read_only=True)
     last_status_change = serializers.DateField(read_only=True)
@@ -30,7 +31,7 @@ class OptionTaskJSONSerializer(serializers.HyperlinkedModelSerializer):
             return "False"
 
 
-class TaskJSONSerializer(serializers.HyperlinkedModelSerializer):
+class TaskJSONSerializer(serializers.ModelSerializer):
     project = OptionProjectJSONSerializer(allow_null=False)
     status = OptionTaskStatusJSONSerializer(allow_null=False)
     last_status_change = serializers.DateField()

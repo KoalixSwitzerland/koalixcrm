@@ -30,7 +30,7 @@ class TaskStatusAPITest(LiveServerTestCase):
         data = {
             "title": "New Task Status",
             "description": "A new task status",
-            "isDone": False,
+            "is_done": False,
         }
         created = self.api_client.create_task_status(data)
         self.assertIsNotNone(created)

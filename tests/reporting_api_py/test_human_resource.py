@@ -35,8 +35,8 @@ class HumanResourceAPITest(LiveServerTestCase):
         resource_manager = StandardResourceManagerFactory.create()
         data = {
             "user": {"id": user_extension.id},
-            "resourceType": {"id": resource_type.id},
-            "resourceManager": {"id": resource_manager.id},
+            "resource_type": {"id": resource_type.id},
+            "resource_manager": {"id": resource_manager.id},
         }
         created = self.api_client.create_human_resource(data)
         self.assertIsNotNone(created)
@@ -45,6 +45,6 @@ class HumanResourceAPITest(LiveServerTestCase):
         new_resource_type = StandardResourceTypeFactory.create()
         updated = self.api_client.update_human_resource(
             self.human_resource.id,
-            {"resourceType": {"id": new_resource_type.id}}
+            {"resource_type": {"id": new_resource_type.id}}
         )
         self.assertIsNotNone(updated)

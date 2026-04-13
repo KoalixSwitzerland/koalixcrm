@@ -9,7 +9,7 @@ from koalixcrm.accounting.serializers.account_serializer import OptionAccountJSO
 from koalixcrm.accounting.serializers.accounting_period_serializer import OptionAccountingPeriodJSONSerializer
 
 
-class UserJSONSerializer(serializers.HyperlinkedModelSerializer):
+class UserJSONSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)
     username = serializers.CharField(read_only=True)
     first_name = serializers.CharField(read_only=True)
@@ -24,7 +24,7 @@ class UserJSONSerializer(serializers.HyperlinkedModelSerializer):
             'last_name')
 
 
-class BookingJSONSerializer(serializers.HyperlinkedModelSerializer):
+class BookingJSONSerializer(serializers.ModelSerializer):
 
     from_account = OptionAccountJSONSerializer(allow_null=False)
     to_account = OptionAccountJSONSerializer(allow_null=False)
@@ -57,7 +57,10 @@ class BookingJSONSerializer(serializers.HyperlinkedModelSerializer):
         # Deserialize from staff
         request = self.context.get('request')
         koalixcrm_user = request.META.get('HTTP_KOALIXCRM_USER')
-        user = User.objects.get(username=koalixcrm_user)
+        if koalixcrm_user:
+            user = User.objects.get(username=koalixcrm_user)
+        else:
+            user = request.user
         booking.staff = user
         booking.last_modified_by = user
 
@@ -97,7 +100,10 @@ class BookingJSONSerializer(serializers.HyperlinkedModelSerializer):
         # Deserialize from staff
         request = self.context.get('request')
         koalixcrm_user = request.META.get('HTTP_KOALIXCRM_USER')
-        user = User.objects.get(username=koalixcrm_user)
+        if koalixcrm_user:
+            user = User.objects.get(username=koalixcrm_user)
+        else:
+            user = request.user
         booking.staff = user
 
         # Deserialize from account

@@ -38,7 +38,10 @@ class CustomerJSONSerializer(ContactJSONSerializer):
         # Deserialize from staff
         request = self.context.get('request')
         koalixcrm_user = request.META.get('HTTP_KOALIXCRM_USER')
-        user = User.objects.get(username=koalixcrm_user)
+        if koalixcrm_user:
+            user = User.objects.get(username=koalixcrm_user)
+        else:
+            user = request.user
         customer.last_modified_by = user
 
         customer.save()
@@ -61,7 +64,10 @@ class CustomerJSONSerializer(ContactJSONSerializer):
         # Deserialize from staff
         request = self.context.get('request')
         koalixcrm_user = request.META.get('HTTP_KOALIXCRM_USER')
-        user = User.objects.get(username=koalixcrm_user)
+        if koalixcrm_user:
+            user = User.objects.get(username=koalixcrm_user)
+        else:
+            user = request.user
         customer.last_modified_by = user
 
         # Deserialize from customer group

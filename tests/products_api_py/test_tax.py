@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 from koalixcrm.products_api_py.products_api_client import KoalixCRMProductsAPIClient
 from koalixcrm.products.factory.tax_factory import StandardTaxFactory
-from koalixcrm.crm.models import Tax
+from koalixcrm.products.models.tax import Tax
 
 
 class TaxAPITest(LiveServerTestCase):
@@ -39,6 +39,8 @@ class TaxAPITest(LiveServerTestCase):
         data = {
             "tax_rate": "8.00",
             "name": "New Test Tax",
+            "account_activa": None,
+            "account_passiva": None,
         }
         created = self.api_client.create_tax(data)
         self.assertIsNotNone(created)

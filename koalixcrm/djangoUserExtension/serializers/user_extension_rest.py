@@ -4,13 +4,13 @@ from koalixcrm.products.serializers.currency_serializer import CurrencyJSONSeria
 from koalixcrm.djangoUserExtension.serializers.template_set_rest import TemplateSetJSONSerializer
 
 
-class OptionUserExtensionJSONSerializer(serializers.HyperlinkedModelSerializer):
-    default_template_set = TemplateSetJSONSerializer()
-    default_currency = CurrencyJSONSerializer()
+class OptionUserExtensionJSONSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False)
+    default_template_set = TemplateSetJSONSerializer(required=False)
+    default_currency = CurrencyJSONSerializer(required=False)
 
     class Meta:
         model = UserExtension
         fields = ('id',
-                  'user',
                   'default_template_set',
                   'default_currency')

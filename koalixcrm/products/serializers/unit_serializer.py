@@ -3,7 +3,7 @@ from rest_framework import serializers
 from koalixcrm.products.models.unit import Unit
 
 
-class OptionUnitJSONSerializer(serializers.HyperlinkedModelSerializer):
+class OptionUnitJSONSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)
     description = serializers.CharField(read_only=True)
     short_name = serializers.CharField(read_only=True)
@@ -15,7 +15,7 @@ class OptionUnitJSONSerializer(serializers.HyperlinkedModelSerializer):
                   'short_name')
 
 
-class UnitJSONSerializer(serializers.HyperlinkedModelSerializer):
+class UnitJSONSerializer(serializers.ModelSerializer):
     short_name = serializers.CharField()
     description = serializers.CharField()
     is_a_fraction_of = OptionUnitJSONSerializer(allow_null=True)

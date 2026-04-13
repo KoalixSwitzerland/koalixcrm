@@ -30,7 +30,7 @@ class AgreementStatusAPITest(LiveServerTestCase):
         data = {
             "title": "New Agreement Status",
             "description": "A new agreement status",
-            "isAgreed": False,
+            "is_agreed": False,
         }
         created = self.api_client.create_agreement_status(data)
         self.assertIsNotNone(created)

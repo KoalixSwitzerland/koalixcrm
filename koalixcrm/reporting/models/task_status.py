@@ -21,7 +21,7 @@ class TaskStatus(models.Model):
         return str(self.id) + " " + str(self.title)
 
 
-class TaskStatusJSONSerializer(serializers.HyperlinkedModelSerializer):
+class TaskStatusJSONSerializer(serializers.ModelSerializer):
     class Meta:
         model = TaskStatus
         fields = ('id',

@@ -7,17 +7,19 @@ from koalixcrm.reporting.serializers.resource_manager_serializer import OptionRe
 from koalixcrm.reporting.serializers.resource_type_serializer import OptionResourceTypeJSONSerializer
 
 
-class OptionResourceJSONSerializer(serializers.HyperlinkedModelSerializer):
+class OptionResourceJSONSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False)
     resource_type = OptionResourceTypeJSONSerializer(required=False, read_only=True)
     resource_manager = OptionResourceManagerJSONSerializer(read_only=True)
 
     class Meta:
         model = Resource
-        fields = ('resource_type',
+        fields = ('id',
+                  'resource_type',
                   'resource_manager')
 
 
-class ResourceJSONSerializer(serializers.HyperlinkedModelSerializer):
+class ResourceJSONSerializer(serializers.ModelSerializer):
     resource_type = OptionResourceTypeJSONSerializer()
     resource_manager = OptionResourceManagerJSONSerializer()
 

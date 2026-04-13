@@ -12,6 +12,7 @@ import koalixcrm
 
 
 class OptionProjectJSONSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False)
     project_status = OptionProjectStatusJSONSerializer(read_only=True)
     project_manager = UserSerializer(read_only=True)
     project_name = serializers.CharField(read_only=True)
@@ -27,7 +28,8 @@ class OptionProjectJSONSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = ('project_status',
+        fields = ('id',
+                  'project_status',
                   'project_manager',
                   'project_name',
                   'description',
@@ -47,7 +49,8 @@ class ProjectJSONSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = ('project_status',
+        fields = ('id',
+                  'project_status',
                   'project_manager',
                   'project_name',
                   'description',
@@ -58,7 +61,7 @@ class ProjectJSONSerializer(serializers.ModelSerializer):
 
     def get_tasks(self, obj):
         from koalixcrm.reporting.serializers.task_serializer import TaskJSONSerializer
-        tasks = obj.task_set.all()
+        tasks = obj.tasks.all()
         return TaskJSONSerializer(tasks, many=True, context=self.context).data
 
     def get_is_reporting_allowed(self, obj):
@@ -90,8 +93,13 @@ class ProjectJSONSerializer(serializers.ModelSerializer):
                 project.default_template_set = TemplateSet.objects.get(id=default_template_set.get('id', None))
             else:
                 project.default_template_set = None
-        project.title = validated_data['title']
+        project.project_name = validated_data['project_name']
         project.description = validated_data['description']
+        # Set last_modified_by from request user
+        request = self.context.get('request')
+        if request and request.user:
+            project.project_manager = request.user
+            project.last_modified_by = request.user
         project.save()
         return project
 
@@ -99,8 +107,8 @@ class ProjectJSONSerializer(serializers.ModelSerializer):
         # Deserialize default currency
         default_currency = validated_data.pop('default_currency')
         if default_currency:
-            if default_currency.get('id', project.project):
-                project.default_currency = Project.objects.get(id=default_currency.get('id', None))
+            if default_currency.get('id', None):
+                project.default_currency = Currency.objects.get(id=default_currency.get('id', None))
             else:
                 project.default_currency = project.default_currency_id
         else:
@@ -123,7 +131,7 @@ class ProjectJSONSerializer(serializers.ModelSerializer):
                 project.default_template_set = project.default_template_set_id
         else:
             project.default_template_set = None
-        project.title = validated_data['title']
-        project.description = validated_data['description']
+        project.project_name = validated_data.get('project_name', project.project_name)
+        project.description = validated_data.get('description', project.description)
         project.save()
         return project

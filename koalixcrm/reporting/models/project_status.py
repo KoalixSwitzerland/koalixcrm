@@ -26,7 +26,7 @@ class ProjectStatus(models.Model):
         return str(self.id) + " " + str(self.title)
 
 
-class ProjectStatusJSONSerializer(serializers.HyperlinkedModelSerializer):
+class ProjectStatusJSONSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectStatus
         fields = ('id',

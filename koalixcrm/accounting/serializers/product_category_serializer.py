@@ -6,17 +6,17 @@ from koalixcrm.accounting.models.product_category import ProductCategory
 from koalixcrm.accounting.models import Account
 
 
-class ProductCategoryMinimalJSONSerializer(serializers.HyperlinkedModelSerializer):
+class ProductCategoryMinimalJSONSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)
     title = serializers.CharField(read_only=True)
 
     class Meta:
-        model = Account
+        model = ProductCategory
         fields = ('id',
                   'title')
 
 
-class ProductCategoryJSONSerializer(serializers.HyperlinkedModelSerializer):
+class ProductCategoryJSONSerializer(serializers.ModelSerializer):
     profit_account = OptionAccountJSONSerializer()
     loss_account = OptionAccountJSONSerializer()
 

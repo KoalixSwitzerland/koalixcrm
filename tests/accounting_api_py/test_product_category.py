@@ -64,8 +64,8 @@ class ProductCategoryAPITest(LiveServerTestCase):
     def test_write(self):
         data = {
             "title": "New API Product Category",
-            "profitAccount": {"id": self.profit_account.id},
-            "lossAccount": {"id": self.loss_account.id},
+            "profit_account": {"id": self.profit_account.id},
+            "loss_account": {"id": self.loss_account.id},
         }
         created = self.api_client.create_product_category(data)
         self.assertIsNotNone(created)

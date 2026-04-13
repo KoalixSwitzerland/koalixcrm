@@ -3,7 +3,7 @@ import pytest
 import os
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
-from koalixcrm.test.test_support_functions import *
+from tests.contracts.test_support_functions import *
 from koalixcrm.contracts.factory.contract_factory import StandardContractFactory
 from koalixcrm.contracts.factory.quote_factory import StandardQuoteFactory
 from koalixcrm.crm.factory.user_factory import AdminUserFactory

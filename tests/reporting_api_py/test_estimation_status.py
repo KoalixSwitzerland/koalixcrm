@@ -30,7 +30,7 @@ class EstimationStatusAPITest(LiveServerTestCase):
         data = {
             "title": "New Estimation Status",
             "description": "A new estimation status",
-            "isObsolete": False,
+            "is_obsolete": False,
         }
         created = self.api_client.create_estimation_status(data)
         self.assertIsNotNone(created)

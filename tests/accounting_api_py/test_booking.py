@@ -48,13 +48,13 @@ class BookingAPITest(LiveServerTestCase):
 
     def test_write(self):
         data = {
-            "fromAccount": {"id": self.from_account.id},
-            "toAccount": {"id": self.to_account.id},
+            "from_account": {"id": self.from_account.id},
+            "to_account": {"id": self.to_account.id},
             "amount": "250.00",
             "description": "API test booking",
-            "bookingDate": "2018-07-01T00:00",
-            "bookingReference": None,
-            "accountingPeriod": {"id": self.accounting_period.id},
+            "booking_date": "2018-07-01T00:00",
+            "booking_reference": None,
+            "accounting_period": {"id": self.accounting_period.id},
         }
         created = self.api_client.create_booking(data)
         self.assertIsNotNone(created)

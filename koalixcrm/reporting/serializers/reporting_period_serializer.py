@@ -7,7 +7,8 @@ from koalixcrm.reporting.serializers.reporting_period_status_serializer import O
 from koalixcrm.reporting.serializers.project_serializer import OptionProjectJSONSerializer
 
 
-class OptionReportingPeriodJSONSerializer(serializers.HyperlinkedModelSerializer):
+class OptionReportingPeriodJSONSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False)
     project = OptionProjectJSONSerializer(read_only=True)
     title = serializers.CharField(read_only=True)
     begin = serializers.DateField(read_only=True)
@@ -16,14 +17,15 @@ class OptionReportingPeriodJSONSerializer(serializers.HyperlinkedModelSerializer
 
     class Meta:
         model = ReportingPeriod
-        fields = ('project',
+        fields = ('id',
+                  'project',
                   'title',
                   'begin',
                   'end',
                   'status')
 
 
-class ReportingPeriodJSONSerializer(serializers.HyperlinkedModelSerializer):
+class ReportingPeriodJSONSerializer(serializers.ModelSerializer):
     project = OptionProjectJSONSerializer()
     title = serializers.CharField()
     begin = serializers.DateField()
@@ -32,7 +34,8 @@ class ReportingPeriodJSONSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = ReportingPeriod
-        fields = ('project',
+        fields = ('id',
+                  'project',
                   'title',
                   'begin',
                   'end',

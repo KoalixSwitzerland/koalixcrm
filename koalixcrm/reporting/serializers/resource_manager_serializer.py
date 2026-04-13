@@ -5,15 +5,17 @@ from koalixcrm.reporting.models.resource_manager import ResourceManager
 from koalixcrm.djangoUserExtension.serializers.user_extension_rest import OptionUserExtensionJSONSerializer
 
 
-class OptionResourceManagerJSONSerializer(serializers.HyperlinkedModelSerializer):
+class OptionResourceManagerJSONSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False)
     user = OptionUserExtensionJSONSerializer(read_only=True)
 
     class Meta:
         model = ResourceManager
-        fields = ('user',)
+        fields = ('id',
+                  'user',)
 
 
-class ResourceManagerJSONSerializer(serializers.HyperlinkedModelSerializer):
+class ResourceManagerJSONSerializer(serializers.ModelSerializer):
     user = OptionUserExtensionJSONSerializer()
 
     class Meta:

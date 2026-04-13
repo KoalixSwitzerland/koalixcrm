@@ -26,7 +26,7 @@ class EstimationStatus(models.Model):
         return str(self.id) + " " + str(self.title)
 
 
-class EstimationStatusJSONSerializer(serializers.HyperlinkedModelSerializer):
+class EstimationStatusJSONSerializer(serializers.ModelSerializer):
     class Meta:
         model = EstimationStatus
         fields = ('id',

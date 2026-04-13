@@ -8,7 +8,7 @@ from koalixcrm.contracts.factory.quote_factory import StandardQuoteFactory
 from koalixcrm.crm.factory.user_factory import StaffUserFactory
 from koalixcrm.products.factory.product_type_factory import StandardProductTypeFactory
 from koalixcrm.products.factory.product_price_factory import StandardPriceFactory
-from koalixcrm.crm.models import Task
+from koalixcrm.reporting.models.task import Task
 from koalixcrm.crm.views.create_task import CreateTaskView
 
 

@@ -34,11 +34,11 @@ class ProjectAPITest(LiveServerTestCase):
         default_currency = StandardCurrencyFactory.create()
         default_template_set = StandardTemplateSetFactory.create()
         data = {
-            "projectName": "API Created Project",
+            "project_name": "API Created Project",
             "description": "Created via API test",
-            "projectStatus": {"id": project_status.id},
-            "defaultCurrency": {"id": default_currency.id},
-            "defaultTemplateSet": {"id": default_template_set.id},
+            "project_status": {"id": project_status.id},
+            "default_currency": {"id": default_currency.id},
+            "default_template_set": {"id": default_template_set.id},
         }
         created = self.api_client.create_project(data)
         self.assertIsNotNone(created)

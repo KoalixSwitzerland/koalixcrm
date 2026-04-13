@@ -30,7 +30,7 @@ class ReportingPeriodStatusAPITest(LiveServerTestCase):
         data = {
             "title": "New Reporting Period Status",
             "description": "A new reporting period status",
-            "isDone": False,
+            "is_done": False,
         }
         created = self.api_client.create_reporting_period_status(data)
         self.assertIsNotNone(created)

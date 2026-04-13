@@ -9,4 +9,4 @@ class StandardQuoteFactory(StandardSalesDocumentFactory):
         model = Quote
 
     valid_until = "2018-05-20"
-    status = "C"
+    status = "I"

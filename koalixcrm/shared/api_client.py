@@ -238,7 +238,7 @@ class BaseAPIClient:
     def _build_headers(self) -> Dict[str, str]:
         """Build request headers based on the current authentication method."""
         if self.use_session_auth:
-            headers = {'Content-Type': 'application/json'}
+            headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
             if self._session_token:
                 headers['Authorization'] = f'Basic {self._session_token}'
         else:
@@ -246,6 +246,7 @@ class BaseAPIClient:
             headers = {
                 'Authorization': f"{token_type} {self.token}",
                 'Content-Type': 'application/json',
+                'Accept': 'application/json',
             }
 
         if self.custom_origin_verification_enabled and self.custom_origin_verification_key:

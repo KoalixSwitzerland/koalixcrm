@@ -6,7 +6,7 @@ from koalixcrm.reporting_api_py.reporting_api_client import KoalixCRMReportingAP
 from koalixcrm.reporting.factory.work_factory import StandardWorkFactory
 from koalixcrm.reporting.factory.task_factory import StandardTaskFactory
 from koalixcrm.reporting.factory.reporting_period_factory import StandardReportingPeriodFactory
-from koalixcrm.djangoUserExtension.factories.factory_user_extension import StandardUserExtensionFactory
+from koalixcrm.reporting.factory.human_resource_factory import StandardHumanResourceFactory
 
 
 class WorkAPITest(LiveServerTestCase):
@@ -32,16 +32,16 @@ class WorkAPITest(LiveServerTestCase):
     def test_write(self):
         task = StandardTaskFactory.create()
         reporting_period = StandardReportingPeriodFactory.create()
-        human_resource = StandardUserExtensionFactory.create()
+        human_resource = StandardHumanResourceFactory.create()
         data = {
-            "humanResource": {"id": human_resource.id},
+            "human_resource": {"id": human_resource.id},
             "task": {"id": task.id},
-            "reportingPeriod": {"id": reporting_period.id},
+            "reporting_period": {"id": reporting_period.id},
             "date": "2024-01-15",
-            "startTime": None,
-            "stopTime": None,
-            "workedHours": "2.00",
-            "shortDescription": "API work entry",
+            "start_time": None,
+            "stop_time": None,
+            "worked_hours": "2.00",
+            "short_description": "API work entry",
             "description": "Created via API test",
         }
         created = self.api_client.create_work(data)
@@ -50,6 +50,6 @@ class WorkAPITest(LiveServerTestCase):
     def test_modify(self):
         updated = self.api_client.update_work(
             self.work.id,
-            {"shortDescription": "Updated work description"}
+            {"short_description": "Updated work description"}
         )
         self.assertIsNotNone(updated)

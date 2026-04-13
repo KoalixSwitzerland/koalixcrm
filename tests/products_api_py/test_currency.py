@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 from koalixcrm.products_api_py.products_api_client import KoalixCRMProductsAPIClient
 from koalixcrm.products.factory.currency_factory import StandardCurrencyFactory
-from koalixcrm.crm.models import Currency
+from koalixcrm.products.models.currency import Currency
 
 
 class CurrencyAPITest(LiveServerTestCase):

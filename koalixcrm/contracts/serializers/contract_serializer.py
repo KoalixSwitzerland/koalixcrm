@@ -3,8 +3,13 @@ from rest_framework import serializers
 from koalixcrm.contracts.models.contract import Contract
 
 
-class ContractJSONSerializer(serializers.HyperlinkedModelSerializer):
+class ContractJSONSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contract
         fields = ('id',
-                  'description')
+                  'staff',
+                  'description',
+                  'default_customer',
+                  'default_currency',
+                  'default_template_set',
+                  'last_modified_by')

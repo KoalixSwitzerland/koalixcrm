@@ -41,8 +41,8 @@ class AgreementAPITest(LiveServerTestCase):
         agreement_status = AgreedAgreementStatusFactory.create()
         data = {
             "amount": "50.00",
-            "dateFrom": "2024-01-01",
-            "dateUntil": "2024-12-31",
+            "date_from": "2024-01-01",
+            "date_until": "2024-12-31",
             "task": {"id": task.id},
             "resource": {"id": resource.id},
             "unit": {"id": unit.id},

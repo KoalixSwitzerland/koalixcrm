@@ -5,7 +5,7 @@ import datetime
 from koalixcrm.reporting.models.work import Work
 from koalixcrm.reporting.factory.task_factory import StandardTaskFactory
 from koalixcrm.reporting.factory.reporting_period_factory import StandardReportingPeriodFactory
-from koalixcrm.djangoUserExtension.factories.factory_user_extension import StandardUserExtensionFactory
+from koalixcrm.reporting.factory.human_resource_factory import StandardHumanResourceFactory
 from koalixcrm.global_support_functions import make_date_utc
 
 
@@ -13,7 +13,7 @@ class StandardWorkFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Work
 
-    human_resource = factory.SubFactory(StandardUserExtensionFactory)
+    human_resource = factory.SubFactory(StandardHumanResourceFactory)
     date = make_date_utc(datetime.datetime(2018, 5, 1, 0, 00))
     start_time = None
     stop_time = None

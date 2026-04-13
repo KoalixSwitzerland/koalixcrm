@@ -36,7 +36,7 @@ class TaskAPITest(LiveServerTestCase):
             "description": "Created via API test",
             "project": {"id": project.id},
             "status": {"id": task_status.id},
-            "lastStatusChange": "2024-01-15",
+            "last_status_change": "2024-01-15",
         }
         created = self.api_client.create_task(data)
         self.assertIsNotNone(created)

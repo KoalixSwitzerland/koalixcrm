@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 import pytest
 import os
-from koalixcrm.test.test_support_functions import *
+from tests.contracts.test_support_functions import *
 from koalixcrm.contracts.factory.contract_factory import StandardContractFactory
 from koalixcrm.crm.factory.user_factory import AdminUserFactory
 from koalixcrm.crm.factory.customer_group_factory import StandardCustomerGroupFactory
 from koalixcrm.djangoUserExtension.factories.factory_document_template import StandardQuoteTemplateFactory
 from koalixcrm.djangoUserExtension.factories.factory_document_template import StandardInvoiceTemplateFactory
 from koalixcrm.djangoUserExtension.factories.factory_document_template import StandardPurchaseOrderTemplateFactory
-from koalixcrm.test.UITests import UITests
+from tests.e2e.UITests import UITests
 from koalixcrm.contracts.models.quote import Quote
 from koalixcrm.contracts.models.invoice import Invoice
 from koalixcrm.contracts.models.purchase_order import PurchaseOrder

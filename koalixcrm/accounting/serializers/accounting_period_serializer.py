@@ -6,7 +6,7 @@ from koalixcrm.accounting.models.accounting_period import AccountingPeriod
 from koalixcrm.accounting.models import Account
 
 
-class OptionAccountingPeriodJSONSerializer(serializers.HyperlinkedModelSerializer):
+class OptionAccountingPeriodJSONSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)
     title = serializers.CharField(read_only=True)
 
@@ -16,7 +16,7 @@ class OptionAccountingPeriodJSONSerializer(serializers.HyperlinkedModelSerialize
                   'title')
 
 
-class AccountingPeriodJSONSerializer(serializers.HyperlinkedModelSerializer):
+class AccountingPeriodJSONSerializer(serializers.ModelSerializer):
     class Meta:
         model = AccountingPeriod
         fields = ('id',

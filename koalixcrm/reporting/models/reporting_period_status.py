@@ -29,7 +29,7 @@ class ReportingPeriodStatus(models.Model):
             return str(self.id)
 
 
-class TaskStatusJSONSerializer(serializers.HyperlinkedModelSerializer):
+class TaskStatusJSONSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReportingPeriodStatus
         fields = ('id',

@@ -30,7 +30,7 @@ class ProjectStatusAPITest(LiveServerTestCase):
         data = {
             "title": "New Status",
             "description": "A new project status",
-            "isDone": False,
+            "is_done": False,
         }
         created = self.api_client.create_project_status(data)
         self.assertIsNotNone(created)

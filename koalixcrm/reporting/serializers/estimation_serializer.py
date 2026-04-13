@@ -9,7 +9,7 @@ from koalixcrm.reporting.serializers.estimation_status_serializer import OptionE
 from koalixcrm.reporting.serializers.resource_serializer import OptionResourceJSONSerializer
 
 
-class EstimationJSONSerializer(serializers.HyperlinkedModelSerializer):
+class EstimationJSONSerializer(serializers.ModelSerializer):
     task = OptionTaskJSONSerializer(allow_null=False)
     resource = OptionResourceJSONSerializer(allow_null=False)
     status = OptionEstimationStatusJSONSerializer(allow_null=False)
@@ -19,7 +19,8 @@ class EstimationJSONSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Estimation
-        fields = ('task',
+        fields = ('id',
+                  'task',
                   'resource',
                   'amount',
                   'date_from',
@@ -49,10 +50,14 @@ class EstimationJSONSerializer(serializers.HyperlinkedModelSerializer):
         # Deserialize status
         status = validated_data.pop('status')
         if status:
-            if type.get('id', None):
+            if status.get('id', None):
                 estimation.status = EstimationStatus.objects.get(id=status.get('id', None))
             else:
                 estimation.status = None
+        # Set reporting_period (PK field)
+        reporting_period = validated_data.get('reporting_period')
+        if reporting_period:
+            estimation.reporting_period = reporting_period
 
         estimation.save()
         return estimation

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import pytest
 import datetime
-from koalixcrm.test.test_support_functions import *
+from tests.contracts.test_support_functions import *
 from koalixcrm.crm.factory.user_factory import AdminUserFactory
 from koalixcrm.crm.factory.customer_factory import StandardCustomerFactory
 from koalixcrm.crm.factory.customer_group_factory import StandardCustomerGroupFactory
@@ -10,7 +10,7 @@ from koalixcrm.djangoUserExtension.factories.factory_user_extension import Stand
 from koalixcrm.reporting.factory.reporting_period_factory import StandardReportingPeriodFactory
 from koalixcrm.reporting.factory.task_factory import StandardTaskFactory
 from koalixcrm.reporting.models.work import Work
-from koalixcrm.test.UITests import UITests
+from tests.e2e.UITests import UITests
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys

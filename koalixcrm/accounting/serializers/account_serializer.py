@@ -4,7 +4,7 @@ from rest_framework import serializers
 from koalixcrm.accounting.models.account import Account
 
 
-class OptionAccountJSONSerializer(serializers.HyperlinkedModelSerializer):
+class OptionAccountJSONSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)
     account_number = serializers.IntegerField(read_only=True)
     title = serializers.CharField(read_only=True)
@@ -16,7 +16,7 @@ class OptionAccountJSONSerializer(serializers.HyperlinkedModelSerializer):
                   'title')
 
 
-class AccountJSONSerializer(serializers.HyperlinkedModelSerializer):
+class AccountJSONSerializer(serializers.ModelSerializer):
     account_number = serializers.IntegerField(allow_null=False)
     account_type = serializers.CharField(allow_null=False)
     is_open_reliabilities_account = serializers.BooleanField()

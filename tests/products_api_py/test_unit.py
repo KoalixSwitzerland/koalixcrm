@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 from koalixcrm.products_api_py.products_api_client import KoalixCRMProductsAPIClient
 from koalixcrm.products.factory.unit_factory import StandardUnitFactory
-from koalixcrm.crm.models import Unit
+from koalixcrm.products.models.unit import Unit
 
 
 class UnitAPITest(LiveServerTestCase):
@@ -39,6 +39,7 @@ class UnitAPITest(LiveServerTestCase):
         data = {
             "description": "Liter",
             "short_name": "l",
+            "is_a_fraction_of": None,
         }
         created = self.api_client.create_unit(data)
         self.assertIsNotNone(created)

@@ -3,7 +3,7 @@ from rest_framework import serializers
 from koalixcrm.crm.contact.customer_group import CustomerGroup
 
 
-class OptionCustomerGroupJSONSerializer(serializers.HyperlinkedModelSerializer):
+class OptionCustomerGroupJSONSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)
     name = serializers.CharField(read_only=True)
 
@@ -13,7 +13,7 @@ class OptionCustomerGroupJSONSerializer(serializers.HyperlinkedModelSerializer):
                   'name')
 
 
-class CustomerGroupJSONSerializer(serializers.HyperlinkedModelSerializer):
+class CustomerGroupJSONSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomerGroup
         fields = ('id',
