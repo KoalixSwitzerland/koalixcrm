@@ -20,6 +20,10 @@ pip-log.txt
 .coverage
 .tox
 *~
+test_report/
+
+# Environment variables
+.env.local
 
 # IntelliJ
 *.iml

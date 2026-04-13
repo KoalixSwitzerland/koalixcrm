@@ -1,1 +1,0 @@
--r requirements/development_requirements.txt

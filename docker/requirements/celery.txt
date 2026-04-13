@@ -1,0 +1,5 @@
+celery==5.4.0
+kombu[sqs]>=5.3.0
+pycurl>=7.45.0
+boto3>=1.40.2
+requests>=2.32.0

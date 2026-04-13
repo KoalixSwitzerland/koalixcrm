@@ -1,0 +1,39 @@
+# docker/prod/Dockerfile.django
+#
+# Production Django container for koalixcrm.
+# Application code is COPIED into the image (no bind mounts).
+# Served via Gunicorn instead of Django runserver.
+
+FROM python:3.13
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libpq-dev \
+    libcurl4-openssl-dev \
+    libssl-dev \
+ && rm -rf /var/lib/apt/lists/*
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+WORKDIR /usr/src/app
+
+COPY docker/requirements/django.txt /usr/src/app/
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir -r django.txt && \
+    pip install --no-cache-dir gunicorn
+
+# Copy application code
+COPY koalixcrm /usr/src/app/koalixcrm
+COPY koalixcrm_microservices /usr/src/app/koalixcrm_microservices
+COPY koalixcrm_mq_commands /usr/src/app/koalixcrm_mq_commands
+COPY koalixcrm_utils /usr/src/app/koalixcrm_utils
+COPY projectsettings /usr/src/app/projectsettings
+COPY manage.py /usr/src/app/manage.py
+
+EXPOSE 8000
+
+COPY docker/prod/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+CMD ["/usr/local/bin/entrypoint.sh"]

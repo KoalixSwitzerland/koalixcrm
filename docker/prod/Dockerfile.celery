@@ -1,0 +1,29 @@
+# docker/prod/Dockerfile.celery
+#
+# Production Celery worker for koalixcrm PDF export microservice.
+# Application code is COPIED into the image (no bind mounts).
+
+FROM python:3.13
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libpq-dev \
+    libcurl4-openssl-dev \
+    libssl-dev \
+ && rm -rf /var/lib/apt/lists/*
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+WORKDIR /usr/src/app
+
+COPY docker/requirements/celery.txt /usr/src/app/
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir -r celery.txt
+
+# Copy application code
+COPY koalixcrm_microservices /usr/src/app/koalixcrm_microservices
+COPY koalixcrm_mq_commands /usr/src/app/koalixcrm_mq_commands
+COPY koalixcrm_utils /usr/src/app/koalixcrm_utils
+
+CMD ["celery", "-A", "koalixcrm_microservices.celery_app", "worker", "-l", "info", "-B"]
