@@ -11,6 +11,7 @@ from koalixcrm.contracts.models.sales_document import (
 )
 from koalixcrm.contracts.models.sales_document_position import SalesDocumentPosition
 from koalixcrm.contracts.admin.sales_document_position_admin import SalesDocumentInlinePosition
+from koalixcrm.contracts.admin.sales_document_media_admin import SalesDocumentMediaInline
 from koalixcrm.products.models.product_type import ProductType
 import koalixcrm.contracts.models.calculations
 
@@ -114,7 +115,7 @@ class OptionSalesDocument(admin.ModelAdmin):
     save_as = True
     inlines = [SalesDocumentInlinePosition, SalesDocumentTextParagraph,
                SalesDocumentPostalAddress, SalesDocumentPhoneAddress,
-               SalesDocumentEmailAddress]
+               SalesDocumentEmailAddress, SalesDocumentMediaInline]
 
     def response_add(self, request, obj, post_url_continue=None):
         new_obj = self.after_saving_model_and_related_inlines(request, obj)
@@ -129,7 +130,7 @@ class OptionSalesDocument(admin.ModelAdmin):
 
     def after_saving_model_and_related_inlines(self, request, obj):
         try:
-            koalixcrm.contract_object_management.models.calculations.Calculations.calculate_document_price(obj, date.today())
+            koalixcrm.contracts.models.calculations.Calculations.calculate_document_price(obj, date.today())
             self.message_user(request, "Successfully calculated Prices")
         except (ProductType.NoPriceFound, SalesDocumentPosition.NoPriceFound) as e:
             self.message_user(request, "Unsuccessful in updating the Prices " + e.__str__(), level=messages.ERROR)
@@ -149,7 +150,7 @@ class OptionSalesDocument(admin.ModelAdmin):
             response = CreateNewDocumentView.create_new_document(self,
                                                                  request,
                                                                  obj,
-                                                                 koalixcrm.contract_object_management.models.quote.Quote,
+                                                                 koalixcrm.contracts.models.quote.Quote,
                                                                  ("/admin/contract_object_management/"+obj.__class__.__name__.lower()+"/"))
             return response
 
@@ -161,7 +162,7 @@ class OptionSalesDocument(admin.ModelAdmin):
             response = CreateNewDocumentView.create_new_document(self,
                                                                  request,
                                                                  obj,
-                                                                 koalixcrm.contract_object_management.models.invoice.Invoice,
+                                                                 koalixcrm.contracts.models.invoice.Invoice,
                                                                  ("/admin/contract_object_management/"+obj.__class__.__name__.lower()+"/"))
             return response
 
@@ -173,7 +174,7 @@ class OptionSalesDocument(admin.ModelAdmin):
             response = CreateNewDocumentView.create_new_document(self,
                                                                  request,
                                                                  obj,
-                                                                 koalixcrm.contract_object_management.models.purchase_confirmation.PurchaseConfirmation,
+                                                                 koalixcrm.contracts.models.purchase_confirmation.PurchaseConfirmation,
                                                                  ("/admin/contract_object_management/"+obj.__class__.__name__.lower()+"/"))
             return response
 
@@ -185,7 +186,7 @@ class OptionSalesDocument(admin.ModelAdmin):
             response = CreateNewDocumentView.create_new_document(self,
                                                                  request,
                                                                  obj,
-                                                                 koalixcrm.contract_object_management.models.delivery_note.DeliveryNote,
+                                                                 koalixcrm.contracts.models.delivery_note.DeliveryNote,
                                                                  ("/admin/contract_object_management/"+obj.__class__.__name__.lower()+"/"))
             return response
 
@@ -197,7 +198,7 @@ class OptionSalesDocument(admin.ModelAdmin):
             response = CreateNewDocumentView.create_new_document(self,
                                                                  request,
                                                                  obj,
-                                                                 koalixcrm.contract_object_management.models.payment_reminder.PaymentReminder,
+                                                                 koalixcrm.contracts.models.payment_reminder.PaymentReminder,
                                                                  ("/admin/contract_object_management/"+obj.__class__.__name__.lower()+"/"))
             return response
 
@@ -209,7 +210,7 @@ class OptionSalesDocument(admin.ModelAdmin):
             response = CreateNewDocumentView.create_new_document(self,
                                                                  request,
                                                                  obj,
-                                                                 koalixcrm.contract_object_management.models.purchase_order.PurchaseOrder,
+                                                                 koalixcrm.contracts.models.purchase_order.PurchaseOrder,
                                                                  ("/admin/contract_object_management/"+obj.__class__.__name__.lower()+"/"))
             return response
 
@@ -229,20 +230,30 @@ class OptionSalesDocument(admin.ModelAdmin):
 
     def create_pdf_async(self, request, queryset):
         from koalixcrm.crm.models.pdf_export_process import PDFExportProcess
+        queued = 0
         for obj in queryset:
+            if not obj.template_set:
+                self.message_user(
+                    request,
+                    _("Template-set missing for %(doc)s") % {"doc": obj},
+                    level=messages.ERROR,
+                )
+                continue
             PDFExportProcess.objects.create(
                 source_model=obj.__class__.__name__,
                 source_id=obj.id,
                 template_set=obj.template_set,
                 triggered_by=request.user,
             )
-        self.message_user(
-            request,
-            _("PDF export job(s) queued. Check PDF Export Processes for status."),
-            level=messages.SUCCESS,
-        )
+            queued += 1
+        if queued:
+            self.message_user(
+                request,
+                _("%(count)d PDF export job(s) queued. Check PDF Export Processes for status.") % {"count": queued},
+                level=messages.SUCCESS,
+            )
 
-    create_pdf_async.short_description = _("Create PDF (async)")
+    create_pdf_async.short_description = _("Create PDF")
 
     def create_project(self, request, queryset):
         from koalixcrm.crm.views.create_task import CreateTaskView

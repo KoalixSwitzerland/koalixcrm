@@ -7,3 +7,4 @@ from koalixcrm.contracts.models.purchase_confirmation import *
 from koalixcrm.contracts.models.purchase_order import *
 from koalixcrm.contracts.models.delivery_note import *
 from koalixcrm.contracts.models.payment_reminder import *
+from koalixcrm.contracts.models.sales_document_media import *

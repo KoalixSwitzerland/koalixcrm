@@ -29,7 +29,7 @@ class OptionQuote(OptionSalesDocument):
                'create_delivery_note',
                'create_purchase_order',
                'create_project',
-               'create_pdf']
+               'create_pdf_async']
 
     pluginProcessor = PluginProcessor()
     inlines.extend(pluginProcessor.getPluginAdditions("quoteInlines"))

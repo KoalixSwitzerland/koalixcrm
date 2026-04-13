@@ -19,7 +19,7 @@ class OptionPurchaseOrder(OptionSalesDocument):
     save_as = OptionSalesDocument.save_as
     inlines = OptionSalesDocument.inlines
     actions = ['create_purchase_confirmation', 'create_invoice', 'create_quote',
-               'create_delivery_note', 'create_pdf',
+               'create_delivery_note', 'create_pdf_async',
                'register_invoice_in_accounting', 'register_payment_in_accounting',]
 
     pluginProcessor = PluginProcessor()

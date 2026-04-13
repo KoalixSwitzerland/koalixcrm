@@ -108,7 +108,7 @@ class OptionContract(admin.ModelAdmin):
             response = CreateNewDocumentView.create_new_document(self,
                                                                  request,
                                                                  obj,
-                                                                 koalixcrm.contract_object_management.models.quote.Quote,
+                                                                 koalixcrm.contracts.models.quote.Quote,
                                                                  ("/admin/contract_object_management/"+obj.__class__.__name__.lower()+"/"))
             return response
 
@@ -120,7 +120,7 @@ class OptionContract(admin.ModelAdmin):
             response = CreateNewDocumentView.create_new_document(self,
                                                                  request,
                                                                  obj,
-                                                                 koalixcrm.contract_object_management.models.invoice.Invoice,
+                                                                 koalixcrm.contracts.models.invoice.Invoice,
                                                                  ("/admin/contract_object_management/"+obj.__class__.__name__.lower()+"/"))
             return response
 
@@ -132,7 +132,7 @@ class OptionContract(admin.ModelAdmin):
             response = CreateNewDocumentView.create_new_document(self,
                                                                  request,
                                                                  obj,
-                                                                 koalixcrm.contract_object_management.models.purchase_confirmation.PurchaseConfirmation,
+                                                                 koalixcrm.contracts.models.purchase_confirmation.PurchaseConfirmation,
                                                                  ("/admin/contract_object_management/"+obj.__class__.__name__.lower()+"/"))
             return response
 
@@ -144,7 +144,7 @@ class OptionContract(admin.ModelAdmin):
             response = CreateNewDocumentView.create_new_document(self,
                                                                  request,
                                                                  obj,
-                                                                 koalixcrm.contract_object_management.models.delivery_note.DeliveryNote,
+                                                                 koalixcrm.contracts.models.delivery_note.DeliveryNote,
                                                                  ("/admin/contract_object_management/"+obj.__class__.__name__.lower()+"/"))
             return response
 
@@ -156,7 +156,7 @@ class OptionContract(admin.ModelAdmin):
             response = CreateNewDocumentView.create_new_document(self,
                                                                  request,
                                                                  obj,
-                                                                 koalixcrm.contract_object_management.models.payment_reminder.PaymentReminder,
+                                                                 koalixcrm.contracts.models.payment_reminder.PaymentReminder,
                                                                  ("/admin/contract_object_management/"+obj.__class__.__name__.lower()+"/"))
             return response
 
@@ -168,7 +168,7 @@ class OptionContract(admin.ModelAdmin):
             response = CreateNewDocumentView.create_new_document(self,
                                                                  request,
                                                                  obj,
-                                                                 koalixcrm.contract_object_management.models.purchase_order.PurchaseOrder,
+                                                                 koalixcrm.contracts.models.purchase_order.PurchaseOrder,
                                                                  ("/admin/contract_object_management/"+obj.__class__.__name__.lower()+"/"))
             return response
 

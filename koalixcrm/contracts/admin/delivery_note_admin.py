@@ -17,4 +17,4 @@ class OptionDeliveryNote(OptionSalesDocument):
 
     save_as = OptionSalesDocument.save_as
     inlines = OptionSalesDocument.inlines
-    actions = ['create_purchase_confirmation', 'create_invoice','create_pdf']
+    actions = ['create_purchase_confirmation', 'create_invoice', 'create_pdf_async']

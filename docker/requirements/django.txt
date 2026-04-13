@@ -9,6 +9,7 @@ djangorestframework==3.16.0
 djangorestframework-xml==2.0.0
 markdown==3.8
 django-filter==25.1
+django-storages[s3]==1.14.4
 pandas==2.2.3
 matplotlib==3.10.3
 PyJWT[crypto]>=2.8.0

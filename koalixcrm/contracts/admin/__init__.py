@@ -17,7 +17,10 @@ from koalixcrm.contracts.admin.payment_reminder_admin import OptionPaymentRemind
 from koalixcrm.contracts.admin.purchase_order_admin import OptionPurchaseOrder  # noqa: F401
 from koalixcrm.contracts.admin.sales_document_admin import OptionSalesDocument  # noqa: F401
 from koalixcrm.contracts.admin.sales_document_position_admin import SalesDocumentInlinePosition  # noqa: F401
+from koalixcrm.contracts.admin.sales_document_media_admin import SalesDocumentMediaAdmin, SalesDocumentMediaInline  # noqa: F401
+from koalixcrm.contracts.models.sales_document_media import SalesDocumentMedia
 
+admin.site.register(SalesDocumentMedia, SalesDocumentMediaAdmin)
 admin.site.register(Contract, OptionContract)
 admin.site.register(Quote, OptionQuote)
 admin.site.register(PurchaseConfirmation, OptionPurchaseConfirmation)

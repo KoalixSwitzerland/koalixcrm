@@ -27,7 +27,7 @@ class OptionPaymentReminder(OptionSalesDocument):
                'create_invoice',
                'create_quote',
                'create_delivery_note',
-               'create_pdf',
+               'create_pdf_async',
                'register_invoice_in_accounting',
                'register_payment_in_accounting']
 

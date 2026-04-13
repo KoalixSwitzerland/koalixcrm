@@ -4,11 +4,10 @@ from django.db import models
 from django.contrib import admin
 from django.utils.translation import gettext as _
 
-from filebrowser.fields import FileBrowseField
-
 from koalixcrm.djangoUserExtension.models.text_paragraph import InlineTextParagraph
 from koalixcrm.global_support_functions import xstr
 from koalixcrm.crm.exceptions import *
+from koalixcrm_utils.s3_storage import TemplateFileStorage
 
 
 class DocumentTemplate(models.Model):
@@ -16,16 +15,22 @@ class DocumentTemplate(models.Model):
                              max_length=100,
                              blank=True,
                              null=True)
-    xsl_file = FileBrowseField(verbose_name=_("XSL File"),
-                               max_length=200)
-    fop_config_file = FileBrowseField(verbose_name=_("FOP Configuration File"),
-                                      blank=True,
-                                      null=True,
-                                      max_length=200)
-    logo = FileBrowseField(verbose_name=_("Logo for the PDF generation"),
-                           blank=True,
-                           null=True,
-                           max_length=200)
+    xsl_file = models.FileField(verbose_name=_("XSL File"),
+                                storage=TemplateFileStorage,
+                                upload_to="xsl/",
+                                max_length=200)
+    fop_config_file = models.FileField(verbose_name=_("FOP Configuration File"),
+                                       storage=TemplateFileStorage,
+                                       upload_to="fop_config/",
+                                       blank=True,
+                                       null=True,
+                                       max_length=200)
+    logo = models.FileField(verbose_name=_("Logo for the PDF generation"),
+                            storage=TemplateFileStorage,
+                            upload_to="logos/",
+                            blank=True,
+                            null=True,
+                            max_length=200)
 
     def get_fop_config_file(self):
         if self.fop_config_file:

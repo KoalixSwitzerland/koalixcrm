@@ -114,11 +114,10 @@ class SalesDocument(models.Model):
 
     def serialize_to_xml(self):
         from koalixcrm.crm.models import PostalAddressForContact
-        from koalixcrm.crm.models import Currency
-        from koalixcrm.crm.models import PurchaseOrder
-        from koalixcrm.crm.models import SalesDocument
-        from koalixcrm.crm.models import SalesDocumentPosition
         from koalixcrm.crm.models import Contact
+        from koalixcrm.products.models import Currency
+        from koalixcrm.contracts.models.purchase_order import PurchaseOrder
+        from koalixcrm.contracts.models.sales_document_position import SalesDocumentPosition
         from django.contrib import auth
         objects = [self, ]
         position_class = SalesDocumentPosition
@@ -153,7 +152,7 @@ class SalesDocument(models.Model):
 
     def create_sales_document(self, calling_model):
         self.staff = calling_model.staff
-        if isinstance(calling_model, koalixcrm.contract_object_management.models.contract.Contract):
+        if isinstance(calling_model, koalixcrm.contracts.models.contract.Contract):
             self.contract = calling_model
             self.customer = calling_model.default_customer
             self.currency = calling_model.default_currency
