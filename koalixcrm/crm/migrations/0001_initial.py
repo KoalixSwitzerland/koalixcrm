@@ -6,6 +6,7 @@ from django.conf import settings
 from django.db import migrations, models
 
 
+from koalixcrm.migration_utils import CreateModelIfNotExists, AddFieldIfNotExists
 class Migration(migrations.Migration):
 
     initial = True
@@ -15,7 +16,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='Call',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
@@ -28,7 +29,7 @@ class Migration(migrations.Migration):
                 ('staff', models.ForeignKey(blank=True, limit_choices_to={'is_staff': True}, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='db_relcallstaff', to=settings.AUTH_USER_MODEL, verbose_name='Staff')),
             ],
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='Contact',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
@@ -42,7 +43,7 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'Contact',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='CustomerBillingCycle',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
@@ -55,7 +56,7 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'Customer Billing Cycle',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='CustomerGroup',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
@@ -66,7 +67,7 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'Customer Groups',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='EmailAddress',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
@@ -77,7 +78,7 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'Email Address',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='PDFExportProcess',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
@@ -95,7 +96,7 @@ class Migration(migrations.Migration):
                 'ordering': ['-created_at'],
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='Person',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
@@ -111,7 +112,7 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'People',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='PhoneAddress',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
@@ -122,7 +123,7 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'Phone Address',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='PostalAddress',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
@@ -143,7 +144,7 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'Postal Address',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='TextParagraphInDocumentTemplate',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
@@ -155,7 +156,7 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'TextParagraphInDocumentTemplates',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='CallForContact',
             fields=[
                 ('call_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='crm.call')),
@@ -167,7 +168,7 @@ class Migration(migrations.Migration):
             },
             bases=('crm.call',),
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='VisitForContact',
             fields=[
                 ('call_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='crm.call')),
@@ -179,7 +180,7 @@ class Migration(migrations.Migration):
             },
             bases=('crm.call',),
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='Customer',
             fields=[
                 ('contact_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='crm.contact')),
@@ -191,7 +192,7 @@ class Migration(migrations.Migration):
             },
             bases=('crm.contact',),
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='Supplier',
             fields=[
                 ('contact_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='crm.contact')),
@@ -203,7 +204,7 @@ class Migration(migrations.Migration):
             },
             bases=('crm.contact',),
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='ContactPersonAssociation',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
@@ -214,7 +215,7 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'Contacts',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='EmailAddressForContact',
             fields=[
                 ('emailaddress_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='crm.emailaddress')),

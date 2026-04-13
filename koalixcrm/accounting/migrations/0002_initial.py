@@ -5,6 +5,7 @@ from django.conf import settings
 from django.db import migrations, models
 
 
+from koalixcrm.migration_utils import CreateModelIfNotExists, AddFieldIfNotExists
 class Migration(migrations.Migration):
 
     initial = True
@@ -17,52 +18,52 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='accountingperiod',
             name='template_profit_loss_statement',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='db_profit_loss_statement_template_set', to='djangoUserExtension.documenttemplate', verbose_name='Referred template for profit, loss statement'),
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='accountingperiod',
             name='template_set_balance_sheet',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='db_balancesheet_template_set', to='djangoUserExtension.documenttemplate', verbose_name='Referred template for balance sheet'),
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='booking',
             name='accounting_period',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='accounting.accountingperiod', verbose_name='AccountingPeriod'),
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='booking',
             name='booking_reference',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='contract_object_management.invoice', verbose_name='Booking Reference'),
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='booking',
             name='from_account',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='db_booking_fromaccount', to='accounting.account', verbose_name='From Account'),
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='booking',
             name='last_modified_by',
             field=models.ForeignKey(blank=True, limit_choices_to={'is_staff': True}, on_delete=django.db.models.deletion.CASCADE, related_name='db_booking_lstmodified', to=settings.AUTH_USER_MODEL, verbose_name='Last modified by'),
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='booking',
             name='staff',
             field=models.ForeignKey(blank=True, limit_choices_to={'is_staff': True}, on_delete=django.db.models.deletion.CASCADE, related_name='db_booking_refstaff', to=settings.AUTH_USER_MODEL, verbose_name='Reference Staff'),
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='booking',
             name='to_account',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='db_booking_toaccount', to='accounting.account', verbose_name='To Account'),
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='productcategory',
             name='loss_account',
             field=models.ForeignKey(limit_choices_to={'account_type': 'S'}, on_delete=django.db.models.deletion.CASCADE, related_name='db_loss_account', to='accounting.account', verbose_name='Loss Account'),
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='productcategory',
             name='profit_account',
             field=models.ForeignKey(limit_choices_to={'account_type': 'E'}, on_delete=django.db.models.deletion.CASCADE, related_name='db_profit_account', to='accounting.account', verbose_name='Profit Account'),

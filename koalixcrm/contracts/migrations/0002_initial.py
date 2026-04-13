@@ -6,6 +6,7 @@ from django.conf import settings
 from django.db import migrations, models
 
 
+from koalixcrm.migration_utils import CreateModelIfNotExists, AddFieldIfNotExists
 class Migration(migrations.Migration):
 
     initial = True
@@ -19,7 +20,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='Position',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
@@ -43,37 +44,37 @@ class Migration(migrations.Migration):
                 'ordering': ['position_number'],
             },
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='contract',
             name='default_currency',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='products.currency', verbose_name='Default Currency'),
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='contract',
             name='default_customer',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='crm.customer', verbose_name='Default Customer'),
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='contract',
             name='default_supplier',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='crm.supplier', verbose_name='Default Supplier'),
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='contract',
             name='default_template_set',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='djangoUserExtension.templateset', verbose_name='Default Template Set'),
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='contract',
             name='last_modified_by',
             field=models.ForeignKey(limit_choices_to={'is_staff': True}, on_delete=django.db.models.deletion.CASCADE, related_name='db_contractlstmodified', to=settings.AUTH_USER_MODEL, verbose_name='Last modified by'),
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='contract',
             name='staff',
             field=models.ForeignKey(blank=True, limit_choices_to={'is_staff': True}, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='db_relcontractstaff', to=settings.AUTH_USER_MODEL, verbose_name='Staff'),
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='DeliveryNote',
             fields=[
                 ('salesdocument_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='contract_object_management.salesdocument')),
@@ -87,7 +88,7 @@ class Migration(migrations.Migration):
             },
             bases=('contract_object_management.salesdocument',),
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='Invoice',
             fields=[
                 ('salesdocument_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='contract_object_management.salesdocument')),
@@ -102,7 +103,7 @@ class Migration(migrations.Migration):
             },
             bases=('contract_object_management.salesdocument',),
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='PaymentReminder',
             fields=[
                 ('salesdocument_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='contract_object_management.salesdocument')),
@@ -118,7 +119,7 @@ class Migration(migrations.Migration):
             },
             bases=('contract_object_management.salesdocument',),
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='PurchaseConfirmation',
             fields=[
                 ('salesdocument_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='contract_object_management.salesdocument')),
@@ -130,7 +131,7 @@ class Migration(migrations.Migration):
             },
             bases=('contract_object_management.salesdocument',),
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='Quote',
             fields=[
                 ('salesdocument_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='contract_object_management.salesdocument')),
@@ -144,42 +145,42 @@ class Migration(migrations.Migration):
             },
             bases=('contract_object_management.salesdocument',),
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='salesdocument',
             name='contract',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='contract_object_management.contract', verbose_name='Contract'),
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='salesdocument',
             name='currency',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='products.currency', verbose_name='Currency'),
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='salesdocument',
             name='customer',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.customer', verbose_name='Customer'),
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='salesdocument',
             name='derived_from_sales_document',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='contract_object_management.salesdocument'),
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='salesdocument',
             name='last_modified_by',
             field=models.ForeignKey(blank='True', limit_choices_to={'is_staff': True}, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='db_lstscmodified', to=settings.AUTH_USER_MODEL, verbose_name='Last modified by'),
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='salesdocument',
             name='staff',
             field=models.ForeignKey(blank=True, limit_choices_to={'is_staff': True}, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='db_relscstaff', to=settings.AUTH_USER_MODEL, verbose_name='Staff'),
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='salesdocument',
             name='template_set',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='djangoUserExtension.documenttemplate', verbose_name='Referred Template'),
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='EmailAddressForContract',
             fields=[
                 ('emailaddress_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='crm.emailaddress')),
@@ -193,7 +194,7 @@ class Migration(migrations.Migration):
             },
             bases=('crm.emailaddress',),
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='EmailAddressForSalesDocument',
             fields=[
                 ('emailaddress_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='crm.emailaddress')),
@@ -207,7 +208,7 @@ class Migration(migrations.Migration):
             },
             bases=('crm.emailaddress',),
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='PhoneAddressForContract',
             fields=[
                 ('phoneaddress_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='crm.phoneaddress')),
@@ -221,7 +222,7 @@ class Migration(migrations.Migration):
             },
             bases=('crm.phoneaddress',),
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='PhoneAddressForSalesDocument',
             fields=[
                 ('phoneaddress_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='crm.phoneaddress')),
@@ -235,7 +236,7 @@ class Migration(migrations.Migration):
             },
             bases=('crm.phoneaddress',),
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='PostalAddressForContract',
             fields=[
                 ('postaladdress_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='crm.postaladdress')),
@@ -249,7 +250,7 @@ class Migration(migrations.Migration):
             },
             bases=('crm.postaladdress',),
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='PostalAddressForSalesDocument',
             fields=[
                 ('postaladdress_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='crm.postaladdress')),
@@ -263,7 +264,7 @@ class Migration(migrations.Migration):
             },
             bases=('crm.postaladdress',),
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='TextParagraphInSalesDocument',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
@@ -277,7 +278,7 @@ class Migration(migrations.Migration):
                 'db_table': 'crm_textparagraphinsalesdocument',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='PurchaseOrder',
             fields=[
                 ('salesdocument_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='contract_object_management.salesdocument')),
@@ -291,7 +292,7 @@ class Migration(migrations.Migration):
             },
             bases=('contract_object_management.salesdocument',),
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='SalesDocumentPosition',
             fields=[
                 ('position_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='contract_object_management.position')),

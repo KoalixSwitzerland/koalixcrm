@@ -6,6 +6,7 @@ from django.conf import settings
 from django.db import migrations, models
 
 
+from koalixcrm.migration_utils import CreateModelIfNotExists, AddFieldIfNotExists
 class Migration(migrations.Migration):
 
     initial = True
@@ -17,7 +18,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='DocumentTemplate',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
@@ -31,7 +32,7 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'Document templates',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='TemplateSet',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
@@ -42,7 +43,7 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'Template-sets',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='BalanceSheetTemplate',
             fields=[
                 ('documenttemplate_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='djangoUserExtension.documenttemplate')),
@@ -53,7 +54,7 @@ class Migration(migrations.Migration):
             },
             bases=('djangoUserExtension.documenttemplate',),
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='DeliveryNoteTemplate',
             fields=[
                 ('documenttemplate_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='djangoUserExtension.documenttemplate')),
@@ -64,7 +65,7 @@ class Migration(migrations.Migration):
             },
             bases=('djangoUserExtension.documenttemplate',),
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='InvoiceTemplate',
             fields=[
                 ('documenttemplate_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='djangoUserExtension.documenttemplate')),
@@ -75,7 +76,7 @@ class Migration(migrations.Migration):
             },
             bases=('djangoUserExtension.documenttemplate',),
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='MonthlyProjectSummaryTemplate',
             fields=[
                 ('documenttemplate_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='djangoUserExtension.documenttemplate')),
@@ -86,7 +87,7 @@ class Migration(migrations.Migration):
             },
             bases=('djangoUserExtension.documenttemplate',),
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='PaymentReminderTemplate',
             fields=[
                 ('documenttemplate_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='djangoUserExtension.documenttemplate')),
@@ -97,7 +98,7 @@ class Migration(migrations.Migration):
             },
             bases=('djangoUserExtension.documenttemplate',),
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='ProfitLossStatementTemplate',
             fields=[
                 ('documenttemplate_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='djangoUserExtension.documenttemplate')),
@@ -108,7 +109,7 @@ class Migration(migrations.Migration):
             },
             bases=('djangoUserExtension.documenttemplate',),
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='PurchaseConfirmationTemplate',
             fields=[
                 ('documenttemplate_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='djangoUserExtension.documenttemplate')),
@@ -119,7 +120,7 @@ class Migration(migrations.Migration):
             },
             bases=('djangoUserExtension.documenttemplate',),
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='PurchaseOrderTemplate',
             fields=[
                 ('documenttemplate_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='djangoUserExtension.documenttemplate')),
@@ -130,7 +131,7 @@ class Migration(migrations.Migration):
             },
             bases=('djangoUserExtension.documenttemplate',),
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='QuoteTemplate',
             fields=[
                 ('documenttemplate_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='djangoUserExtension.documenttemplate')),
@@ -141,7 +142,7 @@ class Migration(migrations.Migration):
             },
             bases=('djangoUserExtension.documenttemplate',),
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='WorkReportTemplate',
             fields=[
                 ('documenttemplate_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='djangoUserExtension.documenttemplate')),
@@ -152,7 +153,7 @@ class Migration(migrations.Migration):
             },
             bases=('djangoUserExtension.documenttemplate',),
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='UserExtension',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
@@ -165,7 +166,7 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'User Extension',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='UserExtensionEmailAddress',
             fields=[
                 ('emailaddress_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='crm.emailaddress')),
@@ -178,7 +179,7 @@ class Migration(migrations.Migration):
             },
             bases=('crm.emailaddress',),
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='UserExtensionPhoneAddress',
             fields=[
                 ('phoneaddress_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='crm.phoneaddress')),
@@ -191,7 +192,7 @@ class Migration(migrations.Migration):
             },
             bases=('crm.phoneaddress',),
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='UserExtensionPostalAddress',
             fields=[
                 ('postaladdress_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='crm.postaladdress')),
@@ -204,52 +205,52 @@ class Migration(migrations.Migration):
             },
             bases=('crm.postaladdress',),
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='templateset',
             name='balance_sheet_statement_template',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='djangoUserExtension.balancesheettemplate'),
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='templateset',
             name='delivery_note_template',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='djangoUserExtension.deliverynotetemplate'),
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='templateset',
             name='invoice_template',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='djangoUserExtension.invoicetemplate'),
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='templateset',
             name='monthly_project_summary_template',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='djangoUserExtension.monthlyprojectsummarytemplate'),
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='templateset',
             name='payment_reminder_template',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='djangoUserExtension.paymentremindertemplate'),
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='templateset',
             name='profit_loss_statement_template',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='djangoUserExtension.profitlossstatementtemplate'),
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='templateset',
             name='purchase_confirmation_template',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='djangoUserExtension.purchaseconfirmationtemplate'),
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='templateset',
             name='purchase_order_template',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='djangoUserExtension.purchaseordertemplate'),
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='templateset',
             name='quote_template',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='djangoUserExtension.quotetemplate'),
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='templateset',
             name='work_report_template',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='djangoUserExtension.workreporttemplate'),

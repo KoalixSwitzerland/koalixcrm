@@ -3,6 +3,7 @@
 from django.db import migrations, models
 
 
+from koalixcrm.migration_utils import CreateModelIfNotExists, AddFieldIfNotExists
 class Migration(migrations.Migration):
 
     initial = True
@@ -11,7 +12,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='Account',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
@@ -30,7 +31,7 @@ class Migration(migrations.Migration):
                 'ordering': ['account_number'],
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='AccountingPeriod',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
@@ -43,7 +44,7 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'Accounting Periods',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='Booking',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
@@ -58,7 +59,7 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'Bookings',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='ProductCategory',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),

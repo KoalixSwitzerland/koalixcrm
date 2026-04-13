@@ -5,6 +5,7 @@ import filebrowser.fields
 from django.db import migrations, models
 
 
+from koalixcrm.migration_utils import CreateModelIfNotExists, AddFieldIfNotExists
 class Migration(migrations.Migration):
 
     initial = True
@@ -15,7 +16,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='Subscription',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
@@ -26,7 +27,7 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'Subscriptions',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='SubscriptionEvent',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
@@ -39,7 +40,7 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'Subscription Events',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='SubscriptionType',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
@@ -56,7 +57,7 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'Subscription Types',
             },
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='subscription',
             name='subscription_type',
             field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='subscriptions.subscriptiontype', verbose_name='Subscription Type'),

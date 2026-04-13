@@ -5,6 +5,7 @@ from django.conf import settings
 from django.db import migrations, models
 
 
+from koalixcrm.migration_utils import CreateModelIfNotExists, AddFieldIfNotExists
 class Migration(migrations.Migration):
 
     initial = True
@@ -17,7 +18,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='AgreementStatus',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
@@ -31,7 +32,7 @@ class Migration(migrations.Migration):
                 'db_table': 'crm_agreementstatus',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='AgreementType',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
@@ -44,7 +45,7 @@ class Migration(migrations.Migration):
                 'db_table': 'crm_agreementtype',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='EstimationStatus',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
@@ -58,7 +59,7 @@ class Migration(migrations.Migration):
                 'db_table': 'crm_estimationstatus',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='Resource',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
@@ -67,7 +68,7 @@ class Migration(migrations.Migration):
                 'db_table': 'crm_resource',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='ProjectLinkType',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
@@ -80,7 +81,7 @@ class Migration(migrations.Migration):
                 'db_table': 'crm_projectlinktype',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='ProjectStatus',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
@@ -94,7 +95,7 @@ class Migration(migrations.Migration):
                 'db_table': 'crm_projectstatus',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='ReportingPeriodStatus',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
@@ -108,7 +109,7 @@ class Migration(migrations.Migration):
                 'db_table': 'crm_reportingperiodstatus',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='ResourceType',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
@@ -121,7 +122,7 @@ class Migration(migrations.Migration):
                 'db_table': 'crm_resourcetype',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='TaskLinkType',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
@@ -134,7 +135,7 @@ class Migration(migrations.Migration):
                 'db_table': 'crm_tasklinktype',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='TaskStatus',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
@@ -148,7 +149,7 @@ class Migration(migrations.Migration):
                 'db_table': 'crm_taskstatus',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='HumanResource',
             fields=[
                 ('resource_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='reporting.resource')),
@@ -159,7 +160,7 @@ class Migration(migrations.Migration):
             },
             bases=('reporting.resource',),
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='Project',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
@@ -179,7 +180,7 @@ class Migration(migrations.Migration):
                 'db_table': 'crm_project',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='GenericProjectLink',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
@@ -196,7 +197,7 @@ class Migration(migrations.Migration):
                 'db_table': 'crm_genericprojectlink',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='ReportingPeriod',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
@@ -212,7 +213,7 @@ class Migration(migrations.Migration):
                 'db_table': 'crm_reportingperiod',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='ResourceManager',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
@@ -222,12 +223,12 @@ class Migration(migrations.Migration):
                 'db_table': 'crm_resourcemanager',
             },
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='resource',
             name='resource_manager',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='reporting.resourcemanager', verbose_name='Manager'),
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='ResourcePrice',
             fields=[
                 ('price_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='products.price')),
@@ -238,12 +239,12 @@ class Migration(migrations.Migration):
             },
             bases=('products.price',),
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='resource',
             name='resource_type',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='reporting.resourcetype', verbose_name='Resource Type'),
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='Task',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
@@ -259,7 +260,7 @@ class Migration(migrations.Migration):
                 'db_table': 'crm_task',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='Estimation',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
@@ -277,7 +278,7 @@ class Migration(migrations.Migration):
                 'db_table': 'crm_estimation',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='Agreement',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
@@ -297,7 +298,7 @@ class Migration(migrations.Migration):
                 'db_table': 'crm_agreement',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='GenericTaskLink',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
@@ -314,7 +315,7 @@ class Migration(migrations.Migration):
                 'db_table': 'crm_generictasklink',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='Work',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),

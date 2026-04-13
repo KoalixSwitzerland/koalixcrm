@@ -5,6 +5,7 @@ from django.conf import settings
 from django.db import migrations, models
 
 
+from koalixcrm.migration_utils import CreateModelIfNotExists, AddFieldIfNotExists
 class Migration(migrations.Migration):
 
     initial = True
@@ -16,72 +17,72 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='pdfexportprocess',
             name='template_set',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='djangoUserExtension.documenttemplate', verbose_name='Template Set'),
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='pdfexportprocess',
             name='triggered_by',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL, verbose_name='Triggered By'),
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='person',
             name='companies',
             field=models.ManyToManyField(blank=True, through='crm.ContactPersonAssociation', to='crm.contact', verbose_name='Works at'),
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='contactpersonassociation',
             name='person',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='contact_association', to='crm.person'),
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='textparagraphindocumenttemplate',
             name='document_template',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='djangoUserExtension.documenttemplate'),
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='callforcontact',
             name='company',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.contact'),
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='callforcontact',
             name='cperson',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='crm.person', verbose_name='Person'),
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='visitforcontact',
             name='company',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.contact'),
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='visitforcontact',
             name='cperson',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='crm.person', verbose_name='Person'),
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='visitforcontact',
             name='ref_call',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='crm.callforcontact', verbose_name='Reference Call'),
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='customer',
             name='default_customer_billing_cycle',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.customerbillingcycle', verbose_name='Default Billing Cycle'),
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='customer',
             name='is_member_of',
             field=models.ManyToManyField(blank=True, to='crm.customergroup', verbose_name='Is member of'),
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='emailaddressforcontact',
             name='person',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.contact'),
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='PhoneAddressForContact',
             fields=[
                 ('phoneaddress_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='crm.phoneaddress')),
@@ -94,7 +95,7 @@ class Migration(migrations.Migration):
             },
             bases=('crm.phoneaddress',),
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='PostalAddressForContact',
             fields=[
                 ('postaladdress_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='crm.postaladdress')),

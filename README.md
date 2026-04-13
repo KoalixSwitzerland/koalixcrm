@@ -46,5 +46,79 @@ docker compose run --service-ports web python manage.py runserver 0.0.0.0:8000 -
 ## Release Process
 Information about the release process: [Release Process](https://github.com/scaphilo/koalixcrm/wiki/Release-Process)
 
+## Upgrade from 1.14.0 to v2.0.0
+
+v2.0.0 is a major release that restructures the monolithic `crm` app into independent Django apps:
+
+| New app | Moved from | Contains |
+| --- | --- | --- |
+| `accounting` | `accounting` (unchanged) | Account, AccountingPeriod, Booking, ProductCategory |
+| `contract_object_management` | `crm` | Contract, SalesDocument, Invoice, Quote, DeliveryNote, Position, ... |
+| `products` | `crm` | Currency, ProductType, Product, Tax, Unit, Price, ... |
+| `reporting` | `crm` | Project, Task, Work, ReportingPeriod, Agreement, Estimation, Resource, ... |
+| `crm` | `crm` (reduced) | Contact, Customer, Supplier, Person, Call, EmailAddress, PhoneAddress, PostalAddress, ... |
+| `djangoUserExtension` | `djangoUserExtension` (unchanged) | DocumentTemplate, TemplateSet, UserExtension, ... |
+| `subscriptions` | `subscriptions` (unchanged) | Subscription, SubscriptionEvent, SubscriptionType |
+
+All database table names remain unchanged (`crm_*` prefix) to preserve data compatibility.
+
+### Migration steps (PostgreSQL dump to v2.0.0)
+
+The upgrade requires three steps. Make sure you have a backup of your database before starting.
+
+**Prerequisites:**
+- A PostgreSQL dump from 1.14.0 (e.g. `auftraegekoalixnet_20230101.sql`)
+- The v2.0.0 codebase checked out
+- Python virtualenv activated
+
+**Step 1 -- Convert PostgreSQL dump to SQLite:**
+
+```bash
+python koalixcrm_utils/pg2sqlite.py your_dump.sql projectsettings/db.sqlite3
+```
+
+**Step 2 -- Extract legacy data and prepare for migration:**
+
+```bash
+python koalixcrm_utils/pre_migrate_cleanup.py
+```
+
+This detects the legacy database, extracts all data to `projectsettings/legacy_data.json`,
+and drops all tables so Django can recreate them with proper schemas.
+
+**Step 3 -- Run Django migrations to create the new schema:**
+
+```bash
+python manage.py migrate --settings=projectsettings.settings.development_docker_sqlite_settings
+```
+
+**Step 4 -- Import legacy data into the new schema:**
+
+```bash
+python koalixcrm_utils/pre_migrate_cleanup.py projectsettings/db.sqlite3 projectsettings/legacy_data.json import
+```
+
+This imports all data back, automatically handling:
+- Columns removed in v2.0.0 (e.g. `originalAmount` in Account) are skipped
+- Tables Django manages itself (`django_migrations`, `auth_permission`, `django_content_type`) are skipped
+- Foreign key relationships are preserved (all tables keep their original `crm_*` names)
+
+### Fresh install (no existing data)
+
+For a fresh v2.0.0 install without existing data, simply run:
+
+```bash
+python manage.py migrate --settings=projectsettings.settings.development_docker_sqlite_settings
+python manage.py createsuperuser --settings=projectsettings.settings.development_docker_sqlite_settings
+```
+
+### Migration utilities reference
+
+| File | Purpose |
+| --- | --- |
+| `koalixcrm_utils/pg2sqlite.py` | Converts a PostgreSQL dump file to SQLite3 |
+| `koalixcrm_utils/pre_migrate_cleanup.py` | Handles legacy data extraction, table cleanup, and data re-import |
+| `koalixcrm/migration_utils.py` | `CreateModelIfNotExists` and `AddFieldIfNotExists` -- migration operations that skip table/column creation when they already exist, allowing the same migrations to work for both fresh installs and upgrades |
+
 ## Update from version 1.12 to 1.14
 Some information about the update procedure from Version 1.12 to Version 1.14: [update](https://github.com/scaphilo/koalixcrm/wiki/Update) 

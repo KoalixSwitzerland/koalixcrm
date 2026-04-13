@@ -5,6 +5,7 @@ from django.conf import settings
 from django.db import migrations, models
 
 
+from koalixcrm.migration_utils import CreateModelIfNotExists, AddFieldIfNotExists
 class Migration(migrations.Migration):
 
     initial = True
@@ -16,7 +17,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='Currency',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
@@ -30,7 +31,7 @@ class Migration(migrations.Migration):
                 'db_table': 'crm_currency',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='ProductType',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
@@ -48,7 +49,7 @@ class Migration(migrations.Migration):
                 'db_table': 'crm_producttype',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='Product',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
@@ -59,7 +60,7 @@ class Migration(migrations.Migration):
                 'db_table': 'crm_product',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='CustomerGroupTransform',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
@@ -74,7 +75,7 @@ class Migration(migrations.Migration):
                 'db_table': 'crm_customergrouptransform',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='CurrencyTransform',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
@@ -89,7 +90,7 @@ class Migration(migrations.Migration):
                 'db_table': 'crm_currencytransform',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='Tax',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
@@ -104,12 +105,12 @@ class Migration(migrations.Migration):
                 'db_table': 'crm_tax',
             },
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='producttype',
             name='tax',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='products.tax'),
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='Unit',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
@@ -124,12 +125,12 @@ class Migration(migrations.Migration):
                 'db_table': 'crm_unit',
             },
         ),
-        migrations.AddField(
+        AddFieldIfNotExists(
             model_name='producttype',
             name='default_unit',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='products.unit', verbose_name='Unit'),
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='Price',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
@@ -146,7 +147,7 @@ class Migration(migrations.Migration):
                 'db_table': 'crm_price',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='UnitTransform',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
@@ -161,7 +162,7 @@ class Migration(migrations.Migration):
                 'db_table': 'crm_unittransform',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='ProductPrice',
             fields=[
                 ('price_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='products.price')),

@@ -3,6 +3,7 @@
 from django.db import migrations, models
 
 
+from koalixcrm.migration_utils import CreateModelIfNotExists, AddFieldIfNotExists
 class Migration(migrations.Migration):
 
     initial = True
@@ -11,7 +12,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='Contract',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
@@ -25,7 +26,7 @@ class Migration(migrations.Migration):
                 'db_table': 'crm_contract',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfNotExists(
             name='SalesDocument',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
