@@ -34,3 +34,10 @@ test_report/
 
 # Virtual environment
 venv_linux/
+
+# Database files
+*.sqlite3
+*.sql
+
+# Migration data exports
+legacy_data.json
