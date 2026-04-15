@@ -4,7 +4,7 @@ from django.test import LiveServerTestCase
 from django.contrib.auth.models import User
 
 from koalixcrm.crm_api_py.crm_api_client import KoalixCRMContactsAPIClient
-from koalixcrm.crm.factory.customer_group_factory import StandardCustomerGroupFactory
+from tests.factories.crm.customer_group_factory import StandardCustomerGroupFactory
 from koalixcrm.crm.models import CustomerGroup
 
 

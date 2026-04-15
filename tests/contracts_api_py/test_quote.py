@@ -4,11 +4,11 @@ from django.test import LiveServerTestCase
 from django.contrib.auth.models import User
 
 from koalixcrm.contracts_api_py.contracts_api_client import KoalixCRMContractsAPIClient
-from koalixcrm.contracts.factory.quote_factory import StandardQuoteFactory
-from koalixcrm.contracts.factory.contract_factory import StandardContractFactory
-from koalixcrm.crm.factory.customer_factory import StandardCustomerFactory
-from koalixcrm.crm.factory.customer_billing_cycle_factory import StandardCustomerBillingCycleFactory
-from koalixcrm.products.factory.currency_factory import StandardCurrencyFactory
+from tests.factories.contracts.quotation_factory import StandardQuoteFactory
+from tests.factories.contracts.contract_factory import StandardContractFactory
+from tests.factories.crm.customer_factory import StandardCustomerFactory
+from tests.factories.crm.customer_billing_cycle_factory import StandardCustomerBillingCycleFactory
+from tests.factories.settings.currency_factory import StandardCurrencyFactory
 from koalixcrm.contracts.models.quote import Quote
 
 

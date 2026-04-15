@@ -3,13 +3,13 @@ from django.test import LiveServerTestCase
 from django.contrib.auth.models import User
 
 from koalixcrm.reporting_api_py.reporting_api_client import KoalixCRMReportingAPIClient
-from koalixcrm.reporting.factory.agreement_factory import StandardAgreementToTaskFactory
-from koalixcrm.reporting.factory.task_factory import StandardTaskFactory
-from koalixcrm.reporting.factory.resource_factory import StandardResourceFactory
-from koalixcrm.reporting.factory.resource_price_factory import StandardResourcePriceFactory
-from koalixcrm.reporting.factory.agreement_type_factory import StandardAgreementTypeFactory
-from koalixcrm.reporting.factory.agreement_status_factory import AgreedAgreementStatusFactory
-from koalixcrm.products.factory.unit_factory import StandardUnitFactory
+from tests.factories.reporting.agreement_factory import StandardAgreementToTaskFactory
+from tests.factories.reporting.task_factory import StandardTaskFactory
+from tests.factories.reporting.resource_factory import StandardResourceFactory
+from tests.factories.reporting.resource_price_factory import StandardResourcePriceFactory
+from tests.factories.reporting.agreement_type_factory import StandardAgreementTypeFactory
+from tests.factories.reporting.agreement_status_factory import AgreedAgreementStatusFactory
+from tests.factories.settings.unit_factory import StandardUnitFactory
 
 
 class AgreementAPITest(LiveServerTestCase):

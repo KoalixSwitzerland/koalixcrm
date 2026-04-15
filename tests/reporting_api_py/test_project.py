@@ -3,10 +3,10 @@ from django.test import LiveServerTestCase
 from django.contrib.auth.models import User
 
 from koalixcrm.reporting_api_py.reporting_api_client import KoalixCRMReportingAPIClient
-from koalixcrm.reporting.factory.project_factory import StandardProjectFactory
-from koalixcrm.reporting.factory.project_status_factory import StartedProjectStatusFactory
-from koalixcrm.products.factory.currency_factory import StandardCurrencyFactory
-from koalixcrm.djangoUserExtension.factories.factory_template_set import StandardTemplateSetFactory
+from tests.factories.reporting.project_factory import StandardProjectFactory
+from tests.factories.reporting.project_status_factory import StartedProjectStatusFactory
+from tests.factories.settings.currency_factory import StandardCurrencyFactory
+from tests.factories.djangoUserExtension.factory_template_set import StandardTemplateSetFactory
 
 
 class ProjectAPITest(LiveServerTestCase):

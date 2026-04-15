@@ -3,10 +3,10 @@ from django.test import LiveServerTestCase
 from django.contrib.auth.models import User
 
 from koalixcrm.reporting_api_py.reporting_api_client import KoalixCRMReportingAPIClient
-from koalixcrm.reporting.factory.human_resource_factory import StandardHumanResourceFactory
-from koalixcrm.djangoUserExtension.factories.factory_user_extension import StandardUserExtensionFactory
-from koalixcrm.reporting.factory.resource_type_factory import StandardResourceTypeFactory
-from koalixcrm.reporting.factory.resource_manager_factory import StandardResourceManagerFactory
+from tests.factories.reporting.human_resource_factory import StandardHumanResourceFactory
+from tests.factories.djangoUserExtension.factory_user_extension import StandardUserExtensionFactory
+from tests.factories.reporting.resource_type_factory import StandardResourceTypeFactory
+from tests.factories.reporting.resource_manager_factory import StandardResourceManagerFactory
 
 
 class HumanResourceAPITest(LiveServerTestCase):

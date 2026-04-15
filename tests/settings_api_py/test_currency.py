@@ -4,7 +4,7 @@ from django.test import LiveServerTestCase
 from django.contrib.auth.models import User
 
 from koalixcrm.settings_api_py.settings_api_client import KoalixCRMSettingsAPIClient
-from koalixcrm.settings.factory.currency_factory import StandardCurrencyFactory
+from tests.factories.settings.currency_factory import StandardCurrencyFactory
 from koalixcrm.settings.models.currency import Currency
 
 

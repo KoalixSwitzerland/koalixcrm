@@ -2,12 +2,12 @@
 
 import pytest
 from django.test import TestCase
-from koalixcrm.contracts.factory.commercial_document_position_factory import StandardCommercialDocumentPositionFactory
-from koalixcrm.settings.factory.currency_factory import StandardCurrencyFactory
-from koalixcrm.contracts.factory.quotation_factory import StandardQuotationFactory
-from koalixcrm.crm.factory.user_factory import StaffUserFactory
-from koalixcrm.products.factory.product_type_factory import StandardProductTypeFactory
-from koalixcrm.products.factory.product_price_factory import StandardPriceFactory
+from tests.factories.contracts.commercial_document_position_factory import StandardCommercialDocumentPositionFactory
+from tests.factories.settings.currency_factory import StandardCurrencyFactory
+from tests.factories.contracts.quotation_factory import StandardQuotationFactory
+from tests.factories.crm.user_factory import StaffUserFactory
+from tests.factories.products.product_type_factory import StandardProductTypeFactory
+from tests.factories.products.product_price_factory import StandardPriceFactory
 from koalixcrm.reporting.models.task import Task
 from koalixcrm.crm.views.create_task import CreateTaskView
 

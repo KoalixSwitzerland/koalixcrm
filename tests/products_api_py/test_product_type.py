@@ -4,9 +4,9 @@ from django.test import LiveServerTestCase
 from django.contrib.auth.models import User
 
 from koalixcrm.products_api_py.products_api_client import KoalixCRMProductsAPIClient
-from koalixcrm.products.factory.product_type_factory import StandardProductTypeFactory
-from koalixcrm.settings.factory.unit_factory import StandardUnitFactory
-from koalixcrm.settings.factory.tax_factory import StandardTaxFactory
+from tests.factories.products.product_type_factory import StandardProductTypeFactory
+from tests.factories.settings.unit_factory import StandardUnitFactory
+from tests.factories.settings.tax_factory import StandardTaxFactory
 from koalixcrm.products.models.product_type import ProductType
 
 

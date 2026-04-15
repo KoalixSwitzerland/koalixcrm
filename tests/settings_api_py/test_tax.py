@@ -4,7 +4,7 @@ from django.test import LiveServerTestCase
 from django.contrib.auth.models import User
 
 from koalixcrm.settings_api_py.settings_api_client import KoalixCRMSettingsAPIClient
-from koalixcrm.settings.factory.tax_factory import StandardTaxFactory
+from tests.factories.settings.tax_factory import StandardTaxFactory
 from koalixcrm.settings.models.tax import Tax
 
 

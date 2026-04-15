@@ -4,7 +4,7 @@ from django.test import LiveServerTestCase
 from django.contrib.auth.models import User
 
 from koalixcrm.settings_api_py.settings_api_client import KoalixCRMSettingsAPIClient
-from koalixcrm.settings.factory.unit_factory import StandardUnitFactory
+from tests.factories.settings.unit_factory import StandardUnitFactory
 from koalixcrm.settings.models.unit import Unit
 
 
