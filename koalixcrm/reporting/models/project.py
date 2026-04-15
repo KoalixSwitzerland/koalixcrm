@@ -40,7 +40,7 @@ class Project(models.Model):
                                              verbose_name=_("Default Template Set"),
                                              null=True,
                                              blank=True)
-    default_currency = models.ForeignKey("products.Currency",
+    default_currency = models.ForeignKey("settings.Currency",
                                          on_delete=models.CASCADE,
                                          verbose_name=_("Default Currency"),
                                          null=False,

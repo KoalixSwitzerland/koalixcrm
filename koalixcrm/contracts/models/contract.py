@@ -80,7 +80,7 @@ class Contract(models.Model):
                                          verbose_name=_("Default Supplier"),
                                          null=True,
                                          blank=True)
-    default_currency = models.ForeignKey("products.Currency",
+    default_currency = models.ForeignKey("settings.Currency",
                                          on_delete=models.CASCADE,
                                          verbose_name=_("Default Currency"),
                                          blank=False,

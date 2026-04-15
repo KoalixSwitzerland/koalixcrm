@@ -6,7 +6,7 @@ from koalixcrm.reporting.models.agreement import Agreement
 from koalixcrm.reporting.factory.resource_factory import StandardResourceFactory
 from koalixcrm.reporting.factory.human_resource_factory import StandardHumanResourceFactory
 from koalixcrm.reporting.factory.task_factory import StandardTaskFactory
-from koalixcrm.products.factory.unit_factory import StandardUnitFactory
+from koalixcrm.settings.factory.unit_factory import StandardUnitFactory
 from koalixcrm.reporting.factory.resource_price_factory import StandardResourcePriceFactory
 from koalixcrm.reporting.factory.agreement_type_factory import StandardAgreementTypeFactory
 from koalixcrm.reporting.factory.agreement_status_factory import AgreedAgreementStatusFactory

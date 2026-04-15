@@ -79,7 +79,7 @@ class SalesDocument(models.Model):
                               verbose_name=_("Staff"),
                               related_name="db_relscstaff",
                               null=True)
-    currency = models.ForeignKey("products.Currency", on_delete=models.CASCADE, verbose_name=_("Currency"),
+    currency = models.ForeignKey("settings.Currency", on_delete=models.CASCADE, verbose_name=_("Currency"),
                                  blank=False, null=False)
     date_of_creation = models.DateTimeField(verbose_name=_("Created at"),
                                             auto_now_add=True)
@@ -115,7 +115,7 @@ class SalesDocument(models.Model):
     def serialize_to_xml(self):
         from koalixcrm.crm.models import PostalAddressForContact
         from koalixcrm.crm.models import Contact
-        from koalixcrm.products.models import Currency
+        from koalixcrm.settings.models import Currency
         from koalixcrm.contracts.models.purchase_order import PurchaseOrder
         from koalixcrm.contracts.models.sales_document_position import SalesDocumentPosition
         from django.contrib import auth

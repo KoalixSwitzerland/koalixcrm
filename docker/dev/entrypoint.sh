@@ -10,6 +10,7 @@ set -e
 
 export DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE:-projectsettings.settings.development_docker_settings}
 
+python manage.py sync_split_migrations
 python manage.py migrate --noinput
 
 python manage.py collectstatic --noinput

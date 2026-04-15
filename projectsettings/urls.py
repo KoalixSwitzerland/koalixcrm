@@ -17,9 +17,12 @@ from koalixcrm.crm_api_py.crm_api import (
     SupplierViewSet, PersonViewSet, ContactViewSet,
 )
 from koalixcrm.products_api_py.products_api import (
-    CurrencyViewSet, TaxViewSet, UnitViewSet, ProductTypeViewSet,
-    ProductViewSet, ProductPriceViewSet, CurrencyTransformViewSet,
-    UnitTransformViewSet, CustomerGroupTransformViewSet,
+    ProductTypeViewSet, ProductViewSet, ProductPriceViewSet,
+    CustomerGroupTransformViewSet,
+)
+from koalixcrm.settings_api_py.settings_api import (
+    CurrencyViewSet, TaxViewSet, UnitViewSet,
+    CurrencyTransformViewSet, UnitTransformViewSet,
 )
 from koalixcrm.contracts_api_py.contracts_api import (
     ContractViewSet, InvoiceViewSet, QuoteViewSet,
@@ -57,15 +60,16 @@ router.register(r'customer_groups', CustomerGroupViewSet)
 router.register(r'suppliers', SupplierViewSet)
 router.register(r'persons', PersonViewSet)
 router.register(r'contacts', ContactViewSet)
-# Products
+# Settings (shared value objects)
 router.register(r'currencies', CurrencyViewSet)
-router.register(r'products', ProductTypeViewSet)
 router.register(r'taxes', TaxViewSet)
 router.register(r'units', UnitViewSet)
-router.register(r'product_items', ProductViewSet)
-router.register(r'product_prices', ProductPriceViewSet)
 router.register(r'currency_transforms', CurrencyTransformViewSet)
 router.register(r'unit_transforms', UnitTransformViewSet)
+# Products
+router.register(r'products', ProductTypeViewSet)
+router.register(r'product_items', ProductViewSet)
+router.register(r'product_prices', ProductPriceViewSet)
 router.register(r'customer_group_transforms', CustomerGroupTransformViewSet)
 # Contract Object Management
 router.register(r'contracts', ContractViewSet)

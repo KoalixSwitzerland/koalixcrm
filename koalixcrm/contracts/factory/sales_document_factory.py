@@ -7,7 +7,7 @@ from koalixcrm.contracts.models.sales_document import SalesDocument
 from koalixcrm.crm.factory.user_factory import StaffUserFactory
 from koalixcrm.contracts.factory.contract_factory import StandardContractFactory
 from koalixcrm.crm.factory.customer_factory import StandardCustomerFactory
-from koalixcrm.products.factory.currency_factory import StandardCurrencyFactory
+from koalixcrm.settings.factory.currency_factory import StandardCurrencyFactory
 from koalixcrm.djangoUserExtension.factories.factory_document_template import StandardQuoteTemplateFactory
 
 

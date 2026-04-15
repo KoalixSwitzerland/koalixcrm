@@ -4,8 +4,8 @@ import factory
 import datetime
 from koalixcrm.products.models.product_price import ProductPrice
 from koalixcrm.products.factory.product_factory import StandardProductFactory
-from koalixcrm.products.factory.unit_factory import StandardUnitFactory
-from koalixcrm.products.factory.currency_factory import StandardCurrencyFactory
+from koalixcrm.settings.factory.unit_factory import StandardUnitFactory
+from koalixcrm.settings.factory.currency_factory import StandardCurrencyFactory
 from koalixcrm.crm.factory.customer_group_factory import StandardCustomerGroupFactory
 from koalixcrm.global_support_functions import make_date_utc
 

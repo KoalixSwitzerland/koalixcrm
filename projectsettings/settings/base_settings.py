@@ -23,6 +23,7 @@ PREREQUISITE_APPS = [
 ]
 
 PROJECT_APPS = [
+    'koalixcrm.settings',
     'koalixcrm.products',
     'koalixcrm.contracts',
     'koalixcrm.reporting',

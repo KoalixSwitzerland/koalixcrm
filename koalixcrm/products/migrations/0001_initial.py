@@ -5,7 +5,7 @@ from django.conf import settings
 from django.db import migrations, models
 
 
-from koalixcrm.migration_utils import CreateModelIfNotExists, AddFieldIfNotExists
+from koalixcrm.migration_utils import CreateModelIfNotExists
 class Migration(migrations.Migration):
 
     initial = True
@@ -13,24 +13,11 @@ class Migration(migrations.Migration):
     dependencies = [
         ('accounting', '0001_initial'),
         ('crm', '0001_initial'),
+        ('settings', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
-        CreateModelIfNotExists(
-            name='Currency',
-            fields=[
-                ('id', models.BigAutoField(primary_key=True, serialize=False)),
-                ('description', models.CharField(max_length=100, verbose_name='Description')),
-                ('short_name', models.CharField(max_length=3, verbose_name='Displayed Name After Prices')),
-                ('rounding', models.DecimalField(blank=True, decimal_places=2, max_digits=5, null=True, verbose_name='Rounding')),
-            ],
-            options={
-                'verbose_name': 'Currency',
-                'verbose_name_plural': 'Currency',
-                'db_table': 'crm_currency',
-            },
-        ),
         CreateModelIfNotExists(
             name='ProductType',
             fields=[
@@ -42,6 +29,8 @@ class Migration(migrations.Migration):
                 ('date_of_creation', models.DateTimeField(auto_now_add=True, verbose_name='Created at')),
                 ('accounting_product_category', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='accounting.productcategory', verbose_name='Accounting Product Category')),
                 ('last_modified_by', models.ForeignKey(blank=True, limit_choices_to={'is_staff': True}, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='Last modified by')),
+                ('default_unit', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='settings.unit', verbose_name='Unit')),
+                ('tax', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='settings.tax')),
             ],
             options={
                 'verbose_name': 'Product Type',
@@ -76,90 +65,20 @@ class Migration(migrations.Migration):
             },
         ),
         CreateModelIfNotExists(
-            name='CurrencyTransform',
-            fields=[
-                ('id', models.BigAutoField(primary_key=True, serialize=False)),
-                ('factor', models.DecimalField(decimal_places=2, max_digits=17, verbose_name='Factor between From and To Currency')),
-                ('from_currency', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='db_reltransformfromcurrency', to='products.currency', verbose_name='From Currency')),
-                ('to_currency', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='db_reltransformtocurrency', to='products.currency', verbose_name='To Currency')),
-                ('product_type', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='products.producttype', verbose_name='Product')),
-            ],
-            options={
-                'verbose_name': 'Currency Transform',
-                'verbose_name_plural': 'Currency Transforms',
-                'db_table': 'crm_currencytransform',
-            },
-        ),
-        CreateModelIfNotExists(
-            name='Tax',
-            fields=[
-                ('id', models.BigAutoField(primary_key=True, serialize=False)),
-                ('tax_rate', models.DecimalField(decimal_places=2, max_digits=5, verbose_name='Taxrate in Percentage')),
-                ('name', models.CharField(max_length=100, verbose_name='Taxname')),
-                ('account_activa', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='db_relaccountactiva', to='accounting.account', verbose_name='Activa Account')),
-                ('account_passiva', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='db_relaccountpassiva', to='accounting.account', verbose_name='Passiva Account')),
-            ],
-            options={
-                'verbose_name': 'Tax',
-                'verbose_name_plural': 'Taxes',
-                'db_table': 'crm_tax',
-            },
-        ),
-        AddFieldIfNotExists(
-            model_name='producttype',
-            name='tax',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='products.tax'),
-        ),
-        CreateModelIfNotExists(
-            name='Unit',
-            fields=[
-                ('id', models.BigAutoField(primary_key=True, serialize=False)),
-                ('description', models.CharField(max_length=100, verbose_name='Description')),
-                ('short_name', models.CharField(max_length=3, verbose_name='Displayed Name After Quantity In The Position')),
-                ('fraction_factor_to_next_higher_unit', models.DecimalField(blank=True, decimal_places=10, max_digits=20, null=True, verbose_name='Factor Between This And Next Higher Unit')),
-                ('is_a_fraction_of', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='products.unit', verbose_name='Is A Fraction Of')),
-            ],
-            options={
-                'verbose_name': 'Unit',
-                'verbose_name_plural': 'Units',
-                'db_table': 'crm_unit',
-            },
-        ),
-        AddFieldIfNotExists(
-            model_name='producttype',
-            name='default_unit',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='products.unit', verbose_name='Unit'),
-        ),
-        CreateModelIfNotExists(
             name='Price',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('price', models.DecimalField(decimal_places=2, max_digits=17, verbose_name='Price Per Unit')),
                 ('valid_from', models.DateField(blank=True, null=True, verbose_name='Valid from')),
                 ('valid_until', models.DateField(blank=True, null=True, verbose_name='Valid until')),
-                ('currency', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='products.currency', verbose_name='Currency')),
+                ('currency', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='settings.currency', verbose_name='Currency')),
                 ('customer_group', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='crm.customergroup', verbose_name='Customer Group')),
-                ('unit', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='products.unit', verbose_name='Unit')),
+                ('unit', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='settings.unit', verbose_name='Unit')),
             ],
             options={
                 'verbose_name': 'Price',
                 'verbose_name_plural': 'Prices',
                 'db_table': 'crm_price',
-            },
-        ),
-        CreateModelIfNotExists(
-            name='UnitTransform',
-            fields=[
-                ('id', models.BigAutoField(primary_key=True, serialize=False)),
-                ('factor', models.DecimalField(decimal_places=2, max_digits=17, verbose_name='Factor between From and To Unit')),
-                ('from_unit', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='db_reltransfromfromunit', to='products.unit', verbose_name='From Unit')),
-                ('product_type', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='products.producttype', verbose_name='Product Type')),
-                ('to_unit', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='db_reltransfromtounit', to='products.unit', verbose_name='To Unit')),
-            ],
-            options={
-                'verbose_name': 'Unit Transform',
-                'verbose_name_plural': 'Unit Transforms',
-                'db_table': 'crm_unittransform',
             },
         ),
         CreateModelIfNotExists(

@@ -2,12 +2,12 @@
 
 from django.db import models
 from django.utils.translation import gettext as _
-from koalixcrm.products.models.currency import Currency
-from koalixcrm.products.models.unit import Unit
+from koalixcrm.settings.models.currency import Currency
+from koalixcrm.settings.models.unit import Unit
 # CustomerGroup referenced via string FK 'crm.CustomerGroup'
-from koalixcrm.products.models.unit_transform import UnitTransform
+from koalixcrm.settings.models.unit_transform import UnitTransform
 from koalixcrm.products.models.customer_group_transform import CustomerGroupTransform
-from koalixcrm.products.models.currency_transform import CurrencyTransform
+from koalixcrm.settings.models.currency_transform import CurrencyTransform
 
 
 class Price(models.Model):

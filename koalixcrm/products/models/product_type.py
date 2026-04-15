@@ -17,8 +17,8 @@ class ProductType(models.Model):
                                                max_length=200,
                                                null=True,
                                                blank=True)
-    default_unit = models.ForeignKey("Unit", on_delete=models.CASCADE, verbose_name=_("Unit"))
-    tax = models.ForeignKey("Tax",
+    default_unit = models.ForeignKey("settings.Unit", on_delete=models.CASCADE, verbose_name=_("Unit"))
+    tax = models.ForeignKey("settings.Tax",
                             on_delete=models.CASCADE,
                             blank=False,
                             null=False)

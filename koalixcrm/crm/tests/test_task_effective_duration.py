@@ -4,7 +4,7 @@ from django.test import TestCase
 from koalixcrm.crm.factory.customer_billing_cycle_factory import StandardCustomerBillingCycleFactory
 from koalixcrm.crm.factory.customer_factory import StandardCustomerFactory
 from koalixcrm.crm.factory.customer_group_factory import StandardCustomerGroupFactory
-from koalixcrm.products.factory.currency_factory import StandardCurrencyFactory
+from koalixcrm.settings.factory.currency_factory import StandardCurrencyFactory
 from koalixcrm.reporting.factory.work_factory import StandardWorkFactory
 from koalixcrm.reporting.factory.task_status_factory import DoneTaskStatusFactory
 from koalixcrm.reporting.factory.reporting_period_factory import StandardReportingPeriodFactory

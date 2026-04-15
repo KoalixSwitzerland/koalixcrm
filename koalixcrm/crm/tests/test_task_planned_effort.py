@@ -5,7 +5,7 @@ from koalixcrm.crm.factory.user_factory import AdminUserFactory
 from koalixcrm.crm.factory.customer_billing_cycle_factory import StandardCustomerBillingCycleFactory
 from koalixcrm.crm.factory.customer_factory import StandardCustomerFactory
 from koalixcrm.crm.factory.customer_group_factory import StandardCustomerGroupFactory
-from koalixcrm.products.factory.currency_factory import StandardCurrencyFactory
+from koalixcrm.settings.factory.currency_factory import StandardCurrencyFactory
 from koalixcrm.reporting.factory.reporting_period_factory import StandardReportingPeriodFactory
 from koalixcrm.djangoUserExtension.factories.factory_user_extension import StandardUserExtensionFactory
 from koalixcrm.reporting.factory.task_factory import StandardTaskFactory

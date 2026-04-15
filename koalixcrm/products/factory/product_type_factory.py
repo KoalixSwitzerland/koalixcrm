@@ -3,9 +3,9 @@
 import factory
 import datetime
 from koalixcrm.products.models.product_type import ProductType
-from koalixcrm.products.factory.unit_factory import StandardUnitFactory
+from koalixcrm.settings.factory.unit_factory import StandardUnitFactory
 from koalixcrm.crm.factory.user_factory import StaffUserFactory
-from koalixcrm.products.factory.tax_factory import StandardTaxFactory
+from koalixcrm.settings.factory.tax_factory import StandardTaxFactory
 from koalixcrm.global_support_functions import make_date_utc
 
 

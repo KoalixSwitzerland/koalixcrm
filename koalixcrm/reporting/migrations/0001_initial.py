@@ -14,6 +14,7 @@ class Migration(migrations.Migration):
         ('contenttypes', '0002_remove_content_type_name'),
         ('djangoUserExtension', '0001_initial'),
         ('products', '0001_initial'),
+        ('settings', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
@@ -168,7 +169,7 @@ class Migration(migrations.Migration):
                 ('description', models.TextField(blank=True, null=True, verbose_name='Description')),
                 ('date_of_creation', models.DateTimeField(auto_now_add=True, verbose_name='Created at')),
                 ('last_modification', models.DateTimeField(auto_now=True, verbose_name='Last modified')),
-                ('default_currency', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='products.currency', verbose_name='Default Currency')),
+                ('default_currency', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='settings.currency', verbose_name='Default Currency')),
                 ('default_template_set', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='djangoUserExtension.templateset', verbose_name='Default Template Set')),
                 ('last_modified_by', models.ForeignKey(limit_choices_to={'is_staff': True}, on_delete=django.db.models.deletion.CASCADE, related_name='db_project_last_modified', to=settings.AUTH_USER_MODEL, verbose_name='Last modified by')),
                 ('project_manager', models.ForeignKey(blank=True, limit_choices_to={'is_staff': True}, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='db_rel_project_staff', to=settings.AUTH_USER_MODEL, verbose_name='Staff')),
@@ -285,7 +286,7 @@ class Migration(migrations.Migration):
                 ('date_from', models.DateField(verbose_name='Agreement From')),
                 ('date_until', models.DateField(verbose_name='Agreement To')),
                 ('amount', models.DecimalField(blank=True, decimal_places=2, max_digits=5, null=True, verbose_name='Amount')),
-                ('unit', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='products.unit')),
+                ('unit', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='settings.unit')),
                 ('status', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='reporting.agreementstatus')),
                 ('type', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='reporting.agreementtype')),
                 ('resource', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='reporting.resource')),

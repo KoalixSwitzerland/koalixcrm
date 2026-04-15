@@ -23,7 +23,7 @@ class Position(models.Model):
                                      verbose_name=_("Product"),
                                      blank=False,
                                      null=True)
-    unit = models.ForeignKey("products.Unit",
+    unit = models.ForeignKey("settings.Unit",
                              on_delete=models.CASCADE,
                              verbose_name=_("Unit"),
                              blank=True,
@@ -71,7 +71,7 @@ class SalesDocumentPosition(Position):
 
     @staticmethod
     def add_positions(position_class, object_to_create_pdf):
-        from koalixcrm.products.models.unit import Unit
+        from koalixcrm.settings.models.unit import Unit
         from koalixcrm.products.models.product_type import ProductType
         objects = list(position_class.objects.filter(sales_document=object_to_create_pdf.id))
         for position in list(position_class.objects.filter(sales_document=object_to_create_pdf.id)):

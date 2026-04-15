@@ -8,6 +8,7 @@ set -e
 
 export DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE:-projectsettings.settings.production_docker_postgres_settings}
 
+python manage.py sync_split_migrations || true
 python manage.py migrate --noinput || true
 python manage.py collectstatic --noinput
 

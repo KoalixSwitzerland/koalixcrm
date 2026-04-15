@@ -14,6 +14,7 @@ class Migration(migrations.Migration):
     dependencies = [
         ('crm', '0001_initial'),
         ('products', '0001_initial'),
+        ('settings', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
@@ -157,7 +158,7 @@ class Migration(migrations.Migration):
             name='UserExtension',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
-                ('default_currency', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='products.currency')),
+                ('default_currency', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='settings.currency')),
                 ('default_template_set', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='djangoUserExtension.templateset')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],

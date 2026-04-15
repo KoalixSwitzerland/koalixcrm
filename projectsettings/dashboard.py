@@ -109,9 +109,9 @@ class CustomIndexDashboard(Dashboard):
                     _('Product settings'),
                     column=1,
                     css_classes=('collapse closed',),
-                    models=('koalixcrm.products.models.tax.Tax',
-                            'koalixcrm.products.models.unit.Unit',
-                            'koalixcrm.products.models.currency.Currency'),
+                    models=('koalixcrm.settings.models.tax.Tax',
+                            'koalixcrm.settings.models.unit.Unit',
+                            'koalixcrm.settings.models.currency.Currency'),
                 ),
                 modules.ModelList(
                     _('Reporting settings'),

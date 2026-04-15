@@ -3,7 +3,7 @@
 import factory
 from koalixcrm.contracts.models.sales_document_position import SalesDocumentPosition
 from koalixcrm.products.factory.product_type_factory import StandardProductTypeFactory
-from koalixcrm.products.factory.unit_factory import StandardUnitFactory
+from koalixcrm.settings.factory.unit_factory import StandardUnitFactory
 
 
 class StandardSalesDocumentPositionFactory(factory.django.DjangoModelFactory):

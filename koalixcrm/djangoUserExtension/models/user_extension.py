@@ -19,7 +19,7 @@ class UserExtension(models.Model):
                              blank=False,
                              null=False)
     default_template_set = models.ForeignKey("TemplateSet", on_delete=models.CASCADE)
-    default_currency = models.ForeignKey("products.Currency", on_delete=models.CASCADE)
+    default_currency = models.ForeignKey("settings.Currency", on_delete=models.CASCADE)
 
     @staticmethod
     def objects_to_serialize(object_to_create_pdf, reference_user):

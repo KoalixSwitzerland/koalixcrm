@@ -6,9 +6,9 @@ from koalixcrm.reporting.models.agreement_status import AgreementStatus
 from koalixcrm.reporting.models.resource_price import ResourcePrice
 from koalixcrm.reporting.models.resource import Resource
 from koalixcrm.reporting.models.task import Task
-from koalixcrm.products.models.unit import Unit
+from koalixcrm.settings.models.unit import Unit
 from koalixcrm.reporting.serializers.task_serializer import OptionTaskJSONSerializer
-from koalixcrm.products.serializers.unit_serializer import OptionUnitJSONSerializer
+from koalixcrm.settings.serializers.unit_serializer import OptionUnitJSONSerializer
 from koalixcrm.reporting.serializers.resource_price_serializer import OptionResourcePriceJSONSerializer
 from koalixcrm.reporting.serializers.agreement_type_serializer import OptionAgreementTypeJSONSerializer
 from koalixcrm.reporting.serializers.agreement_status_serializer import OptionAgreementStatusJSONSerializer

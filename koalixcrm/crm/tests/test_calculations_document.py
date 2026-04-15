@@ -2,18 +2,18 @@ import pytest
 import datetime
 from django.test import TestCase
 from koalixcrm.contracts.models.calculations import Calculations
-from koalixcrm.products.factory.currency_factory import StandardCurrencyFactory
+from koalixcrm.settings.factory.currency_factory import StandardCurrencyFactory
 from koalixcrm.contracts.factory.quote_factory import StandardQuoteFactory
 from koalixcrm.contracts.factory.sales_document_position_factory import StandardSalesDocumentPositionFactory
 from koalixcrm.products.factory.product_type_factory import StandardProductTypeFactory
 from koalixcrm.products.factory.product_price_factory import StandardPriceFactory
 from koalixcrm.crm.factory.customer_factory import StandardCustomerFactory
 from koalixcrm.crm.factory.customer_group_factory import StandardCustomerGroupFactory, AdvancedCustomerGroupFactory
-from koalixcrm.products.factory.tax_factory import StandardTaxFactory
-from koalixcrm.products.factory.unit_factory import StandardUnitFactory, SmallUnitFactory
+from koalixcrm.settings.factory.tax_factory import StandardTaxFactory
+from koalixcrm.settings.factory.unit_factory import StandardUnitFactory, SmallUnitFactory
 from koalixcrm.products.factory.customer_group_transform_factory import StandardCustomerGroupTransformFactory
-from koalixcrm.products.factory.unit_transform_factory import StandardUnitTransformFactory
-from koalixcrm.products.factory.currency_transform_factory import StandardCurrencyTransformFactory
+from koalixcrm.settings.factory.unit_transform_factory import StandardUnitTransformFactory
+from koalixcrm.settings.factory.currency_transform_factory import StandardCurrencyTransformFactory
 from koalixcrm.global_support_functions import make_date_utc
 
 

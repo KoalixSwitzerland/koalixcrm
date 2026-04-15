@@ -5,7 +5,7 @@ from koalixcrm.reporting.models.project import Project
 from koalixcrm.reporting.factory.project_status_factory import StartedProjectStatusFactory
 from koalixcrm.djangoUserExtension.factories.factory_template_set import StandardTemplateSetFactory
 from koalixcrm.crm.factory.user_factory import StaffUserFactory
-from koalixcrm.products.factory.currency_factory import StandardCurrencyFactory
+from koalixcrm.settings.factory.currency_factory import StandardCurrencyFactory
 
 
 class StandardProjectFactory(factory.django.DjangoModelFactory):

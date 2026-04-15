@@ -3,7 +3,7 @@
 import pytest
 from django.test import TestCase
 from koalixcrm.contracts.factory.sales_document_position_factory import StandardSalesDocumentPositionFactory
-from koalixcrm.products.factory.currency_factory import StandardCurrencyFactory
+from koalixcrm.settings.factory.currency_factory import StandardCurrencyFactory
 from koalixcrm.contracts.factory.quote_factory import StandardQuoteFactory
 from koalixcrm.crm.factory.user_factory import StaffUserFactory
 from koalixcrm.products.factory.product_type_factory import StandardProductTypeFactory

@@ -16,6 +16,7 @@ class Migration(migrations.Migration):
         ('crm', '0001_initial'),
         ('djangoUserExtension', '0001_initial'),
         ('products', '0001_initial'),
+        ('settings', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
@@ -35,7 +36,7 @@ class Migration(migrations.Migration):
                 ('last_calculated_price', models.DecimalField(blank=True, decimal_places=2, max_digits=17, null=True, verbose_name='Last Calculated Price')),
                 ('last_calculated_tax', models.DecimalField(blank=True, decimal_places=2, max_digits=17, null=True, verbose_name='Last Calculated Tax')),
                 ('product_type', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='products.producttype', verbose_name='Product')),
-                ('unit', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='products.unit', verbose_name='Unit')),
+                ('unit', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='settings.unit', verbose_name='Unit')),
             ],
             options={
                 'verbose_name': 'Position',
@@ -47,7 +48,7 @@ class Migration(migrations.Migration):
         AddFieldIfNotExists(
             model_name='contract',
             name='default_currency',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='products.currency', verbose_name='Default Currency'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='settings.currency', verbose_name='Default Currency'),
         ),
         AddFieldIfNotExists(
             model_name='contract',
@@ -153,7 +154,7 @@ class Migration(migrations.Migration):
         AddFieldIfNotExists(
             model_name='salesdocument',
             name='currency',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='products.currency', verbose_name='Currency'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='settings.currency', verbose_name='Currency'),
         ),
         AddFieldIfNotExists(
             model_name='salesdocument',
