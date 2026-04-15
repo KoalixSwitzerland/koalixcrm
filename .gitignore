@@ -41,3 +41,13 @@ venv_linux/
 
 # Migration data exports
 legacy_data.json
+
+# Celery beat runtime state
+celerybeat-schedule
+celerybeat-schedule-*
+
+# Legacy project tree restored from v1.x dumps
+/auftraegekoalixnet/
+
+# Generated PDF/XML artifacts from document rendering
+/projectsettings/static/pdf/
