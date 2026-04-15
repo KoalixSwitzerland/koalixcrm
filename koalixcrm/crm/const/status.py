@@ -12,10 +12,10 @@ INVOICESTATUS = (
     ('D', _('Deleted')),
 )
 
-QUOTESTATUS = (
+QUOTATIONSTATUS = (
     ('S', _('Success')),
-    ('I', _('Quote created')),
-    ('Q', _('Quote sent')),
+    ('I', _('Quotation created')),
+    ('Q', _('Quotation sent')),
     ('F', _('First reminder sent')),
     ('R', _('Second reminder sent')),
     ('D', _('Deleted')),
@@ -29,7 +29,7 @@ PURCHASEORDERSTATUS = (
     ('P', _('Invoice payed')),
 )
 
-DELIVERYNOTESTATUS = (
+DESPATCHADVICESTATUS = (
     ('C', _('Created')),
     ('S', _('Sent')),
     ('R', _('Received')),

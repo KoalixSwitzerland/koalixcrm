@@ -25,10 +25,10 @@ class Customer(Contact):
         invoice = contract.create_invoice()
         return invoice
 
-    def create_quote(self, request):
+    def create_quotation(self, request):
         contract = self.create_contract(request)
-        quote = contract.create_quote()
-        return quote
+        quotation = contract.create_quotation()
+        return quotation
 
     def is_in_group(self, customer_group):
         for customer_group_membership in self.is_member_of.all():

@@ -92,13 +92,13 @@ class OptionCustomer(admin.ModelAdmin):
     create_contract.short_description = _("Create Contract")
 
     @staticmethod
-    def create_quote(self, request, queryset):
+    def create_quotation(self, request, queryset):
         for obj in queryset:
-            quote = obj.create_quote(request)
-            response = HttpResponseRedirect('/admin/contract_object_management/quote/' + str(quote.id))
+            quotation = obj.create_quotation(request)
+            response = HttpResponseRedirect('/admin/contract_object_management/quotation/' + str(quotation.id))
         return response
 
-    create_quote.short_description = _("Create Quote")
+    create_quotation.short_description = _("Create Quotation")
 
     @staticmethod
     def create_invoice(self, request, queryset):
@@ -117,7 +117,7 @@ class OptionCustomer(admin.ModelAdmin):
             obj.staff = request.user
         obj.save()
 
-    actions = ['create_contract', 'create_invoice', 'create_quote']
+    actions = ['create_contract', 'create_invoice', 'create_quotation']
     pluginProcessor = PluginProcessor()
     inlines.extend(pluginProcessor.getPluginAdditions("customerActions"))
 

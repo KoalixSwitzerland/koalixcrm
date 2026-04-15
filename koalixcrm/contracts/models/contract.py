@@ -9,7 +9,7 @@ from koalixcrm.crm.contact.phone_address import PhoneAddress
 from koalixcrm.crm.contact.email_address import EmailAddress
 from koalixcrm.crm.contact.postal_address import PostalAddress
 from koalixcrm.contracts.models.invoice import Invoice
-from koalixcrm.contracts.models.quote import Quote
+from koalixcrm.contracts.models.quotation import Quotation
 from koalixcrm.contracts.models.purchase_order import PurchaseOrder
 from koalixcrm.global_support_functions import xstr
 from koalixcrm.crm.const.purpose import *
@@ -128,10 +128,10 @@ class Contract(models.Model):
         invoice.create_from_reference(self)
         return invoice
 
-    def create_quote(self):
-        quote = Quote()
-        quote.create_from_reference(self)
-        return quote
+    def create_quotation(self):
+        quotation = Quotation()
+        quotation.create_from_reference(self)
+        return quotation
 
     def create_purchase_order(self):
         purchase_order = PurchaseOrder()

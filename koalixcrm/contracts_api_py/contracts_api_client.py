@@ -5,10 +5,10 @@ from typing import Any, Dict, List, Optional
 from koalixcrm.shared.api_client import BaseAPIClient
 from koalixcrm.contracts_api_py.dto.contract import Contract
 from koalixcrm.contracts_api_py.dto.invoice import Invoice
-from koalixcrm.contracts_api_py.dto.quote import Quote
+from koalixcrm.contracts_api_py.dto.quotation import Quotation
 from koalixcrm.contracts_api_py.dto.purchase_order import PurchaseOrder
-from koalixcrm.contracts_api_py.dto.purchase_confirmation import PurchaseConfirmation
-from koalixcrm.contracts_api_py.dto.delivery_note import DeliveryNote
+from koalixcrm.contracts_api_py.dto.sales_order import SalesOrder
+from koalixcrm.contracts_api_py.dto.despatch_advice import DespatchAdvice
 from koalixcrm.contracts_api_py.dto.payment_reminder import PaymentReminder
 from koalixcrm.contracts_api_py.dto.commercial_document_position import CommercialDocumentPosition
 from koalixcrm.contracts_api_py.dto.credit_note import CreditNote
@@ -63,25 +63,25 @@ class KoalixCRMContractsAPIClient(BaseAPIClient):
         return self._put_full_update(Invoice, "/invoices", object_id, data)
 
     # ------------------------------------------------------------------
-    # Quotes
+    # Quotations
     # ------------------------------------------------------------------
 
-    def get_quote(self, object_id: int) -> Optional[Quote]:
-        return self._get_object(Quote, "/quotes", object_id)
+    def get_quotation(self, object_id: int) -> Optional[Quotation]:
+        return self._get_object(Quotation, "/quotations", object_id)
 
-    def get_quote_list(self) -> List[Quote]:
-        return self._get_object_list(Quote, "/quotes/")
+    def get_quotation_list(self) -> List[Quotation]:
+        return self._get_object_list(Quotation, "/quotations/")
 
-    def create_quote(self, data: Dict[str, Any]) -> Optional[Quote]:
-        response_data = self._make_request("/quotes/", method="POST", data=data)
+    def create_quotation(self, data: Dict[str, Any]) -> Optional[Quotation]:
+        response_data = self._make_request("/quotations/", method="POST", data=data)
         if response_data:
-            obj = Quote(response_data, self)
-            self._cache.set(Quote, obj.id, obj)
+            obj = Quotation(response_data, self)
+            self._cache.set(Quotation, obj.id, obj)
             return obj
         return None
 
-    def update_quote(self, object_id: int, data: Dict[str, Any]) -> Optional[Quote]:
-        return self._put_full_update(Quote, "/quotes", object_id, data)
+    def update_quotation(self, object_id: int, data: Dict[str, Any]) -> Optional[Quotation]:
+        return self._put_full_update(Quotation, "/quotations", object_id, data)
 
     # ------------------------------------------------------------------
     # Purchase Orders
@@ -105,46 +105,46 @@ class KoalixCRMContractsAPIClient(BaseAPIClient):
         return self._put_full_update(PurchaseOrder, "/purchase_orders", object_id, data)
 
     # ------------------------------------------------------------------
-    # Purchase Confirmations
+    # Sales Orders
     # ------------------------------------------------------------------
 
-    def get_purchase_confirmation(self, object_id: int) -> Optional[PurchaseConfirmation]:
-        return self._get_object(PurchaseConfirmation, "/purchase_confirmations", object_id)
+    def get_sales_order(self, object_id: int) -> Optional[SalesOrder]:
+        return self._get_object(SalesOrder, "/sales_orders", object_id)
 
-    def get_purchase_confirmation_list(self) -> List[PurchaseConfirmation]:
-        return self._get_object_list(PurchaseConfirmation, "/purchase_confirmations/")
+    def get_sales_order_list(self) -> List[SalesOrder]:
+        return self._get_object_list(SalesOrder, "/sales_orders/")
 
-    def create_purchase_confirmation(self, data: Dict[str, Any]) -> Optional[PurchaseConfirmation]:
-        response_data = self._make_request("/purchase_confirmations/", method="POST", data=data)
+    def create_sales_order(self, data: Dict[str, Any]) -> Optional[SalesOrder]:
+        response_data = self._make_request("/sales_orders/", method="POST", data=data)
         if response_data:
-            obj = PurchaseConfirmation(response_data, self)
-            self._cache.set(PurchaseConfirmation, obj.id, obj)
+            obj = SalesOrder(response_data, self)
+            self._cache.set(SalesOrder, obj.id, obj)
             return obj
         return None
 
-    def update_purchase_confirmation(self, object_id: int, data: Dict[str, Any]) -> Optional[PurchaseConfirmation]:
-        return self._put_full_update(PurchaseConfirmation, "/purchase_confirmations", object_id, data)
+    def update_sales_order(self, object_id: int, data: Dict[str, Any]) -> Optional[SalesOrder]:
+        return self._put_full_update(SalesOrder, "/sales_orders", object_id, data)
 
     # ------------------------------------------------------------------
-    # Delivery Notes
+    # Despatch Advices
     # ------------------------------------------------------------------
 
-    def get_delivery_note(self, object_id: int) -> Optional[DeliveryNote]:
-        return self._get_object(DeliveryNote, "/delivery_notes", object_id)
+    def get_despatch_advice(self, object_id: int) -> Optional[DespatchAdvice]:
+        return self._get_object(DespatchAdvice, "/despatch_advices", object_id)
 
-    def get_delivery_note_list(self) -> List[DeliveryNote]:
-        return self._get_object_list(DeliveryNote, "/delivery_notes/")
+    def get_despatch_advice_list(self) -> List[DespatchAdvice]:
+        return self._get_object_list(DespatchAdvice, "/despatch_advices/")
 
-    def create_delivery_note(self, data: Dict[str, Any]) -> Optional[DeliveryNote]:
-        response_data = self._make_request("/delivery_notes/", method="POST", data=data)
+    def create_despatch_advice(self, data: Dict[str, Any]) -> Optional[DespatchAdvice]:
+        response_data = self._make_request("/despatch_advices/", method="POST", data=data)
         if response_data:
-            obj = DeliveryNote(response_data, self)
-            self._cache.set(DeliveryNote, obj.id, obj)
+            obj = DespatchAdvice(response_data, self)
+            self._cache.set(DespatchAdvice, obj.id, obj)
             return obj
         return None
 
-    def update_delivery_note(self, object_id: int, data: Dict[str, Any]) -> Optional[DeliveryNote]:
-        return self._put_full_update(DeliveryNote, "/delivery_notes", object_id, data)
+    def update_despatch_advice(self, object_id: int, data: Dict[str, Any]) -> Optional[DespatchAdvice]:
+        return self._put_full_update(DespatchAdvice, "/despatch_advices", object_id, data)
 
     # ------------------------------------------------------------------
     # Payment Reminders

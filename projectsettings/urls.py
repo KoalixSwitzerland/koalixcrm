@@ -25,9 +25,9 @@ from koalixcrm.settings_api_py.settings_api import (
     CurrencyTransformViewSet, UnitTransformViewSet,
 )
 from koalixcrm.contracts_api_py.contracts_api import (
-    ContractViewSet, InvoiceViewSet, QuoteViewSet,
-    PurchaseOrderViewSet, PurchaseConfirmationViewSet,
-    DeliveryNoteViewSet, PaymentReminderViewSet,
+    ContractViewSet, InvoiceViewSet, QuotationViewSet,
+    PurchaseOrderViewSet, SalesOrderViewSet,
+    DespatchAdviceViewSet, PaymentReminderViewSet,
     CommercialDocumentPositionViewSet,
     CreditNoteViewSet,
 )
@@ -75,10 +75,10 @@ router.register(r'customer_group_transforms', CustomerGroupTransformViewSet)
 # Contract Object Management
 router.register(r'contracts', ContractViewSet)
 router.register(r'invoices', InvoiceViewSet)
-router.register(r'quotes', QuoteViewSet)
+router.register(r'quotations', QuotationViewSet)
 router.register(r'purchase_orders', PurchaseOrderViewSet)
-router.register(r'purchase_confirmations', PurchaseConfirmationViewSet)
-router.register(r'delivery_notes', DeliveryNoteViewSet)
+router.register(r'sales_orders', SalesOrderViewSet)
+router.register(r'despatch_advices', DespatchAdviceViewSet)
 router.register(r'payment_reminders', PaymentReminderViewSet)
 router.register(r'commercial_document_positions', CommercialDocumentPositionViewSet)
 router.register(r'credit_notes', CreditNoteViewSet)

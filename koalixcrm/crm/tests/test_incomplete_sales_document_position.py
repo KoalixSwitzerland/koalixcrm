@@ -3,7 +3,7 @@ import datetime
 from django.test import TestCase
 from koalixcrm.contracts.models.calculations import Calculations
 from koalixcrm.settings.factory.currency_factory import StandardCurrencyFactory
-from koalixcrm.contracts.factory.quote_factory import StandardQuoteFactory
+from koalixcrm.contracts.factory.quotation_factory import StandardQuotationFactory
 from koalixcrm.contracts.factory.commercial_document_position_factory import StandardCommercialDocumentPositionFactory
 from koalixcrm.products.factory.product_type_factory import StandardProductTypeFactory
 from koalixcrm.products.factory.product_price_factory import StandardPriceFactory
@@ -51,7 +51,7 @@ class DocumentCommercialDocumentPosition(TestCase):
 
     @pytest.mark.back_end_tests
     def test_calculate_document_price_overwritten(self):
-        quote_1 = StandardQuoteFactory.create(customer=self.customer)
+        quotation_1 = StandardQuotationFactory.create(customer=self.customer)
         StandardCommercialDocumentPositionFactory.create(
             quantity=1,
             discount=0,
@@ -59,21 +59,21 @@ class DocumentCommercialDocumentPosition(TestCase):
             overwrite_product_price=True,
             position_price_per_unit=90,
             unit=self.unit,
-            commercial_document=quote_1
+            commercial_document=quotation_1
         )
         datetime_now = make_date_utc(datetime.datetime(2024, 1, 1, 0, 00))
         date_now = datetime_now.date()
         Calculations.calculate_document_price(
-            document=quote_1,
+            document=quotation_1,
             pricing_date=date_now)
         self.assertEqual(
-            quote_1.last_calculated_price.__str__(), "90.00")
+            quotation_1.last_calculated_price.__str__(), "90.00")
         self.assertEqual(
-            quote_1.last_calculated_tax.__str__(), "9.00")
+            quotation_1.last_calculated_tax.__str__(), "9.00")
 
     @pytest.mark.back_end_tests
     def test_calculate_document_price_overwritten_WithNone(self):
-        quote_2 = StandardQuoteFactory.create(customer=self.customer)
+        quotation_2 = StandardQuotationFactory.create(customer=self.customer)
         StandardCommercialDocumentPositionFactory.create(
             quantity=1,
             discount=0,
@@ -81,13 +81,13 @@ class DocumentCommercialDocumentPosition(TestCase):
             overwrite_product_price=True,
             position_price_per_unit=None,
             unit=self.unit,
-            commercial_document=quote_2
+            commercial_document=quotation_2
         )
         datetime_now = make_date_utc(datetime.datetime(2024, 1, 1, 0, 00))
         date_now = datetime_now.date()
         try:
             Calculations.calculate_document_price(
-                document=quote_2,
+                document=quotation_2,
                 pricing_date=date_now)
         except CommercialDocumentPosition.NoPriceFound as e:
             self.assertEqual(

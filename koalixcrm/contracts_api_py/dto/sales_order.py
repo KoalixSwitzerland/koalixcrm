@@ -3,12 +3,10 @@ from typing import Dict, Any
 from koalixcrm.shared.base_model import BaseModel
 
 
-class DeliveryNote(BaseModel):
-    """Client-side model representing a delivery note."""
+class SalesOrder(BaseModel):
+    """Client-side model representing a sales order."""
 
     def __init__(self, data: Dict[str, Any], client=None):
-        self.tracking_reference = None
-        self.status = None
         self.external_reference = None
         self.discount = None
         self.description = None

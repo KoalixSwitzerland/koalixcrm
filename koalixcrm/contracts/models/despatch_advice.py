@@ -6,9 +6,9 @@ from koalixcrm.crm.const.status import *
 from koalixcrm.contracts.models.commercial_document import CommercialDocument
 
 
-class DeliveryNote(CommercialDocument):
+class DespatchAdvice(CommercialDocument):
     tracking_reference = models.CharField(verbose_name=_("Tracking Reference"), max_length=100, blank=True)
-    status = models.CharField(max_length=1, choices=DELIVERYNOTESTATUS)
+    status = models.CharField(max_length=1, choices=DESPATCHADVICESTATUS)
 
     def create_from_reference(self, calling_model):
         self.create_commercial_document(calling_model)
@@ -19,10 +19,10 @@ class DeliveryNote(CommercialDocument):
         self.attach_text_paragraphs()
 
     def __str__(self):
-        return _("Delivery Note") + ": " + self.id.__str__() + " " + _("from Contract") + ": " + self.contract.id.__str__()
+        return _("Despatch Advice") + ": " + self.id.__str__() + " " + _("from Contract") + ": " + self.contract.id.__str__()
 
     class Meta:
         app_label = "contract_object_management"
-        db_table = "crm_deliverynote"
-        verbose_name = _('Delivery Note')
-        verbose_name_plural = _('Delivery Notes')
+        db_table = "crm_despatchadvice"
+        verbose_name = _('Despatch Advice')
+        verbose_name_plural = _('Despatch Advices')

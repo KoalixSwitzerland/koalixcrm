@@ -11,8 +11,8 @@ class CommercialDocumentMedia(models.Model):
 
     Follows the S3Media pattern (see qq_workflow_support.models.s3_media).
     Created by the Celery PDF export task after successful FOP transformation
-    and S3 upload.  Reused across all commercial document types (Invoice, Quote,
-    DeliveryNote, PurchaseOrder, PurchaseConfirmation, PaymentReminder).
+    and S3 upload.  Reused across all commercial document types (Invoice, Quotation,
+    DespatchAdvice, PurchaseOrder, SalesOrder, PaymentReminder).
     """
 
     STATUS_CHOICES = [

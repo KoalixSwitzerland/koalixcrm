@@ -51,10 +51,10 @@ class Command(BaseCommand):
         template_set = djangoUserExtension.models.TemplateSet()
         template_set.title = 'default_template_set'
         template_set.invoiceXSLFile = Command.store_default_template_xsl_file("en", "invoice.xsl")
-        template_set.quoteXSLFile = Command.store_default_template_xsl_file("en", "quote.xsl")
-        template_set.purchaseconfirmationXSLFile = Command.store_default_template_xsl_file("en", "purchaseconfirmation.xsl")
+        template_set.quotationXSLFile = Command.store_default_template_xsl_file("en", "quotation.xsl")
+        template_set.salesorderXSLFile = Command.store_default_template_xsl_file("en", "salesorder.xsl")
         template_set.purchaseorderXSLFile = Command.store_default_template_xsl_file("en", "purchaseorder.xsl")
-        template_set.deilveryorderXSLFile = Command.store_default_template_xsl_file("en", "deliveryorder.xsl")
+        template_set.despatchadviceXSLFile = Command.store_default_template_xsl_file("en", "despatchadvice.xsl")
 
         if 'koalixcrm.accounting' in settings.INSTALLED_APPS:
             template_set.profitLossStatementXSLFile = Command.store_default_template_xsl_file("en", "profitlossstatement.xsl")

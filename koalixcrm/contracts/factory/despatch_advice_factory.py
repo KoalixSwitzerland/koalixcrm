@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from koalixcrm.contracts.models.delivery_note import DeliveryNote
+from koalixcrm.contracts.models.despatch_advice import DespatchAdvice
 from koalixcrm.contracts.factory.commercial_document_factory import StandardCommercialDocumentFactory
 
 
-class StandardDeliveryNoteFactory(StandardCommercialDocumentFactory):
+class StandardDespatchAdviceFactory(StandardCommercialDocumentFactory):
     class Meta:
-        model = DeliveryNote
+        model = DespatchAdvice
 
     tracking_reference = "This is a tracking reference"
     status = "S"

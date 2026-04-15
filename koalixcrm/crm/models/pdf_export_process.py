@@ -26,7 +26,7 @@ class PDFExportProcess(models.Model):
     source_model = models.CharField(
         verbose_name=_("Source Model"),
         max_length=100,
-        help_text=_("Class name of the source object (e.g. Invoice, Quote)")
+        help_text=_("Class name of the source object (e.g. Invoice, Quotation)")
     )
     source_id = models.BigIntegerField(
         verbose_name=_("Source Object ID"),

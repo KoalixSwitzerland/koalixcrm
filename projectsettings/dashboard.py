@@ -23,14 +23,15 @@ class CustomIndexDashboard(Dashboard):
             collapsible=True,
             children=[
                    modules.ModelList(
-                    _('Sales Documents and Contracts'),
+                    _('Commercial Documents and Contracts'),
                     column=1,
                     css_classes=('collapse closed',),
                     models=('koalixcrm.contracts.models.contract.Contract',
-                            'koalixcrm.contracts.models.quote.Quote',
-                            'koalixcrm.contracts.models.purchase_confirmation.PurchaseConfirmation',
-                            'koalixcrm.contracts.models.delivery_note.DeliveryNote',
+                            'koalixcrm.contracts.models.quotation.Quotation',
+                            'koalixcrm.contracts.models.sales_order.SalesOrder',
+                            'koalixcrm.contracts.models.despatch_advice.DespatchAdvice',
                             'koalixcrm.contracts.models.invoice.Invoice',
+                            'koalixcrm.contracts.models.credit_note.CreditNote',
                             'koalixcrm.contracts.models.payment_reminder.PaymentReminder',),
                     ),
                     modules.ModelList(

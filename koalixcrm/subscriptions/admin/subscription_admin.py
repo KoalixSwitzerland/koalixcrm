@@ -62,7 +62,7 @@ class OptionSubscription(admin.ModelAdmin):
     create_invoice.short_description = _("Create Invoice")
 
     @staticmethod
-    def create_quote(queryset):
+    def create_quotation(queryset):
         for obj in queryset:
             invoice = obj.create_invoice()
             response = HttpResponseRedirect('/admin/crm/invoice/' + str(invoice.id))
@@ -113,8 +113,8 @@ class KoalixcrmPluginInterface(object):
     contractActions = [create_subscription]
     invoiceInlines = []
     invoiceActions = []
-    quoteInlines = []
-    quoteActions = []
+    quotationInlines = []
+    quotationActions = []
     customerInlines = []
     customerActions = []
 

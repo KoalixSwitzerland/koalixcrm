@@ -83,7 +83,7 @@ class CommercialDocumentPosition(Position):
     def create_position(self, calling_model, attach_to_model):
         """Copies all the content of the calling model and attaches
         links itself to the attach_to_model, this function is usually
-        used within the create invoice, quote, reminder,... functions"""
+        used within the create invoice, quotation, reminder,... functions"""
 
         self.product_type = calling_model.product_type
         self.position_number = calling_model.position_number

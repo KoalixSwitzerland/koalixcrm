@@ -273,9 +273,9 @@
                                               font-family="BitstreamVeraSans"
                                               text-align="left">
                                         <xsl:value-of
-                                                select="substring(object[@model='crm.deliverynote']/field[@name='delivery_date'], 9, 2)"/><xsl:text>.</xsl:text><xsl:value-of
-                                            select="substring(object[@model='crm.deliverynote']/field[@name='delivery_date'], 6, 2)"/><xsl:text>.</xsl:text><xsl:value-of
-                                            select="substring(object[@model='crm.deliverynote']/field[@name='delivery_date'], 1, 4)"/>
+                                                select="substring(object[@model='contract_object_management.despatchadvice']/field[@name='delivery_date'], 9, 2)"/><xsl:text>.</xsl:text><xsl:value-of
+                                            select="substring(object[@model='contract_object_management.despatchadvice']/field[@name='delivery_date'], 6, 2)"/><xsl:text>.</xsl:text><xsl:value-of
+                                            select="substring(object[@model='contract_object_management.despatchadvice']/field[@name='delivery_date'], 1, 4)"/>
                                     </fo:block>
                                     <fo:block font-size="7pt"
                                               font-family="BitstreamVeraSans"
@@ -415,7 +415,7 @@
                               text-align="left"
                               font-weight="bold"
                               margin-top="2cm">
-                        Lieferschein
+                        Delivery note
                         <xsl:value-of select="object[@model='crm.salesdocument']/field[@name='description']"/>
                     </fo:block>
                     <xsl:for-each select="object[@model='crm.textparagraphinsalesdocument']">

@@ -2,10 +2,10 @@ from koalixcrm.contracts.models.contract import *
 from koalixcrm.contracts.models.commercial_document import *
 from koalixcrm.contracts.models.commercial_document_position import *
 from koalixcrm.contracts.models.invoice import *
-from koalixcrm.contracts.models.quote import *
-from koalixcrm.contracts.models.purchase_confirmation import *
+from koalixcrm.contracts.models.quotation import *
+from koalixcrm.contracts.models.sales_order import *
 from koalixcrm.contracts.models.purchase_order import *
-from koalixcrm.contracts.models.delivery_note import *
+from koalixcrm.contracts.models.despatch_advice import *
 from koalixcrm.contracts.models.payment_reminder import *
 from koalixcrm.contracts.models.commercial_document_media import *
 from koalixcrm.contracts.models.credit_note import *

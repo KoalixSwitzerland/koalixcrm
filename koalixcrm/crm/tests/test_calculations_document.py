@@ -3,7 +3,7 @@ import datetime
 from django.test import TestCase
 from koalixcrm.contracts.models.calculations import Calculations
 from koalixcrm.settings.factory.currency_factory import StandardCurrencyFactory
-from koalixcrm.contracts.factory.quote_factory import StandardQuoteFactory
+from koalixcrm.contracts.factory.quotation_factory import StandardQuotationFactory
 from koalixcrm.contracts.factory.commercial_document_position_factory import StandardCommercialDocumentPositionFactory
 from koalixcrm.products.factory.product_type_factory import StandardProductTypeFactory
 from koalixcrm.products.factory.product_price_factory import StandardPriceFactory
@@ -175,91 +175,91 @@ class DocumentCalculationsTest(TestCase):
 
     @pytest.mark.back_end_tests
     def test_calculate_document_price_without_customer_group(self):
-        quote_1 = StandardQuoteFactory.create(customer=self.customer)
+        quotation_1 = StandardQuotationFactory.create(customer=self.customer)
         StandardCommercialDocumentPositionFactory.create(
             quantity=1,
             discount=0,
             product_type=self.product_without_customer_group,
             overwrite_product_price=False,
             unit=self.unit,
-            commercial_document=quote_1
+            commercial_document=quotation_1
         )
         datetime_now = make_date_utc(datetime.datetime(2024, 1, 1, 0, 00))
         date_now = datetime_now.date()
         Calculations.calculate_document_price(
-            document=quote_1,
+            document=quotation_1,
             pricing_date=date_now)
         self.assertEqual(
-            quote_1.last_calculated_price.__str__(), "100.00")
+            quotation_1.last_calculated_price.__str__(), "100.00")
         self.assertEqual(
-            quote_1.last_calculated_tax.__str__(), "10.00")
+            quotation_1.last_calculated_tax.__str__(), "10.00")
 
     @pytest.mark.back_end_tests
     def test_calculate_document_price_without_date_from(self):
-        quote_2 = StandardQuoteFactory.create(customer=self.customer)
+        quotation_2 = StandardQuotationFactory.create(customer=self.customer)
         StandardCommercialDocumentPositionFactory.create(
             quantity=1,
             discount=0,
             unit=self.unit,
             product_type=self.product_without_date_from,
             overwrite_product_price=False,
-            commercial_document=quote_2
+            commercial_document=quotation_2
         )
         datetime_now = make_date_utc(datetime.datetime(2024, 1, 1, 0, 00))
         date_now = datetime_now.date()
         Calculations.calculate_document_price(
-            document=quote_2,
+            document=quotation_2,
             pricing_date=date_now)
         self.assertEqual(
-            quote_2.last_calculated_price.__str__(), "50.00")
+            quotation_2.last_calculated_price.__str__(), "50.00")
         self.assertEqual(
-            quote_2.last_calculated_tax.__str__(), "5.00")
+            quotation_2.last_calculated_tax.__str__(), "5.00")
 
     @pytest.mark.back_end_tests
     def test_calculate_document_price_without_date_until(self):
-        quote_3 = StandardQuoteFactory.create(customer=self.customer)
+        quotation_3 = StandardQuotationFactory.create(customer=self.customer)
         StandardCommercialDocumentPositionFactory.create(
             quantity=1,
             discount=0,
             unit=self.unit,
             product_type=self.product_without_date_until,
             overwrite_product_price=False,
-            commercial_document=quote_3
+            commercial_document=quotation_3
         )
         datetime_now = make_date_utc(datetime.datetime(2024, 1, 1, 0, 00))
         date_now = datetime_now.date()
         Calculations.calculate_document_price(
-            document=quote_3,
+            document=quotation_3,
             pricing_date=date_now)
         self.assertEqual(
-            quote_3.last_calculated_price.__str__(), "130.00")
+            quotation_3.last_calculated_price.__str__(), "130.00")
         self.assertEqual(
-            quote_3.last_calculated_tax.__str__(), "13.00")
+            quotation_3.last_calculated_tax.__str__(), "13.00")
 
     @pytest.mark.back_end_tests
     def test_calculate_document_price_without_dates(self):
-        quote_4 = StandardQuoteFactory.create(customer=self.customer)
+        quotation_4 = StandardQuotationFactory.create(customer=self.customer)
         StandardCommercialDocumentPositionFactory.create(
             quantity=1,
             discount=0,
             unit=self.unit,
             product_type=self.product_without_dates,
             overwrite_product_price=False,
-            commercial_document=quote_4
+            commercial_document=quotation_4
         )
         datetime_now = make_date_utc(datetime.datetime(2024, 1, 1, 0, 00))
         date_now = datetime_now.date()
         Calculations.calculate_document_price(
-            document=quote_4,
+            document=quotation_4,
             pricing_date=date_now)
         self.assertEqual(
-            quote_4.last_calculated_price.__str__(), "80.00")
+            quotation_4.last_calculated_price.__str__(), "80.00")
         self.assertEqual(
-            quote_4.last_calculated_tax.__str__(), "8.00")
+            quotation_4.last_calculated_tax.__str__(), "8.00")
 
     @pytest.mark.back_end_tests
     def test_calculate_document_price_with_currency_rounding(self):
-        quote_5 = StandardQuoteFactory.create(
+        quotation_5 = StandardQuotationFactory.create(
             customer=self.customer,
             currency=self.test_currency_with_rounding
         )
@@ -269,21 +269,21 @@ class DocumentCalculationsTest(TestCase):
             unit=self.unit,
             product_type=self.product_with_currency_rounding,
             overwrite_product_price=False,
-            commercial_document=quote_5
+            commercial_document=quotation_5
         )
         datetime_now = make_date_utc(datetime.datetime(2024, 1, 1, 0, 00))
         date_now = datetime_now.date()
         Calculations.calculate_document_price(
-            document=quote_5,
+            document=quotation_5,
             pricing_date=date_now)
         self.assertEqual(
-            quote_5.last_calculated_price.__str__(), "30")
+            quotation_5.last_calculated_price.__str__(), "30")
         self.assertEqual(
-            quote_5.last_calculated_tax.__str__(), "3")
+            quotation_5.last_calculated_tax.__str__(), "3")
 
     @pytest.mark.back_end_tests
     def test_calculate_document_price_without_currency_rounding(self):
-        quote_6 = StandardQuoteFactory.create(
+        quotation_6 = StandardQuotationFactory.create(
             customer=self.customer,
             currency=self.test_currency_without_rounding
         )
@@ -293,21 +293,21 @@ class DocumentCalculationsTest(TestCase):
             unit=self.unit,
             product_type=self.product_without_currency_rounding,
             overwrite_product_price=False,
-            commercial_document=quote_6
+            commercial_document=quotation_6
         )
         datetime_now = make_date_utc(datetime.datetime(2024, 1, 1, 0, 00))
         date_now = datetime_now.date()
         Calculations.calculate_document_price(
-            document=quote_6,
+            document=quotation_6,
             pricing_date=date_now)
         self.assertEqual(
-            quote_6.last_calculated_price.__str__(), "23.10")
+            quotation_6.last_calculated_price.__str__(), "23.10")
         self.assertEqual(
-            quote_6.last_calculated_tax.__str__(), "2.30")
+            quotation_6.last_calculated_tax.__str__(), "2.30")
 
     @pytest.mark.back_end_tests
     def test_calculate_document_price_with_document_discount(self):
-        quote_7 = StandardQuoteFactory.create(
+        quotation_7 = StandardQuotationFactory.create(
             customer=self.customer,
             currency=self.test_currency_without_rounding,
             discount=10
@@ -318,21 +318,21 @@ class DocumentCalculationsTest(TestCase):
             unit=self.unit,
             product_type=self.product_without_currency_rounding,
             overwrite_product_price=False,
-            commercial_document=quote_7
+            commercial_document=quotation_7
         )
         datetime_now = make_date_utc(datetime.datetime(2024, 1, 1, 0, 00))
         date_now = datetime_now.date()
         Calculations.calculate_document_price(
-            document=quote_7,
+            document=quotation_7,
             pricing_date=date_now)
         self.assertEqual(
-            quote_7.last_calculated_price.__str__(), "20.80")
+            quotation_7.last_calculated_price.__str__(), "20.80")
         self.assertEqual(
-            quote_7.last_calculated_tax.__str__(), "2.05")
+            quotation_7.last_calculated_tax.__str__(), "2.05")
 
     @pytest.mark.back_end_tests
     def test_calculate_document_with_customer_group_transform(self):
-        quote_8 = StandardQuoteFactory.create(
+        quotation_8 = StandardQuotationFactory.create(
             customer=self.customer)
         StandardCommercialDocumentPositionFactory.create(
             quantity=1,
@@ -340,21 +340,21 @@ class DocumentCalculationsTest(TestCase):
             unit=self.unit,
             product_type=self.product_with_alternative_customer_group,
             overwrite_product_price=False,
-            commercial_document=quote_8
+            commercial_document=quotation_8
         )
         datetime_now = make_date_utc(datetime.datetime(2024, 1, 1, 0, 00))
         date_now = datetime_now.date()
         Calculations.calculate_document_price(
-            document=quote_8,
+            document=quotation_8,
             pricing_date=date_now)
         self.assertEqual(
-            quote_8.last_calculated_price.__str__(), "40.00")
+            quotation_8.last_calculated_price.__str__(), "40.00")
         self.assertEqual(
-            quote_8.last_calculated_tax.__str__(), "4.00")
+            quotation_8.last_calculated_tax.__str__(), "4.00")
 
     @pytest.mark.back_end_tests
     def test_calculate_document_with_currency_transform(self):
-        quote_9 = StandardQuoteFactory.create(
+        quotation_9 = StandardQuotationFactory.create(
             currency=self.test_currency_with_rounding,
             customer=self.customer)
         StandardCommercialDocumentPositionFactory.create(
@@ -363,35 +363,35 @@ class DocumentCalculationsTest(TestCase):
             unit=self.unit,
             product_type=self.product_with_alternative_currency,
             overwrite_product_price=False,
-            commercial_document=quote_9
+            commercial_document=quotation_9
         )
         datetime_now = make_date_utc(datetime.datetime(2024, 1, 1, 0, 00))
         date_now = datetime_now.date()
         Calculations.calculate_document_price(
-            document=quote_9,
+            document=quotation_9,
             pricing_date=date_now)
         self.assertEqual(
-            quote_9.last_calculated_price.__str__(), "40")
+            quotation_9.last_calculated_price.__str__(), "40")
         self.assertEqual(
-            quote_9.last_calculated_tax.__str__(), "4")
+            quotation_9.last_calculated_tax.__str__(), "4")
 
     @pytest.mark.back_end_tests
     def test_calculate_document_with_unit_transform(self):
-        quote_10 = StandardQuoteFactory.create(customer=self.customer)
+        quotation_10 = StandardQuotationFactory.create(customer=self.customer)
         StandardCommercialDocumentPositionFactory.create(
             quantity=1,
             discount=0,
             unit=self.unit,
             product_type=self.product_with_alternative_unit,
             overwrite_product_price=False,
-            commercial_document=quote_10
+            commercial_document=quotation_10
         )
         datetime_now = make_date_utc(datetime.datetime(2024, 1, 1, 0, 00))
         date_now = datetime_now.date()
         Calculations.calculate_document_price(
-            document=quote_10,
+            document=quotation_10,
             pricing_date=date_now)
         self.assertEqual(
-            quote_10.last_calculated_price.__str__(), "40.00")
+            quotation_10.last_calculated_price.__str__(), "40.00")
         self.assertEqual(
-            quote_10.last_calculated_tax.__str__(), "4.00")
+            quotation_10.last_calculated_tax.__str__(), "4.00")

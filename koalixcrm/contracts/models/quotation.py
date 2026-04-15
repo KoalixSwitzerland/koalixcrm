@@ -10,18 +10,18 @@ from koalixcrm.contracts.models.commercial_document import CommercialDocument
 from koalixcrm.global_support_functions import limit_string_length
 
 
-class Quote(CommercialDocument):
+class Quotation(CommercialDocument):
     valid_until = models.DateField(verbose_name=_("Valid until"))
-    status = models.CharField(max_length=1, choices=QUOTESTATUS, verbose_name=_('Status'))
+    status = models.CharField(max_length=1, choices=QUOTATIONSTATUS, verbose_name=_('Status'))
 
-    def link_to_quote(self):
+    def link_to_quotation(self):
         if self.id:
-            return format_html("<a href='/admin/contract_object_management/quote/%s' >%s</a>" % (str(self.id),
+            return format_html("<a href='/admin/contract_object_management/quotation/%s' >%s</a>" % (str(self.id),
                                                                           limit_string_length(str(self.description),
                                                                                               30)))
         else:
             return "Not present"
-    link_to_quote.short_description = _("Quote");
+    link_to_quotation.short_description = _("Quotation");
 
     def create_from_reference(self, calling_model):
         self.create_commercial_document(calling_model)
@@ -34,10 +34,10 @@ class Quote(CommercialDocument):
         self.attach_text_paragraphs()
 
     def __str__(self):
-        return _("Quote") + ": " + self.id.__str__() + " " + _("from Contract") + ": " + self.contract.id.__str__()
+        return _("Quotation") + ": " + self.id.__str__() + " " + _("from Contract") + ": " + self.contract.id.__str__()
 
     class Meta:
         app_label = "contract_object_management"
-        db_table = "crm_quote"
-        verbose_name = _('Quote')
-        verbose_name_plural = _('Quotes')
+        db_table = "crm_quotation"
+        verbose_name = _('Quotation')
+        verbose_name_plural = _('Quotations')

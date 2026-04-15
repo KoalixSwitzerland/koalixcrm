@@ -18,9 +18,9 @@ class OptionPurchaseOrder(OptionCommercialDocument):
 
     save_as = OptionCommercialDocument.save_as
     inlines = OptionCommercialDocument.inlines
-    actions = ['create_purchase_confirmation', 'create_invoice', 'create_quote',
-               'create_delivery_note', 'create_pdf_async',
+    actions = ['create_sales_order', 'create_invoice', 'create_quotation',
+               'create_despatch_advice', 'create_pdf_async',
                'register_invoice_in_accounting', 'register_payment_in_accounting',]
 
     pluginProcessor = PluginProcessor()
-    inlines.extend(pluginProcessor.getPluginAdditions("quoteInlines"))
+    inlines.extend(pluginProcessor.getPluginAdditions("quotationInlines"))

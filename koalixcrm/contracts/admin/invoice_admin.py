@@ -89,10 +89,10 @@ class OptionInvoice(OptionCommercialDocument):
     save_as = OptionCommercialDocument.save_as
     inlines = OptionCommercialDocument.inlines
 
-    actions = ['create_purchase_confirmation',
-               'create_quote',
+    actions = ['create_sales_order',
+               'create_quotation',
                'create_invoice',
-               'create_delivery_note',
+               'create_despatch_advice',
                'create_purchase_order',
                'create_payment_reminder',
                'create_pdf_async',

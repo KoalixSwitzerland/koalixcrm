@@ -3,7 +3,7 @@
 from koalixcrm.contracts.admin.commercial_document_admin import OptionCommercialDocument
 
 
-class OptionPurchaseConfirmation(OptionCommercialDocument):
+class OptionSalesOrder(OptionCommercialDocument):
     list_display = OptionCommercialDocument.list_display
     list_filter = OptionCommercialDocument.list_filter
     ordering = OptionCommercialDocument.ordering
@@ -12,5 +12,5 @@ class OptionPurchaseConfirmation(OptionCommercialDocument):
 
     save_as = OptionCommercialDocument.save_as
     inlines = OptionCommercialDocument.inlines
-    actions = ['create_invoice', 'create_quote',
-               'create_delivery_note', 'create_purchase_order', 'create_pdf_async']
+    actions = ['create_invoice', 'create_quotation',
+               'create_despatch_advice', 'create_purchase_order', 'create_pdf_async']
