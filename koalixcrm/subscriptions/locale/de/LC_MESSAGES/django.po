@@ -2,13 +2,13 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-04 20:29+0000\n"
+"POT-Creation-Date: 2026-04-15 20:29+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,87 +18,97 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
-#: koalixcrm/subscriptions/admin.py:26 koalixcrm/subscriptions/admin.py:38
-#: koalixcrm/subscriptions/admin.py:78
+#: admin/subscription_admin.py:29 admin/subscription_admin.py:48
+#: admin/subscription_admin.py:88
 msgid "Basics"
 msgstr "Grundlagen"
 
-#: koalixcrm/subscriptions/admin.py:66
+#: admin/subscription_admin.py:62
 msgid "Create Invoice"
 msgstr "Erzeuge Rechnung"
 
-#: koalixcrm/subscriptions/admin.py:94
+#: admin/subscription_admin.py:108
 #, fuzzy
 #| msgid "Subscription"
 msgid "Create Subscription"
 msgstr "Abonnement"
 
-#: koalixcrm/subscriptions/const/events.py:6
+#: const/events.py:6
 msgid "Offered"
 msgstr "Offeriert"
 
-#: koalixcrm/subscriptions/const/events.py:7
+#: const/events.py:7
 msgid "Canceled"
 msgstr "Aufgelöst"
 
-#: koalixcrm/subscriptions/const/events.py:8
+#: const/events.py:8
 msgid "Signed"
 msgstr "Unterschrieben"
 
-#: koalixcrm/subscriptions/models.py:11 koalixcrm/subscriptions/models.py:12
-#: koalixcrm/subscriptions/models.py:81
+#: models/subscription.py:10 models/subscription.py:11
+#: models/subscription_type.py:37
 msgid "Subscription Type"
 msgstr "Abonnement Typ"
 
-#: koalixcrm/subscriptions/models.py:49 koalixcrm/subscriptions/models.py:54
+#: models/subscription.py:47 models/subscription_event.py:11
 msgid "Subscription"
 msgstr "Abonnement"
 
-#: koalixcrm/subscriptions/models.py:50
+#: models/subscription.py:48
 msgid "Subscriptions"
 msgstr "Abonnemente"
 
-#: koalixcrm/subscriptions/models.py:55
+#: models/subscription_event.py:12
 msgid "Event Date"
 msgstr "Ereignis Datum"
 
-#: koalixcrm/subscriptions/models.py:56
+#: models/subscription_event.py:15
 msgid "Event"
 msgstr "Ereignis"
 
-#: koalixcrm/subscriptions/models.py:64
+#: models/subscription_event.py:22
 msgid "Subscription Event"
 msgstr "Abonnement Ereignis"
 
-#: koalixcrm/subscriptions/models.py:65
+#: models/subscription_event.py:23
 msgid "Subscription Events"
 msgstr "Abonnement Ereignisse"
 
-#: koalixcrm/subscriptions/models.py:69
-msgid "Cancelation Period (months)"
+#: models/subscription_type.py:10
+msgid "Product Type"
+msgstr ""
+
+#: models/subscription_type.py:14
+#, fuzzy
+#| msgid "Cancelation Period (months)"
+msgid "Cancellation Period (months)"
 msgstr "Kündigungsfirst in Monaten"
 
-#: koalixcrm/subscriptions/models.py:70
+#: models/subscription_type.py:17
 msgid "Automatic Contract Extension (months)"
 msgstr "Automatische Vertragsverlängerung in Monaten"
 
-#: koalixcrm/subscriptions/models.py:73
-msgid "Automatic Contract Extensoin Reminder (days)"
+#: models/subscription_type.py:21
+#, fuzzy
+#| msgid "Automatic Contract Extensoin Reminder (days)"
+msgid "Automatic Contract Extension Reminder (days)"
 msgstr "Automatische Vertragsverlängerung Erinnerung in Tagen"
 
-#: koalixcrm/subscriptions/models.py:74
+#: models/subscription_type.py:24
 msgid "Minimum Contract Duration"
 msgstr "Minimale Vertragsdauer"
 
-#: koalixcrm/subscriptions/models.py:75
-msgid "Payment Intervall (days)"
+#: models/subscription_type.py:27
+#, fuzzy
+#| msgid "Payment Intervall (days)"
+msgid "Payment Interval (days)"
 msgstr "Zahlungsintervall"
 
-#: koalixcrm/subscriptions/models.py:76
+#: models/subscription_type.py:30
 msgid "Contract Documents"
 msgstr "Vertragsdokumente"
 
-#: koalixcrm/subscriptions/models.py:82
+#: models/subscription_type.py:38
 msgid "Subscription Types"
 msgstr "Abonnement Typen"
 

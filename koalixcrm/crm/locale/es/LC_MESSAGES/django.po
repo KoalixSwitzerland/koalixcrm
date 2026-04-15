@@ -1,0 +1,1593 @@
+# Translations for the koalixcrm crm app.
+# Copyright (C) 2026 koalix
+# This file is distributed under the same license as the koalixcrm package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: koalixcrm\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-04-15 20:28+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: admin/call_admin.py:10 admin/call_admin.py:60
+msgid "Is call overdue"
+msgstr ""
+
+#: admin/call_admin.py:15
+msgid "Overdue"
+msgstr ""
+
+#: admin/call_admin.py:16 const/status.py:47
+msgid "Planned"
+msgstr ""
+
+#: admin/call_admin.py:50 admin/call_admin.py:84 const/postaladdressprefix.py:6
+msgid "Company"
+msgstr ""
+
+#: admin/contact_inlines.py:111 admin/customer_admin.py:72
+#: contact/postal_address.py:46
+msgid "State"
+msgstr ""
+
+#: admin/contact_inlines.py:132 admin/customer_admin.py:78
+#: contact/postal_address.py:42
+msgid "City"
+msgstr ""
+
+#: admin/customer_admin.py:22
+msgid "Is lead"
+msgstr ""
+
+#: admin/customer_admin.py:27
+msgid "Lead"
+msgstr ""
+
+#: admin/customer_admin.py:28 contact/customer.py:41
+msgid "Customer"
+msgstr ""
+
+#: admin/customer_admin.py:84
+msgid "Is Lead"
+msgstr ""
+
+#: admin/customer_admin.py:92
+msgid "Create Contract"
+msgstr ""
+
+#: admin/customer_admin.py:101
+msgid "Create Quotation"
+msgstr ""
+
+#: admin/customer_admin.py:110
+msgid "Create Invoice"
+msgstr ""
+
+#: admin/pdf_export_process_admin.py:30
+msgid "Export Request"
+msgstr ""
+
+#: admin/pdf_export_process_admin.py:38
+msgid "Process Status"
+msgstr ""
+
+#: admin/person_admin.py:37 contact/person.py:33
+msgid "Works at"
+msgstr ""
+
+#: const/country.py:6
+msgid "Afghanistan"
+msgstr ""
+
+#: const/country.py:7
+msgid "Aland Islands"
+msgstr ""
+
+#: const/country.py:8
+msgid "Albania"
+msgstr ""
+
+#: const/country.py:9
+msgid "Algeria"
+msgstr ""
+
+#: const/country.py:10
+msgid "American Samoa"
+msgstr ""
+
+#: const/country.py:11
+msgid "Andorra"
+msgstr ""
+
+#: const/country.py:12
+msgid "Angola"
+msgstr ""
+
+#: const/country.py:13
+msgid "Anguilla"
+msgstr ""
+
+#: const/country.py:14
+msgid "Antarctica"
+msgstr ""
+
+#: const/country.py:15
+msgid "Antigua and Barbuda"
+msgstr ""
+
+#: const/country.py:16
+msgid "Argentina"
+msgstr ""
+
+#: const/country.py:17
+msgid "Armenia"
+msgstr ""
+
+#: const/country.py:18
+msgid "Aruba"
+msgstr ""
+
+#: const/country.py:19
+msgid "Australia"
+msgstr ""
+
+#: const/country.py:20
+msgid "Austria"
+msgstr ""
+
+#: const/country.py:21
+msgid "Azerbaijan"
+msgstr ""
+
+#: const/country.py:22
+msgid "the Bahamas"
+msgstr ""
+
+#: const/country.py:23
+msgid "Bahrain"
+msgstr ""
+
+#: const/country.py:24
+msgid "Bangladesh"
+msgstr ""
+
+#: const/country.py:25
+msgid "Barbados"
+msgstr ""
+
+#: const/country.py:26
+msgid "Belarus"
+msgstr ""
+
+#: const/country.py:27
+msgid "Belgium"
+msgstr ""
+
+#: const/country.py:28
+msgid "Belize"
+msgstr ""
+
+#: const/country.py:29
+msgid "Benin"
+msgstr ""
+
+#: const/country.py:30
+msgid "Bermuda"
+msgstr ""
+
+#: const/country.py:31
+msgid "Bhutan"
+msgstr ""
+
+#: const/country.py:32
+msgid "Bolivia"
+msgstr ""
+
+#: const/country.py:33
+msgid "Bosnia and Herzegovina"
+msgstr ""
+
+#: const/country.py:34
+msgid "Botswana"
+msgstr ""
+
+#: const/country.py:35
+msgid "Bouvet Island"
+msgstr ""
+
+#: const/country.py:36
+msgid "Brazil"
+msgstr ""
+
+#: const/country.py:37
+msgid "British Indian Ocean Territory"
+msgstr ""
+
+#: const/country.py:38
+msgid "Brunei Darussalam"
+msgstr ""
+
+#: const/country.py:39
+msgid "Bulgaria"
+msgstr ""
+
+#: const/country.py:40
+msgid "Burkina Faso"
+msgstr ""
+
+#: const/country.py:41
+msgid "Burundi"
+msgstr ""
+
+#: const/country.py:42
+msgid "Cambodia"
+msgstr ""
+
+#: const/country.py:43
+msgid "Cameroon"
+msgstr ""
+
+#: const/country.py:44
+msgid "Canada"
+msgstr ""
+
+#: const/country.py:45
+msgid "Cape Verde"
+msgstr ""
+
+#: const/country.py:46
+msgid "Cayman Islands"
+msgstr ""
+
+#: const/country.py:47
+msgid "Central African Republic"
+msgstr ""
+
+#: const/country.py:48
+msgid "Chad"
+msgstr ""
+
+#: const/country.py:49
+msgid "Chile"
+msgstr ""
+
+#: const/country.py:50
+msgid "China"
+msgstr ""
+
+#: const/country.py:51
+msgid "Christmas Island"
+msgstr ""
+
+#: const/country.py:52
+msgid "Cocos (Keeling) Islands"
+msgstr ""
+
+#: const/country.py:53
+msgid "Colombia"
+msgstr ""
+
+#: const/country.py:54
+msgid "Comoros"
+msgstr ""
+
+#: const/country.py:55
+msgid "Congo"
+msgstr ""
+
+#: const/country.py:56
+msgid "Democratic Republic of the Congo"
+msgstr ""
+
+#: const/country.py:57
+msgid "Cook Islands"
+msgstr ""
+
+#: const/country.py:58
+msgid "Costa Rica"
+msgstr ""
+
+#: const/country.py:59
+msgid "Cote d'Ivoire"
+msgstr ""
+
+#: const/country.py:60
+msgid "Croatia"
+msgstr ""
+
+#: const/country.py:61
+msgid "Cuba"
+msgstr ""
+
+#: const/country.py:62
+msgid "Cyprus"
+msgstr ""
+
+#: const/country.py:63
+msgid "Czech Republic"
+msgstr ""
+
+#: const/country.py:64
+msgid "Denmark"
+msgstr ""
+
+#: const/country.py:65
+msgid "Djibouti"
+msgstr ""
+
+#: const/country.py:66
+msgid "Dominica"
+msgstr ""
+
+#: const/country.py:67
+msgid "Dominican Republic"
+msgstr ""
+
+#: const/country.py:68
+msgid "Ecuador"
+msgstr ""
+
+#: const/country.py:69
+msgid "Egypt"
+msgstr ""
+
+#: const/country.py:70
+msgid "El Salvador"
+msgstr ""
+
+#: const/country.py:71
+msgid "Equatorial Guinea"
+msgstr ""
+
+#: const/country.py:72
+msgid "Eritrea"
+msgstr ""
+
+#: const/country.py:73
+msgid "Estonia"
+msgstr ""
+
+#: const/country.py:74
+msgid "Ethiopia"
+msgstr ""
+
+#: const/country.py:75
+msgid "Falkland Islands (Malvinas)"
+msgstr ""
+
+#: const/country.py:76
+msgid "Faroe Islands"
+msgstr ""
+
+#: const/country.py:77
+msgid "Fiji"
+msgstr ""
+
+#: const/country.py:78
+msgid "Finland"
+msgstr ""
+
+#: const/country.py:79
+msgid "France"
+msgstr ""
+
+#: const/country.py:80
+msgid "French Guiana"
+msgstr ""
+
+#: const/country.py:81
+msgid "French Polynesia"
+msgstr ""
+
+#: const/country.py:82
+msgid "French Southern and Antarctic Lands"
+msgstr ""
+
+#: const/country.py:83
+msgid "Gabon"
+msgstr ""
+
+#: const/country.py:84
+msgid "Gambia"
+msgstr ""
+
+#: const/country.py:85
+msgid "Georgia"
+msgstr ""
+
+#: const/country.py:86
+msgid "Germany"
+msgstr ""
+
+#: const/country.py:87
+msgid "Ghana"
+msgstr ""
+
+#: const/country.py:88
+msgid "Gibraltar"
+msgstr ""
+
+#: const/country.py:89
+msgid "Greece"
+msgstr ""
+
+#: const/country.py:90
+msgid "Greenland"
+msgstr ""
+
+#: const/country.py:91
+msgid "Grenada"
+msgstr ""
+
+#: const/country.py:92
+msgid "Guadeloupe"
+msgstr ""
+
+#: const/country.py:93
+msgid "Guam"
+msgstr ""
+
+#: const/country.py:94
+msgid "Guatemala"
+msgstr ""
+
+#: const/country.py:95
+msgid "Guernsey"
+msgstr ""
+
+#: const/country.py:96
+msgid "Guinea"
+msgstr ""
+
+#: const/country.py:97
+msgid "Guinea-Bissau"
+msgstr ""
+
+#: const/country.py:98
+msgid "Guyana"
+msgstr ""
+
+#: const/country.py:99
+msgid "Haiti"
+msgstr ""
+
+#: const/country.py:100
+msgid "Heard Island and McDonald Islands"
+msgstr ""
+
+#: const/country.py:101
+msgid "Vatican City Holy See"
+msgstr ""
+
+#: const/country.py:102
+msgid "Honduras"
+msgstr ""
+
+#: const/country.py:103
+msgid "Hong Kong"
+msgstr ""
+
+#: const/country.py:104
+msgid "Hungary"
+msgstr ""
+
+#: const/country.py:105
+msgid "Iceland"
+msgstr ""
+
+#: const/country.py:106
+msgid "India"
+msgstr ""
+
+#: const/country.py:107
+msgid "Indonesia"
+msgstr ""
+
+#: const/country.py:108
+msgid "Iran"
+msgstr ""
+
+#: const/country.py:109
+msgid "Iraq"
+msgstr ""
+
+#: const/country.py:110
+msgid "Ireland"
+msgstr ""
+
+#: const/country.py:111
+msgid "Isle of Man"
+msgstr ""
+
+#: const/country.py:112
+msgid "Israel"
+msgstr ""
+
+#: const/country.py:113
+msgid "Italy"
+msgstr ""
+
+#: const/country.py:114
+msgid "Jamaica"
+msgstr ""
+
+#: const/country.py:115
+msgid "Japan"
+msgstr ""
+
+#: const/country.py:116
+msgid "Jersey"
+msgstr ""
+
+#: const/country.py:117
+msgid "Jordan"
+msgstr ""
+
+#: const/country.py:118
+msgid "Kazakhstan"
+msgstr ""
+
+#: const/country.py:119
+msgid "Kenya"
+msgstr ""
+
+#: const/country.py:120
+msgid "Kiribati"
+msgstr ""
+
+#: const/country.py:121
+msgid "North Korea"
+msgstr ""
+
+#: const/country.py:122
+msgid "South Korea"
+msgstr ""
+
+#: const/country.py:123
+msgid "Kuwait"
+msgstr ""
+
+#: const/country.py:124
+msgid "Kyrgyzstan"
+msgstr ""
+
+#: const/country.py:125
+msgid "Laos Lao"
+msgstr ""
+
+#: const/country.py:126
+msgid "Latvia"
+msgstr ""
+
+#: const/country.py:127
+msgid "Lebanon"
+msgstr ""
+
+#: const/country.py:128
+msgid "Lesotho"
+msgstr ""
+
+#: const/country.py:129
+msgid "Liberia"
+msgstr ""
+
+#: const/country.py:130
+msgid "Libya Libyan Arab Jamahiriya"
+msgstr ""
+
+#: const/country.py:131
+msgid "Liechtenstein"
+msgstr ""
+
+#: const/country.py:132
+msgid "Lithuania"
+msgstr ""
+
+#: const/country.py:133
+msgid "Luxembourg"
+msgstr ""
+
+#: const/country.py:134
+msgid "Macau Macao"
+msgstr ""
+
+#: const/country.py:135
+msgid "Macedonia"
+msgstr ""
+
+#: const/country.py:136
+msgid "Madagascar"
+msgstr ""
+
+#: const/country.py:137
+msgid "Malawi"
+msgstr ""
+
+#: const/country.py:138
+msgid "Malaysia"
+msgstr ""
+
+#: const/country.py:139
+msgid "Maldives"
+msgstr ""
+
+#: const/country.py:140
+msgid "Mali"
+msgstr ""
+
+#: const/country.py:141
+msgid "Malta"
+msgstr ""
+
+#: const/country.py:142
+msgid "Marshall Islands"
+msgstr ""
+
+#: const/country.py:143
+msgid "Martinique"
+msgstr ""
+
+#: const/country.py:144
+msgid "Mauritania"
+msgstr ""
+
+#: const/country.py:145
+msgid "Mauritius"
+msgstr ""
+
+#: const/country.py:146
+msgid "Mayotte"
+msgstr ""
+
+#: const/country.py:147
+msgid "Mexico"
+msgstr ""
+
+#: const/country.py:148
+msgid "Micronesia"
+msgstr ""
+
+#: const/country.py:149
+msgid "Moldova"
+msgstr ""
+
+#: const/country.py:150
+msgid "Monaco"
+msgstr ""
+
+#: const/country.py:151
+msgid "Mongolia"
+msgstr ""
+
+#: const/country.py:152
+msgid "Montenegro"
+msgstr ""
+
+#: const/country.py:153
+msgid "Montserrat"
+msgstr ""
+
+#: const/country.py:154
+msgid "Morocco"
+msgstr ""
+
+#: const/country.py:155
+msgid "Mozambique"
+msgstr ""
+
+#: const/country.py:156
+msgid "Myanmar"
+msgstr ""
+
+#: const/country.py:157
+msgid "Namibia"
+msgstr ""
+
+#: const/country.py:158
+msgid "Nauru"
+msgstr ""
+
+#: const/country.py:159
+msgid "Nepal"
+msgstr ""
+
+#: const/country.py:160
+msgid "Netherlands"
+msgstr ""
+
+#: const/country.py:161
+msgid "Netherlands Antilles"
+msgstr ""
+
+#: const/country.py:162
+msgid "New Caledonia"
+msgstr ""
+
+#: const/country.py:163
+msgid "New Zealand"
+msgstr ""
+
+#: const/country.py:164
+msgid "Nicaragua"
+msgstr ""
+
+#: const/country.py:165
+msgid "Niger"
+msgstr ""
+
+#: const/country.py:166
+msgid "Nigeria"
+msgstr ""
+
+#: const/country.py:167
+msgid "Niue"
+msgstr ""
+
+#: const/country.py:168
+msgid "Norfolk Island Norfolk Island"
+msgstr ""
+
+#: const/country.py:169
+msgid "Northern Mariana Islands"
+msgstr ""
+
+#: const/country.py:170
+msgid "Norway"
+msgstr ""
+
+#: const/country.py:171
+msgid "Oman"
+msgstr ""
+
+#: const/country.py:172
+msgid "Pakistan"
+msgstr ""
+
+#: const/country.py:173
+msgid "Palau"
+msgstr ""
+
+#: const/country.py:174
+msgid "Palestinian Territory"
+msgstr ""
+
+#: const/country.py:175
+msgid "Panama"
+msgstr ""
+
+#: const/country.py:176
+msgid "Papua New Guinea"
+msgstr ""
+
+#: const/country.py:177
+msgid "Paraguay"
+msgstr ""
+
+#: const/country.py:178
+msgid "Peru"
+msgstr ""
+
+#: const/country.py:179
+msgid "Philippines"
+msgstr ""
+
+#: const/country.py:180
+msgid "Pitcairn Islands"
+msgstr ""
+
+#: const/country.py:181
+msgid "Poland"
+msgstr ""
+
+#: const/country.py:182
+msgid "Portugal"
+msgstr ""
+
+#: const/country.py:183
+msgid "Puerto Rico"
+msgstr ""
+
+#: const/country.py:184
+msgid "Qatar"
+msgstr ""
+
+#: const/country.py:185
+msgid "Reunion"
+msgstr ""
+
+#: const/country.py:186
+msgid "Romania"
+msgstr ""
+
+#: const/country.py:187
+msgid "Russia"
+msgstr ""
+
+#: const/country.py:188
+msgid "Rwanda"
+msgstr ""
+
+#: const/country.py:189
+msgid "Saint Helena"
+msgstr ""
+
+#: const/country.py:190
+msgid "Saint Kitts and Nevis"
+msgstr ""
+
+#: const/country.py:191
+msgid "Saint Lucia"
+msgstr ""
+
+#: const/country.py:192
+msgid "Saint Pierre and Miquelon"
+msgstr ""
+
+#: const/country.py:193
+msgid "Saint Vincent and the Grenadines"
+msgstr ""
+
+#: const/country.py:194
+msgid "Samoa"
+msgstr ""
+
+#: const/country.py:195
+msgid "San Marino"
+msgstr ""
+
+#: const/country.py:196
+msgid "Sao Tome and Principe"
+msgstr ""
+
+#: const/country.py:197
+msgid "Saudi Arabia"
+msgstr ""
+
+#: const/country.py:198
+msgid "Senegal"
+msgstr ""
+
+#: const/country.py:199
+msgid "Serbia"
+msgstr ""
+
+#: const/country.py:200
+msgid "Seychelles"
+msgstr ""
+
+#: const/country.py:201
+msgid "Sierra Leone"
+msgstr ""
+
+#: const/country.py:202
+msgid "Singapore"
+msgstr ""
+
+#: const/country.py:203
+msgid "Slovakia"
+msgstr ""
+
+#: const/country.py:204
+msgid "Slovenia"
+msgstr ""
+
+#: const/country.py:205
+msgid "Solomon Islands"
+msgstr ""
+
+#: const/country.py:206
+msgid "Somalia"
+msgstr ""
+
+#: const/country.py:207
+msgid "South Africa"
+msgstr ""
+
+#: const/country.py:208
+msgid "South Georgia and the South Sandwich Islands"
+msgstr ""
+
+#: const/country.py:209
+msgid "Spain"
+msgstr ""
+
+#: const/country.py:210
+msgid "Sri Lanka"
+msgstr ""
+
+#: const/country.py:211
+msgid "Sudan"
+msgstr ""
+
+#: const/country.py:212
+msgid "Suriname"
+msgstr ""
+
+#: const/country.py:213
+msgid "Svalbard and Jan Mayen"
+msgstr ""
+
+#: const/country.py:214
+msgid "Swaziland"
+msgstr ""
+
+#: const/country.py:215
+msgid "Sweden"
+msgstr ""
+
+#: const/country.py:216
+msgid "Switzerland"
+msgstr ""
+
+#: const/country.py:217
+msgid "Syria"
+msgstr ""
+
+#: const/country.py:218
+msgid "Taiwan"
+msgstr ""
+
+#: const/country.py:219
+msgid "Tajikistan"
+msgstr ""
+
+#: const/country.py:220
+msgid "Tanzania"
+msgstr ""
+
+#: const/country.py:221
+msgid "Thailand"
+msgstr ""
+
+#: const/country.py:222
+msgid "East Timor"
+msgstr ""
+
+#: const/country.py:223
+msgid "Togo"
+msgstr ""
+
+#: const/country.py:224
+msgid "Tokelau"
+msgstr ""
+
+#: const/country.py:225
+msgid "Tonga"
+msgstr ""
+
+#: const/country.py:226
+msgid "Trinidad and Tobago"
+msgstr ""
+
+#: const/country.py:227
+msgid "Tunisia"
+msgstr ""
+
+#: const/country.py:228
+msgid "Turkey"
+msgstr ""
+
+#: const/country.py:229
+msgid "Turkmenistan"
+msgstr ""
+
+#: const/country.py:230
+msgid "Turks and Caicos Islands"
+msgstr ""
+
+#: const/country.py:231
+msgid "Tuvalu"
+msgstr ""
+
+#: const/country.py:232
+msgid "Uganda"
+msgstr ""
+
+#: const/country.py:233
+msgid "Ukraine"
+msgstr ""
+
+#: const/country.py:234
+msgid "United Arab Emirates"
+msgstr ""
+
+#: const/country.py:235
+msgid "United Kingdom"
+msgstr ""
+
+#: const/country.py:236
+msgid "United States"
+msgstr ""
+
+#: const/country.py:237
+msgid "United States Minor Outlying Islands"
+msgstr ""
+
+#: const/country.py:238
+msgid "Uruguay"
+msgstr ""
+
+#: const/country.py:239
+msgid "Uzbekistan"
+msgstr ""
+
+#: const/country.py:240
+msgid "Vanuatu"
+msgstr ""
+
+#: const/country.py:241
+msgid "Venezuela"
+msgstr ""
+
+#: const/country.py:242
+msgid "Vietnam Viet Nam"
+msgstr ""
+
+#: const/country.py:243
+msgid "British Virgin Islands"
+msgstr ""
+
+#: const/country.py:244
+msgid "United States Virgin Islands"
+msgstr ""
+
+#: const/country.py:245
+msgid "Wallis and Futuna"
+msgstr ""
+
+#: const/country.py:246
+msgid "Western Sahara"
+msgstr ""
+
+#: const/country.py:247
+msgid "Yemen"
+msgstr ""
+
+#: const/country.py:248
+msgid "Zambia"
+msgstr ""
+
+#: const/country.py:249
+msgid "Zimbabwe"
+msgstr ""
+
+#: const/postaladdressprefix.py:7
+msgid "Mrs"
+msgstr ""
+
+#: const/postaladdressprefix.py:8
+msgid "Mr"
+msgstr ""
+
+#: const/postaladdressprefix.py:9
+msgid "Ms"
+msgstr ""
+
+#: const/purpose.py:6
+msgid "Delivery Address"
+msgstr ""
+
+#: const/purpose.py:7
+msgid "Billing Address"
+msgstr ""
+
+#: const/purpose.py:8
+msgid "Contact Address"
+msgstr ""
+
+#: const/purpose.py:12
+msgid "Private"
+msgstr ""
+
+#: const/purpose.py:13
+msgid "Business"
+msgstr ""
+
+#: const/purpose.py:14
+msgid "Mobile Private"
+msgstr ""
+
+#: const/purpose.py:15
+msgid "Mobile Business"
+msgstr ""
+
+#: const/purpose.py:19
+msgid "Before subject"
+msgstr ""
+
+#: const/purpose.py:20
+msgid "After subject"
+msgstr ""
+
+#: const/purpose.py:21
+msgid "Before total"
+msgstr ""
+
+#: const/purpose.py:22
+msgid "After total"
+msgstr ""
+
+#: const/purpose.py:23
+msgid "Before wishes"
+msgstr ""
+
+#: const/purpose.py:24
+msgid "After wishes"
+msgstr ""
+
+#: const/purpose.py:25
+msgid "Custom 1"
+msgstr ""
+
+#: const/purpose.py:26
+msgid "Custom 2"
+msgstr ""
+
+#: const/purpose.py:27
+msgid "Custom 3"
+msgstr ""
+
+#: const/purpose.py:28
+msgid "Custom 4"
+msgstr ""
+
+#: const/purpose.py:32
+msgid "First commercial call"
+msgstr ""
+
+#: const/purpose.py:33
+msgid "Planned commercial call"
+msgstr ""
+
+#: const/purpose.py:34
+msgid "Assistance call"
+msgstr ""
+
+#: const/purpose.py:38
+msgid "First commercial visit"
+msgstr ""
+
+#: const/purpose.py:39
+msgid "Installation"
+msgstr ""
+
+#: const/status.py:6
+msgid "Payed"
+msgstr ""
+
+#: const/status.py:7
+msgid "Invoice created"
+msgstr ""
+
+#: const/status.py:8
+msgid "Invoice sent"
+msgstr ""
+
+#: const/status.py:9 const/status.py:19
+msgid "First reminder sent"
+msgstr ""
+
+#: const/status.py:10 const/status.py:20
+msgid "Second reminder sent"
+msgstr ""
+
+#: const/status.py:11
+msgid "Customer cant pay"
+msgstr ""
+
+#: const/status.py:12 const/status.py:21 const/status.py:43
+msgid "Deleted"
+msgstr ""
+
+#: const/status.py:16 const/status.py:51
+msgid "Success"
+msgstr ""
+
+#: const/status.py:17
+msgid "Quotation created"
+msgstr ""
+
+#: const/status.py:18
+msgid "Quotation sent"
+msgstr ""
+
+#: const/status.py:25
+msgid "Ordered"
+msgstr ""
+
+#: const/status.py:26 const/status.py:48
+msgid "Delayed"
+msgstr ""
+
+#: const/status.py:27
+msgid "Delivered"
+msgstr ""
+
+#: const/status.py:28
+msgid "Invoice registered"
+msgstr ""
+
+#: const/status.py:29
+msgid "Invoice payed"
+msgstr ""
+
+#: const/status.py:33
+msgid "Created"
+msgstr ""
+
+#: const/status.py:34
+msgid "Sent"
+msgstr ""
+
+#: const/status.py:35
+msgid "Received"
+msgstr ""
+
+#: const/status.py:36
+msgid "Lost"
+msgstr ""
+
+#: const/status.py:40
+msgid "Credit note created"
+msgstr ""
+
+#: const/status.py:41
+msgid "Credit note sent"
+msgstr ""
+
+#: const/status.py:42
+msgid "Booked"
+msgstr ""
+
+#: const/status.py:49
+msgid "ToRecall"
+msgstr ""
+
+#: const/status.py:50 models/pdf_export_process.py:21
+msgid "Failed"
+msgstr ""
+
+#: contact/call.py:14
+msgid "Staff"
+msgstr ""
+
+#: contact/call.py:18
+msgid "Description"
+msgstr ""
+
+#: contact/call.py:19 contact/contact.py:17
+msgid "Created at"
+msgstr ""
+
+#: contact/call.py:21
+msgid "Date due"
+msgstr ""
+
+#: contact/call.py:24 contact/contact.py:19
+msgid "Last modified"
+msgstr ""
+
+#: contact/call.py:31 contact/contact.py:25
+msgid "Last modified by"
+msgstr ""
+
+#: contact/call.py:33 models/pdf_export_process.py:44
+msgid "Status"
+msgstr ""
+
+#: contact/call.py:39 contact/contact.py:107
+msgid "Call"
+msgstr ""
+
+#: contact/contact.py:16 contact/customer_billing_cycle.py:10
+#: contact/person.py:16 contact/postal_address.py:15
+msgid "Name"
+msgstr ""
+
+#: contact/contact.py:30 contact/contact.py:31
+msgid "Contact"
+msgstr ""
+
+#: contact/contact.py:38 contact/contact.py:53 contact/contact.py:68
+#: contact/contact.py:101 contact/contact.py:121
+msgid "Purpose"
+msgstr ""
+
+#: contact/contact.py:45 contact/contact.py:46
+msgid "Phone Address For Contact"
+msgstr ""
+
+#: contact/contact.py:60 contact/contact.py:61
+msgid "Email Address For Contact"
+msgstr ""
+
+#: contact/contact.py:75 contact/contact.py:76
+msgid "Postal Address For Contact"
+msgstr ""
+
+#: contact/contact.py:89 contact/contact.py:90
+msgid "Contacts"
+msgstr ""
+
+#: contact/contact.py:98 contact/contact.py:118 contact/person.py:58
+msgid "Person"
+msgstr ""
+
+#: contact/contact.py:108
+msgid "Calls"
+msgstr ""
+
+#: contact/contact.py:126
+msgid "Reference Call"
+msgstr ""
+
+#: contact/contact.py:132
+msgid "Visit"
+msgstr ""
+
+#: contact/contact.py:133
+msgid "Visits"
+msgstr ""
+
+#: contact/customer.py:11
+msgid "Default Billing Cycle"
+msgstr ""
+
+#: contact/customer.py:13
+msgid "Is member of"
+msgstr ""
+
+#: contact/customer.py:42
+msgid "Customers"
+msgstr ""
+
+#: contact/customer_billing_cycle.py:11
+msgid "Days To Payment Date"
+msgstr ""
+
+#: contact/customer_billing_cycle.py:12
+msgid "Payment Reminder, Days To Payment Date "
+msgstr ""
+
+#: contact/customer_billing_cycle.py:16 contact/customer_billing_cycle.py:17
+msgid "Customer Billing Cycle"
+msgstr ""
+
+#: contact/customer_group.py:16
+msgid "Customer Group"
+msgstr ""
+
+#: contact/customer_group.py:17
+msgid "Customer Groups"
+msgstr ""
+
+#: contact/email_address.py:9 contact/email_address.py:13
+#: contact/email_address.py:14 contact/person.py:24
+msgid "Email Address"
+msgstr ""
+
+#: contact/person.py:12 contact/postal_address.py:12
+msgid "Prefix"
+msgstr ""
+
+#: contact/person.py:20 contact/postal_address.py:19
+msgid "Pre-name"
+msgstr ""
+
+#: contact/person.py:26 contact/phone_address.py:9
+msgid "Phone Number"
+msgstr ""
+
+#: contact/person.py:28
+msgid "Role"
+msgstr ""
+
+#: contact/person.py:59
+msgid "People"
+msgstr ""
+
+#: contact/phone_address.py:13 contact/phone_address.py:14
+msgid "Phone Address"
+msgstr ""
+
+#: contact/postal_address.py:23
+msgid "Address line 1"
+msgstr ""
+
+#: contact/postal_address.py:27
+msgid "Address line 2"
+msgstr ""
+
+#: contact/postal_address.py:31
+msgid "Address line 3"
+msgstr ""
+
+#: contact/postal_address.py:35
+msgid "Address line 4"
+msgstr ""
+
+#: contact/postal_address.py:38
+msgid "Zip Code"
+msgstr ""
+
+#: contact/postal_address.py:51
+msgid "Country"
+msgstr ""
+
+#: contact/postal_address.py:55
+msgid "Subdivision Code (ISO 3166-2 suffix)"
+msgstr ""
+
+#: contact/postal_address.py:56
+msgid ""
+"e.g. ZH for Kanton Zürich, BY for Bayern — used for regional public holidays"
+msgstr ""
+
+#: contact/postal_address.py:62 contact/postal_address.py:63
+msgid "Postal Address"
+msgstr ""
+
+#: contact/supplier.py:11
+msgid "Offers Shipment to Customer"
+msgstr ""
+
+#: contact/supplier.py:16
+msgid "Supplier"
+msgstr ""
+
+#: contact/supplier.py:17
+msgid "Suppliers"
+msgstr ""
+
+#: management/commands/koalixcrm_install_defaulttemplates.py:35
+msgid "File not found:"
+msgstr ""
+
+#: management/commands/koalixcrm_install_defaulttemplates.py:36
+msgid "Run collectstatic command and fix potential errors"
+msgstr ""
+
+#: management/commands/koalixcrm_install_defaulttemplates.py:66
+msgid "John Smit, Sample Company, 8976 Smallville"
+msgstr ""
+
+#: management/commands/koalixcrm_install_defaulttemplates.py:68
+msgid ""
+"According to your wishes the contract consists of the following positions:"
+msgstr ""
+
+#: management/commands/koalixcrm_install_defaulttemplates.py:69
+msgid ""
+"Thank you for your interest in our company \n"
+" Best regards"
+msgstr ""
+
+#: management/commands/koalixcrm_install_defaulttemplates.py:70
+msgid "We would like to order the following positions:"
+msgstr ""
+
+#: management/commands/koalixcrm_install_defaulttemplates.py:71
+msgid "Best regards"
+msgstr ""
+
+#: management/commands/koalixcrm_install_defaulttemplates.py:72
+msgid "Sample Company"
+msgstr ""
+
+#: management/commands/koalixcrm_install_defaulttemplates.py:73
+msgid "Sample Address"
+msgstr ""
+
+#: models/pdf_export_process.py:18
+msgid "Pending"
+msgstr ""
+
+#: models/pdf_export_process.py:19
+msgid "Processing"
+msgstr ""
+
+#: models/pdf_export_process.py:20
+msgid "Completed"
+msgstr ""
+
+#: models/pdf_export_process.py:27
+msgid "Source Model"
+msgstr ""
+
+#: models/pdf_export_process.py:29
+msgid "Class name of the source object (e.g. Invoice, Quotation)"
+msgstr ""
+
+#: models/pdf_export_process.py:32
+msgid "Source Object ID"
+msgstr ""
+
+#: models/pdf_export_process.py:38
+msgid "Template Set"
+msgstr ""
+
+#: models/pdf_export_process.py:51
+msgid "Result URL"
+msgstr ""
+
+#: models/pdf_export_process.py:55
+msgid "S3 URL of the generated PDF"
+msgstr ""
+
+#: models/pdf_export_process.py:59
+msgid "Error Message"
+msgstr ""
+
+#: models/pdf_export_process.py:67
+msgid "Triggered By"
+msgstr ""
+
+#: models/pdf_export_process.py:73
+msgid "Created At"
+msgstr ""
+
+#: models/pdf_export_process.py:78
+msgid "Updated At"
+msgstr ""
+
+#: models/pdf_export_process.py:84
+msgid "PDF Export Process"
+msgstr ""
+
+#: models/pdf_export_process.py:85
+msgid "PDF Export Processes"
+msgstr ""
+
+#: views/create_task.py:97
+msgid "Successfully created Project and Tasks for this contract"
+msgstr ""
+
+#: views/newdocument.py:31
+msgid " created"
+msgstr ""
+
+#: views/newdocument.py:44
+msgid "Missing Templateset "
+msgstr ""
+
+#: views/newdocument.py:50
+msgid "Missing template for "
+msgstr ""
+
+#: views/pdfexport.py:48
+msgid "User Extension Missing"
+msgstr ""
+
+#: views/pdfexport.py:52
+msgid "User Extension Email Missing"
+msgstr ""
+
+#: views/pdfexport.py:56
+msgid "User Extension Phone Missing"
+msgstr ""
+
+#: views/pdfexport.py:60 views/pdfexport.py:64
+msgid "Template-set Missing"
+msgstr ""
+
+#: views/pdfexport.py:68
+msgid "Fop Config File Missing in TemplateSet"
+msgstr ""
+
+#: views/pdfexport.py:72
+msgid "XSLT File Missing in TemplateSet"
+msgstr ""
+
+#: views/pdfexport.py:76
+msgid "Work report template missing in the user extension"
+msgstr ""
+
+#: views/time_tracking.py:44
+msgid "you have successfully updated your work"
+msgstr ""

@@ -2,13 +2,13 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-04 20:29+0000\n"
+"POT-Creation-Date: 2026-04-15 20:27+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,225 +17,236 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: koalixcrm/accounting/admin.py:22 koalixcrm/accounting/admin.py:73
-msgid "Basic"
-msgstr "Grundlagen"
-
-#: koalixcrm/accounting/admin.py:50
-msgid "The open liabilites account must be a liabities account"
-msgstr ""
-"Das Konto 'Offene Verbindlichkeiten' muss vom Typ 'Verbindlichkeiten' sein"
-
-#: koalixcrm/accounting/admin.py:52
-msgid "There may only be one open liablities account in the system"
-msgstr "Es darf nur ein einziges 'Offene Verbindlichkeiten' konnto geben"
-
-#: koalixcrm/accounting/admin.py:56
-msgid "The open intrests account must be an asset account"
-msgstr ""
-
-#: koalixcrm/accounting/admin.py:58
-msgid "There may only be one open intrests account in the system"
-msgstr ""
-
-#: koalixcrm/accounting/admin.py:61
-msgid "A customer payment account must be an asset account"
-msgstr ""
-
-#: koalixcrm/accounting/admin.py:64
-msgid "A product inventory account must be an asset account"
-msgstr ""
-
-#: koalixcrm/accounting/admin.py:94
-msgid "The begin date cannot be later than the end date."
-msgstr ""
-
-#: koalixcrm/accounting/admin.py:96
-msgid "The begin and the end date may not be empty"
-msgstr ""
-
-#: koalixcrm/accounting/admin.py:106 koalixcrm/accounting/admin.py:153
-msgid "Basics"
-msgstr "Grundlagen"
-
-#: koalixcrm/accounting/admin.py:130
-msgid "Create PDF of Balance Sheet"
-msgstr "Erzeuge ein PDF der Bilanz"
-
-#: koalixcrm/accounting/admin.py:137
-msgid "Create PDF of Profit Loss Statement Sheet"
-msgstr "Erzeuge ein PDF der Erfolgsrechnung"
-
-#: koalixcrm/accounting/admin.py:144
-msgid "Create XML of all Accounts"
-msgstr ""
-
-#: koalixcrm/accounting/const/accountTypeChoices.py:6
+#: const/accountTypeChoices.py:6
 msgid "Earnings"
 msgstr "Ertrag (Einnahmen)"
 
-#: koalixcrm/accounting/const/accountTypeChoices.py:7
+#: const/accountTypeChoices.py:7
 msgid "Spendings"
 msgstr "Aufwand (Ausgaben)"
 
-#: koalixcrm/accounting/const/accountTypeChoices.py:8
+#: const/accountTypeChoices.py:8
 msgid "Liabilities"
 msgstr "Passiva (Schulden)"
 
-#: koalixcrm/accounting/const/accountTypeChoices.py:9
+#: const/accountTypeChoices.py:9
 msgid "Assets"
 msgstr "Aktiva (Vermögen)"
 
-#: koalixcrm/accounting/models.py:24
-msgid "Title"
-msgstr "Titel"
-
-#: koalixcrm/accounting/models.py:25
-msgid "Begin"
-msgstr "Anfang"
-
-#: koalixcrm/accounting/models.py:26
-msgid "End"
-msgstr "Ende"
-
-#: koalixcrm/accounting/models.py:91
-msgid ""
-"During XML Export it was not correctly specified which data that has to be "
-"exported"
-msgstr ""
-
-#: koalixcrm/accounting/models.py:94
-msgid "During XML Export it was not correctly specied data has to be exported"
-msgstr ""
-
-#: koalixcrm/accounting/models.py:105
-msgid "During BalanceSheet PDF Export"
-msgstr ""
-
-#: koalixcrm/accounting/models.py:190
-msgid "Accounting Period"
-msgstr "Abrechnungszeitraum"
-
-#: koalixcrm/accounting/models.py:191
-msgid "Accounting Periods"
-msgstr "Abrechnungszeiträume"
-
-#: koalixcrm/accounting/models.py:195
+#: models/account.py:14
 msgid "Account Number"
 msgstr "Kontonummer"
 
-#: koalixcrm/accounting/models.py:196
+#: models/account.py:15
 msgid "Account Title"
 msgstr "Kontobezeichnung"
 
-#: koalixcrm/accounting/models.py:197
+#: models/account.py:17
 msgid "Account Type"
 msgstr "Kontotyp"
 
-#: koalixcrm/accounting/models.py:198 koalixcrm/accounting/models.py:285
+#: models/account.py:20 models/booking.py:12
 msgid "Description"
 msgstr "Beschreibung"
 
-#: koalixcrm/accounting/models.py:199
+#: models/account.py:21
 msgid "Is The Open Liabilities Account"
 msgstr "Konto für offene Rechungen"
 
-#: koalixcrm/accounting/models.py:200
+#: models/account.py:22
 msgid "Is The Open Interests Account"
 msgstr "Konto für offene Forderungen"
 
-#: koalixcrm/accounting/models.py:201
+#: models/account.py:23
 msgid "Is a Product Inventory Account"
 msgstr "Konto für Lager"
 
-#: koalixcrm/accounting/models.py:202
+#: models/account.py:24
 msgid "Is a Customer Payment Account"
 msgstr "Konto für Kundeneinzahlungen"
 
-#: koalixcrm/accounting/models.py:210
+#: models/account.py:32
 msgid "Value"
 msgstr "Wert"
 
-#: koalixcrm/accounting/models.py:260 koalixcrm/accounting/models.py:261
+#: models/account.py:115 models/account.py:116
 msgid "Account"
 msgstr "Konto"
 
-#: koalixcrm/accounting/models.py:266
-msgid "Product Categorie Title"
-msgstr "Produktekategorie"
+#: models/account.py:134
+#, fuzzy
+#| msgid "The open liabilites account must be a liabities account"
+msgid "The open liabilities account must be a liabities account"
+msgstr ""
+"Das Konto 'Offene Verbindlichkeiten' muss vom Typ 'Verbindlichkeiten' sein"
 
-#: koalixcrm/accounting/models.py:267
-msgid "Profit Account"
-msgstr "Ertrag Konto"
+#: models/account.py:136
+msgid "There may only be one open liablities account in the system"
+msgstr "Es darf nur ein einziges 'Offene Verbindlichkeiten' konnto geben"
 
-#: koalixcrm/accounting/models.py:269
-msgid "Loss Account"
-msgstr "Aufwand Konto"
+#: models/account.py:140
+#, fuzzy
+#| msgid "The open liabilites account must be a liabities account"
+msgid "The open interests account must be an asset account"
+msgstr ""
+"Das Konto 'Offene Verbindlichkeiten' muss vom Typ 'Verbindlichkeiten' sein"
 
-#: koalixcrm/accounting/models.py:274
-msgid "Product Categorie"
-msgstr "Produktekategorie"
+#: models/account.py:142
+msgid "There may only be one open intrests account in the system"
+msgstr ""
 
-#: koalixcrm/accounting/models.py:275
-msgid "Product Categories"
-msgstr "Produktekategorien"
+#: models/account.py:145
+msgid "A customer payment account must be an asset account"
+msgstr ""
 
-#: koalixcrm/accounting/models.py:282
+#: models/account.py:148
+msgid "A product inventory account must be an asset account"
+msgstr ""
+
+#: models/account.py:163 models/booking.py:43
+msgid "Basic"
+msgstr "Grundlagen"
+
+#: models/accounting_period.py:20
+msgid "Title"
+msgstr "Titel"
+
+#: models/accounting_period.py:21
+msgid "Begin"
+msgstr "Anfang"
+
+#: models/accounting_period.py:22
+msgid "End"
+msgstr "Ende"
+
+#: models/accounting_period.py:25
+#, fuzzy
+#| msgid "Create PDF of Balance Sheet"
+msgid "Referred template for balance sheet"
+msgstr "Erzeuge ein PDF der Bilanz"
+
+#: models/accounting_period.py:31
+#, fuzzy
+#| msgid "Create PDF of Profit Loss Statement Sheet"
+msgid "Referred template for profit, loss statement"
+msgstr "Erzeuge ein PDF der Erfolgsrechnung"
+
+#: models/accounting_period.py:41
+msgid "Template Set for balance sheet is missing in Accounting Period"
+msgstr ""
+
+#: models/accounting_period.py:47
+msgid "Template Set for profit loss statement is missing in Accounting Period"
+msgstr ""
+
+#: models/accounting_period.py:166
+msgid "Accounting Period"
+msgstr "Abrechnungszeitraum"
+
+#: models/accounting_period.py:167
+msgid "Accounting Periods"
+msgstr "Abrechnungszeiträume"
+
+#: models/accounting_period.py:183
+msgid "The begin date cannot be later than the end date."
+msgstr ""
+
+#: models/accounting_period.py:185
+msgid "The begin and the end date may not be empty"
+msgstr ""
+
+#: models/accounting_period.py:203 models/product_category.py:40
+msgid "Basics"
+msgstr "Grundlagen"
+
+#: models/accounting_period.py:236
+msgid "Create PDF of Balance Sheet"
+msgstr "Erzeuge ein PDF der Bilanz"
+
+#: models/accounting_period.py:248
+msgid "Create PDF of Profit Loss Statement Sheet"
+msgstr "Erzeuge ein PDF der Erfolgsrechnung"
+
+#: models/booking.py:9
 msgid "From Account"
 msgstr "Vom Konto (Soll)"
 
-#: koalixcrm/accounting/models.py:283
+#: models/booking.py:10
 msgid "To Account"
 msgstr "Zu Konto (Haben)"
 
-#: koalixcrm/accounting/models.py:284
+#: models/booking.py:11
 msgid "Amount"
 msgstr "Betrag"
 
-#: koalixcrm/accounting/models.py:286
+#: models/booking.py:13
 msgid "Booking Reference"
 msgstr "Buchungsreferenz"
 
-#: koalixcrm/accounting/models.py:287
+#: models/booking.py:14
 msgid "Booking at"
 msgstr "Buchung am"
 
-#: koalixcrm/accounting/models.py:288
+#: models/booking.py:15
 msgid "AccountingPeriod"
 msgstr "Abrechnungszeitraum"
 
-#: koalixcrm/accounting/models.py:290
+#: models/booking.py:17
 msgid "Reference Staff"
 msgstr "Zuständiger Mitarbeiter"
 
-#: koalixcrm/accounting/models.py:291
+#: models/booking.py:18
 msgid "Created at"
 msgstr "Erstellt am"
 
-#: koalixcrm/accounting/models.py:292
+#: models/booking.py:19
 msgid "Last modified"
 msgstr "Zuletzt verändert"
 
-#: koalixcrm/accounting/models.py:294
+#: models/booking.py:21
 msgid "Last modified by"
 msgstr "Zuletzt verändert von"
 
-#: koalixcrm/accounting/models.py:299
+#: models/booking.py:26
 msgid "Date"
 msgstr "Datum"
 
-#: koalixcrm/accounting/models.py:306
+#: models/booking.py:33
 msgid "Booking"
 msgstr "Buchung"
 
-#: koalixcrm/accounting/models.py:307
+#: models/booking.py:34
 msgid "Bookings"
 msgstr "Buchungen"
 
-#: koalixcrm/accounting/views.py:34 koalixcrm/accounting/views.py:69
+#: models/product_category.py:10
+#, fuzzy
+#| msgid "Product Categorie Title"
+msgid "Product Category Title"
+msgstr "Produktekategorie"
+
+#: models/product_category.py:14
+msgid "Profit Account"
+msgstr "Ertrag Konto"
+
+#: models/product_category.py:19
+msgid "Loss Account"
+msgstr "Aufwand Konto"
+
+#: models/product_category.py:25
+#, fuzzy
+#| msgid "Product Categorie"
+msgid "Product Category"
+msgstr "Produktekategorie"
+
+#: models/product_category.py:26
+msgid "Product Categories"
+msgstr "Produktekategorien"
+
+#: views/document_export.py:35 views/document_export.py:67
 msgid "User Extension Missing"
 msgstr ""
 
-#: koalixcrm/accounting/views.py:37 koalixcrm/accounting/views.py:72
+#: views/document_export.py:38 views/document_export.py:70
 msgid "Templateset Missing"
 msgstr ""

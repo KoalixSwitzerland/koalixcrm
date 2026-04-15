@@ -1,0 +1,102 @@
+# Translations for the koalixcrm subscriptions app.
+# Copyright (C) 2026 koalix
+# This file is distributed under the same license as the koalixcrm package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: koalixcrm\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-04-15 20:29+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: admin/subscription_admin.py:29 admin/subscription_admin.py:48
+#: admin/subscription_admin.py:88
+msgid "Basics"
+msgstr ""
+
+#: admin/subscription_admin.py:62
+msgid "Create Invoice"
+msgstr ""
+
+#: admin/subscription_admin.py:108
+msgid "Create Subscription"
+msgstr ""
+
+#: const/events.py:6
+msgid "Offered"
+msgstr ""
+
+#: const/events.py:7
+msgid "Canceled"
+msgstr ""
+
+#: const/events.py:8
+msgid "Signed"
+msgstr ""
+
+#: models/subscription.py:10 models/subscription.py:11
+#: models/subscription_type.py:37
+msgid "Subscription Type"
+msgstr ""
+
+#: models/subscription.py:47 models/subscription_event.py:11
+msgid "Subscription"
+msgstr ""
+
+#: models/subscription.py:48
+msgid "Subscriptions"
+msgstr ""
+
+#: models/subscription_event.py:12
+msgid "Event Date"
+msgstr ""
+
+#: models/subscription_event.py:15
+msgid "Event"
+msgstr ""
+
+#: models/subscription_event.py:22
+msgid "Subscription Event"
+msgstr ""
+
+#: models/subscription_event.py:23
+msgid "Subscription Events"
+msgstr ""
+
+#: models/subscription_type.py:10
+msgid "Product Type"
+msgstr ""
+
+#: models/subscription_type.py:14
+msgid "Cancellation Period (months)"
+msgstr ""
+
+#: models/subscription_type.py:17
+msgid "Automatic Contract Extension (months)"
+msgstr ""
+
+#: models/subscription_type.py:21
+msgid "Automatic Contract Extension Reminder (days)"
+msgstr ""
+
+#: models/subscription_type.py:24
+msgid "Minimum Contract Duration"
+msgstr ""
+
+#: models/subscription_type.py:27
+msgid "Payment Interval (days)"
+msgstr ""
+
+#: models/subscription_type.py:30
+msgid "Contract Documents"
+msgstr ""
+
+#: models/subscription_type.py:38
+msgid "Subscription Types"
+msgstr ""

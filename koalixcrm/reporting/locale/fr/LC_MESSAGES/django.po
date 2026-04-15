@@ -1,0 +1,408 @@
+# Translations for the koalixcrm reporting app.
+# Copyright (C) 2026 koalix
+# This file is distributed under the same license as the koalixcrm package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: koalixcrm\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-04-15 20:29+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: admin/agreement_admin.py:11 admin/estimation_admin.py:12
+#: admin/task_admin.py:30 admin/work_admin.py:23 admin/work_admin.py:63
+#: models/work.py:52 models/work.py:95 models/work.py:139 models/work.py:140
+msgid "Work"
+msgstr ""
+
+#: admin/agreement_status_admin.py:14 admin/estimation_status_admin.py:14
+#: models/agreement_status.py:22 models/agreement_status.py:23
+msgid "Agreement Status"
+msgstr ""
+
+#: admin/agreement_type_admin.py:13
+msgid "AgreementType"
+msgstr ""
+
+#: admin/human_resource_admin.py:20 admin/resource_manager_admin.py:11
+msgid "Basics"
+msgstr ""
+
+#: admin/human_resource_admin.py:32
+msgid "Work Report PDF"
+msgstr ""
+
+#: admin/project_admin.py:28 admin/project_admin.py:73
+#: models/generic_project_link.py:13 models/project.py:63 models/project.py:518
+#: models/reporting_period.py:19 models/task.py:27
+msgid "Project"
+msgstr ""
+
+#: admin/project_admin.py:61 admin/reporting_period_admin.py:52
+msgid "Create Report PDF"
+msgstr ""
+
+#: admin/project_link_type_admin.py:13
+msgid "ProjectLinkType"
+msgstr ""
+
+#: admin/project_status_admin.py:14 models/project.py:35
+#: models/project_status.py:22 models/project_status.py:23
+msgid "Project Status"
+msgstr ""
+
+#: admin/reporting_period_admin.py:22 admin/reporting_period_admin.py:58
+msgid "ReportingPeriod"
+msgstr ""
+
+#: admin/reporting_period_status_admin.py:14 admin/task_status_admin.py:14
+#: models/task_status.py:17 models/task_status.py:18
+msgid "Task Status"
+msgstr ""
+
+#: admin/resource_type_admin.py:13
+msgid "ResourceType"
+msgstr ""
+
+#: admin/task_admin.py:57 models/agreement.py:13 models/estimation.py:19
+#: models/generic_task_link.py:12 models/task.py:59 models/task.py:527
+#: models/work.py:38
+msgid "Task"
+msgstr ""
+
+#: admin/task_link_type_admin.py:13
+msgid "TaskLinkType"
+msgstr ""
+
+#: admin/work_admin.py:42
+msgid ""
+"Delete is not allowed because the work is used in a reporting period which "
+"is marked 'as done'"
+msgstr ""
+
+#: admin/work_admin.py:49
+msgid "Delete Selected Work"
+msgstr ""
+
+#: models/agreement.py:21
+msgid "Agreement From"
+msgstr ""
+
+#: models/agreement.py:24
+msgid "Agreement To"
+msgstr ""
+
+#: models/agreement.py:27 models/estimation.py:30
+msgid "Amount"
+msgstr ""
+
+#: models/agreement.py:58
+msgid "Agreement of Resource Consumption"
+msgstr ""
+
+#: models/agreement.py:63
+msgid "Agreement"
+msgstr ""
+
+#: models/agreement.py:64
+msgid "Agreements"
+msgstr ""
+
+#: models/agreement_status.py:10 models/agreement_type.py:9
+#: models/estimation_status.py:10 models/project_link_type.py:9
+#: models/project_status.py:10 models/reporting_period.py:23
+#: models/reporting_period_status.py:10 models/resource_type.py:9
+#: models/task.py:21 models/task_link_type.py:9 models/task_status.py:10
+msgid "Title"
+msgstr ""
+
+#: models/agreement_status.py:14 models/agreement_type.py:10
+#: models/estimation_status.py:14 models/project_link_type.py:10
+#: models/project_status.py:14 models/reporting_period_status.py:14
+#: models/resource_type.py:13 models/task_link_type.py:10
+#: models/task_status.py:11 models/work.py:33
+msgid "Text"
+msgstr ""
+
+#: models/agreement_status.py:17
+msgid "Status represents agreement exists"
+msgstr ""
+
+#: models/agreement_type.py:15 models/agreement_type.py:16
+msgid "Agreement Type"
+msgstr ""
+
+#: models/estimation.py:24
+msgid "Estimation From"
+msgstr ""
+
+#: models/estimation.py:27
+msgid "Estimation Until"
+msgstr ""
+
+#: models/estimation.py:37
+msgid "Status of the estimation"
+msgstr ""
+
+#: models/estimation.py:42
+msgid "Reporting Period based on which the estimation was done"
+msgstr ""
+
+#: models/estimation.py:108 models/estimation.py:113
+msgid "Estimation of Resource Consumption"
+msgstr ""
+
+#: models/estimation.py:114
+msgid "Estimation of Resource Consumptions"
+msgstr ""
+
+#: models/estimation_status.py:17
+msgid "Status represents estimation is obsolete"
+msgstr ""
+
+#: models/estimation_status.py:22 models/estimation_status.py:23
+msgid "Estimation Status"
+msgstr ""
+
+#: models/generic_project_link.py:18 models/project_link_type.py:15
+#: models/project_link_type.py:16
+msgid "Project Link Type"
+msgstr ""
+
+#: models/generic_project_link.py:25 models/generic_task_link.py:24
+#: models/project.py:48
+msgid "Created at"
+msgstr ""
+
+#: models/generic_project_link.py:30 models/generic_task_link.py:29
+#: models/project.py:55
+msgid "Last modified by"
+msgstr ""
+
+#: models/generic_project_link.py:34
+msgid "Link to"
+msgstr ""
+
+#: models/generic_project_link.py:39
+msgid "Project Link"
+msgstr ""
+
+#: models/generic_project_link.py:40
+msgid "Project Links"
+msgstr ""
+
+#: models/generic_task_link.py:16 models/task_link_type.py:15
+#: models/task_link_type.py:16
+msgid "Task Link Type"
+msgstr ""
+
+#: models/generic_task_link.py:38
+msgid "Task Link"
+msgstr ""
+
+#: models/generic_task_link.py:39
+msgid "Task Links"
+msgstr ""
+
+#: models/human_resource.py:16 models/resource_manager.py:12
+msgid "User"
+msgstr ""
+
+#: models/project.py:22
+msgid "Staff"
+msgstr ""
+
+#: models/project.py:26
+msgid "Project name"
+msgstr ""
+
+#: models/project.py:30 models/task.py:31
+msgid "Description"
+msgstr ""
+
+#: models/project.py:40
+msgid "Default Template Set"
+msgstr ""
+
+#: models/project.py:45
+msgid "Default Currency"
+msgstr ""
+
+#: models/project.py:50
+msgid "Last modified"
+msgstr ""
+
+#: models/project.py:74
+msgid "Template Set missing in Project"
+msgstr ""
+
+#: models/project.py:256
+msgid "Effective Confirmed Costs"
+msgstr ""
+
+#: models/project.py:261
+msgid "Effective Not Confirmed Costs"
+msgstr ""
+
+#: models/project.py:269
+msgid "Effective Accumulated effort"
+msgstr ""
+
+#: models/project.py:315 models/task.py:247
+msgid "Planned Total Costs"
+msgstr ""
+
+#: models/project.py:347 models/task.py:272
+msgid "Effective Start"
+msgstr ""
+
+#: models/project.py:385 models/task.py:321
+msgid "Effective End"
+msgstr ""
+
+#: models/project.py:409 models/task.py:345
+msgid "Effective Duration [dys]"
+msgstr ""
+
+#: models/project.py:482 models/task.py:69
+msgid "Planned Duration [dys]"
+msgstr ""
+
+#: models/project.py:519
+msgid "Projects"
+msgstr ""
+
+#: models/project_status.py:17
+msgid "Status represents project is done"
+msgstr ""
+
+#: models/reporting_period.py:26
+msgid "Begin"
+msgstr ""
+
+#: models/reporting_period.py:29
+msgid "End"
+msgstr ""
+
+#: models/reporting_period.py:34 models/reporting_period_status.py:22
+#: models/reporting_period_status.py:23
+msgid "Reporting Period Status"
+msgstr ""
+
+#: models/reporting_period.py:177 models/work.py:43
+msgid "Reporting Period"
+msgstr ""
+
+#: models/reporting_period.py:178
+msgid "Reporting Periods"
+msgstr ""
+
+#: models/reporting_period_status.py:17
+msgid "Status represents reporting period is closed"
+msgstr ""
+
+#: models/resource.py:10
+msgid "Manager"
+msgstr ""
+
+#: models/resource.py:15
+msgid "Resource Type"
+msgstr ""
+
+#: models/resource_price.py:12
+msgid "Resource"
+msgstr ""
+
+#: models/resource_type.py:23 models/resource_type.py:24
+msgid "Resource Link Type"
+msgstr ""
+
+#: models/task.py:34
+msgid "Status"
+msgstr ""
+
+#: models/task.py:37
+msgid "Last Status Change"
+msgstr ""
+
+#: models/task.py:95
+msgid "Planned Start"
+msgstr ""
+
+#: models/task.py:121
+msgid "Planned End"
+msgstr ""
+
+#: models/task.py:160
+msgid "Planned Effort"
+msgstr ""
+
+#: models/task.py:242
+msgid "Planned Costs"
+msgstr ""
+
+#: models/task.py:396
+msgid "Effective Effort [hrs]"
+msgstr ""
+
+#: models/task.py:484
+msgid "Effective costs confirmed"
+msgstr ""
+
+#: models/task.py:490
+msgid "Effective costs not confirmed"
+msgstr ""
+
+#: models/task.py:512
+msgid "Reporting"
+msgstr ""
+
+#: models/task.py:528
+msgid "Tasks"
+msgstr ""
+
+#: models/task_status.py:12
+msgid "Status represents task done"
+msgstr ""
+
+#: models/work.py:15
+msgid "Date"
+msgstr ""
+
+#: models/work.py:18
+msgid "Start Time"
+msgstr ""
+
+#: models/work.py:21
+msgid "Stop Time"
+msgstr ""
+
+#: models/work.py:24
+msgid "Worked Hours"
+msgstr ""
+
+#: models/work.py:29
+msgid "Short Description"
+msgstr ""
+
+#: models/work.py:60
+msgid "Please add description"
+msgstr ""
+
+#: models/work.py:61
+msgid "Short description"
+msgstr ""
+
+#: models/work.py:95
+msgid "from Person"
+msgstr ""
+
+#: models/work.py:121
+msgid "Confirmed"
+msgstr ""

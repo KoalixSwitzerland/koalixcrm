@@ -1,0 +1,124 @@
+# Translations for the koalixcrm settings app.
+# Copyright (C) 2026 koalix
+# This file is distributed under the same license as the koalixcrm package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: koalixcrm\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-04-15 20:29+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: models/currency.py:10 models/unit.py:9
+msgid "Description"
+msgstr ""
+
+#: models/currency.py:12
+msgid "Displayed Name After Prices"
+msgstr ""
+
+#: models/currency.py:16
+msgid "Rounding"
+msgstr ""
+
+#: models/currency.py:50 models/currency.py:51
+msgid "Currency"
+msgstr ""
+
+#: models/currency_transform.py:13
+msgid "From Currency"
+msgstr ""
+
+#: models/currency_transform.py:19
+msgid "To Currency"
+msgstr ""
+
+#: models/currency_transform.py:25
+msgid "Product"
+msgstr ""
+
+#: models/currency_transform.py:26
+msgid "Factor between From and To Currency"
+msgstr ""
+
+#: models/currency_transform.py:41
+msgid "Currency Transform"
+msgstr ""
+
+#: models/currency_transform.py:42
+msgid "Currency Transforms"
+msgstr ""
+
+#: models/tax.py:11
+msgid "Taxrate in Percentage"
+msgstr ""
+
+#: models/tax.py:12
+msgid "Taxname"
+msgstr ""
+
+#: models/tax.py:16
+msgid "Activa Account"
+msgstr ""
+
+#: models/tax.py:22
+msgid "Passiva Account"
+msgstr ""
+
+#: models/tax.py:36
+msgid "Tax"
+msgstr ""
+
+#: models/tax.py:37
+msgid "Taxes"
+msgstr ""
+
+#: models/unit.py:11
+msgid "Displayed Name After Quantity In The Position"
+msgstr ""
+
+#: models/unit.py:17
+msgid "Is A Fraction Of"
+msgstr ""
+
+#: models/unit.py:18
+msgid "Factor Between This And Next Higher Unit"
+msgstr ""
+
+#: models/unit.py:30
+msgid "Unit"
+msgstr ""
+
+#: models/unit.py:31
+msgid "Units"
+msgstr ""
+
+#: models/unit_transform.py:11
+msgid "From Unit"
+msgstr ""
+
+#: models/unit_transform.py:17
+msgid "To Unit"
+msgstr ""
+
+#: models/unit_transform.py:25
+msgid "Product Type"
+msgstr ""
+
+#: models/unit_transform.py:26
+msgid "Factor between From and To Unit"
+msgstr ""
+
+#: models/unit_transform.py:47
+msgid "Unit Transform"
+msgstr ""
+
+#: models/unit_transform.py:48
+msgid "Unit Transforms"
+msgstr ""
