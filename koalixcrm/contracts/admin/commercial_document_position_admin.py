@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib import admin
-from koalixcrm.contracts.models.sales_document_position import SalesDocumentPosition
+from koalixcrm.contracts.models.commercial_document_position import CommercialDocumentPosition
 
 
-class SalesDocumentInlinePosition(admin.TabularInline):
-    model = SalesDocumentPosition
+class CommercialDocumentInlinePosition(admin.TabularInline):
+    model = CommercialDocumentPosition
     extra = 1
     classes = ['expand']
     fieldsets = (

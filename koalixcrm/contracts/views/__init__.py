@@ -6,7 +6,8 @@ from .purchase_order_view_set import PurchaseOrderViewSet
 from .purchase_confirmation_view_set import PurchaseConfirmationViewSet
 from .delivery_note_view_set import DeliveryNoteViewSet
 from .payment_reminder_view_set import PaymentReminderViewSet
-from .sales_document_position_view_set import SalesDocumentPositionViewSet
+from .commercial_document_position_view_set import CommercialDocumentPositionViewSet
+from .credit_note_view_set import CreditNoteViewSet
 
 __all__ = [
     'ContractViewSet',
@@ -16,5 +17,6 @@ __all__ = [
     'PurchaseConfirmationViewSet',
     'DeliveryNoteViewSet',
     'PaymentReminderViewSet',
-    'SalesDocumentPositionViewSet',
+    'CommercialDocumentPositionViewSet',
+    'CreditNoteViewSet',
 ]

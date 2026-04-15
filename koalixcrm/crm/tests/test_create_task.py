@@ -2,7 +2,7 @@
 
 import pytest
 from django.test import TestCase
-from koalixcrm.contracts.factory.sales_document_position_factory import StandardSalesDocumentPositionFactory
+from koalixcrm.contracts.factory.commercial_document_position_factory import StandardCommercialDocumentPositionFactory
 from koalixcrm.settings.factory.currency_factory import StandardCurrencyFactory
 from koalixcrm.contracts.factory.quote_factory import StandardQuoteFactory
 from koalixcrm.crm.factory.user_factory import StaffUserFactory
@@ -26,8 +26,8 @@ class DocumentCalculationsTest(TestCase):
             StandardPriceFactory.create(
                 product_type=test_product,
             )
-            StandardSalesDocumentPositionFactory.create(
-                sales_document=self.test_quote,
+            StandardCommercialDocumentPositionFactory.create(
+                commercial_document=self.test_quote,
                 position_number=i*10,
                 quantity=0.333*i,
                 description="This is a test position " + i.__str__(),

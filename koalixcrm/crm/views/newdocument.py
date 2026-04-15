@@ -13,7 +13,7 @@ class CreateNewDocumentView:
             Args:
               calling_model_admin (ModelAdmin):  The calling ModelAdmin must be provided for error message response.
               request: The request User is to know where to save the error message
-              calling_model (Contract or SalesDocument):  The model from which a new document shall be created
+              calling_model (Contract or CommercialDocument):  The model from which a new document shall be created
               requested_document_type (str): The document type name that shall be created
               redirect_to (str): String that describes to where the method should redirect in case of an error
 

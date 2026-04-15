@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 
 from django.utils.translation import gettext as _
-from koalixcrm.contracts.models.sales_document import SalesDocument
+from koalixcrm.contracts.models.commercial_document import CommercialDocument
 
 
-class PurchaseConfirmation(SalesDocument):
+class PurchaseConfirmation(CommercialDocument):
 
     def create_from_reference(self, calling_model):
-        self.create_sales_document(calling_model)
+        self.create_commercial_document(calling_model)
         self.template_set = self.contract.get_template_set(self)
         self.save()
-        self.attach_sales_document_positions(calling_model)
+        self.attach_commercial_document_positions(calling_model)
         self.attach_text_paragraphs()
 
     def __str__(self):

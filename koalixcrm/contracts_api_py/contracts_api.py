@@ -11,7 +11,8 @@ from koalixcrm.contracts.views.purchase_order_view_set import PurchaseOrderViewS
 from koalixcrm.contracts.views.purchase_confirmation_view_set import PurchaseConfirmationViewSet
 from koalixcrm.contracts.views.delivery_note_view_set import DeliveryNoteViewSet
 from koalixcrm.contracts.views.payment_reminder_view_set import PaymentReminderViewSet
-from koalixcrm.contracts.views.sales_document_position_view_set import SalesDocumentPositionViewSet
+from koalixcrm.contracts.views.commercial_document_position_view_set import CommercialDocumentPositionViewSet
+from koalixcrm.contracts.views.credit_note_view_set import CreditNoteViewSet
 
 __all__ = [
     'ContractViewSet',
@@ -21,5 +22,6 @@ __all__ = [
     'PurchaseConfirmationViewSet',
     'DeliveryNoteViewSet',
     'PaymentReminderViewSet',
-    'SalesDocumentPositionViewSet',
+    'CommercialDocumentPositionViewSet',
+    'CreditNoteViewSet',
 ]

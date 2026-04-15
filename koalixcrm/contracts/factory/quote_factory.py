@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from koalixcrm.contracts.models.quote import Quote
-from koalixcrm.contracts.factory.sales_document_factory import StandardSalesDocumentFactory
+from koalixcrm.contracts.factory.commercial_document_factory import StandardCommercialDocumentFactory
 
 
-class StandardQuoteFactory(StandardSalesDocumentFactory):
+class StandardQuoteFactory(StandardCommercialDocumentFactory):
     class Meta:
         model = Quote
 

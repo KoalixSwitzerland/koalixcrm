@@ -95,7 +95,7 @@ class CreateSalesDocumentFromContract(StaticLiveServerTestCase):
                            }
         for document_type in test_parameters:
             test_parameter = test_parameters[document_type]
-            create_sales_document_from_reference(test_case=self,
+            create_commercial_document_from_reference(test_case=self,
                                                  timeout=timeout,
                                                  document_type=document_type,
                                                  reference_type="invoice",

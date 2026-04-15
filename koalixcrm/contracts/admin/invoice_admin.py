@@ -10,16 +10,16 @@ from django.contrib import messages
 from django.template.context_processors import csrf
 from koalixcrm.plugin import *
 from koalixcrm.contracts.models.invoice import Invoice
-from koalixcrm.contracts.admin.sales_document_admin import OptionSalesDocument
+from koalixcrm.contracts.admin.commercial_document_admin import OptionCommercialDocument
 from koalixcrm.accounting.models import Account
 
 
-class OptionInvoice(OptionSalesDocument):
-    list_display = OptionSalesDocument.list_display + ('payable_until', 'status',)
-    list_filter = OptionSalesDocument.list_filter + ('status',)
-    ordering = OptionSalesDocument.ordering
-    search_fields = OptionSalesDocument.search_fields
-    fieldsets = OptionSalesDocument.fieldsets + (
+class OptionInvoice(OptionCommercialDocument):
+    list_display = OptionCommercialDocument.list_display + ('payable_until', 'status',)
+    list_filter = OptionCommercialDocument.list_filter + ('status',)
+    ordering = OptionCommercialDocument.ordering
+    search_fields = OptionCommercialDocument.search_fields
+    fieldsets = OptionCommercialDocument.fieldsets + (
         (_('Invoice specific'), {
             'fields': ('payable_until', 'status', 'payment_bank_reference' )
         }),
@@ -71,8 +71,23 @@ class OptionInvoice(OptionSalesDocument):
 
     register_payment_in_accounting.short_description = _("Register Payment in Accounting")
 
-    save_as = OptionSalesDocument.save_as
-    inlines = OptionSalesDocument.inlines
+    def create_credit_note_from_invoice(self, request, queryset):
+        from koalixcrm.crm.views.newdocument import CreateNewDocumentView
+        import koalixcrm.contracts.models.credit_note
+        for obj in queryset:
+            response = CreateNewDocumentView.create_new_document(
+                self,
+                request,
+                obj,
+                koalixcrm.contracts.models.credit_note.CreditNote,
+                ("/admin/contract_object_management/" + obj.__class__.__name__.lower() + "/"),
+            )
+            return response
+
+    create_credit_note_from_invoice.short_description = _("Create Credit Note from Invoice")
+
+    save_as = OptionCommercialDocument.save_as
+    inlines = OptionCommercialDocument.inlines
 
     actions = ['create_purchase_confirmation',
                'create_quote',
@@ -82,7 +97,8 @@ class OptionInvoice(OptionSalesDocument):
                'create_payment_reminder',
                'create_pdf_async',
                'register_invoice_in_accounting',
-               'register_payment_in_accounting',]
+               'register_payment_in_accounting',
+               'create_credit_note_from_invoice',]
 
     pluginProcessor = PluginProcessor()
     actions.extend(pluginProcessor.getPluginAdditions("invoiceActions"))

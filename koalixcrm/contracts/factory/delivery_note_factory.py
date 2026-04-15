@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from koalixcrm.contracts.models.delivery_note import DeliveryNote
-from koalixcrm.contracts.factory.sales_document_factory import StandardSalesDocumentFactory
+from koalixcrm.contracts.factory.commercial_document_factory import StandardCommercialDocumentFactory
 
 
-class StandardDeliveryNoteFactory(StandardSalesDocumentFactory):
+class StandardDeliveryNoteFactory(StandardCommercialDocumentFactory):
     class Meta:
         model = DeliveryNote
 

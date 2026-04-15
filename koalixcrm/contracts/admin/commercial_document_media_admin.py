@@ -2,13 +2,13 @@
 
 from django.contrib import admin
 from django.utils.translation import gettext as _
-from koalixcrm.contracts.models.sales_document_media import SalesDocumentMedia
+from koalixcrm.contracts.models.commercial_document_media import CommercialDocumentMedia
 
 
-class SalesDocumentMediaAdmin(admin.ModelAdmin):
+class CommercialDocumentMediaAdmin(admin.ModelAdmin):
     list_display = (
         'id',
-        'sales_document',
+        'commercial_document',
         'media_type',
         'status',
         'created_by',
@@ -27,8 +27,8 @@ class SalesDocumentMediaAdmin(admin.ModelAdmin):
     ordering = ('-created_at',)
 
 
-class SalesDocumentMediaInline(admin.TabularInline):
-    model = SalesDocumentMedia
+class CommercialDocumentMediaInline(admin.TabularInline):
+    model = CommercialDocumentMedia
     extra = 0
     classes = ['collapse']
     readonly_fields = (

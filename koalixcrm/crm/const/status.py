@@ -36,6 +36,13 @@ DELIVERYNOTESTATUS = (
     ('R', _('Lost')),
 )
 
+CREDITNOTESTATUS = (
+    ('C', _('Credit note created')),
+    ('S', _('Credit note sent')),
+    ('B', _('Booked')),
+    ('D', _('Deleted')),
+)
+
 CALLSTATUS = (
     ('P', _('Planned')),
     ('D', _('Delayed')),

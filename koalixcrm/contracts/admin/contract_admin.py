@@ -10,7 +10,9 @@ from koalixcrm.contracts.models.contract import (
 )
 from koalixcrm.contracts.admin.quote_admin import InlineQuote
 from koalixcrm.contracts.admin.invoice_admin import InlineInvoice
+from koalixcrm.contracts.admin.credit_note_admin import InlineCreditNote
 import koalixcrm.contracts.models.quote
+import koalixcrm.contracts.models.credit_note
 import koalixcrm.contracts.models.invoice
 import koalixcrm.contracts.models.purchase_confirmation
 import koalixcrm.contracts.models.delivery_note
@@ -98,7 +100,8 @@ class OptionContract(admin.ModelAdmin):
                ContractPhoneAddress,
                ContractEmailAddress,
                InlineQuote,
-               InlineInvoice]
+               InlineInvoice,
+               InlineCreditNote]
     pluginProcessor = PluginProcessor()
     inlines.extend(pluginProcessor.getPluginAdditions("contractInlines"))
 
@@ -182,8 +185,21 @@ class OptionContract(admin.ModelAdmin):
             obj.staff = request.user
         obj.save()
 
+    def create_credit_note(self, request, queryset):
+        from koalixcrm.crm.views.newdocument import CreateNewDocumentView
+        for obj in queryset:
+            response = CreateNewDocumentView.create_new_document(self,
+                                                                 request,
+                                                                 obj,
+                                                                 koalixcrm.contracts.models.credit_note.CreditNote,
+                                                                 ("/admin/contract_object_management/"+obj.__class__.__name__.lower()+"/"))
+            return response
+
+    create_credit_note.short_description = _("Create Credit Note")
+
     actions = ['create_quote',
                'create_invoice',
-               'create_purchase_order']
+               'create_purchase_order',
+               'create_credit_note']
     pluginProcessor = PluginProcessor()
     actions.extend(pluginProcessor.getPluginAdditions("contractActions"))

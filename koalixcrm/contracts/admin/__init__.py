@@ -15,12 +15,14 @@ from koalixcrm.contracts.admin.purchase_confirmation_admin import OptionPurchase
 from koalixcrm.contracts.admin.delivery_note_admin import OptionDeliveryNote  # noqa: F401
 from koalixcrm.contracts.admin.payment_reminder_admin import OptionPaymentReminder  # noqa: F401
 from koalixcrm.contracts.admin.purchase_order_admin import OptionPurchaseOrder  # noqa: F401
-from koalixcrm.contracts.admin.sales_document_admin import OptionSalesDocument  # noqa: F401
-from koalixcrm.contracts.admin.sales_document_position_admin import SalesDocumentInlinePosition  # noqa: F401
-from koalixcrm.contracts.admin.sales_document_media_admin import SalesDocumentMediaAdmin, SalesDocumentMediaInline  # noqa: F401
-from koalixcrm.contracts.models.sales_document_media import SalesDocumentMedia
+from koalixcrm.contracts.admin.commercial_document_admin import OptionCommercialDocument  # noqa: F401
+from koalixcrm.contracts.admin.commercial_document_position_admin import CommercialDocumentInlinePosition  # noqa: F401
+from koalixcrm.contracts.admin.commercial_document_media_admin import CommercialDocumentMediaAdmin, CommercialDocumentMediaInline  # noqa: F401
+from koalixcrm.contracts.admin.credit_note_admin import OptionCreditNote, InlineCreditNote  # noqa: F401
+from koalixcrm.contracts.models.commercial_document_media import CommercialDocumentMedia
+from koalixcrm.contracts.models.credit_note import CreditNote
 
-admin.site.register(SalesDocumentMedia, SalesDocumentMediaAdmin)
+admin.site.register(CommercialDocumentMedia, CommercialDocumentMediaAdmin)
 admin.site.register(Contract, OptionContract)
 admin.site.register(Quote, OptionQuote)
 admin.site.register(PurchaseConfirmation, OptionPurchaseConfirmation)
@@ -28,3 +30,4 @@ admin.site.register(DeliveryNote, OptionDeliveryNote)
 admin.site.register(Invoice, OptionInvoice)
 admin.site.register(PaymentReminder, OptionPaymentReminder)
 admin.site.register(PurchaseOrder, OptionPurchaseOrder)
+admin.site.register(CreditNote, OptionCreditNote)

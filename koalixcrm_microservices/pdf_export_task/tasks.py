@@ -46,22 +46,24 @@ def _upload_to_s3(local_path: str, s3_key: str) -> str:
 
 def _resolve_source_object(source_model: str, source_id: int):
     """Resolve the Django model instance from model name and ID."""
-    from koalixcrm.contracts.models.sales_document import SalesDocument
+    from koalixcrm.contracts.models.commercial_document import CommercialDocument
     from koalixcrm.contracts.models.invoice import Invoice
     from koalixcrm.contracts.models.quote import Quote
     from koalixcrm.contracts.models.delivery_note import DeliveryNote
     from koalixcrm.contracts.models.purchase_order import PurchaseOrder
     from koalixcrm.contracts.models.purchase_confirmation import PurchaseConfirmation
     from koalixcrm.contracts.models.payment_reminder import PaymentReminder
+    from koalixcrm.contracts.models.credit_note import CreditNote
 
     MODEL_MAP = {
-        'SalesDocument': SalesDocument,
+        'CommercialDocument': CommercialDocument,
         'Invoice': Invoice,
         'Quote': Quote,
         'DeliveryNote': DeliveryNote,
         'PurchaseOrder': PurchaseOrder,
         'PurchaseConfirmation': PurchaseConfirmation,
         'PaymentReminder': PaymentReminder,
+        'CreditNote': CreditNote,
     }
 
     model_class = MODEL_MAP.get(source_model)
@@ -99,8 +101,8 @@ def run(payload: dict) -> dict:
     try:
         from django.contrib.auth.models import User
         from koalixcrm.djangoUserExtension.models import DocumentTemplate
-        from koalixcrm.contracts.models.sales_document import SalesDocument
-        from koalixcrm.contracts.models.sales_document_media import SalesDocumentMedia
+        from koalixcrm.contracts.models.commercial_document import CommercialDocument
+        from koalixcrm.contracts.models.commercial_document_media import CommercialDocumentMedia
 
         source_obj = _resolve_source_object(cmd.source_model, cmd.source_id)
         template_set = DocumentTemplate.objects.get(id=cmd.template_set_id)
@@ -113,12 +115,12 @@ def run(payload: dict) -> dict:
         s3_key = f"pdf-exports/{cmd.source_model}_{cmd.source_id}_{cmd.process_id}.pdf"
         result_url = _upload_to_s3(pdf_path, s3_key)
 
-        # Resolve the base SalesDocument for the FK (handles STI subclasses)
-        base_doc = SalesDocument.objects.get(id=source_obj.id)
+        # Resolve the base CommercialDocument for the FK (handles STI subclasses)
+        base_doc = CommercialDocument.objects.get(id=source_obj.id)
 
-        # Create SalesDocumentMedia record following the S3Media pattern
-        SalesDocumentMedia.objects.create(
-            sales_document=base_doc,
+        # Create CommercialDocumentMedia record following the S3Media pattern
+        CommercialDocumentMedia.objects.create(
+            commercial_document=base_doc,
             s3_url=result_url,
             s3_key=s3_key,
             status='completed',

@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from koalixcrm.contracts.models.payment_reminder import PaymentReminder
-from koalixcrm.contracts.factory.sales_document_factory import StandardSalesDocumentFactory
+from koalixcrm.contracts.factory.commercial_document_factory import StandardCommercialDocumentFactory
 
 
-class StandardPaymentReminderFactory(StandardSalesDocumentFactory):
+class StandardPaymentReminderFactory(StandardCommercialDocumentFactory):
     class Meta:
         model = PaymentReminder
 

@@ -3,21 +3,21 @@
 from datetime import *
 from django.contrib import admin, messages
 from django.utils.translation import gettext as _
-from koalixcrm.contracts.models.sales_document import (
-    TextParagraphInSalesDocument,
-    PostalAddressForSalesDocument,
-    EmailAddressForSalesDocument,
-    PhoneAddressForSalesDocument,
+from koalixcrm.contracts.models.commercial_document import (
+    TextParagraphInCommercialDocument,
+    PostalAddressForCommercialDocument,
+    EmailAddressForCommercialDocument,
+    PhoneAddressForCommercialDocument,
 )
-from koalixcrm.contracts.models.sales_document_position import SalesDocumentPosition
-from koalixcrm.contracts.admin.sales_document_position_admin import SalesDocumentInlinePosition
-from koalixcrm.contracts.admin.sales_document_media_admin import SalesDocumentMediaInline
+from koalixcrm.contracts.models.commercial_document_position import CommercialDocumentPosition
+from koalixcrm.contracts.admin.commercial_document_position_admin import CommercialDocumentInlinePosition
+from koalixcrm.contracts.admin.commercial_document_media_admin import CommercialDocumentMediaInline
 from koalixcrm.products.models.product_type import ProductType
 import koalixcrm.contracts.models.calculations
 
 
-class SalesDocumentTextParagraph(admin.StackedInline):
-    model = TextParagraphInSalesDocument
+class CommercialDocumentTextParagraph(admin.StackedInline):
+    model = TextParagraphInCommercialDocument
     extra = 1
     classes = ['collapse']
     fieldsets = (
@@ -28,8 +28,8 @@ class SalesDocumentTextParagraph(admin.StackedInline):
     allow_add = True
 
 
-class SalesDocumentPostalAddress(admin.StackedInline):
-    model = PostalAddressForSalesDocument
+class CommercialDocumentPostalAddress(admin.StackedInline):
+    model = PostalAddressForCommercialDocument
     extra = 1
     classes = ['collapse']
     fieldsets = (
@@ -51,8 +51,8 @@ class SalesDocumentPostalAddress(admin.StackedInline):
     allow_add = True
 
 
-class SalesDocumentPhoneAddress(admin.TabularInline):
-    model = PhoneAddressForSalesDocument
+class CommercialDocumentPhoneAddress(admin.TabularInline):
+    model = PhoneAddressForCommercialDocument
     extra = 1
     classes = ['collapse']
     fieldsets = (
@@ -63,8 +63,8 @@ class SalesDocumentPhoneAddress(admin.TabularInline):
     allow_add = True
 
 
-class SalesDocumentEmailAddress(admin.TabularInline):
-    model = EmailAddressForSalesDocument
+class CommercialDocumentEmailAddress(admin.TabularInline):
+    model = EmailAddressForCommercialDocument
     extra = 1
     classes = ['collapse']
     fieldsets = (
@@ -75,7 +75,7 @@ class SalesDocumentEmailAddress(admin.TabularInline):
     allow_add = True
 
 
-class OptionSalesDocument(admin.ModelAdmin):
+class OptionCommercialDocument(admin.ModelAdmin):
     list_display = ('id',
                     'description',
                     'contract',
@@ -113,26 +113,26 @@ class OptionSalesDocument(admin.ModelAdmin):
         }),
     )
     save_as = True
-    inlines = [SalesDocumentInlinePosition, SalesDocumentTextParagraph,
-               SalesDocumentPostalAddress, SalesDocumentPhoneAddress,
-               SalesDocumentEmailAddress, SalesDocumentMediaInline]
+    inlines = [CommercialDocumentInlinePosition, CommercialDocumentTextParagraph,
+               CommercialDocumentPostalAddress, CommercialDocumentPhoneAddress,
+               CommercialDocumentEmailAddress, CommercialDocumentMediaInline]
 
     def response_add(self, request, obj, post_url_continue=None):
         new_obj = self.after_saving_model_and_related_inlines(request, obj)
         new_obj.custom_date_field = date.today().__str__()
-        return super(OptionSalesDocument, self).response_add(request=request,
+        return super(OptionCommercialDocument, self).response_add(request=request,
                                                              obj=new_obj,
                                                              post_url_continue=post_url_continue)
 
     def response_change(self, request, new_object):
         obj = self.after_saving_model_and_related_inlines(request, new_object)
-        return super(OptionSalesDocument, self).response_change(request, obj)
+        return super(OptionCommercialDocument, self).response_change(request, obj)
 
     def after_saving_model_and_related_inlines(self, request, obj):
         try:
             koalixcrm.contracts.models.calculations.Calculations.calculate_document_price(obj, date.today())
             self.message_user(request, "Successfully calculated Prices")
-        except (ProductType.NoPriceFound, SalesDocumentPosition.NoPriceFound) as e:
+        except (ProductType.NoPriceFound, CommercialDocumentPosition.NoPriceFound) as e:
             self.message_user(request, "Unsuccessful in updating the Prices " + e.__str__(), level=messages.ERROR)
         return obj
 

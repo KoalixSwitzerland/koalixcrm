@@ -4,7 +4,7 @@ from django.test import TestCase
 from koalixcrm.contracts.models.calculations import Calculations
 from koalixcrm.settings.factory.currency_factory import StandardCurrencyFactory
 from koalixcrm.contracts.factory.quote_factory import StandardQuoteFactory
-from koalixcrm.contracts.factory.sales_document_position_factory import StandardSalesDocumentPositionFactory
+from koalixcrm.contracts.factory.commercial_document_position_factory import StandardCommercialDocumentPositionFactory
 from koalixcrm.products.factory.product_type_factory import StandardProductTypeFactory
 from koalixcrm.products.factory.product_price_factory import StandardPriceFactory
 from koalixcrm.crm.factory.customer_factory import StandardCustomerFactory
@@ -176,13 +176,13 @@ class DocumentCalculationsTest(TestCase):
     @pytest.mark.back_end_tests
     def test_calculate_document_price_without_customer_group(self):
         quote_1 = StandardQuoteFactory.create(customer=self.customer)
-        StandardSalesDocumentPositionFactory.create(
+        StandardCommercialDocumentPositionFactory.create(
             quantity=1,
             discount=0,
             product_type=self.product_without_customer_group,
             overwrite_product_price=False,
             unit=self.unit,
-            sales_document=quote_1
+            commercial_document=quote_1
         )
         datetime_now = make_date_utc(datetime.datetime(2024, 1, 1, 0, 00))
         date_now = datetime_now.date()
@@ -197,13 +197,13 @@ class DocumentCalculationsTest(TestCase):
     @pytest.mark.back_end_tests
     def test_calculate_document_price_without_date_from(self):
         quote_2 = StandardQuoteFactory.create(customer=self.customer)
-        StandardSalesDocumentPositionFactory.create(
+        StandardCommercialDocumentPositionFactory.create(
             quantity=1,
             discount=0,
             unit=self.unit,
             product_type=self.product_without_date_from,
             overwrite_product_price=False,
-            sales_document=quote_2
+            commercial_document=quote_2
         )
         datetime_now = make_date_utc(datetime.datetime(2024, 1, 1, 0, 00))
         date_now = datetime_now.date()
@@ -218,13 +218,13 @@ class DocumentCalculationsTest(TestCase):
     @pytest.mark.back_end_tests
     def test_calculate_document_price_without_date_until(self):
         quote_3 = StandardQuoteFactory.create(customer=self.customer)
-        StandardSalesDocumentPositionFactory.create(
+        StandardCommercialDocumentPositionFactory.create(
             quantity=1,
             discount=0,
             unit=self.unit,
             product_type=self.product_without_date_until,
             overwrite_product_price=False,
-            sales_document=quote_3
+            commercial_document=quote_3
         )
         datetime_now = make_date_utc(datetime.datetime(2024, 1, 1, 0, 00))
         date_now = datetime_now.date()
@@ -239,13 +239,13 @@ class DocumentCalculationsTest(TestCase):
     @pytest.mark.back_end_tests
     def test_calculate_document_price_without_dates(self):
         quote_4 = StandardQuoteFactory.create(customer=self.customer)
-        StandardSalesDocumentPositionFactory.create(
+        StandardCommercialDocumentPositionFactory.create(
             quantity=1,
             discount=0,
             unit=self.unit,
             product_type=self.product_without_dates,
             overwrite_product_price=False,
-            sales_document=quote_4
+            commercial_document=quote_4
         )
         datetime_now = make_date_utc(datetime.datetime(2024, 1, 1, 0, 00))
         date_now = datetime_now.date()
@@ -263,13 +263,13 @@ class DocumentCalculationsTest(TestCase):
             customer=self.customer,
             currency=self.test_currency_with_rounding
         )
-        StandardSalesDocumentPositionFactory.create(
+        StandardCommercialDocumentPositionFactory.create(
             quantity=1,
             discount=7.5,
             unit=self.unit,
             product_type=self.product_with_currency_rounding,
             overwrite_product_price=False,
-            sales_document=quote_5
+            commercial_document=quote_5
         )
         datetime_now = make_date_utc(datetime.datetime(2024, 1, 1, 0, 00))
         date_now = datetime_now.date()
@@ -287,13 +287,13 @@ class DocumentCalculationsTest(TestCase):
             customer=self.customer,
             currency=self.test_currency_without_rounding
         )
-        StandardSalesDocumentPositionFactory.create(
+        StandardCommercialDocumentPositionFactory.create(
             quantity=1,
             discount=7.5,
             unit=self.unit,
             product_type=self.product_without_currency_rounding,
             overwrite_product_price=False,
-            sales_document=quote_6
+            commercial_document=quote_6
         )
         datetime_now = make_date_utc(datetime.datetime(2024, 1, 1, 0, 00))
         date_now = datetime_now.date()
@@ -312,13 +312,13 @@ class DocumentCalculationsTest(TestCase):
             currency=self.test_currency_without_rounding,
             discount=10
         )
-        StandardSalesDocumentPositionFactory.create(
+        StandardCommercialDocumentPositionFactory.create(
             quantity=1,
             discount=7.5,
             unit=self.unit,
             product_type=self.product_without_currency_rounding,
             overwrite_product_price=False,
-            sales_document=quote_7
+            commercial_document=quote_7
         )
         datetime_now = make_date_utc(datetime.datetime(2024, 1, 1, 0, 00))
         date_now = datetime_now.date()
@@ -334,13 +334,13 @@ class DocumentCalculationsTest(TestCase):
     def test_calculate_document_with_customer_group_transform(self):
         quote_8 = StandardQuoteFactory.create(
             customer=self.customer)
-        StandardSalesDocumentPositionFactory.create(
+        StandardCommercialDocumentPositionFactory.create(
             quantity=1,
             discount=0,
             unit=self.unit,
             product_type=self.product_with_alternative_customer_group,
             overwrite_product_price=False,
-            sales_document=quote_8
+            commercial_document=quote_8
         )
         datetime_now = make_date_utc(datetime.datetime(2024, 1, 1, 0, 00))
         date_now = datetime_now.date()
@@ -357,13 +357,13 @@ class DocumentCalculationsTest(TestCase):
         quote_9 = StandardQuoteFactory.create(
             currency=self.test_currency_with_rounding,
             customer=self.customer)
-        StandardSalesDocumentPositionFactory.create(
+        StandardCommercialDocumentPositionFactory.create(
             quantity=1,
             discount=0,
             unit=self.unit,
             product_type=self.product_with_alternative_currency,
             overwrite_product_price=False,
-            sales_document=quote_9
+            commercial_document=quote_9
         )
         datetime_now = make_date_utc(datetime.datetime(2024, 1, 1, 0, 00))
         date_now = datetime_now.date()
@@ -378,13 +378,13 @@ class DocumentCalculationsTest(TestCase):
     @pytest.mark.back_end_tests
     def test_calculate_document_with_unit_transform(self):
         quote_10 = StandardQuoteFactory.create(customer=self.customer)
-        StandardSalesDocumentPositionFactory.create(
+        StandardCommercialDocumentPositionFactory.create(
             quantity=1,
             discount=0,
             unit=self.unit,
             product_type=self.product_with_alternative_unit,
             overwrite_product_price=False,
-            sales_document=quote_10
+            commercial_document=quote_10
         )
         datetime_now = make_date_utc(datetime.datetime(2024, 1, 1, 0, 00))
         date_now = datetime_now.date()

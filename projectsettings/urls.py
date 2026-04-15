@@ -28,7 +28,8 @@ from koalixcrm.contracts_api_py.contracts_api import (
     ContractViewSet, InvoiceViewSet, QuoteViewSet,
     PurchaseOrderViewSet, PurchaseConfirmationViewSet,
     DeliveryNoteViewSet, PaymentReminderViewSet,
-    SalesDocumentPositionViewSet,
+    CommercialDocumentPositionViewSet,
+    CreditNoteViewSet,
 )
 from koalixcrm.auth.oidc_views import (
     LoginSelectionView, OAuthLoginView, OAuthCallbackView, MultiProviderLogoutView,
@@ -79,7 +80,8 @@ router.register(r'purchase_orders', PurchaseOrderViewSet)
 router.register(r'purchase_confirmations', PurchaseConfirmationViewSet)
 router.register(r'delivery_notes', DeliveryNoteViewSet)
 router.register(r'payment_reminders', PaymentReminderViewSet)
-router.register(r'sales_document_positions', SalesDocumentPositionViewSet)
+router.register(r'commercial_document_positions', CommercialDocumentPositionViewSet)
+router.register(r'credit_notes', CreditNoteViewSet)
 # Reporting
 router.register(r'projects', ProjectViewSet)
 router.register(r'project_status', ProjectStatusViewSet)

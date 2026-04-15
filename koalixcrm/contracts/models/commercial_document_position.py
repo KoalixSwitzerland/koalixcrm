@@ -60,21 +60,21 @@ class Position(models.Model):
         verbose_name_plural = _('Positions')
 
 
-class SalesDocumentPosition(Position):
-    sales_document = models.ForeignKey("SalesDocument", on_delete=models.CASCADE, verbose_name=_("Contract"))
+class CommercialDocumentPosition(Position):
+    commercial_document = models.ForeignKey("CommercialDocument", on_delete=models.CASCADE, verbose_name=_("Contract"))
 
     class Meta:
         app_label = "contract_object_management"
-        db_table = "crm_salesdocumentposition"
-        verbose_name = _('Position in Sales Document')
-        verbose_name_plural = _('Positions Sales Document')
+        db_table = "crm_commercialdocumentposition"
+        verbose_name = _('Position in Commercial Document')
+        verbose_name_plural = _('Positions Commercial Document')
 
     @staticmethod
     def add_positions(position_class, object_to_create_pdf):
         from koalixcrm.settings.models.unit import Unit
         from koalixcrm.products.models.product_type import ProductType
-        objects = list(position_class.objects.filter(sales_document=object_to_create_pdf.id))
-        for position in list(position_class.objects.filter(sales_document=object_to_create_pdf.id)):
+        objects = list(position_class.objects.filter(commercial_document=object_to_create_pdf.id))
+        for position in list(position_class.objects.filter(commercial_document=object_to_create_pdf.id)):
             objects += list(Position.objects.filter(id=position.id))
             objects += list(ProductType.objects.filter(id=position.product_type.id))
             objects += list(Unit.objects.filter(id=position.unit.id))
@@ -97,12 +97,12 @@ class SalesDocumentPosition(Position):
         self.last_pricing_date = calling_model.last_pricing_date
         self.last_calculated_price = calling_model.last_calculated_price
         self.last_calculated_tax = calling_model.last_calculated_tax
-        self.sales_document = attach_to_model
+        self.commercial_document = attach_to_model
         self.save()
 
     def __str__(self):
-        return _("Sales Document Position") + ": " + str(self.id)
+        return _("Commercial Document Position") + ": " + str(self.id)
 
     class NoPriceFound(Exception):
         def __str__(self):
-            return _("There is no Price set for the sales document position")
+            return _("There is no Price set for the commercial document position")

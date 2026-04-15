@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
 
 import factory
-from koalixcrm.contracts.models.sales_document_position import SalesDocumentPosition
+from koalixcrm.contracts.models.commercial_document_position import CommercialDocumentPosition
 from koalixcrm.products.factory.product_type_factory import StandardProductTypeFactory
 from koalixcrm.settings.factory.unit_factory import StandardUnitFactory
 
 
-class StandardSalesDocumentPositionFactory(factory.django.DjangoModelFactory):
+class StandardCommercialDocumentPositionFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = SalesDocumentPosition
+        model = CommercialDocumentPosition
 
     position_number = 5
     quantity = 5
-    description = "This is a test sales document position"
+    description = "This is a test commercial document position"
     discount = 10
     product_type = factory.SubFactory(StandardProductTypeFactory)
     unit = factory.SubFactory(StandardUnitFactory)

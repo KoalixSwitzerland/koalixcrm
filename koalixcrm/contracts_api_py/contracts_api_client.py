@@ -10,11 +10,12 @@ from koalixcrm.contracts_api_py.dto.purchase_order import PurchaseOrder
 from koalixcrm.contracts_api_py.dto.purchase_confirmation import PurchaseConfirmation
 from koalixcrm.contracts_api_py.dto.delivery_note import DeliveryNote
 from koalixcrm.contracts_api_py.dto.payment_reminder import PaymentReminder
-from koalixcrm.contracts_api_py.dto.sales_document_position import SalesDocumentPosition
+from koalixcrm.contracts_api_py.dto.commercial_document_position import CommercialDocumentPosition
+from koalixcrm.contracts_api_py.dto.credit_note import CreditNote
 
 
 class KoalixCRMContractsAPIClient(BaseAPIClient):
-    """API client for managing contracts, sales documents, and related entities."""
+    """API client for managing contracts, commercial documents, and related entities."""
 
     api_path_env_var = 'KOALIXCRM_CONTRACTS_API_PATH'
     api_path_default = ''
@@ -167,22 +168,43 @@ class KoalixCRMContractsAPIClient(BaseAPIClient):
         return self._put_full_update(PaymentReminder, "/payment_reminders", object_id, data)
 
     # ------------------------------------------------------------------
-    # Sales Document Positions
+    # Commercial Document Positions
     # ------------------------------------------------------------------
 
-    def get_sales_document_position(self, object_id: int) -> Optional[SalesDocumentPosition]:
-        return self._get_object(SalesDocumentPosition, "/sales_document_positions", object_id)
+    def get_commercial_document_position(self, object_id: int) -> Optional[CommercialDocumentPosition]:
+        return self._get_object(CommercialDocumentPosition, "/commercial_document_positions", object_id)
 
-    def get_sales_document_position_list(self) -> List[SalesDocumentPosition]:
-        return self._get_object_list(SalesDocumentPosition, "/sales_document_positions/")
+    def get_commercial_document_position_list(self) -> List[CommercialDocumentPosition]:
+        return self._get_object_list(CommercialDocumentPosition, "/commercial_document_positions/")
 
-    def create_sales_document_position(self, data: Dict[str, Any]) -> Optional[SalesDocumentPosition]:
-        response_data = self._make_request("/sales_document_positions/", method="POST", data=data)
+    def create_commercial_document_position(self, data: Dict[str, Any]) -> Optional[CommercialDocumentPosition]:
+        response_data = self._make_request("/commercial_document_positions/", method="POST", data=data)
         if response_data:
-            obj = SalesDocumentPosition(response_data, self)
-            self._cache.set(SalesDocumentPosition, obj.id, obj)
+            obj = CommercialDocumentPosition(response_data, self)
+            self._cache.set(CommercialDocumentPosition, obj.id, obj)
             return obj
         return None
 
-    def update_sales_document_position(self, object_id: int, data: Dict[str, Any]) -> Optional[SalesDocumentPosition]:
-        return self._put_full_update(SalesDocumentPosition, "/sales_document_positions", object_id, data)
+    def update_commercial_document_position(self, object_id: int, data: Dict[str, Any]) -> Optional[CommercialDocumentPosition]:
+        return self._put_full_update(CommercialDocumentPosition, "/commercial_document_positions", object_id, data)
+
+    # ------------------------------------------------------------------
+    # Credit Notes
+    # ------------------------------------------------------------------
+
+    def get_credit_note(self, object_id: int) -> Optional[CreditNote]:
+        return self._get_object(CreditNote, "/credit_notes", object_id)
+
+    def get_credit_note_list(self) -> List[CreditNote]:
+        return self._get_object_list(CreditNote, "/credit_notes/")
+
+    def create_credit_note(self, data: Dict[str, Any]) -> Optional[CreditNote]:
+        response_data = self._make_request("/credit_notes/", method="POST", data=data)
+        if response_data:
+            obj = CreditNote(response_data, self)
+            self._cache.set(CreditNote, obj.id, obj)
+            return obj
+        return None
+
+    def update_credit_note(self, object_id: int, data: Dict[str, Any]) -> Optional[CreditNote]:
+        return self._put_full_update(CreditNote, "/credit_notes", object_id, data)

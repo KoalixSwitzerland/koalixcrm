@@ -5,13 +5,13 @@ from django.conf import settings
 from django.utils.translation import gettext as _
 
 
-class SalesDocumentMedia(models.Model):
+class CommercialDocumentMedia(models.Model):
     """
-    S3-stored media file linked to a SalesDocument.
+    S3-stored media file linked to a CommercialDocument.
 
     Follows the S3Media pattern (see qq_workflow_support.models.s3_media).
     Created by the Celery PDF export task after successful FOP transformation
-    and S3 upload.  Reused across all sales document types (Invoice, Quote,
+    and S3 upload.  Reused across all commercial document types (Invoice, Quote,
     DeliveryNote, PurchaseOrder, PurchaseConfirmation, PaymentReminder).
     """
 
@@ -24,10 +24,10 @@ class SalesDocumentMedia(models.Model):
 
     id = models.BigAutoField(primary_key=True)
 
-    sales_document = models.ForeignKey(
-        "SalesDocument",
+    commercial_document = models.ForeignKey(
+        "CommercialDocument",
         on_delete=models.CASCADE,
-        verbose_name=_("Sales Document"),
+        verbose_name=_("Commercial Document"),
         related_name="media_files",
     )
 
@@ -73,7 +73,7 @@ class SalesDocumentMedia(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
         verbose_name=_("Created By"),
-        related_name="created_sales_document_media",
+        related_name="created_commercial_document_media",
         null=True,
         blank=True,
     )
@@ -91,10 +91,10 @@ class SalesDocumentMedia(models.Model):
 
     class Meta:
         app_label = "contract_object_management"
-        db_table = "crm_salesdocumentmedia"
-        verbose_name = _("Sales Document Media")
-        verbose_name_plural = _("Sales Document Media")
+        db_table = "crm_commercialdocumentmedia"
+        verbose_name = _("Commercial Document Media")
+        verbose_name_plural = _("Commercial Document Media")
         ordering = ['-created_at']
 
     def __str__(self):
-        return f"SalesDocumentMedia #{self.id} [{self.status}] doc={self.sales_document_id}"
+        return f"CommercialDocumentMedia #{self.id} [{self.status}] doc={self.commercial_document_id}"
