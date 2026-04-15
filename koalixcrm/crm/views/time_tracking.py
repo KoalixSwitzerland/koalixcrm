@@ -13,7 +13,7 @@ from koalixcrm.crm.exceptions import UserIsNoHumanResource
 from koalixcrm.djangoUserExtension.exceptions import UserExtensionMissing, TooManyUserExtensionsAvailable
 from koalixcrm.crm.views.range_selection_form import RangeSelectionForm
 from koalixcrm.crm.views.work_entry_formset import BaseWorkEntryFormset
-from koalixcrm.crm.reporting.human_resource import HumanResource
+from koalixcrm.reporting.models.human_resource import HumanResource
 
 
 @login_required

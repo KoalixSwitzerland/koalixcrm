@@ -1,0 +1,17 @@
+# -*- coding: utf-8 -*-
+from typing import Dict, Any
+from koalixcrm.shared.base_model import BaseModel
+
+
+class Contract(BaseModel):
+    """Client-side model representing a contract."""
+
+    def __init__(self, data: Dict[str, Any], client=None):
+        self.description = None
+        self.default_customer = None
+        self.default_supplier = None
+        self.default_currency = None
+        self.default_template_set = None
+        self.date_of_creation = None
+        self.last_modification = None
+        super().__init__(data)

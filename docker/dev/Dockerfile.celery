@@ -1,0 +1,49 @@
+# docker/dev/Dockerfile.celery
+#
+# Used by: docker-compose (dev environment, unit tests, integration tests)
+# Source code is NOT copied here -- it is bind-mounted at runtime.
+# watchdog restarts the Celery worker automatically on any .py file change.
+#
+# Differences from docker/prod/Dockerfile.celery:
+#   - test requirements installed
+#   - watchdog[watchmedo] installed for auto-reload
+#   - No COPY of application code
+
+FROM python:3.13
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libpq-dev \
+    libcurl4-openssl-dev \
+    libssl-dev \
+    default-jre-headless \
+    curl \
+ && rm -rf /var/lib/apt/lists/*
+
+# Install Apache FOP 2.9 for PDF generation (matches FOP_EXECUTABLE setting)
+RUN mkdir -p /usr/bin/fop-2.9 && \
+    curl -fsSL https://archive.apache.org/dist/xmlgraphics/fop/binaries/fop-2.9-bin.tar.gz \
+    | tar xz -C /usr/bin/fop-2.9 --strip-components=1 && \
+    chmod +x /usr/bin/fop-2.9/fop/fop
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+WORKDIR /usr/src/app
+
+COPY docker/requirements/django.txt docker/requirements/celery.txt docker/requirements/test.txt /usr/src/app/
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir \
+        -r django.txt \
+        -r celery.txt \
+        -r test.txt && \
+    pip install --no-cache-dir "watchdog[watchmedo]"
+
+# Source code is mounted at runtime -- no COPY
+
+CMD ["watchmedo", "auto-restart", \
+     "--directory=/usr/src/app", \
+     "--pattern=*.py", \
+     "--recursive", \
+     "--", \
+     "celery", "-A", "koalixcrm_microservices.celery_app", "worker", "-l", "info", "-B"]

@@ -20,6 +20,10 @@ pip-log.txt
 .coverage
 .tox
 *~
+test_report/
+
+# Environment variables
+.env.local
 
 # IntelliJ
 *.iml
@@ -27,3 +31,13 @@ pip-log.txt
 
 #VSCODE
 .vscode
+
+# Virtual environment
+venv_linux/
+
+# Database files
+*.sqlite3
+*.sql
+
+# Migration data exports
+legacy_data.json

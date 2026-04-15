@@ -27,7 +27,7 @@ def user_is_not_human_resource(request):
                     if reporting_period_missing_form.cleaned_data['next_steps'] == 'return_to_start':
                         return HttpResponseRedirect('/admin/')
                     else:
-                        return HttpResponseRedirect('/admin/crm/humanresource/add/')
+                        return HttpResponseRedirect('/admin/reporting/humanresource/add/')
         else:
             reporting_period_missing_form = ReportingPeriodMissingForm(initial={'next_steps': 'create_user_extension'})
         title = "User is not registered as Human Resource"

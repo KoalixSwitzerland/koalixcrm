@@ -27,7 +27,7 @@ def reporting_period_missing(request):
                     if reporting_period_missing_form.cleaned_data['next_steps'] == 'return_to_start':
                         return HttpResponseRedirect('/admin/')
                     else:
-                        return HttpResponseRedirect('/admin/crm/reportingperiod/add/')
+                        return HttpResponseRedirect('/admin/reporting/reportingperiod/add/')
         else:
             reporting_period_missing_form = ReportingPeriodMissingForm(initial={'next_steps': 'create_user_extension'})
         title = "User Extension Missing"

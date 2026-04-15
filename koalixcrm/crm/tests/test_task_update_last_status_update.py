@@ -1,23 +1,23 @@
 import datetime
-import pytz
+from zoneinfo import ZoneInfo
 from django.test import TestCase
-from koalixcrm.crm.factories.factory_user import AdminUserFactory
-from koalixcrm.crm.factories.factory_customer_billing_cycle import StandardCustomerBillingCycleFactory
-from koalixcrm.crm.factories.factory_customer import StandardCustomerFactory
-from koalixcrm.crm.factories.factory_customer_group import StandardCustomerGroupFactory
-from koalixcrm.crm.factories.factory_currency import StandardCurrencyFactory
-from koalixcrm.crm.factories.factory_reporting_period import StandardReportingPeriodFactory
+from koalixcrm.crm.factory.user_factory import AdminUserFactory
+from koalixcrm.crm.factory.customer_billing_cycle_factory import StandardCustomerBillingCycleFactory
+from koalixcrm.crm.factory.customer_factory import StandardCustomerFactory
+from koalixcrm.crm.factory.customer_group_factory import StandardCustomerGroupFactory
+from koalixcrm.settings.factory.currency_factory import StandardCurrencyFactory
+from koalixcrm.reporting.factory.reporting_period_factory import StandardReportingPeriodFactory
 from koalixcrm.djangoUserExtension.factories.factory_user_extension import StandardUserExtensionFactory
-from koalixcrm.crm.factories.factory_task_status import DoneTaskStatusFactory
-from koalixcrm.crm.factories.factory_task import StandardTaskFactory
-from koalixcrm.crm.factories.factory_estimation import StandardHumanResourceEstimationToTaskFactory
+from koalixcrm.reporting.factory.task_status_factory import DoneTaskStatusFactory
+from koalixcrm.reporting.factory.task_factory import StandardTaskFactory
+from koalixcrm.reporting.factory.estimation_factory import StandardHumanResourceEstimationToTaskFactory
 
 
 class TaskUpdateLastStatusUpdate(TestCase):
 
     def setUp(self):
         datetime_now = datetime.datetime(2024, 1, 1, 0, 00)
-        datetime_now = pytz.timezone("UTC").localize(datetime_now, is_dst=None)
+        datetime_now = datetime_now.replace(tzinfo=ZoneInfo("UTC"))
         start_date = (datetime_now - datetime.timedelta(days=30)).date()
         end_date_first_task = (datetime_now + datetime.timedelta(days=30)).date()
         end_date_second_task = (datetime_now + datetime.timedelta(days=60)).date()

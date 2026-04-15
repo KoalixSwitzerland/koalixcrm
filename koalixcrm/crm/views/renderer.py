@@ -4,11 +4,14 @@ Provides XML rendering support.
 """
 
 import os
+import tempfile
 from subprocess import check_output, STDOUT
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework_xml.renderers import XMLRenderer
+
+from koalixcrm.crm.documents.pdf_export import PDFExport
 
 
 class XSLFORenderer(TemplateHTMLRenderer):
@@ -37,11 +40,12 @@ class XSLFORenderer(TemplateHTMLRenderer):
             u'set on either the view or response')
 
     def perform_xsl_transformation(self, file_with_serialized_xml, xsl_file, fop_config_file, file_output_pdf):
-        check_output([settings.FOP_EXECUTABLE,
-                      '-c', fop_config_file.path_full,
-                      '-xml', os.path.join(settings.PDF_OUTPUT_ROOT, file_with_serialized_xml),
-                      '-xsl', xsl_file.path_full,
-                      '-pdf', file_output_pdf], stderr=STDOUT)
+        with tempfile.TemporaryDirectory(prefix="koalixcrm_fop_") as tmp_dir:
+            xsl_local = PDFExport._download_s3_field_to_temp(xsl_file, tmp_dir, prefix="xsl_")
+            fop_local = PDFExport._download_s3_field_to_temp(fop_config_file, tmp_dir, prefix="fop_")
+            PDFExport.perform_xsl_transformation(
+                file_with_serialized_xml, xsl_local, fop_local, file_output_pdf
+            )
 
     def render(self, data, accepted_media_type=None, renderer_context=None):
         """

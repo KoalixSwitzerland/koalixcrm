@@ -18,10 +18,15 @@ PREREQUISITE_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'django_filters'
+    'django_filters',
+    'storages',
 ]
 
 PROJECT_APPS = [
+    'koalixcrm.settings',
+    'koalixcrm.products',
+    'koalixcrm.contracts',
+    'koalixcrm.reporting',
     'koalixcrm.crm',
     'koalixcrm.accounting',
     'koalixcrm.djangoUserExtension',
@@ -94,7 +99,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR)
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 PROJECT_ROOT = BASE_DIR
 
@@ -102,7 +107,7 @@ PROJECT_ROOT = BASE_DIR
 PDF_OUTPUT_ROOT = os.path.join(STATIC_ROOT, 'pdf')
 
 # Settings specific for filebrowser
-FILEBROWSER_DIRECTORY = 'media/uploads/'
+FILEBROWSER_DIRECTORY = 'uploads/'
 FILEBROWSER_EXTENSIONS = {
     'XML': ['.xml'],
     'XSL': ['.xsl'],
@@ -112,12 +117,30 @@ FILEBROWSER_EXTENSIONS = {
     'TTF': ['.ttf'],
 }
 
-LOGIN_URL = "/admin/login"
+LOGIN_URL = "/auth/login/"
 
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication',
+        'koalixcrm.auth.m2m_authentication.CeleryWorkerM2MAuthentication',
+        'koalixcrm.auth.oidc_token_authentication.OIDCAccessTokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
-    )
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
 }
+
+# OIDC Configuration (from environment variables)
+OIDC_ISSUER = os.environ.get('OIDC_ISSUER')
+OIDC_ACCEPTED_AUDIENCES = [
+    aud.strip() for aud in
+    os.environ.get('OIDC_ACCEPTED_AUDIENCES', '').split(',')
+    if aud.strip()
+]
+
+AUTHENTICATION_BACKENDS = [
+    'koalixcrm.auth.oidc_backend.OIDCAuthenticationBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]

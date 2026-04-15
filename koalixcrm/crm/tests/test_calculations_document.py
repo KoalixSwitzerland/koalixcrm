@@ -1,19 +1,19 @@
 import pytest
 import datetime
 from django.test import TestCase
-from koalixcrm.crm.documents.calculations import Calculations
-from koalixcrm.crm.factories.factory_currency import StandardCurrencyFactory
-from koalixcrm.crm.factories.factory_quote import StandardQuoteFactory
-from koalixcrm.crm.factories.factory_sales_document_position import StandardSalesDocumentPositionFactory
-from koalixcrm.crm.factories.factory_product_type import StandardProductTypeFactory
-from koalixcrm.crm.factories.factory_product_price import StandardPriceFactory
-from koalixcrm.crm.factories.factory_customer import StandardCustomerFactory
-from koalixcrm.crm.factories.factory_customer_group import StandardCustomerGroupFactory, AdvancedCustomerGroupFactory
-from koalixcrm.crm.factories.factory_tax import StandardTaxFactory
-from koalixcrm.crm.factories.factory_unit import StandardUnitFactory, SmallUnitFactory
-from koalixcrm.crm.factories.factory_customer_group_transform import StandardCustomerGroupTransformFactory
-from koalixcrm.crm.factories.factory_unit_transform import StandardUnitTransformFactory
-from koalixcrm.crm.factories.factory_currency_transform import StandardCurrencyTransformFactory
+from koalixcrm.contracts.models.calculations import Calculations
+from koalixcrm.settings.factory.currency_factory import StandardCurrencyFactory
+from koalixcrm.contracts.factory.quote_factory import StandardQuoteFactory
+from koalixcrm.contracts.factory.sales_document_position_factory import StandardSalesDocumentPositionFactory
+from koalixcrm.products.factory.product_type_factory import StandardProductTypeFactory
+from koalixcrm.products.factory.product_price_factory import StandardPriceFactory
+from koalixcrm.crm.factory.customer_factory import StandardCustomerFactory
+from koalixcrm.crm.factory.customer_group_factory import StandardCustomerGroupFactory, AdvancedCustomerGroupFactory
+from koalixcrm.settings.factory.tax_factory import StandardTaxFactory
+from koalixcrm.settings.factory.unit_factory import StandardUnitFactory, SmallUnitFactory
+from koalixcrm.products.factory.customer_group_transform_factory import StandardCustomerGroupTransformFactory
+from koalixcrm.settings.factory.unit_transform_factory import StandardUnitTransformFactory
+from koalixcrm.settings.factory.currency_transform_factory import StandardCurrencyTransformFactory
 from koalixcrm.global_support_functions import make_date_utc
 
 

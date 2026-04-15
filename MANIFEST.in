@@ -6,6 +6,6 @@ recursive-include koalixcrm/accounting/locale *
 recursive-include koalixcrm/accounting/templates *
 recursive-include koalixcrm/subscriptions/static *
 recursive-include koalixcrm/subscriptions/locale *
-recursive-include koalixcrm/djangoUserExtensions/static *
-recursive-include koalixcrm/djangoUserExtensions/locale *
+recursive-include koalixcrm/djangoUserExtension/static *
+recursive-include koalixcrm/djangoUserExtension/locale *
 

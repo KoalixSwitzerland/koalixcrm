@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import pytz
+import zoneinfo
 from django.shortcuts import redirect, render
 
 
@@ -9,4 +9,4 @@ def set_timezone(request):
         request.session['django_timezone'] = request.POST['timezone']
         return redirect('/')
     else:
-        return render(request, 'crm/admin/set_timezone.html', {'timezones': pytz.common_timezones})
+        return render(request, 'crm/admin/set_timezone.html', {'timezones': sorted(zoneinfo.available_timezones())})

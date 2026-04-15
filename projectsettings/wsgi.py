@@ -1,16 +1,19 @@
 """
-WSGI config for test_koalixcrm project.
+WSGI config for koalixcrm project.
 
-It exposes the WSGI callable as a module-level variable named ``application``.
+This module contains the WSGI application used by Django's development server
+and any production WSGI deployments. It should expose a module-level variable
+named `application`. Django's `runserver` and `runfcgi` commands discover
+this application via the `WSGI_APPLICATION` setting.
 
-For more information on this file, see
-https://docs.djangoproject.com/en/1.11/howto/deployment/wsgi/
+Usually this will be called "koalixcrm.wsgi".
 """
 
 import os
-
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "test_koalixcrm.settings")
+# The settings module that Django uses. By convention, it is usually in the form "myproject.settings.production"
+os.environ.setdefault("DJANGO_SETTINGS_MODULE",
+                      "koalixcrm.projectsettings.settings.production_docker_postgres_settings")
 
 application = get_wsgi_application()

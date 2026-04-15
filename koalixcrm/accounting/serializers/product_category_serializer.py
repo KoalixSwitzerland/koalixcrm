@@ -1,0 +1,78 @@
+# -*- coding: utf-8 -*-
+from koalixcrm.accounting.serializers.account_serializer import OptionAccountJSONSerializer
+from rest_framework import serializers
+
+from koalixcrm.accounting.models.product_category import ProductCategory
+from koalixcrm.accounting.models import Account
+
+
+class ProductCategoryMinimalJSONSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False)
+    title = serializers.CharField(read_only=True)
+
+    class Meta:
+        model = ProductCategory
+        fields = ('id',
+                  'title')
+
+
+class ProductCategoryJSONSerializer(serializers.ModelSerializer):
+    profit_account = OptionAccountJSONSerializer()
+    loss_account = OptionAccountJSONSerializer()
+
+    class Meta:
+        model = ProductCategory
+        fields = ('id',
+                  'title',
+                  'profit_account',
+                  'loss_account')
+        depth = 1
+
+    def create(self, validated_data):
+        product_category = ProductCategory()
+        product_category.title = validated_data['title']
+
+        # Deserialize profit account
+        profit_account = validated_data.pop('profit_account')
+        if profit_account:
+            if profit_account.get('id', None):
+                product_category.profit_account = Account.objects.get(id=profit_account.get('id', None))
+            else:
+                product_category.profit_account = None
+
+        # Deserialize loss account
+        loss_account = validated_data.pop('loss_account')
+        if loss_account:
+            if loss_account.get('id', None):
+                product_category.loss_account = Account.objects.get(id=loss_account.get('id', None))
+            else:
+                product_category.loss_account = None
+
+        product_category.save()
+        return product_category
+
+    def update(self, instance, validated_data):
+        instance.title = validated_data.get('title', instance.title)
+
+        # Deserialize profit account
+        profit_account = validated_data.pop('profit_account')
+        if profit_account:
+            if profit_account.get('id', instance.profit_account_id):
+                instance.profit_account = Account.objects.get(id=profit_account.get('id', None))
+            else:
+                instance.profit_account = instance.profit_account_id
+        else:
+            instance.profit_account = None
+
+        # Deserialize loss account
+        loss_account = validated_data.pop('loss_account')
+        if loss_account:
+            if loss_account.get('id', instance.loss_account_id):
+                instance.loss_account = Account.objects.get(id=loss_account.get('id', None))
+            else:
+                instance.loss_account = instance.loss_account_id
+        else:
+            instance.loss_account = None
+
+        instance.save()
+        return instance

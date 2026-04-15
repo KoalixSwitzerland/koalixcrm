@@ -1,20 +1,20 @@
 import datetime
 import pytest
 from django.test import TestCase
-from koalixcrm.crm.factories.factory_user import AdminUserFactory
-from koalixcrm.crm.factories.factory_customer_billing_cycle import StandardCustomerBillingCycleFactory
-from koalixcrm.crm.factories.factory_customer import StandardCustomerFactory
-from koalixcrm.crm.factories.factory_customer_group import StandardCustomerGroupFactory
-from koalixcrm.crm.factories.factory_currency import StandardCurrencyFactory
-from koalixcrm.crm.factories.factory_reporting_period import StandardReportingPeriodFactory
+from koalixcrm.crm.factory.user_factory import AdminUserFactory
+from koalixcrm.crm.factory.customer_billing_cycle_factory import StandardCustomerBillingCycleFactory
+from koalixcrm.crm.factory.customer_factory import StandardCustomerFactory
+from koalixcrm.crm.factory.customer_group_factory import StandardCustomerGroupFactory
+from koalixcrm.settings.factory.currency_factory import StandardCurrencyFactory
+from koalixcrm.reporting.factory.reporting_period_factory import StandardReportingPeriodFactory
 from koalixcrm.djangoUserExtension.factories.factory_user_extension import StandardUserExtensionFactory
-from koalixcrm.crm.factories.factory_task import StandardTaskFactory
-from koalixcrm.crm.factories.factory_estimation import StandardEstimationToTaskFactory
-from koalixcrm.crm.factories.factory_human_resource import StandardHumanResourceFactory
-from koalixcrm.crm.factories.factory_resource_price import StandardResourcePriceFactory
-from koalixcrm.crm.factories.factory_project import StandardProjectFactory
-from koalixcrm.crm.factories.factory_unit import StandardUnitFactory
-from koalixcrm.crm.factories.factory_estimation import StandardHumanResourceEstimationToTaskFactory
+from koalixcrm.reporting.factory.task_factory import StandardTaskFactory
+from koalixcrm.reporting.factory.estimation_factory import StandardEstimationToTaskFactory
+from koalixcrm.reporting.factory.human_resource_factory import StandardHumanResourceFactory
+from koalixcrm.reporting.factory.resource_price_factory import StandardResourcePriceFactory
+from koalixcrm.reporting.factory.project_factory import StandardProjectFactory
+from koalixcrm.settings.factory.unit_factory import StandardUnitFactory
+from koalixcrm.reporting.factory.estimation_factory import StandardHumanResourceEstimationToTaskFactory
 from koalixcrm.global_support_functions import make_date_utc
 
 

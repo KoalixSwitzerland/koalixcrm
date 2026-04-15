@@ -7,7 +7,6 @@ from koalixcrm.crm.const.postaladdressprefix import *
 
 
 class PostalAddress(models.Model):
-    id = models.BigAutoField(primary_key=True)
     prefix = models.CharField(max_length=1,
                               choices=POSTALADDRESSPREFIX,
                               verbose_name=_("Prefix"), blank=True,
@@ -52,6 +51,11 @@ class PostalAddress(models.Model):
                                verbose_name=_("Country"),
                                blank=True,
                                null=True)
+    subdivision_code = models.CharField(max_length=3,
+                                        verbose_name=_("Subdivision Code (ISO 3166-2 suffix)"),
+                                        help_text=_("e.g. ZH for Kanton Zürich, BY for Bayern — used for regional public holidays"),
+                                        blank=True,
+                                        null=True)
 
     class Meta:
         app_label = "crm"

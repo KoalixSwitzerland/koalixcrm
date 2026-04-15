@@ -1,0 +1,4 @@
+from koalixcrm.products.factory.product_factory import StandardProductFactory
+from koalixcrm.products.factory.product_type_factory import StandardProductTypeFactory
+from koalixcrm.products.factory.product_price_factory import StandardPriceFactory, HighPriceFactory
+from koalixcrm.products.factory.customer_group_transform_factory import StandardCustomerGroupTransformFactory

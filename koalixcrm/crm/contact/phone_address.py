@@ -5,7 +5,6 @@ from django.utils.translation import gettext as _
 
 
 class PhoneAddress(models.Model):
-    id = models.BigAutoField(primary_key=True)
     phone = models.CharField(max_length=20,
                              verbose_name=_("Phone Number"))
 

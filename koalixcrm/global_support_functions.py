@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import datetime
-
-import pytz
+from zoneinfo import ZoneInfo
 
 
 def limit_string_length(input_string, maximum_length):
@@ -48,5 +47,5 @@ class ConditionalMethodDecorator(object):
 
 
 def make_date_utc(input_date):
-    output_date = pytz.timezone("UTC").localize(input_date, is_dst=None)
+    output_date = input_date.replace(tzinfo=ZoneInfo("UTC"))
     return output_date

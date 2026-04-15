@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
 from django.forms import NumberInput
-from koalixcrm.crm.reporting.task import Task
-from koalixcrm.crm.reporting.project import Project
+from koalixcrm.reporting.models.task import Task
+from koalixcrm.reporting.models.project import Project
 from django.contrib.admin.widgets import *
 from koalixcrm.global_support_functions import limit_string_length
 from koalixcrm.djangoUserExtension.models import UserExtension
-from koalixcrm.crm.reporting.reporting_period import ReportingPeriod
-from koalixcrm.crm.reporting.human_resource import HumanResource
+from koalixcrm.reporting.models.reporting_period import ReportingPeriod
+from koalixcrm.reporting.models.human_resource import HumanResource
 
 
 class WorkEntry(forms.Form):
@@ -87,7 +87,7 @@ class WorkEntry(forms.Form):
         return cleaned_data
 
     def update_work(self, request):
-        from koalixcrm.crm.reporting.work import Work
+        from koalixcrm.reporting.models.work import Work
         if self.has_changed():
             if self.cleaned_data['work_id']:
                 work = Work.objects.get(id=self.cleaned_data['work_id'])

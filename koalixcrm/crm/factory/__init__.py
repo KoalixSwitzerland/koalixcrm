@@ -1,0 +1,6 @@
+from koalixcrm.crm.factory.user_factory import StaffUserFactory, AdminUserFactory, StandardUserFactory
+from koalixcrm.crm.factory.contact_factory import StandardContactFactory
+from koalixcrm.crm.factory.customer_factory import StandardCustomerFactory
+from koalixcrm.crm.factory.customer_billing_cycle_factory import StandardCustomerBillingCycleFactory
+from koalixcrm.crm.factory.customer_group_factory import StandardCustomerGroupFactory, AdvancedCustomerGroupFactory
+from koalixcrm.crm.factory.postal_address_factory import StandardPostalAddressFactory

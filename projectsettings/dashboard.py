@@ -8,7 +8,6 @@ To activate your index dashboard add the following to your settings.py::
 
 from django.utils.translation import gettext_lazy as _
 from grappelli.dashboard import modules, Dashboard
-from grappelli.dashboard.utils import get_admin_site_name
 from koalixcrm.version import KOALIXCRM_VERSION
 
 
@@ -19,7 +18,7 @@ class CustomIndexDashboard(Dashboard):
 
     def init_with_context(self, context):
         self.children.append(modules.Group(
-            _('koalixcrm Version' + KOALIXCRM_VERSION),
+            _('koalixcrm Version ' + KOALIXCRM_VERSION),
             column=1,
             collapsible=True,
             children=[
@@ -27,12 +26,12 @@ class CustomIndexDashboard(Dashboard):
                     _('Sales Documents and Contracts'),
                     column=1,
                     css_classes=('collapse closed',),
-                    models=('koalixcrm.crm.documents.contract.Contract',
-                            'koalixcrm.crm.documents.quote.Quote',
-                            'koalixcrm.crm.documents.purchase_confirmation.PurchaseConfirmation',
-                            'koalixcrm.crm.documents.delivery_note.DeliveryNote',
-                            'koalixcrm.crm.documents.invoice.Invoice',
-                            'koalixcrm.crm.documents.payment_reminder.PaymentReminder',),
+                    models=('koalixcrm.contracts.models.contract.Contract',
+                            'koalixcrm.contracts.models.quote.Quote',
+                            'koalixcrm.contracts.models.purchase_confirmation.PurchaseConfirmation',
+                            'koalixcrm.contracts.models.delivery_note.DeliveryNote',
+                            'koalixcrm.contracts.models.invoice.Invoice',
+                            'koalixcrm.contracts.models.payment_reminder.PaymentReminder',),
                     ),
                     modules.ModelList(
                         _('Scheduler'),
@@ -45,7 +44,7 @@ class CustomIndexDashboard(Dashboard):
                         _('Products'),
                         column=1,
                         css_classes=('collapse closed',),
-                        models=('koalixcrm.crm.product.product.Product',),
+                        models=('koalixcrm.products.models.product.Product',),
                     ),
                     modules.ModelList(
                         _('Contacts'),
@@ -71,7 +70,7 @@ class CustomIndexDashboard(Dashboard):
                                 'koalixcrm.crm.reporting.agreement.Agreement',
                                 'koalixcrm.crm.reporting.estimation.Estimation',
                                 'koalixcrm.crm.reporting.human_resource.HumanResource',
-                                'koalixcrm.crm.documents.purchase_order.PurchaseOrder',),
+                                'koalixcrm.contracts.models.purchase_order.PurchaseOrder',),
                     ),
                     modules.LinkList(
                         _('Report Work And Expenses'),
@@ -110,9 +109,9 @@ class CustomIndexDashboard(Dashboard):
                     _('Product settings'),
                     column=1,
                     css_classes=('collapse closed',),
-                    models=('koalixcrm.crm.product.tax.Tax',
-                            'koalixcrm.crm.product.unit.Unit',
-                            'koalixcrm.crm.product.currency.Currency'),
+                    models=('koalixcrm.settings.models.tax.Tax',
+                            'koalixcrm.settings.models.unit.Unit',
+                            'koalixcrm.settings.models.currency.Currency'),
                 ),
                 modules.ModelList(
                     _('Reporting settings'),
@@ -136,9 +135,9 @@ class CustomIndexDashboard(Dashboard):
                     _('PDF document settings'),
                     column=1,
                     css_classes=('collapse closed',),
-                    models=('koalixcrm.djangoUserExtension.user_extension.document_template.*',
-                            'koalixcrm.djangoUserExtension.user_extension.template_set.TemplateSet',
-                            'koalixcrm.djangoUserExtension.user_extension.user_extension.*',),
+                    models=('koalixcrm.djangoUserExtension.models.document_template.*',
+                            'koalixcrm.djangoUserExtension.models.template_set.TemplateSet',
+                            'koalixcrm.djangoUserExtension.models.user_extension.*',),
                 ),
             ]
         ))
