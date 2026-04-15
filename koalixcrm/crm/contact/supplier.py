@@ -6,7 +6,10 @@ from koalixcrm.crm.contact.contact import Contact
 
 
 class Supplier(Contact):
-    offers_shipment_to_customers = models.BooleanField(verbose_name=_("Offers Shipment to Customer"))
+    offers_shipment_to_customers = models.BooleanField(
+        db_column="offersShipmentToCustomers",
+        verbose_name=_("Offers Shipment to Customer"),
+    )
 
     class Meta:
         app_label = "crm"
