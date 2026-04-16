@@ -47,7 +47,9 @@ Trigger chain (producer side):
 | [`02-architecture.md`](./02-architecture.md) | Component/container architecture diagram |
 | [`03-use-case-flow.md`](./03-use-case-flow.md) | Use case and end-to-end sequence flow |
 | [`04-state-machine.md`](./04-state-machine.md) | `PDFExportProcess` status lifecycle |
-| [`05-interfaces.md`](./05-interfaces.md) | Interface details (SQS envelope, S3 layout, FOP CLI invocation, env vars) |
+| [`05-interfaces.md`](./05-interfaces.md) | Interface details (SQS envelope wire contract, S3 layout, FOP CLI invocation, env vars) |
+| [`10-migration-reference.md`](./10-migration-reference.md) | Source-of-truth map for the Java rewrite: files to mirror, delete, keep; OIDC env vars; retry semantics; deletion checklist |
+| [`11-dto-shapes.md`](./11-dto-shapes.md) | JSON DTO sketches the new Django endpoints must return (stage 1 anchor) |
 
 ## High-level processing steps inside the microservice
 

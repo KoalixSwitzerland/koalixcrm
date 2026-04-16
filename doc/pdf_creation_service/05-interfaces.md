@@ -11,7 +11,14 @@ Microservice.
   `MaxNumberOfMessages=5`, `WaitTimeSeconds=2`, `VisibilityTimeout=60`).
 - **Local dev**: ElasticMQ via `SQS_ENDPOINT_URL` (see `elasticmq.conf`).
 
-### Message envelope
+### SQS envelope — wire contract
+
+> ⚓ **Stability contract.** This is the JSON the Django producer writes and
+> the (current Python / future Java) consumer reads. Any change here is a
+> coordinated release across producer and consumer. The Java
+> `pdf-export-service` mirrors this shape 1:1 as a `PdfExportCommand`
+> record. Source of truth: `koalixcrm_mq_commands/pdf_export_command.py:8-63`
+> on the producer side.
 
 ```json
 {
@@ -26,14 +33,23 @@ Microservice.
 }
 ```
 
-Serialization is produced by `PDFExportCommand.to_json()`
-(`koalixcrm_mq_commands/pdf_export_command.py:41`). Supported `source_model`
-values are exactly the keys of `MODEL_MAP` in `tasks.py:58-67`:
+| Field | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `type` | string | yes | Must equal `"PDFExportCommand"`. Unknown types are logged and dropped (SQS message deleted) — see `sqs_poller.py:47`. |
+| `payload.process_id` | int | yes | `PDFExportProcess.id`. The worker reads/writes this row. |
+| `payload.source_model` | string | yes | One of the fixed set below. |
+| `payload.source_id` | int | yes | PK of the source commercial document. |
+| `payload.template_set_id` | int | yes | `DocumentTemplate.id`. **`0` means "not set"** — the producer signal substitutes `0` when `template_set` is null (`pdf_export_signals.py:28`). The worker treats `0` as an error. |
+| `payload.printed_by_user_id` | int | yes | `auth.User.id` of the triggering admin. **`0` means "not set"** (same substitution, `pdf_export_signals.py:29`). |
+
+Supported `source_model` values (closed set, matches `tasks.py:58-67`):
 `CommercialDocument`, `Invoice`, `Quote`, `DeliveryNote`, `PurchaseOrder`,
 `PurchaseConfirmation`, `PaymentReminder`, `CreditNote`.
 
-Unknown envelope `type` values are logged and the SQS message is still deleted
-(see `sqs_poller.py:47`), so unrelated commands do not poison the queue.
+Changing this set **requires** a coordinated change in both the producer
+(`MODEL_MAP` was producer-side in the signal is implicit — any
+`PDFExportProcess.source_model` value reaches the worker) and the Java
+service's `XmlBuilder` registry.
 
 ## 2. Shared database (Django ORM)
 
