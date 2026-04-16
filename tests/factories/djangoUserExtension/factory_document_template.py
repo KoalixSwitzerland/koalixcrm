@@ -2,7 +2,6 @@
 
 import factory
 from koalixcrm.djangoUserExtension.models import *
-from filebrowser.base import FileObject
 
 
 class StandardQuoteTemplateFactory(factory.django.DjangoModelFactory):
@@ -10,9 +9,9 @@ class StandardQuoteTemplateFactory(factory.django.DjangoModelFactory):
         model = QuoteTemplate
 
     title = "This is a test Quote Template"
-    xsl_file = FileObject("~/path/to/xsl_file.xsl")
-    fop_config_file = FileObject("~/path/to/fop_config_file.xml")
-    logo = FileObject("~/path/to/logo_file.jpg")
+    xsl_file = "~/path/to/xsl_file.xsl"
+    fop_config_file = "~/path/to/fop_config_file.xml"
+    logo = "~/path/to/logo_file.jpg"
 
 
 class StandardInvoiceTemplateFactory(factory.django.DjangoModelFactory):
@@ -20,9 +19,9 @@ class StandardInvoiceTemplateFactory(factory.django.DjangoModelFactory):
         model = InvoiceTemplate
 
     title = "This is a test Invoice Template"
-    xsl_file = FileObject("~/path/to/xsl_file.xsl")
-    fop_config_file = FileObject("~/path/to/fop_config_file.xml")
-    logo = FileObject("~/path/to/logo_file.jpg")
+    xsl_file = "~/path/to/xsl_file.xsl"
+    fop_config_file = "~/path/to/fop_config_file.xml"
+    logo = "~/path/to/logo_file.jpg"
 
 
 class StandardDeliveryNoteTemplateFactory(factory.django.DjangoModelFactory):
@@ -30,9 +29,9 @@ class StandardDeliveryNoteTemplateFactory(factory.django.DjangoModelFactory):
         model = DeliveryNoteTemplate
 
     title = "This is a test Delivery Note Template"
-    xsl_file = FileObject("~/path/to/xsl_file.xsl")
-    fop_config_file = FileObject("~/path/to/fop_config_file.xml")
-    logo = FileObject("~/path/to/logo_file.jpg")
+    xsl_file = "~/path/to/xsl_file.xsl"
+    fop_config_file = "~/path/to/fop_config_file.xml"
+    logo = "~/path/to/logo_file.jpg"
 
 
 class StandardPaymentReminderTemplateFactory(factory.django.DjangoModelFactory):
@@ -40,9 +39,9 @@ class StandardPaymentReminderTemplateFactory(factory.django.DjangoModelFactory):
         model = PaymentReminderTemplate
 
     title = "This is a test Payment Reminder Template"
-    xsl_file = FileObject("~/path/to/xsl_file.xsl")
-    fop_config_file = FileObject("~/path/to/fop_config_file.xml")
-    logo = FileObject("~/path/to/logo_file.jpg")
+    xsl_file = "~/path/to/xsl_file.xsl"
+    fop_config_file = "~/path/to/fop_config_file.xml"
+    logo = "~/path/to/logo_file.jpg"
 
 
 class StandardPurchaseOrderTemplateFactory(factory.django.DjangoModelFactory):
@@ -50,9 +49,9 @@ class StandardPurchaseOrderTemplateFactory(factory.django.DjangoModelFactory):
         model = PurchaseOrderTemplate
 
     title = "This is a test Purchase Order Template"
-    xsl_file = FileObject("~/path/to/xsl_file.xsl")
-    fop_config_file = FileObject("~/path/to/fop_config_file.xml")
-    logo = FileObject("~/path/to/logo_file.jpg")
+    xsl_file = "~/path/to/xsl_file.xsl"
+    fop_config_file = "~/path/to/fop_config_file.xml"
+    logo = "~/path/to/logo_file.jpg"
 
 
 class StandardPurchaseConfirmationTemplateFactory(factory.django.DjangoModelFactory):
@@ -60,9 +59,9 @@ class StandardPurchaseConfirmationTemplateFactory(factory.django.DjangoModelFact
         model = PurchaseConfirmationTemplate
 
     title = "This is a test Purchase Confirmation Template"
-    xsl_file = FileObject("~/path/to/xsl_file.xsl")
-    fop_config_file = FileObject("~/path/to/fop_config_file.xml")
-    logo = FileObject("~/path/to/logo_file.jpg")
+    xsl_file = "~/path/to/xsl_file.xsl"
+    fop_config_file = "~/path/to/fop_config_file.xml"
+    logo = "~/path/to/logo_file.jpg"
 
 
 class StandardBalanceSheetTemplateFactory(factory.django.DjangoModelFactory):
@@ -70,9 +69,9 @@ class StandardBalanceSheetTemplateFactory(factory.django.DjangoModelFactory):
         model = BalanceSheetTemplate
 
     title = "This is a test Balance Sheet Template"
-    xsl_file = FileObject("~/path/to/xsl_file.xsl")
-    fop_config_file = FileObject("~/path/to/fop_config_file.xml")
-    logo = FileObject("~/path/to/logo_file.jpg")
+    xsl_file = "~/path/to/xsl_file.xsl"
+    fop_config_file = "~/path/to/fop_config_file.xml"
+    logo = "~/path/to/logo_file.jpg"
 
 
 class StandardProfitLossStatementTemplateFactory(factory.django.DjangoModelFactory):
@@ -80,9 +79,9 @@ class StandardProfitLossStatementTemplateFactory(factory.django.DjangoModelFacto
         model = ProfitLossStatementTemplate
 
     title = "This is a test Profit Loss Statement Template"
-    xsl_file = FileObject("~/path/to/xsl_file.xsl")
-    fop_config_file = FileObject("~/path/to/fop_config_file.xml")
-    logo = FileObject("~/path/to/logo_file.jpg")
+    xsl_file = "~/path/to/xsl_file.xsl"
+    fop_config_file = "~/path/to/fop_config_file.xml"
+    logo = "~/path/to/logo_file.jpg"
 
 
 class StandardMonthlyProjectSummaryTemplateFactory(factory.django.DjangoModelFactory):
@@ -90,6 +89,6 @@ class StandardMonthlyProjectSummaryTemplateFactory(factory.django.DjangoModelFac
         model = MonthlyProjectSummaryTemplate
 
     title = "This is a test Purchase Order Template"
-    xsl_file = FileObject("~/path/to/xsl_file.xsl")
-    fop_config_file = FileObject("~/path/to/fop_config_file.xml")
-    logo = FileObject("~/path/to/logo_file.jpg")
+    xsl_file = "~/path/to/xsl_file.xsl"
+    fop_config_file = "~/path/to/fop_config_file.xml"
+    logo = "~/path/to/logo_file.jpg"

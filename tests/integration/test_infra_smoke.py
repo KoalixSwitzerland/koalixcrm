@@ -56,7 +56,10 @@ def test_minio_roundtrip_on_pdf_bucket(s3_client):
 
 def test_elasticmq_envelope_roundtrip(sqs_client):
     """Send a CommandEnvelope through the MQ the Celery worker would read from."""
-    queue_name = os.environ.get("CELERY_SQS", "koalixcrm-celery-sqs")
+    # Use a test-private queue: the live Celery worker in the integration
+    # profile consumes from CELERY_SQS, so any message written to it would
+    # be drained before this test could receive it back.
+    queue_name = f"integration-test-{uuid.uuid4().hex[:12]}"
     q = sqs_client.create_queue(QueueName=queue_name)
     url = q["QueueUrl"]
 
@@ -78,13 +81,26 @@ def test_django_backend_reachable():
     import urllib.request
     import urllib.error
 
+    # Don't follow redirects: /admin/login/ 302s into the OIDC flow which
+    # terminates at an external Keycloak that this test has no business
+    # talking to. A direct response from Django is what we're verifying.
+    class NoRedirect(urllib.request.HTTPRedirectHandler):
+        def redirect_request(self, *args, **kwargs):
+            return None
+
+    opener = urllib.request.build_opener(NoRedirect)
     url = "http://backend:8000/admin/login/"
     last_err: Exception | None = None
     for _ in range(30):
         try:
-            with urllib.request.urlopen(url, timeout=5) as r:
-                assert r.status == 200
+            with opener.open(url, timeout=5) as r:
+                assert r.status in (200, 302)
                 return
+        except urllib.error.HTTPError as exc:
+            if exc.code in (200, 302):
+                return
+            last_err = exc
+            time.sleep(2)
         except (urllib.error.URLError, ConnectionError) as exc:
             last_err = exc
             time.sleep(2)

@@ -13,10 +13,10 @@ from tests.factories.djangoUserExtension.factory_document_template import Standa
 from tests.factories.djangoUserExtension.factory_document_template import StandardPurchaseOrderTemplateFactory
 from tests.factories.djangoUserExtension.factory_document_template import StandardDeliveryNoteTemplateFactory
 from tests.factories.djangoUserExtension.factory_document_template import StandardPaymentReminderTemplateFactory
-from koalixcrm.contracts.models.quote import Quote
+from koalixcrm.contracts.models.quotation import Quotation
 from koalixcrm.contracts.models.invoice import Invoice
 from koalixcrm.contracts.models.purchase_order import PurchaseOrder
-from koalixcrm.contracts.models.delivery_note import DeliveryNote
+from koalixcrm.contracts.models.despatch_advice import DespatchAdvice
 from koalixcrm.contracts.models.payment_reminder import PaymentReminder
 
 
@@ -77,9 +77,9 @@ class CreateSalesDocumentFromContract(StaticLiveServerTestCase):
         except TimeoutException:
             print("Timed out waiting for page to load")
 
-        test_parameters = {Quote: {"action_name": "create_quote",
-                                   "template_name": "quote_template",
-                                   "template_to_select": self.test_quote_template},
+        test_parameters = {Quotation: {"action_name": "create_quotation",
+                                       "template_name": "quote_template",
+                                       "template_to_select": self.test_quote_template},
                            Invoice: {"action_name": "create_invoice",
                                      "template_name": "invoice_template",
                                      "template_to_select": self.test_invoice_template},
@@ -89,9 +89,9 @@ class CreateSalesDocumentFromContract(StaticLiveServerTestCase):
                            PaymentReminder: {"action_name": "create_payment_reminder",
                                              "template_name": "payment_reminder_template",
                                              "template_to_select": self.test_payment_reminder_template},
-                           DeliveryNote: {"action_name": "create_delivery_note",
-                                          "template_name": "delivery_note_template",
-                                          "template_to_select": self.test_delivery_note_template},
+                           DespatchAdvice: {"action_name": "create_despatch_advice",
+                                            "template_name": "delivery_note_template",
+                                            "template_to_select": self.test_delivery_note_template},
                            }
         for document_type in test_parameters:
             test_parameter = test_parameters[document_type]

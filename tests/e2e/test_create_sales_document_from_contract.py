@@ -9,7 +9,7 @@ from tests.factories.djangoUserExtension.factory_document_template import Standa
 from tests.factories.djangoUserExtension.factory_document_template import StandardInvoiceTemplateFactory
 from tests.factories.djangoUserExtension.factory_document_template import StandardPurchaseOrderTemplateFactory
 from tests.e2e.UITests import UITests
-from koalixcrm.contracts.models.quote import Quote
+from koalixcrm.contracts.models.quotation import Quotation
 from koalixcrm.contracts.models.invoice import Invoice
 from koalixcrm.contracts.models.purchase_order import PurchaseOrder
 
@@ -53,9 +53,9 @@ class CreateSalesDocumentFromContract(UITests):
         except TimeoutException:
             print("Timed out waiting for page to load")
 
-        test_parameters = {Quote: {"action_name": "create_quote",
-                                   "template_name": "quote_template",
-                                   "template_to_select": self.test_quote_template},
+        test_parameters = {Quotation: {"action_name": "create_quotation",
+                                       "template_name": "quote_template",
+                                       "template_to_select": self.test_quote_template},
                            Invoice: {"action_name": "create_invoice",
                                      "template_name": "invoice_template",
                                      "template_to_select": self.test_invoice_template},

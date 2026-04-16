@@ -69,10 +69,10 @@ class TaskConstructorTest(TestCase):
             project=self.test_reporting_period.project,
         )
         task_minimal_1.save()
-        self.assertEquals(task_minimal_1.last_status_change, datetime.date(2024, 6, 2))
+        self.assertEqual(task_minimal_1.last_status_change, datetime.date(2024, 6, 2))
         self._freeze.freeze(datetime.date(2018, 6, 15))
         task_minimal_2 = Task.objects.create(
             project=self.test_reporting_period.project,
         )
         task_minimal_2.save()
-        self.assertEquals(task_minimal_2.last_status_change, datetime.date(2018, 6, 15))
+        self.assertEqual(task_minimal_2.last_status_change, datetime.date(2018, 6, 15))

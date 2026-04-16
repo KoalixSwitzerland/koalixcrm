@@ -48,5 +48,5 @@ class TaskUpdateLastStatusUpdate(TestCase):
         new_status = DoneTaskStatusFactory.create()
         self.test_1st_task.status = new_status
         self.test_1st_task.save()
-        self.assertEquals(previous_last_status_change, datetime.date(2024, 6, 15))
+        self.assertEqual(previous_last_status_change, datetime.date(2024, 6, 15))
         self.assertEqual(self.test_1st_task.last_status_change, datetime.date.today())
