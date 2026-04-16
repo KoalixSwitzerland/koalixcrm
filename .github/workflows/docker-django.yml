@@ -1,0 +1,206 @@
+name: Docker Django
+
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+#
+# The image built here is a generic Django runtime for koalixcrm. It does NOT
+# hard-code any deployment target (no AWS-specific bootstrapping). The
+# messaging queue (SQS / ElasticMQ) and object storage (S3 / MinIO) endpoints
+# are selected entirely through runtime environment variables so that the
+# same image can be composed by /app/koalixcrm_system against local S3/SQS
+# substitutes or against real AWS services in production.
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+    # Publish semver tags as releases.
+    tags: [ 'v*.*.*' ]
+
+env:
+  # Use docker.io for Docker Hub if empty
+  REGISTRY: ghcr.io
+  # Custom image name for Django
+  IMAGE_NAME: ${{ github.repository_owner }}/koalixcrm_django
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+      # This is used to complete the identity challenge
+      # with sigstore/fulcio when running outside of PRs.
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get latest tag and create dev tag
+        if: github.ref == 'refs/heads/develop'
+        id: create_dev_tag
+        run: |
+          # Get the last release tag (excluding dev tags)
+          LAST_TAG=$(git tag -l --sort=-v:refname | grep -v '\-dev' | head -n 1)
+          if [ -z "$LAST_TAG" ]; then
+            LAST_TAG="v0.0.0"
+          fi
+          echo "Last release tag: $LAST_TAG"
+
+          # Create a counter for dev builds based on the number of commits since last release tag
+          DEV_NUMBER=$(git rev-list --count HEAD ^${LAST_TAG} 2>/dev/null || git rev-list --count HEAD)
+
+          # Create the new dev tag name
+          NEW_TAG="${LAST_TAG}-dev${DEV_NUMBER}"
+          echo "New dev tag: $NEW_TAG"
+          echo "tag_name=$NEW_TAG" >> $GITHUB_OUTPUT
+
+          # Create and push the tag
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag "$NEW_TAG"
+          git push origin "$NEW_TAG"
+
+      - name: Set tag name
+        id: set_tag
+        run: |
+          if [ "${{ github.ref }}" == "refs/heads/develop" ]; then
+            echo "tag_name=${{ steps.create_dev_tag.outputs.tag_name }}" >> $GITHUB_OUTPUT
+          else
+            echo "tag_name=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+          fi
+
+      # Install the cosign tool
+      # https://github.com/sigstore/cosign-installer
+      - name: Install cosign
+        uses: sigstore/cosign-installer@v3.3.0
+        with:
+          cosign-release: 'v2.2.2'
+
+      # Set up BuildKit Docker container builder to be able to build
+      # multi-platform images and export cache
+      # https://github.com/docker/setup-buildx-action
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@f95db51fddba0c2d1ec667646a06c2ce06100226 # v3.0.0
+
+      # Login against a Docker registry
+      # https://github.com/docker/login-action
+      - name: Log into registry ${{ env.REGISTRY }}
+        uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # v3.0.0
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Extract metadata (tags, labels) for Docker
+      # https://github.com/docker/metadata-action
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@96383f45573cb7f253c731d3b3ab81c87ef81934 # v5.0.0
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=raw,value=${{ steps.set_tag.outputs.tag_name }},enable=${{ github.ref == 'refs/heads/develop' }}
+            type=raw,value=${{ github.ref_name }},enable=${{ startsWith(github.ref, 'refs/tags/') }}
+
+      # Build and push Docker image with Buildx
+      # https://github.com/docker/build-push-action
+      - name: Build and push Docker image
+        id: build-and-push
+        uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
+        with:
+          context: .
+          file: ./docker/prod/Dockerfile.django
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # Sign the resulting Docker image digest.
+      # This will only write to the public Rekor transparency log when the Docker
+      # repository is public to avoid leaking data.  If you would like to publish
+      # transparency data even for private images, pass --force to cosign below.
+      # https://github.com/sigstore/cosign
+      - name: Sign the published Docker image
+        env:
+          # https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#using-an-intermediate-environment-variable
+          TAGS: ${{ steps.meta.outputs.tags }}
+          DIGEST: ${{ steps.build-and-push.outputs.digest }}
+        # This step uses the identity token to provision an ephemeral certificate
+        # against the sigstore community Fulcio instance.
+        run: echo "${TAGS}" | xargs -I {} cosign sign --yes {}@${DIGEST}
+
+      - name: Cleanup dev releases
+        if: startsWith(github.ref, 'refs/tags/v') && !contains(github.ref, '-dev')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          IMAGE_NAME: ${{ env.IMAGE_NAME }}
+        run: |
+          # Get package name (repo owner/repo name)
+          PACKAGE_NAME=$(echo "${IMAGE_NAME}" | cut -d'/' -f2)
+          echo "Cleaning up dev versions for package: ${PACKAGE_NAME}"
+
+          # List all versions of the package
+          VERSIONS=$(gh api -H "Accept: application/vnd.github+json" \
+            "/orgs/${{ github.repository_owner }}/packages/container/${PACKAGE_NAME}/versions" --paginate)
+
+          # If not an org, try user packages
+          if echo "$VERSIONS" | grep -q "Not Found"; then
+            VERSIONS=$(gh api -H "Accept: application/vnd.github+json" \
+              "/users/${{ github.repository_owner }}/packages/container/${PACKAGE_NAME}/versions" --paginate)
+          fi
+
+          # We'll iterate through versions and delete those with -dev tags
+          echo "$VERSIONS" | jq -c '.[]' | while read -r version; do
+            ID=$(echo "$version" | jq -r '.id')
+            TAGS=$(echo "$version" | jq -r '.metadata.container.tags[]' 2>/dev/null || echo "")
+
+            DELETE=false
+            for TAG in $TAGS; do
+              if [[ "$TAG" == *"-dev"* ]]; then
+                DELETE=true
+                break
+              fi
+            done
+
+            if [ "$DELETE" = true ]; then
+              echo "Deleting version ID: $ID with tags: $TAGS"
+
+              # Before deleting the dev version, find its digest to delete the signature
+              DIGEST=$(echo "$version" | jq -r '.name') # For containers, 'name' is often the digest (sha256:...)
+
+              # Delete the version itself
+              gh api --method DELETE -H "Accept: application/vnd.github+json" \
+                "/orgs/${{ github.repository_owner }}/packages/container/${PACKAGE_NAME}/versions/$ID" || \
+              gh api --method DELETE -H "Accept: application/vnd.github+json" \
+                "/users/${{ github.repository_owner }}/packages/container/${PACKAGE_NAME}/versions/$ID"
+
+              # Try to find and delete the signature for this digest
+              # Cosign signatures are tags named like sha256-<digest-without-sha256:>.sig
+              SIG_TAG="${DIGEST/:/-}.sig"
+              echo "Looking for signature tag: $SIG_TAG"
+
+              # Find version with this signature tag
+              SIG_VERSION_ID=$(echo "$VERSIONS" | jq -r ".[] | select(.metadata.container.tags // [] | contains([\"$SIG_TAG\"])) | .id")
+              if [ -n "$SIG_VERSION_ID" ]; then
+                echo "Deleting signature version ID: $SIG_VERSION_ID"
+                gh api --method DELETE -H "Accept: application/vnd.github+json" \
+                  "/orgs/${{ github.repository_owner }}/packages/container/${PACKAGE_NAME}/versions/$SIG_VERSION_ID" || \
+                gh api --method DELETE -H "Accept: application/vnd.github+json" \
+                  "/users/${{ github.repository_owner }}/packages/container/${PACKAGE_NAME}/versions/$SIG_VERSION_ID"
+              fi
+            fi
+          done

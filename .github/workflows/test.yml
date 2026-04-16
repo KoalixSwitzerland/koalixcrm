@@ -1,0 +1,168 @@
+name: Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+permissions:
+  contents: read
+  packages: read
+
+env:
+  REGISTRY: ghcr.io
+  # docker-compose.yml defaults assume sibling directories; override to point
+  # from the compose file location (koalixcrm_system/) back to the workspace
+  # root where the koalixcrm code is checked out.
+  KOALIXCRM_DIR: ./..
+
+jobs:
+  unit-django-tests:
+    runs-on: ubuntu-latest
+    name: Unit Tests (Django)
+
+    steps:
+      - name: Checkout koalixcrm
+        uses: actions/checkout@v4
+
+      - name: Pull system config from GHCR
+        env:
+          CONFIG_IMAGE: ghcr.io/${{ github.repository_owner }}/koalixcrm_system_config
+        run: |
+          CONFIG_IMAGE_LC=$(echo "$CONFIG_IMAGE" | tr '[:upper:]' '[:lower:]')
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
+          docker create --name tmp-config "${CONFIG_IMAGE_LC}:main" /dev/null
+          mkdir -p koalixcrm_system
+          docker cp tmp-config:/ koalixcrm_system/
+          docker rm tmp-config
+
+      # Create the data directory with an empty secrets.env so Docker Compose
+      # can parse the full file without errors (unit profiles don't use it).
+      - name: Prepare data directory
+        run: |
+          mkdir -p koalixcrm_data/db
+          touch koalixcrm_data/secrets.env
+
+      - name: Run Django unit tests
+        run: |
+          docker compose \
+            -f ./koalixcrm_system/docker-compose.yml \
+            --profile unit-django run --rm unit-django-runner
+
+      - name: Upload coverage to Codacy
+        if: success() && hashFiles('test_report/coverage.xml') != ''
+        uses: codacy/codacy-coverage-reporter-action@v1
+        with:
+          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+          coverage-reports: test_report/coverage.xml
+          language: Python
+
+      - name: Upload coverage.xml as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: django-coverage-xml
+          path: test_report/coverage.xml
+          if-no-files-found: warn
+
+      - name: Teardown
+        if: always()
+        run: |
+          docker compose \
+            -f ./koalixcrm_system/docker-compose.yml \
+            --profile unit-django down -v
+
+  unit-celery-tests:
+    runs-on: ubuntu-latest
+    name: Unit Tests (Celery)
+
+    steps:
+      - name: Checkout koalixcrm
+        uses: actions/checkout@v4
+
+      - name: Pull system config from GHCR
+        env:
+          CONFIG_IMAGE: ghcr.io/${{ github.repository_owner }}/koalixcrm_system_config
+        run: |
+          CONFIG_IMAGE_LC=$(echo "$CONFIG_IMAGE" | tr '[:upper:]' '[:lower:]')
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
+          docker create --name tmp-config "${CONFIG_IMAGE_LC}:main" /dev/null
+          mkdir -p koalixcrm_system
+          docker cp tmp-config:/ koalixcrm_system/
+          docker rm tmp-config
+
+      - name: Prepare data directory
+        run: |
+          mkdir -p koalixcrm_data/db
+          touch koalixcrm_data/secrets.env
+
+      - name: Run Celery unit tests
+        run: |
+          docker compose \
+            -f ./koalixcrm_system/docker-compose.yml \
+            --profile unit-celery run --rm unit-celery-runner
+
+      - name: Upload coverage.xml as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: celery-coverage-xml
+          path: test_report/coverage-celery.xml
+          if-no-files-found: warn
+
+      - name: Teardown
+        if: always()
+        run: |
+          docker compose \
+            -f ./koalixcrm_system/docker-compose.yml \
+            --profile unit-celery down -v
+
+  integration-tests:
+    runs-on: ubuntu-latest
+    name: Integration Tests
+
+    steps:
+      - name: Checkout koalixcrm
+        uses: actions/checkout@v4
+
+      - name: Pull system config from GHCR
+        env:
+          CONFIG_IMAGE: ghcr.io/${{ github.repository_owner }}/koalixcrm_system_config
+        run: |
+          CONFIG_IMAGE_LC=$(echo "$CONFIG_IMAGE" | tr '[:upper:]' '[:lower:]')
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
+          docker create --name tmp-config "${CONFIG_IMAGE_LC}:main" /dev/null
+          mkdir -p koalixcrm_system
+          docker cp tmp-config:/ koalixcrm_system/
+          docker rm tmp-config
+
+      # Create secrets.env from the KOALIXCRM_SECRETS_ENV GitHub secret.
+      # This file is loaded by backend, celery, and integration-runner services.
+      # To set up: copy the contents of your local secrets.env into a GitHub
+      # repository secret named KOALIXCRM_SECRETS_ENV (Settings -> Secrets -> Actions).
+      - name: Create secrets.env
+        run: |
+          mkdir -p koalixcrm_data/db
+          echo "${{ secrets.KOALIXCRM_SECRETS_ENV }}" > koalixcrm_data/secrets.env
+
+      - name: Run integration tests
+        run: |
+          docker compose \
+            -f ./koalixcrm_system/docker-compose.yml \
+            --profile integration run --rm integration-runner
+
+      - name: Upload coverage.xml as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: integration-coverage-xml
+          path: test_report/coverage.xml
+          if-no-files-found: warn
+
+      - name: Teardown
+        if: always()
+        run: |
+          docker compose \
+            -f ./koalixcrm_system/docker-compose.yml \
+            --profile integration down -v

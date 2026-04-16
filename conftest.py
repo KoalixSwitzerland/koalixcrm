@@ -9,12 +9,18 @@ Authentication strategy:
 """
 import os
 import pytest
-from django.contrib.auth.models import User
 
 
 @pytest.fixture
 def admin_user(db):
-    """Create a Django superuser for test authentication."""
+    """Create a Django superuser for test authentication.
+
+    Django is imported lazily so this conftest stays importable under the
+    `unit-celery` profile (which runs with `-p no:django` and no configured
+    DJANGO_SETTINGS_MODULE).
+    """
+    from django.contrib.auth.models import User
+
     user, _ = User.objects.get_or_create(
         username='admin',
         defaults={
