@@ -50,6 +50,7 @@ Trigger chain (producer side):
 | [`05-interfaces.md`](./05-interfaces.md) | Interface details (SQS envelope wire contract, S3 layout, FOP CLI invocation, env vars) |
 | [`10-migration-reference.md`](./10-migration-reference.md) | Source-of-truth map for the Java rewrite: files to mirror, delete, keep; OIDC env vars; retry semantics; deletion checklist |
 | [`11-dto-shapes.md`](./11-dto-shapes.md) | JSON DTO sketches the new Django endpoints must return (stage 1 anchor) |
+| [`20-java-implementation.md`](./20-java-implementation.md) | Stage-by-stage snapshot of what actually landed on the Java-migration branch |
 
 ## High-level processing steps inside the microservice
 
