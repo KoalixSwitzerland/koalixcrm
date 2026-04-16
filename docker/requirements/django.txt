@@ -7,7 +7,7 @@ psycopg2-binary==2.9.11
 django-grappelli==3.0.10
 djangorestframework==3.16.0
 djangorestframework-xml==2.0.0
-markdown==3.8
+markdown==3.8.1
 django-filter==25.1
 django-storages[s3]==1.14.4
 pandas==2.2.3
