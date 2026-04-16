@@ -1,0 +1,236 @@
+# Translations for the koalixcrm accounting app.
+# Copyright (C) 2026 koalix
+# This file is distributed under the same license as the koalixcrm package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: koalixcrm\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-04-15 20:27+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: const/accountTypeChoices.py:6
+msgid "Earnings"
+msgstr ""
+
+#: const/accountTypeChoices.py:7
+msgid "Spendings"
+msgstr ""
+
+#: const/accountTypeChoices.py:8
+msgid "Liabilities"
+msgstr ""
+
+#: const/accountTypeChoices.py:9
+msgid "Assets"
+msgstr ""
+
+#: models/account.py:14
+msgid "Account Number"
+msgstr ""
+
+#: models/account.py:15
+msgid "Account Title"
+msgstr ""
+
+#: models/account.py:17
+msgid "Account Type"
+msgstr ""
+
+#: models/account.py:20 models/booking.py:12
+msgid "Description"
+msgstr ""
+
+#: models/account.py:21
+msgid "Is The Open Liabilities Account"
+msgstr ""
+
+#: models/account.py:22
+msgid "Is The Open Interests Account"
+msgstr ""
+
+#: models/account.py:23
+msgid "Is a Product Inventory Account"
+msgstr ""
+
+#: models/account.py:24
+msgid "Is a Customer Payment Account"
+msgstr ""
+
+#: models/account.py:32
+msgid "Value"
+msgstr ""
+
+#: models/account.py:115 models/account.py:116
+msgid "Account"
+msgstr ""
+
+#: models/account.py:134
+msgid "The open liabilities account must be a liabities account"
+msgstr ""
+
+#: models/account.py:136
+msgid "There may only be one open liablities account in the system"
+msgstr ""
+
+#: models/account.py:140
+msgid "The open interests account must be an asset account"
+msgstr ""
+
+#: models/account.py:142
+msgid "There may only be one open intrests account in the system"
+msgstr ""
+
+#: models/account.py:145
+msgid "A customer payment account must be an asset account"
+msgstr ""
+
+#: models/account.py:148
+msgid "A product inventory account must be an asset account"
+msgstr ""
+
+#: models/account.py:163 models/booking.py:43
+msgid "Basic"
+msgstr ""
+
+#: models/accounting_period.py:20
+msgid "Title"
+msgstr ""
+
+#: models/accounting_period.py:21
+msgid "Begin"
+msgstr ""
+
+#: models/accounting_period.py:22
+msgid "End"
+msgstr ""
+
+#: models/accounting_period.py:25
+msgid "Referred template for balance sheet"
+msgstr ""
+
+#: models/accounting_period.py:31
+msgid "Referred template for profit, loss statement"
+msgstr ""
+
+#: models/accounting_period.py:41
+msgid "Template Set for balance sheet is missing in Accounting Period"
+msgstr ""
+
+#: models/accounting_period.py:47
+msgid "Template Set for profit loss statement is missing in Accounting Period"
+msgstr ""
+
+#: models/accounting_period.py:166
+msgid "Accounting Period"
+msgstr ""
+
+#: models/accounting_period.py:167
+msgid "Accounting Periods"
+msgstr ""
+
+#: models/accounting_period.py:183
+msgid "The begin date cannot be later than the end date."
+msgstr ""
+
+#: models/accounting_period.py:185
+msgid "The begin and the end date may not be empty"
+msgstr ""
+
+#: models/accounting_period.py:203 models/product_category.py:40
+msgid "Basics"
+msgstr ""
+
+#: models/accounting_period.py:236
+msgid "Create PDF of Balance Sheet"
+msgstr ""
+
+#: models/accounting_period.py:248
+msgid "Create PDF of Profit Loss Statement Sheet"
+msgstr ""
+
+#: models/booking.py:9
+msgid "From Account"
+msgstr ""
+
+#: models/booking.py:10
+msgid "To Account"
+msgstr ""
+
+#: models/booking.py:11
+msgid "Amount"
+msgstr ""
+
+#: models/booking.py:13
+msgid "Booking Reference"
+msgstr ""
+
+#: models/booking.py:14
+msgid "Booking at"
+msgstr ""
+
+#: models/booking.py:15
+msgid "AccountingPeriod"
+msgstr ""
+
+#: models/booking.py:17
+msgid "Reference Staff"
+msgstr ""
+
+#: models/booking.py:18
+msgid "Created at"
+msgstr ""
+
+#: models/booking.py:19
+msgid "Last modified"
+msgstr ""
+
+#: models/booking.py:21
+msgid "Last modified by"
+msgstr ""
+
+#: models/booking.py:26
+msgid "Date"
+msgstr ""
+
+#: models/booking.py:33
+msgid "Booking"
+msgstr ""
+
+#: models/booking.py:34
+msgid "Bookings"
+msgstr ""
+
+#: models/product_category.py:10
+msgid "Product Category Title"
+msgstr ""
+
+#: models/product_category.py:14
+msgid "Profit Account"
+msgstr ""
+
+#: models/product_category.py:19
+msgid "Loss Account"
+msgstr ""
+
+#: models/product_category.py:25
+msgid "Product Category"
+msgstr ""
+
+#: models/product_category.py:26
+msgid "Product Categories"
+msgstr ""
+
+#: views/document_export.py:35 views/document_export.py:67
+msgid "User Extension Missing"
+msgstr ""
+
+#: views/document_export.py:38 views/document_export.py:70
+msgid "Templateset Missing"
+msgstr ""

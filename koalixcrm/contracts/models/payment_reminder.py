@@ -3,12 +3,12 @@
 from datetime import *
 from django.db import models
 from django.utils.translation import gettext as _
-from koalixcrm.crm.const.status import *
+from koalixcrm.core.const.status import *
 from django.core.validators import MaxValueValidator, MinValueValidator
-from koalixcrm.contracts.models.sales_document import SalesDocument
+from koalixcrm.contracts.models.commercial_document import CommercialDocument
 
 
-class PaymentReminder(SalesDocument):
+class PaymentReminder(CommercialDocument):
     payable_until = models.DateField(verbose_name=_("To pay until"))
     payment_bank_reference = models.CharField(verbose_name=_("Payment Bank Reference"),
                                               max_length=100,
@@ -23,14 +23,14 @@ class PaymentReminder(SalesDocument):
                               choices=INVOICESTATUS)
 
     def create_from_reference(self, calling_model):
-        self.create_sales_document(calling_model)
+        self.create_commercial_document(calling_model)
         self.status = 'C'
         self.iteration_number = 1
         self.payable_until = date.today() + \
                              timedelta(days=self.customer.default_customer_billing_cycle.payment_reminder_time_to_payment)
         self.template_set = self.contract.get_template_set(self)
         self.save()
-        self.attach_sales_document_positions(calling_model)
+        self.attach_commercial_document_positions(calling_model)
         self.attach_text_paragraphs()
         self.staff = calling_model.staff
 

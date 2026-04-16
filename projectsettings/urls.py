@@ -11,7 +11,7 @@ from rest_framework import routers
 from koalixcrm.accounting_api_py.accounting_api import (
     AccountViewSet, AccountingPeriodViewSet, BookingViewSet, ProductCategoryViewSet,
 )
-from koalixcrm.crm_api_py.crm_api import (
+from koalixcrm.contacts_api_py.contacts_api import (
     CustomerViewSet, CustomerGroupViewSet, CustomerBillingCycleViewSet,
     ContactPostalAddressViewSet, ContactEmailAddressViewSet, ContactPhoneAddressViewSet,
     SupplierViewSet, PersonViewSet, ContactViewSet,
@@ -20,15 +20,16 @@ from koalixcrm.products_api_py.products_api import (
     ProductTypeViewSet, ProductViewSet, ProductPriceViewSet,
     CustomerGroupTransformViewSet,
 )
-from koalixcrm.settings_api_py.settings_api import (
+from koalixcrm.core_api_py.core_api import (
     CurrencyViewSet, TaxViewSet, UnitViewSet,
     CurrencyTransformViewSet, UnitTransformViewSet,
 )
 from koalixcrm.contracts_api_py.contracts_api import (
-    ContractViewSet, InvoiceViewSet, QuoteViewSet,
-    PurchaseOrderViewSet, PurchaseConfirmationViewSet,
-    DeliveryNoteViewSet, PaymentReminderViewSet,
-    SalesDocumentPositionViewSet,
+    ContractViewSet, InvoiceViewSet, QuotationViewSet,
+    PurchaseOrderViewSet, SalesOrderViewSet,
+    DespatchAdviceViewSet, PaymentReminderViewSet,
+    CommercialDocumentPositionViewSet,
+    CreditNoteViewSet,
 )
 from koalixcrm.auth.oidc_views import (
     LoginSelectionView, OAuthLoginView, OAuthCallbackView, MultiProviderLogoutView,
@@ -74,12 +75,13 @@ router.register(r'customer_group_transforms', CustomerGroupTransformViewSet)
 # Contract Object Management
 router.register(r'contracts', ContractViewSet)
 router.register(r'invoices', InvoiceViewSet)
-router.register(r'quotes', QuoteViewSet)
+router.register(r'quotations', QuotationViewSet)
 router.register(r'purchase_orders', PurchaseOrderViewSet)
-router.register(r'purchase_confirmations', PurchaseConfirmationViewSet)
-router.register(r'delivery_notes', DeliveryNoteViewSet)
+router.register(r'sales_orders', SalesOrderViewSet)
+router.register(r'despatch_advices', DespatchAdviceViewSet)
 router.register(r'payment_reminders', PaymentReminderViewSet)
-router.register(r'sales_document_positions', SalesDocumentPositionViewSet)
+router.register(r'commercial_document_positions', CommercialDocumentPositionViewSet)
+router.register(r'credit_notes', CreditNoteViewSet)
 # Reporting
 router.register(r'projects', ProjectViewSet)
 router.register(r'project_status', ProjectStatusViewSet)
@@ -112,7 +114,7 @@ urlpatterns = [
     path('', include(router.urls)),
     path('admin/filebrowser/', site.urls),
     path('grappelli/', include('grappelli.urls')),
-    path('koalixcrm/crm/reporting/', include('koalixcrm.crm.reporting.urls')),
+    path('koalixcrm/crm/reporting/', include('koalixcrm.core.reporting.urls')),
     # OIDC auth (admin login via Keycloak)
     path('auth/login/', LoginSelectionView.as_view(), name='login-selection'),
     path('auth/login/<str:provider>/', OAuthLoginView.as_view(), name='oauth-login'),

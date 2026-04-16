@@ -4,7 +4,7 @@ from django.test import LiveServerTestCase
 from django.contrib.auth.models import User
 
 from koalixcrm.accounting_api_py.accounting_api_client import KoalixCRMAccountingAPIClient
-from koalixcrm.accounting.factory.accounting_period_factory import StandardAccountingPeriodFactory
+from tests.factories.accounting.accounting_period_factory import StandardAccountingPeriodFactory
 from koalixcrm.accounting.models import AccountingPeriod
 
 

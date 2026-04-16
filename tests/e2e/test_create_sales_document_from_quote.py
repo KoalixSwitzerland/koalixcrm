@@ -4,14 +4,14 @@ import os
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from tests.contracts.test_support_functions import *
-from koalixcrm.contracts.factory.contract_factory import StandardContractFactory
-from koalixcrm.contracts.factory.quote_factory import StandardQuoteFactory
-from koalixcrm.crm.factory.user_factory import AdminUserFactory
-from koalixcrm.crm.factory.customer_group_factory import StandardCustomerGroupFactory
-from koalixcrm.djangoUserExtension.factories.factory_document_template import StandardQuoteTemplateFactory
-from koalixcrm.djangoUserExtension.factories.factory_document_template import StandardInvoiceTemplateFactory
-from koalixcrm.djangoUserExtension.factories.factory_document_template import StandardPurchaseOrderTemplateFactory
-from koalixcrm.contracts.models.quote import Quote
+from tests.factories.contracts.contract_factory import StandardContractFactory
+from tests.factories.contracts.quotation_factory import StandardQuotationFactory
+from tests.factories.contacts.user_factory import AdminUserFactory
+from tests.factories.contacts.customer_group_factory import StandardCustomerGroupFactory
+from tests.factories.djangoUserExtension.factory_document_template import StandardQuoteTemplateFactory
+from tests.factories.djangoUserExtension.factory_document_template import StandardInvoiceTemplateFactory
+from tests.factories.djangoUserExtension.factory_document_template import StandardPurchaseOrderTemplateFactory
+from koalixcrm.contracts.models.quotation import Quotation
 from koalixcrm.contracts.models.invoice import Invoice
 from koalixcrm.contracts.models.purchase_order import PurchaseOrder
 
@@ -28,7 +28,7 @@ class CreateSalesDocumentFromContract(StaticLiveServerTestCase):
         cls.test_user = AdminUserFactory.create()
         cls.test_customer_group = StandardCustomerGroupFactory.create()
         cls.test_contract = StandardContractFactory.create()
-        cls.test_quote = StandardQuoteFactory.create(contract=cls.test_contract)
+        cls.test_quote = StandardQuotationFactory.create(contract=cls.test_contract)
         cls.test_quote_template = StandardQuoteTemplateFactory.create()
         cls.test_invoice_template = StandardInvoiceTemplateFactory.create()
         cls.test_purchase_order_template = StandardPurchaseOrderTemplateFactory.create()
@@ -50,7 +50,7 @@ class CreateSalesDocumentFromContract(StaticLiveServerTestCase):
     def test_create_sales_document_from_quote(self):
         selenium = self.selenium
         # login
-        selenium.get('%s%s' % (self.live_server_url, '/admin/crm/quote/'))
+        selenium.get('%s%s' % (self.live_server_url, '/admin/contracts/quotation/'))
         # the browser will be redirected to the login page
         timeout = 2
         try:
@@ -71,9 +71,9 @@ class CreateSalesDocumentFromContract(StaticLiveServerTestCase):
         except TimeoutException:
             print("Timed out waiting for page to load")
 
-        test_parameters = {Quote: {"action_name": "create_quote",
-                                   "template_name": "quote_template",
-                                   "template_to_select": self.test_quote_template},
+        test_parameters = {Quotation: {"action_name": "create_quotation",
+                                       "template_name": "quote_template",
+                                       "template_to_select": self.test_quote_template},
                            Invoice: {"action_name": "create_invoice",
                                      "template_name": "invoice_template",
                                      "template_to_select": self.test_invoice_template},
@@ -83,10 +83,10 @@ class CreateSalesDocumentFromContract(StaticLiveServerTestCase):
                            }
         for document_type in test_parameters:
             test_parameter = test_parameters[document_type]
-            create_sales_document_from_reference(test_case=self,
+            create_commercial_document_from_reference(test_case=self,
                                                  timeout=timeout,
                                                  document_type=document_type,
-                                                 reference_type="quote",
+                                                 reference_type="quotation",
                                                  reference_id=self.test_quote,
                                                  action_name=test_parameter["action_name"],
                                                  template_name=test_parameter["template_name"],

@@ -11,15 +11,15 @@ from django.contrib.admin import helpers
 from django.shortcuts import render
 from django.contrib import messages
 from django.template.context_processors import csrf
-from koalixcrm.crm.const.status import *
-from koalixcrm.crm.exceptions import *
+from koalixcrm.core.const.status import *
+from koalixcrm.core.exceptions import *
 from koalixcrm import accounting
-from koalixcrm.contracts.models.sales_document import SalesDocument
-from koalixcrm.contracts.models.sales_document_position import SalesDocumentPosition
+from koalixcrm.contracts.models.commercial_document import CommercialDocument
+from koalixcrm.contracts.models.commercial_document_position import CommercialDocumentPosition
 from koalixcrm.global_support_functions import limit_string_length
 
 
-class Invoice(SalesDocument):
+class Invoice(CommercialDocument):
     payable_until = models.DateField(verbose_name=_("To pay until"))
     payment_bank_reference = models.CharField(verbose_name=_("Payment Bank Reference"), max_length=100, blank=True,
                                               null=True)
@@ -35,14 +35,14 @@ class Invoice(SalesDocument):
     link_to_invoice.short_description = _("Invoice")
 
     def create_from_reference(self, calling_model):
-        self.create_sales_document(calling_model)
+        self.create_commercial_document(calling_model)
         self.status = 'C'
         self.payable_until = date.today() + \
                              timedelta(days=self.customer.default_customer_billing_cycle.time_to_payment_date)
         self.date_of_creation = date.today().__str__()
         self.template_set = self.contract.get_template_set(self)
         self.save()
-        self.attach_sales_document_positions(calling_model)
+        self.attach_commercial_document_positions(calling_model)
         self.attach_text_paragraphs()
 
     def register_invoice_in_accounting(self, request):
@@ -54,7 +54,7 @@ class Invoice(SalesDocument):
             raise IncompleteInvoice(_("Complete invoice and run price recalculation. Price may not be Zero"))
         if len(activa_account) == 0:
             raise OpenInterestAccountMissing(_("Please specify one open interest account in the accounting"))
-        for position in list(SalesDocumentPosition.objects.filter(sales_document=self.id)):
+        for position in list(CommercialDocumentPosition.objects.filter(commercial_document=self.id)):
             profit_account = position.product.accounting_product_categorie.profitAccount
             dict_prices[profit_account] = position.last_calculated_price
             dict_tax[profit_account] = position.last_calculated_tax

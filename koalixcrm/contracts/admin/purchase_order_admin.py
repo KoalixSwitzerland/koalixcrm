@@ -2,25 +2,25 @@
 
 from django.utils.translation import gettext as _
 from koalixcrm.plugin import *
-from koalixcrm.contracts.admin.sales_document_admin import OptionSalesDocument
+from koalixcrm.contracts.admin.commercial_document_admin import OptionCommercialDocument
 
 
-class OptionPurchaseOrder(OptionSalesDocument):
-    list_display = OptionSalesDocument.list_display + ('supplier', 'status',)
-    list_filter = OptionSalesDocument.list_filter + ('status',)
-    ordering = OptionSalesDocument.ordering
-    search_fields = OptionSalesDocument.search_fields
-    fieldsets = OptionSalesDocument.fieldsets + (
+class OptionPurchaseOrder(OptionCommercialDocument):
+    list_display = OptionCommercialDocument.list_display + ('supplier', 'status',)
+    list_filter = OptionCommercialDocument.list_filter + ('status',)
+    ordering = OptionCommercialDocument.ordering
+    search_fields = OptionCommercialDocument.search_fields
+    fieldsets = OptionCommercialDocument.fieldsets + (
         (_('Purchase Order specific'), {
             'fields': ('supplier', 'status',)
         }),
     )
 
-    save_as = OptionSalesDocument.save_as
-    inlines = OptionSalesDocument.inlines
-    actions = ['create_purchase_confirmation', 'create_invoice', 'create_quote',
-               'create_delivery_note', 'create_pdf_async',
+    save_as = OptionCommercialDocument.save_as
+    inlines = OptionCommercialDocument.inlines
+    actions = ['create_sales_order', 'create_invoice', 'create_quotation',
+               'create_despatch_advice', 'create_pdf_async',
                'register_invoice_in_accounting', 'register_payment_in_accounting',]
 
     pluginProcessor = PluginProcessor()
-    inlines.extend(pluginProcessor.getPluginAdditions("quoteInlines"))
+    inlines.extend(pluginProcessor.getPluginAdditions("quotationInlines"))

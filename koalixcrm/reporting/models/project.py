@@ -9,7 +9,7 @@ from django.utils.translation import gettext as _
 from django.utils.html import format_html
 from koalixcrm.reporting.models.reporting_period import ReportingPeriod
 from koalixcrm.shared.pdf_export import PDFExport
-from koalixcrm.crm.exceptions import TemplateSetMissingInContract
+from koalixcrm.core.exceptions import TemplateSetMissingInContract
 from koalixcrm.reporting.models.task import Task
 import matplotlib.dates as mdates
 from matplotlib import pyplot
@@ -40,7 +40,7 @@ class Project(models.Model):
                                              verbose_name=_("Default Template Set"),
                                              null=True,
                                              blank=True)
-    default_currency = models.ForeignKey("settings.Currency",
+    default_currency = models.ForeignKey("core.Currency",
                                          on_delete=models.CASCADE,
                                          verbose_name=_("Default Currency"),
                                          null=False,

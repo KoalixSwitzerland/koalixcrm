@@ -1,20 +1,22 @@
 # -*- coding: utf-8 -*-
 from .contract_view_set import ContractViewSet
 from .invoice_view_set import InvoiceViewSet
-from .quote_view_set import QuoteViewSet
+from .quotation_view_set import QuotationViewSet
 from .purchase_order_view_set import PurchaseOrderViewSet
-from .purchase_confirmation_view_set import PurchaseConfirmationViewSet
-from .delivery_note_view_set import DeliveryNoteViewSet
+from .sales_order_view_set import SalesOrderViewSet
+from .despatch_advice_view_set import DespatchAdviceViewSet
 from .payment_reminder_view_set import PaymentReminderViewSet
-from .sales_document_position_view_set import SalesDocumentPositionViewSet
+from .commercial_document_position_view_set import CommercialDocumentPositionViewSet
+from .credit_note_view_set import CreditNoteViewSet
 
 __all__ = [
     'ContractViewSet',
     'InvoiceViewSet',
-    'QuoteViewSet',
+    'QuotationViewSet',
     'PurchaseOrderViewSet',
-    'PurchaseConfirmationViewSet',
-    'DeliveryNoteViewSet',
+    'SalesOrderViewSet',
+    'DespatchAdviceViewSet',
     'PaymentReminderViewSet',
-    'SalesDocumentPositionViewSet',
+    'CommercialDocumentPositionViewSet',
+    'CreditNoteViewSet',
 ]

@@ -56,8 +56,8 @@ class AccountingPeriod(models.Model):
         return template_set.get_xsl_file()
 
     def create_pdf(self, template_set, printed_by):
-        import koalixcrm.crm
-        return koalixcrm.crm.documents.pdfexport.PDFExport.create_pdf(self, template_set, printed_by)
+        import koalixcrm.core.documents.pdf_export
+        return koalixcrm.core.documents.pdf_export.PDFExport.create_pdf(self, template_set, printed_by)
 
     def overall_earnings(self):
         earnings = 0
@@ -224,7 +224,7 @@ class OptionAccountingPeriod(admin.ModelAdmin):
             instance.save()
 
     def create_pdf_of_balance_sheet(self, request, queryset):
-        from koalixcrm.crm.views.pdfexport import PDFExportView
+        from koalixcrm.core.views.pdfexport import PDFExportView
         for obj in queryset:
             response = PDFExportView.export_pdf(self,
                                                 request,
@@ -236,7 +236,7 @@ class OptionAccountingPeriod(admin.ModelAdmin):
     create_pdf_of_balance_sheet.short_description = _("Create PDF of Balance Sheet")
 
     def create_pdf_of_profit_loss_statement(self, request, queryset):
-        from koalixcrm.crm.views.pdfexport import PDFExportView
+        from koalixcrm.core.views.pdfexport import PDFExportView
         for obj in queryset:
             response = PDFExportView.export_pdf(self,
                                                 request,

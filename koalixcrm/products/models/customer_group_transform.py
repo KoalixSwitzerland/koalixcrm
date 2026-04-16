@@ -6,13 +6,13 @@ from django.utils.translation import gettext as _
 
 class CustomerGroupTransform(models.Model):
     id = models.BigAutoField(primary_key=True)
-    from_customer_group = models.ForeignKey('crm.CustomerGroup',
+    from_customer_group = models.ForeignKey('contacts.CustomerGroup',
                                             on_delete=models.CASCADE,
                                             verbose_name=_("From Customer Group"),
                                             related_name="db_reltransfromfromcustomergroup",
                                             blank=False,
                                             null=False)
-    to_customer_group = models.ForeignKey('crm.CustomerGroup',
+    to_customer_group = models.ForeignKey('contacts.CustomerGroup',
                                           on_delete=models.CASCADE,
                                           verbose_name=_("To Customer Group"),
                                           related_name="db_reltransfromtocustomergroup",

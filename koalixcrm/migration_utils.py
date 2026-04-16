@@ -109,6 +109,9 @@ def cleanup_legacy_migrations(apps, schema_editor):
         'contract_object_management',
         'products',
         'reporting',
+        'contacts',
+        'core',
+        'settings',
     ]
     for app in new_only_apps:
         cursor.execute("DELETE FROM django_migrations WHERE app = %s", [app])

@@ -17,8 +17,8 @@ class ProductType(models.Model):
                                                max_length=200,
                                                null=True,
                                                blank=True)
-    default_unit = models.ForeignKey("settings.Unit", on_delete=models.CASCADE, verbose_name=_("Unit"))
-    tax = models.ForeignKey("settings.Tax",
+    default_unit = models.ForeignKey("core.Unit", on_delete=models.CASCADE, verbose_name=_("Unit"))
+    tax = models.ForeignKey("core.Tax",
                             on_delete=models.CASCADE,
                             blank=False,
                             null=False)
@@ -42,7 +42,7 @@ class ProductType(models.Model):
         """The function searches for a valid price and returns the price of the product as a decimal value.
 
         Args:
-            koalixcrm.crm.contact.customer customer
+            koalixcrm.contacts.models.customer customer
             koalixcrm.crm.product.unit unit
             koalixcrm.crm.product.currency currency
             datetime.date date

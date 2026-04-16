@@ -32,7 +32,7 @@ def assert_when_element_is_not_equal_to(testcase, xpath, string):
         return
 
 
-def create_sales_document_from_reference(test_case,
+def create_commercial_document_from_reference(test_case,
                                          timeout,
                                          reference_type,
                                          reference_id,
@@ -75,9 +75,9 @@ def create_sales_document_from_reference(test_case,
         '/html/body/div/article/div/form/section/div/table/tbody/tr/td[1]/input')
     if not contract_1.is_selected():
         contract_1.send_keys(Keys.SPACE)
-    action_create_sales_document = selenium.find_element('xpath',
+    action_create_commercial_document = selenium.find_element('xpath',
         '/html/body/div/article/div/form/footer/ul/li/div/select/option[@value="'+action_name+'"]')
-    action_create_sales_document.click()
+    action_create_commercial_document.click()
     ok_button = selenium.find_element('xpath', '/html/body/div/article/div/form/footer/ul/li/div/button')
     ok_button.send_keys(Keys.RETURN)
     time.sleep(1)
@@ -86,7 +86,7 @@ def create_sales_document_from_reference(test_case,
         WebDriverWait(selenium, timeout).until(element_present)
     except TimeoutException:
         print("Timed out waiting for page to load")
-    sales_documents = document_type.objects.filter(contract=test_case.test_contract)
-    for sales_document in sales_documents:
-        if sales_document.id != reference_id:
-            test_case.assertEqual(type(sales_document), document_type)
+    commercial_documents = document_type.objects.filter(contract=test_case.test_contract)
+    for commercial_document in commercial_documents:
+        if commercial_document.id != reference_id:
+            test_case.assertEqual(type(commercial_document), document_type)

@@ -4,9 +4,9 @@ from django.test import LiveServerTestCase
 from django.contrib.auth.models import User
 
 from koalixcrm.accounting_api_py.accounting_api_client import KoalixCRMAccountingAPIClient
-from koalixcrm.accounting.factory.booking_factory import StandardBookingFactory
-from koalixcrm.accounting.factory.account_factory import StandardAccountFactory, OpenInterestAccountFactory
-from koalixcrm.accounting.factory.accounting_period_factory import StandardAccountingPeriodFactory
+from tests.factories.accounting.booking_factory import StandardBookingFactory
+from tests.factories.accounting.account_factory import StandardAccountFactory, OpenInterestAccountFactory
+from tests.factories.accounting.accounting_period_factory import StandardAccountingPeriodFactory
 from koalixcrm.accounting.models import Booking
 
 

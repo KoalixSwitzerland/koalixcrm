@@ -12,9 +12,9 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('crm', '0001_initial'),
+        ('contacts', '0001_initial'),
         ('products', '0001_initial'),
-        ('settings', '0001_initial'),
+        ('core', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
@@ -158,7 +158,7 @@ class Migration(migrations.Migration):
             name='UserExtension',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
-                ('default_currency', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='settings.currency')),
+                ('default_currency', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='core.currency')),
                 ('default_template_set', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='djangoUserExtension.templateset')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
@@ -170,7 +170,7 @@ class Migration(migrations.Migration):
         CreateModelIfNotExists(
             name='UserExtensionEmailAddress',
             fields=[
-                ('emailaddress_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='crm.emailaddress')),
+                ('emailaddress_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='contacts.emailaddress')),
                 ('purpose', models.CharField(choices=[('H', 'Private'), ('O', 'Business'), ('P', 'Mobile Private'), ('B', 'Mobile Business')], max_length=1, verbose_name='Purpose')),
                 ('userExtension', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='djangoUserExtension.userextension')),
             ],
@@ -178,12 +178,12 @@ class Migration(migrations.Migration):
                 'verbose_name': 'Email Address for User Extension',
                 'verbose_name_plural': 'Email Address for User Extension',
             },
-            bases=('crm.emailaddress',),
+            bases=('contacts.emailaddress',),
         ),
         CreateModelIfNotExists(
             name='UserExtensionPhoneAddress',
             fields=[
-                ('phoneaddress_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='crm.phoneaddress')),
+                ('phoneaddress_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='contacts.phoneaddress')),
                 ('purpose', models.CharField(choices=[('H', 'Private'), ('O', 'Business'), ('P', 'Mobile Private'), ('B', 'Mobile Business')], max_length=1, verbose_name='Purpose')),
                 ('userExtension', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='djangoUserExtension.userextension')),
             ],
@@ -191,12 +191,12 @@ class Migration(migrations.Migration):
                 'verbose_name': 'Phone number for User Extension',
                 'verbose_name_plural': 'Phone number for User Extension',
             },
-            bases=('crm.phoneaddress',),
+            bases=('contacts.phoneaddress',),
         ),
         CreateModelIfNotExists(
             name='UserExtensionPostalAddress',
             fields=[
-                ('postaladdress_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='crm.postaladdress')),
+                ('postaladdress_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='contacts.postaladdress')),
                 ('purpose', models.CharField(choices=[('H', 'Private'), ('O', 'Business'), ('P', 'Mobile Private'), ('B', 'Mobile Business')], max_length=1, verbose_name='Purpose')),
                 ('userExtension', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='djangoUserExtension.userextension')),
             ],
@@ -204,7 +204,7 @@ class Migration(migrations.Migration):
                 'verbose_name': 'Postal Address for User Extension',
                 'verbose_name_plural': 'Postal Address for User Extension',
             },
-            bases=('crm.postaladdress',),
+            bases=('contacts.postaladdress',),
         ),
         AddFieldIfNotExists(
             model_name='templateset',
@@ -255,5 +255,19 @@ class Migration(migrations.Migration):
             model_name='templateset',
             name='work_report_template',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='djangoUserExtension.workreporttemplate'),
+        ),
+        CreateModelIfNotExists(
+            name='TextParagraphInDocumentTemplate',
+            fields=[
+                ('id', models.BigAutoField(primary_key=True, serialize=False)),
+                ('purpose', models.CharField(choices=[('BS', 'Before subject'), ('AS', 'After subject'), ('BT', 'Before total'), ('AT', 'After total'), ('BW', 'Before wishes'), ('AW', 'After wishes'), ('C1', 'Custom 1'), ('C2', 'Custom 2'), ('C3', 'Custom 3'), ('C4', 'Custom 4')], max_length=2, verbose_name='Purpose')),
+                ('text_paragraph', models.TextField(verbose_name='Text')),
+                ('document_template', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='djangoUserExtension.documenttemplate')),
+            ],
+            options={
+                'verbose_name': 'TextParagraphInDocumentTemplate',
+                'verbose_name_plural': 'TextParagraphInDocumentTemplates',
+                'db_table': 'crm_textparagraphindocumenttemplate',
+            },
         ),
     ]

@@ -3,7 +3,7 @@ from django.test import LiveServerTestCase
 from django.contrib.auth.models import User
 
 from koalixcrm.reporting_api_py.reporting_api_client import KoalixCRMReportingAPIClient
-from koalixcrm.reporting.factory.task_status_factory import StartedTaskStatusFactory
+from tests.factories.reporting.task_status_factory import StartedTaskStatusFactory
 
 
 class TaskStatusAPITest(LiveServerTestCase):

@@ -10,7 +10,7 @@ from koalixcrm.reporting.models.reporting_period import ReportingPeriod
 from koalixcrm.reporting.models.resource_price import ResourcePrice
 from koalixcrm.reporting.models.estimation import Estimation
 from koalixcrm.shared.pdf_export import PDFExport
-from koalixcrm.crm.exceptions import ReportingPeriodNotFound
+from koalixcrm.core.exceptions import ReportingPeriodNotFound
 from rest_framework import serializers
 from koalixcrm import global_support_functions
 

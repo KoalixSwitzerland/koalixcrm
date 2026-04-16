@@ -8,12 +8,14 @@ from koalixcrm.contracts.models.contract import (
     PhoneAddressForContract,
     EmailAddressForContract,
 )
-from koalixcrm.contracts.admin.quote_admin import InlineQuote
+from koalixcrm.contracts.admin.quotation_admin import InlineQuotation
 from koalixcrm.contracts.admin.invoice_admin import InlineInvoice
-import koalixcrm.contracts.models.quote
+from koalixcrm.contracts.admin.credit_note_admin import InlineCreditNote
+import koalixcrm.contracts.models.quotation
+import koalixcrm.contracts.models.credit_note
 import koalixcrm.contracts.models.invoice
-import koalixcrm.contracts.models.purchase_confirmation
-import koalixcrm.contracts.models.delivery_note
+import koalixcrm.contracts.models.sales_order
+import koalixcrm.contracts.models.despatch_advice
 import koalixcrm.contracts.models.payment_reminder
 import koalixcrm.contracts.models.purchase_order
 
@@ -97,25 +99,26 @@ class OptionContract(admin.ModelAdmin):
     inlines = [ContractPostalAddress,
                ContractPhoneAddress,
                ContractEmailAddress,
-               InlineQuote,
-               InlineInvoice]
+               InlineQuotation,
+               InlineInvoice,
+               InlineCreditNote]
     pluginProcessor = PluginProcessor()
     inlines.extend(pluginProcessor.getPluginAdditions("contractInlines"))
 
-    def create_quote(self, request, queryset):
-        from koalixcrm.crm.views.newdocument import CreateNewDocumentView
+    def create_quotation(self, request, queryset):
+        from koalixcrm.core.views.newdocument import CreateNewDocumentView
         for obj in queryset:
             response = CreateNewDocumentView.create_new_document(self,
                                                                  request,
                                                                  obj,
-                                                                 koalixcrm.contracts.models.quote.Quote,
+                                                                 koalixcrm.contracts.models.quotation.Quotation,
                                                                  ("/admin/contract_object_management/"+obj.__class__.__name__.lower()+"/"))
             return response
 
-    create_quote.short_description = _("Create Quote")
+    create_quotation.short_description = _("Create Quotation")
 
     def create_invoice(self, request, queryset):
-        from koalixcrm.crm.views.newdocument import CreateNewDocumentView
+        from koalixcrm.core.views.newdocument import CreateNewDocumentView
         for obj in queryset:
             response = CreateNewDocumentView.create_new_document(self,
                                                                  request,
@@ -126,32 +129,32 @@ class OptionContract(admin.ModelAdmin):
 
     create_invoice.short_description = _("Create Invoice")
 
-    def create_purchase_confirmation(self, request, queryset):
-        from koalixcrm.crm.views.newdocument import CreateNewDocumentView
+    def create_sales_order(self, request, queryset):
+        from koalixcrm.core.views.newdocument import CreateNewDocumentView
         for obj in queryset:
             response = CreateNewDocumentView.create_new_document(self,
                                                                  request,
                                                                  obj,
-                                                                 koalixcrm.contracts.models.purchase_confirmation.PurchaseConfirmation,
+                                                                 koalixcrm.contracts.models.sales_order.SalesOrder,
                                                                  ("/admin/contract_object_management/"+obj.__class__.__name__.lower()+"/"))
             return response
 
-    create_purchase_confirmation.short_description = _("Create Purchase Confirmation")
+    create_sales_order.short_description = _("Create Sales Order")
 
-    def create_delivery_note(self, request, queryset):
-        from koalixcrm.crm.views.newdocument import CreateNewDocumentView
+    def create_despatch_advice(self, request, queryset):
+        from koalixcrm.core.views.newdocument import CreateNewDocumentView
         for obj in queryset:
             response = CreateNewDocumentView.create_new_document(self,
                                                                  request,
                                                                  obj,
-                                                                 koalixcrm.contracts.models.delivery_note.DeliveryNote,
+                                                                 koalixcrm.contracts.models.despatch_advice.DespatchAdvice,
                                                                  ("/admin/contract_object_management/"+obj.__class__.__name__.lower()+"/"))
             return response
 
-    create_delivery_note.short_description = _("Create Delivery note")
+    create_despatch_advice.short_description = _("Create Despatch Advice")
 
     def create_payment_reminder(self, request, queryset):
-        from koalixcrm.crm.views.newdocument import CreateNewDocumentView
+        from koalixcrm.core.views.newdocument import CreateNewDocumentView
         for obj in queryset:
             response = CreateNewDocumentView.create_new_document(self,
                                                                  request,
@@ -163,7 +166,7 @@ class OptionContract(admin.ModelAdmin):
     create_payment_reminder.short_description = _("Create Payment Reminder")
 
     def create_purchase_order(self, request, queryset):
-        from koalixcrm.crm.views.newdocument import CreateNewDocumentView
+        from koalixcrm.core.views.newdocument import CreateNewDocumentView
         for obj in queryset:
             response = CreateNewDocumentView.create_new_document(self,
                                                                  request,
@@ -182,8 +185,21 @@ class OptionContract(admin.ModelAdmin):
             obj.staff = request.user
         obj.save()
 
-    actions = ['create_quote',
+    def create_credit_note(self, request, queryset):
+        from koalixcrm.core.views.newdocument import CreateNewDocumentView
+        for obj in queryset:
+            response = CreateNewDocumentView.create_new_document(self,
+                                                                 request,
+                                                                 obj,
+                                                                 koalixcrm.contracts.models.credit_note.CreditNote,
+                                                                 ("/admin/contract_object_management/"+obj.__class__.__name__.lower()+"/"))
+            return response
+
+    create_credit_note.short_description = _("Create Credit Note")
+
+    actions = ['create_quotation',
                'create_invoice',
-               'create_purchase_order']
+               'create_purchase_order',
+               'create_credit_note']
     pluginProcessor = PluginProcessor()
     actions.extend(pluginProcessor.getPluginAdditions("contractActions"))

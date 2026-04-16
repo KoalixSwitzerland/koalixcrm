@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from decimal import *
-from koalixcrm.contracts.models.sales_document_position import SalesDocumentPosition
+from koalixcrm.contracts.models.commercial_document_position import CommercialDocumentPosition
 
 
 class Calculations:
@@ -26,7 +26,7 @@ class Calculations:
 
         price = 0
         tax = 0
-        positions = SalesDocumentPosition.objects.filter(sales_document=document.id)
+        positions = CommercialDocumentPosition.objects.filter(commercial_document=document.id)
         contact_for_price_calculation = document.customer
         if positions.exists():
             for position in positions:
@@ -79,7 +79,7 @@ class Calculations:
                                                                                contact,
                                                                                currency)
         elif position.position_price_per_unit is None:
-            raise SalesDocumentPosition.NoPriceFound
+            raise CommercialDocumentPosition.NoPriceFound
         nominal_total = position.position_price_per_unit * position.quantity
         if isinstance(position.discount, Decimal):
             nominal_minus_discount = nominal_total * (1 - position.discount / 100)

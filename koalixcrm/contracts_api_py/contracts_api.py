@@ -6,20 +6,22 @@ Exposes Contract/Document REST viewsets for URL routing.
 """
 from koalixcrm.contracts.views.contract_view_set import ContractViewSet
 from koalixcrm.contracts.views.invoice_view_set import InvoiceViewSet
-from koalixcrm.contracts.views.quote_view_set import QuoteViewSet
+from koalixcrm.contracts.views.quotation_view_set import QuotationViewSet
 from koalixcrm.contracts.views.purchase_order_view_set import PurchaseOrderViewSet
-from koalixcrm.contracts.views.purchase_confirmation_view_set import PurchaseConfirmationViewSet
-from koalixcrm.contracts.views.delivery_note_view_set import DeliveryNoteViewSet
+from koalixcrm.contracts.views.sales_order_view_set import SalesOrderViewSet
+from koalixcrm.contracts.views.despatch_advice_view_set import DespatchAdviceViewSet
 from koalixcrm.contracts.views.payment_reminder_view_set import PaymentReminderViewSet
-from koalixcrm.contracts.views.sales_document_position_view_set import SalesDocumentPositionViewSet
+from koalixcrm.contracts.views.commercial_document_position_view_set import CommercialDocumentPositionViewSet
+from koalixcrm.contracts.views.credit_note_view_set import CreditNoteViewSet
 
 __all__ = [
     'ContractViewSet',
     'InvoiceViewSet',
-    'QuoteViewSet',
+    'QuotationViewSet',
     'PurchaseOrderViewSet',
-    'PurchaseConfirmationViewSet',
-    'DeliveryNoteViewSet',
+    'SalesOrderViewSet',
+    'DespatchAdviceViewSet',
     'PaymentReminderViewSet',
-    'SalesDocumentPositionViewSet',
+    'CommercialDocumentPositionViewSet',
+    'CreditNoteViewSet',
 ]

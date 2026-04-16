@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import pytest
 from tests.contracts.test_support_functions import *
-from koalixcrm.crm.factory.user_factory import AdminUserFactory
+from tests.factories.contacts.user_factory import AdminUserFactory
 from tests.e2e.UITests import UITests
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.common.by import By

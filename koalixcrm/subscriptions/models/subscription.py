@@ -2,7 +2,7 @@
 from datetime import *
 from django.db import models
 from django.utils.translation import gettext as _
-import koalixcrm.crm.documents
+import koalixcrm.core.documents
 
 
 class Subscription(models.Model):
@@ -15,21 +15,21 @@ class Subscription(models.Model):
         self.save()
         return self
 
-    def create_quote(self):
-        quote = koalixcrm.crm.documents.quote.Quote()
-        quote.contract = self.contract
-        quote.discount = 0
-        quote.staff = self.contract.staff
-        quote.customer = self.contract.defaultcustomer
-        quote.status = 'C'
-        quote.currency = self.contract.defaultcurrency
-        quote.valid_until = date.today().__str__()
-        quote.date_of_creation = date.today().__str__()
-        quote.save()
-        return quote
+    def create_quotation(self):
+        quotation = koalixcrm.core.documents.quotation.Quotation()
+        quotation.contract = self.contract
+        quotation.discount = 0
+        quotation.staff = self.contract.staff
+        quotation.customer = self.contract.defaultcustomer
+        quotation.status = 'C'
+        quotation.currency = self.contract.defaultcurrency
+        quotation.valid_until = date.today().__str__()
+        quotation.date_of_creation = date.today().__str__()
+        quotation.save()
+        return quotation
 
     def create_invoice(self):
-        invoice = koalixcrm.crm.documents.invoice.Invoice()
+        invoice = koalixcrm.core.documents.invoice.Invoice()
         invoice.contract = self.contract
         invoice.discount = 0
         invoice.staff = self.contract.staff

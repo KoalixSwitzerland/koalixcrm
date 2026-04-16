@@ -33,15 +33,22 @@ You can find the documentation of koalixcrm here: [doc](http://readthedocs.org/d
 ## Installation
 Some information about the installation of koalixcrm: [installation](https://github.com/scaphilo/koalixcrm/wiki/Installation)
 
-## Development environment setup
-To set up the development environment for KoalixCRM, you can use Docker with the following commands:
+## Getting started
 
-docker-compose pull
-docker-compose up
+The stack is orchestrated from the sibling repo
+[`koalixcrm_system`](https://github.com/KoalixSwitzerland/koalixcrm_system)
+(docker-compose + infra config). Pick the guide that matches your
+environment:
 
-To run the application, use:
+- [Local setup with Docker Desktop](docs/setup-local-docker-desktop.md) —
+  Windows / macOS / Linux workstation
+- [Linux server install (VPS / VPC)](docs/setup-linux-server.md) —
+  headless Linux host with native Docker
 
-docker compose run --service-ports web python manage.py runserver 0.0.0.0:8000 --settings=projectsettings.settings.development_docker_sqlite_settings.py
+Both guides cover launching the app and picking the UI language
+(`en-us`, `de`, `fr`, `es`, `pt-br` via the `KOALIXCRM_LANGUAGE_CODE`
+env var). Admin/user configuration is covered separately in the
+*configuration guide* (coming soon).
 
 ## Release Process
 Information about the release process: [Release Process](https://github.com/scaphilo/koalixcrm/wiki/Release-Process)

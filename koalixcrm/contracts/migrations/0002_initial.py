@@ -13,10 +13,10 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('contract_object_management', '0001_initial'),
-        ('crm', '0001_initial'),
+        ('contacts', '0001_initial'),
         ('djangoUserExtension', '0001_initial'),
         ('products', '0001_initial'),
-        ('settings', '0001_initial'),
+        ('core', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
@@ -36,7 +36,7 @@ class Migration(migrations.Migration):
                 ('last_calculated_price', models.DecimalField(blank=True, decimal_places=2, max_digits=17, null=True, verbose_name='Last Calculated Price')),
                 ('last_calculated_tax', models.DecimalField(blank=True, decimal_places=2, max_digits=17, null=True, verbose_name='Last Calculated Tax')),
                 ('product_type', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='products.producttype', verbose_name='Product')),
-                ('unit', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='settings.unit', verbose_name='Unit')),
+                ('unit', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='core.unit', verbose_name='Unit')),
             ],
             options={
                 'verbose_name': 'Position',
@@ -48,17 +48,17 @@ class Migration(migrations.Migration):
         AddFieldIfNotExists(
             model_name='contract',
             name='default_currency',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='settings.currency', verbose_name='Default Currency'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='core.currency', verbose_name='Default Currency'),
         ),
         AddFieldIfNotExists(
             model_name='contract',
             name='default_customer',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='crm.customer', verbose_name='Default Customer'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='contacts.customer', verbose_name='Default Customer'),
         ),
         AddFieldIfNotExists(
             model_name='contract',
             name='default_supplier',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='crm.supplier', verbose_name='Default Supplier'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='contacts.supplier', verbose_name='Default Supplier'),
         ),
         AddFieldIfNotExists(
             model_name='contract',
@@ -154,12 +154,12 @@ class Migration(migrations.Migration):
         AddFieldIfNotExists(
             model_name='salesdocument',
             name='currency',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='settings.currency', verbose_name='Currency'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='core.currency', verbose_name='Currency'),
         ),
         AddFieldIfNotExists(
             model_name='salesdocument',
             name='customer',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crm.customer', verbose_name='Customer'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='contacts.customer', verbose_name='Customer'),
         ),
         AddFieldIfNotExists(
             model_name='salesdocument',
@@ -184,7 +184,7 @@ class Migration(migrations.Migration):
         CreateModelIfNotExists(
             name='EmailAddressForContract',
             fields=[
-                ('emailaddress_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='crm.emailaddress')),
+                ('emailaddress_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='contacts.emailaddress')),
                 ('purpose', models.CharField(choices=[('D', 'Delivery Address'), ('B', 'Billing Address'), ('C', 'Contact Address')], max_length=1, verbose_name='Purpose')),
                 ('contract', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='contract_object_management.contract')),
             ],
@@ -193,12 +193,12 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'Email Address For Contracts',
                 'db_table': 'crm_emailaddressforcontract',
             },
-            bases=('crm.emailaddress',),
+            bases=('contacts.emailaddress',),
         ),
         CreateModelIfNotExists(
             name='EmailAddressForSalesDocument',
             fields=[
-                ('emailaddress_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='crm.emailaddress')),
+                ('emailaddress_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='contacts.emailaddress')),
                 ('purpose', models.CharField(choices=[('D', 'Delivery Address'), ('B', 'Billing Address'), ('C', 'Contact Address')], max_length=1, verbose_name='Purpose')),
                 ('sales_document', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='contract_object_management.salesdocument')),
             ],
@@ -207,12 +207,12 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'Email Address For Sales Documents',
                 'db_table': 'crm_emailaddressforsalesdocument',
             },
-            bases=('crm.emailaddress',),
+            bases=('contacts.emailaddress',),
         ),
         CreateModelIfNotExists(
             name='PhoneAddressForContract',
             fields=[
-                ('phoneaddress_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='crm.phoneaddress')),
+                ('phoneaddress_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='contacts.phoneaddress')),
                 ('purpose', models.CharField(choices=[('D', 'Delivery Address'), ('B', 'Billing Address'), ('C', 'Contact Address')], max_length=1, verbose_name='Purpose')),
                 ('contract', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='contract_object_management.contract')),
             ],
@@ -221,12 +221,12 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'Phone Address For Contracts',
                 'db_table': 'crm_phoneaddressforcontract',
             },
-            bases=('crm.phoneaddress',),
+            bases=('contacts.phoneaddress',),
         ),
         CreateModelIfNotExists(
             name='PhoneAddressForSalesDocument',
             fields=[
-                ('phoneaddress_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='crm.phoneaddress')),
+                ('phoneaddress_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='contacts.phoneaddress')),
                 ('purpose', models.CharField(choices=[('D', 'Delivery Address'), ('B', 'Billing Address'), ('C', 'Contact Address')], max_length=1, verbose_name='Purpose')),
                 ('sales_document', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='contract_object_management.salesdocument')),
             ],
@@ -235,12 +235,12 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'Phone Address For Sales Documents',
                 'db_table': 'crm_phoneaddressforsalesdocument',
             },
-            bases=('crm.phoneaddress',),
+            bases=('contacts.phoneaddress',),
         ),
         CreateModelIfNotExists(
             name='PostalAddressForContract',
             fields=[
-                ('postaladdress_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='crm.postaladdress')),
+                ('postaladdress_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='contacts.postaladdress')),
                 ('purpose', models.CharField(choices=[('D', 'Delivery Address'), ('B', 'Billing Address'), ('C', 'Contact Address')], max_length=1, verbose_name='Purpose')),
                 ('contract', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='contract_object_management.contract')),
             ],
@@ -249,12 +249,12 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'Postal Address For Contracts',
                 'db_table': 'crm_postaladdressforcontract',
             },
-            bases=('crm.postaladdress',),
+            bases=('contacts.postaladdress',),
         ),
         CreateModelIfNotExists(
             name='PostalAddressForSalesDocument',
             fields=[
-                ('postaladdress_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='crm.postaladdress')),
+                ('postaladdress_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='contacts.postaladdress')),
                 ('purpose', models.CharField(choices=[('D', 'Delivery Address'), ('B', 'Billing Address'), ('C', 'Contact Address')], max_length=1, verbose_name='Purpose')),
                 ('sales_document', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='contract_object_management.salesdocument')),
             ],
@@ -263,7 +263,7 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'Postal Address For Sales Documents',
                 'db_table': 'crm_postaladdressforsalesdocument',
             },
-            bases=('crm.postaladdress',),
+            bases=('contacts.postaladdress',),
         ),
         CreateModelIfNotExists(
             name='TextParagraphInSalesDocument',
@@ -284,7 +284,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('salesdocument_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='contract_object_management.salesdocument')),
                 ('status', models.CharField(choices=[('O', 'Ordered'), ('D', 'Delayed'), ('Y', 'Delivered'), ('I', 'Invoice registered'), ('P', 'Invoice payed')], max_length=1)),
-                ('supplier', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='crm.supplier', verbose_name='Supplier')),
+                ('supplier', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='contacts.supplier', verbose_name='Supplier')),
             ],
             options={
                 'verbose_name': 'Purchase Order',
