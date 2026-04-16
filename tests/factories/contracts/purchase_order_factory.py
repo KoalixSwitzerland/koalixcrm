@@ -2,7 +2,7 @@
 
 import factory
 from koalixcrm.contracts.models.purchase_order import PurchaseOrder
-from tests.factories.crm.supplier_factory import StandardSupplierFactory
+from tests.factories.contacts.supplier_factory import StandardSupplierFactory
 from tests.factories.contracts.commercial_document_factory import StandardCommercialDocumentFactory
 
 

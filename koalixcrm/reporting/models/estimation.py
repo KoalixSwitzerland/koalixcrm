@@ -6,7 +6,7 @@ from koalixcrm.reporting.models.resource_price import ResourcePrice
 from decimal import *
 from django.core.exceptions import ValidationError
 from django.forms import BaseInlineFormSet
-from koalixcrm.crm.exceptions import ReportingPeriodNotFound
+from koalixcrm.core.exceptions import ReportingPeriodNotFound
 
 
 class Estimation(models.Model):

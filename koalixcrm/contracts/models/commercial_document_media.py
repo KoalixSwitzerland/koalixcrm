@@ -60,7 +60,7 @@ class CommercialDocumentMedia(models.Model):
     )
 
     pdf_export_process = models.ForeignKey(
-        "crm.PDFExportProcess",
+        "core.PDFExportProcess",
         on_delete=models.SET_NULL,
         verbose_name=_("PDF Export Process"),
         related_name="media_files",

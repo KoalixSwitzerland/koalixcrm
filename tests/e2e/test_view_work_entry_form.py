@@ -2,10 +2,10 @@
 import pytest
 import datetime
 from tests.contracts.test_support_functions import *
-from tests.factories.crm.user_factory import AdminUserFactory
-from tests.factories.crm.customer_factory import StandardCustomerFactory
-from tests.factories.crm.customer_group_factory import StandardCustomerGroupFactory
-from tests.factories.settings.currency_factory import StandardCurrencyFactory
+from tests.factories.contacts.user_factory import AdminUserFactory
+from tests.factories.contacts.customer_factory import StandardCustomerFactory
+from tests.factories.contacts.customer_group_factory import StandardCustomerGroupFactory
+from tests.factories.core.currency_factory import StandardCurrencyFactory
 from tests.factories.djangoUserExtension.factory_user_extension import StandardUserExtensionFactory
 from tests.factories.reporting.reporting_period_factory import StandardReportingPeriodFactory
 from tests.factories.reporting.task_factory import StandardTaskFactory

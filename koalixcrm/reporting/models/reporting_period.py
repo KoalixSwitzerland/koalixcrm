@@ -4,7 +4,7 @@ from datetime import *
 from django.db import models
 from django.utils.translation import gettext as _
 from koalixcrm.shared.pdf_export import PDFExport
-from koalixcrm.crm.exceptions import ReportingPeriodNotFound
+from koalixcrm.core.exceptions import ReportingPeriodNotFound
 from rest_framework import serializers
 from django.core.exceptions import ValidationError
 from django.forms import ModelForm

@@ -1,5 +1,0 @@
-from tests.factories.settings.currency_factory import StandardCurrencyFactory, SecondStandardCurrencyFactory
-from tests.factories.settings.currency_transform_factory import StandardCurrencyTransformFactory
-from tests.factories.settings.tax_factory import StandardTaxFactory
-from tests.factories.settings.unit_factory import StandardUnitFactory, SmallUnitFactory
-from tests.factories.settings.unit_transform_factory import StandardUnitTransformFactory

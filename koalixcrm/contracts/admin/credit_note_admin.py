@@ -18,7 +18,7 @@ class OptionCreditNote(OptionCommercialDocument):
     )
 
     def register_credit_note_in_accounting(self, request, queryset):
-        from koalixcrm.crm.exceptions import OpenInterestAccountMissing, IncompleteInvoice
+        from koalixcrm.core.exceptions import OpenInterestAccountMissing, IncompleteInvoice
         try:
             for obj in queryset:
                 obj.register_credit_note_in_accounting(request)

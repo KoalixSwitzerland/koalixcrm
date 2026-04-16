@@ -4,7 +4,7 @@ import factory
 from koalixcrm.reporting.models.generic_task_link import GenericTaskLink
 from tests.factories.reporting.task_factory import StandardTaskFactory
 from tests.factories.reporting.task_link_type_factory import RelatedToTaskLinkTypeFactory
-from tests.factories.crm.user_factory import StaffUserFactory
+from tests.factories.contacts.user_factory import StaffUserFactory
 from tests.factories.reporting.project_factory import StandardProjectFactory
 from django.contrib.contenttypes.models import ContentType
 

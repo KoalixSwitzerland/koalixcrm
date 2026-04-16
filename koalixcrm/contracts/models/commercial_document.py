@@ -4,15 +4,15 @@ from datetime import *
 from django.db import models
 from django.contrib import admin, messages
 from django.utils.translation import gettext as _
-from koalixcrm.crm.const.purpose import *
+from koalixcrm.core.const.purpose import *
 from koalixcrm.global_support_functions import xstr, make_date_utc
-from koalixcrm.crm.contact.phone_address import PhoneAddress
-from koalixcrm.crm.contact.email_address import EmailAddress
-from koalixcrm.crm.contact.postal_address import PostalAddress
+from koalixcrm.contacts.models.phone_address import PhoneAddress
+from koalixcrm.contacts.models.email_address import EmailAddress
+from koalixcrm.contacts.models.postal_address import PostalAddress
 from koalixcrm.contracts.models.commercial_document_position import CommercialDocumentPosition
 from koalixcrm.djangoUserExtension.models import TextParagraphInDocumentTemplate, UserExtension
 from koalixcrm.products.models.product_type import ProductType
-from koalixcrm.crm.exceptions import TemplateSetMissingInContract
+from koalixcrm.core.exceptions import TemplateSetMissingInContract
 import koalixcrm.contracts.models.calculations
 from koalixcrm.shared.pdf_export import PDFExport
 
@@ -69,7 +69,7 @@ class CommercialDocument(models.Model):
                                               verbose_name=_("Tax"),
                                               blank=True,
                                               null=True)
-    customer = models.ForeignKey("crm.Customer",
+    customer = models.ForeignKey("contacts.Customer",
                                  on_delete=models.CASCADE,
                                  verbose_name=_("Customer"))
     staff = models.ForeignKey('auth.User',
@@ -79,7 +79,7 @@ class CommercialDocument(models.Model):
                               verbose_name=_("Staff"),
                               related_name="db_relscstaff",
                               null=True)
-    currency = models.ForeignKey("settings.Currency", on_delete=models.CASCADE, verbose_name=_("Currency"),
+    currency = models.ForeignKey("core.Currency", on_delete=models.CASCADE, verbose_name=_("Currency"),
                                  blank=False, null=False)
     date_of_creation = models.DateTimeField(verbose_name=_("Created at"),
                                             auto_now_add=True)
@@ -113,9 +113,9 @@ class CommercialDocument(models.Model):
         verbose_name_plural = _('Commercial Documents')
 
     def serialize_to_xml(self):
-        from koalixcrm.crm.models import PostalAddressForContact
-        from koalixcrm.crm.models import Contact
-        from koalixcrm.settings.models import Currency
+        from koalixcrm.contacts.models import PostalAddressForContact
+        from koalixcrm.contacts.models import Contact
+        from koalixcrm.core.models import Currency
         from koalixcrm.contracts.models.purchase_order import PurchaseOrder
         from koalixcrm.contracts.models.commercial_document_position import CommercialDocumentPosition
         from django.contrib import auth
@@ -182,7 +182,7 @@ class CommercialDocument(models.Model):
     def create_pdf(self, template_set, printed_by):
         self.last_print_date = make_date_utc(datetime.now())
         self.save()
-        return koalixcrm.crm.documents.pdf_export.PDFExport.create_pdf(self, template_set, printed_by)
+        return koalixcrm.core.documents.pdf_export.PDFExport.create_pdf(self, template_set, printed_by)
 
     def get_template_set(self):
         if self.template_set:

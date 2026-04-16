@@ -25,7 +25,7 @@ class HumanResourceAdminView(admin.ModelAdmin):
     )
 
     def create_work_report_pdf(self, request, queryset):
-        from koalixcrm.crm.views.create_work_report import create_work_report
+        from koalixcrm.core.views.create_work_report import create_work_report
 
         return create_work_report(self, request, queryset)
 

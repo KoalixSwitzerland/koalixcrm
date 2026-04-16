@@ -4,7 +4,7 @@ from django.db import models
 from django.contrib import admin
 from django.utils.translation import gettext as _
 
-from koalixcrm.crm.const.purpose import *
+from koalixcrm.core.const.purpose import *
 
 
 class TextParagraphInDocumentTemplate(models.Model):
@@ -14,7 +14,8 @@ class TextParagraphInDocumentTemplate(models.Model):
     text_paragraph = models.TextField(verbose_name=_("Text"), blank=False, null=False)
 
     class Meta:
-        app_label = "crm"
+        app_label = "djangoUserExtension"
+        db_table = "crm_textparagraphindocumenttemplate"
         verbose_name = _('TextParagraphInDocumentTemplate')
         verbose_name_plural = _('TextParagraphInDocumentTemplates')
 

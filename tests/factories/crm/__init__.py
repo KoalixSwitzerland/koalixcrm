@@ -1,6 +1,0 @@
-from tests.factories.crm.user_factory import StaffUserFactory, AdminUserFactory, StandardUserFactory
-from tests.factories.crm.contact_factory import StandardContactFactory
-from tests.factories.crm.customer_factory import StandardCustomerFactory
-from tests.factories.crm.customer_billing_cycle_factory import StandardCustomerBillingCycleFactory
-from tests.factories.crm.customer_group_factory import StandardCustomerGroupFactory, AdvancedCustomerGroupFactory
-from tests.factories.crm.postal_address_factory import StandardPostalAddressFactory

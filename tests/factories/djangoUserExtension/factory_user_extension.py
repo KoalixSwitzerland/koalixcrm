@@ -2,8 +2,8 @@
 
 import factory
 from koalixcrm.djangoUserExtension.models import UserExtension
-from tests.factories.crm.user_factory import StaffUserFactory
-from tests.factories.settings.currency_factory import StandardCurrencyFactory
+from tests.factories.contacts.user_factory import StaffUserFactory
+from tests.factories.core.currency_factory import StandardCurrencyFactory
 from tests.factories.djangoUserExtension.factory_template_set import StandardTemplateSetFactory
 
 

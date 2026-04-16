@@ -3,7 +3,7 @@
 from datetime import *
 from django.db import models
 from django.utils.translation import gettext as _
-from koalixcrm.crm.const.status import *
+from koalixcrm.core.const.status import *
 from django.core.validators import MaxValueValidator, MinValueValidator
 from koalixcrm.contracts.models.commercial_document import CommercialDocument
 

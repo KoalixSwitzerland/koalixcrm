@@ -23,11 +23,11 @@ PREREQUISITE_APPS = [
 ]
 
 PROJECT_APPS = [
-    'koalixcrm.settings',
+    'koalixcrm.core',
+    'koalixcrm.contacts',
     'koalixcrm.products',
     'koalixcrm.contracts',
     'koalixcrm.reporting',
-    'koalixcrm.crm',
     'koalixcrm.accounting',
     'koalixcrm.djangoUserExtension',
     'koalixcrm.subscriptions',
@@ -47,7 +47,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'koalixcrm.crm.middleware.timezoneMiddleware.TimezoneMiddleware',
+    'koalixcrm.core.middleware.timezoneMiddleware.TimezoneMiddleware',
 ]
 
 ROOT_URLCONF = 'projectsettings.urls'

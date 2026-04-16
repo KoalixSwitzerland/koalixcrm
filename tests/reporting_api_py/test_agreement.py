@@ -9,7 +9,7 @@ from tests.factories.reporting.resource_factory import StandardResourceFactory
 from tests.factories.reporting.resource_price_factory import StandardResourcePriceFactory
 from tests.factories.reporting.agreement_type_factory import StandardAgreementTypeFactory
 from tests.factories.reporting.agreement_status_factory import AgreedAgreementStatusFactory
-from tests.factories.settings.unit_factory import StandardUnitFactory
+from tests.factories.core.unit_factory import StandardUnitFactory
 
 
 class AgreementAPITest(LiveServerTestCase):

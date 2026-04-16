@@ -2,12 +2,12 @@
 
 from django.db import models
 from django.utils.translation import gettext as _
-from koalixcrm.settings.models.currency import Currency
-from koalixcrm.settings.models.unit import Unit
-# CustomerGroup referenced via string FK 'crm.CustomerGroup'
-from koalixcrm.settings.models.unit_transform import UnitTransform
+from koalixcrm.core.models.currency import Currency
+from koalixcrm.core.models.unit import Unit
+# CustomerGroup referenced via string FK 'contacts.CustomerGroup'
+from koalixcrm.core.models.unit_transform import UnitTransform
 from koalixcrm.products.models.customer_group_transform import CustomerGroupTransform
-from koalixcrm.settings.models.currency_transform import CurrencyTransform
+from koalixcrm.core.models.currency_transform import CurrencyTransform
 
 
 class Price(models.Model):
@@ -20,7 +20,7 @@ class Price(models.Model):
                                  verbose_name='Currency',
                                  blank=False,
                                  null=False)
-    customer_group = models.ForeignKey('crm.CustomerGroup',
+    customer_group = models.ForeignKey('contacts.CustomerGroup',
                                        on_delete=models.CASCADE,
                                        verbose_name=_("Customer Group"),
                                        blank=True,
@@ -124,7 +124,7 @@ class Price(models.Model):
         or it returns the factor with the lowest transform factor
 
         Args:
-            koalixcrm.crm.contact.customer customer
+            koalixcrm.contacts.models.customer customer
             koalixcrm.crm.product.product product
 
         Returns:

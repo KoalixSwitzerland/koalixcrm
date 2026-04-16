@@ -12,8 +12,8 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('accounting', '0001_initial'),
-        ('crm', '0001_initial'),
-        ('settings', '0001_initial'),
+        ('contacts', '0001_initial'),
+        ('core', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
@@ -29,8 +29,8 @@ class Migration(migrations.Migration):
                 ('date_of_creation', models.DateTimeField(auto_now_add=True, verbose_name='Created at')),
                 ('accounting_product_category', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='accounting.productcategory', verbose_name='Accounting Product Category')),
                 ('last_modified_by', models.ForeignKey(blank=True, limit_choices_to={'is_staff': True}, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='Last modified by')),
-                ('default_unit', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='settings.unit', verbose_name='Unit')),
-                ('tax', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='settings.tax')),
+                ('default_unit', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='core.unit', verbose_name='Unit')),
+                ('tax', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='core.tax')),
             ],
             options={
                 'verbose_name': 'Product Type',
@@ -54,8 +54,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
                 ('factor', models.DecimalField(decimal_places=2, max_digits=17, verbose_name='Factor between From and To Customer Group')),
-                ('from_customer_group', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='db_reltransfromfromcustomergroup', to='crm.customergroup', verbose_name='From Customer Group')),
-                ('to_customer_group', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='db_reltransfromtocustomergroup', to='crm.customergroup', verbose_name='To Customer Group')),
+                ('from_customer_group', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='db_reltransfromfromcustomergroup', to='contacts.customergroup', verbose_name='From Customer Group')),
+                ('to_customer_group', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='db_reltransfromtocustomergroup', to='contacts.customergroup', verbose_name='To Customer Group')),
                 ('product_type', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='products.producttype', verbose_name='Product Type')),
             ],
             options={
@@ -71,9 +71,9 @@ class Migration(migrations.Migration):
                 ('price', models.DecimalField(decimal_places=2, max_digits=17, verbose_name='Price Per Unit')),
                 ('valid_from', models.DateField(blank=True, null=True, verbose_name='Valid from')),
                 ('valid_until', models.DateField(blank=True, null=True, verbose_name='Valid until')),
-                ('currency', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='settings.currency', verbose_name='Currency')),
-                ('customer_group', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='crm.customergroup', verbose_name='Customer Group')),
-                ('unit', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='settings.unit', verbose_name='Unit')),
+                ('currency', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='core.currency', verbose_name='Currency')),
+                ('customer_group', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='contacts.customergroup', verbose_name='Customer Group')),
+                ('unit', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='core.unit', verbose_name='Unit')),
             ],
             options={
                 'verbose_name': 'Price',

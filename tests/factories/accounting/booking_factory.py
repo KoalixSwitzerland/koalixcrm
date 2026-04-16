@@ -5,7 +5,7 @@ import datetime
 from koalixcrm.accounting.models import Booking
 from tests.factories.accounting.account_factory import StandardAccountFactory, OpenInterestAccountFactory
 from tests.factories.accounting.accounting_period_factory import StandardAccountingPeriodFactory
-from tests.factories.crm.user_factory import StaffUserFactory
+from tests.factories.contacts.user_factory import StaffUserFactory
 from koalixcrm.global_support_functions import make_date_utc
 
 

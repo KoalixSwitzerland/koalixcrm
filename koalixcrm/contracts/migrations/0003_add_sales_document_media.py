@@ -25,7 +25,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ("contract_object_management", "0002_initial"),
-        ("crm", "0002_initial"),
+        ("core", "0004_pdf_export_process"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
@@ -118,7 +118,7 @@ class Migration(migrations.Migration):
                         null=True,
                         on_delete=django.db.models.deletion.SET_NULL,
                         related_name="media_files",
-                        to="crm.pdfexportprocess",
+                        to="core.pdfexportprocess",
                         verbose_name="PDF Export Process",
                     ),
                 ),

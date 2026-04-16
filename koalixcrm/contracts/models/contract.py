@@ -5,18 +5,18 @@ from django.contrib import admin
 from django.utils.translation import gettext as _
 
 from koalixcrm.plugin import *
-from koalixcrm.crm.contact.phone_address import PhoneAddress
-from koalixcrm.crm.contact.email_address import EmailAddress
-from koalixcrm.crm.contact.postal_address import PostalAddress
+from koalixcrm.contacts.models.phone_address import PhoneAddress
+from koalixcrm.contacts.models.email_address import EmailAddress
+from koalixcrm.contacts.models.postal_address import PostalAddress
 from koalixcrm.contracts.models.invoice import Invoice
 from koalixcrm.contracts.models.quotation import Quotation
 from koalixcrm.contracts.models.purchase_order import PurchaseOrder
 from koalixcrm.global_support_functions import xstr
-from koalixcrm.crm.const.purpose import *
-from koalixcrm.crm.exceptions import *
+from koalixcrm.core.const.purpose import *
+from koalixcrm.core.exceptions import *
 from koalixcrm.djangoUserExtension.models import UserExtension
 import koalixcrm.contracts.models.calculations
-import koalixcrm.crm.documents.pdf_export
+import koalixcrm.core.documents.pdf_export
 
 class PostalAddressForContract(PostalAddress):
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT)
@@ -70,17 +70,17 @@ class Contract(models.Model):
                               blank=True,
                               null=True)
     description = models.TextField(verbose_name=_("Description"))
-    default_customer = models.ForeignKey("crm.Customer",
+    default_customer = models.ForeignKey("contacts.Customer",
                                          on_delete=models.CASCADE,
                                          verbose_name=_("Default Customer"),
                                          null=True,
                                          blank=True)
-    default_supplier = models.ForeignKey("crm.Supplier",
+    default_supplier = models.ForeignKey("contacts.Supplier",
                                          on_delete=models.CASCADE,
                                          verbose_name=_("Default Supplier"),
                                          null=True,
                                          blank=True)
-    default_currency = models.ForeignKey("settings.Currency",
+    default_currency = models.ForeignKey("core.Currency",
                                          on_delete=models.CASCADE,
                                          verbose_name=_("Default Currency"),
                                          blank=False,

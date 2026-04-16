@@ -4,8 +4,8 @@ import factory
 from koalixcrm.reporting.models.project import Project
 from tests.factories.reporting.project_status_factory import StartedProjectStatusFactory
 from tests.factories.djangoUserExtension.factory_template_set import StandardTemplateSetFactory
-from tests.factories.crm.user_factory import StaffUserFactory
-from tests.factories.settings.currency_factory import StandardCurrencyFactory
+from tests.factories.contacts.user_factory import StaffUserFactory
+from tests.factories.core.currency_factory import StandardCurrencyFactory
 
 
 class StandardProjectFactory(factory.django.DjangoModelFactory):

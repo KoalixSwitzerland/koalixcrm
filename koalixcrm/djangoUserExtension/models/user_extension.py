@@ -4,9 +4,9 @@ from django.db import models
 from django.contrib import admin
 from django.utils.translation import gettext as _
 
-from koalixcrm.crm.contact.postal_address import PostalAddress
-from koalixcrm.crm.contact.phone_address import PhoneAddress
-from koalixcrm.crm.contact.email_address import EmailAddress
+from koalixcrm.contacts.models.postal_address import PostalAddress
+from koalixcrm.contacts.models.phone_address import PhoneAddress
+from koalixcrm.contacts.models.email_address import EmailAddress
 from koalixcrm.djangoUserExtension.const.purpose import *
 from koalixcrm.djangoUserExtension.exceptions import *
 from koalixcrm.global_support_functions import xstr
@@ -19,12 +19,12 @@ class UserExtension(models.Model):
                              blank=False,
                              null=False)
     default_template_set = models.ForeignKey("TemplateSet", on_delete=models.CASCADE)
-    default_currency = models.ForeignKey("settings.Currency", on_delete=models.CASCADE)
+    default_currency = models.ForeignKey("core.Currency", on_delete=models.CASCADE)
 
     @staticmethod
     def objects_to_serialize(object_to_create_pdf, reference_user):
-        from koalixcrm.crm.contact.phone_address import PhoneAddress
-        from koalixcrm.crm.contact.email_address import EmailAddress
+        from koalixcrm.contacts.models.phone_address import PhoneAddress
+        from koalixcrm.contacts.models.email_address import EmailAddress
         from django.contrib import auth
         objects = list(auth.models.User.objects.filter(id=reference_user.id))
         user_extension = UserExtension.objects.filter(user=reference_user.id)
@@ -187,7 +187,7 @@ class OptionUserExtension(admin.ModelAdmin):
     )
 
     def create_work_report_pdf(self, request, queryset):
-        from koalixcrm.crm.views.create_work_report import create_work_report
+        from koalixcrm.core.views.create_work_report import create_work_report
 
         return create_work_report(self, request, queryset)
 

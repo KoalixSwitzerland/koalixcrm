@@ -5,7 +5,7 @@ from django.contrib import admin
 from django.utils.translation import gettext as _
 
 from koalixcrm.global_support_functions import xstr
-from koalixcrm.crm.exceptions import *
+from koalixcrm.core.exceptions import *
 
 
 class TemplateSet(models.Model):

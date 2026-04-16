@@ -4,10 +4,10 @@ import factory
 import datetime
 from koalixcrm.global_support_functions import make_date_utc
 from koalixcrm.contracts.models.commercial_document import CommercialDocument
-from tests.factories.crm.user_factory import StaffUserFactory
+from tests.factories.contacts.user_factory import StaffUserFactory
 from tests.factories.contracts.contract_factory import StandardContractFactory
-from tests.factories.crm.customer_factory import StandardCustomerFactory
-from tests.factories.settings.currency_factory import StandardCurrencyFactory
+from tests.factories.contacts.customer_factory import StandardCustomerFactory
+from tests.factories.core.currency_factory import StandardCurrencyFactory
 from tests.factories.djangoUserExtension.factory_document_template import StandardQuoteTemplateFactory
 
 

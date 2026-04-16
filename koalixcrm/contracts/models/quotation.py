@@ -5,7 +5,7 @@ from django.db import models
 from django.contrib import admin
 from django.utils.translation import gettext as _
 from django.utils.html import format_html
-from koalixcrm.crm.const.status import *
+from koalixcrm.core.const.status import *
 from koalixcrm.contracts.models.commercial_document import CommercialDocument
 from koalixcrm.global_support_functions import limit_string_length
 

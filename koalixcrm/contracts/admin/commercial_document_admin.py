@@ -145,7 +145,7 @@ class OptionCommercialDocument(admin.ModelAdmin):
         obj.save()
 
     def create_quotation(self, request, queryset):
-        from koalixcrm.crm.views.newdocument import CreateNewDocumentView
+        from koalixcrm.core.views.newdocument import CreateNewDocumentView
         for obj in queryset:
             response = CreateNewDocumentView.create_new_document(self,
                                                                  request,
@@ -157,7 +157,7 @@ class OptionCommercialDocument(admin.ModelAdmin):
     create_quotation.short_description = _("Create Quotation")
 
     def create_invoice(self, request, queryset):
-        from koalixcrm.crm.views.newdocument import CreateNewDocumentView
+        from koalixcrm.core.views.newdocument import CreateNewDocumentView
         for obj in queryset:
             response = CreateNewDocumentView.create_new_document(self,
                                                                  request,
@@ -169,7 +169,7 @@ class OptionCommercialDocument(admin.ModelAdmin):
     create_invoice.short_description = _("Create Invoice")
 
     def create_sales_order(self, request, queryset):
-        from koalixcrm.crm.views.newdocument import CreateNewDocumentView
+        from koalixcrm.core.views.newdocument import CreateNewDocumentView
         for obj in queryset:
             response = CreateNewDocumentView.create_new_document(self,
                                                                  request,
@@ -181,7 +181,7 @@ class OptionCommercialDocument(admin.ModelAdmin):
     create_sales_order.short_description = _("Create Sales Order")
 
     def create_despatch_advice(self, request, queryset):
-        from koalixcrm.crm.views.newdocument import CreateNewDocumentView
+        from koalixcrm.core.views.newdocument import CreateNewDocumentView
         for obj in queryset:
             response = CreateNewDocumentView.create_new_document(self,
                                                                  request,
@@ -193,7 +193,7 @@ class OptionCommercialDocument(admin.ModelAdmin):
     create_despatch_advice.short_description = _("Create Despatch Advice")
 
     def create_payment_reminder(self, request, queryset):
-        from koalixcrm.crm.views.newdocument import CreateNewDocumentView
+        from koalixcrm.core.views.newdocument import CreateNewDocumentView
         for obj in queryset:
             response = CreateNewDocumentView.create_new_document(self,
                                                                  request,
@@ -205,7 +205,7 @@ class OptionCommercialDocument(admin.ModelAdmin):
     create_payment_reminder.short_description = _("Create Payment Reminder")
 
     def create_purchase_order(self, request, queryset):
-        from koalixcrm.crm.views.newdocument import CreateNewDocumentView
+        from koalixcrm.core.views.newdocument import CreateNewDocumentView
         for obj in queryset:
             response = CreateNewDocumentView.create_new_document(self,
                                                                  request,
@@ -217,7 +217,7 @@ class OptionCommercialDocument(admin.ModelAdmin):
     create_purchase_order.short_description = _("Create Purchase Order")
 
     def create_pdf(self, request, queryset):
-        from koalixcrm.crm.views.pdfexport import PDFExportView
+        from koalixcrm.core.views.pdfexport import PDFExportView
         for obj in queryset:
             response = PDFExportView.export_pdf(self,
                                                 request,
@@ -229,7 +229,7 @@ class OptionCommercialDocument(admin.ModelAdmin):
     create_pdf.short_description = _("Create PDF")
 
     def create_pdf_async(self, request, queryset):
-        from koalixcrm.crm.models.pdf_export_process import PDFExportProcess
+        from koalixcrm.core.models.pdf_export_process import PDFExportProcess
         queued = 0
         for obj in queryset:
             if not obj.template_set:
@@ -256,7 +256,7 @@ class OptionCommercialDocument(admin.ModelAdmin):
     create_pdf_async.short_description = _("Create PDF")
 
     def create_project(self, request, queryset):
-        from koalixcrm.crm.views.create_task import CreateTaskView
+        from koalixcrm.core.views.create_task import CreateTaskView
         for obj in queryset:
             response = CreateTaskView.create_project(self,
                                                      request,

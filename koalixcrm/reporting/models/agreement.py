@@ -14,7 +14,7 @@ class Agreement(models.Model):
                              blank=False,
                              null=False)
     resource = models.ForeignKey("Resource", on_delete=models.CASCADE)
-    unit = models.ForeignKey("settings.Unit", on_delete=models.CASCADE)
+    unit = models.ForeignKey("core.Unit", on_delete=models.CASCADE)
     costs = models.ForeignKey(ResourcePrice, on_delete=models.CASCADE)
     type = models.ForeignKey("AgreementType", on_delete=models.CASCADE)
     status = models.ForeignKey("AgreementStatus", on_delete=models.CASCADE)

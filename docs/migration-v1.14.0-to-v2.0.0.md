@@ -17,20 +17,30 @@ lived in a single app (historically `crm`). v2.0.0 completes a multi-step
 refactor that breaks that monolith into focused apps:
 
 ```
-crm                    contacts, addresses, phone numbers, customer groups
+contacts               Contact, Customer, Supplier, Person,
+                       CustomerGroup, CustomerBillingCycle, Call,
+                       postal/phone/email addresses
 accounting             accounts, bookings, periods, product categories
-settings               shared value objects: Currency, Unit, Tax,
-                       CurrencyTransform, UnitTransform
+core                   shared value objects (Currency, Unit, Tax,
+                       CurrencyTransform, UnitTransform) +
+                       cross-cutting infrastructure (PDFExportProcess,
+                       timezone middleware, documents/, exceptions,
+                       const, signals, locale, templates, static)
 products               ProductType, Product, Price, ProductPrice,
                        CustomerGroupTransform
 contract_object_management
-                       Contract, SalesDocument, Quote, Invoice,
+                       Contract, CommercialDocument, Quote, Invoice,
                        DeliveryNote, PurchaseOrder, PaymentReminder, …
 reporting              Project, Task, Agreement, Estimation, Resource,
                        ReportingPeriod, …
 djangoUserExtension    DocumentTemplate family, TemplateSet,
-                       UserExtension
+                       UserExtension, TextParagraphInDocumentTemplate
 ```
+
+The `crm` app is gone; its contents were split into `contacts` (the
+contact domain) and `core` (the shared infrastructure). The former
+`settings` app was renamed to `core` to avoid the naming collision with
+`django.conf.settings`.
 
 Two invariants let this refactor roll out without rewriting the data:
 
@@ -56,20 +66,35 @@ migrations. That is what the reconciliation tooling is for.
 
 ## What v2.0.0 contains
 
-1. The `settings` app (new in v2.0.0): owns `Currency`, `Unit`, `Tax`,
-   and the two transform models. Mirror of the `products` app layout
-   (admin / models / views / serializers / migrations / factory /
-   signals).
-2. `settings.0001_initial` + `settings.0002_transforms` migrations,
-   split from the original monolithic `products.0001_initial`.
-3. `settings_api_py/` REST façade mirroring `products_api_py/`, plus
-   an updated `products_api_py/` that no longer carries the moved
-   entities. URL routing in `projectsettings/urls.py` now pulls the
-   shared-value-object viewsets from `settings_api_py`.
-4. `sync_split_migrations` management command — the operator-facing
-   tool that makes legacy databases consistent with the new migration
-   graph.
-5. Both Docker entrypoints (`docker/dev/entrypoint.sh`,
+1. The `core` app (new in v2.0.0): owns the shared value objects
+   (`Currency`, `Unit`, `Tax`, `CurrencyTransform`, `UnitTransform`) plus
+   the cross-cutting infrastructure that used to live in `crm`:
+   `PDFExportProcess`, the timezone middleware, `documents/pdf_export`,
+   `exceptions`, `const`, `inlinemixin`, legacy HTML views, the
+   reporting URL config, templates, static assets, and management
+   commands.
+2. The `contacts` app (new in v2.0.0): owns the contact domain split
+   out of `crm` — `Contact`, `Customer`, `Supplier`, `Person`,
+   `CustomerGroup`, `CustomerBillingCycle`, `Call`, and postal / phone /
+   email addresses plus their admin / serializer / viewset.
+3. `core.0001_initial`, `core.0002_transforms`,
+   `core.0003_pdf_export_process_links`, and
+   `core.0004_pdf_export_process` migrations. PDFExportProcess lives in
+   its own migration (not `core.0001_initial`) so that
+   `sync_split_migrations` can auto-record `core.0001_initial` on the
+   legacy 2019-era DB, which has `crm_currency`/`crm_unit`/`crm_tax`
+   but no `crm_pdfexportprocess`.
+4. `contacts.0001_initial`, `contacts.0002_initial`,
+   `contacts.0003_add_postaladdress_subdivision_code` migrations.
+5. `core_api_py/` REST façade (renamed from the former
+   `settings_api_py/`) and `contacts_api_py/` REST façade (renamed from
+   the former `crm_api_py/`). URL routing in
+   `projectsettings/urls.py` pulls value-object viewsets from
+   `core_api_py` and contact viewsets from `contacts_api_py`.
+6. `sync_split_migrations` management command (in
+   `koalixcrm/core/management/commands/`) — the operator-facing tool
+   that makes legacy databases consistent with the new migration graph.
+7. Both Docker entrypoints (`docker/dev/entrypoint.sh`,
    `docker/prod/entrypoint.sh`) run `sync_split_migrations` before
    `migrate`.
 
@@ -146,25 +171,32 @@ dependencies that crossed app boundaries during the split.
 On a 2019-era monolithic database the output is:
 
 ```
-Recorded settings.0001_initial as applied.
-Recorded settings.0002_transforms as applied.
+Recorded core.0001_initial as applied.
+Recorded core.0002_transforms as applied.
+Recorded contacts.0001_initial as applied.
+Recorded contacts.0002_initial as applied.
 Recorded products.0001_initial as applied.
 Recorded contract_object_management.0001_initial as applied.
 Recorded contract_object_management.0002_initial as applied.
 Recorded reporting.0001_initial as applied.
-Recorded crm.0002_initial as applied.
 ```
 
 After that, `migrate` sees a consistent history and applies only the
-genuinely new migrations (e.g.
+genuinely new migrations — e.g.
+`contacts.0003_add_postaladdress_subdivision_code`,
+`core.0003_pdf_export_process_links`,
+`core.0004_pdf_export_process`,
 `contract_object_management.0003_add_sales_document_media`,
-`djangoUserExtension.0002_documenttemplate_s3_file_fields`).
+`djangoUserExtension.0002_documenttemplate_s3_file_fields`.
+`core.0004_pdf_export_process` creates `crm_pdfexportprocess` on
+legacy DBs that don't have it yet; on DBs already migrated past it the
+`CreateModelIfNotExists` guard makes it a no-op.
 
 ## How to do further splits or moves
 
 This is the reason this document matters. If you need to pull another
-group of models out of the monolith — say, moving `CustomerBillingCycle`
-out of `crm` into its own app — do it like this:
+group of models out of an existing app — say, moving `Call` out of
+`contacts` into its own app — do it like this:
 
 1. **Keep the `db_table` name.** Set
    `class Meta: db_table = "crm_customerbillingcycle"` (or whatever the
@@ -187,12 +219,12 @@ out of `crm` into its own app — do it like this:
    prevent re-creation conflicts against existing databases.
 
 5. **Handle circular dependencies by splitting migrations.** The
-   `settings` ↔ `products` split needed this: `CurrencyTransform` and
+   `core` ↔ `products` split needed this: `CurrencyTransform` and
    `UnitTransform` reference `products.ProductType`, but
-   `products.ProductType` references `settings.Unit` and `settings.Tax`.
-   Solution: three migrations in order `settings.0001_initial` (creates
+   `products.ProductType` references `core.Unit` and `core.Tax`.
+   Solution: three migrations in order `core.0001_initial` (creates
    Currency/Unit/Tax) → `products.0001_initial` (creates ProductType et
-   al.) → `settings.0002_transforms` (creates CurrencyTransform /
+   al.) → `core.0002_transforms` (creates CurrencyTransform /
    UnitTransform). If your split has the same shape, use the same
    pattern.
 
@@ -203,12 +235,23 @@ out of `crm` into its own app — do it like this:
    their migrations, tests, factories, and serializers — expect similar
    scope.
 
+6.1 **If you're pulling models out of a legacy-era app whose
+   `db_table` prefix is `crm_`, keep the prefix.** Every Meta on the
+   moved model must set `db_table = "crm_<modelname>"` explicitly, AND
+   every `CreateModelIfNotExists` in the new migration must include
+   `'db_table': 'crm_<modelname>'` in its `options`. Otherwise
+   `sync_split_migrations` will compare against the Django-inferred
+   `<app>_<modelname>` and skip the migration on legacy DBs, and
+   `makemigrations` will generate a phantom `AlterModelTable` migration
+   renaming the legacy tables.
+
 7. **Update the API surface if applicable.** v2.0.0 introduced
-   `settings_api_py` as a dedicated REST façade for settings-owned
-   entities, and thinned out `products_api_py` accordingly. If your
-   split has a client-facing REST surface, mirror that: move the
-   viewsets, DTOs, and client methods to a new `<app>_api_py` package,
-   and update `projectsettings/urls.py` routes to import from it.
+   `core_api_py` as a dedicated REST façade for core-owned entities
+   (renamed from `settings_api_py`) and `contacts_api_py` as the
+   contact-domain façade (renamed from `crm_api_py`). If your split has
+   a client-facing REST surface, mirror that: move the viewsets, DTOs,
+   and client methods to a new `<app>_api_py` package, and update
+   `projectsettings/urls.py` routes to import from it.
 
 8. **`sync_split_migrations` will keep working automatically.** The
    command walks the graph dynamically — it doesn't hard-code app
@@ -268,11 +311,14 @@ out of `crm` into its own app — do it like this:
 
 | Concern | Path |
 |---|---|
-| New settings app | `koalixcrm/settings/` |
-| Settings migrations | `koalixcrm/settings/migrations/0001_initial.py`, `0002_transforms.py` |
+| New core app | `koalixcrm/core/` |
+| Core migrations | `koalixcrm/core/migrations/0001_initial.py`, `0002_transforms.py`, `0003_pdf_export_process_links.py`, `0004_pdf_export_process.py` |
+| New contacts app | `koalixcrm/contacts/` |
+| Contacts migrations | `koalixcrm/contacts/migrations/0001_initial.py`, `0002_initial.py`, `0003_add_postaladdress_subdivision_code.py` |
 | Idempotent migration ops | `koalixcrm/migration_utils.py` |
-| Reconciliation command | `koalixcrm/settings/management/commands/sync_split_migrations.py` |
-| REST façade (new) | `koalixcrm/settings_api_py/` |
+| Reconciliation command | `koalixcrm/core/management/commands/sync_split_migrations.py` |
+| REST façade (core) | `koalixcrm/core_api_py/` |
+| REST façade (contacts) | `koalixcrm/contacts_api_py/` |
 | REST façade (trimmed) | `koalixcrm/products_api_py/` |
 | URL wiring | `projectsettings/urls.py` |
 | Entrypoint wiring | `docker/dev/entrypoint.sh`, `docker/prod/entrypoint.sh` |

@@ -6,7 +6,7 @@ from django.utils.html import format_html
 from django.utils.translation import gettext as _
 from koalixcrm.shared.pdf_export import PDFExport
 from koalixcrm.global_support_functions import *
-from koalixcrm.crm.exceptions import ReportingPeriodDoneDeleteNotPossible
+from koalixcrm.core.exceptions import ReportingPeriodDoneDeleteNotPossible
 
 
 class Work(models.Model):

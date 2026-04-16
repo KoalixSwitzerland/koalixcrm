@@ -3,7 +3,7 @@
 import factory
 from koalixcrm.contracts.models.commercial_document_position import CommercialDocumentPosition
 from tests.factories.products.product_type_factory import StandardProductTypeFactory
-from tests.factories.settings.unit_factory import StandardUnitFactory
+from tests.factories.core.unit_factory import StandardUnitFactory
 
 
 class StandardCommercialDocumentPositionFactory(factory.django.DjangoModelFactory):

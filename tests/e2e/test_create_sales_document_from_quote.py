@@ -6,8 +6,8 @@ from selenium import webdriver
 from tests.contracts.test_support_functions import *
 from tests.factories.contracts.contract_factory import StandardContractFactory
 from tests.factories.contracts.quotation_factory import StandardQuotationFactory
-from tests.factories.crm.user_factory import AdminUserFactory
-from tests.factories.crm.customer_group_factory import StandardCustomerGroupFactory
+from tests.factories.contacts.user_factory import AdminUserFactory
+from tests.factories.contacts.customer_group_factory import StandardCustomerGroupFactory
 from tests.factories.djangoUserExtension.factory_document_template import StandardQuoteTemplateFactory
 from tests.factories.djangoUserExtension.factory_document_template import StandardInvoiceTemplateFactory
 from tests.factories.djangoUserExtension.factory_document_template import StandardPurchaseOrderTemplateFactory

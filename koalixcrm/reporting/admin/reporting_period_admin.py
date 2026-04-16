@@ -40,7 +40,7 @@ class ReportingPeriodAdmin(admin.ModelAdmin):
         obj.save()
 
     def create_report_pdf(self, request, queryset):
-        from koalixcrm.crm.views.pdfexport import PDFExportView
+        from koalixcrm.core.views.pdfexport import PDFExportView
         for obj in queryset:
             response = PDFExportView.export_pdf(self,
                                                 request,

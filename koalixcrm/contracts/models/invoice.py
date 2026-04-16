@@ -11,8 +11,8 @@ from django.contrib.admin import helpers
 from django.shortcuts import render
 from django.contrib import messages
 from django.template.context_processors import csrf
-from koalixcrm.crm.const.status import *
-from koalixcrm.crm.exceptions import *
+from koalixcrm.core.const.status import *
+from koalixcrm.core.exceptions import *
 from koalixcrm import accounting
 from koalixcrm.contracts.models.commercial_document import CommercialDocument
 from koalixcrm.contracts.models.commercial_document_position import CommercialDocumentPosition

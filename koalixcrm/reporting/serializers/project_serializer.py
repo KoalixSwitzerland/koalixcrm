@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from rest_framework import serializers
 from koalixcrm.reporting.models.project import Project
-from koalixcrm.settings.models.currency import Currency
+from koalixcrm.core.models.currency import Currency
 from koalixcrm.reporting.models.project_status import ProjectStatus
 from koalixcrm.reporting.serializers.project_status_serializer import OptionProjectStatusJSONSerializer
-from koalixcrm.settings.serializers.currency_serializer import CurrencyJSONSerializer
+from koalixcrm.core.serializers.currency_serializer import CurrencyJSONSerializer
 from koalixcrm.djangoUserExtension.serializers.user_rest import UserSerializer
 from koalixcrm.djangoUserExtension.serializers.template_set_rest import OptionTemplateSetJSONSerializer
 from koalixcrm.djangoUserExtension.models.template_set import TemplateSet

@@ -11,7 +11,7 @@ from rest_framework import routers
 from koalixcrm.accounting_api_py.accounting_api import (
     AccountViewSet, AccountingPeriodViewSet, BookingViewSet, ProductCategoryViewSet,
 )
-from koalixcrm.crm_api_py.crm_api import (
+from koalixcrm.contacts_api_py.contacts_api import (
     CustomerViewSet, CustomerGroupViewSet, CustomerBillingCycleViewSet,
     ContactPostalAddressViewSet, ContactEmailAddressViewSet, ContactPhoneAddressViewSet,
     SupplierViewSet, PersonViewSet, ContactViewSet,
@@ -20,7 +20,7 @@ from koalixcrm.products_api_py.products_api import (
     ProductTypeViewSet, ProductViewSet, ProductPriceViewSet,
     CustomerGroupTransformViewSet,
 )
-from koalixcrm.settings_api_py.settings_api import (
+from koalixcrm.core_api_py.core_api import (
     CurrencyViewSet, TaxViewSet, UnitViewSet,
     CurrencyTransformViewSet, UnitTransformViewSet,
 )
@@ -114,7 +114,7 @@ urlpatterns = [
     path('', include(router.urls)),
     path('admin/filebrowser/', site.urls),
     path('grappelli/', include('grappelli.urls')),
-    path('koalixcrm/crm/reporting/', include('koalixcrm.crm.reporting.urls')),
+    path('koalixcrm/crm/reporting/', include('koalixcrm.core.reporting.urls')),
     # OIDC auth (admin login via Keycloak)
     path('auth/login/', LoginSelectionView.as_view(), name='login-selection'),
     path('auth/login/<str:provider>/', OAuthLoginView.as_view(), name='oauth-login'),

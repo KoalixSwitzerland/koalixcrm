@@ -17,7 +17,7 @@ django.setup()
 
 def _update_process_status(process_id: int, status: str, result_url: str = "", error_message: str = ""):
     """Update the PDFExportProcess status via Django ORM."""
-    from koalixcrm.crm.models.pdf_export_process import PDFExportProcess
+    from koalixcrm.core.models.pdf_export_process import PDFExportProcess
     try:
         process = PDFExportProcess.objects.get(id=process_id)
         process.status = status

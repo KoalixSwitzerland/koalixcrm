@@ -31,7 +31,7 @@ class OptionInvoice(OptionCommercialDocument):
         payment_account = forms.ModelChoiceField(Account.objects.filter(account_type="A"))
 
     def register_invoice_in_accounting(self, request, queryset):
-        from koalixcrm.crm.exceptions import OpenInterestAccountMissing, IncompleteInvoice
+        from koalixcrm.core.exceptions import OpenInterestAccountMissing, IncompleteInvoice
         try:
             for obj in queryset:
                 obj.register_invoice_in_accounting(request)
@@ -72,7 +72,7 @@ class OptionInvoice(OptionCommercialDocument):
     register_payment_in_accounting.short_description = _("Register Payment in Accounting")
 
     def create_credit_note_from_invoice(self, request, queryset):
-        from koalixcrm.crm.views.newdocument import CreateNewDocumentView
+        from koalixcrm.core.views.newdocument import CreateNewDocumentView
         import koalixcrm.contracts.models.credit_note
         for obj in queryset:
             response = CreateNewDocumentView.create_new_document(
