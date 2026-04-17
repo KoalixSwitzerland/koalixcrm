@@ -310,6 +310,32 @@ def build_legacy_contact_to_party_mapping(apps):
     return mapping
 
 
+def build_legacy_customer_group_to_party_group_mapping(apps):
+    """Reconstruct `legacy_customer_group_id -> new_party_group_id`.
+
+    Same approach as `build_legacy_contact_to_party_mapping`: the backfill
+    (PR #393) creates one PartyGroup per legacy CustomerGroup in pk order,
+    so zipping the two lists back together reproduces the mapping.
+    """
+    LegacyCustomerGroup = apps.get_model('contacts', 'CustomerGroup')
+    PartyGroup = apps.get_model('contacts', 'PartyGroup')
+
+    legacy_ids = list(
+        LegacyCustomerGroup.objects.order_by('pk').values_list('pk', flat=True)
+    )
+    new_ids = list(
+        PartyGroup.objects.filter(role_type_scope='customer')
+        .order_by('pk').values_list('pk', flat=True)
+    )
+    if len(legacy_ids) != len(new_ids):
+        raise RuntimeError(
+            f"Legacy CustomerGroup / PartyGroup count mismatch: "
+            f"{len(legacy_ids)} vs {len(new_ids)}. "
+            f"Run `manage.py contacts_backfill_reconcile` to diagnose."
+        )
+    return dict(zip(legacy_ids, new_ids))
+
+
 def row_count_report(apps):
     """Compute a {label: (legacy_count, new_count, delta)} report.
 

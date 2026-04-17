@@ -25,6 +25,15 @@ class Price(models.Model):
                                        verbose_name=_("Customer Group"),
                                        blank=True,
                                        null=True)
+    # Transitional Party-pattern FK (issue #394). Populated from customer_group
+    # by products migration 0002 via the backfill mapping. Legacy FK kept as
+    # nullable shadow until #395.
+    party_group = models.ForeignKey('contacts.PartyGroup',
+                                    on_delete=models.PROTECT,
+                                    related_name='prices',
+                                    verbose_name=_("Party Group"),
+                                    blank=True,
+                                    null=True)
     price = models.DecimalField(max_digits=17,
                                 decimal_places=2,
                                 verbose_name=_("Price Per Unit"))

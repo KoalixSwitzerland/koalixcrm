@@ -18,6 +18,21 @@ class CustomerGroupTransform(models.Model):
                                           related_name="db_reltransfromtocustomergroup",
                                           blank=False,
                                           null=False)
+    # Transitional Party-pattern FKs (issue #394). Kept nullable during the
+    # transition because the legacy from_/to_customer_group remain required.
+    # Nullability is tightened in #395 after the legacy fields are dropped.
+    from_party_group = models.ForeignKey('contacts.PartyGroup',
+                                         on_delete=models.PROTECT,
+                                         related_name='transforms_from',
+                                         verbose_name=_("From Party Group"),
+                                         blank=True,
+                                         null=True)
+    to_party_group = models.ForeignKey('contacts.PartyGroup',
+                                       on_delete=models.PROTECT,
+                                       related_name='transforms_to',
+                                       verbose_name=_("To Party Group"),
+                                       blank=True,
+                                       null=True)
     product_type = models.ForeignKey('ProductType',
                                      on_delete=models.CASCADE,
                                      verbose_name=_("Product Type"),
