@@ -1,4 +1,3 @@
-from django.contrib.auth.models import User
 from rest_framework import serializers
 
 from koalixcrm.contacts.models.customer import Customer
@@ -35,14 +34,7 @@ class CustomerJSONSerializer(ContactJSONSerializer):
             else:
                 customer.default_customer_billing_cycle = None
 
-        # Deserialize from staff
-        request = self.context.get('request')
-        koalixcrm_user = request.META.get('HTTP_KOALIXCRM_USER')
-        if koalixcrm_user:
-            user = User.objects.get(username=koalixcrm_user)
-        else:
-            user = request.user
-        customer.last_modified_by = user
+        customer.last_modified_by = self.context['request'].user
 
         customer.save()
 
@@ -61,14 +53,7 @@ class CustomerJSONSerializer(ContactJSONSerializer):
         customer.name = validated_data.get('name', customer.name)
         customer.is_lead = validated_data.get('is_lead', customer.is_lead)
 
-        # Deserialize from staff
-        request = self.context.get('request')
-        koalixcrm_user = request.META.get('HTTP_KOALIXCRM_USER')
-        if koalixcrm_user:
-            user = User.objects.get(username=koalixcrm_user)
-        else:
-            user = request.user
-        customer.last_modified_by = user
+        customer.last_modified_by = self.context['request'].user
 
         # Deserialize from customer group
         # Clear all from existing customer and add the deserialized items again.

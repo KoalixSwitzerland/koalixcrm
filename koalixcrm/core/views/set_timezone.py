@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import zoneinfo
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
 
+@login_required
 def set_timezone(request):
     if request.method == 'POST':
         request.session['django_timezone'] = request.POST['timezone']

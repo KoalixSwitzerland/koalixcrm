@@ -87,10 +87,19 @@ class WorkEntry(forms.Form):
         return cleaned_data
 
     def update_work(self, request):
+        from django.core.exceptions import PermissionDenied
         from koalixcrm.reporting.models.work import Work
         if self.has_changed():
+            current_human_resource = HumanResource.objects.get(user=UserExtension.get_user_extension(request.user))
             if self.cleaned_data['work_id']:
-                work = Work.objects.get(id=self.cleaned_data['work_id'])
+                # Only allow access to Work entries owned by the current user's HumanResource.
+                # Without this filter, any authenticated user could edit/delete other users' work
+                # by tampering with the hidden work_id form field.
+                try:
+                    work = Work.objects.get(id=self.cleaned_data['work_id'],
+                                            human_resource=current_human_resource)
+                except Work.DoesNotExist:
+                    raise PermissionDenied("You are not allowed to modify this work entry.")
             else:
                 if not self.cleaned_data['DELETE']:
                     work = Work()
@@ -102,7 +111,7 @@ class WorkEntry(forms.Form):
                 work.task = self.cleaned_data['task']
                 work.reporting_period = ReportingPeriod.get_reporting_period(project=self.cleaned_data['task'].project,
                                                                              search_date=self.cleaned_data['datetime_start'].date())
-                work.human_resource = HumanResource.objects.get(user=UserExtension.get_user_extension(request.user))
+                work.human_resource = current_human_resource
                 work.date = self.cleaned_data['datetime_start'].date()
                 if bool(self.cleaned_data['datetime_start']) & bool(self.cleaned_data['datetime_stop']):
                     work.start_time = self.cleaned_data['datetime_start']
