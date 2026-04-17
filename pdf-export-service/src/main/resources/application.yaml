@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: pdf-export-service
+  cloud:
+    aws:
+      region:
+        static: ${AWS_REGION:eu-west-3}
+      credentials:
+        access-key: ${AWS_ACCESS_KEY_ID:}
+        secret-key: ${AWS_SECRET_ACCESS_KEY:}
+      sqs:
+        endpoint: ${SQS_ENDPOINT_URL:}
+      s3:
+        endpoint: ${S3_ENDPOINT_URL:}
+        path-style-access-enabled: ${S3_PATH_STYLE_ACCESS:true}
+
+koalixcrm:
+  crm:
+    base-url: ${KOALIXCRM_API_URL:http://localhost:8000}
+  oidc:
+    issuer: ${CELERY_WORKER_M2M_OIDC_ISSUER:}
+    client-id: ${CELERY_WORKER_M2M_CLIENT_ID:}
+    client-secret: ${CELERY_WORKER_M2M_CLIENT_SECRET:}
+    scope: ${CELERY_WORKER_M2M_SCOPE:}
+  s3:
+    pdf-bucket: ${S3_PDF_BUCKET:koalixcrm-pdf-exports}
+    key-prefix: pdf-exports
+  sqs:
+    queue-name: ${KOALIXCRM_MICROSERVICE_SQS:koalixcrm-microservice-sqs}
+  origin:
+    enabled: ${X_CUSTOM_ORIGIN_VERIFICATION_ON:false}
+    header-name: X-Custom-Origin-Verify
+    header-value: ${X_CUSTOM_ORIGIN_VERIFICATION_KEY:}
+
+logging:
+  level:
+    root: ${LOG_LEVEL:INFO}
+    net.koalix: DEBUG
