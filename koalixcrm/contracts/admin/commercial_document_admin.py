@@ -145,7 +145,7 @@ class OptionCommercialDocument(admin.ModelAdmin):
         obj.save()
 
     def create_quotation(self, request, queryset):
-        from koalixcrm.core.views.newdocument import CreateNewDocumentView
+        from koalixcrm.contracts.views.newdocument import CreateNewDocumentView
         for obj in queryset:
             response = CreateNewDocumentView.create_new_document(self,
                                                                  request,
@@ -157,7 +157,7 @@ class OptionCommercialDocument(admin.ModelAdmin):
     create_quotation.short_description = _("Create Quotation")
 
     def create_invoice(self, request, queryset):
-        from koalixcrm.core.views.newdocument import CreateNewDocumentView
+        from koalixcrm.contracts.views.newdocument import CreateNewDocumentView
         for obj in queryset:
             response = CreateNewDocumentView.create_new_document(self,
                                                                  request,
@@ -169,7 +169,7 @@ class OptionCommercialDocument(admin.ModelAdmin):
     create_invoice.short_description = _("Create Invoice")
 
     def create_sales_order(self, request, queryset):
-        from koalixcrm.core.views.newdocument import CreateNewDocumentView
+        from koalixcrm.contracts.views.newdocument import CreateNewDocumentView
         for obj in queryset:
             response = CreateNewDocumentView.create_new_document(self,
                                                                  request,
@@ -181,7 +181,7 @@ class OptionCommercialDocument(admin.ModelAdmin):
     create_sales_order.short_description = _("Create Sales Order")
 
     def create_despatch_advice(self, request, queryset):
-        from koalixcrm.core.views.newdocument import CreateNewDocumentView
+        from koalixcrm.contracts.views.newdocument import CreateNewDocumentView
         for obj in queryset:
             response = CreateNewDocumentView.create_new_document(self,
                                                                  request,
@@ -193,7 +193,7 @@ class OptionCommercialDocument(admin.ModelAdmin):
     create_despatch_advice.short_description = _("Create Despatch Advice")
 
     def create_payment_reminder(self, request, queryset):
-        from koalixcrm.core.views.newdocument import CreateNewDocumentView
+        from koalixcrm.contracts.views.newdocument import CreateNewDocumentView
         for obj in queryset:
             response = CreateNewDocumentView.create_new_document(self,
                                                                  request,
@@ -205,7 +205,7 @@ class OptionCommercialDocument(admin.ModelAdmin):
     create_payment_reminder.short_description = _("Create Payment Reminder")
 
     def create_purchase_order(self, request, queryset):
-        from koalixcrm.core.views.newdocument import CreateNewDocumentView
+        from koalixcrm.contracts.views.newdocument import CreateNewDocumentView
         for obj in queryset:
             response = CreateNewDocumentView.create_new_document(self,
                                                                  request,
@@ -256,7 +256,7 @@ class OptionCommercialDocument(admin.ModelAdmin):
     create_pdf_async.short_description = _("Create PDF")
 
     def create_project(self, request, queryset):
-        from koalixcrm.core.views.create_task import CreateTaskView
+        from koalixcrm.reporting.views.create_task import CreateTaskView
         for obj in queryset:
             response = CreateTaskView.create_project(self,
                                                      request,

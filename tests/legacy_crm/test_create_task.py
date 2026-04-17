@@ -9,7 +9,7 @@ from tests.factories.contacts.user_factory import StaffUserFactory
 from tests.factories.products.product_type_factory import StandardProductTypeFactory
 from tests.factories.products.product_price_factory import StandardPriceFactory
 from koalixcrm.reporting.models.task import Task
-from koalixcrm.core.views.create_task import CreateTaskView
+from koalixcrm.reporting.views.create_task import CreateTaskView
 
 
 class DocumentCalculationsTest(TestCase):

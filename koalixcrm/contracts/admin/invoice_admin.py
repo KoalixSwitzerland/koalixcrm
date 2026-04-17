@@ -72,7 +72,7 @@ class OptionInvoice(OptionCommercialDocument):
     register_payment_in_accounting.short_description = _("Register Payment in Accounting")
 
     def create_credit_note_from_invoice(self, request, queryset):
-        from koalixcrm.core.views.newdocument import CreateNewDocumentView
+        from koalixcrm.contracts.views.newdocument import CreateNewDocumentView
         import koalixcrm.contracts.models.credit_note
         for obj in queryset:
             response = CreateNewDocumentView.create_new_document(

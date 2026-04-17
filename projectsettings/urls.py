@@ -24,6 +24,13 @@ from koalixcrm.core_api_py.core_api import (
     CurrencyViewSet, TaxViewSet, UnitViewSet,
     CurrencyTransformViewSet, UnitTransformViewSet,
 )
+from koalixcrm.core_api_py.pdf_export_process_view_set import PDFExportProcessViewSet
+from koalixcrm.djangoUserExtension.views.document_template_view_set import (
+    DocumentTemplateViewSet,
+)
+from koalixcrm.contracts.views.commercial_document_media_view_set import (
+    CommercialDocumentMediaViewSet,
+)
 from koalixcrm.contracts_api_py.contracts_api import (
     ContractViewSet, InvoiceViewSet, QuotationViewSet,
     PurchaseOrderViewSet, SalesOrderViewSet,
@@ -67,6 +74,8 @@ router.register(r'taxes', TaxViewSet)
 router.register(r'units', UnitViewSet)
 router.register(r'currency_transforms', CurrencyTransformViewSet)
 router.register(r'unit_transforms', UnitTransformViewSet)
+router.register(r'pdf_export_processes', PDFExportProcessViewSet)
+router.register(r'document_templates', DocumentTemplateViewSet)
 # Products
 router.register(r'products', ProductTypeViewSet)
 router.register(r'product_items', ProductViewSet)
@@ -81,6 +90,7 @@ router.register(r'sales_orders', SalesOrderViewSet)
 router.register(r'despatch_advices', DespatchAdviceViewSet)
 router.register(r'payment_reminders', PaymentReminderViewSet)
 router.register(r'commercial_document_positions', CommercialDocumentPositionViewSet)
+router.register(r'commercial_document_media', CommercialDocumentMediaViewSet)
 router.register(r'credit_notes', CreditNoteViewSet)
 # Reporting
 router.register(r'projects', ProjectViewSet)
@@ -114,7 +124,7 @@ urlpatterns = [
     path('', include(router.urls)),
     path('admin/filebrowser/', site.urls),
     path('grappelli/', include('grappelli.urls')),
-    path('koalixcrm/crm/reporting/', include('koalixcrm.core.reporting.urls')),
+    path('koalixcrm/crm/reporting/', include('koalixcrm.reporting.urls')),
     # OIDC auth (admin login via Keycloak)
     path('auth/login/', LoginSelectionView.as_view(), name='login-selection'),
     path('auth/login/<str:provider>/', OAuthLoginView.as_view(), name='oauth-login'),
