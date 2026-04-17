@@ -3,7 +3,7 @@
 from django.http import HttpResponseRedirect
 from django.contrib import admin
 from django.utils.translation import gettext as _
-from koalixcrm.plugin import *
+from koalixcrm.plugin import PluginProcessor
 from koalixcrm.contacts.models.customer import Customer
 from koalixcrm.contacts.models.contact import PostalAddressForContact
 from koalixcrm.contacts.admin.contact_inlines import (

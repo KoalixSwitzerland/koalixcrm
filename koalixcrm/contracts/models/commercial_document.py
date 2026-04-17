@@ -1,17 +1,15 @@
 # -*- coding: utf-8 -*-
 
-from datetime import *
+from datetime import datetime
 from django.db import models
-from django.contrib import admin, messages
 from django.utils.translation import gettext as _
-from koalixcrm.core.const.purpose import *
+from koalixcrm.core.const.purpose import PURPOSESTEXTPARAGRAPHINDOCUMENTS, PURPOSESADDRESSINCONTRACT
 from koalixcrm.global_support_functions import xstr, make_date_utc
 from koalixcrm.contacts.models.phone_address import PhoneAddress
 from koalixcrm.contacts.models.email_address import EmailAddress
 from koalixcrm.contacts.models.postal_address import PostalAddress
 from koalixcrm.contracts.models.commercial_document_position import CommercialDocumentPosition
 from koalixcrm.djangoUserExtension.models import TextParagraphInDocumentTemplate, UserExtension
-from koalixcrm.products.models.product_type import ProductType
 from koalixcrm.core.exceptions import TemplateSetMissingInContract
 import koalixcrm.contracts.models.calculations
 from koalixcrm.shared.pdf_export import PDFExport

@@ -34,6 +34,10 @@ from koalixcrm.reporting.admin.work_admin import WorkAdminView
 from koalixcrm.reporting.admin.reporting_period_admin import ReportingPeriodAdmin
 from koalixcrm.reporting.admin.reporting_period_status_admin import OptionReportingPeriodStatus
 
+from koalixcrm.contracts.models.contract import Contract
+from koalixcrm.contracts.admin.contract_admin import OptionContract
+from koalixcrm.reporting.admin.generic_project_link_admin import InlineGenericProjectLinkAdmin
+
 admin.site.register(Task, TaskAdminView)
 admin.site.register(TaskLinkType, OptionTaskLinkType)
 admin.site.register(TaskStatus, OptionTaskStatus)
@@ -51,10 +55,6 @@ admin.site.register(ReportingPeriod, ReportingPeriodAdmin)
 admin.site.register(ReportingPeriodStatus, OptionReportingPeriodStatus)
 
 # Extend Contract admin to include reporting inlines
-from koalixcrm.contracts.models.contract import Contract
-from koalixcrm.contracts.admin.contract_admin import OptionContract
-from koalixcrm.reporting.admin.generic_project_link_admin import InlineGenericProjectLinkAdmin
-
 admin.site.unregister(Contract)
 
 

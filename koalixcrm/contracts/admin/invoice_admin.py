@@ -8,7 +8,7 @@ from django.contrib.admin import helpers
 from django.shortcuts import render
 from django.contrib import messages
 from django.template.context_processors import csrf
-from koalixcrm.plugin import *
+from koalixcrm.plugin import *  # noqa: F401, F403
 from koalixcrm.contracts.models.invoice import Invoice
 from koalixcrm.contracts.admin.commercial_document_admin import OptionCommercialDocument
 from koalixcrm.accounting.models import Account
@@ -100,7 +100,7 @@ class OptionInvoice(OptionCommercialDocument):
                'register_payment_in_accounting',
                'create_credit_note_from_invoice',]
 
-    pluginProcessor = PluginProcessor()
+    pluginProcessor = PluginProcessor()  # noqa: F405
     actions.extend(pluginProcessor.getPluginAdditions("invoiceActions"))
     inlines.extend(pluginProcessor.getPluginAdditions("invoiceInlines"))
 

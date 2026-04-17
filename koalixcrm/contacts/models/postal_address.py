@@ -2,8 +2,8 @@
 
 from django.db import models
 from django.utils.translation import gettext as _
-from koalixcrm.core.const.country import *
-from koalixcrm.core.const.postaladdressprefix import *
+from koalixcrm.core.const.country import COUNTRIES
+from koalixcrm.core.const.postaladdressprefix import POSTALADDRESSPREFIX
 
 
 class PostalAddress(models.Model):

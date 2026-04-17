@@ -3,10 +3,7 @@
 Provides XML rendering support.
 """
 
-import os
 import tempfile
-from subprocess import check_output, STDOUT
-from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework_xml.renderers import XMLRenderer

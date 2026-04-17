@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from datetime import *
+from datetime import date
 from django.db import models
 from django.contrib import admin
 from django.utils.translation import gettext as _

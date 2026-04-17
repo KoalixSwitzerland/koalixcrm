@@ -28,10 +28,10 @@ class Command(BaseCommand):
     @staticmethod
     def path_of_default_template_file(language, file_name):
         file_path = path.join(settings.STATIC_ROOT, "default_templates", language, file_name)
-        f = None;
+        f = None
         try:
             f = open(file_path,'r')
-        except (FileNotFoundError) as e:
+        except (FileNotFoundError):
             print(_("File not found:") + file_path)
             print(_("Run collectstatic command and fix potential errors"))
         finally:

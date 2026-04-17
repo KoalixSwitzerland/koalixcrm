@@ -2,7 +2,7 @@
 
 from django.contrib import admin
 from django.utils.translation import gettext as _
-from koalixcrm.plugin import *
+from koalixcrm.plugin import *  # noqa: F401, F403
 from koalixcrm.contracts.models.quotation import Quotation
 from koalixcrm.contracts.admin.commercial_document_admin import OptionCommercialDocument
 
@@ -31,7 +31,7 @@ class OptionQuotation(OptionCommercialDocument):
                'create_project',
                'create_pdf_async']
 
-    pluginProcessor = PluginProcessor()
+    pluginProcessor = PluginProcessor()  # noqa: F405
     inlines.extend(pluginProcessor.getPluginAdditions("quotationInlines"))
 
 

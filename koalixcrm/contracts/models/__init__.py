@@ -1,11 +1,11 @@
-from koalixcrm.contracts.models.contract import *
-from koalixcrm.contracts.models.commercial_document import *
-from koalixcrm.contracts.models.commercial_document_position import *
-from koalixcrm.contracts.models.invoice import *
-from koalixcrm.contracts.models.quotation import *
-from koalixcrm.contracts.models.sales_order import *
-from koalixcrm.contracts.models.purchase_order import *
-from koalixcrm.contracts.models.despatch_advice import *
-from koalixcrm.contracts.models.payment_reminder import *
-from koalixcrm.contracts.models.commercial_document_media import *
-from koalixcrm.contracts.models.credit_note import *
+from koalixcrm.contracts.models.contract import *  # noqa: F401, F403
+from koalixcrm.contracts.models.commercial_document import *  # noqa: F401, F403
+from koalixcrm.contracts.models.commercial_document_position import *  # noqa: F401, F403
+from koalixcrm.contracts.models.invoice import *  # noqa: F401, F403
+from koalixcrm.contracts.models.quotation import *  # noqa: F401, F403
+from koalixcrm.contracts.models.sales_order import *  # noqa: F401, F403
+from koalixcrm.contracts.models.purchase_order import *  # noqa: F401, F403
+from koalixcrm.contracts.models.despatch_advice import *  # noqa: F401, F403
+from koalixcrm.contracts.models.payment_reminder import *  # noqa: F401, F403
+from koalixcrm.contracts.models.commercial_document_media import *  # noqa: F401, F403
+from koalixcrm.contracts.models.credit_note import *  # noqa: F401, F403

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from datetime import *
+from datetime import date
 from django.db import models
 from django.utils.translation import gettext as _
 from django.utils.html import format_html
-from koalixcrm.core.const.status import *
-from koalixcrm.core.exceptions import *
+from koalixcrm.core.const.status import CREDITNOTESTATUS
+from koalixcrm.core.exceptions import IncompleteInvoice, OpenInterestAccountMissing, InvoiceAlreadyRegistered
 from koalixcrm import accounting
 from koalixcrm.contracts.models.commercial_document import CommercialDocument
 from koalixcrm.contracts.models.commercial_document_position import CommercialDocumentPosition

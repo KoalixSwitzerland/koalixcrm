@@ -2,7 +2,7 @@
 
 from django.db import models
 from django.utils.translation import gettext as _
-from koalixcrm.core.const.status import *
+from koalixcrm.core.const.status import PURCHASEORDERSTATUS
 from koalixcrm.contracts.models.commercial_document import CommercialDocument
 
 

@@ -5,7 +5,7 @@ Ported from qq_workflow_support_webapp_backend.
 """
 from typing import Optional, Type, TypeVar
 
-T = TypeVar('T', bound='BaseModel')
+T = TypeVar('T')
 
 __all__ = ['ObjectCache', 'T']
 

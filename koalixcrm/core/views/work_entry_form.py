@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
+from django import forms
 from django.forms import NumberInput
 from koalixcrm.reporting.models.task import Task
 from koalixcrm.reporting.models.project import Project
-from django.contrib.admin.widgets import *
+from django.contrib.admin.widgets import AdminSplitDateTime, AdminTextareaWidget
 from koalixcrm.global_support_functions import limit_string_length
 from koalixcrm.djangoUserExtension.models import UserExtension
 from koalixcrm.reporting.models.reporting_period import ReportingPeriod

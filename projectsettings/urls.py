@@ -1,10 +1,11 @@
 """koalixcrm URL Configuration"""
 
 from django.urls import path, include
-from django.conf.urls.static import *
+from django.conf.urls.static import *  # noqa: F401, F403
 from django.contrib.staticfiles.urls import static
 from django.contrib import admin
 from django.shortcuts import redirect
+from django.conf import settings
 from filebrowser.sites import site
 from rest_framework import routers
 

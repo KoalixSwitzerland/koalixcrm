@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from datetime import *
+from datetime import date, timedelta
 from django.db import models
 from django.utils.translation import gettext as _
 import koalixcrm.core.documents

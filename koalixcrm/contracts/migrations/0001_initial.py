@@ -3,7 +3,7 @@
 from django.db import migrations, models
 
 
-from koalixcrm.migration_utils import CreateModelIfNotExists, AddFieldIfNotExists
+from koalixcrm.migration_utils import CreateModelIfNotExists
 class Migration(migrations.Migration):
 
     initial = True

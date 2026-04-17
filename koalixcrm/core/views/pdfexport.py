@@ -6,8 +6,18 @@ from django.http import Http404
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.utils.translation import gettext as _
-from koalixcrm.core.exceptions import *
-from koalixcrm.djangoUserExtension.exceptions import *
+from koalixcrm.core.exceptions import (
+    TemplateSetMissing,
+    TemplateSetMissingInContract,
+    TemplateFOPConfigFileMissing,
+    TemplateXSLTFileMissing,
+)
+from koalixcrm.djangoUserExtension.exceptions import (
+    TemplateSetMissingForUserExtension,
+    UserExtensionMissing,
+    UserExtensionEmailAddressMissing,
+    UserExtensionPhoneAddressMissing,
+)
 from django.contrib import messages
 
 
@@ -75,7 +85,7 @@ class PDFExportView:
                 response = HttpResponseRedirect(redirect_to)
                 calling_model_admin.message_user(request, _("Work report template missing in the user extension"),
                                                  level=messages.ERROR)
-            elif type(e) == CalledProcessError:
+            elif isinstance(e, CalledProcessError):
                 response = HttpResponseRedirect(redirect_to)
                 calling_model_admin.message_user(request, e.output)
             else:

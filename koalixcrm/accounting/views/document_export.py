@@ -4,8 +4,8 @@ from wsgiref.util import FileWrapper
 from django.http import Http404
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
-from koalixcrm.core.exceptions import *
-from koalixcrm.djangoUserExtension.exceptions import *
+from koalixcrm.core.exceptions import TemplateSetMissing
+from koalixcrm.djangoUserExtension.exceptions import UserExtensionMissing
 from django.utils.translation import gettext as _
 
 

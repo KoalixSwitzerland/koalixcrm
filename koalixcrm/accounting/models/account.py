@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.utils.translation import gettext as _
 from django import forms
 
-from koalixcrm.accounting.const.accountTypeChoices import *
+from koalixcrm.accounting.const.accountTypeChoices import ACCOUNTTYPECHOICES
 from koalixcrm.accounting.exceptions import AccountingPeriodNotFound
 from koalixcrm.shared.pdf_export import PDFExport
 

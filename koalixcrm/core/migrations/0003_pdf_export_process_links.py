@@ -1,11 +1,9 @@
 # Generated migration for koalixcrm core app — PDFExportProcess cross-app FKs
 
-import django.db.models.deletion
 from django.conf import settings
-from django.db import migrations, models
+from django.db import migrations
 
 
-from koalixcrm.migration_utils import AddFieldIfNotExists
 
 
 class Migration(migrations.Migration):

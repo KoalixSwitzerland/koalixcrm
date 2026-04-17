@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import datetime
-from dateutil.relativedelta import *
+from dateutil.relativedelta import relativedelta
 from django.db import models
 from django.utils.translation import gettext as _
 from koalixcrm.djangoUserExtension.models.user_extension import UserExtension
@@ -65,12 +65,12 @@ class HumanResource(Resource):
                           "project_efforts": project_efforts_day}
             month_key = str(date.month)+"/"+str(date.year)
             week_key = str(date.isocalendar()[1])+"/"+str(date.year)
-            if not (week_key in weeks):
+            if week_key not in weeks:
                 weeks[week_key] = {'effort': 0,
                                    'week': str(date.isocalendar()[1]),
                                    'year': str(date.year),
                                    "project_efforts": project_efforts_week}
-            if not (month_key in months):
+            if month_key not in months:
                 months[month_key] = {'effort': 0,
                                      'month': str(date.month),
                                      'year': str(date.year),
