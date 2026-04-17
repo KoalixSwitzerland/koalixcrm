@@ -76,6 +76,8 @@ def cleanup_legacy_migrations(apps, schema_editor):
     the old migration history so Django doesn't see inconsistencies
     between old app-scoped records and new app-scoped migrations.
     """
+    MigrationRecorder = apps.get_model('django', 'Migration') if False else None
+
     # We can't use the ORM here because the Migration model isn't in
     # INSTALLED_APPS. Use raw SQL instead.
     cursor = schema_editor.connection.cursor()

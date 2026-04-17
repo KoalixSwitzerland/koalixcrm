@@ -3,7 +3,7 @@
 from django.db import models
 from django.utils.translation import gettext as _
 from koalixcrm.reporting.models.resource_price import ResourcePrice
-from decimal import Decimal
+from decimal import *
 from django.core.exceptions import ValidationError
 from django.forms import BaseInlineFormSet
 from koalixcrm.core.exceptions import ReportingPeriodNotFound

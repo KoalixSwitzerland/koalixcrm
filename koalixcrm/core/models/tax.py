@@ -25,7 +25,7 @@ class Tax(models.Model):
                                         blank=True)
 
     def get_tax_rate(self):
-        return self.tax_rate
+        return self.tax_rate;
 
     def __str__(self):
         return self.name

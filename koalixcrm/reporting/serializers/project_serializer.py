@@ -8,6 +8,7 @@ from koalixcrm.core.serializers.currency_serializer import CurrencyJSONSerialize
 from koalixcrm.djangoUserExtension.serializers.user_rest import UserSerializer
 from koalixcrm.djangoUserExtension.serializers.template_set_rest import OptionTemplateSetJSONSerializer
 from koalixcrm.djangoUserExtension.models.template_set import TemplateSet
+import koalixcrm
 
 
 class OptionProjectJSONSerializer(serializers.ModelSerializer):

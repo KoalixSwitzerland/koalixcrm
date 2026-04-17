@@ -5,7 +5,7 @@ from django.forms import ValidationError
 from django.utils.html import format_html
 from django.utils.translation import gettext as _
 from koalixcrm.shared.pdf_export import PDFExport
-from koalixcrm.global_support_functions import limit_string_length
+from koalixcrm.global_support_functions import *
 from koalixcrm.core.exceptions import ReportingPeriodDoneDeleteNotPossible
 
 
@@ -58,7 +58,7 @@ class Work(models.Model):
             return limit_string_length(self.description, 100)
         else:
             return _("Please add description")
-    get_short_description.short_description = _("Short description")
+    get_short_description.short_description = _("Short description");
 
     def serialize_to_xml(self):
         objects = [self, ]

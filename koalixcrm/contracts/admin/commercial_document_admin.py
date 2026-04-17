@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from datetime import *  # noqa: F401, F403
+from datetime import *
 from django.contrib import admin, messages
 from django.utils.translation import gettext as _
 from koalixcrm.contracts.models.commercial_document import (
@@ -119,7 +119,7 @@ class OptionCommercialDocument(admin.ModelAdmin):
 
     def response_add(self, request, obj, post_url_continue=None):
         new_obj = self.after_saving_model_and_related_inlines(request, obj)
-        new_obj.custom_date_field = date.today().__str__()  # noqa: F405
+        new_obj.custom_date_field = date.today().__str__()
         return super(OptionCommercialDocument, self).response_add(request=request,
                                                              obj=new_obj,
                                                              post_url_continue=post_url_continue)
@@ -130,7 +130,7 @@ class OptionCommercialDocument(admin.ModelAdmin):
 
     def after_saving_model_and_related_inlines(self, request, obj):
         try:
-            koalixcrm.contracts.models.calculations.Calculations.calculate_document_price(obj, date.today())  # noqa: F405
+            koalixcrm.contracts.models.calculations.Calculations.calculate_document_price(obj, date.today())
             self.message_user(request, "Successfully calculated Prices")
         except (ProductType.NoPriceFound, CommercialDocumentPosition.NoPriceFound) as e:
             self.message_user(request, "Unsuccessful in updating the Prices " + e.__str__(), level=messages.ERROR)

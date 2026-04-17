@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from datetime import datetime
+from datetime import *
 from django.db import models
 from django.utils.translation import gettext as _
-from koalixcrm.core.const.status import CALLSTATUS
+from koalixcrm.core.const.status import *
 
 
 class Call(models.Model):

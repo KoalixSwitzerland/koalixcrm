@@ -3,7 +3,7 @@ from django.http import Http404
 from django.http import HttpResponseRedirect
 from django.utils.translation import gettext as _
 from django.contrib import messages
-from koalixcrm.core.exceptions import TemplateSetMissingInContract, TemplateMissingInTemplateSet
+from koalixcrm.core.exceptions import *
 
 
 class CreateNewDocumentView:

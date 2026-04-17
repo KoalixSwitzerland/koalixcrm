@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from datetime import datetime, timedelta
+from datetime import *
 from django.db import models
 from django.utils.translation import gettext as _
 from koalixcrm.shared.pdf_export import PDFExport

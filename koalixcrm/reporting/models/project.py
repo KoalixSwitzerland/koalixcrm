@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import os
-from decimal import Decimal
-from datetime import datetime
+from decimal import *
+from datetime import *
 from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext as _

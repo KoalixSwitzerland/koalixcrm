@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 import datetime
-from django import forms
 from django.http import Http404
 from django.shortcuts import render
-from django.contrib.admin.widgets import AdminDateWidget
+from django.contrib.admin.widgets import *
 from django.contrib.admin import helpers
 from django.template.context_processors import csrf
 from koalixcrm.djangoUserExtension.exceptions import TooManyUserExtensionsAvailable

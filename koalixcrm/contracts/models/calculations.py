@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from decimal import Decimal
+from decimal import *
 from koalixcrm.contracts.models.commercial_document_position import CommercialDocumentPosition
 
 

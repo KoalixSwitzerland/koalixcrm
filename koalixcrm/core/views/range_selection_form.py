@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from django import forms
-from django.contrib.admin.widgets import AdminDateWidget
+from django.contrib.admin.widgets import *
 
 
 class RangeSelectionForm(forms.Form):

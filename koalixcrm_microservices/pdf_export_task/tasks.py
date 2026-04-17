@@ -2,6 +2,7 @@ import logging
 import os
 
 import django
+import requests
 
 from koalixcrm_microservices.celery_app import app
 from koalixcrm_mq_commands import PDFExportCommand

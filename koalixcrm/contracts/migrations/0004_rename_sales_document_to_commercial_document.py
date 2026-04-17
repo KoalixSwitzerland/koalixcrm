@@ -32,6 +32,7 @@ class RenameParentModel(Operation):
         new_ptr = f"{new_lower}_ptr"
         old_key = (app_label, old_lower)
         new_key = (app_label, new_lower)
+        old_ref_str = f"{app_label}.{self.old_name}"
         new_ref_str = f"{app_label}.{self.new_name}"
         old_ref_lower = f"{app_label}.{old_lower}"
 

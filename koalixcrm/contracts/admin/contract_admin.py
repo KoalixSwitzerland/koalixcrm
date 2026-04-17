@@ -2,7 +2,7 @@
 
 from django.contrib import admin
 from django.utils.translation import gettext as _
-from koalixcrm.plugin import *  # noqa: F401, F403
+from koalixcrm.plugin import *
 from koalixcrm.contracts.models.contract import (
     PostalAddressForContract,
     PhoneAddressForContract,
@@ -102,7 +102,7 @@ class OptionContract(admin.ModelAdmin):
                InlineQuotation,
                InlineInvoice,
                InlineCreditNote]
-    pluginProcessor = PluginProcessor()  # noqa: F405
+    pluginProcessor = PluginProcessor()
     inlines.extend(pluginProcessor.getPluginAdditions("contractInlines"))
 
     def create_quotation(self, request, queryset):
@@ -201,5 +201,5 @@ class OptionContract(admin.ModelAdmin):
                'create_invoice',
                'create_purchase_order',
                'create_credit_note']
-    pluginProcessor = PluginProcessor()  # noqa: F405
+    pluginProcessor = PluginProcessor()
     actions.extend(pluginProcessor.getPluginAdditions("contractActions"))

@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from datetime import date
+from datetime import *
 from django.db import models
+from django.contrib import admin
 from django.utils.translation import gettext as _
 from django.utils.html import format_html
-from koalixcrm.core.const.status import QUOTATIONSTATUS
+from koalixcrm.core.const.status import *
 from koalixcrm.contracts.models.commercial_document import CommercialDocument
 from koalixcrm.global_support_functions import limit_string_length
 
@@ -20,7 +21,7 @@ class Quotation(CommercialDocument):
                                                                                               30)))
         else:
             return "Not present"
-    link_to_quotation.short_description = _("Quotation")
+    link_to_quotation.short_description = _("Quotation");
 
     def create_from_reference(self, calling_model):
         self.create_commercial_document(calling_model)

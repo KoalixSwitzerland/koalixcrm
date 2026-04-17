@@ -6,7 +6,7 @@ from django.utils.translation import gettext as _
 
 from koalixcrm.djangoUserExtension.models.text_paragraph import InlineTextParagraph
 from koalixcrm.global_support_functions import xstr
-from koalixcrm.core.exceptions import TemplateFOPConfigFileMissing, TemplateXSLTFileMissing
+from koalixcrm.core.exceptions import *
 from koalixcrm_utils.s3_storage import TemplateFileStorage
 
 

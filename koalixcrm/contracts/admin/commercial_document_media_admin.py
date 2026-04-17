@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib import admin
+from django.utils.translation import gettext as _
 from koalixcrm.contracts.models.commercial_document_media import CommercialDocumentMedia
 
 

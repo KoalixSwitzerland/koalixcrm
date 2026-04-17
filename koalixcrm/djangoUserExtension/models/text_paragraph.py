@@ -4,7 +4,7 @@ from django.db import models
 from django.contrib import admin
 from django.utils.translation import gettext as _
 
-from koalixcrm.core.const.purpose import PURPOSESTEXTPARAGRAPHINDOCUMENTS
+from koalixcrm.core.const.purpose import *
 
 
 class TextParagraphInDocumentTemplate(models.Model):

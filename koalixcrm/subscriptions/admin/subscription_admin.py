@@ -2,12 +2,7 @@
 from django.contrib import admin
 from django.http import HttpResponseRedirect
 from django.utils.translation import gettext as _
-from koalixcrm.subscriptions.models import Subscription, SubscriptionEvent, SubscriptionType
-from koalixcrm.contracts.models import Contract as crmmodels_Contract
-
-# Alias for backward compatibility
-class crmmodels:
-    Contract = crmmodels_Contract
+from koalixcrm.subscriptions.models import *
 
 
 class AdminSubscriptionEvent(admin.TabularInline):

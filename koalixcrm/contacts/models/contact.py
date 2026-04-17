@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from django.db import models
 from django.utils.translation import gettext as _
 from koalixcrm.contacts.models.phone_address import PhoneAddress
 from koalixcrm.contacts.models.email_address import EmailAddress
 from koalixcrm.contacts.models.postal_address import PostalAddress
 from koalixcrm.contacts.models.call import Call
-from koalixcrm.contacts.models.person import Person
-from koalixcrm.core.const.purpose import PURPOSESADDRESSINCUSTOMER, PURPOSEVISITINCUSTOMER, PURPOSECALLINCUSTOMER
+from koalixcrm.contacts.models.person import *
+from koalixcrm.core.const.purpose import *
 from koalixcrm.global_support_functions import xstr
 
 

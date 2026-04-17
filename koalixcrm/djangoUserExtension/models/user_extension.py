@@ -7,14 +7,8 @@ from django.utils.translation import gettext as _
 from koalixcrm.contacts.models.postal_address import PostalAddress
 from koalixcrm.contacts.models.phone_address import PhoneAddress
 from koalixcrm.contacts.models.email_address import EmailAddress
-from koalixcrm.djangoUserExtension.const.purpose import PURPOSESADDRESSINUSEREXTENTION
-from koalixcrm.djangoUserExtension.exceptions import (
-    UserExtensionMissing,
-    UserExtensionPhoneAddressMissing,
-    UserExtensionEmailAddressMissing,
-    TooManyUserExtensionsAvailable,
-    TemplateSetMissingForUserExtension,
-)
+from koalixcrm.djangoUserExtension.const.purpose import *
+from koalixcrm.djangoUserExtension.exceptions import *
 from koalixcrm.global_support_functions import xstr
 
 

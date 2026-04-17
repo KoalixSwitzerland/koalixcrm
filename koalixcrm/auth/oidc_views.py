@@ -188,6 +188,8 @@ class MultiProviderLogoutView(LogoutView):
     Logout with federated OIDC end_session_endpoint support.
     """
     def dispatch(self, request, *args, **kwargs):
+        provider = request.session.get('auth_provider', 'oidc')
+
         logout(request)
 
         next_url = request.GET.get('next', '')

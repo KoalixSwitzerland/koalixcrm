@@ -5,18 +5,14 @@ from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import gettext as _
 from django.contrib.contenttypes.models import ContentType
-from koalixcrm.core.exceptions import TemplateSetMissing
-from koalixcrm.djangoUserExtension.exceptions import (
-    UserExtensionMissing,
-    UserExtensionEmailAddressMissing,
-    UserExtensionPhoneAddressMissing,
-)
+from koalixcrm.core.exceptions import *
+from koalixcrm.djangoUserExtension.exceptions import *
 from koalixcrm.contracts.models.commercial_document import CommercialDocument
 from koalixcrm.contracts.models.commercial_document_position import CommercialDocumentPosition
 from koalixcrm.reporting.models.task import Task
 from koalixcrm.reporting.models.generic_task_link import GenericTaskLink
 from koalixcrm.reporting.models.project import Project
-from koalixcrm.global_support_functions import limit_string_length
+from koalixcrm.global_support_functions import *
 from datetime import date
 
 

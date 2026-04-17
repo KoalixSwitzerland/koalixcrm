@@ -1,11 +1,10 @@
 """koalixcrm URL Configuration"""
 
 from django.urls import path, include
-from django.conf.urls.static import *  # noqa: F401, F403
+from django.conf.urls.static import *
 from django.contrib.staticfiles.urls import static
 from django.contrib import admin
 from django.shortcuts import redirect
-from django.conf import settings
 from filebrowser.sites import site
 from rest_framework import routers
 
@@ -31,16 +30,6 @@ from koalixcrm.contracts_api_py.contracts_api import (
     DespatchAdviceViewSet, PaymentReminderViewSet,
     CommercialDocumentPositionViewSet,
     CreditNoteViewSet,
-)
-from koalixcrm.contracts.views.commercial_document_media_view_set import (
-    CommercialDocumentMediaViewSet,
-)
-from koalixcrm.core.views.pdf_export_process_view_set import PDFExportProcessViewSet
-from koalixcrm.djangoUserExtension.views.document_template_view_set import (
-    DocumentTemplateViewSet,
-)
-from koalixcrm.djangoUserExtension.views.user_extension_view_set import (
-    UserExtensionViewSet,
 )
 from koalixcrm.auth.oidc_views import (
     LoginSelectionView, OAuthLoginView, OAuthCallbackView, MultiProviderLogoutView,
@@ -93,11 +82,6 @@ router.register(r'despatch_advices', DespatchAdviceViewSet)
 router.register(r'payment_reminders', PaymentReminderViewSet)
 router.register(r'commercial_document_positions', CommercialDocumentPositionViewSet)
 router.register(r'credit_notes', CreditNoteViewSet)
-router.register(r'commercial_document_media', CommercialDocumentMediaViewSet)
-# PDF microservice integration
-router.register(r'pdf_export_processes', PDFExportProcessViewSet)
-router.register(r'document_templates', DocumentTemplateViewSet)
-router.register(r'user_extensions', UserExtensionViewSet)
 # Reporting
 router.register(r'projects', ProjectViewSet)
 router.register(r'project_status', ProjectStatusViewSet)

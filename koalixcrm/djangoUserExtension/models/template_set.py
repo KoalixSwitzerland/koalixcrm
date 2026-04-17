@@ -5,7 +5,7 @@ from django.contrib import admin
 from django.utils.translation import gettext as _
 
 from koalixcrm.global_support_functions import xstr
-from koalixcrm.core.exceptions import *  # noqa: F401, F403
+from koalixcrm.core.exceptions import *
 
 
 class TemplateSet(models.Model):
@@ -73,10 +73,10 @@ class TemplateSet(models.Model):
             if mapping_class_to_templates[required_template_set]:
                 return mapping_class_to_templates[required_template_set]
             else:
-                raise TemplateMissingInTemplateSet("The TemplateSet does not contain a template for " +  # noqa: F405
+                raise TemplateMissingInTemplateSet("The TemplateSet does not contain a template for " +
                                                    required_template_set)
         except KeyError:
-            raise IncorrectUseOfAPI("")  # noqa: F405
+            raise IncorrectUseOfAPI("")
 
 
 class OptionTemplateSet(admin.ModelAdmin):

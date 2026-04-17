@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.contrib import admin
 from django.utils.translation import gettext as _
 
+from koalixcrm.plugin import *
 from koalixcrm.contacts.models.phone_address import PhoneAddress
 from koalixcrm.contacts.models.email_address import EmailAddress
 from koalixcrm.contacts.models.postal_address import PostalAddress
@@ -10,9 +12,11 @@ from koalixcrm.contracts.models.invoice import Invoice
 from koalixcrm.contracts.models.quotation import Quotation
 from koalixcrm.contracts.models.purchase_order import PurchaseOrder
 from koalixcrm.global_support_functions import xstr
-from koalixcrm.core.const.purpose import PURPOSESADDRESSINCONTRACT
-from koalixcrm.core.exceptions import TemplateSetMissingInContract
+from koalixcrm.core.const.purpose import *
+from koalixcrm.core.exceptions import *
 from koalixcrm.djangoUserExtension.models import UserExtension
+import koalixcrm.contracts.models.calculations
+import koalixcrm.core.documents.pdf_export
 
 class PostalAddressForContract(PostalAddress):
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT)
