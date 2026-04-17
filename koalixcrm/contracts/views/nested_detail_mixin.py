@@ -19,12 +19,13 @@ class NestedDetailMixin:
 
     @action(detail=True, methods=["get"], url_path="nested", url_name="nested")
     def nested(self, request, pk=None):
-        if self.nested_serializer_class is None:
+        serializer_class = self.nested_serializer_class
+        if serializer_class is None:
             raise NotImplementedError(
                 f"{type(self).__name__} must set nested_serializer_class"
             )
         instance = self.get_object()
-        serializer = self.nested_serializer_class(
+        serializer = serializer_class(
             instance, context=self.get_serializer_context()
         )
         return Response(serializer.data)

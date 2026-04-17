@@ -6,7 +6,6 @@ endpoints to hand out time-limited download URLs that the Java PDF worker
 then follows via HTTP 302.
 """
 import os
-from urllib.parse import urlparse, urlunparse
 
 from koalixcrm_utils.aws_clients import get_s3_client
 

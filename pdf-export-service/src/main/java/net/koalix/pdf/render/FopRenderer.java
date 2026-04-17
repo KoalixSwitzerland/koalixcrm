@@ -6,6 +6,7 @@ import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.MimeConstants;
 import org.springframework.stereotype.Component;
 
+import javax.xml.XMLConstants;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXResult;
@@ -37,6 +38,9 @@ public class FopRenderer {
 
             Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, out);
             TransformerFactory tFactory = TransformerFactory.newInstance();
+            tFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+            tFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+            tFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
             Transformer transformer = tFactory.newTransformer(new StreamSource(xsl));
             transformer.transform(new StreamSource(xml), new SAXResult(fop.getDefaultHandler()));
             return out.toByteArray();
