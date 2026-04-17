@@ -13,6 +13,23 @@ from koalixcrm.contacts.views.contact_phone_address_view_set import ContactPhone
 from koalixcrm.contacts.views.supplier_view_set import SupplierViewSet
 from koalixcrm.contacts.views.person_view_set import PersonViewSet
 from koalixcrm.contacts.views.contact_view_set import ContactViewSet
+from koalixcrm.contacts.views.party_view_sets import (
+    PartyViewSet,
+    OrganizationViewSet,
+    PartyContactViewSet,
+    PartyIdentificationViewSet,
+    PartyRoleViewSet,
+    OrganizationMembershipViewSet,
+    OrganizationRelationshipViewSet,
+    AddressViewSet,
+    AddressAssignmentViewSet,
+    PhoneNumberViewSet,
+    PhoneAssignmentViewSet,
+    PartyEmailViewSet,
+    EmailAssignmentViewSet,
+    PartyGroupViewSet,
+    PartyGroupMembershipViewSet,
+)
 
 __all__ = [
     'CustomerViewSet',
@@ -24,4 +41,20 @@ __all__ = [
     'SupplierViewSet',
     'PersonViewSet',
     'ContactViewSet',
+    # Party data model (issue #394).
+    'PartyViewSet',
+    'OrganizationViewSet',
+    'PartyContactViewSet',
+    'PartyIdentificationViewSet',
+    'PartyRoleViewSet',
+    'OrganizationMembershipViewSet',
+    'OrganizationRelationshipViewSet',
+    'AddressViewSet',
+    'AddressAssignmentViewSet',
+    'PhoneNumberViewSet',
+    'PhoneAssignmentViewSet',
+    'PartyEmailViewSet',
+    'EmailAssignmentViewSet',
+    'PartyGroupViewSet',
+    'PartyGroupMembershipViewSet',
 ]

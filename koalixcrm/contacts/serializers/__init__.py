@@ -17,6 +17,23 @@ from koalixcrm.contacts.serializers.customer_billing_cycle_serializer import (
     OptionCustomerBillingCycleJSONSerializer,
     CustomerBillingCycleJSONSerializer,
 )
+from koalixcrm.contacts.serializers.party_serializers import (
+    PartyJSONSerializer,
+    OrganizationJSONSerializer,
+    PartyContactJSONSerializer,
+    PartyIdentificationJSONSerializer,
+    PartyRoleJSONSerializer,
+    OrganizationMembershipJSONSerializer,
+    OrganizationRelationshipJSONSerializer,
+    AddressJSONSerializer,
+    AddressAssignmentJSONSerializer,
+    PhoneNumberJSONSerializer,
+    PhoneAssignmentJSONSerializer,
+    PartyEmailJSONSerializer,
+    EmailAssignmentJSONSerializer,
+    PartyGroupJSONSerializer,
+    PartyGroupMembershipJSONSerializer,
+)
 
 __all__ = [
     'ContactJSONSerializer',
@@ -31,4 +48,19 @@ __all__ = [
     'CustomerGroupJSONSerializer',
     'OptionCustomerBillingCycleJSONSerializer',
     'CustomerBillingCycleJSONSerializer',
+    'PartyJSONSerializer',
+    'OrganizationJSONSerializer',
+    'PartyContactJSONSerializer',
+    'PartyIdentificationJSONSerializer',
+    'PartyRoleJSONSerializer',
+    'OrganizationMembershipJSONSerializer',
+    'OrganizationRelationshipJSONSerializer',
+    'AddressJSONSerializer',
+    'AddressAssignmentJSONSerializer',
+    'PhoneNumberJSONSerializer',
+    'PhoneAssignmentJSONSerializer',
+    'PartyEmailJSONSerializer',
+    'EmailAssignmentJSONSerializer',
+    'PartyGroupJSONSerializer',
+    'PartyGroupMembershipJSONSerializer',
 ]

@@ -15,6 +15,14 @@ from koalixcrm.contacts_api_py.contacts_api import (
     CustomerViewSet, CustomerGroupViewSet, CustomerBillingCycleViewSet,
     ContactPostalAddressViewSet, ContactEmailAddressViewSet, ContactPhoneAddressViewSet,
     SupplierViewSet, PersonViewSet, ContactViewSet,
+    # Party data model (issue #394).
+    PartyViewSet, OrganizationViewSet, PartyContactViewSet,
+    PartyIdentificationViewSet, PartyRoleViewSet,
+    OrganizationMembershipViewSet, OrganizationRelationshipViewSet,
+    AddressViewSet, AddressAssignmentViewSet,
+    PhoneNumberViewSet, PhoneAssignmentViewSet,
+    PartyEmailViewSet, EmailAssignmentViewSet,
+    PartyGroupViewSet, PartyGroupMembershipViewSet,
 )
 from koalixcrm.products_api_py.products_api import (
     ProductTypeViewSet, ProductViewSet, ProductPriceViewSet,
@@ -68,6 +76,23 @@ router.register(r'customer_groups', CustomerGroupViewSet)
 router.register(r'suppliers', SupplierViewSet)
 router.register(r'persons', PersonViewSet)
 router.register(r'contacts', ContactViewSet)
+# CRM (Party data model — issue #394; coexists with legacy routes above
+# until #395 turns the legacy ones into read-only deprecation shims).
+router.register(r'parties', PartyViewSet)
+router.register(r'organizations', OrganizationViewSet)
+router.register(r'party_contacts', PartyContactViewSet)
+router.register(r'party_identifications', PartyIdentificationViewSet)
+router.register(r'party_roles', PartyRoleViewSet)
+router.register(r'organization_memberships', OrganizationMembershipViewSet)
+router.register(r'organization_relationships', OrganizationRelationshipViewSet)
+router.register(r'addresses', AddressViewSet)
+router.register(r'address_assignments', AddressAssignmentViewSet)
+router.register(r'phone_numbers', PhoneNumberViewSet)
+router.register(r'phone_assignments', PhoneAssignmentViewSet)
+router.register(r'party_emails', PartyEmailViewSet)
+router.register(r'email_assignments', EmailAssignmentViewSet)
+router.register(r'party_groups', PartyGroupViewSet)
+router.register(r'party_group_memberships', PartyGroupMembershipViewSet)
 # Settings (shared value objects)
 router.register(r'currencies', CurrencyViewSet)
 router.register(r'taxes', TaxViewSet)
