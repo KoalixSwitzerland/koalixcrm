@@ -72,6 +72,15 @@ class CommercialDocument(models.Model):
     customer = models.ForeignKey("contacts.Customer",
                                  on_delete=models.CASCADE,
                                  verbose_name=_("Customer"))
+    # Transitional Party-pattern FK (issue #394). Nullable during the
+    # migration window; the legacy `customer` remains authoritative until
+    # #395. Populated by 0007_contract_party_fks.
+    party = models.ForeignKey("contacts.Party",
+                              on_delete=models.PROTECT,
+                              related_name="commercial_documents",
+                              verbose_name=_("Party"),
+                              null=True,
+                              blank=True)
     staff = models.ForeignKey('auth.User',
                               on_delete=models.CASCADE,
                               limit_choices_to={'is_staff': True},

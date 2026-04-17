@@ -80,6 +80,21 @@ class Contract(models.Model):
                                          verbose_name=_("Default Supplier"),
                                          null=True,
                                          blank=True)
+    # Transitional Party-pattern FKs (issue #394). Populated by
+    # 0007_contract_party_fks from default_customer / default_supplier. Kept
+    # alongside the legacy FKs until #395 drops the latter — see ADR 0001.
+    buyer_party = models.ForeignKey("contacts.Party",
+                                    on_delete=models.PROTECT,
+                                    related_name="contracts_as_buyer",
+                                    verbose_name=_("Buyer (Party)"),
+                                    null=True,
+                                    blank=True)
+    supplier_party = models.ForeignKey("contacts.Party",
+                                       on_delete=models.PROTECT,
+                                       related_name="contracts_as_supplier",
+                                       verbose_name=_("Supplier (Party)"),
+                                       null=True,
+                                       blank=True)
     default_currency = models.ForeignKey("core.Currency",
                                          on_delete=models.CASCADE,
                                          verbose_name=_("Default Currency"),

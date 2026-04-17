@@ -281,6 +281,35 @@ def reverse(apps, schema_editor):
         apps.get_model('contacts', model_name).objects.all().delete()
 
 
+def build_legacy_contact_to_party_mapping(apps):
+    """Reconstruct `legacy_contact_id -> new_party_id` without shadow columns.
+
+    The backfill (PR #393) creates one Organization row per legacy Contact row,
+    iterating both in primary-key order. This helper re-derives that mapping
+    for follow-up FK-rewire migrations (PR #394) by zipping the two lists
+    back together in the same order.
+
+    Assumes the Organization table was empty before PR #393 ran — true for
+    fresh migrations and for any deployment that applied PRs #392 and #393
+    as a pair, which is the only supported path.
+    """
+    LegacyContact = apps.get_model('contacts', 'Contact')
+    Organization = apps.get_model('contacts', 'Organization')
+
+    mapping = {}
+    legacy_ids = list(LegacyContact.objects.order_by('pk').values_list('pk', flat=True))
+    party_ids = list(Organization.objects.order_by('pk').values_list('pk', flat=True))
+    if len(legacy_ids) != len(party_ids):
+        raise RuntimeError(
+            f"Legacy Contact / Organization count mismatch: "
+            f"{len(legacy_ids)} vs {len(party_ids)}. "
+            f"Run `manage.py contacts_backfill_reconcile` to diagnose."
+        )
+    for legacy_id, party_id in zip(legacy_ids, party_ids):
+        mapping[legacy_id] = party_id
+    return mapping
+
+
 def row_count_report(apps):
     """Compute a {label: (legacy_count, new_count, delta)} report.
 
