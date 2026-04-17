@@ -309,6 +309,23 @@ Likely follow-up issues to fix as they surface:
 - `FopFactory.newInstance(new File(".").toURI())` is probably too permissive — point it
   at a packaged `fop.xconf` inside the jar once templates are finalised.
 
+### 1b. First integration tests (concept + initial impl)
+
+Captured in [`pdf-export-service/INTEGRATION_TEST_CONCEPT.md`](./pdf-export-service/INTEGRATION_TEST_CONCEPT.md).
+Two layers, both expected to surface real defects on first run:
+
+- **Step 1 — `TemplateFetcherIT`** (`src/test/java/net/koalix/pdf/template/`) —
+  LocalStack S3 + WireMock Django, proves the 302-redirect → presigned-URL
+  → local temp file path works end-to-end.
+- **Step 2 — `FopRendererIT`** (`src/test/java/net/koalix/pdf/render/`) —
+  parameterised over every real `.xsl` in
+  `auftraegekoalixnet/media/uploads/templatefiles/`. Asserts only that FOP
+  emits a `%PDF-` envelope; content will be near-empty until XSL
+  reconciliation (step 4 below) lands — that is the signal.
+
+Orchestrator + SQS integration tests are deliberately deferred (see concept
+doc §Step 3/4) to keep this first pass small.
+
 ### 2. Local round-trip: create one PDF through the admin
 Assumes dev stack up with `--profile dev up`.
 1. Create a superuser: `docker compose exec backend python manage.py createsuperuser`.

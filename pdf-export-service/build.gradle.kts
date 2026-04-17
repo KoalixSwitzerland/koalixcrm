@@ -32,8 +32,13 @@ dependencies {
     testImplementation("com.github.tomakehurst:wiremock-standalone:3.0.1")
     testImplementation("org.testcontainers:junit-jupiter:1.20.3")
     testImplementation("org.testcontainers:localstack:1.20.3")
+    testImplementation("org.assertj:assertj-core:3.26.3")
 }
 
 tasks.named<Test>("test") {
     useJUnitPlatform()
+    testLogging {
+        showStandardStreams = true
+        events("passed", "failed", "skipped")
+    }
 }
