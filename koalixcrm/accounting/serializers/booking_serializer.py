@@ -54,13 +54,7 @@ class BookingJSONSerializer(serializers.ModelSerializer):
         booking.booking_date = validated_data['booking_date']
         booking.booking_reference = validated_data['booking_reference']
 
-        # Deserialize from staff
-        request = self.context.get('request')
-        koalixcrm_user = request.META.get('HTTP_KOALIXCRM_USER')
-        if koalixcrm_user:
-            user = User.objects.get(username=koalixcrm_user)
-        else:
-            user = request.user
+        user = self.context['request'].user
         booking.staff = user
         booking.last_modified_by = user
 
@@ -97,14 +91,7 @@ class BookingJSONSerializer(serializers.ModelSerializer):
         booking.booking_date = validated_data['booking_date']
         booking.booking_reference = validated_data['booking_reference']
 
-        # Deserialize from staff
-        request = self.context.get('request')
-        koalixcrm_user = request.META.get('HTTP_KOALIXCRM_USER')
-        if koalixcrm_user:
-            user = User.objects.get(username=koalixcrm_user)
-        else:
-            user = request.user
-        booking.staff = user
+        booking.staff = self.context['request'].user
 
         # Deserialize from account
         from_account = validated_data.pop('from_account')

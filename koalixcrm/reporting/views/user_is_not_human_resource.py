@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render
 from django.template.context_processors import csrf
@@ -18,6 +19,7 @@ class ReportingPeriodMissingForm(forms.Form):
                                    choices=NEXT_STEPS)
 
 
+@login_required
 def user_is_not_human_resource(request):
     try:
         if request.POST.get('post'):
