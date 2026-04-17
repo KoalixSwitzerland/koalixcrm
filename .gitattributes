@@ -1,0 +1,61 @@
+# Normalize line endings across WSL/Linux and Windows checkouts.
+# Canonical form in the repo is LF. Windows clients may check out CRLF
+# for their working tree, but commits are always stored as LF.
+
+* text=auto eol=lf
+
+# Shell scripts must stay LF even on Windows checkouts (broken otherwise).
+*.sh       text eol=lf
+
+# Explicit text types (defensive — overrides any per-client autocrlf).
+*.py       text eol=lf
+*.js       text eol=lf
+*.ts       text eol=lf
+*.java     text eol=lf
+*.kts      text eol=lf
+*.kt       text eol=lf
+*.css      text eol=lf
+*.scss     text eol=lf
+*.html     text eol=lf
+*.htm      text eol=lf
+*.xml      text eol=lf
+*.xsl      text eol=lf
+*.yml      text eol=lf
+*.yaml     text eol=lf
+*.json     text eol=lf
+*.md       text eol=lf
+*.txt      text eol=lf
+*.po       text eol=lf
+*.cfg      text eol=lf
+*.ini      text eol=lf
+*.toml     text eol=lf
+*.sql      text eol=lf
+*.conf     text eol=lf
+Dockerfile text eol=lf
+*.dockerfile text eol=lf
+
+# Binary files — never touch line endings or try to diff as text.
+*.png      binary
+*.jpg      binary
+*.jpeg     binary
+*.gif      binary
+*.ico      binary
+*.svg      binary
+*.pdf      binary
+*.woff     binary
+*.woff2    binary
+*.ttf      binary
+*.eot      binary
+*.otf      binary
+*.mo       binary
+*.swf      binary
+*.zip      binary
+*.gz       binary
+*.tar      binary
+*.jar      binary
+*.class    binary
+*.pyc      binary
+*.db       binary
+*.sqlite   binary
+*.sqlite3  binary
+*.map      binary
