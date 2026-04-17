@@ -11,8 +11,8 @@ from koalixcrm.djangoUserExtension.models import UserExtension
 from koalixcrm.core.exceptions import ReportingPeriodNotFound
 from koalixcrm.core.exceptions import UserIsNoHumanResource
 from koalixcrm.djangoUserExtension.exceptions import UserExtensionMissing, TooManyUserExtensionsAvailable
-from koalixcrm.core.views.range_selection_form import RangeSelectionForm
-from koalixcrm.core.views.work_entry_formset import BaseWorkEntryFormset
+from koalixcrm.reporting.views.range_selection_form import RangeSelectionForm
+from koalixcrm.reporting.views.work_entry_formset import BaseWorkEntryFormset
 from koalixcrm.reporting.models.human_resource import HumanResource
 
 

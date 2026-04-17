@@ -187,7 +187,7 @@ class OptionUserExtension(admin.ModelAdmin):
     )
 
     def create_work_report_pdf(self, request, queryset):
-        from koalixcrm.core.views.create_work_report import create_work_report
+        from koalixcrm.reporting.views.create_work_report import create_work_report
 
         return create_work_report(self, request, queryset)
 

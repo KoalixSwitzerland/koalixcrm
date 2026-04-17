@@ -114,7 +114,7 @@ urlpatterns = [
     path('', include(router.urls)),
     path('admin/filebrowser/', site.urls),
     path('grappelli/', include('grappelli.urls')),
-    path('koalixcrm/crm/reporting/', include('koalixcrm.core.reporting.urls')),
+    path('koalixcrm/crm/reporting/', include('koalixcrm.reporting.urls')),
     # OIDC auth (admin login via Keycloak)
     path('auth/login/', LoginSelectionView.as_view(), name='login-selection'),
     path('auth/login/<str:provider>/', OAuthLoginView.as_view(), name='oauth-login'),
