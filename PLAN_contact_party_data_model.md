@@ -1,10 +1,27 @@
 # Plan: Contact / Party Data Model (issue #198)
 
 **Status:** accepted — to be executed as four sequential issues / four PRs
+**Release:** ships with **v2.0.0** (major version break, no backwards-compat promise)
 **Target apps:** `koalixcrm.contacts` (primary), `koalixcrm.contracts`, `koalixcrm.products`, `koalixcrm.reporting`, `koalixcrm.djangoUserExtension`, `koalixcrm.contacts_api_py`, `app_api_java`
 **Authoritative ADR:** [`koalixcrm_system/adr/0001-contact-and-party-data-model.md`](../koalixcrm_system/adr/0001-contact-and-party-data-model.md)
 **GitHub issue:** [KoalixSwitzerland/koalixcrm#198](https://github.com/KoalixSwitzerland/koalixcrm/issues/198)
 **Deciders:** @scaphilo, @Hacont — *"standardize wherever possible"* → UBL 2.3 vocabulary is authoritative.
+
+> **v2.0.0 clean-break decision (2026-04-17, @scaphilo + @Hacont):**
+>
+> Since this ships with the v1.14.0 → v2.0.0 major version bump, we explicitly trade API
+> backwards-compatibility for a simpler migration. That changes the shape of PR #3 and PR #4
+> materially — summarised in [§ v2.0.0 clean-break simplifications](#v200-clean-break-simplifications)
+> below, with the per-PR sections updated in place. **Data migration is preserved** (the legacy
+> rows still get migrated into the new Party tables) — the break is on API surface only:
+>
+> - no deprecation headers, no `Deprecation:` / `Sunset:` HTTP shims, no read-only legacy routes,
+> - no "keep the old FK as a nullable shadow for one release",
+> - no transitional dual-admin / dual-serializer / dual-viewset layers kept around,
+> - no staged tightening of NOT NULL constraints across two PRs.
+>
+> Everything already committed on `issue/392-…`, `issue/393-…`, and `issue/394-…` stays useful —
+> the simplification collapses the *remaining* work into the expanded PR #4 described below.
 
 ---
 
@@ -65,12 +82,50 @@ repo in a half-migrated state.
 
 | PR | Title | Touches | DB migrations | Risk |
 |---|---|---|---|---|
-| #1 | Additive schema (new Party / Organization / Contact / … tables) | `contacts/` only | 1 schema migration (additive) | Low |
-| #2 | Data migration into new tables | `contacts/` only | 1 data migration (`RunPython`) | **High** — production data |
-| #3 | Rewire external FKs to `Party` | `contracts/`, `products/`, `reporting/`, `djangoUserExtension/`, `contacts_api_py/`, `app_api_java/` | 1 FK-swap migration per app | Medium — hot path (invoicing) |
-| #4 | Drop legacy `Contact`/`Customer`/`Supplier`/`Person` tables + code | `contacts/` cleanup | 1 destructive migration | Low once #3 is stable |
+| #1 (#392) | Additive schema (new Party / Organization / Contact / … tables) | `contacts/` only | 1 schema migration (additive) | Low |
+| #2 (#393) | Data migration into new tables | `contacts/` only | 1 data migration (`RunPython`) | **High** — production data |
+| #3 (#394) | **Add** new FKs alongside legacy + new admin / DRF / DTOs | `contracts/`, `products/`, `contacts_api_py/`, `app_api_java/` | 1 FK-add migration per app | Medium — hot path (invoicing) |
+| #4 (#395) | **Drop** legacy models, FKs, admin, DRF, DTOs, REST routes + rename transitional classes + PDF worker alignment | `contacts/`, `contracts/`, `products/`, `reporting/`, `djangoUserExtension/`, `contacts_api_py/`, `app_api_java/`, `pdf-export-service/` | 1 destructive migration per app | Medium — large surface but mechanical |
 
-Each PR is shippable in isolation — the system runs correctly after each one.
+Each PR remains shippable in isolation in the sense that the codebase compiles and tests pass.
+The v2.0.0 release is cut **after #4 merges** — between #3 and #4 the API carries both legacy and
+new shapes, but that window is internal to the release train; external consumers only see the
+post-#4 API.
+
+### v2.0.0 clean-break simplifications
+
+The per-PR sections below were drafted before the v2.0.0 clean-break decision and still contain
+transitional-era language in places. The following **overrides** apply — take them as the source
+of truth where they conflict with the older wording:
+
+- **PR #3 (#394).** *Already committed as phases A–F.* No further work needed in this PR.
+  Phase G (REST deprecation shims on `/api/customers/` etc.) and Phase H (soft-warning
+  `CommercialDocument.clean()` validation) are **cancelled** — they were coexistence-era
+  polish. Their intent is absorbed into #4: legacy routes get deleted outright, and the
+  `party`-has-active-`customer`-role rule goes straight to a hard constraint alongside the
+  NOT NULL migration.
+- **PR #4 (#395) expanded scope** (see [§ PR #4](#pr-4--drop-legacy-models--code)):
+  1. Drop legacy models (`Contact`, `Customer`, `Supplier`, `Person`, `CustomerGroup`, all
+     `*ForContact` satellites) and their DB tables.
+  2. Drop legacy FK *columns* on documents (`Contract.default_customer`, `Contract.default_supplier`,
+     `CommercialDocument.customer`, `Price.customer_group`,
+     `CustomerGroupTransform.from_/to_customer_group`).
+  3. Tighten the new FKs to `NOT NULL` in the same migration.
+  4. Delete legacy admin, DRF serializers, viewsets, REST routes, Python DTOs, Java DTOs.
+     **No deprecation shim, no read-only legacy route, no deprecated-alias class.**
+  5. Rename transitional classes and files: `PartyContact` → `Contact`, `PartyEmail` →
+     `EmailAddress` (Django class + db_table + .py file + Java DTO + Python DTO + serializer +
+     viewset + every import site).
+  6. Restructure `djangoUserExtension` satellite models (`UserExtensionPostalAddress` /
+     `-PhoneAddress` / `-EmailAddress`) — they can no longer inherit from the legacy base
+     classes (the bases are being deleted). Either flatten to standalone models or rebuild on
+     the new `Address` / `PhoneNumber` / `PartyEmail` types with a user-specific assignment
+     table. Decision to be taken in the PR.
+  7. Update `nested_commercial_document.py` (Python) and the Java `ContactDto` record together
+     to emit and consume Party-shaped JSON. PDF worker XSL-FO templates change in the same PR.
+  8. Add the **hard** validation: `Contract.buyer_party` / `CommercialDocument.party` must have
+     an active `PartyRole(role_type='customer')` at the document's `issue_date`. Enforced in
+     `clean()` + serializer + admin; no "warning only" phase.
 
 ---
 
@@ -367,64 +422,156 @@ the PDF pipeline continues to use the legacy shape end-to-end until PR #395.
 
 ---
 
-## PR #4 — Drop legacy models & code
+## PR #4 — Drop legacy models & code (v2.0.0 clean-break cutover)
 
 ### Goal
 
-Remove the now-unused legacy `Contact` / `Customer` / `Supplier` / `Person` /
-`ContactPersonAssociation` / `PostalAddressForContact` / `EmailAddressForContact` /
-`PhoneAddressForContact` / `CustomerGroup` models, admins, serializers, and viewsets. Rename the
-transitional `natural_person.py` file to canonical `contact.py`.
+Single big cleanup PR that takes the repo from the dual-shape state left by PR #3 to the
+post-v2.0.0 steady state where only the Party data model remains. No deprecation window, no
+shims, no alias classes — this is the breaking change that the v1.14.0 → v2.0.0 bump licenses.
 
 ### Scope — destructive migrations
 
-- `contacts/migrations/00XX_drop_legacy.py`:
-  - `DeleteModel` for all legacy models listed above.
-  - Drops DB tables `crm_contact`, `crm_customer`, `crm_supplier`, `crm_person`,
+Per app, a single migration that (a) tightens new FKs to NOT NULL, (b) drops the legacy FK
+columns, and (c) drops the legacy tables where applicable. All in the same migration so there's
+no intermediate state where a document has neither a legacy customer nor a valid party.
+
+- **`contacts/migrations/0006_drop_legacy_models.py`:**
+  - `DeleteModel` for `Contact`, `Customer`, `Supplier`, `Person`, `ContactPersonAssociation`,
+    `PostalAddressForContact`, `EmailAddressForContact`, `PhoneAddressForContact`,
+    `CustomerGroup`.
+  - Drops tables `crm_contact`, `crm_customer`, `crm_supplier`, `crm_person`,
     `crm_contactpersonassociation`, `crm_postaladdressforcontact`, `crm_emailaddressforcontact`,
     `crm_phoneaddressforcontact`, `crm_customergroup`.
-- `contracts/migrations/00XX_drop_legacy_customer_fks.py`:
-  - Removes the shadow nullable FK fields introduced in PR #3.
-  - Same for `products/` and `djangoUserExtension/`.
+  - Also the MTI-parent tables that inherit from `PostalAddress` / `PhoneAddress` /
+    `EmailAddress` (the legacy base classes) need to be handled — see djUE restructure below.
+  - Renames `crm_partycontact` → `crm_contact` and `crm_partyemail` → `crm_emailaddress`
+    via `AlterModelTable`. (This is the v2.0.0 moment where the new table finally owns the
+    canonical name.)
+- **`contracts/migrations/0009_drop_legacy_customer_fks.py`:**
+  - `AlterField` on `Contract.buyer_party` / `Contract.supplier_party` /
+    `CommercialDocument.party` → `null=False, blank=False`.
+  - `RemoveField` for `Contract.default_customer`, `Contract.default_supplier`,
+    `CommercialDocument.customer`.
+  - Precondition: a `RunPython` step asserts `Contract.objects.filter(buyer_party__isnull=True)`
+    is empty and that every `CommercialDocument.party` is populated. Migration refuses to
+    proceed otherwise.
+- **`products/migrations/0003_drop_legacy_customer_group_fks.py`:**
+  - `RemoveField` for `Price.customer_group`, `CustomerGroupTransform.from_customer_group`,
+    `CustomerGroupTransform.to_customer_group`.
+  - `AlterField` tightening `from_party_group` / `to_party_group` to `null=False`.
+- **`djangoUserExtension/migrations/00XX_user_extension_satellite_restructure.py`:**
+  - Restructures `UserExtensionPostalAddress` / `-PhoneAddress` / `-EmailAddress` — they can no
+    longer inherit from the now-deleted legacy base classes. Default choice: flatten to
+    standalone models with explicit fields (all the columns they need already live on the
+    legacy-base rows and can be copied). Alternative (reuse new `Address` / `PhoneNumber` /
+    `PartyEmail` + a `UserAddressAssignment`-style table) is cleaner but costs another PR
+    after v2.0.0.
 
 ### Scope — code removal
 
-- Delete files:
-  - `koalixcrm/contacts/models/{contact.py,customer.py,supplier.py,person.py,
-    call.py /* only if unused by new models */,postal_address.py,email_address.py,phone_address.py,
-    customer_group.py,customer_billing_cycle.py /* **keep** — not legacy */}`
-    — *verify per file that nothing in PR-#3-migrated code still imports it*.
-  - Legacy admin / serializer / viewset files listed in PR #3's inventory (the ones that were
-    temporarily kept as read-only shadows).
-  - `/api/customers/`, `/api/suppliers/`, `/api/persons/`, `/api/customer-groups/` URL registrations.
-- Rename `koalixcrm/contacts/models/natural_person.py` → `contact.py`; drop the transitional
-  `PartyContact` alias in `contacts/models/__init__.py`; update imports repo-wide.
-- Java DTO mirror: remove the deprecated legacy `ContactDto` alias introduced in PR #3.
-- **Restructure `djangoUserExtension` satellite models** (added in Phase C 2026-04-17):
-  `UserExtensionPostalAddress`, `UserExtensionPhoneAddress`, `UserExtensionEmailAddress` currently
-  inherit from legacy `PostalAddress` / `PhoneAddress` / `EmailAddress`. Options:
-  (a) flatten to standalone models with explicit fields (simple, preserves data),
-  (b) migrate onto the new `Address` / `PhoneNumber` / `PartyEmail` types via a user-specific
-      assignment table (consistent with the Party pattern but requires a UserAddressAssignment
-      model or similar).
-  Decide before PR #4 code starts.
+**Delete outright:**
+
+- Legacy model files: `koalixcrm/contacts/models/{customer.py, supplier.py, person.py,
+  customer_group.py, postal_address.py, email_address.py, phone_address.py}`. (The legacy
+  `contact.py` is replaced in-place — see rename below.)
+- Legacy admin: `koalixcrm/contacts/admin/{customer_admin.py, supplier_admin.py, person_admin.py,
+  customer_group_admin.py, call_admin.py, contact_inlines.py}`. (Keep
+  `customer_billing_cycle_admin.py` — CustomerBillingCycle is retained.)
+- Legacy DRF serializers: `koalixcrm/contacts/serializers/{customer_serializer.py,
+  supplier_serializer.py, person_serializer.py, customer_group_serializer.py,
+  contact_serializer.py}`.
+- Legacy DRF viewsets: `koalixcrm/contacts/views/{customer_view_set.py, supplier_view_set.py,
+  person_view_set.py, customer_group_view_set.py, contact_view_set.py,
+  contact_postal_address_view_set.py, contact_phone_address_view_set.py,
+  contact_email_address_view_set.py}`.
+- Legacy REST routes: `/api/customers/`, `/api/suppliers/`, `/api/persons/`,
+  `/api/customer_groups/`, `/api/contacts/`, `/api/contact_postal_addresses/`,
+  `/api/contact_phone_numbers/`, `/api/contact_email_addresses/` — removed from
+  `projectsettings/urls.py`. No read-only shims.
+- Legacy Python DTOs: `koalixcrm/contacts_api_py/dto/{contact.py, customer.py, supplier.py,
+  person.py, customer_group.py, postal_address.py, email_address.py, phone_address.py}` and
+  the matching get / list / create / update methods on `KoalixCRMContactsAPIClient`.
+- Legacy Java DTOs: `app_api_java/.../dto/{ContactDto.java, PostalAddressDto.java,
+  EmailAddressDto.java, PhoneAddressDto.java}`.
+- Any remaining `contacts.Customer` / `contacts.Supplier` / `contacts.Person` /
+  `contacts.CustomerGroup` import anywhere in the tree — zero hits allowed after this PR.
+
+**Rename the transitional classes to their canonical names (one operation per class, touching
+Django model + admin + serializer + viewset + Python DTO + Java DTO + every import site):**
+
+- `koalixcrm.contacts.models.natural_person.PartyContact` → `contact.Contact`.
+  Rename class, rename `.py` file, `AlterModelTable('partycontact', 'contact')`, update
+  `__init__.py` and every importer.
+- `koalixcrm.contacts.models.party_email.PartyEmail` → `email_address.EmailAddress`.
+  Same treatment.
+- Python DTO `PartyContact` → `Contact`; Python DTO `PartyEmail` → `EmailAddress`.
+- Java DTO `PartyContactDto` → `ContactDto` (replaces the legacy `ContactDto` that was deleted
+  above); `PartyEmailDto` → `EmailAddressDto` (likewise).
+- REST routes `/api/party_contacts/` → `/api/contacts/`; `/api/party_emails/` → `/api/emails/`
+  (or drop `party_` prefix systematically from other routes if consistency is desired —
+  decision TBD in the PR).
+
+### Scope — cross-app serializer cutover
+
+Items deliberately deferred from PR #3 Phase F:
+
+- **`contracts/serializers/nested_commercial_document.py`** — replace `ContactNestedSerializer`
+  with a `PartyNestedSerializer` that reads from the Party model. Field shape stays close to
+  existing (the PDF worker's XSL-FO templates rely on it) but sources from `Party` +
+  `AddressAssignment` + `EmailAssignment` + `PhoneAssignment` instead of the legacy satellites.
+- **`reporting/serializers/resource_price_serializer.py`** — switch the `customer_group` field
+  to `party_group` with the new serializer type. `ResourcePrice` already inherits `party_group`
+  from `products.Price` via MTI; the field is present on the model.
+- **`pdf-export-service/`** (Java PDF worker) — update the XSL-FO builders to consume the new
+  JSON shape from the nested serializer. This is the *real* work on the Java side for v2.0.0
+  and is the reason the legacy `ContactDto` could not be removed earlier.
+
+### Scope — hard validation rule
+
+Absorbed from the cancelled PR #3 Phase H (soft validation). Enforced at three levels in this PR:
+
+- **Model:** `CommercialDocument.clean()` raises `ValidationError` if `self.party` has no
+  active `PartyRole(role_type='customer')` at `self.issue_date`.
+- **Serializer:** The new `CommercialDocumentSerializer` and subclasses re-check via
+  `validate_party()`.
+- **Admin:** `ModelAdmin.get_form` filters the `party` dropdown to parties with an active
+  customer role.
+
+Same rule for `Contract.buyer_party` (role=`customer`) and `Contract.supplier_party`
+(role=`supplier`) at `Contract.start_date`. Hard constraint from day one — no warning-only
+rollout.
+
+### Scope — Python DTO cleanup
+
+- Remove the 4 get / get_list / create / update methods each for `Customer`, `Supplier`,
+  `Person`, `Contact` (legacy), `CustomerGroup`, and the 3 contact-address variants — 32
+  methods total gone from `KoalixCRMContactsAPIClient`.
+- After the class rename, drop the transitional `as PartyDto` / `as PartyContactDto` / etc.
+  import aliases in `contacts_api_client.py`. The imports become plain `from … import Contact,
+  Party, Organization, …`.
 
 ### Acceptance criteria
 
-- Repo-wide grep for `contacts.Customer`, `contacts.Supplier`, legacy `contacts.Contact`,
-  `contacts.Person`, `contacts.CustomerGroup`, `ContactPersonAssociation`,
-  `PostalAddressForContact`, `EmailAddressForContact`, `PhoneAddressForContact` returns **zero
-  hits** outside migration history.
-- `python manage.py migrate` applies cleanly and drops the legacy tables.
-- Full pytest suite passes.
-- Changelog entry: *"Legacy contact models removed. Party data model is the single source of truth.
-  Issue #198 closed."*
+- Repo-wide grep for `contacts.Customer`, `contacts.Supplier`, legacy-semantics
+  `contacts.Contact` (org-like), `contacts.Person`, `contacts.CustomerGroup`,
+  `ContactPersonAssociation`, `PostalAddressForContact`, `EmailAddressForContact`,
+  `PhoneAddressForContact` → **zero hits** outside migration history.
+- Repo-wide grep for `PartyContact` / `PartyEmail` → zero hits (both renamed).
+- `python manage.py migrate` applies cleanly and drops the legacy tables on both fresh DBs and
+  DBs that have PR #3 applied.
+- Full pytest suite passes, including end-to-end invoice PDF generation via the Java worker.
+- CHANGELOG entry documents the breaking API changes:
+  - Removed endpoints, removed DTOs, removed models, renamed types.
+  - v2.0.0 release notes link to the UBL 2.3 `Party` mapping table for migration guidance.
+- Git tag `v2.0.0` is cut **from this commit**.
 
 ### Out of scope for PR #4
 
-- Squash of the four new migrations into one — do it in a follow-up housekeeping PR once
-  production is stable.
-- REST API v2 framing / OpenAPI schema overhaul — bigger topic, separate issue.
+- Squash of the four new migrations into one — follow-up housekeeping PR after v2.0.0 is in
+  production.
+- OpenAPI / REST API v2 schema overhaul — bigger topic, separate issue.
+- Duplicate detection / merge UI, GDPR erasure tooling — tracked separately.
 
 ---
 
