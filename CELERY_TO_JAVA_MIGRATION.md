@@ -259,3 +259,140 @@ worker after this migration.
   container swapped for `pdf-service` container.
 - **API client library:** hand-written `app_api_java` (switch to OpenAPI
   generator if/when a second Java consumer appears).
+
+## Where we are right now
+
+Branch: `refactor/pdf-service-java-migration` on *both* `koalixcrm` and
+`koalixcrm_system` (each has its own commits, no push yet).
+
+Landed commits on `koalixcrm`:
+
+| Commit | Subject |
+| --- | --- |
+| `5b7c2fa` | docs: plan Python/Celery → Java/Spring Boot PDF-service migration (#386) |
+| `d636069` | docs(pdf-service): add migration reference, DTO sketches, envelope contract (#386) |
+| `c8bf7bc` | feat(pdf-service): implement stages 1-4 of Python/Celery → Java migration (#386) |
+| *pending* | fix(pdf-service): declare URISyntaxException in S3PdfUploader |
+
+Landed commits on `koalixcrm_system`:
+
+| Commit | Subject |
+| --- | --- |
+| `5b70569` | feat: swap Celery worker for Java pdf-service in compose (koalixcrm#386) |
+
+Stage status (see also
+[`doc/pdf_creation_service/20-java-implementation.md`](./doc/pdf_creation_service/20-java-implementation.md)):
+
+| Stage | Status |
+| --- | --- |
+| 1 — Django JSON-only API additions | ✅ committed |
+| 2 — `app_api_java` Gradle module | ✅ committed |
+| 3 — `pdf-export-service` Spring Boot | ✅ committed (golden-PDF diff explicitly skipped by user) |
+| 4 — Docker & compose wiring | ✅ committed (koalixcrm + koalixcrm_system) |
+| 5 — Delete legacy Python worker code | ⏳ pending — destructive, deliberately held |
+| 6 — Refresh architecture docs | ⏳ pending — diagrams still describe the Python worker |
+
+## Planned next steps
+
+Execute in order. Each step is a small commit on the same branch unless noted.
+
+### 1. Verify the `pdf-service` image builds end-to-end
+```
+cd /app/koalixcrm_system
+docker compose --env-file .env.aaron --profile dev build pdf-service
+```
+Expected: Gradle build succeeds after the `URISyntaxException` fix.
+Likely follow-up issues to fix as they surface:
+- `LiveReload`/Jackson-datatype classpath drift (record reflection).
+- Spring Cloud AWS auto-config needing `spring.cloud.aws.credentials.type: static` when
+  endpoint is MinIO — revisit `application.yaml` if the S3 client can't resolve credentials.
+- `FopFactory.newInstance(new File(".").toURI())` is probably too permissive — point it
+  at a packaged `fop.xconf` inside the jar once templates are finalised.
+
+### 2. Local round-trip: create one PDF through the admin
+Assumes dev stack up with `--profile dev up`.
+1. Create a superuser: `docker compose exec backend python manage.py createsuperuser`.
+2. Log into `http://localhost:8000/admin/`, set up one `UserExtension`,
+   one `DocumentTemplate` (upload a minimal XSL + fop.xconf), one
+   `Customer` + `Contract` + `Invoice` + positions.
+3. Run the admin action **Create PDF async** on the invoice.
+4. Tail `docker compose logs -f pdf-service` — expect:
+   - `@SqsListener` receives the `PDFExportCommand` envelope,
+   - `CrmApiClient` fetches `/pdf_export_processes/{id}/`,
+     `/invoices/{id}/nested/`, `/document_templates/{id}/`,
+     `/user_extensions/{id}/`,
+   - FOP renders to `s3://koalixcrm-pdf-exports/pdf-exports/Invoice_<id>_<pid>.pdf`,
+   - `POST /commercial_document_media/` and `PATCH /pdf_export_processes/{id}/ status=completed`.
+5. Verify in MinIO console (`http://localhost:9011`) that the PDF landed
+   and opens in a viewer.
+
+### 3. Fix the local-dev auth gap ⚠️ blocking a green round-trip
+The Java `OidcTokenProvider` unconditionally calls the OIDC discovery
+endpoint. Local dev has no Keycloak (per ADR). The Python
+`api_client.py` falls back to sending only the
+`X-Custom-Origin-Verify` header when OIDC is not configured.
+
+To unblock:
+- Add an `AuthMode` enum to `app_api_java` (`OIDC`, `ORIGIN_KEY`).
+- When `CELERY_WORKER_M2M_OIDC_ISSUER` is blank, construct
+  `CrmApiClient` without an `OidcTokenProvider`; skip the
+  `Authorization: Bearer …` header; always send `X-Custom-Origin-Verify`.
+- Mirror this in Django: `koalixcrm/auth/m2m_authentication.py` must
+  accept origin-key auth when OIDC is disabled (check the existing
+  middleware — it probably already does this for the Python client).
+
+### 4. XSL template reconciliation
+`XmlAggregator` emits a clean but new shape. The stylesheets currently
+in the MinIO templates bucket expect the old `lxml` output. Options:
+
+1. Re-author the XSL templates against the new structure (preferred).
+   One template per commercial-document type; shared includes for
+   `postal_address`, `position`, `tax_summary`.
+2. Reshape the Java XML to match the old lxml structure. Requires
+   capturing a reference sample from a still-running Python worker
+   (dev only; the production worker is being removed).
+
+Recommend option 1 + a one-off golden-PDF capture now that the
+Java service can reach end-of-pipeline.
+
+### 5. Stage 5 — delete the legacy Python worker
+Strict checklist in
+[`doc/pdf_creation_service/10-migration-reference.md`](./doc/pdf_creation_service/10-migration-reference.md#deletion-checklist-for-stage-5).
+Only execute after step 2 proves a green round-trip. Concretely:
+
+```
+rm -rf koalixcrm_microservices/ koalixcrm_mq_commands/
+rm koalixcrm/core/documents/pdf_export.py koalixcrm/core/views/renderer.py \
+   koalixcrm/core/views/pdfexport.py
+# edit: drop serialize_to_xml + create_pdf + sync create_pdf admin action
+rm docker/requirements/celery.txt docker/dev/Dockerfile.celery docker/prod/Dockerfile.celery
+rm .github/workflows/docker-celery.yml
+```
+Plus in `koalixcrm_system`: remove the `celery` service block and the
+`legacy-celery` profile bookkeeping added by commit `5b70569`.
+
+### 6. Stage 6 — refresh architecture docs
+Rewrite `doc/pdf_creation_service/{01-context,02-architecture,03-use-case-flow,05-interfaces}.md`
+against the Java service. `04-state-machine.md` stays valid.
+
+### 7. Open PRs
+Two PRs, one per repo, cross-linking each other and linking issue
+`KoalixSwitzerland/koalixcrm#386`:
+
+- `KoalixSwitzerland/koalixcrm#<new>` — branch
+  `refactor/pdf-service-java-migration`, three commits so far plus the
+  S3 fix.
+- `KoalixSwitzerland/koalixcrm_system#<new>` — branch
+  `refactor/pdf-service-java-migration`, one commit so far.
+
+Both still need pushing — no `git push` has happened yet.
+
+## Parking lot (nice-to-have, not required to ship)
+
+- Package the Gradle wrapper (`./gradlew`) so CI doesn't need the
+  `gradle:jdk21-alpine` base image.
+- Split `app_api_java` into per-domain clients (contracts, core,
+  user-extensions) once a second Java consumer needs a subset.
+- Replace hand-rolled DTOs with OpenAPI-generated records when the
+  Django endpoints publish a schema.
+- Add a `/actuator/health` probe and wire it into the compose healthcheck.

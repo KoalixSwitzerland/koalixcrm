@@ -37,6 +37,11 @@ public class S3PdfUploader {
                 .contentType("application/pdf")
                 .build();
         s3Client.putObject(request, RequestBody.fromBytes(body));
-        return s3Client.utilities().getUrl(b -> b.bucket(props.s3().pdfBucket()).key(key)).toURI();
+        java.net.URL url = s3Client.utilities().getUrl(b -> b.bucket(props.s3().pdfBucket()).key(key));
+        try {
+            return url.toURI();
+        } catch (java.net.URISyntaxException e) {
+            throw new IllegalStateException("S3 returned non-URI URL: " + url, e);
+        }
     }
 }
