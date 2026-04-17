@@ -341,7 +341,29 @@ it — promote to a hard constraint in a follow-up.
   the new `party_group` FK added in Phase B. No separate reporting migration needed.
 - **`reporting/serializers/resource_price_serializer.py`** and
   **`contracts/serializers/nested_commercial_document.py`** still reference the legacy field names
-  (`customer_group` and `customer` respectively). Scheduled for Phase D (admin / DRF).
+  (`customer_group` and `customer` respectively). Deferred further to the Java-DTO work window —
+  they are tightly coupled to the Java PDF worker's input shape, and rewriting them requires
+  co-ordinated changes on the Java side. See Phase F findings below.
+
+### Phase F deferrals (2026-04-17)
+
+Phase F added Java DTO records for all 15 new Party-pattern endpoints (`PartyDto`,
+`OrganizationDto`, `PartyContactDto`, …). It did **not**:
+
+- **Rewrite `ContactDto`** (the legacy "org-like entity with nested addresses" record that
+  `CommercialDocumentDto` embeds). The PDF worker still consumes that exact shape via
+  `/invoices/<id>/nested/` etc. Rewriting it in-place would break PDF generation. The rewrite is
+  staged for the post-#395 clean-up PR once the legacy `Customer`/`Contact` models are gone and
+  the nested serializer can emit Party-shaped JSON safely.
+- **Update `nested_commercial_document.py` and `resource_price_serializer.py`** on the Python
+  side. Same reason: these are the producer side of the Java-consumed JSON. They flip together
+  with the Java PDF worker in the post-#395 PR.
+- **Update the PDF worker's XSL-FO builders or the `CrmApiClient` Java class** to consume the
+  new DTOs. The PDF worker keeps reading the legacy shape; the new Java DTOs exist only as a
+  preparatory mirror until a consumer is built.
+
+Net effect: the Java and Python sides both have **both** shapes available (legacy + new), and
+the PDF pipeline continues to use the legacy shape end-to-end until PR #395.
 
 ---
 
