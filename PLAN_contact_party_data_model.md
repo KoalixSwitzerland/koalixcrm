@@ -254,7 +254,7 @@ After this PR, `Party` is authoritative — the legacy models still exist but no
 | `contracts.CommercialDocument.customer` → `contacts.Customer` | **→** `party` → `contacts.Party` | same migration |
 | `products.Price.customer_group` → `contacts.CustomerGroup` | **→** `party_group` → `contacts.PartyGroup` | `products/migrations/00XX_party_group_fk.py` |
 | `products.CustomerGroupTransform.from_customer_group` / `.to_customer_group` | **→** `from_party_group` / `to_party_group` | same migration |
-| `djangoUserExtension.UserExtension.*` (if any Customer ref — **verify**) | → `Party` | `djangoUserExtension/migrations/00XX_party_fk.py` |
+| `djangoUserExtension.UserExtension.*` | — no FK to `Customer` / `Supplier` / `Contact` / `Person` / `CustomerGroup` (verified 2026-04-17). Satellite models `UserExtensionPostalAddress` / `-PhoneAddress` / `-EmailAddress` inherit from legacy `PostalAddress` / `PhoneAddress` / `EmailAddress` (concrete-table inheritance) and must be restructured in PR #4 when those bases are dropped. | *(n/a — moved to PR #4)* |
 
 For each FK swap migration:
 
@@ -329,6 +329,20 @@ it — promote to a hard constraint in a follow-up.
 - Duplicate detection and merge UI.
 - GDPR erasure tooling (separate issue after PR #4).
 
+### Phase C verification findings (2026-04-17)
+
+- **`djangoUserExtension.UserExtension`** has no FK to any legacy contacts model. Its three
+  satellite classes (`UserExtensionPostalAddress` / `-PhoneAddress` / `-EmailAddress`) inherit
+  from the legacy `PostalAddress` / `PhoneAddress` / `-EmailAddress` base models via concrete-table
+  inheritance — **not** FKs. This coupling is therefore deferred to PR #4, which must either
+  restructure these satellite models to use explicit fields (no inheritance) or migrate them onto
+  the new `Address` / `PhoneNumber` / `PartyEmail` types with a user-specific assignment model.
+- **`reporting.ResourcePrice`** is an MTI subclass of `products.Price` and automatically inherits
+  the new `party_group` FK added in Phase B. No separate reporting migration needed.
+- **`reporting/serializers/resource_price_serializer.py`** and
+  **`contracts/serializers/nested_commercial_document.py`** still reference the legacy field names
+  (`customer_group` and `customer` respectively). Scheduled for Phase D (admin / DRF).
+
 ---
 
 ## PR #4 — Drop legacy models & code
@@ -364,6 +378,14 @@ transitional `natural_person.py` file to canonical `contact.py`.
 - Rename `koalixcrm/contacts/models/natural_person.py` → `contact.py`; drop the transitional
   `PartyContact` alias in `contacts/models/__init__.py`; update imports repo-wide.
 - Java DTO mirror: remove the deprecated legacy `ContactDto` alias introduced in PR #3.
+- **Restructure `djangoUserExtension` satellite models** (added in Phase C 2026-04-17):
+  `UserExtensionPostalAddress`, `UserExtensionPhoneAddress`, `UserExtensionEmailAddress` currently
+  inherit from legacy `PostalAddress` / `PhoneAddress` / `EmailAddress`. Options:
+  (a) flatten to standalone models with explicit fields (simple, preserves data),
+  (b) migrate onto the new `Address` / `PhoneNumber` / `PartyEmail` types via a user-specific
+      assignment table (consistent with the Party pattern but requires a UserAddressAssignment
+      model or similar).
+  Decide before PR #4 code starts.
 
 ### Acceptance criteria
 
