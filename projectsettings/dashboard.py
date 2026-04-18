@@ -38,7 +38,7 @@ class CustomIndexDashboard(Dashboard):
                         _('Products'),
                         column=1,
                         css_classes=('collapse closed',),
-                        models=('koalixcrm.products.models.product.Product',),
+                        models=('koalixcrm.products.models.product_type.ProductType',),
                     ),
                     modules.ModelList(
                         _('Parties'),
