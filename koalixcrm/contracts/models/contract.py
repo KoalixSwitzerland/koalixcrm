@@ -70,19 +70,6 @@ class Contract(models.Model):
                               blank=True,
                               null=True)
     description = models.TextField(verbose_name=_("Description"))
-    default_customer = models.ForeignKey("contacts.Customer",
-                                         on_delete=models.CASCADE,
-                                         verbose_name=_("Default Customer"),
-                                         null=True,
-                                         blank=True)
-    default_supplier = models.ForeignKey("contacts.Supplier",
-                                         on_delete=models.CASCADE,
-                                         verbose_name=_("Default Supplier"),
-                                         null=True,
-                                         blank=True)
-    # Transitional Party-pattern FKs (issue #394). Populated by
-    # 0007_contract_party_fks from default_customer / default_supplier. Kept
-    # alongside the legacy FKs until #395 drops the latter — see ADR 0001.
     buyer_party = models.ForeignKey("contacts.Party",
                                     on_delete=models.PROTECT,
                                     related_name="contracts_as_buyer",

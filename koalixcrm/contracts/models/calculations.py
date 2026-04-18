@@ -27,12 +27,12 @@ class Calculations:
         price = 0
         tax = 0
         positions = CommercialDocumentPosition.objects.filter(commercial_document=document.id)
-        contact_for_price_calculation = document.customer
+        party_for_price_calculation = document.party
         if positions.exists():
             for position in positions:
                 price += Calculations.calculate_position_price(position,
                                                                pricing_date,
-                                                               contact_for_price_calculation,
+                                                               party_for_price_calculation,
                                                                document.currency)
                 tax += Calculations.calculate_position_tax(position, document.currency)
             if document.discount is not None:
@@ -53,7 +53,7 @@ class Calculations:
         return 1
 
     @staticmethod
-    def calculate_position_price(position, pricing_date, contact, currency):
+    def calculate_position_price(position, pricing_date, party, currency):
         """Performs a price calculation a position.
         The calculated price is stored in the last_calculated_price
         The date when the price was calculated is stored in last_pricing_date
@@ -76,7 +76,7 @@ class Calculations:
         if not position.overwrite_product_price:
             position.position_price_per_unit = position.product_type.get_price(pricing_date,
                                                                                position.unit,
-                                                                               contact,
+                                                                               party,
                                                                                currency)
         elif position.position_price_per_unit is None:
             raise CommercialDocumentPosition.NoPriceFound

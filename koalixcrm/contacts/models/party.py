@@ -22,6 +22,17 @@ class Party(models.Model):
         blank=True, null=True,
         verbose_name=_("Last modified by"),
     )
+    # Moved from legacy Customer.default_customer_billing_cycle in #395 G3.
+    # Nullable because Party is generic — only parties that play the
+    # `customer` role need a billing cycle. Populated during the backfill
+    # (PR #393) for parties migrated from a legacy Customer.
+    default_billing_cycle = models.ForeignKey(
+        'CustomerBillingCycle',
+        on_delete=models.PROTECT,
+        related_name='parties',
+        blank=True, null=True,
+        verbose_name=_("Default billing cycle"),
+    )
 
     class Meta:
         app_label = "contacts"

@@ -1,19 +1,25 @@
 # -*- coding: utf-8 -*-
-from koalixcrm.contacts.models.contact import *
-from koalixcrm.contacts.models.customer_group import *
-from koalixcrm.contacts.models.customer import *
-from koalixcrm.contacts.models.postal_address import *
-from koalixcrm.contacts.models.customer_billing_cycle import *
-from koalixcrm.contacts.models.email_address import *
-from koalixcrm.contacts.models.phone_address import *
-from koalixcrm.contacts.models.supplier import *
-from koalixcrm.contacts.models.person import *
-from koalixcrm.contacts.models.call import *
+"""koalixcrm.contacts models (post-v2.0.0 / issue #395 G3).
 
-# New Party-pattern models (issue #198 / PR #392). Coexist with the legacy
-# models above until #395 drops them. Class names of the two models that
-# collide with legacy (`Contact` → `PartyContact`, `EmailAddress` →
-# `PartyEmail`) are transitional and get renamed in #395.
+Legacy Contact/Customer/Supplier/Person/CustomerGroup/Call models are
+gone. `PostalAddress`/`PhoneAddress`/`EmailAddress` are retained as
+MTI base classes for non-legacy satellite tables in `contracts` and
+`djangoUserExtension` — those inherit field layout, not Party-domain
+semantics.
+
+Transitional class names `PartyContact` and `PartyEmail` are to be
+renamed to `Contact` and `EmailAddress` in a follow-up step of G3
+(G4: rename pass).
+"""
+from koalixcrm.contacts.models.customer_billing_cycle import *  # noqa: F401, F403
+
+# Shared MTI base classes retained for contracts / djangoUserExtension
+# satellite tables (not "legacy" — reusable field layouts).
+from koalixcrm.contacts.models.postal_address import *  # noqa: F401, F403
+from koalixcrm.contacts.models.email_address import *  # noqa: F401, F403
+from koalixcrm.contacts.models.phone_address import *  # noqa: F401, F403
+
+# Party data model (issue #198).
 from koalixcrm.contacts.models.party import *  # noqa: F401, F403
 from koalixcrm.contacts.models.organization import *  # noqa: F401, F403
 from koalixcrm.contacts.models.natural_person import *  # noqa: F401, F403

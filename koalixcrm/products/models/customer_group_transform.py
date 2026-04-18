@@ -6,19 +6,6 @@ from django.utils.translation import gettext as _
 
 class CustomerGroupTransform(models.Model):
     id = models.BigAutoField(primary_key=True)
-    from_customer_group = models.ForeignKey('contacts.CustomerGroup',
-                                            on_delete=models.CASCADE,
-                                            verbose_name=_("From Customer Group"),
-                                            related_name="db_reltransfromfromcustomergroup",
-                                            blank=False,
-                                            null=False)
-    to_customer_group = models.ForeignKey('contacts.CustomerGroup',
-                                          on_delete=models.CASCADE,
-                                          verbose_name=_("To Customer Group"),
-                                          related_name="db_reltransfromtocustomergroup",
-                                          blank=False,
-                                          null=False)
-    # Party-pattern FKs (issue #394, tightened to NOT NULL in #395 G2).
     from_party_group = models.ForeignKey('contacts.PartyGroup',
                                          on_delete=models.PROTECT,
                                          related_name='transforms_from',
@@ -38,30 +25,18 @@ class CustomerGroupTransform(models.Model):
                                  max_digits=17,
                                  decimal_places=2,)
 
-    def transform(self, customer_group):
-        """The transform function verifies whether the provided argument customer_group
-        is corresponding with the "from_customer_group" variable of the CustomerGroupTransform class
-        When this is ok, the function returns the "to_customer_group". When the provided customer_group
-        argument is not corresponding, the function returns a "None"
-
-        Args:
-        customer_group: CustomerGroup object
-
-        Returns:
-        CustomerGroup object or None
-
-        Raises:
-        No exceptions planned"""
-        if self.from_customer_group == customer_group:
-            return self.to_customer_group
-        else:
-            return None
+    def transform(self, party_group):
+        """Return `to_party_group` if the given party_group matches this
+        transform's `from_party_group`, else None."""
+        if self.from_party_group == party_group:
+            return self.to_party_group
+        return None
 
     def get_transform_factor(self):
         return self.factor
 
     def __str__(self):
-        return "From " + self.from_customer_group.name + " to " + self.to_customer_group.name
+        return "From " + self.from_party_group.name + " to " + self.to_party_group.name
 
     class Meta:
         app_label = "products"

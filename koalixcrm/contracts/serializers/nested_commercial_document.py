@@ -1,24 +1,28 @@
 # -*- coding: utf-8 -*-
-"""
-Deeply-nested JSON serializers for the commercial-document types.
+"""Deeply-nested JSON serializers for the commercial-document types.
 
 Consumed by the Java PDF worker: a single GET returns everything the
-XslFo builders need — customer / supplier contact details, positions with
-product type and tax, document-level totals, and a pre-computed tax summary.
+XslFo builders need — party (Organization or Contact) details, positions
+with product type and tax, document-level totals, and a pre-computed tax
+summary.
 
-Additive over the shallow legacy serializers (``InvoiceJSONSerializer`` etc.):
-those stay in place for existing Python clients.
+v2.0.0 (issue #395 G3): every commercial document now carries a `party`
+FK pointing at a Party (Organization or PartyContact). The legacy
+`customer` / `supplier` fields on Contract / CommercialDocument /
+PurchaseOrder are gone. The nested shape here reflects that — the JSON
+field `party` replaces the old `customer` (and the separate `supplier`
+field on PurchaseOrder is also gone; POs use the inherited `party`).
 """
 from collections import OrderedDict
 from decimal import Decimal
 
 from rest_framework import serializers
 
-from koalixcrm.contacts.models.contact import (
-    EmailAddressForContact,
-    PhoneAddressForContact,
-    PostalAddressForContact,
-)
+from koalixcrm.contacts.models.address_assignment import AddressAssignment
+from koalixcrm.contacts.models.email_assignment import EmailAssignment
+from koalixcrm.contacts.models.organization import Organization
+from koalixcrm.contacts.models.natural_person import PartyContact
+from koalixcrm.contacts.models.phone_assignment import PhoneAssignment
 from koalixcrm.contracts.models.commercial_document import CommercialDocument
 from koalixcrm.contracts.models.commercial_document_position import (
     CommercialDocumentPosition,
@@ -34,63 +38,110 @@ from koalixcrm.core.serializers.tax_serializer import OptionTaxJSONSerializer
 from koalixcrm.core.serializers.unit_serializer import OptionUnitJSONSerializer
 
 
-class ContactPostalAddressNestedSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PostalAddressForContact
-        fields = (
-            "id",
-            "purpose",
-            "prefix",
-            "pre_name",
-            "name",
-            "address_line_1",
-            "address_line_2",
-            "address_line_3",
-            "address_line_4",
-            "zip_code",
-            "town",
-            "state",
-            "country",
-            "subdivision_code",
-        )
+class NestedAddressSerializer(serializers.Serializer):
+    purpose = serializers.CharField(read_only=True)
+    is_primary = serializers.BooleanField(read_only=True)
+    address_line_1 = serializers.SerializerMethodField()
+    address_line_2 = serializers.SerializerMethodField()
+    address_line_3 = serializers.SerializerMethodField()
+    address_line_4 = serializers.SerializerMethodField()
+    zip_code = serializers.SerializerMethodField()
+    town = serializers.SerializerMethodField()
+    state = serializers.SerializerMethodField()
+    country = serializers.SerializerMethodField()
+    subdivision_code = serializers.SerializerMethodField()
+
+    def _addr(self, obj):
+        return obj.address
+
+    def get_address_line_1(self, obj): return self._addr(obj).address_line_1
+    def get_address_line_2(self, obj): return self._addr(obj).address_line_2
+    def get_address_line_3(self, obj): return self._addr(obj).address_line_3
+    def get_address_line_4(self, obj): return self._addr(obj).address_line_4
+    def get_zip_code(self, obj): return self._addr(obj).zip_code
+    def get_town(self, obj): return self._addr(obj).town
+    def get_state(self, obj): return self._addr(obj).state
+    def get_country(self, obj): return self._addr(obj).country
+    def get_subdivision_code(self, obj): return self._addr(obj).subdivision_code
 
 
-class ContactPhoneAddressNestedSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PhoneAddressForContact
-        fields = ("id", "purpose", "phone")
+class NestedPhoneSerializer(serializers.Serializer):
+    purpose = serializers.CharField(read_only=True)
+    is_primary = serializers.BooleanField(read_only=True)
+    phone_e164 = serializers.SerializerMethodField()
+
+    def get_phone_e164(self, obj):
+        return obj.phone.phone_e164
 
 
-class ContactEmailAddressNestedSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = EmailAddressForContact
-        fields = ("id", "purpose", "email")
+class NestedEmailSerializer(serializers.Serializer):
+    purpose = serializers.CharField(read_only=True)
+    is_primary = serializers.BooleanField(read_only=True)
+    email = serializers.SerializerMethodField()
+
+    def get_email(self, obj):
+        return obj.email.email
 
 
-class ContactNestedSerializer(serializers.Serializer):
-    """
-    Serializer for a ``Contact`` row (shared by Customer and Supplier) with
-    nested address lists. Works by taking either a Customer/Supplier instance
-    or a plain Contact instance — all three are ``Contact`` subclasses.
+class PartyNestedSerializer(serializers.Serializer):
+    """A Party (Organization or natural-person Contact) with its assignments.
+
+    The Java PDF worker reads this shape via the nested commercial-document
+    endpoints. The `type` field ("organization" / "contact") tells the
+    worker which name fields to render; `postal_addresses` / `phone_numbers`
+    / `email_addresses` source from the new assignment tables (loose links,
+    purpose + validity) rather than from MTI satellite tables as the legacy
+    `customer` block did.
     """
 
     id = serializers.IntegerField(read_only=True)
-    name = serializers.CharField(read_only=True)
+    display_name = serializers.CharField(read_only=True)
+    type = serializers.SerializerMethodField()
+    organization = serializers.SerializerMethodField()
+    contact = serializers.SerializerMethodField()
     postal_addresses = serializers.SerializerMethodField()
-    phone_addresses = serializers.SerializerMethodField()
+    phone_numbers = serializers.SerializerMethodField()
     email_addresses = serializers.SerializerMethodField()
 
-    def get_postal_addresses(self, obj):
-        rows = PostalAddressForContact.objects.filter(person=obj.id)
-        return ContactPostalAddressNestedSerializer(rows, many=True).data
+    def get_type(self, obj):
+        if Organization.objects.filter(party_ptr_id=obj.id).exists():
+            return 'organization'
+        if PartyContact.objects.filter(party_ptr_id=obj.id).exists():
+            return 'contact'
+        return 'party'  # bare Party (shouldn't happen for documents)
 
-    def get_phone_addresses(self, obj):
-        rows = PhoneAddressForContact.objects.filter(person=obj.id)
-        return ContactPhoneAddressNestedSerializer(rows, many=True).data
+    def get_organization(self, obj):
+        org = Organization.objects.filter(party_ptr_id=obj.id).first()
+        if not org:
+            return None
+        return {
+            'legal_name': org.legal_name,
+            'legal_form': org.legal_form,
+            'registration_number': org.registration_number,
+            'legal_seat_country': org.legal_seat_country,
+        }
+
+    def get_contact(self, obj):
+        contact = PartyContact.objects.filter(party_ptr_id=obj.id).first()
+        if not contact:
+            return None
+        return {
+            'prefix': contact.prefix,
+            'given_name': contact.given_name,
+            'family_name': contact.family_name,
+        }
+
+    def get_postal_addresses(self, obj):
+        rows = AddressAssignment.objects.filter(party=obj).select_related('address')
+        return NestedAddressSerializer(rows, many=True).data
+
+    def get_phone_numbers(self, obj):
+        rows = PhoneAssignment.objects.filter(party=obj).select_related('phone')
+        return NestedPhoneSerializer(rows, many=True).data
 
     def get_email_addresses(self, obj):
-        rows = EmailAddressForContact.objects.filter(person=obj.id)
-        return ContactEmailAddressNestedSerializer(rows, many=True).data
+        rows = EmailAssignment.objects.filter(party=obj).select_related('email')
+        return NestedEmailSerializer(rows, many=True).data
 
 
 class ProductTypeNestedSerializer(serializers.Serializer):
@@ -109,8 +160,6 @@ class ProductTypeNestedSerializer(serializers.Serializer):
 
 
 class PositionNestedSerializer(serializers.ModelSerializer):
-    """One line item in a commercial document, with product/tax info inlined."""
-
     product_type = ProductTypeNestedSerializer(read_only=True)
     unit = OptionUnitJSONSerializer(read_only=True)
 
@@ -133,13 +182,7 @@ class PositionNestedSerializer(serializers.ModelSerializer):
 
 
 def _compute_tax_summary(positions):
-    """
-    Aggregate positions by tax rate.
-
-    Returns a list of ``{"rate": "8.1", "taxable_amount": "...", "tax_amount": "..."}``
-    ordered by tax rate ascending. Positions without a ProductType/Tax are
-    grouped under an ``"unknown"`` rate entry so they are not silently dropped.
-    """
+    """Aggregate positions by tax rate. Returns a list ordered by rate."""
     buckets = OrderedDict()
     for p in positions:
         rate_key = "unknown"
@@ -163,16 +206,15 @@ def _compute_tax_summary(positions):
 
 
 class _BaseCommercialDocumentNestedSerializer(serializers.ModelSerializer):
-    """
-    Base for subclass-specific nested serializers.
+    """Base for subclass-specific nested serializers.
 
-    ``type`` helps the Java worker pick the right :class:`XmlBuilder`. ``items``
-    are ordered by ``position_number``. ``user_extension`` is a sub-resource
+    `type` helps the Java worker pick the right XmlBuilder. `items` are
+    ordered by `position_number`. `user_extension` is a sub-resource
     (bare id) so the worker fetches it separately only when needed.
     """
 
     type = serializers.SerializerMethodField()
-    customer = ContactNestedSerializer(read_only=True)
+    party = PartyNestedSerializer(read_only=True)
     currency = CurrencyJSONSerializer(read_only=True)
     items = serializers.SerializerMethodField()
     tax_summary = serializers.SerializerMethodField()
@@ -184,7 +226,7 @@ class _BaseCommercialDocumentNestedSerializer(serializers.ModelSerializer):
             "id",
             "type",
             "contract",
-            "customer",
+            "party",
             "staff",
             "currency",
             "external_reference",
@@ -247,8 +289,6 @@ class QuotationNestedSerializer(_BaseCommercialDocumentNestedSerializer):
 
 
 class DespatchAdviceNestedSerializer(_BaseCommercialDocumentNestedSerializer):
-    """DeliveryNote in the migration doc's terminology."""
-
     class Meta(_BaseCommercialDocumentNestedSerializer.Meta):
         model = DespatchAdvice
         fields = _BaseCommercialDocumentNestedSerializer.Meta.fields + (
@@ -258,14 +298,13 @@ class DespatchAdviceNestedSerializer(_BaseCommercialDocumentNestedSerializer):
 
 
 class PurchaseOrderNestedSerializer(_BaseCommercialDocumentNestedSerializer):
-    """Purchase orders carry a ``supplier`` (not ``customer``)."""
-
-    supplier = ContactNestedSerializer(read_only=True)
+    """Purchase orders carry the supplier in the inherited `party` field — no
+    separate `supplier` block in v2.0.0 (the legacy PurchaseOrder.supplier FK
+    was dropped in #395 G3)."""
 
     class Meta(_BaseCommercialDocumentNestedSerializer.Meta):
         model = PurchaseOrder
         fields = _BaseCommercialDocumentNestedSerializer.Meta.fields + (
-            "supplier",
             "status",
         )
 

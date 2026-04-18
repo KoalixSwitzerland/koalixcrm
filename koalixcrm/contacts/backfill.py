@@ -89,7 +89,11 @@ def forwards(apps, schema_editor):
         )
         contact_id_to_party_id[legacy_c.id] = org.pk
 
-    # 2. Customer -> PartyRole(customer).
+    # 2. Customer -> PartyRole(customer). `default_billing_cycle` is moved
+    #    onto Party in a separate migration (#395 G3) — at this migration's
+    #    schema state the field doesn't exist yet, so we can't set it here.
+    #    See contacts/migrations/0008_backfill_party_billing_cycle for the
+    #    population pass that runs after the column is added.
     for cust in LegacyCustomer.objects.all():
         party_id = contact_id_to_party_id.get(cust.pk)
         if not party_id:

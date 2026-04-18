@@ -37,8 +37,8 @@ class Invoice(CommercialDocument):
     def create_from_reference(self, calling_model):
         self.create_commercial_document(calling_model)
         self.status = 'C'
-        self.payable_until = date.today() + \
-                             timedelta(days=self.customer.default_customer_billing_cycle.time_to_payment_date)
+        cycle = self.party.default_billing_cycle
+        self.payable_until = date.today() + timedelta(days=cycle.time_to_payment_date)
         self.date_of_creation = date.today().__str__()
         self.template_set = self.contract.get_template_set(self)
         self.save()

@@ -38,28 +38,25 @@ class ProductType(models.Model):
                                                     null=True,
                                                     blank=True)
 
-    def get_price(self, date, unit, customer, currency):
-        """The function searches for a valid price and returns the price of the product as a decimal value.
+    def get_price(self, date, unit, party, currency):
+        """Find the applicable price for this ProductType at `date` for the
+        given `party`, returning the price as a Decimal.
 
         Args:
-            koalixcrm.contacts.models.customer customer
-            koalixcrm.crm.product.unit unit
-            koalixcrm.crm.product.currency currency
-            datetime.date date
-
-        Returns:
-            when a match is found: dict customer_group_factors name=customer_group, value=factor
-            when no match is found: customer_group_factors is None
+            party: koalixcrm.contacts.models.party.Party  (the customer)
+            unit: koalixcrm.core.models.Unit
+            currency: koalixcrm.core.models.Currency
+            date: datetime.date
 
         Raises:
-            In case the algorithm does not find a valid product price, the function raises a
-            NoPriceFound Exception"""
+            NoPriceFound if no valid product price matches.
+        """
         prices = ProductPrice.objects.filter(product_type=self)
         valid_prices = list()
         for price in list(prices):
             currency_factor = price.get_currency_transform_factor(currency, self.id)
             unit_factor = price.get_unit_transform_factor(unit, self.id)
-            group_factor = price.get_customer_group_transform_factor(customer, self.id)
+            group_factor = price.get_party_group_transform_factor(party, self.id)
             date_in_range = price.is_date_in_range(date)
             if date_in_range \
                     and currency_factor != 0 \
