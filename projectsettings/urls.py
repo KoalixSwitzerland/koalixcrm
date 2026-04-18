@@ -12,10 +12,8 @@ from koalixcrm.accounting_api_py.accounting_api import (
     AccountViewSet, AccountingPeriodViewSet, BookingViewSet, ProductCategoryViewSet,
 )
 from koalixcrm.contacts_api_py.contacts_api import (
-    CustomerViewSet, CustomerGroupViewSet, CustomerBillingCycleViewSet,
-    ContactPostalAddressViewSet, ContactEmailAddressViewSet, ContactPhoneAddressViewSet,
-    SupplierViewSet, PersonViewSet, ContactViewSet,
-    # Party data model (issue #394).
+    CustomerBillingCycleViewSet,
+    # Party data model (issue #394 / #395).
     PartyViewSet, OrganizationViewSet, PartyContactViewSet,
     PartyIdentificationViewSet, PartyRoleViewSet,
     OrganizationMembershipViewSet, OrganizationRelationshipViewSet,
@@ -66,18 +64,9 @@ router.register(r'accounts', AccountViewSet)
 router.register(r'accounting_periods', AccountingPeriodViewSet)
 router.register(r'bookings', BookingViewSet)
 router.register(r'product_categories', ProductCategoryViewSet)
-# CRM (contacts)
-router.register(r'customers', CustomerViewSet)
+# CRM (contacts — Party data model; legacy customer/supplier/person
+# endpoints removed in v2.0.0, issue #395).
 router.register(r'customer_billing_cycles', CustomerBillingCycleViewSet)
-router.register(r'contact_postal_addresses', ContactPostalAddressViewSet)
-router.register(r'contact_phone_numbers', ContactPhoneAddressViewSet)
-router.register(r'contact_email_addresses', ContactEmailAddressViewSet)
-router.register(r'customer_groups', CustomerGroupViewSet)
-router.register(r'suppliers', SupplierViewSet)
-router.register(r'persons', PersonViewSet)
-router.register(r'contacts', ContactViewSet)
-# CRM (Party data model — issue #394; coexists with legacy routes above
-# until #395 turns the legacy ones into read-only deprecation shims).
 router.register(r'parties', PartyViewSet)
 router.register(r'organizations', OrganizationViewSet)
 router.register(r'party_contacts', PartyContactViewSet)
