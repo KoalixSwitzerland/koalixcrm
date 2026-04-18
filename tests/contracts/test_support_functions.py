@@ -41,7 +41,7 @@ def create_commercial_document_from_reference(test_case,
                                          template_name,
                                          template_to_select):
     selenium = test_case.selenium
-    selenium.get('%s%s' % (test_case.live_server_url, '/admin/crm/'+reference_type+'/'))
+    selenium.get('%s%s' % (test_case.live_server_url, '/admin/contract_object_management/'+reference_type+'/'))
     time.sleep(1)
     fail_when_element_does_not_exist(test_case,
                                        '/html/body/div/article/div/form/section/div/table/tbody/tr/td[1]/input')
@@ -70,7 +70,7 @@ def create_commercial_document_from_reference(test_case,
     save_button = selenium.find_element('xpath', '/html/body/div/article/div/form/div/footer/ul/li[2]/input')
     save_button.send_keys(Keys.RETURN)
     time.sleep(1)
-    selenium.get('%s%s' % (test_case.live_server_url, '/admin/crm/'+reference_type+'/'))
+    selenium.get('%s%s' % (test_case.live_server_url, '/admin/contract_object_management/'+reference_type+'/'))
     contract_1 = selenium.find_element('xpath',
         '/html/body/div/article/div/form/section/div/table/tbody/tr/td[1]/input')
     if not contract_1.is_selected():
