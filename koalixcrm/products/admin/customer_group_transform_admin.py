@@ -12,8 +12,8 @@ class CustomerGroupTransformInlineAdmin(admin.TabularInline):
     classes = ['collapse']
     fieldsets = (
         ('', {
-            'fields': ('from_customer_group',
-                       'to_customer_group',
+            'fields': ('from_party_group',
+                       'to_party_group',
                        'factor',)
         }),
     )

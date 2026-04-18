@@ -38,28 +38,25 @@ class ProductType(models.Model):
                                                     null=True,
                                                     blank=True)
 
-    def get_price(self, date, unit, customer, currency):
-        """The function searches for a valid price and returns the price of the product as a decimal value.
+    def get_price(self, date, unit, party, currency):
+        """Find the applicable price for this ProductType at `date` for the
+        given `party`, returning the price as a Decimal.
 
         Args:
-            koalixcrm.contacts.models.customer customer
-            koalixcrm.crm.product.unit unit
-            koalixcrm.crm.product.currency currency
-            datetime.date date
-
-        Returns:
-            when a match is found: dict customer_group_factors name=customer_group, value=factor
-            when no match is found: customer_group_factors is None
+            party: koalixcrm.contacts.models.party.Party  (the customer)
+            unit: koalixcrm.core.models.Unit
+            currency: koalixcrm.core.models.Currency
+            date: datetime.date
 
         Raises:
-            In case the algorithm does not find a valid product price, the function raises a
-            NoPriceFound Exception"""
+            NoPriceFound if no valid product price matches.
+        """
         prices = ProductPrice.objects.filter(product_type=self)
         valid_prices = list()
         for price in list(prices):
             currency_factor = price.get_currency_transform_factor(currency, self.id)
             unit_factor = price.get_unit_transform_factor(unit, self.id)
-            group_factor = price.get_customer_group_transform_factor(customer, self.id)
+            group_factor = price.get_party_group_transform_factor(party, self.id)
             date_in_range = price.is_date_in_range(date)
             if date_in_range \
                     and currency_factor != 0 \
@@ -74,7 +71,7 @@ class ProductType(models.Model):
                     lowest_price = price
             return lowest_price
         else:
-            raise ProductType.NoPriceFound(customer, unit, date, currency, self)
+            raise ProductType.NoPriceFound(party, unit, date, currency, self)
 
     def get_tax_rate(self):
         return self.tax.get_tax_rate()
@@ -89,16 +86,15 @@ class ProductType(models.Model):
         verbose_name_plural = _('Product Types')
 
     class NoPriceFound(Exception):
-        def __init__(self, customer, unit, date, currency, product):
-            self.customer = customer
+        def __init__(self, party, unit, date, currency, product):
+            self.party = party
             self.unit = unit
             self.date = date
             self.product = product
             self.currency = currency
-            return
 
         def __str__(self):
             return _("There is no Price for this product type") + ": " + self.product.__str__() + _(
                 "that matches the date") + ": " + self.date.__str__() + " ," + _(
-                "customer") + ": " + self.customer.__str__() + " ," + _(
+                "party") + ": " + self.party.__str__() + " ," + _(
                 "currency") + ": " + self.currency.__str__() + _(" and unit") + ":" + self.unit.__str__()

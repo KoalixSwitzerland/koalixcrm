@@ -7,7 +7,8 @@ from koalixcrm.contracts.models.commercial_document import CommercialDocument
 
 
 class PurchaseOrder(CommercialDocument):
-    supplier = models.ForeignKey("contacts.Supplier", on_delete=models.CASCADE, verbose_name=_("Supplier"), null=True)
+    # Supplier is the inherited CommercialDocument.party. The legacy
+    # PurchaseOrder.supplier FK was dropped in #395 G3.
     status = models.CharField(max_length=1, choices=PURCHASEORDERSTATUS)
 
     def create_from_reference(self, calling_model):

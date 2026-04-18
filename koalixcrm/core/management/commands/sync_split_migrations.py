@@ -37,6 +37,17 @@ LEGACY_ID_RE = re.compile(
     flags=re.IGNORECASE,
 )
 
+# Matches legacy `<model>_ptr_id integer NOT NULL` column declarations in
+# MTI-child tables (Customer/Supplier inherit from Contact; PurchaseOrder
+# etc. inherit from SalesDocument). Django treats the `_ptr_id` column as
+# both the PK and a FK to the parent table; pre-Django-1.9 schemas declared
+# it without PRIMARY KEY, which makes every later schema edit blow up with
+# `foreign key mismatch` because the FK target isn't a proper PK.
+LEGACY_PTR_ID_RE = re.compile(
+    r'("?\w+_ptr_id"?)\s+integer\s+NOT\s+NULL(?!\s+PRIMARY)',
+    flags=re.IGNORECASE,
+)
+
 
 class Command(BaseCommand):
     help = "Reconcile django_migrations for legacy/mid-refactor deployments."
@@ -130,24 +141,46 @@ class Command(BaseCommand):
             self._rebuild_sqlite_table(table_name, create_sql)
 
     def _needs_id_upgrade(self, table_name, create_sql):
+        """True if the table is missing a proper INTEGER PRIMARY KEY column.
+
+        Two shapes trigger a rebuild:
+          1. `id integer NOT NULL` without PRIMARY KEY — the 2019-era
+             monolithic schema for every root model.
+          2. `<model>_ptr_id integer NOT NULL` without PRIMARY KEY — same
+             era's MTI-child tables (Customer/Supplier, PurchaseOrder/…).
+        """
         with connection.cursor() as cursor:
             cursor.execute(f'PRAGMA table_info("{table_name}")')
             cols = cursor.fetchall()  # cid, name, type, notnull, dflt_value, pk
+        has_pk = any(c[5] for c in cols)
+        if has_pk:
+            return False
         id_col = next((c for c in cols if c[1].lower() == "id"), None)
-        if not id_col:
-            return False
-        is_pk = bool(id_col[5])
-        is_integer = (id_col[2] or "").strip().upper() == "INTEGER"
-        # An `id INTEGER PRIMARY KEY` column is already a ROWID alias — fine.
-        if is_pk and is_integer:
-            return False
-        # Only rewrite columns we can confidently rewrite with the regex.
-        return bool(LEGACY_ID_RE.search(create_sql))
+        if id_col and (id_col[2] or "").strip().upper() == "INTEGER":
+            return bool(LEGACY_ID_RE.search(create_sql))
+        ptr_col = next(
+            (c for c in cols if c[1].lower().endswith("_ptr_id")), None,
+        )
+        if ptr_col and (ptr_col[2] or "").strip().upper() == "INTEGER":
+            return bool(LEGACY_PTR_ID_RE.search(create_sql))
+        return False
 
     def _rebuild_sqlite_table(self, table_name, create_sql):
         new_create_sql, count = LEGACY_ID_RE.subn(
             "id INTEGER PRIMARY KEY AUTOINCREMENT", create_sql, count=1,
         )
+        if count == 0:
+            # No root-model id column — must be an MTI child with <x>_ptr_id.
+            # Don't AUTOINCREMENT: the child's PK must equal the parent's id,
+            # so it's populated by the ORM, not by SQLite.
+            match = LEGACY_PTR_ID_RE.search(create_sql)
+            if not match:
+                return
+            ptr_col_name = match.group(1).strip('"')
+            new_create_sql = LEGACY_PTR_ID_RE.sub(
+                f'{ptr_col_name} INTEGER PRIMARY KEY', create_sql, count=1,
+            )
+            count = 1
         if count == 0:
             return
         tmp_name = f"{table_name}__sync_split_tmp"

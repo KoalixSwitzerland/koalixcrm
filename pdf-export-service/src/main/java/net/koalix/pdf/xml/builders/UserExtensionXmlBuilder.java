@@ -1,9 +1,9 @@
 package net.koalix.pdf.xml.builders;
 
-import net.koalix.api.dto.EmailAddressDto;
-import net.koalix.api.dto.PhoneAddressDto;
-import net.koalix.api.dto.PostalAddressDto;
 import net.koalix.api.dto.UserExtensionDto;
+import net.koalix.api.dto.UserExtensionEmailAddressDto;
+import net.koalix.api.dto.UserExtensionPhoneAddressDto;
+import net.koalix.api.dto.UserExtensionPostalAddressDto;
 import net.koalix.pdf.xml.XmlBuilder;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +17,11 @@ import static net.koalix.pdf.xml.XmlWriteSupport.writeText;
  * Writes the issuing user / company block: the admin's UserExtension
  * aggregate is the XSL-FO template's source of truth for the company name,
  * address, logo contact info, and default currency.
+ *
+ * <p>Post-v2.0.0 the Party-pattern models took over "contact" data, but
+ * the UserExtension satellites stayed on concrete-table inheritance.
+ * See the follow-up issue on the UserExtension satellite restructure;
+ * this builder works against the still-legacy shape.
  */
 @Component
 public class UserExtensionXmlBuilder implements XmlBuilder<UserExtensionDto> {
@@ -43,7 +48,7 @@ public class UserExtensionXmlBuilder implements XmlBuilder<UserExtensionDto> {
             writer.writeEndElement();
         }
         if (dto.postalAddresses() != null) {
-            for (PostalAddressDto addr : dto.postalAddresses()) {
+            for (UserExtensionPostalAddressDto addr : dto.postalAddresses()) {
                 writer.writeStartElement("postal_address");
                 writeAttribute(writer, "purpose", addr.purpose());
                 writeText(writer, "prefix", addr.prefix());
@@ -58,7 +63,7 @@ public class UserExtensionXmlBuilder implements XmlBuilder<UserExtensionDto> {
             }
         }
         if (dto.phoneAddresses() != null) {
-            for (PhoneAddressDto addr : dto.phoneAddresses()) {
+            for (UserExtensionPhoneAddressDto addr : dto.phoneAddresses()) {
                 writer.writeStartElement("phone_address");
                 writeAttribute(writer, "purpose", addr.purpose());
                 writer.writeCharacters(addr.phone() == null ? "" : addr.phone());
@@ -66,7 +71,7 @@ public class UserExtensionXmlBuilder implements XmlBuilder<UserExtensionDto> {
             }
         }
         if (dto.emailAddresses() != null) {
-            for (EmailAddressDto addr : dto.emailAddresses()) {
+            for (UserExtensionEmailAddressDto addr : dto.emailAddresses()) {
                 writer.writeStartElement("email_address");
                 writeAttribute(writer, "purpose", addr.purpose());
                 writer.writeCharacters(addr.email() == null ? "" : addr.email());

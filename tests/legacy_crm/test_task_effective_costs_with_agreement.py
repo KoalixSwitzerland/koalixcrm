@@ -38,14 +38,14 @@ class TaskEffectiveCostsWithAgreement(TestCase):
             resource=self.human_resource,
             unit=self.test_unit,
             currency=self.test_currency,
-            customer_group=self.test_customer_group,
+            party_group=self.test_customer_group,
             price="120",
         )
         self.resource_price_agreement = StandardResourcePriceFactory.create(
             resource=self.human_resource_two,
             unit=self.test_unit,
             currency=self.test_currency,
-            customer_group=self.test_customer_group,
+            party_group=self.test_customer_group,
             price="90",
         )
         self.test_reporting_period = StandardReportingPeriodFactory.create()

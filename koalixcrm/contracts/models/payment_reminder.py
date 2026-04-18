@@ -26,8 +26,8 @@ class PaymentReminder(CommercialDocument):
         self.create_commercial_document(calling_model)
         self.status = 'C'
         self.iteration_number = 1
-        self.payable_until = date.today() + \
-                             timedelta(days=self.customer.default_customer_billing_cycle.payment_reminder_time_to_payment)
+        cycle = self.party.default_billing_cycle
+        self.payable_until = date.today() + timedelta(days=cycle.payment_reminder_time_to_payment)
         self.template_set = self.contract.get_template_set(self)
         self.save()
         self.attach_commercial_document_positions(calling_model)

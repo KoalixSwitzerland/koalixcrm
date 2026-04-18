@@ -20,11 +20,12 @@ class Price(models.Model):
                                  verbose_name='Currency',
                                  blank=False,
                                  null=False)
-    customer_group = models.ForeignKey('contacts.CustomerGroup',
-                                       on_delete=models.CASCADE,
-                                       verbose_name=_("Customer Group"),
-                                       blank=True,
-                                       null=True)
+    party_group = models.ForeignKey('contacts.PartyGroup',
+                                    on_delete=models.PROTECT,
+                                    related_name='prices',
+                                    verbose_name=_("Party Group"),
+                                    blank=True,
+                                    null=True)
     price = models.DecimalField(max_digits=17,
                                 decimal_places=2,
                                 verbose_name=_("Price Per Unit"))
@@ -54,10 +55,10 @@ class Price(models.Model):
         else:
             return False
 
-    def is_customer_group_criteria_fulfilled(self, customer_group):
-        if self.customer_group is None:
+    def is_party_group_criteria_fulfilled(self, party_group):
+        if self.party_group is None:
             return True
-        elif self.customer_group == customer_group:
+        elif self.party_group == party_group:
             return True
         else:
             return False
@@ -118,41 +119,38 @@ class Price(models.Model):
                 unit_factor = unit_transform.get_transform_factor()
         return unit_factor
 
-    def get_customer_group_transform_factor(self, customer, product_type):
-        """The function searches through all customer_groups in which the customer is member of
-        from these customer_groups, the function returns the customer_group with the perfect match
-        or it returns the factor with the lowest transform factor
+    def get_party_group_transform_factor(self, party, product_type):
+        """Search through all PartyGroup memberships the party belongs to.
+        Return factor 1 for a perfect match, else the lowest transform factor.
 
         Args:
-            koalixcrm.contacts.models.customer customer
-            koalixcrm.crm.product.product product
+            party: koalixcrm.contacts.models.party.Party
+            product_type: koalixcrm.products.models.product_type.ProductType
 
         Returns:
             Decimal factor
-
-        Raises:
-            No exceptions planned"""
-        customer_group_factor = 0
-        if self.customer_group is None:
-            customer_group_factor = 1
-        elif customer is not None:
-            customer_groups = customer.is_member_of.all()
-            if customer_groups is not None:
-                for customer_group in customer_groups:
-                    if self.customer_group == customer_group:
-                        customer_group_factor = 1
-                        # Stop for loop when a perfect match is found
-                        break
-                    else:
-                        customer_group_transform = CustomerGroupTransform.objects.get(
-                            from_customer_group=self.customer_group,
-                            to_customer_group=customer_group,
-                            product_type=product_type)
-                        if customer_group_transform:
-                            transform_factor = customer_group_transform.get_transform_factor()
-                            if customer_group_factor > transform_factor or customer_group_factor == 0:
-                                customer_group_factor = transform_factor
-        return customer_group_factor
+        """
+        party_group_factor = 0
+        if self.party_group is None:
+            party_group_factor = 1
+        elif party is not None:
+            memberships = party.group_memberships.all()
+            for membership in memberships:
+                group = membership.party_group
+                if self.party_group == group:
+                    party_group_factor = 1
+                    break
+                else:
+                    transform = CustomerGroupTransform.objects.filter(
+                        from_party_group=self.party_group,
+                        to_party_group=group,
+                        product_type=product_type,
+                    ).first()
+                    if transform:
+                        factor = transform.get_transform_factor()
+                        if party_group_factor > factor or party_group_factor == 0:
+                            party_group_factor = factor
+        return party_group_factor
 
     class Meta:
         app_label = "products"

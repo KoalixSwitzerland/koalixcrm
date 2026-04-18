@@ -56,7 +56,7 @@ class CreateSalesDocumentFromContract(StaticLiveServerTestCase):
     def test_create_sales_document_from_quote(self):
         selenium = self.selenium
         # login
-        selenium.get('%s%s' % (self.live_server_url, '/admin/crm/invoice/'))
+        selenium.get('%s%s' % (self.live_server_url, '/admin/contract_object_management/invoice/'))
         # the browser will be redirected to the login page
         timeout = 2
         try:

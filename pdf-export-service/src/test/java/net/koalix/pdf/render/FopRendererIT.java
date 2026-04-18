@@ -6,7 +6,7 @@ import net.koalix.pdf.support.DocumentFixtures;
 import net.koalix.pdf.template.TemplateAssets;
 import net.koalix.pdf.xml.XmlAggregator;
 import net.koalix.pdf.xml.builders.CommercialDocumentXmlBuilder;
-import net.koalix.pdf.xml.builders.ContactXmlBuilder;
+import net.koalix.pdf.xml.builders.PartyXmlBuilder;
 import net.koalix.pdf.xml.builders.PositionXmlBuilder;
 import net.koalix.pdf.xml.builders.UserExtensionXmlBuilder;
 import org.apache.fop.apps.FopFactory;
@@ -64,7 +64,7 @@ class FopRendererIT {
         }
 
         aggregator = new XmlAggregator(
-                new CommercialDocumentXmlBuilder(new ContactXmlBuilder(), new PositionXmlBuilder()),
+                new CommercialDocumentXmlBuilder(new PartyXmlBuilder(), new PositionXmlBuilder()),
                 new UserExtensionXmlBuilder());
         renderer = new FopRenderer(fopFactory);
     }

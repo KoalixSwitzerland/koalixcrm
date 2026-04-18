@@ -12,9 +12,15 @@ from koalixcrm.accounting_api_py.accounting_api import (
     AccountViewSet, AccountingPeriodViewSet, BookingViewSet, ProductCategoryViewSet,
 )
 from koalixcrm.contacts_api_py.contacts_api import (
-    CustomerViewSet, CustomerGroupViewSet, CustomerBillingCycleViewSet,
-    ContactPostalAddressViewSet, ContactEmailAddressViewSet, ContactPhoneAddressViewSet,
-    SupplierViewSet, PersonViewSet, ContactViewSet,
+    CustomerBillingCycleViewSet,
+    # Party data model (issue #394 / #395).
+    PartyViewSet, OrganizationViewSet, PartyContactViewSet,
+    PartyIdentificationViewSet, PartyRoleViewSet,
+    OrganizationMembershipViewSet, OrganizationRelationshipViewSet,
+    AddressViewSet, AddressAssignmentViewSet,
+    PhoneNumberViewSet, PhoneAssignmentViewSet,
+    PartyEmailViewSet, EmailAssignmentViewSet,
+    PartyGroupViewSet, PartyGroupMembershipViewSet,
 )
 from koalixcrm.products_api_py.products_api import (
     ProductTypeViewSet, ProductViewSet, ProductPriceViewSet,
@@ -58,16 +64,24 @@ router.register(r'accounts', AccountViewSet)
 router.register(r'accounting_periods', AccountingPeriodViewSet)
 router.register(r'bookings', BookingViewSet)
 router.register(r'product_categories', ProductCategoryViewSet)
-# CRM (contacts)
-router.register(r'customers', CustomerViewSet)
+# CRM (contacts — Party data model; legacy customer/supplier/person
+# endpoints removed in v2.0.0, issue #395).
 router.register(r'customer_billing_cycles', CustomerBillingCycleViewSet)
-router.register(r'contact_postal_addresses', ContactPostalAddressViewSet)
-router.register(r'contact_phone_numbers', ContactPhoneAddressViewSet)
-router.register(r'contact_email_addresses', ContactEmailAddressViewSet)
-router.register(r'customer_groups', CustomerGroupViewSet)
-router.register(r'suppliers', SupplierViewSet)
-router.register(r'persons', PersonViewSet)
-router.register(r'contacts', ContactViewSet)
+router.register(r'parties', PartyViewSet)
+router.register(r'organizations', OrganizationViewSet)
+router.register(r'party_contacts', PartyContactViewSet)
+router.register(r'party_identifications', PartyIdentificationViewSet)
+router.register(r'party_roles', PartyRoleViewSet)
+router.register(r'organization_memberships', OrganizationMembershipViewSet)
+router.register(r'organization_relationships', OrganizationRelationshipViewSet)
+router.register(r'addresses', AddressViewSet)
+router.register(r'address_assignments', AddressAssignmentViewSet)
+router.register(r'phone_numbers', PhoneNumberViewSet)
+router.register(r'phone_assignments', PhoneAssignmentViewSet)
+router.register(r'party_emails', PartyEmailViewSet)
+router.register(r'email_assignments', EmailAssignmentViewSet)
+router.register(r'party_groups', PartyGroupViewSet)
+router.register(r'party_group_memberships', PartyGroupMembershipViewSet)
 # Settings (shared value objects)
 router.register(r'currencies', CurrencyViewSet)
 router.register(r'taxes', TaxViewSet)

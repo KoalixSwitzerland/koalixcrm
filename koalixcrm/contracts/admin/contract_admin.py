@@ -71,16 +71,16 @@ class ContractEmailAddress(admin.TabularInline):
 class OptionContract(admin.ModelAdmin):
     list_display = ('id',
                     'description',
-                    'default_customer',
-                    'default_supplier',
+                    'buyer_party',
+                    'supplier_party',
                     'staff',
                     'default_currency',
                     'date_of_creation',
                     'last_modification',
                     'last_modified_by')
     list_display_links = ('id',)
-    list_filter = ('default_customer',
-                   'default_supplier',
+    list_filter = ('buyer_party',
+                   'supplier_party',
                    'staff',
                    'default_currency')
     ordering = ('id', )
@@ -89,9 +89,9 @@ class OptionContract(admin.ModelAdmin):
     fieldsets = (
         (_('Basics'), {
             'fields': ('description',
-                       'default_customer',
+                       'buyer_party',
                        'staff',
-                       'default_supplier',
+                       'supplier_party',
                        'default_currency',
                        'default_template_set')
         }),

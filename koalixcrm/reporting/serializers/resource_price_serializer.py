@@ -1,32 +1,28 @@
 # -*- coding: utf-8 -*-
 from rest_framework import serializers
-from koalixcrm.reporting.models.resource_price import ResourcePrice
+
+from koalixcrm.contacts.models.party_group import PartyGroup
+from koalixcrm.contacts.serializers.party_serializers import PartyGroupJSONSerializer
 from koalixcrm.core.models.currency import Currency
 from koalixcrm.core.models.unit import Unit
-from koalixcrm.contacts.models.customer_group import CustomerGroup
-from koalixcrm.contacts.serializers.customer_group_serializer import OptionCustomerGroupJSONSerializer
 from koalixcrm.core.serializers.currency_serializer import CurrencyJSONSerializer
 from koalixcrm.core.serializers.unit_serializer import OptionUnitJSONSerializer
+from koalixcrm.reporting.models.resource_price import ResourcePrice
 
 
 class OptionResourcePriceJSONSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)
     price = serializers.DecimalField(decimal_places=2, max_digits=5, required=False)
     unit = OptionUnitJSONSerializer(required=False)
-    customer_group = OptionCustomerGroupJSONSerializer(required=False)
+    party_group = PartyGroupJSONSerializer(required=False)
     currency = CurrencyJSONSerializer(allow_null=False, required=False)
     valid_from = serializers.DateField(allow_null=False, required=False)
     valid_until = serializers.DateField(required=False)
 
     class Meta:
         model = ResourcePrice
-        fields = ('id',
-                  'price',
-                  'currency',
-                  'unit',
-                  'valid_from',
-                  'valid_until',
-                  'customer_group')
+        fields = ('id', 'price', 'currency', 'unit',
+                  'valid_from', 'valid_until', 'party_group')
 
 
 class ResourcePricesSONSerializer(serializers.ModelSerializer):
@@ -35,72 +31,40 @@ class ResourcePricesSONSerializer(serializers.ModelSerializer):
     unit = OptionUnitJSONSerializer()
     valid_from = serializers.DateField(allow_null=False)
     valid_until = serializers.DateField()
-    customer_group = OptionCustomerGroupJSONSerializer()
+    party_group = PartyGroupJSONSerializer()
 
     class Meta:
         model = ResourcePrice
-        fields = ('price',
-                  'currency',
-                  'unit',
-                  'valid_from',
-                  'valid_until',
-                  'customer_group')
+        fields = ('price', 'currency', 'unit',
+                  'valid_from', 'valid_until', 'party_group')
 
     def create(self, validated_data):
         resource_price = ResourcePrice()
-        # Deserialize currency
         currency = validated_data.pop('currency')
-        if currency:
-            if currency.get('id', None):
-                resource_price.currency = Currency.objects.get(id=currency.get('id', None))
-            else:
-                resource_price.currency = None
-        # Deserialize unit
+        if currency and currency.get('id'):
+            resource_price.currency = Currency.objects.get(id=currency['id'])
         unit = validated_data.pop('unit')
-        if unit:
-            if unit.get('id', None):
-                resource_price.unit = Unit.objects.get(id=unit.get('id', None))
-            else:
-                resource_price.unit = None
+        if unit and unit.get('id'):
+            resource_price.unit = Unit.objects.get(id=unit['id'])
         resource_price.save()
-        # Deserialize customer group
-        customer_group = validated_data.pop('customer_group')
-        if customer_group:
-            if customer_group.get('id', None):
-                resource_price.customer_group = CustomerGroup.objects.get(id=customer_group.get('id', None))
-            else:
-                resource_price.customer_group = None
+        party_group = validated_data.pop('party_group', None)
+        if party_group and party_group.get('id'):
+            resource_price.party_group = PartyGroup.objects.get(id=party_group['id'])
         resource_price.save()
         return resource_price
 
     def update(self, resource_price, validated_data):
-        # Deserialize currency
         currency = validated_data.pop('currency')
-        if currency:
-            if currency.get('id', resource_price.currency):
-                resource_price.currency = Currency.objects.get(id=currency.get('id', None))
-            else:
-                resource_price.currency = resource_price.currency_id
-        else:
-            resource_price.currency = None
-        # Deserialize unit
+        if currency and currency.get('id'):
+            resource_price.currency = Currency.objects.get(id=currency['id'])
         unit = validated_data.pop('unit')
-        if unit:
-            if unit.get('id', resource_price.status):
-                resource_price.unit = Unit.objects.get(id=unit.get('id', None))
-            else:
-                resource_price.unit = resource_price.unit_id
-        else:
-            resource_price.unit = None
+        if unit and unit.get('id'):
+            resource_price.unit = Unit.objects.get(id=unit['id'])
         resource_price.save()
-        # Deserialize customer group
-        customer_group = validated_data.pop('customer_group')
-        if customer_group:
-            if customer_group.get('id', resource_price.customer_group):
-                resource_price.customer_group = CustomerGroup.objects.get(id=customer_group.get('id', None))
-            else:
-                resource_price.customer_group = resource_price.customer_group_id
+        party_group = validated_data.pop('party_group', None)
+        if party_group and party_group.get('id'):
+            resource_price.party_group = PartyGroup.objects.get(id=party_group['id'])
         else:
-            resource_price.customer_group = None
+            resource_price.party_group = None
         resource_price.save()
         return resource_price

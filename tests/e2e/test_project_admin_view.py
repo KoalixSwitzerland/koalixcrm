@@ -20,7 +20,7 @@ class TestProjectAdminView(UITests):
     def test_project_admin(self):
         selenium = self.selenium
         # login
-        selenium.get('%s%s' % (self.live_server_url, '/admin/crm/project/'))
+        selenium.get('%s%s' % (self.live_server_url, '/admin/reporting/project/'))
         # the browser will be redirected to the login page
         timeout = 10
         try:
@@ -34,7 +34,7 @@ class TestProjectAdminView(UITests):
         username.send_keys("admin")
         password.send_keys("admin")
         time.sleep(5)
-        self.selenium.get('%s%s' % (self.live_server_url, '/admin/crm/project/'))
+        self.selenium.get('%s%s' % (self.live_server_url, '/admin/reporting/project/'))
         try:
             element_present = expected_conditions.presence_of_element_located((By.ID,
                                                                                '/html/body/div/article/header/ul/li/a'))
@@ -42,7 +42,7 @@ class TestProjectAdminView(UITests):
         except TimeoutException:
             print("Timed out waiting for page to load")
         # find the form element
-        selenium.get('%s%s' % (self.live_server_url, '/admin/crm/project/add'))
+        selenium.get('%s%s' % (self.live_server_url, '/admin/reporting/project/add'))
 
         try:
             element_present = expected_conditions.presence_of_element_located((By.ID, 'id_project_status'))

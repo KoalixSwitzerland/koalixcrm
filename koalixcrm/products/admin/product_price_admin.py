@@ -17,7 +17,7 @@ class ProductPriceInlineAdmin(admin.TabularInline):
                        'unit',
                        'valid_from',
                        'valid_until',
-                       'customer_group')
+                       'party_group')
         }),
     )
     allow_add = True

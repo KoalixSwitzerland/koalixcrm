@@ -30,9 +30,9 @@ class DocumentCommercialDocumentPosition(TestCase):
         self.alternative_currency = self.test_currency_without_rounding
         self.customer_group = StandardCustomerGroupFactory.create()
         self.alternative_customer_group = AdvancedCustomerGroupFactory.create()
-        self.customer = StandardCustomerFactory.create()
-        self.customer.is_member_of.add(self.customer_group)
-        self.customer.save()
+        self.customer = StandardCustomerFactory.create(
+            is_member_of=(self.customer_group,),
+        )
         self.unit = StandardUnitFactory.create()
         self.alternative_unit = SmallUnitFactory.create()
         self.product_without_dates = StandardProductTypeFactory.create(
@@ -41,7 +41,7 @@ class DocumentCommercialDocumentPosition(TestCase):
         )
         self.price_without_customer_group = StandardPriceFactory.create(
             product_type=self.product_without_dates,
-            customer_group=None,
+            party_group=None,
             price=100,
             unit=self.unit,
             currency=self.test_currency_with_rounding,
@@ -51,7 +51,7 @@ class DocumentCommercialDocumentPosition(TestCase):
 
     @pytest.mark.back_end_tests
     def test_calculate_document_price_overwritten(self):
-        quotation_1 = StandardQuotationFactory.create(customer=self.customer)
+        quotation_1 = StandardQuotationFactory.create(party=self.customer)
         StandardCommercialDocumentPositionFactory.create(
             quantity=1,
             discount=0,
@@ -73,7 +73,7 @@ class DocumentCommercialDocumentPosition(TestCase):
 
     @pytest.mark.back_end_tests
     def test_calculate_document_price_overwritten_WithNone(self):
-        quotation_2 = StandardQuotationFactory.create(customer=self.customer)
+        quotation_2 = StandardQuotationFactory.create(party=self.customer)
         StandardCommercialDocumentPositionFactory.create(
             quantity=1,
             discount=0,

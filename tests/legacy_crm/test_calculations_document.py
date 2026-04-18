@@ -32,9 +32,9 @@ class DocumentCalculationsTest(TestCase):
         self.alternative_currency = self.test_currency_without_rounding
         self.customer_group = StandardCustomerGroupFactory.create()
         self.alternative_customer_group = AdvancedCustomerGroupFactory.create()
-        self.customer = StandardCustomerFactory.create()
-        self.customer.is_member_of.add(self.customer_group)
-        self.customer.save()
+        self.customer = StandardCustomerFactory.create(
+            is_member_of=(self.customer_group,),
+        )
         self.unit = StandardUnitFactory.create()
         self.alternative_unit = SmallUnitFactory.create()
         self.product_without_dates = StandardProductTypeFactory.create(
@@ -75,7 +75,7 @@ class DocumentCalculationsTest(TestCase):
         )
         self.price_without_customer_group = StandardPriceFactory.create(
             product_type=self.product_without_customer_group,
-            customer_group=None,
+            party_group=None,
             price=100,
             unit=self.unit,
             currency=self.test_currency_with_rounding,
@@ -84,7 +84,7 @@ class DocumentCalculationsTest(TestCase):
         )
         self.price_without_dates = StandardPriceFactory.create(
             product_type=self.product_without_dates,
-            customer_group=self.customer_group,
+            party_group=self.customer_group,
             valid_from=None,
             valid_until=None,
             unit=self.unit,
@@ -93,7 +93,7 @@ class DocumentCalculationsTest(TestCase):
         )
         self.price_without_date_to = StandardPriceFactory.create(
             product_type=self.product_without_date_until,
-            customer_group=self.customer_group,
+            party_group=self.customer_group,
             valid_from=start_date,
             valid_until=None,
             unit=self.unit,
@@ -102,7 +102,7 @@ class DocumentCalculationsTest(TestCase):
         )
         self.price_without_date_from = StandardPriceFactory.create(
             product_type=self.product_without_date_from,
-            customer_group=self.customer_group,
+            party_group=self.customer_group,
             valid_from=None,
             valid_until=end_date,
             unit=self.unit,
@@ -112,7 +112,7 @@ class DocumentCalculationsTest(TestCase):
         self.price_without_date_from = StandardPriceFactory.create(
             product_type=self.product_without_currency_rounding,
             currency=self.test_currency_without_rounding,
-            customer_group=self.customer_group,
+            party_group=self.customer_group,
             price=25,
             unit=self.unit,
             valid_from=start_date,
@@ -121,7 +121,7 @@ class DocumentCalculationsTest(TestCase):
         self.price_without_date_from = StandardPriceFactory.create(
             product_type=self.product_with_currency_rounding,
             currency=self.test_currency_with_rounding,
-            customer_group=self.customer_group,
+            party_group=self.customer_group,
             price=33,
             unit=self.unit,
             valid_from=start_date,
@@ -129,7 +129,7 @@ class DocumentCalculationsTest(TestCase):
         )
         self.price_with_alternative_customer_group = StandardPriceFactory.create(
             product_type=self.product_with_alternative_customer_group,
-            customer_group=self.alternative_customer_group,
+            party_group=self.alternative_customer_group,
             valid_from=start_date,
             valid_until=end_date,
             unit=self.unit,
@@ -137,14 +137,14 @@ class DocumentCalculationsTest(TestCase):
             price=80
         )
         self.customer_group_transform = StandardCustomerGroupTransformFactory.create(
-            from_customer_group=self.alternative_customer_group,
-            to_customer_group=self.customer_group,
+            from_party_group=self.alternative_customer_group,
+            to_party_group=self.customer_group,
             product_type=self.product_with_alternative_customer_group,
             factor=0.50
         )
         self.price_with_alternative_currency = StandardPriceFactory.create(
             product_type=self.product_with_alternative_currency,
-            customer_group=self.customer_group,
+            party_group=self.customer_group,
             valid_from=start_date,
             valid_until=end_date,
             unit=self.unit,
@@ -159,7 +159,7 @@ class DocumentCalculationsTest(TestCase):
         )
         self.price_with_alternative_unit = StandardPriceFactory.create(
             product_type=self.product_with_alternative_unit,
-            customer_group=self.customer_group,
+            party_group=self.customer_group,
             valid_from=start_date,
             valid_until=end_date,
             unit=self.alternative_unit,
@@ -175,7 +175,7 @@ class DocumentCalculationsTest(TestCase):
 
     @pytest.mark.back_end_tests
     def test_calculate_document_price_without_customer_group(self):
-        quotation_1 = StandardQuotationFactory.create(customer=self.customer)
+        quotation_1 = StandardQuotationFactory.create(party=self.customer)
         StandardCommercialDocumentPositionFactory.create(
             quantity=1,
             discount=0,
@@ -196,7 +196,7 @@ class DocumentCalculationsTest(TestCase):
 
     @pytest.mark.back_end_tests
     def test_calculate_document_price_without_date_from(self):
-        quotation_2 = StandardQuotationFactory.create(customer=self.customer)
+        quotation_2 = StandardQuotationFactory.create(party=self.customer)
         StandardCommercialDocumentPositionFactory.create(
             quantity=1,
             discount=0,
@@ -217,7 +217,7 @@ class DocumentCalculationsTest(TestCase):
 
     @pytest.mark.back_end_tests
     def test_calculate_document_price_without_date_until(self):
-        quotation_3 = StandardQuotationFactory.create(customer=self.customer)
+        quotation_3 = StandardQuotationFactory.create(party=self.customer)
         StandardCommercialDocumentPositionFactory.create(
             quantity=1,
             discount=0,
@@ -238,7 +238,7 @@ class DocumentCalculationsTest(TestCase):
 
     @pytest.mark.back_end_tests
     def test_calculate_document_price_without_dates(self):
-        quotation_4 = StandardQuotationFactory.create(customer=self.customer)
+        quotation_4 = StandardQuotationFactory.create(party=self.customer)
         StandardCommercialDocumentPositionFactory.create(
             quantity=1,
             discount=0,
@@ -260,7 +260,7 @@ class DocumentCalculationsTest(TestCase):
     @pytest.mark.back_end_tests
     def test_calculate_document_price_with_currency_rounding(self):
         quotation_5 = StandardQuotationFactory.create(
-            customer=self.customer,
+            party=self.customer,
             currency=self.test_currency_with_rounding
         )
         StandardCommercialDocumentPositionFactory.create(
@@ -284,7 +284,7 @@ class DocumentCalculationsTest(TestCase):
     @pytest.mark.back_end_tests
     def test_calculate_document_price_without_currency_rounding(self):
         quotation_6 = StandardQuotationFactory.create(
-            customer=self.customer,
+            party=self.customer,
             currency=self.test_currency_without_rounding
         )
         StandardCommercialDocumentPositionFactory.create(
@@ -308,7 +308,7 @@ class DocumentCalculationsTest(TestCase):
     @pytest.mark.back_end_tests
     def test_calculate_document_price_with_document_discount(self):
         quotation_7 = StandardQuotationFactory.create(
-            customer=self.customer,
+            party=self.customer,
             currency=self.test_currency_without_rounding,
             discount=10
         )
@@ -333,7 +333,7 @@ class DocumentCalculationsTest(TestCase):
     @pytest.mark.back_end_tests
     def test_calculate_document_with_customer_group_transform(self):
         quotation_8 = StandardQuotationFactory.create(
-            customer=self.customer)
+            party=self.customer)
         StandardCommercialDocumentPositionFactory.create(
             quantity=1,
             discount=0,
@@ -356,7 +356,7 @@ class DocumentCalculationsTest(TestCase):
     def test_calculate_document_with_currency_transform(self):
         quotation_9 = StandardQuotationFactory.create(
             currency=self.test_currency_with_rounding,
-            customer=self.customer)
+            party=self.customer)
         StandardCommercialDocumentPositionFactory.create(
             quantity=1,
             discount=0,
@@ -377,7 +377,7 @@ class DocumentCalculationsTest(TestCase):
 
     @pytest.mark.back_end_tests
     def test_calculate_document_with_unit_transform(self):
-        quotation_10 = StandardQuotationFactory.create(customer=self.customer)
+        quotation_10 = StandardQuotationFactory.create(party=self.customer)
         StandardCommercialDocumentPositionFactory.create(
             quantity=1,
             discount=0,

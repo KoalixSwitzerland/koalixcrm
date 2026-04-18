@@ -41,7 +41,9 @@ def _build_absolute_url(request, path):
 
 class LoginSelectionView(View):
     """
-    Admin login view. Redirects directly to OIDC provider OAuth flow.
+    Admin login view. Redirects to the OIDC provider when configured;
+    otherwise falls back to Django's built-in admin login form so that
+    local development and e2e tests work without a live Keycloak.
     """
     def get(self, request):
         next_url = request.GET.get('next', '')
@@ -53,10 +55,36 @@ class LoginSelectionView(View):
                 return redirect('admin:index')
             return redirect('/')
 
-        oidc_url = reverse('oauth-login', kwargs={'provider': 'oidc'})
-        if next_url:
-            oidc_url += f'?next={next_url}'
-        return redirect(oidc_url)
+        if hasattr(oauth, 'oidc'):
+            oidc_url = reverse('oauth-login', kwargs={'provider': 'oidc'})
+            if next_url:
+                oidc_url += f'?next={next_url}'
+            return redirect(oidc_url)
+
+        from django.contrib.admin.sites import site as _admin_site
+        from django.contrib.auth.views import LoginView
+        return LoginView.as_view(
+            template_name='admin/login.html',
+            extra_context={
+                **_admin_site.each_context(request),
+                'title': _admin_site.site_header,
+            },
+        )(request)
+
+    def post(self, request):
+        # Delegate credential POSTs to the fallback admin login form when
+        # OIDC isn't configured; the authlib flow doesn't use POST.
+        if hasattr(oauth, 'oidc'):
+            return redirect('login-selection')
+        from django.contrib.admin.sites import site as _admin_site
+        from django.contrib.auth.views import LoginView
+        return LoginView.as_view(
+            template_name='admin/login.html',
+            extra_context={
+                **_admin_site.each_context(request),
+                'title': _admin_site.site_header,
+            },
+        )(request)
 
 
 class OAuthLoginView(View):

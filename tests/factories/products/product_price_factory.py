@@ -16,7 +16,7 @@ class StandardPriceFactory(factory.django.DjangoModelFactory):
         django_get_or_create = ('product_type',
                                 'unit',
                                 'currency',
-                                'customer_group',
+                                'party_group',
                                 'price',
                                 'valid_from',
                                 'valid_until')
@@ -24,7 +24,7 @@ class StandardPriceFactory(factory.django.DjangoModelFactory):
     product_type = factory.SubFactory(StandardProductFactory)
     unit = factory.SubFactory(StandardUnitFactory)
     currency = factory.SubFactory(StandardCurrencyFactory)
-    customer_group = factory.SubFactory(StandardCustomerGroupFactory)
+    party_group = factory.SubFactory(StandardCustomerGroupFactory)
     price = "100.50"
     valid_from = make_date_utc(datetime.datetime(2018, 6, 15, 00)).date()
     valid_until = make_date_utc(datetime.datetime(2024, 6, 15, 00)).date()
@@ -36,7 +36,7 @@ class HighPriceFactory(factory.django.DjangoModelFactory):
     product_type = factory.SubFactory(StandardProductFactory)
     unit = factory.SubFactory(StandardUnitFactory)
     currency = factory.SubFactory(StandardCurrencyFactory)
-    customer_group = factory.SubFactory(StandardCustomerGroupFactory)
+    party_group = factory.SubFactory(StandardCustomerGroupFactory)
     price = "250.50"
     valid_from = make_date_utc(datetime.datetime(2018, 6, 15, 00)).date()
     valid_until = make_date_utc(datetime.datetime(2024, 6, 15, 00)).date()

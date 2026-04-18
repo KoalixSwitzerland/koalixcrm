@@ -9,7 +9,8 @@ class ContractJSONSerializer(serializers.ModelSerializer):
         fields = ('id',
                   'staff',
                   'description',
-                  'default_customer',
+                  'buyer_party',
+                  'supplier_party',
                   'default_currency',
                   'default_template_set',
                   'last_modified_by')

@@ -69,9 +69,10 @@ class CommercialDocument(models.Model):
                                               verbose_name=_("Tax"),
                                               blank=True,
                                               null=True)
-    customer = models.ForeignKey("contacts.Customer",
-                                 on_delete=models.CASCADE,
-                                 verbose_name=_("Customer"))
+    party = models.ForeignKey("contacts.Party",
+                              on_delete=models.PROTECT,
+                              related_name="commercial_documents",
+                              verbose_name=_("Party"))
     staff = models.ForeignKey('auth.User',
                               on_delete=models.CASCADE,
                               limit_choices_to={'is_staff': True},
@@ -112,34 +113,6 @@ class CommercialDocument(models.Model):
         verbose_name = _('Commercial Document')
         verbose_name_plural = _('Commercial Documents')
 
-    def serialize_to_xml(self):
-        from koalixcrm.contacts.models import PostalAddressForContact
-        from koalixcrm.contacts.models import Contact
-        from koalixcrm.core.models import Currency
-        from koalixcrm.contracts.models.purchase_order import PurchaseOrder
-        from koalixcrm.contracts.models.commercial_document_position import CommercialDocumentPosition
-        from django.contrib import auth
-        objects = [self, ]
-        position_class = CommercialDocumentPosition
-        objects += list(CommercialDocument.objects.filter(id=self.id))
-        if isinstance(self, PurchaseOrder):
-            objects += list(Contact.objects.filter(id=self.supplier.id))
-            objects += list(PostalAddressForContact.objects.filter(person=self.supplier.id))
-            for address in list(PostalAddressForContact.objects.filter(person=self.supplier.id)):
-                objects += list(PostalAddress.objects.filter(id=address.id))
-        else:
-            objects += list(Contact.objects.filter(id=self.customer.id))
-            objects += list(PostalAddressForContact.objects.filter(person=self.customer.id))
-            for address in list(PostalAddressForContact.objects.filter(person=self.customer.id)):
-                objects += list(PostalAddress.objects.filter(id=address.id))
-        objects += list(TextParagraphInCommercialDocument.objects.filter(commercial_document=self.id))
-        objects += list(Currency.objects.filter(id=self.currency.id))
-        objects += CommercialDocumentPosition.add_positions(position_class, self)
-        objects += list(auth.models.User.objects.filter(id=self.staff.id))
-        objects += UserExtension.objects_to_serialize(self, self.staff)
-        main_xml = PDFExport.write_xml(objects)
-        return main_xml
-
     def is_complete_with_price(self):
         """ Checks whether the CommercialDocument is completed with a price, in case the
         CommercialDocument was not completed or the price calculation was not performed,
@@ -154,14 +127,14 @@ class CommercialDocument(models.Model):
         self.staff = calling_model.staff
         if isinstance(calling_model, koalixcrm.contracts.models.contract.Contract):
             self.contract = calling_model
-            self.customer = calling_model.default_customer
+            self.party = calling_model.buyer_party
             self.currency = calling_model.default_currency
             self.description = calling_model.description
             self.discount = 0
         elif isinstance(calling_model, CommercialDocument):
             self.derived_from_commercial_document = calling_model
             self.contract = calling_model.contract
-            self.customer = calling_model.customer
+            self.party = calling_model.party
             self.currency = calling_model.currency
             self.description = calling_model.description
             self.discount = calling_model.discount

@@ -47,7 +47,7 @@ class InlineCreditNote(admin.TabularInline):
     extra = 1
     readonly_fields = ('link_to_credit_note',
                        'contract',
-                       'customer',
+                       'party',
                        'issue_date',
                        'status',
                        'last_pricing_date',
@@ -57,7 +57,7 @@ class InlineCreditNote(admin.TabularInline):
         (_('Credit Note'), {
             'fields': ('link_to_credit_note',
                        'contract',
-                       'customer',
+                       'party',
                        'issue_date',
                        'status',
                        'last_pricing_date',

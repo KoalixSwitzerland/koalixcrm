@@ -22,12 +22,12 @@ class ContractAPITest(LiveServerTestCase):
         )
         self.billing_cycle = StandardCustomerBillingCycleFactory.create()
         self.customer = StandardCustomerFactory.create(
-            default_customer_billing_cycle=self.billing_cycle,
+            default_billing_cycle=self.billing_cycle,
         )
         self.currency = StandardCurrencyFactory.create()
         self.contract = StandardContractFactory.create(
             staff=self.admin_user,
-            default_customer=self.customer,
+            buyer_party=self.customer,
             default_currency=self.currency,
             last_modified_by=self.admin_user,
         )
@@ -52,7 +52,7 @@ class ContractAPITest(LiveServerTestCase):
         data = {
             "description": "New API Contract",
             "staff": self.admin_user.id,
-            "default_customer": self.customer.id,
+            "buyer_party": self.customer.id,
             "default_currency": self.currency.id,
             "last_modified_by": self.admin_user.id,
         }

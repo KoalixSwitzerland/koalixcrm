@@ -43,7 +43,7 @@ class InlineQuotation(admin.TabularInline):
     extra = 1
     readonly_fields = ('link_to_quotation',
                        'contract',
-                       'customer',
+                       'party',
                        'valid_until',
                        'status',
                        'last_pricing_date',
@@ -53,7 +53,7 @@ class InlineQuotation(admin.TabularInline):
         (_('Quotation'), {
             'fields': ('link_to_quotation',
                        'contract',
-                       'customer',
+                       'party',
                        'valid_until',
                        'status',
                        'last_pricing_date',

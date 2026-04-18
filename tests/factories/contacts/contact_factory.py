@@ -1,16 +1,21 @@
 # -*- coding: utf-8 -*-
+"""Factory for the new Party pattern (post-v2.0.0 / issue #395 G3).
 
+`StandardContactFactory` still exists by name for downstream factory
+inheritance, but it now produces a `contacts.Organization` (Party
+subclass) instead of the legacy `contacts.Contact`. Tests that expected
+legacy-Contact-only attributes need targeted updates.
+"""
 import factory
-from koalixcrm.contacts.models import Contact
+
+from koalixcrm.contacts.models.organization import Organization
 from tests.factories.contacts.user_factory import StaffUserFactory
 
 
 class StandardContactFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = Contact
-        django_get_or_create = ('name',)
+        model = Organization
 
-    name = "John Smith"
-    date_of_creation = "2018-05-01"
-    last_modification = "2018-05-03"
+    display_name = factory.Sequence(lambda n: f"Fixture Org {n}")
+    legal_name = factory.LazyAttribute(lambda o: o.display_name)
     last_modified_by = factory.SubFactory(StaffUserFactory)

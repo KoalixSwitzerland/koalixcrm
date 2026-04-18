@@ -10,7 +10,7 @@ from tests.factories.contacts.customer_group_factory import StandardCustomerGrou
 class StandardCustomerGroupTransformFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = CustomerGroupTransform
-    from_customer_group = factory.SubFactory(AdvancedCustomerGroupFactory)
-    to_customer_group = factory.SubFactory(StandardCustomerGroupFactory)
+    from_party_group = factory.SubFactory(AdvancedCustomerGroupFactory)
+    to_party_group = factory.SubFactory(StandardCustomerGroupFactory)
     product_type = factory.SubFactory(StandardProductTypeFactory)
     factor = "10"

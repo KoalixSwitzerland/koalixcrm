@@ -32,7 +32,7 @@ class CreateSalesDocumentFromContract(UITests):
     def test_create_sales_document_from_contract(self):
         selenium = self.selenium
         # login
-        selenium.get('%s%s' % (self.live_server_url, '/admin/crm/contract/'))
+        selenium.get('%s%s' % (self.live_server_url, '/admin/contract_object_management/contract/'))
         # the browser will be redirected to the login page
         timeout = 2
         try:
