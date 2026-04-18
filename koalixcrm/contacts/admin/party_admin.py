@@ -6,6 +6,10 @@ fieldsets) arrives in PR #394 once the new model is authoritative.
 """
 from django.contrib import admin
 
+from koalixcrm.contacts.admin.actions import (
+    convert_contacts_to_organizations,
+    convert_organizations_to_contacts,
+)
 from koalixcrm.contacts.models.party import Party
 from koalixcrm.contacts.models.organization import Organization
 from koalixcrm.contacts.models.natural_person import PartyContact
@@ -33,12 +37,14 @@ class PartyAdmin(admin.ModelAdmin):
 class OrganizationAdmin(admin.ModelAdmin):
     list_display = ('id', 'display_name', 'legal_form', 'legal_name', 'legal_seat_country')
     search_fields = ('display_name', 'legal_name', 'registration_number')
+    actions = [convert_organizations_to_contacts]
 
 
 @admin.register(PartyContact)
 class PartyContactAdmin(admin.ModelAdmin):
     list_display = ('id', 'display_name', 'given_name', 'family_name', 'gdpr_consent_date')
     search_fields = ('display_name', 'given_name', 'family_name')
+    actions = [convert_contacts_to_organizations]
 
 
 @admin.register(PartyIdentification)
