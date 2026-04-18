@@ -79,7 +79,7 @@ class OptionCommercialDocument(admin.ModelAdmin):
     list_display = ('id',
                     'description',
                     'contract',
-                    'customer',
+                    'party',
                     'currency',
                     'staff',
                     'last_modified_by',
@@ -89,21 +89,21 @@ class OptionCommercialDocument(admin.ModelAdmin):
                     'last_modification',
                     'last_print_date')
     list_display_links = ('id',)
-    list_filter = ('customer',
+    list_filter = ('party',
                    'contract',
                    'currency',
                    'staff',
                    'last_modification')
     ordering = ('-id',)
     search_fields = ('contract__id',
-                     'customer__name',
+                     'party__display_name',
                      'currency__description')
 
     fieldsets = (
         (_('Sales Contract'), {
             'fields': ('contract',
                        'description',
-                       'customer',
+                       'party',
                        'currency',
                        'discount',
                        'staff',

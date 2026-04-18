@@ -113,7 +113,7 @@ class InlineInvoice(admin.TabularInline):
     extra = 1
     readonly_fields = ('link_to_invoice',
                        'contract',
-                       'customer',
+                       'party',
                        'payable_until',
                        'status',
                        'last_pricing_date',
@@ -123,7 +123,7 @@ class InlineInvoice(admin.TabularInline):
         (_('Invoice'), {
             'fields': ('link_to_invoice',
                        'contract',
-                       'customer',
+                       'party',
                        'payable_until',
                        'status',
                        'last_pricing_date',
