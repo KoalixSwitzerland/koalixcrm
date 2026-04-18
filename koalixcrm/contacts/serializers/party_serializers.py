@@ -53,7 +53,7 @@ class PartyContactJSONSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'display_name', 'default_language',
             'prefix', 'given_name', 'family_name',
-            'date_of_birth', 'gdpr_consent_date', 'preferred_language',
+            'date_of_birth', 'gdpr_consent_date',
             'created_at', 'updated_at',
         )
         read_only_fields = ('created_at', 'updated_at')

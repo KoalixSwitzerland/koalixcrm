@@ -4,7 +4,6 @@ from django.utils.translation import gettext as _
 
 from koalixcrm.contacts.models.party import Party
 from koalixcrm.core.const.postaladdressprefix import POSTALADDRESSPREFIX
-from koalixcrm.core.const.party import LANGUAGE_CHOICES
 
 
 # Class is named `PartyContact` (not `Contact`) to avoid colliding with the
@@ -33,11 +32,8 @@ class PartyContact(Party):
         blank=True, null=True,
         verbose_name=_("GDPR consent date"),
     )
-    preferred_language = models.CharField(
-        max_length=2, choices=LANGUAGE_CHOICES,
-        blank=True, null=True,
-        verbose_name=_("Preferred language"),
-    )
+    # Language preference lives on the parent Party as `default_language` —
+    # inherited automatically via MTI, one field for orgs and contacts.
 
     class Meta:
         app_label = "contacts"

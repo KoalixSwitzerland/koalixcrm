@@ -23,7 +23,6 @@ public record PartyContactDto(
         String familyName,
         LocalDate dateOfBirth,
         LocalDate gdprConsentDate,
-        String preferredLanguage,
         OffsetDateTime createdAt,
         OffsetDateTime updatedAt
 ) {

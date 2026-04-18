@@ -58,7 +58,7 @@ class PartyContactModelTest(TestCase):
             given_name="Jane",
             family_name="Doe",
             date_of_birth=datetime.date(1990, 1, 1),
-            preferred_language='en',
+            default_language='en',
         )
         self.assertIsNotNone(contact.id)
         self.assertEqual(str(contact), "Jane Doe")

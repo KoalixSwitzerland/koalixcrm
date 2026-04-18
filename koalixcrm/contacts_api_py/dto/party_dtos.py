@@ -48,7 +48,6 @@ class PartyContact(BaseModel):
         self.family_name = None
         self.date_of_birth = None
         self.gdpr_consent_date = None
-        self.preferred_language = None
         self.created_at = None
         self.updated_at = None
         super().__init__(data)
