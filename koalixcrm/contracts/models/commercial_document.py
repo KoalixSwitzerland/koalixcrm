@@ -72,15 +72,13 @@ class CommercialDocument(models.Model):
     customer = models.ForeignKey("contacts.Customer",
                                  on_delete=models.CASCADE,
                                  verbose_name=_("Customer"))
-    # Transitional Party-pattern FK (issue #394). Nullable during the
-    # migration window; the legacy `customer` remains authoritative until
-    # #395. Populated by 0007_contract_party_fks.
+    # Party-pattern FK (issue #394, tightened to NOT NULL in #395 G2).
+    # `customer` is kept through #395 G3 for the backfill's benefit and
+    # then dropped; `party` is the long-lived FK target.
     party = models.ForeignKey("contacts.Party",
                               on_delete=models.PROTECT,
                               related_name="commercial_documents",
-                              verbose_name=_("Party"),
-                              null=True,
-                              blank=True)
+                              verbose_name=_("Party"))
     staff = models.ForeignKey('auth.User',
                               on_delete=models.CASCADE,
                               limit_choices_to={'is_staff': True},
