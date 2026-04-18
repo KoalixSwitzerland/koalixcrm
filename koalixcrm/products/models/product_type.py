@@ -71,7 +71,7 @@ class ProductType(models.Model):
                     lowest_price = price
             return lowest_price
         else:
-            raise ProductType.NoPriceFound(customer, unit, date, currency, self)
+            raise ProductType.NoPriceFound(party, unit, date, currency, self)
 
     def get_tax_rate(self):
         return self.tax.get_tax_rate()
@@ -86,16 +86,15 @@ class ProductType(models.Model):
         verbose_name_plural = _('Product Types')
 
     class NoPriceFound(Exception):
-        def __init__(self, customer, unit, date, currency, product):
-            self.customer = customer
+        def __init__(self, party, unit, date, currency, product):
+            self.party = party
             self.unit = unit
             self.date = date
             self.product = product
             self.currency = currency
-            return
 
         def __str__(self):
             return _("There is no Price for this product type") + ": " + self.product.__str__() + _(
                 "that matches the date") + ": " + self.date.__str__() + " ," + _(
-                "customer") + ": " + self.customer.__str__() + " ," + _(
+                "party") + ": " + self.party.__str__() + " ," + _(
                 "currency") + ": " + self.currency.__str__() + _(" and unit") + ":" + self.unit.__str__()
