@@ -14,7 +14,7 @@ class StandardContractFactory(factory.django.DjangoModelFactory):
 
     staff = factory.SubFactory(StaffUserFactory)
     description = "This is the description to a test contract"
-    default_customer = factory.SubFactory(StandardCustomerFactory)
+    buyer_party = factory.SubFactory(StandardCustomerFactory)
     default_currency = factory.SubFactory(StandardCurrencyFactory)
     default_template_set = factory.SubFactory(StandardTemplateSetFactory)
     date_of_creation = "2018-05-01"

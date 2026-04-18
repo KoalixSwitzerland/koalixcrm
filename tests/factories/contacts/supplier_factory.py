@@ -6,8 +6,6 @@ equivalent of the legacy Supplier model. `offers_shipment_to_customers`
 has no direct replacement in the Party pattern; tests that depended on
 it need a follow-up.
 """
-from datetime import date
-
 import factory
 
 from koalixcrm.contacts.models.party_role import PartyRole
@@ -20,9 +18,11 @@ class StandardSupplierFactory(StandardContactFactory):
     def supplier_role(obj, create, extracted, **kwargs):
         if not create:
             return
+        # ISO string instead of date() — some tests freeze datetime.date and
+        # breaks Django's isinstance check for DateField values.
         PartyRole.objects.create(
             party_id=obj.pk,
             role_type='supplier',
             is_primary=True,
-            valid_from=date(1970, 1, 1),
+            valid_from='1970-01-01',
         )

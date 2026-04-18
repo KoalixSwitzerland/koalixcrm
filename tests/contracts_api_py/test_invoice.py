@@ -23,18 +23,18 @@ class InvoiceAPITest(LiveServerTestCase):
         )
         self.billing_cycle = StandardCustomerBillingCycleFactory.create()
         self.customer = StandardCustomerFactory.create(
-            default_customer_billing_cycle=self.billing_cycle,
+            default_billing_cycle=self.billing_cycle,
         )
         self.currency = StandardCurrencyFactory.create()
         self.contract = StandardContractFactory.create(
             staff=self.admin_user,
-            default_customer=self.customer,
+            buyer_party=self.customer,
             default_currency=self.currency,
             last_modified_by=self.admin_user,
         )
         self.invoice = StandardInvoiceFactory.create(
             contract=self.contract,
-            customer=self.customer,
+            party=self.customer,
             currency=self.currency,
             staff=self.admin_user,
             last_modified_by=self.admin_user,
@@ -59,7 +59,7 @@ class InvoiceAPITest(LiveServerTestCase):
     def test_write(self):
         data = {
             "contract": self.contract.id,
-            "customer": self.customer.id,
+            "party": self.customer.id,
             "currency": self.currency.id,
             "staff": self.admin_user.id,
             "last_modified_by": self.admin_user.id,

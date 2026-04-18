@@ -61,7 +61,7 @@ class TaskPlannedEffort(TestCase):
             resource=self.test_human_resource,
             unit=self.test_unit,
             currency=self.test_currency,
-            customer_group=self.test_customer_group,
+            party_group=self.test_customer_group,
             price="120",
         )
         self.assertEqual(

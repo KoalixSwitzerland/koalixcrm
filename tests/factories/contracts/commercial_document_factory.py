@@ -22,7 +22,7 @@ class StandardCommercialDocumentFactory(factory.django.DjangoModelFactory):
     last_pricing_date = make_date_utc(datetime.datetime(2018, 5, 1, 00))
     last_calculated_price = "220.00"
     last_calculated_tax = "10.00"
-    customer = factory.SubFactory(StandardCustomerFactory)
+    party = factory.SubFactory(StandardCustomerFactory)
     staff = factory.SubFactory(StaffUserFactory)
     currency = factory.SubFactory(StandardCurrencyFactory)
     date_of_creation = make_date_utc(datetime.datetime(2018, 5, 1, 00))
