@@ -3,13 +3,15 @@ package net.koalix.api.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
- * Standalone address (issue #394). Purpose and validity live on the
- * {@link AddressAssignmentDto}, and person-like prefix/name fields live
- * on {@link PartyContactDto}.
+ * Flat postal address as emitted inside a {@link NestedPartyDto}. Purpose
+ * and validity are carried alongside the address fields (the Python
+ * side is really reading an AddressAssignment joined to an Address and
+ * projecting the fields together).
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public record AddressDto(
-        Long id,
+public record NestedPostalAddressDto(
+        String purpose,
+        Boolean isPrimary,
         String addressLine1,
         String addressLine2,
         String addressLine3,
@@ -19,5 +21,4 @@ public record AddressDto(
         String state,
         String country,
         String subdivisionCode
-) {
-}
+) {}

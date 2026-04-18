@@ -2,9 +2,10 @@ package net.koalix.pdf.support;
 
 import net.koalix.api.dto.CommercialDocumentDto;
 import net.koalix.api.dto.CommercialDocumentPositionDto;
-import net.koalix.api.dto.ContactDto;
 import net.koalix.api.dto.CurrencyDto;
-import net.koalix.api.dto.PostalAddressDto;
+import net.koalix.api.dto.NestedPartyDto;
+import net.koalix.api.dto.NestedPartyDto.NestedOrganizationBlock;
+import net.koalix.api.dto.NestedPostalAddressDto;
 import net.koalix.api.dto.ProductTypeDto;
 import net.koalix.api.dto.TaxSummaryEntry;
 import net.koalix.api.dto.UserDto;
@@ -28,14 +29,17 @@ public final class DocumentFixtures {
     public static CommercialDocumentDto invoice() {
         return new CommercialDocumentDto(
                 17L, "Invoice", 12L,
-                new ContactDto(
-                        42L, "ACME SA",
-                        List.of(new PostalAddressDto(
-                                1L, "billing", null, null, "ACME SA",
+                new NestedPartyDto(
+                        42L,
+                        "ACME SA",
+                        "organization",
+                        new NestedOrganizationBlock("ACME SA", "ag", null, "CH"),
+                        null,
+                        List.of(new NestedPostalAddressDto(
+                                "billing", Boolean.TRUE,
                                 "Bahnhofstrasse 1", null, null, null,
-                                8001, "Zurich", null, "CH", null)),
+                                "8001", "Zurich", null, "CH", null)),
                         List.of(), List.of()),
-                null,
                 5L,
                 new CurrencyDto(1L, "Swiss Franc", "CHF", new BigDecimal("0.05")),
                 "EXT-1", "Integration test invoice",

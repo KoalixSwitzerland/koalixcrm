@@ -17,19 +17,23 @@ import static net.koalix.pdf.xml.XmlWriteSupport.writeText;
  * Top-level builder for a {@link CommercialDocumentDto}.
  *
  * <p>Emits a {@code <commercial_document type="Invoice">} element with
- * all nested sub-blocks (customer/supplier contact, currency, positions,
- * tax summary, subclass-specific fields). The XSL-FO templates switch on
- * the {@code type} attribute to render each document kind.
+ * all nested sub-blocks (party, currency, positions, tax summary,
+ * subclass-specific fields). The XSL-FO templates switch on the
+ * {@code type} attribute to render each document kind.
+ *
+ * <p>Post-v2.0.0 (issue #395 G3) the {@code <customer>}/{@code <supplier>}
+ * blocks were replaced by a single {@code <party>} block — the buyer for
+ * sales-side docs and the supplier for PurchaseOrders.
  */
 @Component
 public class CommercialDocumentXmlBuilder implements XmlBuilder<CommercialDocumentDto> {
 
-    private final ContactXmlBuilder contactBuilder;
+    private final PartyXmlBuilder partyBuilder;
     private final PositionXmlBuilder positionBuilder;
 
-    public CommercialDocumentXmlBuilder(ContactXmlBuilder contactBuilder,
+    public CommercialDocumentXmlBuilder(PartyXmlBuilder partyBuilder,
                                         PositionXmlBuilder positionBuilder) {
-        this.contactBuilder = contactBuilder;
+        this.partyBuilder = partyBuilder;
         this.positionBuilder = positionBuilder;
     }
 
@@ -58,15 +62,8 @@ public class CommercialDocumentXmlBuilder implements XmlBuilder<CommercialDocume
             writeText(writer, "description", dto.currency().description());
             writer.writeEndElement();
         }
-        if (dto.customer() != null) {
-            writer.writeStartElement("customer");
-            contactBuilder.write(writer, dto.customer());
-            writer.writeEndElement();
-        }
-        if (dto.supplier() != null) {
-            writer.writeStartElement("supplier");
-            contactBuilder.write(writer, dto.supplier());
-            writer.writeEndElement();
+        if (dto.party() != null) {
+            partyBuilder.write(writer, dto.party());
         }
         if (dto.items() != null) {
             writer.writeStartElement("items");
