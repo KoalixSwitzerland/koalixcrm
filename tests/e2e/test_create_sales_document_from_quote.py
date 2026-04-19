@@ -8,7 +8,7 @@ from tests.factories.contracts.contract_factory import StandardContractFactory
 from tests.factories.contracts.quotation_factory import StandardQuotationFactory
 from tests.factories.contacts.user_factory import AdminUserFactory
 from tests.factories.contacts.customer_group_factory import StandardCustomerGroupFactory
-from tests.factories.djangoUserExtension.factory_document_template import StandardQuoteTemplateFactory
+from tests.factories.djangoUserExtension.factory_document_template import StandardQuotationTemplateFactory
 from tests.factories.djangoUserExtension.factory_document_template import StandardInvoiceTemplateFactory
 from tests.factories.djangoUserExtension.factory_document_template import StandardPurchaseOrderTemplateFactory
 from koalixcrm.contracts.models.quotation import Quotation
@@ -29,7 +29,7 @@ class CreateSalesDocumentFromContract(StaticLiveServerTestCase):
         cls.test_customer_group = StandardCustomerGroupFactory.create()
         cls.test_contract = StandardContractFactory.create()
         cls.test_quote = StandardQuotationFactory.create(contract=cls.test_contract)
-        cls.test_quote_template = StandardQuoteTemplateFactory.create()
+        cls.test_quotation_template = StandardQuotationTemplateFactory.create()
         cls.test_invoice_template = StandardInvoiceTemplateFactory.create()
         cls.test_purchase_order_template = StandardPurchaseOrderTemplateFactory.create()
 
@@ -72,8 +72,8 @@ class CreateSalesDocumentFromContract(StaticLiveServerTestCase):
             print("Timed out waiting for page to load")
 
         test_parameters = {Quotation: {"action_name": "create_quotation",
-                                       "template_name": "quote_template",
-                                       "template_to_select": self.test_quote_template},
+                                       "template_name": "quotation_template",
+                                       "template_to_select": self.test_quotation_template},
                            Invoice: {"action_name": "create_invoice",
                                      "template_name": "invoice_template",
                                      "template_to_select": self.test_invoice_template},

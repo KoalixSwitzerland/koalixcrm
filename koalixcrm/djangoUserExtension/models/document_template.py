@@ -60,18 +60,18 @@ class InvoiceTemplate(DocumentTemplate):
         verbose_name_plural = _('Invoice templates')
 
 
-class QuoteTemplate(DocumentTemplate):
+class QuotationTemplate(DocumentTemplate):
     class Meta:
         app_label = "djangoUserExtension"
-        verbose_name = _('Quote template')
-        verbose_name_plural = _('Quote templates')
+        verbose_name = _('Quotation template')
+        verbose_name_plural = _('Quotation templates')
 
 
-class DeliveryNoteTemplate(DocumentTemplate):
+class DespatchAdviceTemplate(DocumentTemplate):
     class Meta:
         app_label = "djangoUserExtension"
-        verbose_name = _('Delivery note template')
-        verbose_name_plural = _('Delivery note templates')
+        verbose_name = _('Despatch advice template')
+        verbose_name_plural = _('Despatch advice templates')
 
 
 class PaymentReminderTemplate(DocumentTemplate):
@@ -88,11 +88,11 @@ class PurchaseOrderTemplate(DocumentTemplate):
         verbose_name_plural = _('Purchase order templates')
 
 
-class PurchaseConfirmationTemplate(DocumentTemplate):
+class SalesOrderTemplate(DocumentTemplate):
     class Meta:
         app_label = "djangoUserExtension"
-        verbose_name = _('Purchase confirmation template')
-        verbose_name_plural = _('Purchase confirmation templates')
+        verbose_name = _('Sales order template')
+        verbose_name_plural = _('Sales order templates')
 
 
 class ProfitLossStatementTemplate(DocumentTemplate):

@@ -79,10 +79,10 @@ class TestDocumentTemplateEndpoint:
     @pytest.fixture
     def document_template(self, db):
         from tests.factories.djangoUserExtension.factory_document_template import (
-            StandardQuoteTemplateFactory,
+            StandardQuotationTemplateFactory,
         )
 
-        return StandardQuoteTemplateFactory()
+        return StandardQuotationTemplateFactory()
 
     def test_retrieve_returns_sub_resource_hrefs(self, api_client, document_template):
         resp = api_client.get(f"/document_templates/{document_template.id}/")

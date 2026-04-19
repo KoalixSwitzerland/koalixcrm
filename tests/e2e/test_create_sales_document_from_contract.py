@@ -5,7 +5,7 @@ from tests.contracts.test_support_functions import *
 from tests.factories.contracts.contract_factory import StandardContractFactory
 from tests.factories.contacts.user_factory import AdminUserFactory
 from tests.factories.contacts.customer_group_factory import StandardCustomerGroupFactory
-from tests.factories.djangoUserExtension.factory_document_template import StandardQuoteTemplateFactory
+from tests.factories.djangoUserExtension.factory_document_template import StandardQuotationTemplateFactory
 from tests.factories.djangoUserExtension.factory_document_template import StandardInvoiceTemplateFactory
 from tests.factories.djangoUserExtension.factory_document_template import StandardPurchaseOrderTemplateFactory
 from tests.e2e.UITests import UITests
@@ -21,7 +21,7 @@ class CreateSalesDocumentFromContract(UITests):
         self.test_user = AdminUserFactory.create()
         self.test_customer_group = StandardCustomerGroupFactory.create()
         self.test_contract = StandardContractFactory.create()
-        self.test_quote_template = StandardQuoteTemplateFactory.create()
+        self.test_quotation_template = StandardQuotationTemplateFactory.create()
         self.test_invoice_template = StandardInvoiceTemplateFactory.create()
         self.test_purchase_order_template = StandardPurchaseOrderTemplateFactory.create()
 
@@ -54,8 +54,8 @@ class CreateSalesDocumentFromContract(UITests):
             print("Timed out waiting for page to load")
 
         test_parameters = {Quotation: {"action_name": "create_quotation",
-                                       "template_name": "quote_template",
-                                       "template_to_select": self.test_quote_template},
+                                       "template_name": "quotation_template",
+                                       "template_to_select": self.test_quotation_template},
                            Invoice: {"action_name": "create_invoice",
                                      "template_name": "invoice_template",
                                      "template_to_select": self.test_invoice_template},

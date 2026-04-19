@@ -16,20 +16,20 @@ class TemplateSet(models.Model):
                                          on_delete=models.CASCADE,
                                          blank=True,
                                          null=True)
-    quote_template = models.ForeignKey("QuoteTemplate",
-                                       on_delete=models.CASCADE,
-                                       blank=True,
-                                       null=True)
-    delivery_note_template = models.ForeignKey("DeliveryNoteTemplate",
-                                               on_delete=models.CASCADE,
-                                               blank=True, null=True)
+    quotation_template = models.ForeignKey("QuotationTemplate",
+                                           on_delete=models.CASCADE,
+                                           blank=True,
+                                           null=True)
+    despatch_advice_template = models.ForeignKey("DespatchAdviceTemplate",
+                                                 on_delete=models.CASCADE,
+                                                 blank=True, null=True)
     payment_reminder_template = models.ForeignKey("PaymentReminderTemplate",
                                                   on_delete=models.CASCADE,
                                                   blank=True,
                                                   null=True)
-    purchase_confirmation_template = models.ForeignKey("PurchaseConfirmationTemplate",
-                                                       on_delete=models.CASCADE,
-                                                       blank=True, null=True)
+    sales_order_template = models.ForeignKey("SalesOrderTemplate",
+                                             on_delete=models.CASCADE,
+                                             blank=True, null=True)
     purchase_order_template = models.ForeignKey("PurchaseOrderTemplate",
                                                 on_delete=models.CASCADE,
                                                 blank=True,
@@ -60,10 +60,10 @@ class TemplateSet(models.Model):
 
     def get_template_set(self, required_template_set):
         mapping_class_to_templates = {"Invoice": self.invoice_template,
-                                      "Quotation": self.quote_template,
-                                      "DespatchAdvice": self.delivery_note_template,
+                                      "Quotation": self.quotation_template,
+                                      "DespatchAdvice": self.despatch_advice_template,
                                       "PaymentReminder": self.payment_reminder_template,
-                                      "SalesOrder": self.purchase_confirmation_template,
+                                      "SalesOrder": self.sales_order_template,
                                       "PurchaseOrder": self.purchase_order_template,
                                       "ProfitLossStatement": self.profit_loss_statement_template,
                                       "BalanceSheet": self.balance_sheet_statement_template,
@@ -88,10 +88,10 @@ class OptionTemplateSet(admin.ModelAdmin):
         (_('Basics'), {
             'fields': ('title',
                        'invoice_template',
-                       'quote_template',
-                       'delivery_note_template',
+                       'quotation_template',
+                       'despatch_advice_template',
                        'payment_reminder_template',
-                       'purchase_confirmation_template',
+                       'sales_order_template',
                        'purchase_order_template',
                        'profit_loss_statement_template',
                        'balance_sheet_statement_template',

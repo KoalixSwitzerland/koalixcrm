@@ -8,11 +8,11 @@ from typing import Any, Dict, Optional
 @dataclass
 class PDFExportCommand:
     """
-    Command to trigger PDF generation for a sales document or reporting object.
+    Command to trigger PDF generation for a commercial document or reporting object.
 
     Fields:
     - process_id: int (id of PDFExportProcess)
-    - source_model: str (e.g. 'Invoice', 'Quote', 'DeliveryNote')
+    - source_model: str (e.g. 'Invoice', 'Quotation', 'DespatchAdvice', 'SalesOrder', 'PurchaseOrder', 'CreditNote', 'PaymentReminder')
     - source_id: int (id of the source object)
     - template_set_id: int (id of the DocumentTemplate)
     - printed_by_user_id: int (id of the User who triggered the export)

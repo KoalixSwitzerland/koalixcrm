@@ -1,11 +1,11 @@
 from rest_framework import serializers
 
 from koalixcrm.djangoUserExtension.models.document_template import InvoiceTemplate
-from koalixcrm.djangoUserExtension.models.document_template import QuoteTemplate
-from koalixcrm.djangoUserExtension.models.document_template import DeliveryNoteTemplate
+from koalixcrm.djangoUserExtension.models.document_template import QuotationTemplate
+from koalixcrm.djangoUserExtension.models.document_template import DespatchAdviceTemplate
 from koalixcrm.djangoUserExtension.models.document_template import PaymentReminderTemplate
 from koalixcrm.djangoUserExtension.models.document_template import PurchaseOrderTemplate
-from koalixcrm.djangoUserExtension.models.document_template import PurchaseConfirmationTemplate
+from koalixcrm.djangoUserExtension.models.document_template import SalesOrderTemplate
 from koalixcrm.djangoUserExtension.models.document_template import ProfitLossStatementTemplate
 from koalixcrm.djangoUserExtension.models.document_template import BalanceSheetTemplate
 from koalixcrm.djangoUserExtension.models.document_template import MonthlyProjectSummaryTemplate
@@ -30,9 +30,9 @@ class OptionInvoiceTemplateJSONSerializer(OptionDocumentTemplateJSONSerializer):
                   'logo')
 
 
-class OptionQuoteTemplateJSONSerializer(OptionDocumentTemplateJSONSerializer):
+class OptionQuotationTemplateJSONSerializer(OptionDocumentTemplateJSONSerializer):
     class Meta:
-        model = QuoteTemplate
+        model = QuotationTemplate
         fields = ('id',
                   'title',
                   'xsl_file',
@@ -40,9 +40,9 @@ class OptionQuoteTemplateJSONSerializer(OptionDocumentTemplateJSONSerializer):
                   'logo')
 
 
-class OptionDeliveryNoteTemplateJSONSerializer(OptionDocumentTemplateJSONSerializer):
+class OptionDespatchAdviceTemplateJSONSerializer(OptionDocumentTemplateJSONSerializer):
     class Meta:
-        model = DeliveryNoteTemplate
+        model = DespatchAdviceTemplate
         fields = ('id',
                   'title',
                   'xsl_file',
@@ -70,9 +70,9 @@ class OptionPurchaseOrderTemplateJSONSerializer(OptionDocumentTemplateJSONSerial
                   'logo')
 
 
-class OptionPurchaseConfirmationTemplateJSONSerializer(OptionDocumentTemplateJSONSerializer):
+class OptionSalesOrderTemplateJSONSerializer(OptionDocumentTemplateJSONSerializer):
     class Meta:
-        model = PurchaseConfirmationTemplate
+        model = SalesOrderTemplate
         fields = ('id',
                   'title',
                   'xsl_file',

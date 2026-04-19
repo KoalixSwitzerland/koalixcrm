@@ -4,11 +4,11 @@ import factory
 from koalixcrm.djangoUserExtension.models import *
 
 
-class StandardQuoteTemplateFactory(factory.django.DjangoModelFactory):
+class StandardQuotationTemplateFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = QuoteTemplate
+        model = QuotationTemplate
 
-    title = "This is a test Quote Template"
+    title = "This is a test Quotation Template"
     xsl_file = "~/path/to/xsl_file.xsl"
     fop_config_file = "~/path/to/fop_config_file.xml"
     logo = "~/path/to/logo_file.jpg"
@@ -24,11 +24,11 @@ class StandardInvoiceTemplateFactory(factory.django.DjangoModelFactory):
     logo = "~/path/to/logo_file.jpg"
 
 
-class StandardDeliveryNoteTemplateFactory(factory.django.DjangoModelFactory):
+class StandardDespatchAdviceTemplateFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = DeliveryNoteTemplate
+        model = DespatchAdviceTemplate
 
-    title = "This is a test Delivery Note Template"
+    title = "This is a test Despatch Advice Template"
     xsl_file = "~/path/to/xsl_file.xsl"
     fop_config_file = "~/path/to/fop_config_file.xml"
     logo = "~/path/to/logo_file.jpg"
@@ -54,11 +54,11 @@ class StandardPurchaseOrderTemplateFactory(factory.django.DjangoModelFactory):
     logo = "~/path/to/logo_file.jpg"
 
 
-class StandardPurchaseConfirmationTemplateFactory(factory.django.DjangoModelFactory):
+class StandardSalesOrderTemplateFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = PurchaseConfirmationTemplate
+        model = SalesOrderTemplate
 
-    title = "This is a test Purchase Confirmation Template"
+    title = "This is a test Sales Order Template"
     xsl_file = "~/path/to/xsl_file.xsl"
     fop_config_file = "~/path/to/fop_config_file.xml"
     logo = "~/path/to/logo_file.jpg"
