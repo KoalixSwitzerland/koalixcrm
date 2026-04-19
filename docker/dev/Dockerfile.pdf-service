@@ -13,8 +13,18 @@ RUN --mount=type=cache,target=/root/.gradle \
     gradle :pdf-export-service:bootJar --no-daemon
 
 FROM eclipse-temurin:21-jre-alpine AS runtime
+
+ARG APP_VERSION=vX.Y.Z-develop
+ARG VCS_REF=unknown
+
+LABEL org.opencontainers.image.title="koalixcrm-pdf-service-dev" \
+      org.opencontainers.image.version=${APP_VERSION} \
+      org.opencontainers.image.revision=${VCS_REF} \
+      org.opencontainers.image.source="https://github.com/KoalixSwitzerland/koalixcrm"
+
 WORKDIR /app
 COPY --from=build /src/pdf-export-service/build/libs/*.jar /app/pdf-export-service.jar
-ENV JAVA_TOOL_OPTIONS="-XX:MaxRAMPercentage=75"
+ENV JAVA_TOOL_OPTIONS="-XX:MaxRAMPercentage=75" \
+    KOALIXCRM_VERSION=${APP_VERSION}
 EXPOSE 5005
 CMD ["java", "-jar", "/app/pdf-export-service.jar"]

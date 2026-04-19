@@ -1,11 +1,37 @@
+import os
+import re
+
 from setuptools import setup, find_packages
-from koalixcrm.version import KOALIXCRM_VERSION
+
+
+def _resolve_version() -> str:
+    """Resolve the package version.
+
+    Precedence:
+      1. KOALIXCRM_VERSION env var — set by CI (see .github/workflows/*).
+      2. koalixcrm/version.py — auto-written by CI before PyPI upload, or
+         carries the 'vX.Y.Z-develop' fallback during local development.
+    """
+    env_value = os.environ.get("KOALIXCRM_VERSION")
+    if env_value:
+        raw = env_value
+    else:
+        from koalixcrm.version import KOALIXCRM_VERSION
+        raw = KOALIXCRM_VERSION
+
+    # Normalise a git-style tag (e.g. 'v1.15.0', 'v1.15.0-dev5') into a
+    # PEP 440 version (e.g. '1.15.0', '1.15.0.dev5'). Leave already-PEP 440
+    # strings untouched.
+    raw = raw.lstrip("v")
+    raw = re.sub(r"-dev(\d+)$", r".dev\1", raw)
+    return raw
+
 
 with open("README.md", "r", encoding="utf-8") as readme_file:
     long_description = readme_file.read()
 
 setup(name='koalix-crm',
-      version=KOALIXCRM_VERSION,
+      version=_resolve_version(),
       description='koalixcrm is a tiny and easy to use Customer-Relationship-Management'
                   ' Software (CRM) including tiny and easy to use Accounting Software',
       long_description=long_description,

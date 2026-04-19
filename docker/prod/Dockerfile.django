@@ -6,6 +6,9 @@
 
 FROM python:3.13
 
+ARG APP_VERSION=vX.Y.Z-develop
+ARG VCS_REF=unknown
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     libpq-dev \
@@ -14,7 +17,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
  && rm -rf /var/lib/apt/lists/*
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+    PYTHONUNBUFFERED=1 \
+    KOALIXCRM_VERSION=${APP_VERSION}
+
+LABEL org.opencontainers.image.title="koalixcrm-django" \
+      org.opencontainers.image.version=${APP_VERSION} \
+      org.opencontainers.image.revision=${VCS_REF} \
+      org.opencontainers.image.source="https://github.com/KoalixSwitzerland/koalixcrm"
 
 WORKDIR /usr/src/app
 
@@ -30,6 +39,10 @@ COPY koalixcrm_mq_commands /usr/src/app/koalixcrm_mq_commands
 COPY koalixcrm_utils /usr/src/app/koalixcrm_utils
 COPY projectsettings /usr/src/app/projectsettings
 COPY manage.py /usr/src/app/manage.py
+
+# Stamp the resolved version into the Python package so `koalixcrm.version`
+# reports the same value as the image label / KOALIXCRM_VERSION env var.
+RUN printf 'KOALIXCRM_VERSION = "%s"\n' "${APP_VERSION}" > /usr/src/app/koalixcrm/version.py
 
 EXPOSE 8000
 

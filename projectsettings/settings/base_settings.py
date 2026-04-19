@@ -6,6 +6,12 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
+# Application version.
+# CI injects this via the KOALIXCRM_VERSION env var (set from the docker
+# ARG APP_VERSION at image build time). Local runs without that env fall back
+# to a clearly non-release placeholder so they can't be mistaken for a build.
+KOALIXCRM_VERSION = os.getenv("KOALIXCRM_VERSION", "vX.Y.Z-develop")
+
 # Application definition
 PREREQUISITE_APPS = [
     'django.contrib.contenttypes',
