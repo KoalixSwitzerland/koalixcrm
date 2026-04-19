@@ -107,7 +107,7 @@ Repo grep of `/app/koalixcrm/pdf-export-service/` and `/app/koalixcrm/app_api_ja
 
 - `koalixcrm_mq_commands/pdf_export_command.py:15` — docstring example lists `'Quote', 'DeliveryNote'` — update to `'Quotation', 'DespatchAdvice', 'SalesOrder'`.
 - `koalixcrm/core/management/commands/sync_split_migrations.py:42` — comment references historical `SalesDocument`. Leave as-is (historical context, no runtime impact).
-- `auftraegekoalixnet/auftraegekoalixnet/dashboard.py:31-33` — references `koalixcrm.crm.documents.quote.Quote` / `purchase_confirmation.PurchaseConfirmation` / `delivery_note.DeliveryNote`. The module path `koalixcrm.crm.documents` has not existed for multiple releases — this is stale dashboard code. **Decision pending:** confirm whether `auftraegekoalixnet/` is still shipped (separate Django project under this repo), and if not, delete the directory. If yes, update the three import paths to `koalixcrm.contracts.models.quotation.Quotation` / `sales_order.SalesOrder` / `despatch_advice.DespatchAdvice`.
+- `auftraegekoalixnet/auftraegekoalixnet/dashboard.py:31-33` — references `koalixcrm.crm.documents.quote.Quote` / `purchase_confirmation.PurchaseConfirmation` / `delivery_note.DeliveryNote`. **Decision resolved:** the entire `auftraegekoalixnet/` directory is listed in `.gitignore` (line 50, `/auftraegekoalixnet/`). It is a local-workspace artifact — a standalone Django project scaffold that is **not** part of the shipped codebase. No action required on the repo. If the same dashboard file ever re-enters version control it should be updated to `koalixcrm.contracts.models.quotation.Quotation` / `sales_order.SalesOrder` / `despatch_advice.DespatchAdvice`; until then, the stale imports are only loaded in local developer environments that happen to have a copy of the file.
 
 **Migration:** none.
 
@@ -116,6 +116,17 @@ Repo grep of `/app/koalixcrm/pdf-export-service/` and `/app/koalixcrm/app_api_ja
 ---
 
 **Sequencing note:** P-2a, P-2b, P-2c are independent and can land in any order. P-2b is the only one that carries a migration. All three must complete before CR-6 cuts the `v2.0.0-wfs-baseline` tag.
+
+#### P-2 completion record
+
+P-2a, P-2b and P-2c landed together on branch `feature/wfs-integration-change-request` in commit `b7d91d7` (2026-04-19). Verification run the same day:
+
+- **Fresh-DB migration** (empty SQLite, `manage.py migrate`): full chain applies cleanly; `djangoUserExtension.0003_ubl_template_rename` included.
+- **`/app/koalixcrm_data/db/auftraegekoalixnet_20230101.sqlite3`** (2019-era monolithic reference DB): full v1.14.0 → v2.0.0 chain applied, including the new rename migration — no errors.
+- **`/app/koalixcrm_data/db/db.sqlite3`** (current dev DB snapshot): same — clean migration.
+- **`unit-django` profile** (`docker compose --env-file .env.claude --profile unit-django run --rm unit-django-runner`): 163 passed, 0 failed, 11 deselected (e2e/front-end/integration by design) in 4:01.
+
+P-2 is therefore **Done**, not Prereq, in the summary table below.
 
 ---
 
@@ -523,7 +534,9 @@ Violations reject the save with a clear error rather than silently writing cross
 | CR | Title | Status | Default-behaviour impact | Blocking WFS? |
 |---|---|---|---|---|
 | P-1 | Finish `PLAN_contact_party_data_model.md` phase 4 | Prereq | n/a (already planned) | Yes |
-| P-2 | Verify UBL rename is complete | Prereq | n/a | Yes |
+| P-2a | Delete obsolete Python PDF export microservice | **Done** (commit `b7d91d7`, 2026-04-19) | None (dead code removed) | Yes |
+| P-2b | UBL rename in `djangoUserExtension` templates + migration `0003_ubl_template_rename` | **Done** (commit `b7d91d7`, 2026-04-19) | Table renames + FK field renames (no data migration); Java unaffected | Yes |
+| P-2c | Minor cleanups (docstring + stale-dashboard decision) | **Done** (commit `b7d91d7`, 2026-04-19) | None | No |
 | CR-1 | `core.Tax` accounting FKs nullable + validator | Proposed | None (validator preserves required-ness when accounting app installed) | Yes |
 | CR-2 | `CommercialDocumentPosition.product_type` swappable | Proposed | None | Yes |
 | CR-3 | Enforce `koalixcrm_mq_commands` Django-free | Proposed | None | Yes |
@@ -538,7 +551,7 @@ Violations reject the save with a clear error rather than silently writing cross
 
 ## 5. Proposed landing order
 
-1. **P-1, P-2** (prerequisites).
+1. **P-1** (remaining prerequisite). P-2a/b/c already landed in commit `b7d91d7` (2026-04-19).
 2. **CR-8** — shared `Workspace` + `RoleInWorkspace` models in `core`. Must precede CR-9 because CR-9's FK targets them.
 3. **CR-9** — mandatory workspace-scoping + one-off data migration. Largest item; lands before CR-1/CR-2 so their migrations can assume the workspace column exists.
 4. **CR-1, CR-2, CR-4** — independent, can land in parallel.
