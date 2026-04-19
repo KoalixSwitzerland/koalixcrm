@@ -1,0 +1,67 @@
+{% extends "grappelli/dashboard/module.html" %}
+{% load i18n %}
+
+{% block module_content %}
+{% if module.no_access %}
+    <p class="grp-help-text">
+        {% trans "No workspace access — contact an administrator." %}
+    </p>
+{% else %}
+    <ul class="grp-listing-small">
+        {% for row in module.workspace_rows %}
+            <li class="grp-row{% if row.is_active %} grp-selected{% endif %}">
+                {# Color swatch #}
+                {% if row.color %}
+                    <span style="
+                        display: inline-block;
+                        width: 12px;
+                        height: 12px;
+                        background-color: {{ row.color }};
+                        border-radius: 2px;
+                        margin-right: 6px;
+                        vertical-align: middle;
+                    " title="{{ row.color }}"></span>
+                {% endif %}
+
+                {# Workspace name — clicking submits the switch form #}
+                {% if module.workspace_rows|length == 1 %}
+                    {# Single workspace: render inert (switch is a no-op) #}
+                    <span>{{ row.name }}</span>
+                {% else %}
+                    <form method="post" action="{{ row.switch_url }}" style="display: inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="workspace_id" value="{{ row.workspace_id }}">
+                        <button type="submit" class="grp-button" style="
+                            background: none;
+                            border: none;
+                            padding: 0;
+                            cursor: pointer;
+                            color: inherit;
+                            font: inherit;
+                            text-align: left;
+                        ">{{ row.name }}</button>
+                    </form>
+                {% endif %}
+
+                {# Role badges #}
+                {% for role in row.roles %}
+                    <span class="grp-badge" style="
+                        font-size: 0.75em;
+                        background: #e0e0e0;
+                        padding: 1px 5px;
+                        border-radius: 3px;
+                        margin-left: 4px;
+                    ">{{ role }}</span>
+                {% endfor %}
+
+                {# Active marker #}
+                {% if row.is_active %}
+                    <strong style="margin-left: 6px; color: #417690;">
+                        ({% trans "active" %})
+                    </strong>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}
+{% endblock %}

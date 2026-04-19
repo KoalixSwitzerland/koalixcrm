@@ -3,10 +3,11 @@
 from django.db import models
 from django.utils.translation import gettext as _
 
+from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
 from koalixcrm.products.models.product_price import ProductPrice
 
 
-class ProductType(models.Model):
+class ProductType(WorkspaceScopedModel):
     id = models.BigAutoField(primary_key=True)
     description = models.TextField(verbose_name=_("Description"),
                                    null=True,

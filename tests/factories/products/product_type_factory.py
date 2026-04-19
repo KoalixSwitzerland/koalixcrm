@@ -6,6 +6,7 @@ from koalixcrm.products.models.product_type import ProductType
 from tests.factories.core.unit_factory import StandardUnitFactory
 from tests.factories.contacts.user_factory import StaffUserFactory
 from tests.factories.core.tax_factory import StandardTaxFactory
+from tests.factories.core.workspace_factory import DefaultWorkspaceFactory
 from koalixcrm.global_support_functions import make_date_utc
 
 
@@ -14,6 +15,7 @@ class StandardProductTypeFactory(factory.django.DjangoModelFactory):
         model = ProductType
         django_get_or_create = ('product_type_identifier',)
 
+    workspace = factory.SubFactory(DefaultWorkspaceFactory)
     title = "This is a test Product"
     description = "This is a test Product"
     product_type_identifier = "123456"

@@ -7,6 +7,7 @@ from tests.factories.products.product_factory import StandardProductFactory
 from tests.factories.core.unit_factory import StandardUnitFactory
 from tests.factories.core.currency_factory import StandardCurrencyFactory
 from tests.factories.contacts.customer_group_factory import StandardCustomerGroupFactory
+from tests.factories.core.workspace_factory import DefaultWorkspaceFactory
 from koalixcrm.global_support_functions import make_date_utc
 
 
@@ -21,6 +22,7 @@ class StandardPriceFactory(factory.django.DjangoModelFactory):
                                 'valid_from',
                                 'valid_until')
 
+    workspace = factory.SubFactory(DefaultWorkspaceFactory)
     product_type = factory.SubFactory(StandardProductFactory)
     unit = factory.SubFactory(StandardUnitFactory)
     currency = factory.SubFactory(StandardCurrencyFactory)
@@ -33,6 +35,8 @@ class StandardPriceFactory(factory.django.DjangoModelFactory):
 class HighPriceFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = ProductPrice
+
+    workspace = factory.SubFactory(DefaultWorkspaceFactory)
     product_type = factory.SubFactory(StandardProductFactory)
     unit = factory.SubFactory(StandardUnitFactory)
     currency = factory.SubFactory(StandardCurrencyFactory)

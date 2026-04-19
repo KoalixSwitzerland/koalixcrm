@@ -7,3 +7,20 @@ from koalixcrm.contracts.serializers.payment_reminder_serializer import PaymentR
 class PaymentReminderViewSet(BaseModelViewSet):
     queryset = PaymentReminder.objects.all()
     serializer_class = PaymentReminderJSONSerializer
+
+    def get_queryset(self):
+        active = getattr(self.request, 'active_workspace', None)
+        if self.request.user.is_superuser:
+            return PaymentReminder.objects.all()
+        if active is not None:
+            return PaymentReminder.objects.filter(workspace=active)
+        return PaymentReminder.objects.none()
+
+    def perform_create(self, serializer):
+        from koalixcrm.core.models.workspace import Workspace
+        active = getattr(self.request, 'active_workspace', None)
+        if active is None and self.request.user.is_superuser:
+            active, _ = Workspace.objects.get_or_create(
+                name='Default Workspace', defaults={'is_active': True}
+            )
+        serializer.save(workspace=active)

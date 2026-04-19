@@ -3,6 +3,7 @@
 from django.contrib import admin
 from django.utils.translation import gettext as _
 from koalixcrm.plugin import *
+from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
 from koalixcrm.contracts.models.contract import (
     PostalAddressForContract,
     PhoneAddressForContract,
@@ -68,7 +69,7 @@ class ContractEmailAddress(admin.TabularInline):
     allow_add = True
 
 
-class OptionContract(admin.ModelAdmin):
+class OptionContract(WorkspaceScopedModelAdmin, admin.ModelAdmin):
     list_display = ('id',
                     'description',
                     'buyer_party',
@@ -79,7 +80,8 @@ class OptionContract(admin.ModelAdmin):
                     'last_modification',
                     'last_modified_by')
     list_display_links = ('id',)
-    list_filter = ('buyer_party',
+    list_filter = ('workspace',
+                   'buyer_party',
                    'supplier_party',
                    'staff',
                    'default_currency')

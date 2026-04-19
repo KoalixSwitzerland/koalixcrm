@@ -8,6 +8,7 @@ from tests.factories.contacts.user_factory import StaffUserFactory
 from tests.factories.contracts.contract_factory import StandardContractFactory
 from tests.factories.contacts.customer_factory import StandardCustomerFactory
 from tests.factories.core.currency_factory import StandardCurrencyFactory
+from tests.factories.core.workspace_factory import DefaultWorkspaceFactory
 from tests.factories.djangoUserExtension.factory_document_template import StandardQuotationTemplateFactory
 
 
@@ -15,6 +16,7 @@ class StandardCommercialDocumentFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = CommercialDocument
 
+    workspace = factory.SubFactory(DefaultWorkspaceFactory)
     contract = factory.SubFactory(StandardContractFactory)
     external_reference = "This is an external Reference"
     discount = "0"

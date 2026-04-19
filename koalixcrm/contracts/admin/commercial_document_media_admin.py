@@ -2,10 +2,11 @@
 
 from django.contrib import admin
 from django.utils.translation import gettext as _
+from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
 from koalixcrm.contracts.models.commercial_document_media import CommercialDocumentMedia
 
 
-class CommercialDocumentMediaAdmin(admin.ModelAdmin):
+class CommercialDocumentMediaAdmin(WorkspaceScopedModelAdmin, admin.ModelAdmin):
     list_display = (
         'id',
         'commercial_document',
@@ -14,7 +15,7 @@ class CommercialDocumentMediaAdmin(admin.ModelAdmin):
         'created_by',
         'created_at',
     )
-    list_filter = ('status', 'media_type')
+    list_filter = ('workspace', 'status', 'media_type')
     readonly_fields = (
         's3_url',
         's3_key',

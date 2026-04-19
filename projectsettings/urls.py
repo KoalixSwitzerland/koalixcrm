@@ -47,6 +47,7 @@ from koalixcrm.contracts_api_py.contracts_api import (
 from koalixcrm.auth.oidc_views import (
     LoginSelectionView, OAuthLoginView, OAuthCallbackView, MultiProviderLogoutView,
 )
+from koalixcrm.core.views.workspace_switch import WorkspaceSwitchView
 from koalixcrm.reporting_api_py.reporting_api import (
     TaskViewSet, TaskStatusViewSet, ProjectViewSet, ProjectStatusViewSet, AgreementViewSet,
     WorkViewSet, EstimationViewSet, EstimationStatusViewSet,
@@ -136,6 +137,8 @@ admin.site.login = LoginSelectionView.as_view()
 urlpatterns = [
     path('', lambda _: redirect('admin:index'), name='index'),
     path('', include(router.urls)),
+    # Workspace switch view — must appear BEFORE admin/ so the named URL wins.
+    path('admin/core/workspace/switch/', WorkspaceSwitchView.as_view(), name='core-workspace-switch'),
     path('admin/filebrowser/', site.urls),
     path('grappelli/', include('grappelli.urls')),
     path('koalixcrm/crm/reporting/', include('koalixcrm.reporting.urls')),

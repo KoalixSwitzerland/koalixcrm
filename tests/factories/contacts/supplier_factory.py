@@ -25,4 +25,5 @@ class StandardSupplierFactory(StandardContactFactory):
             role_type='supplier',
             is_primary=True,
             valid_from='1970-01-01',
+            workspace=obj.workspace,
         )

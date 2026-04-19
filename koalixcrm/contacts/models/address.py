@@ -3,9 +3,10 @@ from django.db import models
 from django.utils.translation import gettext as _
 
 from koalixcrm.core.const.country import COUNTRIES
+from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
 
 
-class Address(models.Model):
+class Address(WorkspaceScopedModel):
     id = models.BigAutoField(primary_key=True)
     address_line_1 = models.CharField(
         max_length=200, blank=True, null=True,

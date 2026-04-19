@@ -3,6 +3,7 @@
 from datetime import *
 from django.contrib import admin, messages
 from django.utils.translation import gettext as _
+from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
 from koalixcrm.contracts.models.commercial_document import (
     TextParagraphInCommercialDocument,
     PostalAddressForCommercialDocument,
@@ -75,7 +76,7 @@ class CommercialDocumentEmailAddress(admin.TabularInline):
     allow_add = True
 
 
-class OptionCommercialDocument(admin.ModelAdmin):
+class OptionCommercialDocument(WorkspaceScopedModelAdmin, admin.ModelAdmin):
     list_display = ('id',
                     'description',
                     'contract',
@@ -89,7 +90,8 @@ class OptionCommercialDocument(admin.ModelAdmin):
                     'last_modification',
                     'last_print_date')
     list_display_links = ('id',)
-    list_filter = ('party',
+    list_filter = ('workspace',
+                   'party',
                    'contract',
                    'currency',
                    'staff',

@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
 from django.utils.translation import gettext as _
 
+from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
 
-class PDFExportProcess(models.Model):
+
+class PDFExportProcess(WorkspaceScopedModel):
     """
     Tracks the lifecycle of an asynchronous PDF generation job.
 

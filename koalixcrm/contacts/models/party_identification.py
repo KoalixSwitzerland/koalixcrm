@@ -4,9 +4,10 @@ from django.utils.translation import gettext as _
 
 from koalixcrm.contacts.models.party import Party
 from koalixcrm.core.const.party import IDENTIFICATION_SCHEME_CHOICES
+from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
 
 
-class PartyIdentification(models.Model):
+class PartyIdentification(WorkspaceScopedModel):
     id = models.BigAutoField(primary_key=True)
     party = models.ForeignKey(
         Party, on_delete=models.CASCADE,

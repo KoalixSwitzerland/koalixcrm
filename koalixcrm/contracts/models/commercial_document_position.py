@@ -4,6 +4,7 @@ from django.db import models
 from django.contrib import admin
 from django.core.validators import MinValueValidator
 from django.utils.translation import gettext as _
+from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
 
 
 class Position(models.Model):
@@ -60,7 +61,7 @@ class Position(models.Model):
         verbose_name_plural = _('Positions')
 
 
-class CommercialDocumentPosition(Position):
+class CommercialDocumentPosition(WorkspaceScopedModel, Position):
     commercial_document = models.ForeignKey("CommercialDocument", on_delete=models.CASCADE, verbose_name=_("Contract"))
 
     class Meta:

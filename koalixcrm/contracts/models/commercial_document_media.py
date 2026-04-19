@@ -3,9 +3,10 @@
 from django.db import models
 from django.conf import settings
 from django.utils.translation import gettext as _
+from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
 
 
-class CommercialDocumentMedia(models.Model):
+class CommercialDocumentMedia(WorkspaceScopedModel):
     """
     S3-stored media file linked to a CommercialDocument.
 

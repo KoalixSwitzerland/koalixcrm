@@ -15,10 +15,11 @@ from koalixcrm.global_support_functions import xstr
 from koalixcrm.core.const.purpose import *
 from koalixcrm.core.exceptions import *
 from koalixcrm.djangoUserExtension.models import UserExtension
+from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
 import koalixcrm.contracts.models.calculations
 import koalixcrm.core.documents.pdf_export
 
-class PostalAddressForContract(PostalAddress):
+class PostalAddressForContract(WorkspaceScopedModel, PostalAddress):
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT)
     contract = models.ForeignKey('Contract', on_delete=models.CASCADE)
 
@@ -32,7 +33,7 @@ class PostalAddressForContract(PostalAddress):
         return xstr(self.prename) + ' ' + xstr(self.name) + ' ' + xstr(self.addressline1)
 
 
-class PhoneAddressForContract(PhoneAddress):
+class PhoneAddressForContract(WorkspaceScopedModel, PhoneAddress):
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT)
     contract = models.ForeignKey('Contract', on_delete=models.CASCADE)
 
@@ -46,7 +47,7 @@ class PhoneAddressForContract(PhoneAddress):
         return str(self.phone)
 
 
-class EmailAddressForContract(EmailAddress):
+class EmailAddressForContract(WorkspaceScopedModel, EmailAddress):
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT)
     contract = models.ForeignKey('Contract', on_delete=models.CASCADE)
 
@@ -60,7 +61,7 @@ class EmailAddressForContract(EmailAddress):
         return str(self.email)
 
 
-class Contract(models.Model):
+class Contract(WorkspaceScopedModel):
     id = models.BigAutoField(primary_key=True)
     staff = models.ForeignKey('auth.User',
                               on_delete=models.CASCADE,

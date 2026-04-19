@@ -27,6 +27,7 @@ class ProductJSONSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         product = ProductType()
+        product.workspace = validated_data.get('workspace')
         product.product_type_identifier = validated_data.get('product_type_identifier')
         product.title = validated_data['title']
 

@@ -6,9 +6,11 @@ from django.utils.translation import gettext as _
 
 from koalixcrm.global_support_functions import xstr
 from koalixcrm.core.exceptions import *
+from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
+from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
 
 
-class TemplateSet(models.Model):
+class TemplateSet(WorkspaceScopedModel):
     id = models.BigAutoField(primary_key=True)
     title = models.CharField(verbose_name=_("Title"),
                              max_length=100)
@@ -79,9 +81,10 @@ class TemplateSet(models.Model):
             raise IncorrectUseOfAPI("")
 
 
-class OptionTemplateSet(admin.ModelAdmin):
+class OptionTemplateSet(WorkspaceScopedModelAdmin, admin.ModelAdmin):
     list_display = ('id', 'title')
     list_display_links = ('id', 'title')
+    list_filter = ('workspace',)
     ordering = ('id',)
     search_fields = ('id', 'title')
     fieldsets = (

@@ -23,10 +23,13 @@ def api_client(admin_user):
 
 @pytest.fixture
 def pdf_export_process(db):
+    from koalixcrm.core.models.workspace import Workspace
+    ws, _ = Workspace.objects.get_or_create(name='Default Workspace', defaults={'is_active': True})
     return PDFExportProcess.objects.create(
         source_model="Invoice",
         source_id=1,
         status="pending",
+        workspace=ws,
     )
 
 

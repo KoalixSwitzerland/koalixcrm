@@ -3,8 +3,10 @@
 from django.db import models
 from django.utils.translation import gettext as _
 
+from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
 
-class CustomerBillingCycle(models.Model):
+
+class CustomerBillingCycle(WorkspaceScopedModel):
     id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=300,
                             verbose_name=_("Name"))

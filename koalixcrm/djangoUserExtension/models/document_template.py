@@ -7,10 +7,12 @@ from django.utils.translation import gettext as _
 from koalixcrm.djangoUserExtension.models.text_paragraph import InlineTextParagraph
 from koalixcrm.global_support_functions import xstr
 from koalixcrm.core.exceptions import *
+from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
+from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
 from koalixcrm_utils.s3_storage import TemplateFileStorage
 
 
-class DocumentTemplate(models.Model):
+class DocumentTemplate(WorkspaceScopedModel):
     title = models.CharField(verbose_name=_("Title"),
                              max_length=100,
                              blank=True,
@@ -123,9 +125,10 @@ class WorkReportTemplate(DocumentTemplate):
         verbose_name_plural = _('Work report templates')
 
 
-class OptionDocumentTemplate(admin.ModelAdmin):
+class OptionDocumentTemplate(WorkspaceScopedModelAdmin, admin.ModelAdmin):
     list_display = ('id', 'title')
     list_display_links = ('id', 'title')
+    list_filter = ('workspace',)
     ordering = ('id',)
     search_fields = ('id', 'title')
     fieldsets = (

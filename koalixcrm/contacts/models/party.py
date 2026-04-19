@@ -3,9 +3,10 @@ from django.db import models
 from django.utils.translation import gettext as _
 
 from koalixcrm.core.const.party import LANGUAGE_CHOICES
+from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
 
 
-class Party(models.Model):
+class Party(WorkspaceScopedModel):
     id = models.BigAutoField(primary_key=True)
     display_name = models.CharField(max_length=300, verbose_name=_("Display name"))
     default_language = models.CharField(

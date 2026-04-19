@@ -7,3 +7,4 @@ class QuotationJSONSerializer(serializers.ModelSerializer):
     class Meta:
         model = Quotation
         fields = '__all__'
+        read_only_fields = ('workspace',)

@@ -9,6 +9,7 @@ To activate your index dashboard add the following to your settings.py::
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from grappelli.dashboard import modules, Dashboard
+from koalixcrm.core.admin.dashboard_modules import WorkspaceSwitcherModule
 
 
 class CustomIndexDashboard(Dashboard):
@@ -17,6 +18,10 @@ class CustomIndexDashboard(Dashboard):
     """
 
     def init_with_context(self, context):
+        # Workspace switcher — always the first module so the active workspace
+        # is immediately visible after login.  CR-8 §8.6.
+        self.children.append(WorkspaceSwitcherModule(column=1))
+
         self.children.append(modules.Group(
             _('koalixcrm Version ' + settings.KOALIXCRM_VERSION),
             column=1,

@@ -15,9 +15,10 @@ from koalixcrm.products.models.product_type import ProductType
 from koalixcrm.core.exceptions import TemplateSetMissingInContract
 import koalixcrm.contracts.models.calculations
 from koalixcrm.shared.pdf_export import PDFExport
+from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
 
 
-class TextParagraphInCommercialDocument(models.Model):
+class TextParagraphInCommercialDocument(WorkspaceScopedModel):
     id = models.BigAutoField(primary_key=True)
     commercial_document = models.ForeignKey("CommercialDocument", on_delete=models.CASCADE)
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=2, choices=PURPOSESTEXTPARAGRAPHINDOCUMENTS)
@@ -40,7 +41,7 @@ class TextParagraphInCommercialDocument(models.Model):
         return self.id.__str__()
 
 
-class CommercialDocument(models.Model):
+class CommercialDocument(WorkspaceScopedModel):
     contract = models.ForeignKey("Contract",
                                  on_delete=models.CASCADE,
                                  verbose_name=_('Contract'))

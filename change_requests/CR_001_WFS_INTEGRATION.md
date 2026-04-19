@@ -9,7 +9,7 @@
 
 **Scope of this CR:** the set of koalixcrm-side changes that allow the WFS backend to install `koalixcrm.core`, `koalixcrm.contacts`, `koalixcrm.contracts`, `koalixcrm.djangoUserExtension`, and `koalixcrm.products` as-is (same app labels, same migrations, same model names), alongside WFS's own Django apps, in a multi-tenant (workspace-scoped) deployment, without requiring downstream forks of the koalixcrm source tree. This CR delivers a **breaking v2.0.0 release**: workspace-scoping is introduced as mandatory across the product, not as an opt-in.
 
-**Partial harmonization included.** `core.Workspace` and `core.RoleInWorkspace` are introduced as shared models inside `koalixcrm.core`, which becomes the shared package between koalixcrm and WFS. App-specific workspace settings stay in each owning app under a `*WorkspaceSettings` model keyed to the shared `Workspace`. The broader harmonization proposal (extracting further shared primitives beyond `core`) remains tracked separately.
+**Partial harmonization included.** `core.Workspace` and `core.RoleInWorkspace` are introduced as shared models inside `koalixcrm.core`, which becomes the shared package between koalixcrm and WFS. App-specific workspace settings stay in each owning app under a `*WorkspaceSettings` model keyed to the shared `Workspace`. Object-level access grants (`RoleOnObject`) are split out into a follow-up CR-10 to keep the v2.0.0 release surface tight. The broader harmonization proposal (extracting further shared primitives beyond `core`) remains tracked separately.
 
 **Explicitly out of scope for v2.0.0:** switching primary keys to UUID. The `(workspace, business_number)` uniqueness pattern covers the "each workspace starts numbering from 1" use case without a PK migration; any UUID transition is deferred to a later release with its own justification.
 
@@ -132,7 +132,7 @@ P-2 is therefore **Done**, not Prereq, in the summary table below.
 
 ## 3. Change items
 
-Each item is a self-contained upstream PR proposal. Numbering (`CR-1` … `CR-9`) mirrors the `M1` … `M9` numbering used in the WFS integration concept, for cross-referencing.
+Each item is a self-contained upstream PR proposal. Numbering (`CR-1` … `CR-9`) mirrors the `M1` … `M9` numbering used in the WFS integration concept, for cross-referencing. `CR-10` is an out-of-band follow-up scheduled after v2.0.0.
 
 ### CR-1 — Make `core.Tax.account_activa` / `account_passiva` optional
 
@@ -208,35 +208,49 @@ Each item is a self-contained upstream PR proposal. Numbering (`CR-1` … `CR-9`
 - **Migration:** none.
 - **Risk:** none. It is a documented commitment, nothing more.
 
-### CR-8 — Introduce shared `core.Workspace`, `core.RoleInWorkspace`, and `core.RoleOnObject` (REQUIRED)
+### CR-8 — Introduce shared `core.Workspace` and `core.RoleInWorkspace` (REQUIRED)
 
-Reinstated and expanded in this revision. Covers the full access-control substrate that both products share:
+Covers the workspace-level access-control substrate that both products share:
 
 - `core.Workspace` — the tenant model (coarse scope).
 - `core.RoleInWorkspace` — which workspaces a user can see (workspace-level grants).
-- `core.RoleOnObject` — which specific objects a user has been explicitly granted access to, independent of their workspace role (fine-grained grants).
 
-Workspace-level and object-level access are deliberately unified at the data layer: same role vocabulary, one `effective_roles(user, obj)` evaluator, one combined queryset filter. This lets v2.0.0 ship the complete enforcement substrate without committing to the object-level admin UX, which is deferred to a later release (see §8.6 below).
+Object-level grants (`RoleOnObject`, fine-grained per-object sharing) were considered for inclusion here but have been **deferred to CR-10** to keep the v2.0.0 release surface tight. The shared `Role` enum introduced here is forward-compatible with that future addition: CR-10 reuses it verbatim.
 
-> **This item MUST be implemented on the `qq_workflow_support_webapp_backend` side as well.** `Workspace`, `RoleInWorkspace`, and `RoleOnObject` are part of the shared `core` surface consumed verbatim by both products. WFS must import (or copy, depending on the adopted consumption strategy) these models and respect the same enforcement rules in its own admin and API layers. Divergence here breaks the entire integration premise.
+> **This item MUST be implemented on the `qq_workflow_support_webapp_backend` side as well.** `Workspace` and `RoleInWorkspace` are part of the shared `core` surface consumed verbatim by both products. WFS must import (or copy, depending on the adopted consumption strategy) these models and respect the same enforcement rules in its own admin and API layers. Divergence here breaks the entire integration premise.
 
 #### 8.1. `core.Workspace`
 
-Minimal by design:
+Field set is the **union** of what koalixcrm and WFS each had on day one — designed so neither side has to carry product-specific Workspace fields outside `core`:
 
 ```python
 class Workspace(models.Model):
-    name          = models.CharField(max_length=200, unique=True)
-    organization  = models.ForeignKey(
+    name                          = models.CharField(max_length=200, unique=True)
+    description                   = models.TextField(blank=True, default='')
+    external_workspace_reference  = models.CharField(
+        max_length=255, blank=True, default='',
+        help_text='Short prefix for human-readable identifiers (e.g. REP, MSD). '
+                  'Used in IDs like REP-TASK-1.',
+    )
+    is_active                     = models.BooleanField(default=True, db_index=True)
+    organization                  = models.ForeignKey(
         'contacts.Organization', on_delete=models.SET_NULL,
         null=True, blank=True, related_name='workspaces',
         help_text='Optional: the legal entity this workspace represents.',
     )
-    color         = models.CharField(max_length=7, blank=True,
+    color                         = models.CharField(max_length=7, blank=True,
         help_text='Hex color used by the admin header as a visual cue to prevent workspace mix-ups.')
-    date_added    = models.DateField(auto_now_add=True)
-    last_modified = models.DateField(auto_now=True)
+    date_added                    = models.DateField(auto_now_add=True)
+    last_modified                 = models.DateField(auto_now=True)
 ```
+
+Origin of each field:
+
+- `name`, `organization`, `color`, `date_added`, `last_modified` — koalixcrm-introduced (CR-8 first revision).
+- `description`, `external_workspace_reference`, `is_active` — adopted from the WFS `Workspace` so the shared model can replace the WFS one without losing fields.
+- WFS-specific adjacent tables (`WorkspaceConfig`, `WorkspaceLogo`, `WorkspaceMedia`) stay on the WFS side as `*WorkspaceSettings`-style models keyed to the shared `Workspace`.
+
+`external_workspace_reference` is `blank=True` here even though WFS has it as `blank=False`: the schema column is required by the shared contract, but per-product validation can still reject blanks where the product needs them (WFS will keep its `clean()` enforcing non-blank).
 
 Anything product-specific (invoice-number prefixes, default currency, template defaults, WFS workflow settings, etc.) lives in **per-app `*WorkspaceSettings` models**, not on `Workspace` itself. Example split:
 
@@ -249,99 +263,97 @@ Each app owns and migrates its own settings table. Adding a new product-specific
 
 #### 8.2. Shared role vocabulary
 
-Both `RoleInWorkspace` and `RoleOnObject` use the **same** role enum. This is the primary reason to design them together rather than in separate CRs.
+`RoleInWorkspace` references a shared `Role` enum that is the **union** of what koalixcrm and WFS each used on day one. Both products commit to consuming the union enum so a future role addition is a single edit on the koalixcrm side picked up by both:
 
 ```python
 # core/models/access.py
 class Role(models.TextChoices):
-    ADMIN     = 'admin',     'Full control'
-    EDITOR    = 'editor',    'Edit + read'
-    VIEWER    = 'viewer',    'Read only'
-    COMMENTER = 'commenter', 'Read + comment'
+    ADMIN           = 'admin',           'Admin (full control)'
+    EDITOR          = 'editor',          'Editor (edit + read)'
+    VIEWER          = 'viewer',          'Viewer (read only)'
+    COMMENTER       = 'commenter',       'Commenter (read + comment)'
+    EMPLOYEE        = 'employee',        'Employee (WFS: workflow participant)'
+    LINE_MANAGER    = 'line_manager',    'Line Manager (WFS: people management)'
+    PROJECT_MANAGER = 'project_manager', 'Project Manager (WFS: project lead)'
 ```
 
-`RoleInWorkspace.role` and `RoleOnObject.role` both reference `Role.choices`. A future role addition (e.g. `APPROVER`) is a single edit that applies to both layers automatically.
+DB stores lowercase snake_case codes (`'line_manager'`, `'project_manager'`) — chosen for cross-product schema consistency. WFS will migrate from its existing `'LineManager'` / `'ProjectManager'` codes to these as part of its mirror CR.
 
-#### 8.3. `core.RoleInWorkspace` (workspace-level grants)
+The `Role.COMMENTER`, `Role.EDITOR` and `Role.VIEWER` codes originate on the koalixcrm side and are unused by WFS day one — WFS adopts them as no-op codes that become available for fine-grained permission grants once needed. Symmetrically, `EMPLOYEE` / `LINE_MANAGER` / `PROJECT_MANAGER` are WFS-domain codes that koalixcrm stores but does not actively grant in admin workflows.
+
+The enum is forward-compatible with CR-10 (`RoleOnObject`).
+
+#### 8.3. `core.RoleInWorkspace` (workspace-level grants — Group-based)
+
+The grant subject is **`auth.Group`**, not the user directly. This matches WFS's existing model (`/app/qq_workflow_support_webapp_backend/qq_workflow_support/models/role_in_workspace.py`) and is the more enterprise-friendly shape — Keycloak group claims can be mapped to Django groups, which then carry the workspace role:
 
 ```python
 class RoleInWorkspace(models.Model):
-    user      = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
-                                   related_name='workspace_roles')
+    group     = models.ForeignKey('auth.Group', on_delete=models.CASCADE,
+                                   related_name='workspace_roles', db_index=True,
+                                   help_text='Django auth group whose members hold this role.')
     workspace = models.ForeignKey('core.Workspace', on_delete=models.CASCADE,
-                                   related_name='role_assignments')
-    role      = models.CharField(max_length=32, choices=Role.choices)
+                                   related_name='group_role_assignments')
+    role      = models.CharField(max_length=64, choices=Role.choices)
     class Meta:
-        unique_together = [('user', 'workspace', 'role')]
+        unique_together = [('group', 'workspace', 'role')]
 ```
 
-This is the **sole source of truth** for "which workspaces can this user see?". It is deliberately decoupled from `contacts.OrganizationMembership` (which describes business relationships between parties) — they serve different purposes and must not be conflated. A `Workspace` may optionally point to an `Organization` (see `Workspace.organization` above), but access control does not flow through that link.
+Effective access for a user: `user → user.groups.all() → RoleInWorkspace rows`. This is the **sole source of truth** for "which workspaces can this user see?". It is deliberately decoupled from `contacts.OrganizationMembership` (which describes business relationships between parties) — they serve different purposes and must not be conflated. A `Workspace` may optionally point to an `Organization` (see `Workspace.organization` above), but access control does not flow through that link.
 
-#### 8.4. `core.RoleOnObject` (object-level grants, fine-grained)
+Why Group-based:
 
-```python
-class RoleOnObject(models.Model):
-    user         = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
-                                      related_name='object_roles')
-    content_type = models.ForeignKey('contenttypes.ContentType', on_delete=models.CASCADE)
-    object_id    = models.PositiveIntegerField()
-    target       = GenericForeignKey('content_type', 'object_id')
+- WFS already uses Group-based grants — adopting the same shape on the koalixcrm side avoids a breaking schema reshape on the WFS side later.
+- Keycloak (the SSO source) emits group claims naturally; mapping claims → `auth.Group` is a one-line backend hook. Mapping claims → individual user assignments would require per-user provisioning logic.
+- Bulk role administration (onboard 10 employees → add to "Workspace W Employees" group → done) is intrinsic, no admin tooling required.
+- An explicit per-user grant is still expressible: create a singleton group named after the user and assign the role to it. This is rare enough not to warrant a separate code path.
 
-    role         = models.CharField(max_length=32, choices=Role.choices)
+#### 8.4. *(Deferred to CR-10)*
 
-    granted_by   = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,
-                                      null=True, blank=True, related_name='+')
-    granted_at   = models.DateTimeField(auto_now_add=True)
-    expires_at   = models.DateTimeField(null=True, blank=True,
-                                         help_text='Optional: grant automatically lapses at this time.')
+The fine-grained per-object grant model (`RoleOnObject`) was previously specified in this position. It has been moved to **CR-10 — Object-level access grants** to keep the v2.0.0 surface focused on workspace-level isolation. CR-10 will reuse the shared `Role` enum (§8.2) verbatim.
 
-    class Meta:
-        indexes = [
-            models.Index(fields=['content_type', 'object_id']),
-            models.Index(fields=['user', 'content_type']),
-        ]
-        unique_together = [('user', 'content_type', 'object_id', 'role')]
-```
-
-Semantics:
-
-- Targets any workspace-scoped model via generic FK. Non-scoped models (currencies, units, taxes) are not valid targets — enforced by a `clean()` check on the content type.
-- An object-level grant is **additive** to whatever workspace-level grants the user has; it never downgrades workspace-level access. A user with `RoleInWorkspace(role='admin')` on workspace W needs no `RoleOnObject` rows for objects in W.
-- A `RoleOnObject` grant does **not** implicitly grant access to the containing workspace's other rows. It grants access to the one object only. This is the entire point of the distinction.
-- Expired grants (`expires_at < now`) are filtered out at query time by the combined filter in §8.5.
-
-#### 8.5. `effective_roles()` and the combined queryset filter
+#### 8.5. `effective_roles()` and `user_workspaces()` (workspace-level only in CR-8)
 
 ```python
 # core/access.py
 def effective_roles(user, obj) -> set[str]:
-    """Return the set of Role codes this user holds on this object,
-    via workspace grant OR object grant. Used by permission checks."""
-    ws_roles = RoleInWorkspace.objects.filter(
-        user=user, workspace=obj.workspace,
-    ).values_list('role', flat=True)
-    obj_roles = RoleOnObject.objects.active().filter(
-        user=user,
-        content_type=ContentType.objects.get_for_model(type(obj)),
-        object_id=obj.pk,
-    ).values_list('role', flat=True)
-    return set(ws_roles) | set(obj_roles)
+    """Role codes the user holds on this object via group→workspace grants.
+    CR-10 will OR in object-level grants without changing the signature."""
+    if user is None or not getattr(user, 'is_authenticated', False):
+        return set()
+    if user.is_superuser:
+        return set(Role.values)
+    workspace = getattr(obj, 'workspace', None)
+    if workspace is None:
+        return set()
+    return set(
+        RoleInWorkspace.objects.filter(
+            group__in=user.groups.all(),
+            workspace=workspace,
+        ).values_list('role', flat=True)
+    )
+
+def user_workspaces(user):
+    """Active workspaces the user can reach via any group-based role grant.
+    Used by the dashboard switcher and the switch view's auth check."""
+    if user is None or not getattr(user, 'is_authenticated', False):
+        return Workspace.objects.none()
+    if user.is_superuser:
+        return Workspace.objects.filter(is_active=True)
+    return Workspace.objects.filter(
+        is_active=True,
+        group_role_assignments__group__in=user.groups.all(),
+    ).distinct()
 ```
 
-And on the manager:
+And on the manager (CR-9 wiring):
 
 ```python
 # WorkspaceAwareManager.visible_to(user)
-ct = ContentType.objects.get_for_model(self.model)
-return self.filter(
-    Q(workspace__in=RoleInWorkspace.objects.filter(user=user).values('workspace'))
-    | Q(pk__in=RoleOnObject.objects.active().filter(
-            user=user, content_type=ct,
-        ).values('object_id'))
-)
+return self.filter(workspace__in=user_workspaces(user))
 ```
 
-One queryset, two OR'd branches. The object-level branch is empty-table-cheap until grants actually exist. Superusers bypass both.
+A single workspace-level branch in v2.0.0. CR-10 will OR'd-in the object-level branch in a backwards-compatible extension. Superusers bypass (treated as holding every role on every active workspace).
 
 #### 8.6. Grappelli dashboard workspace switcher (shared UI module, REQUIRED in v2.0.0)
 
@@ -353,8 +365,8 @@ The primary post-authentication surface for selecting the active workspace is a 
 
 **Module behaviour.**
 
-- Renders the list of workspaces where the current user holds any `RoleInWorkspace` row (all roles, not just admin).
-- Each row shows: workspace name, `Workspace.color` as a visual swatch, the user's role(s) in that workspace, and a "currently active" marker on the row matching `request.session['active_workspace_id']`.
+- Renders the workspaces returned by `user_workspaces(request.user)` (all roles, not just admin; `is_active=False` workspaces excluded).
+- Each row shows: workspace name, `Workspace.color` as a visual swatch, the user's role(s) in that workspace (union across all of the user's groups), and a "currently active" marker on the row matching `request.session['active_workspace_id']`.
 - Clicking a workspace writes `request.session['active_workspace_id']`, writes a `WorkspaceSwitchEvent(user, from_ws, to_ws, timestamp)` audit row, and redirects to the admin index. Same backend endpoint as the header switcher (CR-9 §9.8) — a single view handles both surfaces.
 - Zero-workspace state: renders a clear "no workspace access — contact an administrator" message. No other dashboard modules render.
 - Single-workspace state: module still renders (so the active-workspace context is always visible) but the switch action is a no-op.
@@ -365,28 +377,29 @@ The primary post-authentication surface for selecting the active workspace is a 
 
 **Included in v2.0.0 (this CR):**
 
-- All three models (`Workspace`, `RoleInWorkspace`, `RoleOnObject`).
-- Shared `Role` enum.
-- `effective_roles()` helper.
-- Combined queryset filter wired into `WorkspaceAwareManager` (CR-9 §9.3) so every admin already honours both layers of grants.
+- Two models (`Workspace`, `RoleInWorkspace` — **Group-based**) plus the `WorkspaceSwitchEvent` audit row.
+- Shared `Role` enum, union of koalixcrm + WFS day-one vocabularies (forward-compatible with CR-10).
+- `effective_roles()` and `user_workspaces()` helpers (workspace-level only — CR-10 extends).
+- Workspace-level queryset filter wired into `WorkspaceAwareManager` (CR-9 §9.3).
 - Grappelli dashboard workspace switcher module (§8.6), shared between koalixcrm and WFS.
-- Raw Django-admin UI on `RoleOnObject` is enough for pilot use (power users can grant by hand).
 
-**Deferred (future release, not in this CR):**
+**Deferred to CR-10 (object-level grants):**
 
+- `RoleOnObject` model, manager, admin, and `clean()` validator restricting target content types.
+- Object-level branch in `effective_roles()` and `WorkspaceAwareManager.visible_to()`.
 - Per-object "Share with…" admin widget on every scoped model's change page.
 - Bulk grant / revoke tooling.
 - UI for inspecting "who has access to this object?".
 
-Rationale: the schema is the expensive part to change later; the UI is additive and can ship when it's polished. Freezing the data model in v2.0.0 means no third breaking migration for object-level access.
+Rationale: keeping CR-8 to workspace-level only shrinks the v2.0.0 access-control surface to what the WFS integration actually requires on day one. Object-level grants are additive — they can land in CR-10 without a second breaking migration on the workspace tables.
 
 #### 8.8. Migration
 
-Schema-only (three new tables + `color` field on workspace). The data migration that creates the Default Workspace lives under CR-9 so the dependent-row backfill is co-located with the column addition.
+Schema-only (three new tables — `Workspace`, `RoleInWorkspace`, `WorkspaceSwitchEvent`). The data migration that creates the Default Workspace lives under CR-9 so the dependent-row backfill is co-located with the column addition.
 
 #### 8.9. Risk
 
-Medium. Load-bearing shared models and UI. Listed explicitly in `FORK_CONTRACT.md` (CR-7) as fork-public, with a stricter change-procedure commitment than other models. WFS-side mirror implementation (both the three models and the Grappelli dashboard module) must be tracked in the companion WFS change request.
+Medium. Load-bearing shared models and UI. Listed explicitly in `FORK_CONTRACT.md` (CR-7) as fork-public, with a stricter change-procedure commitment than other models. WFS-side mirror implementation (both `Workspace` / `RoleInWorkspace` and the Grappelli dashboard module) must be tracked in the companion WFS change request.
 
 ### CR-9 — Mandatory workspace-scoping + one-off data migration (REQUIRED)
 
@@ -403,8 +416,9 @@ This is the largest item in the CR and the one that makes v2.0.0 a breaking rele
 |---|---|
 | Mandatory, not opt-in. | v2.0.0 is already a breaking release. An opt-in mixin with class-body `if settings.X:` conditionals adds complexity solely to preserve upstream-unchanged behaviour — a constraint that no longer applies. |
 | `Workspace` and `RoleInWorkspace` live in shared `core` (per CR-8). | `core` is the 100% shared package between koalixcrm and WFS. The workspace model is not swappable; both products use the same one. |
-| `Workspace` is minimal (name + optional Organization FK + timestamps). | App-specific settings live in per-app `*WorkspaceSettings` models. Keeps the shared model stable across product evolutions. |
-| Admin scoping uses `RoleInWorkspace`, not `OrganizationMembership`. | Access control is a user-to-workspace concept; business relationships between parties (`OrganizationMembership`) are unrelated and must not be conflated. |
+| `Workspace` field set is the union of koalixcrm + WFS day-one fields. | Lets the shared model fully replace WFS's existing `Workspace` without losing data. See CR-8 §8.1 for the breakdown. |
+| `RoleInWorkspace` grants are **Group-based** (not user-based). | Matches WFS's existing shape; aligns with Keycloak group-claim provisioning; bulk admin is intrinsic. See CR-8 §8.3. |
+| Admin scoping uses `RoleInWorkspace`, not `OrganizationMembership`. | Access control is a user→group→workspace concept; business relationships between parties (`OrganizationMembership`) are unrelated and must not be conflated. |
 | Primary keys stay integer. | UUID migration is out of scope; `(workspace, business_number)` covers the "numbering restarts per workspace" need. |
 
 #### 9.3. `WorkspaceScopedModel` abstract base (new)
@@ -478,19 +492,19 @@ Three-phase schema migration per affected app (to keep locking windows short on 
 
 1. **Add nullable `workspace_id` FK** to every affected table.
 2. **Data migration (one-shot, runs once):**
-   - Create `Workspace(name="Default Workspace")` if no workspaces exist.
+   - Create `Workspace(name="Default Workspace", is_active=True)` if no workspaces exist.
    - Stamp every existing row on affected tables with this workspace's id (chunked updates).
-   - For every existing user with `is_staff=True`, create a `RoleInWorkspace(user, default_workspace, role='admin')` so visibility is preserved post-upgrade.
+   - Create an `auth.Group` named `"Default Workspace Admins"`, add every `is_staff=True` user to it, and create a single `RoleInWorkspace(group=that_group, workspace=default_workspace, role='admin')` so visibility is preserved post-upgrade. (Group-based — see CR-8 §8.3.)
    - Populate per-app `*WorkspaceSettings` rows with defaults (current global values become the Default Workspace's settings).
 3. **`ALTER TABLE … SET NOT NULL`** on `workspace_id` columns, plus creation of the new `unique_together` indexes.
 
 The migration is idempotent and re-runnable on partially-migrated databases (guarded by presence of a `Default Workspace` row).
 
-#### 9.8. Admin integration (driven by `RoleInWorkspace` + `RoleOnObject`)
+#### 9.8. Admin integration (driven by `RoleInWorkspace`)
 
-**Visibility (the OR'd queryset).** `WorkspaceScopedModelAdmin.get_queryset` uses the combined filter from CR-8 §8.5: rows visible via workspace-level grant OR via object-level grant OR via superuser bypass. Object-level grants therefore become visible in the same list views as workspace-level grants, without a second UI surface.
+**Visibility.** `WorkspaceScopedModelAdmin.get_queryset` uses the workspace-level filter from CR-8 §8.5: rows visible via workspace-level grant OR via superuser bypass. (CR-10 will OR in an object-level branch in a backwards-compatible extension.)
 
-**FK dropdown scoping.** `formfield_for_foreignkey` restricts every FK choice to objects in the *active workspace*. An Invoice's product/party dropdowns cannot list rows from another workspace — even if the user has `RoleOnObject` grants on objects in that other workspace. (Rationale: fine-grained grants are for viewing/editing that object, not for composing new records that reference it across tenants.)
+**FK dropdown scoping.** `formfield_for_foreignkey` restricts every FK choice to objects in the *active workspace*. An Invoice's product/party dropdowns cannot list rows from another workspace.
 
 **Save-time validation (defence-in-depth).** `save_model` enforces two invariants on every write:
 
@@ -506,6 +520,7 @@ Violations reject the save with a clear error rather than silently writing cross
   - If the user holds exactly one `RoleInWorkspace` → activate it silently. User sees no additional step.
   - If the user holds several → activate the lowest-id workspace among them as a stable default. User is free to switch immediately via either surface below.
   - If the user holds none → admin renders an empty "no workspace access — contact an administrator" dashboard state. No models are listed, no switcher is shown.
+
 - **Two switching surfaces, both post-authentication:**
   - **Grappelli dashboard module** — primary surface. Ships from shared `core` under CR-8 §8.6 (not duplicated here; both products install the same module). Required, not optional.
   - **Header switcher** in the admin bar — product-specific, always visible across every admin page for mid-session switching. Built in CR-9 as part of the product's admin integration and delegates to the same switch view as the dashboard module.
@@ -513,7 +528,7 @@ Violations reject the save with a clear error rather than silently writing cross
 - `Workspace.color` (CR-8 §8.1) tints the admin header band. This is the primary user-visible safeguard against mix-ups: a glance at the header colour tells the user which workspace they are operating in. Far more effective than any backend check at preventing the "I edited the wrong record" class of error.
 - **Out of scope for v2.0.0:** mapping Keycloak group / role claims to `RoleInWorkspace` rows automatically. `RoleInWorkspace` is managed manually (or via API) for now. Claim-driven provisioning is a candidate for a later release.
 
-**Role → Django permission mapping.** The shared `Role` enum (CR-8 §8.2) maps to Django's per-model `add`/`change`/`delete`/`view` perms at request time. Mapping is centralised in `core.access.permissions_for_role()` so both workspace-level and object-level grants translate the same way.
+**Role → Django permission mapping.** The shared `Role` enum (CR-8 §8.2) maps to Django's per-model `add`/`change`/`delete`/`view` perms at request time. Mapping is centralised in `core.access.permissions_for_role()`. CR-10 will reuse the same mapping for object-level grants.
 
 **Deliberate non-coupling.** `contacts.OrganizationMembership` (business relationship between parties) plays no role in admin visibility. A user can have a `RoleInWorkspace` in a workspace whose optional `Workspace.organization` points to an Org they are not a member of — that is allowed and expected (e.g. an external bookkeeper).
 
@@ -522,10 +537,44 @@ Violations reject the save with a clear error rather than silently writing cross
 | Risk | Mitigation |
 |---|---|
 | Data migration times out on large production databases during step 2. | Chunked updates in the data migration; document the expected duration in the release notes; provide a dry-run management command. |
-| Users who were implicit "global admins" in v1.14.0 lose visibility after upgrade because no `RoleInWorkspace` row exists for them. | Migration auto-creates a workspace-admin role on the Default Workspace for every `is_staff=True` user. Called out in release notes. |
+| Users who were implicit "global admins" in v1.14.0 lose visibility after upgrade because no `RoleInWorkspace` row exists for their groups. | Migration auto-creates a "Default Workspace Admins" group, adds every `is_staff=True` user to it, and grants the group `admin` role on the Default Workspace. Called out in release notes. |
 | MTI children accidentally get their own `workspace_id` column (duplication). | Mixin applied to the MTI parent only. Invariant test asserts single-column placement per MTI tree. |
 | `core.Workspace` / `core.RoleInWorkspace` drift between koalixcrm and WFS over time. | Extend CR-5's fork-isolation test to additionally assert schema equality against a snapshot in `FORK_CONTRACT.md` (CR-7). |
 | Cross-workspace leakage via unscoped managers or raw SQL. | `WorkspaceAwareManager.raise_on_missing_context=True` inside request handlers. Dedicated integration tests per app attempt cross-workspace reads and expect empty results. |
+
+### CR-10 — Object-level access grants (`RoleOnObject`) — DEFERRED, post-v2.0.0
+
+Originally bundled into CR-8; split out to keep the v2.0.0 release surface tight. CR-10 is **additive** — it does not require a migration of existing workspace-scoped tables — and can therefore land any time after v2.0.0 ships without a coordinated breaking-release window.
+
+#### 10.1. Scope
+
+- New model `core.RoleOnObject` (user, GenericForeignKey to any workspace-scoped row, `role` from the shared `Role` enum, `granted_by`, `granted_at`, `expires_at`).
+- Custom manager `RoleOnObjectManager` with `.active()` filtering out expired grants.
+- `clean()` validator rejecting workspace-global content types (currencies, units, taxes) as targets.
+- Extension of `core.access.effective_roles(user, obj)` to OR-in object-level grants.
+- Extension of `WorkspaceAwareManager.visible_to(user)` to OR-in `pk__in=RoleOnObject.objects.active().filter(...)`.
+- Raw Django-admin UI on `RoleOnObject` for pilot use.
+- Per-object "Share with…" admin widget on every scoped model's change page.
+- Bulk grant / revoke tooling.
+- UI for inspecting "who has access to this object?".
+
+#### 10.2. Semantics (locked in CR-8 §8.2 by the shared Role enum)
+
+- An object-level grant is **additive** to whatever workspace-level grants the user has; it never downgrades workspace-level access.
+- A `RoleOnObject` grant does **not** implicitly grant access to the containing workspace's other rows.
+- Expired grants (`expires_at < now`) are filtered out at query time.
+
+#### 10.3. Migration
+
+Schema-only — one new table (`crm_roleonobject`) plus its indexes. No backfill.
+
+#### 10.4. Risk
+
+Low — additive table, no changes to existing rows, OR'd branch is empty-table-cheap until grants exist.
+
+#### 10.5. WFS-side impact
+
+Mirror implementation required when CR-10 lands, identical to CR-8: WFS imports/copies the `RoleOnObject` model, manager, admin, and the extension to `effective_roles` / `visible_to`. Tracked separately at the time CR-10 is scheduled.
 
 ---
 
@@ -544,8 +593,9 @@ Violations reject the save with a clear error rather than silently writing cross
 | CR-5 | Fork-isolation invariant test | Proposed | None | Yes |
 | CR-6 | Cut `v2.0.0-wfs-baseline` tag | Proposed | None | Yes |
 | CR-7 | `FORK_CONTRACT.md` at repo root | Proposed | None | No (but strongly requested) |
-| CR-8 | Shared `core.Workspace` + `core.RoleInWorkspace` + `core.RoleOnObject` + Grappelli workspace-switcher dashboard module | Proposed | **Breaking (v2.0.0)** — new tables, shared role enum, combined workspace/object-level enforcement, shared switcher UI. Mirror implementation required in WFS. | **Yes, required** |
+| CR-8 | Shared `core.Workspace` + `core.RoleInWorkspace` + Grappelli workspace-switcher dashboard module | Proposed | **Breaking (v2.0.0)** — new tables, shared role enum, workspace-level enforcement, shared switcher UI. Mirror implementation required in WFS. | **Yes, required** |
 | CR-9 | Mandatory workspace-scoping + data migration | Proposed | **Breaking (v2.0.0)** — `workspace_id` column on all scoped tables; per-workspace uniqueness | **Yes, required** |
+| CR-10 | Object-level access grants (`RoleOnObject` + per-object share UI) | Deferred | Additive — new `RoleOnObject` table, OR'd branch in `effective_roles` / `WorkspaceAwareManager.visible_to`. No migration of existing tables. | No (post-v2.0.0) |
 
 ---
 

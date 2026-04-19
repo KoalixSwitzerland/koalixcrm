@@ -8,9 +8,10 @@ from koalixcrm.core.models.unit import Unit
 from koalixcrm.core.models.unit_transform import UnitTransform
 from koalixcrm.products.models.customer_group_transform import CustomerGroupTransform
 from koalixcrm.core.models.currency_transform import CurrencyTransform
+from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
 
 
-class Price(models.Model):
+class Price(WorkspaceScopedModel):
     unit = models.ForeignKey(Unit,
                              on_delete=models.CASCADE,
                              blank=False,

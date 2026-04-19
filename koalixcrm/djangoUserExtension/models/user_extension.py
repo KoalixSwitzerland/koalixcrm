@@ -10,9 +10,11 @@ from koalixcrm.contacts.models.email_address import EmailAddress
 from koalixcrm.djangoUserExtension.const.purpose import *
 from koalixcrm.djangoUserExtension.exceptions import *
 from koalixcrm.global_support_functions import xstr
+from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
+from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
 
 
-class UserExtension(models.Model):
+class UserExtension(WorkspaceScopedModel):
     id = models.BigAutoField(primary_key=True)
     user = models.ForeignKey("auth.User",
                              on_delete=models.CASCADE,
@@ -166,14 +168,15 @@ class InlineUserExtensionEmailAddress(admin.StackedInline):
     allow_add = True
 
 
-class OptionUserExtension(admin.ModelAdmin):
+class OptionUserExtension(WorkspaceScopedModelAdmin, admin.ModelAdmin):
     list_display = ('id',
                     'user',
                     'default_template_set',
                     'default_currency')
     list_display_links = ('id',
                           'user')
-    list_filter = ('user',
+    list_filter = ('workspace',
+                   'user',
                    'default_template_set',)
     ordering = ('id',)
     search_fields = ('id',

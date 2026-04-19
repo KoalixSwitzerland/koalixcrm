@@ -34,6 +34,23 @@ class DocumentTemplateViewSet(
     permission_classes = [IsAuthenticated, ModelPermissionsWithListView]
     http_method_names = ["get", "head", "options"]
 
+    def get_queryset(self):
+        active = getattr(self.request, 'active_workspace', None)
+        if self.request.user.is_superuser:
+            return DocumentTemplate.objects.all()
+        if active is None:
+            return DocumentTemplate.objects.none()
+        return DocumentTemplate.objects.filter(workspace=active)
+
+    def perform_create(self, serializer):
+        from koalixcrm.core.models.workspace import Workspace
+        active = getattr(self.request, 'active_workspace', None)
+        if active is None and self.request.user.is_superuser:
+            active, _ = Workspace.objects.get_or_create(
+                name='Default Workspace', defaults={'is_active': True}
+            )
+        serializer.save(workspace=active)
+
     def _redirect_to_field(self, field_file, asset_name):
         if not field_file:
             raise NotFound(detail=f"{asset_name} not set on this template")
