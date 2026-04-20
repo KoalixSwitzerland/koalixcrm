@@ -242,6 +242,7 @@ class OptionCommercialDocument(WorkspaceScopedModelAdmin, admin.ModelAdmin):
                 )
                 continue
             PDFExportProcess.objects.create(
+                workspace=getattr(request, 'active_workspace', None) or obj.workspace,
                 source_model=obj.__class__.__name__,
                 source_id=obj.id,
                 template_set=obj.template_set,
