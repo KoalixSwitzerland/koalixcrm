@@ -88,8 +88,6 @@ class TestWorkspaceAwareManagerGetQueryset:
 class TestRaiseOnMissingContext:
 
     def test_raises_when_no_context_and_flag_true(self):
-        from django.db import models
-
         class StrictManager(WorkspaceAwareManager):
             raise_on_missing_context = True
 
@@ -280,7 +278,6 @@ class TestWorkspaceScopedModelAdminSaveModel:
 
     def test_save_assigns_workspace_when_none(self, ws_a):
         from koalixcrm.core.models.pdf_export_process import PDFExportProcess
-        from django.core.exceptions import PermissionDenied
 
         admin = self._make_admin(PDFExportProcess)
 

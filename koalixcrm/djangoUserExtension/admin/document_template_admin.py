@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
-from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
 from koalixcrm.djangoUserExtension.models import (
     SalesOrderTemplate,
     MonthlyProjectSummaryTemplate,
