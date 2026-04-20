@@ -58,15 +58,15 @@ class DocumentTemplateViewSet(
         return HttpResponseRedirect(url)
 
     @action(detail=True, methods=["get"], url_path="xsl", url_name="xsl")
-    def xsl(self, request, pk=None):
+    def xsl(self, request, pk=None, **kwargs):
         return self._redirect_to_field(self.get_object().xsl_file, "xsl_file")
 
     @action(detail=True, methods=["get"], url_path="fop-config", url_name="fop-config")
-    def fop_config(self, request, pk=None):
+    def fop_config(self, request, pk=None, **kwargs):
         return self._redirect_to_field(
             self.get_object().fop_config_file, "fop_config_file"
         )
 
     @action(detail=True, methods=["get"], url_path="logo", url_name="logo")
-    def logo(self, request, pk=None):
+    def logo(self, request, pk=None, **kwargs):
         return self._redirect_to_field(self.get_object().logo, "logo")

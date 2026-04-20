@@ -48,6 +48,7 @@ class ProductCategoryAPITest(LiveServerTestCase):
             self.live_server_url,
             username='admin',
             password='adminpassword',
+            workspace_id=1,
         )
 
     def test_list(self):

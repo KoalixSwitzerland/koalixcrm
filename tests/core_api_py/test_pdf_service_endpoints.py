@@ -44,7 +44,7 @@ class TestPDFExportProcessEndpoint:
 
     def test_patch_status_transitions_to_completed(self, api_client, pdf_export_process):
         resp = api_client.patch(
-            f"/pdf_export_processes/{pdf_export_process.id}/",
+            f"/koalixcrm_core/api/v1/1/pdf-export-processes/{pdf_export_process.id}/",
             {"status": "completed", "result_url": "http://example.test/pdf.pdf"},
             format="json",
         )
@@ -55,7 +55,7 @@ class TestPDFExportProcessEndpoint:
 
     def test_source_fields_are_read_only(self, api_client, pdf_export_process):
         resp = api_client.patch(
-            f"/pdf_export_processes/{pdf_export_process.id}/",
+            f"/koalixcrm_core/api/v1/1/pdf-export-processes/{pdf_export_process.id}/",
             {"source_model": "Quotation", "source_id": 999},
             format="json",
         )
@@ -66,14 +66,14 @@ class TestPDFExportProcessEndpoint:
 
     def test_create_is_not_allowed(self, api_client):
         resp = api_client.post(
-            "/pdf_export_processes/",
+            "/koalixcrm_core/api/v1/1/pdf-export-processes/",
             {"source_model": "Invoice", "source_id": 1, "status": "pending"},
             format="json",
         )
         assert resp.status_code == 405
 
     def test_delete_is_not_allowed(self, api_client, pdf_export_process):
-        resp = api_client.delete(f"/pdf_export_processes/{pdf_export_process.id}/")
+        resp = api_client.delete(f"/koalixcrm_core/api/v1/1/pdf-export-processes/{pdf_export_process.id}/")
         assert resp.status_code == 405
 
 
@@ -88,16 +88,16 @@ class TestDocumentTemplateEndpoint:
         return StandardQuotationTemplateFactory()
 
     def test_retrieve_returns_sub_resource_hrefs(self, api_client, document_template):
-        resp = api_client.get(f"/document_templates/{document_template.id}/")
+        resp = api_client.get(f"/koalixcrm_core/api/v1/1/document-templates/{document_template.id}/")
         assert resp.status_code == 200
         data = resp.json()
         assert data["id"] == document_template.id
-        assert data["xsl_href"].endswith(f"/document_templates/{document_template.id}/xsl/")
+        assert data["xsl_href"].endswith(f"/koalixcrm_core/api/v1/1/document-templates/{document_template.id}/xsl/")
         assert data["fop_config_href"].endswith(
-            f"/document_templates/{document_template.id}/fop-config/"
+            f"/koalixcrm_core/api/v1/1/document-templates/{document_template.id}/fop-config/"
         )
         assert data["logo_href"].endswith(
-            f"/document_templates/{document_template.id}/logo/"
+            f"/koalixcrm_core/api/v1/1/document-templates/{document_template.id}/logo/"
         )
 
     def test_xsl_detail_action_redirects_to_presigned_url(
@@ -110,7 +110,7 @@ class TestDocumentTemplateEndpoint:
             return_value="https://example.test/presigned-xsl",
         ):
             resp = api_client.get(
-                f"/document_templates/{document_template.id}/xsl/", follow=False
+                f"/koalixcrm_core/api/v1/1/document-templates/{document_template.id}/xsl/", follow=False
             )
         assert resp.status_code == 302
         assert resp["Location"] == "https://example.test/presigned-xsl"
@@ -118,7 +118,7 @@ class TestDocumentTemplateEndpoint:
     def test_missing_optional_asset_returns_404(self, api_client, document_template):
         document_template.logo = None
         document_template.save()
-        resp = api_client.get(f"/document_templates/{document_template.id}/logo/")
+        resp = api_client.get(f"/koalixcrm_core/api/v1/1/document-templates/{document_template.id}/logo/")
         assert resp.status_code == 404
 
 
@@ -129,7 +129,7 @@ class TestCommercialDocumentMediaEndpoint:
 
         invoice = StandardInvoiceFactory()
         resp = api_client.post(
-            "/commercial_document_media/",
+            "/koalixcrm_contracts/api/v1/1/commercial-document-media/",
             {
                 "commercial_document": invoice.id,
                 "pdf_export_process": pdf_export_process.id,

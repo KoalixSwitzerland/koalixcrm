@@ -12,10 +12,11 @@ from koalixcrm.core_api_py.dto.unit_transform import UnitTransform
 
 class KoalixCRMCoreAPIClient(BaseAPIClient):
     api_path_env_var = 'KOALIXCRM_CORE_API_PATH'
-    api_path_default = ''
+    api_path_default = '/koalixcrm_core/api/v1/'
+    uses_workspace_id = True
 
-    def __init__(self, api_url=None, username=None, password=None):
-        super().__init__(api_url=api_url, username=username, password=password)
+    def __init__(self, api_url=None, username=None, password=None, workspace_id=None):
+        super().__init__(api_url=api_url, username=username, password=password, workspace_id=workspace_id)
 
     # ------------------------------------------------------------------
     # Currency (endpoint: /currencies)
@@ -85,13 +86,13 @@ class KoalixCRMCoreAPIClient(BaseAPIClient):
     # ------------------------------------------------------------------
 
     def get_currency_transform(self, object_id: int) -> Optional[CurrencyTransform]:
-        return self._get_object(CurrencyTransform, "/currency_transforms", object_id)
+        return self._get_object(CurrencyTransform, "/currency-transforms", object_id)
 
     def get_currency_transform_list(self) -> List[CurrencyTransform]:
-        return self._get_object_list(CurrencyTransform, "/currency_transforms/")
+        return self._get_object_list(CurrencyTransform, "/currency-transforms/")
 
     def create_currency_transform(self, data: Dict[str, Any]) -> Optional[CurrencyTransform]:
-        response_data = self._make_request("/currency_transforms/", method="POST", data=data)
+        response_data = self._make_request("/currency-transforms/", method="POST", data=data)
         if response_data:
             obj = CurrencyTransform(response_data, self)
             self._cache.set(CurrencyTransform, obj.id, obj)
@@ -99,20 +100,20 @@ class KoalixCRMCoreAPIClient(BaseAPIClient):
         return None
 
     def update_currency_transform(self, object_id: int, data: Dict[str, Any]) -> Optional[CurrencyTransform]:
-        return self._put_full_update(CurrencyTransform, "/currency_transforms", object_id, data)
+        return self._put_full_update(CurrencyTransform, "/currency-transforms", object_id, data)
 
     # ------------------------------------------------------------------
     # UnitTransform (endpoint: /unit_transforms)
     # ------------------------------------------------------------------
 
     def get_unit_transform(self, object_id: int) -> Optional[UnitTransform]:
-        return self._get_object(UnitTransform, "/unit_transforms", object_id)
+        return self._get_object(UnitTransform, "/unit-transforms", object_id)
 
     def get_unit_transform_list(self) -> List[UnitTransform]:
-        return self._get_object_list(UnitTransform, "/unit_transforms/")
+        return self._get_object_list(UnitTransform, "/unit-transforms/")
 
     def create_unit_transform(self, data: Dict[str, Any]) -> Optional[UnitTransform]:
-        response_data = self._make_request("/unit_transforms/", method="POST", data=data)
+        response_data = self._make_request("/unit-transforms/", method="POST", data=data)
         if response_data:
             obj = UnitTransform(response_data, self)
             self._cache.set(UnitTransform, obj.id, obj)
@@ -120,4 +121,4 @@ class KoalixCRMCoreAPIClient(BaseAPIClient):
         return None
 
     def update_unit_transform(self, object_id: int, data: Dict[str, Any]) -> Optional[UnitTransform]:
-        return self._put_full_update(UnitTransform, "/unit_transforms", object_id, data)
+        return self._put_full_update(UnitTransform, "/unit-transforms", object_id, data)

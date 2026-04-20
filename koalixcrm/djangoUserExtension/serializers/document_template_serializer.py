@@ -23,9 +23,19 @@ class DocumentTemplateJSONSerializer(serializers.ModelSerializer):
 
     def _detail_url(self, instance, action):
         request = self.context.get("request")
+        # Under CR-002 the basename is `document-template` (kebab-case) and the
+        # URL carries a `workspace_id` path arg. Pull it from the resolver
+        # match so the reverse() round-trips regardless of which workspace
+        # the request came in under.
+        workspace_id = None
+        if request is not None and getattr(request, "resolver_match", None) is not None:
+            workspace_id = request.resolver_match.kwargs.get("workspace_id")
+        kwargs = {"pk": instance.pk}
+        if workspace_id is not None:
+            kwargs["workspace_id"] = workspace_id
         return reverse(
-            f"documenttemplate-{action}",
-            kwargs={"pk": instance.pk},
+            f"document-template-{action}",
+            kwargs=kwargs,
             request=request,
         )
 
