@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django import forms
+from django.apps import apps
 from django.contrib import admin
 from django.http import HttpResponseRedirect
 from django.utils.translation import gettext as _
@@ -11,7 +12,17 @@ from django.template.context_processors import csrf
 from koalixcrm.plugin import *
 from koalixcrm.contracts.models.invoice import Invoice
 from koalixcrm.contracts.admin.commercial_document_admin import OptionCommercialDocument
-from koalixcrm.accounting.models import Account
+
+
+def _activa_account_queryset():
+    """Queryset of accounting.Account rows of type 'A' (activa).
+
+    Returns an empty queryset when the accounting app is not installed, so
+    the PaymentForm stays constructible in a WFS deployment."""
+    if not apps.is_installed('koalixcrm.accounting'):
+        return ()
+    account_model = apps.get_model('accounting', 'Account')
+    return account_model.objects.filter(account_type='A')
 
 
 class OptionInvoice(OptionCommercialDocument):
@@ -28,7 +39,11 @@ class OptionInvoice(OptionCommercialDocument):
     class PaymentForm(forms.Form):
         payment_amount = forms.DecimalField()
         _selected_action = forms.CharField(widget=forms.MultipleHiddenInput)
-        payment_account = forms.ModelChoiceField(Account.objects.filter(account_type="A"))
+        payment_account = forms.ModelChoiceField(queryset=None)
+
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.fields['payment_account'].queryset = _activa_account_queryset()
 
     def register_invoice_in_accounting(self, request, queryset):
         from koalixcrm.core.exceptions import OpenInterestAccountMissing, IncompleteInvoice
@@ -96,9 +111,10 @@ class OptionInvoice(OptionCommercialDocument):
                'create_purchase_order',
                'create_payment_reminder',
                'create_pdf_async',
-               'register_invoice_in_accounting',
-               'register_payment_in_accounting',
                'create_credit_note_from_invoice',]
+    if apps.is_installed('koalixcrm.accounting'):
+        actions = actions + ['register_invoice_in_accounting',
+                             'register_payment_in_accounting']
 
     pluginProcessor = PluginProcessor()
     actions.extend(pluginProcessor.getPluginAdditions("invoiceActions"))

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from django.apps import apps
 from django.db import models
 from django.contrib import admin
 from django.utils.translation import gettext as _
@@ -197,7 +198,7 @@ class OptionUserExtension(WorkspaceScopedModelAdmin, admin.ModelAdmin):
     create_work_report_pdf.short_description = _("Work Report PDF")
 
     save_as = True
-    actions = [create_work_report_pdf]
+    actions = [create_work_report_pdf] if apps.is_installed('koalixcrm.reporting') else []
     inlines = [InlineUserExtensionPostalAddress,
                InlineUserExtensionPhoneAddress,
                InlineUserExtensionEmailAddress]

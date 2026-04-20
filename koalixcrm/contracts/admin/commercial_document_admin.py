@@ -261,13 +261,16 @@ class OptionCommercialDocument(WorkspaceScopedModelAdmin, admin.ModelAdmin):
 
     create_pdf_async.short_description = _("Create PDF")
 
-    def create_project(self, request, queryset):
-        from koalixcrm.reporting.views.create_task import CreateTaskView
-        for obj in queryset:
-            response = CreateTaskView.create_project(self,
-                                                     request,
-                                                     obj,
-                                                     ("/admin/contract_object_management/"+obj.__class__.__name__.lower()+"/"))
-            return response
+    if apps.is_installed('koalixcrm.reporting'):
+        def create_project(self, request, queryset):
+            from koalixcrm.reporting.views.create_task import CreateTaskView
+            for obj in queryset:
+                response = CreateTaskView.create_project(
+                    self,
+                    request,
+                    obj,
+                    ("/admin/contract_object_management/" + obj.__class__.__name__.lower() + "/"),
+                )
+                return response
 
-    create_project.short_description = _("Create Project")
+        create_project.short_description = _("Create Project")

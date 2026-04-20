@@ -44,8 +44,18 @@ def _iter_source_files(app_name: str):
 
 
 def _forbidden_import_names(tree: ast.AST) -> list[str]:
+    """Return forbidden import names found at MODULE level only.
+
+    Lazy imports inside function bodies (the pattern prescribed by
+    `docs/architecture/optional_apps.md` for optional-peer access) are
+    intentionally not flagged — they never execute at module import time
+    and only fire when the peer app is actually installed and the wrapping
+    `apps.is_installed` branch admits them. A top-level import, by contrast,
+    would fail at module load in a WFS deployment where the peer app is
+    absent.
+    """
     hits: list[str] = []
-    for node in ast.walk(tree):
+    for node in tree.body if isinstance(tree, ast.Module) else []:
         if isinstance(node, ast.Import):
             for alias in node.names:
                 for forbidden in FORBIDDEN_APPS:
