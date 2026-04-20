@@ -27,7 +27,7 @@
           <fo:table-row height="2cm" border-bottom-color="black" border-bottom-style="solid" border-bottom-width="0.5pt">
             <fo:table-cell padding-bottom="3pt" >
               <fo:block text-align="left" >
-                <fo:external-graphic content-width="6.0cm">
+                <fo:external-graphic src="logo.png" content-width="6.0cm">
                   <xsl:attribute name="src">
                      <xsl:value-of select="headerpicture"/>
                   </xsl:attribute>
@@ -101,7 +101,7 @@
                 </fo:table-cell>
              </fo:table-header>
               <xsl:choose>
-                  <xsl:when test="Account[accountType='A']/None">-</xsl:when> 
+                  <xsl:when test="Account[accountType='A'][string(.)='']">-</xsl:when> 
                   <xsl:otherwise>
           <fo:table-body font-size="9pt"
                          font-family="BitstreamVeraSans">

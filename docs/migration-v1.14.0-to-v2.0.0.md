@@ -442,3 +442,282 @@ never run.
 | URL wiring | `projectsettings/urls.py` |
 | Entrypoint wiring | `docker/dev/entrypoint.sh`, `docker/prod/entrypoint.sh` |
 | Reference test DBs | `/app/koalixcrm_data/db/auftraegekoalixnet_20230101.sqlite3`, `/app/koalixcrm_data/db/olddb.sqlite3` |
+
+## XSLT template migration (v1.14 → v2.0)
+
+### Why every XSL breaks
+
+Pre-v2.0.0, PDF rendering serialised the ORM via Django's
+`serializers.serialize('xml', ...)`, producing a `<django-objects>`
+root whose children looked like `<object model="crm.salesdocument"
+pk="45"><field name="description">…</field>…</object>`. Templates
+addressed data with XPaths such as
+`object[@model='crm.salesdocument']/field[@name='description']`.
+
+In v2.0.0 the Java PDF worker (`pdf-export-service`) constructs its
+own XML via `XmlAggregator` + the `*XmlBuilder` classes. The new root
+is `<koalixcrm-export>` and the shape is hand-rolled, domain-shaped,
+and far smaller. Every legacy XSL therefore produces empty output and
+FOP fails with `ValidationException: Document is empty`.
+
+### Source of truth for the new XML shape
+
+Do NOT infer the shape from serializers; read the builders — they are
+what actually runs:
+
+- `pdf-export-service/src/main/java/net/koalix/pdf/xml/XmlAggregator.java`
+  (root wrapper)
+- `pdf-export-service/src/main/java/net/koalix/pdf/xml/builders/CommercialDocumentXmlBuilder.java`
+- `pdf-export-service/src/main/java/net/koalix/pdf/xml/builders/PartyXmlBuilder.java`
+- `pdf-export-service/src/main/java/net/koalix/pdf/xml/builders/PositionXmlBuilder.java`
+- `pdf-export-service/src/main/java/net/koalix/pdf/xml/builders/UserExtensionXmlBuilder.java`
+
+Canonical tree (abbreviated):
+
+```xml
+<koalixcrm-export>
+  <commercial_document type="Invoice|Quotation|PurchaseOrder|DespatchAdvice|PaymentReminder|CreditNote" id="…">
+    <contract>…</contract>
+    <staff>…</staff>
+    <template_set>…</template_set>
+    <external_reference>…</external_reference>
+    <description>…</description>
+    <discount>…</discount>
+    <last_pricing_date>…</last_pricing_date>
+    <last_calculated_price>…</last_calculated_price>
+    <last_calculated_tax>…</last_calculated_tax>
+    <date_of_creation>…</date_of_creation>
+    <last_modification>…</last_modification>
+    <custom_date_field>…</custom_date_field>
+    <!-- Invoice/PaymentReminder only: -->
+    <payable_until>…</payable_until>
+    <payment_bank_reference>…</payment_bank_reference>
+    <!-- Quotation only: --> <valid_until>…</valid_until>
+    <!-- CreditNote only: --> <corrects_invoice>…</corrects_invoice><issue_date>…</issue_date><reason>…</reason>
+    <status>…</status>
+
+    <currency id="…">
+      <short_name>CHF</short_name>
+      <description>…</description>
+    </currency>
+
+    <party id="…" type="organization|contact">
+      <display_name>…</display_name>
+      <!-- when type='organization': -->
+      <organization>
+        <legal_name>…</legal_name>
+        <legal_form>…</legal_form>
+        <registration_number>…</registration_number>
+        <legal_seat_country>…</legal_seat_country>
+      </organization>
+      <!-- when type='contact': -->
+      <contact>
+        <prefix>…</prefix>
+        <given_name>…</given_name>
+        <family_name>…</family_name>
+      </contact>
+      <postal_address purpose="billing|shipping|legal|…" is_primary="true|false">
+        <address_line_1>…</address_line_1>…<address_line_4>…</address_line_4>
+        <zip_code>…</zip_code><town>…</town><state>…</state>
+        <country>…</country><subdivision_code>…</subdivision_code>
+      </postal_address>  <!-- repeats -->
+      <phone_number purpose="…" is_primary="…">+41…</phone_number>  <!-- repeats -->
+      <email_address purpose="…" is_primary="…">…</email_address>   <!-- repeats -->
+    </party>
+
+    <items>
+      <position id="…">
+        <position_number>1</position_number>
+        <description>…</description>
+        <quantity>…</quantity>
+        <discount>…</discount>
+        <position_price_per_unit>…</position_price_per_unit>
+        <last_calculated_price>…</last_calculated_price>
+        <last_calculated_tax>…</last_calculated_tax>
+        <unit id="…"><description>…</description><short_name>…</short_name></unit>
+        <product_type id="…">
+          <title>…</title>
+          <product_type_identifier>…</product_type_identifier>
+          <description>…</description>
+          <tax_rate>…</tax_rate>
+        </product_type>
+      </position>
+    </items>
+
+    <tax_summary>
+      <tax_bucket rate="8.1">
+        <taxable_amount>…</taxable_amount>
+        <tax_amount>…</tax_amount>
+      </tax_bucket>
+    </tax_summary>
+  </commercial_document>
+
+  <user_extension id="…">
+    <user id="…"><username>…</username><first_name>…</first_name><last_name>…</last_name><email>…</email></user>
+    <default_template_set>…</default_template_set>
+    <default_currency id="…"><short_name>…</short_name></default_currency>
+    <postal_address purpose="…" is_primary="…">…</postal_address>
+    <phone_address purpose="…" is_primary="…">+41…</phone_address>
+    <email_address purpose="…" is_primary="…">…</email_address>
+  </user_extension>
+</koalixcrm-export>
+```
+
+### Mechanical rewrite rules
+
+These rules are sufficient to mechanically port any of the
+`auftraegekoalixnet/media/uploads/templatefiles/*.xsl`,
+`projectsettings/static/default_templates/de/*.xsl`, `…/en/*.xsl`
+templates. Apply them top-to-bottom.
+
+1. **Root template match**
+   - `<xsl:template match="django-objects">` → `<xsl:template match="koalixcrm-export">`
+
+2. **Sales / commercial document**
+   - `object[@model='crm.salesdocument']` → `commercial_document`
+   - `object[@model='crm.salesdocument']/@pk` → `commercial_document/@id`
+   - `object[@model='crm.salesdocument']/field[@name='FIELD']` → `commercial_document/FIELD` for any of:
+     `contract`, `staff`, `external_reference`, `description`, `discount`,
+     `last_pricing_date`, `last_calculated_price`, `last_calculated_tax`,
+     `date_of_creation`, `last_modification`, `custom_date_field`,
+     `template_set`.
+
+3. **Subtype-specific documents (flattened onto `commercial_document`)**
+   - `object[@model='crm.invoice']/field[@name='payable_until']` → `commercial_document/payable_until`
+   - `object[@model='crm.invoice']/field[@name='payment_bank_reference']` → `commercial_document/payment_bank_reference`
+   - `object[@model='crm.quote' or 'crm.quotation']/field[@name='valid_until']` → `commercial_document/valid_until`
+   - `object[@model='crm.creditnote']/field[@name='{corrects_invoice|issue_date|reason}']` → `commercial_document/{…}`
+   - `status` lives on `commercial_document/status`.
+
+4. **Currency**
+   - `object[@model='crm.currency']` → `commercial_document/currency`
+   - `object[@model='crm.currency']/field[@name='short_name']` → `commercial_document/currency/short_name`
+   - `object[@model='crm.currency']/field[@name='description']` → `commercial_document/currency/description`
+   - `object[@model='crm.currency']/@pk` → `commercial_document/currency/@id`
+
+5. **Counterparty (was Contact, now Party)**
+   - `object[@model='crm.contact']` → `commercial_document/party`
+   - `object[@model='crm.contact']/@pk` → `commercial_document/party/@id`
+   - `object[@model='crm.contact']/field[@name='name']` → `commercial_document/party/display_name`
+   - Organisations (`party[@type='organization']`):
+     - legal name: `party/organization/legal_name`
+     - legal form: `party/organization/legal_form`
+   - Natural-person parties (`party[@type='contact']`):
+     - recipient name: concatenate `party/contact/prefix`, `given_name`, `family_name`
+   - If the template used `postaladdressforcontact`/`postaladdress` `pre_name` + `name` to render the addressee line, switch the `xsl:choose` to branch on `party/@type`:
+     ```xml
+     <xsl:choose>
+       <xsl:when test="commercial_document/party/@type='organization'">
+         <xsl:value-of select="commercial_document/party/organization/legal_name"/>
+       </xsl:when>
+       <xsl:otherwise>
+         <xsl:value-of select="commercial_document/party/contact/prefix"/><xsl:text> </xsl:text>
+         <xsl:value-of select="commercial_document/party/contact/given_name"/><xsl:text> </xsl:text>
+         <xsl:value-of select="commercial_document/party/contact/family_name"/>
+       </xsl:otherwise>
+     </xsl:choose>
+     ```
+
+6. **Postal / phone / email**
+   - `object[@model='crm.postaladdress']/field[@name='FIELD']` → `commercial_document/party/postal_address[@purpose='billing' or @is_primary='true'][1]/FIELD`
+     - Recommended default filter: pick the first `postal_address` whose `@purpose='billing'`, falling back to `@is_primary='true'`, falling back to `postal_address[1]`.
+     - FIELD stays identical: `address_line_1..4`, `zip_code`, `town`, `state`, `country`, `subdivision_code`.
+   - `object[@model='crm.postaladdress']/field[@name='pre_name']` / `name` → drop; take the name from `party/contact` or `party/organization` (rule 5).
+   - `object[@model='crm.phoneaddress']/field[@name='phone']` → `commercial_document/party/phone_number[1]` (text content). Filter by `@purpose` when relevant.
+   - Email on a party: `commercial_document/party/email_address[1]` (text content).
+
+7. **Issuing user / company (was djangoUserExtension.*, crm.phoneaddress, auth.user)**
+   - `object[@model='auth.user']/field[@name='first_name']` → `user_extension/user/first_name`
+   - `…/@name='last_name'` → `user_extension/user/last_name`
+   - `…/@name='email']` → `user_extension/user/email`
+   - `object[@model='crm.phoneaddress']/field[@name='phone']` that referenced the issuing user (sibling of `auth.user`) → `user_extension/phone_address[1]`
+   - Company postal (issuing org): `user_extension/postal_address[@purpose='billing'][1]/…`
+   - `object[@model='djangoUserExtension.templateset']/field[@name='addresser']` → **not in the new XML.** Options:
+     - Hard-code the addresser line in the XSL, OR
+     - (future) extend `UserExtensionXmlBuilder` to emit the addresser — out of scope for this migration; prefer hard-coding per template.
+   - `object[@model='djangoUserExtension.documenttemplate']/field[@name='{pagefooterleft|pagefootermiddle|bankingaccountref}']` → **not in the new XML.** Hard-code in the XSL or delete the cells.
+   - `object[@model='djangoUserExtension.documenttemplate']/field[@name='logo']` → **not in the XML**; the logo is fetched separately by the worker via its presigned URL and made available in the FOP working directory. Leave the `<fo:external-graphic>` but replace the XPath-built `src` with the literal filename of the logo file shipped with the template (see `CrmApiClient.resolvePresignedAssetUrl`).
+
+8. **Positions (`<items>` wrapper is new — important)**
+   - `<xsl:for-each select="object[@model='crm.position']">` → `<xsl:for-each select="commercial_document/items/position">`
+   - `field[@name='position_number']` → `position_number`
+   - `field[@name='description']` → `description`
+   - `field[@name='quantity']` → `quantity`
+   - `field[@name='discount']` → `discount`
+   - `field[@name='position_price_per_unit']` → `position_price_per_unit`
+   - `field[@name='last_calculated_price']` → `last_calculated_price`
+   - `field[@name='last_calculated_tax']` → `last_calculated_tax`
+   - The legacy sort key `<xsl:sort select="field[@name=position_number]"/>` had a typo (missing quotes); rewrite to `<xsl:sort select="position_number" data-type="number"/>`.
+
+9. **Product lookup (dereference by pk is gone)**
+   - Pattern `<xsl:variable name="p" select="field[@name='product']"/>` followed by `../object[@model='crm.product' and @pk=$p]/field[@name='title']` → directly `product_type/title`.
+   - `.../field[@name='description']` → `product_type/description`.
+   - `.../field[@name='product_type_identifier']` → `product_type/product_type_identifier`.
+   - product-type tax rate: `product_type/tax_rate`.
+
+10. **Unit lookup (same pattern)**
+    - `<xsl:variable name="u" select="field[@name='unit']"/>` + `../object[@model='crm.unit' and @pk=$u]/field[@name='short_name']` → `unit/short_name`.
+    - `unit/description`, `unit/@id` analogously.
+
+11. **Currency inside the for-each over positions**
+    - `../object[@model='crm.currency']/field[@name='short_name']` → `/koalixcrm-export/commercial_document/currency/short_name` (absolute) or `../../currency/short_name` (relative from inside `items/position`).
+
+12. **None tests**
+    - `field[@name='X']/None` → `not(X) or string(X)=''`. Replace in every `<xsl:when>` / `<xsl:choose>`.
+
+13. **Text paragraphs**
+    - `object[@model='crm.textparagraphinsalesdocument']` is no longer emitted. Either delete the block or replace with a hard-coded string in the XSL. (If the template must render boilerplate paragraphs, embed them in the XSL itself — that is the v2 model.)
+
+14. **Tax summary / tax rows (new)**
+    - Legacy templates computed totals by iterating positions and summing. Prefer the pre-aggregated
+      `commercial_document/tax_summary/tax_bucket[@rate]/taxable_amount` + `/tax_amount` whenever the
+      original template showed a "Total tax at X%" row. The `@rate` attribute is the decimal string
+      ("8.1", "7.7", etc.).
+
+15. **Document totals**
+    - Grand total (net): `commercial_document/last_calculated_price`
+    - Grand total (tax): `commercial_document/last_calculated_tax`
+    - Currency short name to display next to the number: `commercial_document/currency/short_name`.
+
+16. **Date formatting** — the legacy `substring(...,9,2)` etc. trick still works because the new
+    builders emit ISO-8601 strings (`YYYY-MM-DD`). Leave these `substring` calls alone.
+
+### Caveats / out of scope
+
+- **Filebrowser-driven assets (`filebrowser_directory`, `logo`, fop
+  config).** The Java worker fetches these via the API
+  (`/document_templates/{id}/{xsl|fop-config|logo}/`) and materialises
+  them on local disk before invoking FOP. XSLs should reference logos
+  by bare filename, not via XPath into the XML.
+- **Texts that used to live in `TextParagraphInSalesDocument` /
+  `TemplateSet.addresser` / `DocumentTemplate.pagefooter*` /
+  `bankingaccountref`.** These fields are not in the new XML. Hard-code
+  them in the XSL for now; re-emitting them from the worker can be a
+  follow-up on `UserExtensionXmlBuilder` / a new
+  `DocumentTemplateXmlBuilder`.
+- **`crm.contract`.** Only the contract's PK is currently emitted
+  (`commercial_document/contract`). Any XSL that cross-referenced
+  contract fields must either fetch them via a new worker-side
+  extension or drop those lines.
+
+### How to run the migration (per-file)
+
+For each XSL under
+
+- `/app/koalixcrm/auftraegekoalixnet/media/uploads/templatefiles/*.xsl`
+- `/app/koalixcrm/projectsettings/static/default_templates/de/*.xsl`
+- `/app/koalixcrm/projectsettings/static/default_templates/en/*.xsl`
+
+apply rules 1–16 mechanically. Validate each ported file by:
+
+1. Pulling the live XML the worker sent to FOP for a failing process
+   (add a `Files.write(tmp, xml)` debug hook in
+   `XsltFopRenderer.render()` or tee from
+   `XmlAggregator.build`).
+2. `xsltproc ported.xsl live.xml | fop -xml - -xsl - -pdf out.pdf`
+   locally — it must produce a non-empty FO tree and a PDF.
+
+The same-named file under `auftraegekoalixnet/...` and
+`default_templates/{de,en}/...` is often structurally identical — do
+one language first, then diff-transplant the other.
+

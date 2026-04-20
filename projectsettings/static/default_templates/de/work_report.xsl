@@ -3,7 +3,7 @@
         xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
         xmlns:fo="http://www.w3.org/1999/XSL/Format">
     <xsl:decimal-format name="european" decimal-separator="," grouping-separator="."/>
-    <xsl:template match="django-objects">
+    <xsl:template match="koalixcrm-export">
         <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
             <!-- defines page layout -->
             <fo:layout-master-set>
@@ -30,12 +30,8 @@
                                           border-bottom-width="0.5pt">
                                 <fo:table-cell padding-bottom="3pt">
                                     <fo:block text-align="left">
-                                        <fo:external-graphic content-width="6.0cm">
-                                            <xsl:attribute name="src">
-                                                file:///<xsl:value-of select="filebrowser_directory"/>/<xsl:value-of
-                                                    select="object[@model='djangoUserExtension.documenttemplate']/field[@name='logo']"/>
-                                            </xsl:attribute>
-                                        </fo:external-graphic>
+                                        <fo:external-graphic src="logo.png" content-width="6.0cm">
+</fo:external-graphic>
                                     </fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell padding-bottom="3pt">
@@ -98,24 +94,21 @@
                                     <fo:block font-size="7pt"
                                               font-family="BitstreamVeraSans"
                                               text-align="start">
-                                        <xsl:value-of
-                                                select="object[@model='djangoUserExtension.documenttemplate']/field[@name='pagefooterleft']"/>
+                                        <xsl:text>TODO: configure page footer</xsl:text>
                                     </fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell>
                                     <fo:block font-size="7pt"
                                               font-family="BitstreamVeraSans"
                                               text-align="end">
-                                        <xsl:value-of
-                                                select="object[@model='djangoUserExtension.documenttemplate']/field[@name='pagefootermiddle']"/>
+                                        <xsl:text>TODO: configure page footer</xsl:text>
                                     </fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell>
                                     <fo:block font-size="7pt"
                                               font-family="BitstreamVeraSans"
                                               text-align="end">
-                                        <xsl:value-of
-                                                select="object[@model='djangoUserExtension.documenttemplate']/field[@name='bankingaccountref']"/>
+                                        <xsl:text>TODO: configure page footer</xsl:text>
                                     </fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell>
@@ -130,20 +123,7 @@
                     </fo:table>
                 </fo:static-content>
                 <fo:flow flow-name="xsl-region-body">
-                    <xsl:for-each select="object[@model='crm.textparagraphinsalesdocument']">
-                        <xsl:choose>
-                            <xsl:when test="field[@name='purpose']='BS'">
-                                <fo:block font-size="9pt"
-                                          font-family="BitstreamVeraSans"
-                                          color="black"
-                                          text-align="left"
-                                          margin-top="2cm"
-                                          linefeed-treatment="preserve">
-                                    <xsl:value-of select="field[@name='text_paragraph']"/>
-                                </fo:block>
-                            </xsl:when>
-                        </xsl:choose>
-                    </xsl:for-each>
+                    <!-- TODO: inline text paragraphs here -->
                     <fo:block font-size="15pt"
                               font-family="BitstreamVeraSans"
                               color="black"
@@ -152,13 +132,13 @@
                               margin-top="2cm">
                         Work Report
                     </fo:block>
-                    <xsl:variable name="report_of_user" select="object[@model='djangoUserExtension.userextension']/field[@name='user']"/>
+                    <xsl:variable name="report_of_user" select="user_extension/user"/>
                     <fo:block font-size="10pt"
                               font-family="BitstreamVeraSans"
                               color="black"
                               text-align="left"
                               font-weight="bold">
-                        Employee: <xsl:value-of select="object[@model='auth.user' and @pk=$report_of_user]/field[@name='username']"/>
+                        Employee: <xsl:value-of select="object[@model='auth.user' and @pk=$report_of_user]/username"/>
                     </fo:block>
                     <fo:block font-size="10pt"
                               font-family="BitstreamVeraSans"
@@ -168,21 +148,7 @@
                               margin-bottom="1cm">
                         Range: <xsl:value-of select="range_from"/> to <xsl:value-of select="range_to"/>
                     </fo:block>
-                    <xsl:for-each select="object[@model='crm.textparagraphinsalesdocument']">
-                        <xsl:choose>
-                            <xsl:when test="field[@name='purpose']='AS'">
-                                <fo:block font-size="9pt"
-                                          font-family="BitstreamVeraSans"
-                                          color="black"
-                                          text-align="left"
-                                          margin-top="1cm"
-                                          linefeed-treatment="preserve"
-                                          page-break-after="always">
-                                    <xsl:value-of select="field[@name='text_paragraph']"/>
-                                </fo:block>
-                            </xsl:when>
-                        </xsl:choose>
-                    </xsl:for-each>
+                    <!-- TODO: inline text paragraphs here -->
                     <xsl:for-each select="object[@model='djangoUserExtension.userextension']/Month_Work_Hours">
                         <xsl:variable name="current_month" select="current()/@month"/>
                         <fo:block font-size="9pt"
@@ -252,7 +218,7 @@
                                                        border-width="0.5pt"
                                                        padding="2.5pt">
                                             <fo:block text-align="start">
-                                                <xsl:value-of select="current()/field[@name='project_name']"/>
+                                                <xsl:value-of select="current()/project_name"/>
                                             </fo:block>
                                         </fo:table-cell>
                                         <xsl:for-each select="../object[@model='djangoUserExtension.userextension']/Day_Project_Work_Hours[@month=$current_month and @project=current()/@pk]">
