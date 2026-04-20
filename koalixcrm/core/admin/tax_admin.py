@@ -10,11 +10,7 @@ from koalixcrm.core.models.tax import Tax
 class TaxAdmin(admin.ModelAdmin):
     list_display = ('id',
                     'tax_rate',
-                    'name',
-                    'account_activa',
-                    'account_passiva')
+                    'name')
     fieldsets = (('', {'fields': ('tax_rate',
-                                  'name',
-                                  'account_activa',
-                                  'account_passiva')}),)
+                                  'name')}),)
     allow_add = True

@@ -33,11 +33,6 @@ class ProductType(WorkspaceScopedModel):
                                          blank=True)
     date_of_creation = models.DateTimeField(verbose_name=_("Created at"),
                                             auto_now_add=True)
-    accounting_product_category = models.ForeignKey('accounting.ProductCategory',
-                                                    on_delete=models.CASCADE,
-                                                    verbose_name=_("Accounting Product Category"),
-                                                    null=True,
-                                                    blank=True)
 
     def get_price(self, date, unit, party, currency):
         """Find the applicable price for this ProductType at `date` for the

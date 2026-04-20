@@ -39,8 +39,6 @@ class TaxAPITest(LiveServerTestCase):
         data = {
             "tax_rate": "8.00",
             "name": "New Test Tax",
-            "account_activa": None,
-            "account_passiva": None,
         }
         created = self.api_client.create_tax(data)
         self.assertIsNotNone(created)

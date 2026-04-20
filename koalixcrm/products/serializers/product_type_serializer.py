@@ -1,4 +1,3 @@
-from django.apps import apps
 from rest_framework import serializers
 
 from koalixcrm.products.models.product_type import ProductType
@@ -8,31 +7,13 @@ from koalixcrm.core.serializers.tax_serializer import OptionTaxJSONSerializer
 from koalixcrm.core.serializers.unit_serializer import OptionUnitJSONSerializer
 
 
-class _ProductCategoryOptionSerializer(serializers.Serializer):
-    """Minimal option serializer for `accounting.ProductCategory`.
-
-    Avoids a hard import from `koalixcrm.accounting` — that app is not
-    installed in the WFS fork. Input accepts `{'id': <pk>}` or null; output
-    reads attrs off the ProductCategory instance via duck typing."""
-    id = serializers.IntegerField(required=False, allow_null=True)
-    title = serializers.CharField(read_only=True)
-
-
-def _resolve_product_category(payload):
-    if not payload or not apps.is_installed('koalixcrm.accounting'):
-        return None
-    category_id = payload.get('id', None)
-    if not category_id:
-        return None
-    product_category_model = apps.get_model('accounting', 'ProductCategory')
-    return product_category_model.objects.get(id=category_id)
-
-
 class ProductJSONSerializer(serializers.ModelSerializer):
+    """Core-level ProductType serializer. The accounting product-category
+    linkage is owned by `accounting.ProductCategoryAssignment` since CR-2c
+    and surfaced through accounting-side serializers only."""
     product_type_identifier = serializers.CharField(allow_null=True, required=False)
     default_unit = OptionUnitJSONSerializer(allow_null=True, required=False)
     tax = OptionTaxJSONSerializer(allow_null=True, required=False)
-    accounting_product_category = _ProductCategoryOptionSerializer(allow_null=True, required=False)
 
     class Meta:
         model = ProductType
@@ -40,8 +21,7 @@ class ProductJSONSerializer(serializers.ModelSerializer):
                   'product_type_identifier',
                   'title',
                   'default_unit',
-                  'tax',
-                  'accounting_product_category')
+                  'tax')
         depth = 1
 
     def create(self, validated_data):
@@ -61,10 +41,6 @@ class ProductJSONSerializer(serializers.ModelSerializer):
             product.tax = Tax.objects.get(id=tax.get('id'))
         else:
             product.tax = None
-
-        product.accounting_product_category = _resolve_product_category(
-            validated_data.pop('accounting_product_category', None)
-        )
 
         product.save()
         return product
@@ -86,10 +62,6 @@ class ProductJSONSerializer(serializers.ModelSerializer):
             instance.tax = Tax.objects.get(id=tax.get('id'))
         else:
             instance.tax = None
-
-        instance.accounting_product_category = _resolve_product_category(
-            validated_data.pop('accounting_product_category', None)
-        )
 
         instance.save()
         return instance

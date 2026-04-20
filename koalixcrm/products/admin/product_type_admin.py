@@ -18,8 +18,7 @@ class ProductTypeAdmin(WorkspaceScopedModelAdmin, admin.ModelAdmin):
         'product_type_identifier',
         'title',
         'default_unit',
-        'tax',
-        'accounting_product_category')
+        'tax')
     list_display_links = ('product_type_identifier',)
     list_filter = ('workspace',)
     fieldsets = (
@@ -29,8 +28,7 @@ class ProductTypeAdmin(WorkspaceScopedModelAdmin, admin.ModelAdmin):
                 'title',
                 'description',
                 'default_unit',
-                'tax',
-                'accounting_product_category')
+                'tax')
         }),
     )
     inlines = [ProductPriceInlineAdmin,
