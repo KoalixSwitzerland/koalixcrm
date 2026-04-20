@@ -10,8 +10,8 @@ public record UserExtensionDto(
         UserDto user,
         Long defaultTemplateSet,
         CurrencyDto defaultCurrency,
-        List<UserExtensionPostalAddressDto> postalAddresses,
-        List<UserExtensionPhoneAddressDto> phoneAddresses,
-        List<UserExtensionEmailAddressDto> emailAddresses
+        List<NestedPostalAddressDto> postalAddresses,
+        List<NestedPhoneAssignmentDto> phoneAddresses,
+        List<NestedEmailAssignmentDto> emailAddresses
 ) {
 }

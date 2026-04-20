@@ -5,10 +5,8 @@ from django.db import models
 from django.contrib import admin, messages
 from django.utils.translation import gettext as _
 from koalixcrm.core.const.purpose import *
+from koalixcrm.core.const.party import ASSIGNMENT_PURPOSE_CHOICES
 from koalixcrm.global_support_functions import xstr, make_date_utc
-from koalixcrm.contacts.models.phone_address import PhoneAddress
-from koalixcrm.contacts.models.email_address import EmailAddress
-from koalixcrm.contacts.models.postal_address import PostalAddress
 from koalixcrm.contracts.models.commercial_document_position import CommercialDocumentPosition
 from koalixcrm.djangoUserExtension.models import TextParagraphInDocumentTemplate, UserExtension
 from koalixcrm.products.models.product_type import ProductType
@@ -176,43 +174,91 @@ class CommercialDocument(WorkspaceScopedModel):
         return _("Commercial Document") + ": " + str(self.id) + " " + _("from Contract") + ": " + str(self.contract.id)
 
 
-class PostalAddressForCommercialDocument(PostalAddress):
-    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT)
-    commercial_document = models.ForeignKey("CommercialDocument", on_delete=models.CASCADE)
+class CommercialDocumentAddressAssignment(WorkspaceScopedModel):
+    id = models.BigAutoField(primary_key=True)
+    document = models.ForeignKey(
+        "CommercialDocument", on_delete=models.CASCADE,
+        related_name='address_assignments',
+        verbose_name=_("Commercial Document"),
+    )
+    address = models.ForeignKey(
+        'contacts.Address', on_delete=models.CASCADE,
+        related_name='commercial_document_assignments',
+        verbose_name=_("Address"),
+    )
+    purpose = models.CharField(
+        max_length=16, choices=ASSIGNMENT_PURPOSE_CHOICES,
+        verbose_name=_("Purpose"),
+    )
+    is_primary = models.BooleanField(default=False, verbose_name=_("Is primary"))
+    valid_from = models.DateField(blank=True, null=True, verbose_name=_("Valid from"))
+    valid_to = models.DateField(blank=True, null=True, verbose_name=_("Valid to"))
 
     class Meta:
         app_label = "contract_object_management"
-        db_table = "crm_postaladdressforcommercialdocument"
-        verbose_name = _('Postal Address For Commercial Documents')
-        verbose_name_plural = _('Postal Address For Commercial Documents')
+        db_table = "crm_commercialdocumentaddressassignment"
+        verbose_name = _('Commercial Document Address Assignment')
+        verbose_name_plural = _('Commercial Document Address Assignments')
 
     def __str__(self):
-        return xstr(self.pre_name) + ' ' + xstr(self.name) + ' ' + xstr(self.address_line_1)
+        return f"{self.document_id}-{self.purpose}-{self.address_id}"
 
 
-class EmailAddressForCommercialDocument(EmailAddress):
-    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT)
-    commercial_document = models.ForeignKey("CommercialDocument", on_delete=models.CASCADE)
+class CommercialDocumentPhoneAssignment(WorkspaceScopedModel):
+    id = models.BigAutoField(primary_key=True)
+    document = models.ForeignKey(
+        "CommercialDocument", on_delete=models.CASCADE,
+        related_name='phone_assignments',
+        verbose_name=_("Commercial Document"),
+    )
+    phone_number = models.ForeignKey(
+        'contacts.PhoneNumber', on_delete=models.CASCADE,
+        related_name='commercial_document_assignments',
+        verbose_name=_("Phone number"),
+    )
+    purpose = models.CharField(
+        max_length=16, choices=ASSIGNMENT_PURPOSE_CHOICES,
+        verbose_name=_("Purpose"),
+    )
+    is_primary = models.BooleanField(default=False, verbose_name=_("Is primary"))
+    valid_from = models.DateField(blank=True, null=True, verbose_name=_("Valid from"))
+    valid_to = models.DateField(blank=True, null=True, verbose_name=_("Valid to"))
 
     class Meta:
         app_label = "contract_object_management"
-        db_table = "crm_emailaddressforcommercialdocument"
-        verbose_name = _('Email Address For Commercial Documents')
-        verbose_name_plural = _('Email Address For Commercial Documents')
+        db_table = "crm_commercialdocumentphoneassignment"
+        verbose_name = _('Commercial Document Phone Assignment')
+        verbose_name_plural = _('Commercial Document Phone Assignments')
 
     def __str__(self):
-        return str(self.email)
+        return f"{self.document_id}-{self.purpose}-{self.phone_number_id}"
 
 
-class PhoneAddressForCommercialDocument(PhoneAddress):
-    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT)
-    commercial_document = models.ForeignKey("CommercialDocument", on_delete=models.CASCADE)
+class CommercialDocumentEmailAssignment(WorkspaceScopedModel):
+    id = models.BigAutoField(primary_key=True)
+    document = models.ForeignKey(
+        "CommercialDocument", on_delete=models.CASCADE,
+        related_name='email_assignments',
+        verbose_name=_("Commercial Document"),
+    )
+    email = models.ForeignKey(
+        'contacts.PartyEmail', on_delete=models.CASCADE,
+        related_name='commercial_document_assignments',
+        verbose_name=_("Email"),
+    )
+    purpose = models.CharField(
+        max_length=16, choices=ASSIGNMENT_PURPOSE_CHOICES,
+        verbose_name=_("Purpose"),
+    )
+    is_primary = models.BooleanField(default=False, verbose_name=_("Is primary"))
+    valid_from = models.DateField(blank=True, null=True, verbose_name=_("Valid from"))
+    valid_to = models.DateField(blank=True, null=True, verbose_name=_("Valid to"))
 
     class Meta:
         app_label = "contract_object_management"
-        db_table = "crm_phoneaddressforcommercialdocument"
-        verbose_name = _('Phone Address For Commercial Documents')
-        verbose_name_plural = _('Phone Address For Commercial Documents')
+        db_table = "crm_commercialdocumentemailassignment"
+        verbose_name = _('Commercial Document Email Assignment')
+        verbose_name_plural = _('Commercial Document Email Assignments')
 
     def __str__(self):
-        return str(self.phone)
+        return f"{self.document_id}-{self.purpose}-{self.email_id}"

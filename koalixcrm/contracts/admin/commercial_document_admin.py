@@ -6,9 +6,9 @@ from django.utils.translation import gettext as _
 from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
 from koalixcrm.contracts.models.commercial_document import (
     TextParagraphInCommercialDocument,
-    PostalAddressForCommercialDocument,
-    EmailAddressForCommercialDocument,
-    PhoneAddressForCommercialDocument,
+    CommercialDocumentAddressAssignment,
+    CommercialDocumentPhoneAssignment,
+    CommercialDocumentEmailAssignment,
 )
 from koalixcrm.contracts.models.commercial_document_position import CommercialDocumentPosition
 from koalixcrm.contracts.admin.commercial_document_position_admin import CommercialDocumentInlinePosition
@@ -30,47 +30,43 @@ class CommercialDocumentTextParagraph(admin.StackedInline):
 
 
 class CommercialDocumentPostalAddress(admin.StackedInline):
-    model = PostalAddressForCommercialDocument
+    model = CommercialDocumentAddressAssignment
     extra = 1
     classes = ['collapse']
+    raw_id_fields = ('address',)
     fieldsets = (
         ('Basics', {
-            'fields': ('prefix',
-                       'pre_name',
-                       'name',
-                       'address_line_1',
-                       'address_line_2',
-                       'address_line_3',
-                       'address_line_4',
-                       'zip_code',
-                       'town',
-                       'state',
-                       'country',
-                       'purpose')
+            'fields': ('address',
+                       'purpose',
+                       'is_primary',
+                       'valid_from',
+                       'valid_to')
         }),
     )
     allow_add = True
 
 
 class CommercialDocumentPhoneAddress(admin.TabularInline):
-    model = PhoneAddressForCommercialDocument
+    model = CommercialDocumentPhoneAssignment
     extra = 1
     classes = ['collapse']
+    raw_id_fields = ('phone_number',)
     fieldsets = (
         ('Basics', {
-            'fields': ('phone', 'purpose',)
+            'fields': ('phone_number', 'purpose', 'is_primary',)
         }),
     )
     allow_add = True
 
 
 class CommercialDocumentEmailAddress(admin.TabularInline):
-    model = EmailAddressForCommercialDocument
+    model = CommercialDocumentEmailAssignment
     extra = 1
     classes = ['collapse']
+    raw_id_fields = ('email',)
     fieldsets = (
         ('Basics', {
-            'fields': ('email', 'purpose',)
+            'fields': ('email', 'purpose', 'is_primary',)
         }),
     )
     allow_add = True

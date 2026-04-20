@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 
 from django.apps import apps
+from django.conf import settings
 from django.db import models
 from django.contrib import admin
 from django.utils.translation import gettext as _
 
-from koalixcrm.contacts.models.postal_address import PostalAddress
-from koalixcrm.contacts.models.phone_address import PhoneAddress
-from koalixcrm.contacts.models.email_address import EmailAddress
-from koalixcrm.djangoUserExtension.const.purpose import *
+from koalixcrm.contacts.models.address import Address
+from koalixcrm.contacts.models.phone_number import PhoneNumber
+from koalixcrm.contacts.models.party_email import PartyEmail
+from koalixcrm.core.const.party import ASSIGNMENT_PURPOSE_CHOICES
 from koalixcrm.djangoUserExtension.exceptions import *
 from koalixcrm.global_support_functions import xstr
 from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
@@ -26,24 +27,22 @@ class UserExtension(WorkspaceScopedModel):
 
     @staticmethod
     def objects_to_serialize(object_to_create_pdf, reference_user):
-        from koalixcrm.contacts.models.phone_address import PhoneAddress
-        from koalixcrm.contacts.models.email_address import EmailAddress
         from django.contrib import auth
         objects = list(auth.models.User.objects.filter(id=reference_user.id))
         user_extension = UserExtension.objects.filter(user=reference_user.id)
         if len(user_extension) == 0:
             raise UserExtensionMissing(_("During "+str(object_to_create_pdf)+" PDF Export"))
-        phone_address = UserExtensionPhoneAddress.objects.filter(
-            userExtension=user_extension[0].id)
-        if len(phone_address) == 0:
+        phone_assignments = UserPhoneAssignment.objects.filter(
+            user=reference_user.id)
+        if len(phone_assignments) == 0:
             raise UserExtensionPhoneAddressMissing(_("During "+str(object_to_create_pdf)+" PDF Export"))
-        email_address = UserExtensionEmailAddress.objects.filter(
-            userExtension=user_extension[0].id)
-        if len(email_address) == 0:
+        email_assignments = UserEmailAssignment.objects.filter(
+            user=reference_user.id)
+        if len(email_assignments) == 0:
             raise UserExtensionEmailAddressMissing(_("During "+str(object_to_create_pdf)+" PDF Export"))
         objects += list(user_extension)
-        objects += list(EmailAddress.objects.filter(id=email_address[0].id))
-        objects += list(PhoneAddress.objects.filter(id=phone_address[0].id))
+        objects += list(PhoneNumber.objects.filter(id=phone_assignments[0].phone_number_id))
+        objects += list(PartyEmail.objects.filter(id=email_assignments[0].email_id))
         return objects
 
     @staticmethod
@@ -80,93 +79,97 @@ class UserExtension(WorkspaceScopedModel):
         return xstr(self.id) + ' ' + xstr(self.user.__str__())
 
 
-class UserExtensionPostalAddress(PostalAddress):
-    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINUSEREXTENTION)
-    userExtension = models.ForeignKey(UserExtension, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return xstr(self.name) + ' ' + xstr(self.pre_name)
+class UserAddressAssignment(WorkspaceScopedModel):
+    id = models.BigAutoField(primary_key=True)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='address_assignments',
+        verbose_name=_("User"),
+    )
+    address = models.ForeignKey(
+        Address,
+        on_delete=models.CASCADE,
+        related_name='user_assignments',
+        verbose_name=_("Address"),
+    )
+    purpose = models.CharField(
+        max_length=16, choices=ASSIGNMENT_PURPOSE_CHOICES,
+        verbose_name=_("Purpose"),
+    )
+    is_primary = models.BooleanField(default=False, verbose_name=_("Is primary"))
+    valid_from = models.DateField(blank=True, null=True, verbose_name=_("Valid from"))
+    valid_to = models.DateField(blank=True, null=True, verbose_name=_("Valid to"))
 
     class Meta:
         app_label = "djangoUserExtension"
-        verbose_name = _('Postal Address for User Extension')
-        verbose_name_plural = _('Postal Address for User Extension')
-
-
-class UserExtensionPhoneAddress(PhoneAddress):
-    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINUSEREXTENTION)
-    userExtension = models.ForeignKey(UserExtension, on_delete=models.CASCADE)
+        verbose_name = _('Address assignment for User')
+        verbose_name_plural = _('Address assignments for User')
 
     def __str__(self):
-        return xstr(self.phone)
+        return f"{self.user_id}-{self.purpose}-{self.address_id}"
+
+
+class UserPhoneAssignment(WorkspaceScopedModel):
+    id = models.BigAutoField(primary_key=True)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='phone_assignments',
+        verbose_name=_("User"),
+    )
+    phone_number = models.ForeignKey(
+        PhoneNumber,
+        on_delete=models.CASCADE,
+        related_name='user_assignments',
+        verbose_name=_("Phone number"),
+    )
+    purpose = models.CharField(
+        max_length=16, choices=ASSIGNMENT_PURPOSE_CHOICES,
+        verbose_name=_("Purpose"),
+    )
+    is_primary = models.BooleanField(default=False, verbose_name=_("Is primary"))
+    valid_from = models.DateField(blank=True, null=True, verbose_name=_("Valid from"))
+    valid_to = models.DateField(blank=True, null=True, verbose_name=_("Valid to"))
 
     class Meta:
         app_label = "djangoUserExtension"
-        verbose_name = _('Phone number for User Extension')
-        verbose_name_plural = _('Phone number for User Extension')
-
-
-class UserExtensionEmailAddress(EmailAddress):
-    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINUSEREXTENTION)
-    userExtension = models.ForeignKey(UserExtension, on_delete=models.CASCADE)
+        verbose_name = _('Phone assignment for User')
+        verbose_name_plural = _('Phone assignments for User')
 
     def __str__(self):
-        return xstr(self.email)
+        return f"{self.user_id}-{self.purpose}-{self.phone_number_id}"
+
+
+class UserEmailAssignment(WorkspaceScopedModel):
+    id = models.BigAutoField(primary_key=True)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='email_assignments',
+        verbose_name=_("User"),
+    )
+    email = models.ForeignKey(
+        PartyEmail,
+        on_delete=models.CASCADE,
+        related_name='user_assignments',
+        verbose_name=_("Email"),
+    )
+    purpose = models.CharField(
+        max_length=16, choices=ASSIGNMENT_PURPOSE_CHOICES,
+        verbose_name=_("Purpose"),
+    )
+    is_primary = models.BooleanField(default=False, verbose_name=_("Is primary"))
+    valid_from = models.DateField(blank=True, null=True, verbose_name=_("Valid from"))
+    valid_to = models.DateField(blank=True, null=True, verbose_name=_("Valid to"))
 
     class Meta:
         app_label = "djangoUserExtension"
-        verbose_name = _('Email Address for User Extension')
-        verbose_name_plural = _('Email Address for User Extension')
+        verbose_name = _('Email assignment for User')
+        verbose_name_plural = _('Email assignments for User')
 
-
-class InlineUserExtensionPostalAddress(admin.StackedInline):
-    model = UserExtensionPostalAddress
-    extra = 1
-    classes = ('collapse-open',)
-    fieldsets = (
-        (_('Basics'), {
-            'fields': (
-                'prefix',
-                'pre_name',
-                'name',
-                'address_line_1',
-                'address_line_2',
-                'address_line_3',
-                'address_line_4',
-                'zip_code',
-                'town',
-                'state',
-                'country',
-                'purpose')
-        }),
-    )
-    allow_add = True
-
-
-class InlineUserExtensionPhoneAddress(admin.StackedInline):
-    model = UserExtensionPhoneAddress
-    extra = 1
-    classes = ('collapse-open',)
-    fieldsets = (
-        (_('Basics'), {
-            'fields': ('phone',
-                       'purpose',)
-        }),
-    )
-    allow_add = True
-
-
-class InlineUserExtensionEmailAddress(admin.StackedInline):
-    model = UserExtensionEmailAddress
-    extra = 1
-    classes = ('collapse-open',)
-    fieldsets = (
-        (_('Basics'), {
-            'fields': ('email',
-                       'purpose',)
-        }),
-    )
-    allow_add = True
+    def __str__(self):
+        return f"{self.user_id}-{self.purpose}-{self.email_id}"
 
 
 class OptionUserExtension(WorkspaceScopedModelAdmin, admin.ModelAdmin):
@@ -199,6 +202,3 @@ class OptionUserExtension(WorkspaceScopedModelAdmin, admin.ModelAdmin):
 
     save_as = True
     actions = [create_work_report_pdf] if apps.is_installed('koalixcrm.reporting') else []
-    inlines = [InlineUserExtensionPostalAddress,
-               InlineUserExtensionPhoneAddress,
-               InlineUserExtensionEmailAddress]

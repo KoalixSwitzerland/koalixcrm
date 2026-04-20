@@ -1,9 +1,9 @@
 package net.koalix.pdf.xml.builders;
 
+import net.koalix.api.dto.NestedEmailAssignmentDto;
+import net.koalix.api.dto.NestedPhoneAssignmentDto;
+import net.koalix.api.dto.NestedPostalAddressDto;
 import net.koalix.api.dto.UserExtensionDto;
-import net.koalix.api.dto.UserExtensionEmailAddressDto;
-import net.koalix.api.dto.UserExtensionPhoneAddressDto;
-import net.koalix.api.dto.UserExtensionPostalAddressDto;
 import net.koalix.pdf.xml.XmlBuilder;
 import org.springframework.stereotype.Component;
 
@@ -16,12 +16,11 @@ import static net.koalix.pdf.xml.XmlWriteSupport.writeText;
 /**
  * Writes the issuing user / company block: the admin's UserExtension
  * aggregate is the XSL-FO template's source of truth for the company name,
- * address, logo contact info, and default currency.
+ * address, contact info, and default currency.
  *
- * <p>Post-v2.0.0 the Party-pattern models took over "contact" data, but
- * the UserExtension satellites stayed on concrete-table inheritance.
- * See the follow-up issue on the UserExtension satellite restructure;
- * this builder works against the still-legacy shape.
+ * <p>Emits the Party-pattern assignment-flattened shape, post-#396.
+ * User XSL-FO templates that referenced the pre-v2.0.0 shape need to be
+ * updated — see {@code docs/migration-v1.14.0-to-v2.0.0.md}.
  */
 @Component
 public class UserExtensionXmlBuilder implements XmlBuilder<UserExtensionDto> {
@@ -48,33 +47,39 @@ public class UserExtensionXmlBuilder implements XmlBuilder<UserExtensionDto> {
             writer.writeEndElement();
         }
         if (dto.postalAddresses() != null) {
-            for (UserExtensionPostalAddressDto addr : dto.postalAddresses()) {
+            for (NestedPostalAddressDto addr : dto.postalAddresses()) {
                 writer.writeStartElement("postal_address");
                 writeAttribute(writer, "purpose", addr.purpose());
-                writeText(writer, "prefix", addr.prefix());
-                writeText(writer, "pre_name", addr.preName());
-                writeText(writer, "name", addr.name());
+                writeAttribute(writer, "is_primary", addr.isPrimary());
+                writeText(writer, "valid_from", addr.validFrom() != null ? addr.validFrom().toString() : null);
+                writeText(writer, "valid_to", addr.validTo() != null ? addr.validTo().toString() : null);
                 writeText(writer, "address_line_1", addr.addressLine1());
                 writeText(writer, "address_line_2", addr.addressLine2());
+                writeText(writer, "address_line_3", addr.addressLine3());
+                writeText(writer, "address_line_4", addr.addressLine4());
                 writeText(writer, "zip_code", addr.zipCode());
                 writeText(writer, "town", addr.town());
+                writeText(writer, "state", addr.state());
                 writeText(writer, "country", addr.country());
+                writeText(writer, "subdivision_code", addr.subdivisionCode());
                 writer.writeEndElement();
             }
         }
         if (dto.phoneAddresses() != null) {
-            for (UserExtensionPhoneAddressDto addr : dto.phoneAddresses()) {
+            for (NestedPhoneAssignmentDto addr : dto.phoneAddresses()) {
                 writer.writeStartElement("phone_address");
                 writeAttribute(writer, "purpose", addr.purpose());
-                writer.writeCharacters(addr.phone() == null ? "" : addr.phone());
+                writeAttribute(writer, "is_primary", addr.isPrimary());
+                writer.writeCharacters(addr.phoneE164() == null ? "" : addr.phoneE164());
                 writer.writeEndElement();
             }
         }
         if (dto.emailAddresses() != null) {
-            for (UserExtensionEmailAddressDto addr : dto.emailAddresses()) {
+            for (NestedEmailAssignmentDto addr : dto.emailAddresses()) {
                 writer.writeStartElement("email_address");
                 writeAttribute(writer, "purpose", addr.purpose());
-                writer.writeCharacters(addr.email() == null ? "" : addr.email());
+                writeAttribute(writer, "is_primary", addr.isPrimary());
+                writer.writeCharacters(addr.emailAddress() == null ? "" : addr.emailAddress());
                 writer.writeEndElement();
             }
         }

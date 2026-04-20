@@ -17,9 +17,9 @@ from django.contrib.auth.models import User
 from koalixcrm.core.serializers.currency_serializer import CurrencyJSONSerializer
 from koalixcrm.djangoUserExtension.models.user_extension import (
     UserExtension,
-    UserExtensionEmailAddress,
-    UserExtensionPhoneAddress,
-    UserExtensionPostalAddress,
+    UserAddressAssignment,
+    UserPhoneAssignment,
+    UserEmailAssignment,
 )
 
 
@@ -29,15 +29,25 @@ class UserMinimalSerializer(serializers.ModelSerializer):
         fields = ("id", "username", "first_name", "last_name", "email")
 
 
-class UserExtensionPostalAddressSerializer(serializers.ModelSerializer):
+class UserAddressAssignmentSerializer(serializers.ModelSerializer):
+    address_line_1 = serializers.CharField(source='address.address_line_1', read_only=True)
+    address_line_2 = serializers.CharField(source='address.address_line_2', read_only=True)
+    address_line_3 = serializers.CharField(source='address.address_line_3', read_only=True)
+    address_line_4 = serializers.CharField(source='address.address_line_4', read_only=True)
+    zip_code = serializers.CharField(source='address.zip_code', read_only=True)
+    town = serializers.CharField(source='address.town', read_only=True)
+    state = serializers.CharField(source='address.state', read_only=True)
+    country = serializers.CharField(source='address.country', read_only=True)
+    subdivision_code = serializers.CharField(source='address.subdivision_code', read_only=True)
+
     class Meta:
-        model = UserExtensionPostalAddress
+        model = UserAddressAssignment
         fields = (
             "id",
             "purpose",
-            "prefix",
-            "pre_name",
-            "name",
+            "is_primary",
+            "valid_from",
+            "valid_to",
             "address_line_1",
             "address_line_2",
             "address_line_3",
@@ -50,16 +60,20 @@ class UserExtensionPostalAddressSerializer(serializers.ModelSerializer):
         )
 
 
-class UserExtensionPhoneAddressSerializer(serializers.ModelSerializer):
+class UserPhoneAssignmentSerializer(serializers.ModelSerializer):
+    phone_e164 = serializers.CharField(source='phone_number.phone_e164', read_only=True)
+
     class Meta:
-        model = UserExtensionPhoneAddress
-        fields = ("id", "purpose", "phone")
+        model = UserPhoneAssignment
+        fields = ("id", "purpose", "is_primary", "valid_from", "valid_to", "phone_e164")
 
 
-class UserExtensionEmailAddressSerializer(serializers.ModelSerializer):
+class UserEmailAssignmentSerializer(serializers.ModelSerializer):
+    email_address = serializers.EmailField(source='email.email', read_only=True)
+
     class Meta:
-        model = UserExtensionEmailAddress
-        fields = ("id", "purpose", "email")
+        model = UserEmailAssignment
+        fields = ("id", "purpose", "is_primary", "valid_from", "valid_to", "email_address")
 
 
 class UserExtensionNestedSerializer(serializers.ModelSerializer):
@@ -82,13 +96,13 @@ class UserExtensionNestedSerializer(serializers.ModelSerializer):
         )
 
     def get_postal_addresses(self, instance):
-        rows = UserExtensionPostalAddress.objects.filter(userExtension=instance)
-        return UserExtensionPostalAddressSerializer(rows, many=True).data
+        rows = UserAddressAssignment.objects.filter(user=instance.user_id)
+        return UserAddressAssignmentSerializer(rows, many=True).data
 
     def get_phone_addresses(self, instance):
-        rows = UserExtensionPhoneAddress.objects.filter(userExtension=instance)
-        return UserExtensionPhoneAddressSerializer(rows, many=True).data
+        rows = UserPhoneAssignment.objects.filter(user=instance.user_id)
+        return UserPhoneAssignmentSerializer(rows, many=True).data
 
     def get_email_addresses(self, instance):
-        rows = UserExtensionEmailAddress.objects.filter(userExtension=instance)
-        return UserExtensionEmailAddressSerializer(rows, many=True).data
+        rows = UserEmailAssignment.objects.filter(user=instance.user_id)
+        return UserEmailAssignmentSerializer(rows, many=True).data

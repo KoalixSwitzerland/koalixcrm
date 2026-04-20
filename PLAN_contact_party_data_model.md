@@ -460,13 +460,16 @@ no intermediate state where a document has neither a legacy customer nor a valid
   - `RemoveField` for `Price.customer_group`, `CustomerGroupTransform.from_customer_group`,
     `CustomerGroupTransform.to_customer_group`.
   - `AlterField` tightening `from_party_group` / `to_party_group` to `null=False`.
-- **`djangoUserExtension/migrations/00XX_user_extension_satellite_restructure.py`:**
-  - Restructures `UserExtensionPostalAddress` / `-PhoneAddress` / `-EmailAddress` — they can no
-    longer inherit from the now-deleted legacy base classes. Default choice: flatten to
-    standalone models with explicit fields (all the columns they need already live on the
-    legacy-base rows and can be copied). Alternative (reuse new `Address` / `PhoneNumber` /
-    `PartyEmail` + a `UserAddressAssignment`-style table) is cleaner but costs another PR
-    after v2.0.0.
+- **`djangoUserExtension/migrations/0005_user_address_assignments.py`:**
+  - Option B chosen (not A): `UserExtensionPostalAddress` / `-PhoneAddress` / `-EmailAddress`
+    replaced by `UserAddressAssignment` / `UserPhoneAssignment` / `UserEmailAssignment`
+    reusing Party-pattern value types (`Address` / `PhoneNumber` / `PartyEmail`) with a
+    user FK (to `AUTH_USER_MODEL`). Scope expanded from djUE alone to all 9 satellites across
+    `contracts` (6 satellites → 6 assignments) and `djangoUserExtension` (3 satellites → 3
+    assignments). Executed as issue #396, integrated into v2.0.0.
+  - MTI base tables `PostalAddress` / `PhoneAddress` / `EmailAddress` dropped in
+    `contacts/migrations/0012_drop_address_bases.py` after all satellite replacements are
+    confirmed complete.
 
 ### Scope — code removal
 
@@ -572,6 +575,14 @@ rollout.
   production.
 - OpenAPI / REST API v2 schema overhaul — bigger topic, separate issue.
 - Duplicate detection / merge UI, GDPR erasure tooling — tracked separately.
+
+---
+
+## Decision log
+
+| Date | Decision |
+|---|---|
+| 2026-04-20 | @scaphilo + @Hacont confirmed Option B for issue #396 (reuse Party-pattern types via assignment tables, not flatten-to-standalone); integrated into v2.0.0. |
 
 ---
 

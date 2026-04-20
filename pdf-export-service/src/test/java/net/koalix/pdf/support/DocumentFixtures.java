@@ -3,8 +3,10 @@ package net.koalix.pdf.support;
 import net.koalix.api.dto.CommercialDocumentDto;
 import net.koalix.api.dto.CommercialDocumentPositionDto;
 import net.koalix.api.dto.CurrencyDto;
+import net.koalix.api.dto.NestedEmailAssignmentDto;
 import net.koalix.api.dto.NestedPartyDto;
 import net.koalix.api.dto.NestedPartyDto.NestedOrganizationBlock;
+import net.koalix.api.dto.NestedPhoneAssignmentDto;
 import net.koalix.api.dto.NestedPostalAddressDto;
 import net.koalix.api.dto.ProductTypeDto;
 import net.koalix.api.dto.TaxSummaryEntry;
@@ -12,6 +14,7 @@ import net.koalix.api.dto.UserDto;
 import net.koalix.api.dto.UserExtensionDto;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -36,7 +39,7 @@ public final class DocumentFixtures {
                         new NestedOrganizationBlock("ACME SA", "ag", null, "CH"),
                         null,
                         List.of(new NestedPostalAddressDto(
-                                "billing", Boolean.TRUE,
+                                1L, "billing", Boolean.TRUE, null, null,
                                 "Bahnhofstrasse 1", null, null, null,
                                 "8001", "Zurich", null, "CH", null)),
                         List.of(), List.of()),
@@ -65,5 +68,27 @@ public final class DocumentFixtures {
                 3L,
                 new CurrencyDto(1L, null, "CHF", null),
                 List.of(), List.of(), List.of());
+    }
+
+    /**
+     * UserExtension fixture with a fully-populated multi-line address, phone,
+     * and email — exercises address_line_3/4, state, subdivision_code, and the
+     * is_primary + valid_from/valid_to fields introduced in issue #396.
+     */
+    public static UserExtensionDto userExtensionFull() {
+        return new UserExtensionDto(
+                8L,
+                new UserDto(6L, "b.muster", "Beat", "Muster", "b@example.com"),
+                3L,
+                new CurrencyDto(1L, null, "CHF", null),
+                List.of(new NestedPostalAddressDto(
+                        2L, "primary", Boolean.TRUE,
+                        LocalDate.of(2024, 1, 1), null,
+                        "c/o QuantalQ AG", "Technopark", "Floor 4", "Room 42",
+                        "8005", "Zurich", "ZH", "CH", "CH-ZH")),
+                List.of(new NestedPhoneAssignmentDto(
+                        3L, "primary", Boolean.TRUE, null, null, "+41441234567")),
+                List.of(new NestedEmailAssignmentDto(
+                        4L, "primary", Boolean.TRUE, null, null, "b@example.com")));
     }
 }
