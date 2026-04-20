@@ -176,6 +176,8 @@ Each item is a self-contained upstream PR proposal. Numbering (`CR-1` … `CR-9`
   - The signal resolves the callable at dispatch time (lazy import), not at module load.
 - **Migration:** none.
 - **Risk:** low. Pure refactor behind a setting.
+- **Implementation note (Done):** `koalixcrm/core/pdf_export_dispatch.py` provides `default_sqs_dispatcher` (wraps `koalixcrm_utils.aws_clients.get_sqs_queue`) and `get_dispatcher()` which resolves the dotted path via `django.utils.module_loading.import_string` at call time. `koalixcrm/core/signals/pdf_export_signals.py` no longer imports `aws_clients` at module load.
+- **WFS-side follow-up:** WFS already owns an SQS fleet (`qq_wfs_microservices.brokers`, `qq_wfs_sqs_commands`). Once WFS imports `koalixcrm.core` directly it must point `KOALIXCRM_PDF_EXPORT_DISPATCHER` at an adapter that reuses that fleet — tracked in WFS `CR_001_KOALIXCRM_WORKSPACE_ALIGNMENT.md` §7a.
 
 ### CR-5 — Enforce that `core`, `contacts`, `contracts`, `djangoUserExtension`, `products` have **zero** imports from `reporting`, `accounting`, `subscriptions`
 
@@ -589,7 +591,7 @@ Mirror implementation required when CR-10 lands, identical to CR-8: WFS imports/
 | CR-1 | `core.Tax` accounting FKs nullable + validator | Proposed | None (validator preserves required-ness when accounting app installed) | Yes |
 | CR-2 | `CommercialDocumentPosition.product_type` swappable | Proposed | None | Yes |
 | CR-3 | Enforce `koalixcrm_mq_commands` Django-free | Proposed | None | Yes |
-| CR-4 | `KOALIXCRM_PDF_EXPORT_DISPATCHER` swappable | Proposed | None (default keeps current sender) | Yes |
+| CR-4 | `KOALIXCRM_PDF_EXPORT_DISPATCHER` swappable | **Done** | None (default keeps current sender) | Yes |
 | CR-5 | Fork-isolation invariant test | Proposed | None | Yes |
 | CR-6 | Cut `v2.0.0-wfs-baseline` tag | Proposed | None | Yes |
 | CR-7 | `FORK_CONTRACT.md` at repo root | Proposed | None | No (but strongly requested) |

@@ -206,6 +206,28 @@ When removing a hard import from an optional peer:
 
 ---
 
+## Swappable integration points (settings-based)
+
+A small number of **integration seams** — places where a fork needs to
+redirect outbound behaviour rather than turn it off — use a dotted-path
+setting instead of an `is_installed` branch. These are reserved for cases
+where the behaviour is always present, but *who* implements it differs per
+deployment.
+
+| Setting | Default | Purpose |
+|---------|---------|---------|
+| `KOALIXCRM_PDF_EXPORT_DISPATCHER` | `koalixcrm.core.pdf_export_dispatch.default_sqs_dispatcher` | Callable `(PDFExportCommand) -> None` invoked on `PDFExportProcess` creation (CR-4). WFS overrides this to reuse its existing SQS broker/poller fleet instead of running a second SQS client layer. |
+
+Rules:
+
+- The dotted path is resolved **at call time** via
+  `django.utils.module_loading.import_string`, never at module load. A
+  typo in the setting must fail the dispatch, not the Django startup.
+- The default implementation must preserve current behaviour exactly so
+  existing installs need no setting change.
+- Add new seams only when `apps.is_installed` is the wrong knob (the
+  feature is universal, only the backend varies).
+
 ## See also
 
 - `tests/unit/test_fork_isolation.py` — enforces no top-level imports of
