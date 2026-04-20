@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from django.apps import apps
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext as _
 
@@ -25,7 +27,21 @@ class Tax(models.Model):
                                         blank=True)
 
     def get_tax_rate(self):
-        return self.tax_rate;
+        return self.tax_rate
+
+    def clean(self):
+        super().clean()
+        if apps.is_installed('koalixcrm.accounting'):
+            missing = []
+            if self.account_activa_id is None:
+                missing.append('account_activa')
+            if self.account_passiva_id is None:
+                missing.append('account_passiva')
+            if missing:
+                raise ValidationError({
+                    field: _("This field is required when the accounting app is installed.")
+                    for field in missing
+                })
 
     def __str__(self):
         return self.name

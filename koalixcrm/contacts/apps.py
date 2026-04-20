@@ -6,3 +6,9 @@ class ContactsConfig(AppConfig):
     name = 'koalixcrm.contacts'
     label = 'contacts'
     default_auto_field = 'django.db.models.BigAutoField'
+    required_peers: tuple[str, ...] = ('koalixcrm.core',)
+    optional_peers: tuple[str, ...] = ()
+
+    def ready(self):
+        from koalixcrm.core.app_checks import register_peer_check
+        register_peer_check(self)

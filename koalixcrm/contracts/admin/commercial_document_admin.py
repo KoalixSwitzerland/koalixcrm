@@ -13,7 +13,7 @@ from koalixcrm.contracts.models.commercial_document import (
 from koalixcrm.contracts.models.commercial_document_position import CommercialDocumentPosition
 from koalixcrm.contracts.admin.commercial_document_position_admin import CommercialDocumentInlinePosition
 from koalixcrm.contracts.admin.commercial_document_media_admin import CommercialDocumentMediaInline
-from koalixcrm.products.models.product_type import ProductType
+from django.apps import apps
 import koalixcrm.contracts.models.calculations
 
 
@@ -131,10 +131,14 @@ class OptionCommercialDocument(WorkspaceScopedModelAdmin, admin.ModelAdmin):
         return super(OptionCommercialDocument, self).response_change(request, obj)
 
     def after_saving_model_and_related_inlines(self, request, obj):
+        no_price_errors = (CommercialDocumentPosition.NoPriceFound,)
+        if apps.is_installed('koalixcrm.products'):
+            product_type_model = apps.get_model('products', 'ProductType')
+            no_price_errors = no_price_errors + (product_type_model.NoPriceFound,)
         try:
             koalixcrm.contracts.models.calculations.Calculations.calculate_document_price(obj, date.today())
             self.message_user(request, "Successfully calculated Prices")
-        except (ProductType.NoPriceFound, CommercialDocumentPosition.NoPriceFound) as e:
+        except no_price_errors as e:
             self.message_user(request, "Unsuccessful in updating the Prices " + e.__str__(), level=messages.ERROR)
         return obj
 
