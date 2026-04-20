@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """Model-level tests for the new Party data model (issue #198, PR #392).
 
-Scope per PLAN_contact_party_data_model.md §PR #1 acceptance criteria:
 create + save + __str__ for every new model. Relationship integrity
 (cascades, constraints) is intentionally out of scope here — covered
 later once the model is authoritative.

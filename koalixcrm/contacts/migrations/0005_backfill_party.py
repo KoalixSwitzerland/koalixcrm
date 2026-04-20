@@ -1,6 +1,6 @@
 """Data migration: legacy contacts -> Party data model.
 
-Implements §PR #2 of PLAN_contact_party_data_model.md. Forward / reverse
+Implements Forward / reverse
 logic lives in `koalixcrm.contacts.backfill` so it's callable from tests
 and management commands — migration filenames start with a digit and are
 not valid Python identifiers for direct import.

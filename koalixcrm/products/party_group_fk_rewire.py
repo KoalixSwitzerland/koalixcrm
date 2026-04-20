@@ -5,7 +5,6 @@
 Called from migration 0002_party_group_fks (via RunPython) and from tests.
 Separate module because migration filenames start with a digit.
 
-See PLAN_contact_party_data_model.md §PR #3, issue #394.
 """
 from koalixcrm.contacts.backfill import (
     build_legacy_customer_group_to_party_group_mapping,

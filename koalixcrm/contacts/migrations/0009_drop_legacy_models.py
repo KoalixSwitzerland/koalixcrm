@@ -18,7 +18,7 @@ are retained as MTI base classes for non-legacy satellites in contracts
 (PostalAddressForContract etc.) and djangoUserExtension
 (UserExtensionPostalAddress etc.). Restructuring those satellites and
 finally dropping the bases is tracked as a follow-up (out of scope for
-this commit; noted in PLAN_contact_party_data_model.md).
+this commit;
 """
 from django.db import migrations
 

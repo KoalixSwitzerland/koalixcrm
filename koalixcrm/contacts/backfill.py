@@ -10,7 +10,6 @@ migration passes its historical `apps` + the schema editor; tests and
 management commands pass `django.apps.apps` + `None`. Either works because
 the code only uses `apps.get_model(...)`.
 
-See PLAN_contact_party_data_model.md §PR #2, issue #393.
 """
 import datetime
 
