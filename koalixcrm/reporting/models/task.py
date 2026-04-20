@@ -1,12 +1,9 @@
-# -*- coding: utf-8 -*-
-
 from decimal import *
 from django.db import models
 from django.utils.translation import gettext as _
 from django.utils.html import format_html
 from koalixcrm.reporting.models.agreement import Agreement
 from koalixcrm.reporting.models.work import Work
-from koalixcrm.reporting.models.reporting_period import ReportingPeriod
 from koalixcrm.reporting.models.resource_price import ResourcePrice
 from koalixcrm.reporting.models.estimation import Estimation
 from koalixcrm.shared.pdf_export import PDFExport
@@ -153,7 +150,8 @@ class Task(models.Model):
                                                                                                     predecessor_reporting_period.project)
                     except ReportingPeriodNotFound:
                         predecessor_reporting_period = None
-            effort += latest_estimation.amount
+            if latest_estimation.amount is not None:
+                effort += latest_estimation.amount
         else:
             effort = 0
         return effort
@@ -459,8 +457,9 @@ class Task(models.Model):
                 if human_resource_list[human_resource_dict].get(agreement):
                     for work in human_resource_list[human_resource_dict].get(agreement):
                         if work in work_with_agreement:
-                            if (agreement_remaining_amount - work.worked_hours) > 0:
-                                agreement_remaining_amount -= work.worked_hours
+                            worked_hours = work.worked_hours if work.worked_hours is not None else Decimal(0)
+                            if (agreement_remaining_amount - worked_hours) > 0:
+                                agreement_remaining_amount -= worked_hours
                                 sum_costs += Decimal(work.effort_hours())*agreement.costs.price
                                 work_calculated.append(work)
         for work in all_work_in_task:

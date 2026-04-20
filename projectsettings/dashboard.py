@@ -37,7 +37,8 @@ class CustomIndexDashboard(Dashboard):
                             'koalixcrm.contracts.models.despatch_advice.DespatchAdvice',
                             'koalixcrm.contracts.models.invoice.Invoice',
                             'koalixcrm.contracts.models.credit_note.CreditNote',
-                            'koalixcrm.contracts.models.payment_reminder.PaymentReminder',),
+                            'koalixcrm.contracts.models.payment_reminder.PaymentReminder',
+                            'koalixcrm.contracts.models.purchase_order.PurchaseOrder',),
                     ),
                     modules.ModelList(
                         _('Products'),
@@ -82,8 +83,7 @@ class CustomIndexDashboard(Dashboard):
                                 'koalixcrm.reporting.models.task.Task',
                                 'koalixcrm.reporting.models.agreement.Agreement',
                                 'koalixcrm.reporting.models.estimation.Estimation',
-                                'koalixcrm.reporting.models.human_resource.HumanResource',
-                                'koalixcrm.contracts.models.purchase_order.PurchaseOrder',),
+                                'koalixcrm.reporting.models.human_resource.HumanResource',),
                     ),
                     modules.LinkList(
                         _('Report Work And Expenses'),
@@ -99,17 +99,46 @@ class CustomIndexDashboard(Dashboard):
             ]
         ))
 
+        # Support links — top of the right column.
+        self.children.append(modules.LinkList(
+            _('Support'),
+            column=2,
+            children=[
+                {
+                    'title': _('koalixcrm on github'),
+                    'url': 'https://github.com/KoalixSwitzerland/koalixcrm',
+                    'external': True,
+                },
+            ]
+        ))
+
+        # Version Information
+        self.children.append(modules.LinkList(
+            title=_('Version Information'),
+            column=2,
+            children=[
+                {'title': f'Backend Version: {settings.KOALIXCRM_VERSION}', 'url': '/version/'},
+                {'title': 'API Version: v1', 'url': '/version/'},
+            ]
+        ))
+
         # append a group for "Administration" & "Applications"
         self.children.append(modules.Group(
             _('Users, Access Rights and Application Settings'),
-            column=1,
+            column=2,
             collapsible=True,
             children=[
                 modules.ModelList(
                     _('Administration'),
-                    column=1,
+                    column=2,
                     collapsible=False,
                     models=('django.contrib.*',),
+                ),
+                modules.ModelList(
+                    _('Workspaces'),
+                    column=2,
+                    css_classes=('collapse closed',),
+                    models=('koalixcrm.core.models.workspace.Workspace',),
                 ),
                 modules.ModelList(
                     _('Contact settings'),
@@ -154,65 +183,6 @@ class CustomIndexDashboard(Dashboard):
                             'koalixcrm.djangoUserExtension.models.template_set.TemplateSet',
                             'koalixcrm.djangoUserExtension.models.user_extension.*',),
                 ),
-            ]
-        ))
-
-        # append another link list module for "support".
-        self.children.append(modules.LinkList(
-            _('Media Management'),
-            column=2,
-            children=[
-                {
-                    'title': _('FileBrowser'),
-                    'url': '/admin/filebrowser/browse/',
-                    'external': False,
-                },
-            ]
-        ))
-
-        # append another link list module for "support".
-        self.children.append(modules.LinkList(
-            _('Support'),
-            column=2,
-            children=[
-                {
-                    'title': _('koalixcrm on github'),
-                    'url': 'https://github.com/scaphilo/koalixcrm/',
-                    'external': True,
-                },
-                {
-                    'title': _('Django Documentation'),
-                    'url': 'http://docs.djangoproject.com/',
-                    'external': True,
-                },
-                {
-                    'title': _('Grappelli Documentation'),
-                    'url': 'http://packages.python.org/django-grappelli/',
-                    'external': True,
-                },
-                {
-                    'title': _('Grappelli Google-Code'),
-                    'url': 'http://code.google.com/p/django-grappelli/',
-                    'external': True,
-                },
-            ]
-        ))
-
-        # append a feed module
-        self.children.append(modules.Feed(
-            _('Latest Django News'),
-            column=2,
-            feed_url='http://www.djangoproject.com/rss/weblog/',
-            limit=5
-        ))
-
-        # Version Information
-        self.children.append(modules.LinkList(
-            title=_('Version Information'),
-            column=2,
-            children=[
-                {'title': f'Backend Version: {settings.KOALIXCRM_VERSION}', 'url': '/version/'},
-                {'title': 'API Version: v1', 'url': '/version/'},
             ]
         ))
 
