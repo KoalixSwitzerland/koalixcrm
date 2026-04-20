@@ -6,6 +6,7 @@ Pillow==12.2.0
 psycopg2-binary==2.9.11
 django-grappelli==3.0.10
 djangorestframework==3.16.0
+drf-spectacular==0.27.2
 djangorestframework-xml==2.0.0
 django-filter==25.1
 django-storages[s3]==1.14.4
