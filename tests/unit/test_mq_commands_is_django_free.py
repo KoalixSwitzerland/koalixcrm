@@ -9,7 +9,7 @@ The test isolates the import in a subprocess so it runs without Django
 configured — any ``import django`` chain surfaces as a ``ModuleNotFoundError``
 or shows up in ``sys.modules``.
 """
-import subprocess
+import subprocess  # nosec B404 - trusted literal invocation, see test body
 import sys
 import textwrap
 
@@ -32,12 +32,13 @@ SCRIPT = textwrap.dedent(
 
 
 def test_mq_commands_does_not_import_django():
-    result = subprocess.run(
+    result = subprocess.run(  # nosec B603 - args are a hardcoded literal script, no shell, no user input
         [sys.executable, '-c', SCRIPT],
         capture_output=True,
         text=True,
         # Run without inheriting DJANGO_SETTINGS_MODULE from the pytest env.
         env={'PATH': '/usr/bin:/bin:/usr/local/bin'},
+        check=False,
     )
     assert result.returncode == 0, (
         f"koalixcrm_mq_commands pulls Django into sys.modules.\n"

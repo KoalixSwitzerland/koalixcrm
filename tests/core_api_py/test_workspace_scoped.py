@@ -103,8 +103,6 @@ class TestRaiseOnMissingContext:
             manager.get_queryset()
 
     def test_no_raise_when_context_set(self, ws_a):
-        from django.db import models
-
         class StrictManager(WorkspaceAwareManager):
             raise_on_missing_context = True
 
