@@ -46,6 +46,8 @@ class AccountingPeriodReportSerializer(serializers.ModelSerializer):
                   'title',
                   'begin',
                   'end',
+                  'template_set_balance_sheet',
+                  'template_profit_loss_statement',
                   'overall_earnings',
                   'overall_spendings',
                   'overall_assets',

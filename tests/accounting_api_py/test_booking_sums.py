@@ -123,6 +123,10 @@ class BookingSumsAPITest(LiveServerTestCase):
             f'{API_BASE}/accounting-periods/{self.fx.current.id}/report-data/'
         )
         self.assertEqual(data['id'], self.fx.current.id)
+        # The two template FKs are exposed so the Java service can tell
+        # whether it's rendering the balance sheet or the profit/loss report.
+        self.assertIn('template_set_balance_sheet', data)
+        self.assertIn('template_profit_loss_statement', data)
         self.assertEqual(Decimal(data['overall_earnings']), Decimal('250'))
         self.assertEqual(Decimal(data['overall_assets']), Decimal('350'))
         account_ids = {a['id'] for a in data['accounts']}
