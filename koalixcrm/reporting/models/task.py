@@ -1,4 +1,4 @@
-from decimal import *
+from decimal import Decimal
 from django.db import models
 from django.utils.translation import gettext as _
 from django.utils.html import format_html
