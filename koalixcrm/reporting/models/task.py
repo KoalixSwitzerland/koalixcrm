@@ -6,7 +6,6 @@ from koalixcrm.reporting.models.agreement import Agreement
 from koalixcrm.reporting.models.work import Work
 from koalixcrm.reporting.models.resource_price import ResourcePrice
 from koalixcrm.reporting.models.estimation import Estimation
-from koalixcrm.shared.pdf_export import PDFExport
 from koalixcrm.core.exceptions import ReportingPeriodNotFound
 from rest_framework import serializers
 from koalixcrm import global_support_functions
@@ -342,52 +341,6 @@ class Task(models.Model):
         return duration_as_string
     effective_duration.short_description = _("Effective Duration [dys]")
     effective_duration.tags = True
-
-    def serialize_to_xml(self, reporting_period):
-        objects = [self, ]
-        main_xml = PDFExport.write_xml(objects)
-        if reporting_period:
-            works = Work.objects.filter(task=self.id,
-                                        reporting_period=reporting_period)
-        else:
-            works = Work.objects.filter(task=self.id)
-        for work in works:
-            work_xml = work.serialize_to_xml()
-            main_xml = PDFExport.merge_xml(main_xml, work_xml)
-        main_xml = PDFExport.append_element_to_pattern(main_xml,
-                                                       "object/[@model='crm.task']",
-                                                       "Effective_Costs_Confirmed_Overall",
-                                                       self.effective_costs_confirmed())
-        main_xml = PDFExport.append_element_to_pattern(main_xml,
-                                                       "object/[@model='crm.task']",
-                                                       "Effective_Costs_Not_Confirmed_Overall",
-                                                       self.effective_costs_not_confirmed())
-        main_xml = PDFExport.append_element_to_pattern(main_xml,
-                                                       "object/[@model='crm.task']",
-                                                       "Effective_Effort_Overall",
-                                                       self.effective_effort(reporting_period=None))
-        if reporting_period:
-            main_xml = PDFExport.append_element_to_pattern(main_xml,
-                                                           "object/[@model='crm.task']",
-                                                           "Effective_Costs_InPeriod",
-                                                           self.effective_costs(reporting_period=reporting_period))
-            main_xml = PDFExport.append_element_to_pattern(main_xml,
-                                                           "object/[@model='crm.task']",
-                                                           "Effective_Effort_InPeriod",
-                                                           self.effective_effort(reporting_period=reporting_period))
-        main_xml = PDFExport.append_element_to_pattern(main_xml,
-                                                       "object/[@model='crm.task']",
-                                                       "Planned_Effort",
-                                                       self.planned_costs())
-        main_xml = PDFExport.append_element_to_pattern(main_xml,
-                                                       "object/[@model='crm.task']",
-                                                       "Effective_Duration",
-                                                       self.effective_duration())
-        main_xml = PDFExport.append_element_to_pattern(main_xml,
-                                                       "object/[@model='crm.task']",
-                                                       "Planned_Duration",
-                                                       self.planned_duration())
-        return main_xml
 
     def effective_effort_overall(self):
         return self.effective_effort(reporting_period=None)

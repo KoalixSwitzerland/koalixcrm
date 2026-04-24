@@ -218,18 +218,6 @@ class OptionCommercialDocument(WorkspaceScopedModelAdmin, admin.ModelAdmin):
 
     create_purchase_order.short_description = _("Create Purchase Order")
 
-    def create_pdf(self, request, queryset):
-        from koalixcrm.core.views.pdfexport import PDFExportView
-        for obj in queryset:
-            response = PDFExportView.export_pdf(self,
-                                                request,
-                                                obj,
-                                                ("/admin/contract_object_management/"+obj.__class__.__name__.lower()+"/"),
-                                                obj.template_set)
-            return response
-
-    create_pdf.short_description = _("Create PDF")
-
     def create_pdf_async(self, request, queryset):
         from koalixcrm.core.models.pdf_export_process import PDFExportProcess
         queued = 0

@@ -1,18 +1,15 @@
 # -*- coding: utf-8 -*-
 
-from datetime import *
 from django.db import models
 from django.contrib import admin, messages
 from django.utils.translation import gettext as _
 from koalixcrm.core.const.purpose import *
 from koalixcrm.core.const.party import ASSIGNMENT_PURPOSE_CHOICES
-from koalixcrm.global_support_functions import xstr, make_date_utc
+from koalixcrm.global_support_functions import xstr
 from koalixcrm.contracts.models.commercial_document_position import CommercialDocumentPosition
 from koalixcrm.djangoUserExtension.models import TextParagraphInDocumentTemplate, UserExtension
 from koalixcrm.products.models.product_type import ProductType
-from koalixcrm.core.exceptions import TemplateSetMissingInContract
 import koalixcrm.contracts.models.calculations
-from koalixcrm.shared.pdf_export import PDFExport
 from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
 
 
@@ -150,25 +147,6 @@ class CommercialDocument(WorkspaceScopedModel):
             for commercial_document_position in list(commercial_document_positions):
                 new_position = CommercialDocumentPosition()
                 new_position.create_position(commercial_document_position, self)
-
-    def create_pdf(self, template_set, printed_by):
-        self.last_print_date = make_date_utc(datetime.now())
-        self.save()
-        return koalixcrm.core.documents.pdf_export.PDFExport.create_pdf(self, template_set, printed_by)
-
-    def get_template_set(self):
-        if self.template_set:
-            return self.template_set
-        else:
-            raise TemplateSetMissingInContract((_("Template Set missing in Commercial Document" + str(self))))
-
-    def get_fop_config_file(self, template_set):
-        template_set = self.get_template_set()
-        return template_set.get_fop_config_file()
-
-    def get_xsl_file(self, template_set):
-        template_set = self.get_template_set()
-        return template_set.get_xsl_file()
 
     def __str__(self):
         return _("Commercial Document") + ": " + str(self.id) + " " + _("from Contract") + ": " + str(self.contract.id)

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.utils.translation import gettext as _
 from koalixcrm.reporting.models.project import Project
 from koalixcrm.reporting.admin.task_admin import TaskInlineAdminView
@@ -49,14 +49,39 @@ class ProjectAdminView(admin.ModelAdmin):
         obj.save()
 
     def create_report_pdf(self, request, queryset):
-        from koalixcrm.core.views.pdfexport import PDFExportView
+        """Enqueue an async PDFExportProcess per selected project. The Java
+        pdf-export-service picks the message up from SQS, fetches the JSON
+        snapshot from ``/projects/<id>/report-data/``, renders the PDF, and
+        writes the result URL back onto the process row. Watch the PDF
+        Export Processes admin for status.
+        """
+        from koalixcrm.core.models.pdf_export_process import PDFExportProcess
+        from koalixcrm.core.models.workspace import Workspace
+        workspace = getattr(request, 'active_workspace', None) or Workspace.objects.first()
+        queued = 0
         for obj in queryset:
-            response = PDFExportView.export_pdf(self,
-                                                request,
-                                                obj,
-                                                ("/admin/reporting/"+obj.__class__.__name__.lower()+"/"),
-                                                obj.default_template_set.monthly_project_summary_template)
-            return response
+            template_set = getattr(obj.default_template_set, 'monthly_project_summary_template', None)
+            if not template_set:
+                self.message_user(
+                    request,
+                    _("Monthly project summary template missing for %(project)s") % {'project': obj},
+                    level=messages.ERROR,
+                )
+                continue
+            PDFExportProcess.objects.create(
+                workspace=workspace,
+                source_model=obj.__class__.__name__,
+                source_id=obj.id,
+                template_set=template_set,
+                triggered_by=request.user,
+            )
+            queued += 1
+        if queued:
+            self.message_user(
+                request,
+                _("%(count)d project report job(s) queued.") % {'count': queued},
+                level=messages.SUCCESS,
+            )
 
     create_report_pdf.short_description = _("Create Report PDF")
 

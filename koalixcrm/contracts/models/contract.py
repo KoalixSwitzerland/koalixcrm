@@ -15,7 +15,6 @@ from koalixcrm.core.exceptions import *
 from koalixcrm.djangoUserExtension.models import UserExtension
 from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
 import koalixcrm.contracts.models.calculations
-import koalixcrm.core.documents.pdf_export
 
 
 class ContractAddressAssignment(WorkspaceScopedModel):

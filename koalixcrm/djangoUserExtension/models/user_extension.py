@@ -194,9 +194,48 @@ class OptionUserExtension(WorkspaceScopedModelAdmin, admin.ModelAdmin):
     )
 
     def create_work_report_pdf(self, request, queryset):
-        from koalixcrm.reporting.views.create_work_report import create_work_report
-
-        return create_work_report(self, request, queryset)
+        """Enqueue async work-report PDFs for the HumanResource attached to
+        each selected UserExtension. Mirrors HumanResourceAdminView's
+        action; defaults to the trailing 60-day range until #404 lands
+        the params field for date-range support.
+        """
+        from django.contrib import messages
+        from koalixcrm.core.models.pdf_export_process import PDFExportProcess
+        from koalixcrm.core.models.workspace import Workspace
+        from koalixcrm.reporting.models.human_resource import HumanResource
+        workspace = getattr(request, 'active_workspace', None) or Workspace.objects.first()
+        queued = 0
+        for ue in queryset:
+            template_set = getattr(ue.default_template_set, 'work_report_template', None)
+            if not template_set:
+                self.message_user(
+                    request,
+                    _("Work report template missing for %(ue)s") % {'ue': ue},
+                    level=messages.ERROR,
+                )
+                continue
+            hr = HumanResource.objects.filter(user=ue).first()
+            if hr is None:
+                self.message_user(
+                    request,
+                    _("No HumanResource attached to %(ue)s") % {'ue': ue},
+                    level=messages.ERROR,
+                )
+                continue
+            PDFExportProcess.objects.create(
+                workspace=workspace,
+                source_model='HumanResource',
+                source_id=hr.id,
+                template_set=template_set,
+                triggered_by=request.user,
+            )
+            queued += 1
+        if queued:
+            self.message_user(
+                request,
+                _("%(count)d work report job(s) queued.") % {'count': queued},
+                level=messages.SUCCESS,
+            )
 
     create_work_report_pdf.short_description = _("Work Report PDF")
 

@@ -6,7 +6,6 @@ from django import forms
 
 from koalixcrm.accounting.const.accountTypeChoices import *
 from koalixcrm.accounting.exceptions import AccountingPeriodNotFound
-from koalixcrm.shared.pdf_export import PDFExport
 
 
 class Account(models.Model):
@@ -85,27 +84,6 @@ class Account(models.Model):
             sum += booking.amount
 
         return sum
-
-    def serialize_to_xml(self, accounting_period):
-        objects = [self, ]
-        main_xml = PDFExport.write_xml(objects)
-        main_xml = PDFExport.append_element_to_pattern(main_xml,
-                                                       "object/[@model='accounting.account']",
-                                                       "sum_of_all_bookings_within_accounting_period",
-                                                       self.sum_of_all_bookings_within_accounting_period(accounting_period))
-        main_xml = PDFExport.append_element_to_pattern(main_xml,
-                                                       "object/[@model='accounting.account']",
-                                                       "sum_of_all_bookings_through_now",
-                                                       self.sum_of_all_bookings_through_now(accounting_period))
-        main_xml = PDFExport.append_element_to_pattern(main_xml,
-                                                       "object/[@model='accounting.account']",
-                                                       "sum_of_all_bookings_before_accounting_period",
-                                                       self.sum_of_all_bookings_before_accounting_period(accounting_period))
-        main_xml = PDFExport.append_element_to_pattern(main_xml,
-                                                       "object/[@model='accounting.account']",
-                                                       "sum_of_all_bookings_through_now",
-                                                       self.sum_of_all_bookings())
-        return main_xml
 
     def __str__(self):
         return self.account_number.__str__() + " " + self.title

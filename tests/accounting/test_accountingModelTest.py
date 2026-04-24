@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 from koalixcrm.accounting.models import Account
 from koalixcrm.accounting.models import AccountingPeriod
 from koalixcrm.accounting.models import Booking
-from koalixcrm.shared.pdf_export import PDFExport
 from koalixcrm.global_support_functions import make_date_utc
 
 
@@ -159,26 +158,9 @@ class AccountingModelTest(TestCase):
         self.assertEqual(
             (accounting_period_2025.overall_spendings()).__str__(), "1000.00")
 
-    def test_serialize_to_xml(self):
-        accounting_period_2025 = AccountingPeriod.objects.get(title="Fiscal year 2025")
-        xml = accounting_period_2025.serialize_to_xml()
-        result=PDFExport.find_element_in_xml(xml, "object/[@model='accounting.account']/field[@name='title']", 'Earnings')
-        self.assertEqual(result, 1)
-        result=PDFExport.find_element_in_xml(xml, "object/[@model='accounting.account']/field[@name='title']", 'Spendings')
-        self.assertEqual(result, 1)
-        result=PDFExport.find_element_in_xml(xml, "object/[@model='accounting.account']/field[@name='title']", 'Investment capital')
-        self.assertEqual(result, 1)
-        result=PDFExport.find_element_in_xml(xml, "object/[@model='accounting.account']/field[@name='title']", 'Shortterm bankloans')
-        self.assertEqual(result, 1)
-        result=PDFExport.find_element_in_xml(xml, "object/[@model='accounting.account']/field[@name='title']",'Cash')
-        self.assertEqual(result, 1)
-        result=PDFExport.find_element_in_xml(xml, "object/[@model='accounting.account']/field[@name='title']",'Bank Account')
-        self.assertEqual(result, 1)
-        result=PDFExport.find_element_in_xml(xml, "object/[@model='accounting.accountingperiod']/Overall_Spendings", '1000.00')
-        self.assertEqual(result, 1)
-        result=PDFExport.find_element_in_xml(xml, "object/[@model='accounting.accountingperiod']/Overall_Earnings", '500.00')
-        self.assertEqual(result, 1)
-        result=PDFExport.find_element_in_xml(xml, "object/[@model='accounting.accountingperiod']/Overall_Assets", '494500.00')
-        self.assertEqual(result, 1)
-        result=PDFExport.find_element_in_xml(xml, "object/[@model='accounting.accountingperiod']/Overall_Liabilities", '495000.00')
-        self.assertEqual(result, 1)
+    # The legacy ``AccountingPeriod.serialize_to_xml`` was removed when the
+    # FOP/PDF flow moved to the Java pdf-export-service (issue #404). The
+    # equivalent surface — that the report payload contains every account
+    # plus the four overall aggregates — is now covered by
+    # ``tests/accounting_api_py/test_accounting_period_report.py`` and
+    # ``tests/accounting/test_accounting_period_admin_pdf_actions.py``.

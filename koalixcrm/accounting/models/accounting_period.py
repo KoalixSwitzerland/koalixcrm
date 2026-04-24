@@ -6,9 +6,7 @@ from django.db import models
 from django.utils.translation import gettext as _
 from django import forms
 from koalixcrm.accounting.models import Account
-from koalixcrm.shared.pdf_export import PDFExport
 from koalixcrm.accounting.exceptions import AccountingPeriodNotFound
-from koalixcrm.accounting.exceptions import TemplateSetMissingInAccountingPeriod
 from koalixcrm.accounting.models import InlineBookings
 
 
@@ -32,32 +30,6 @@ class AccountingPeriod(models.Model):
                                                        related_name='db_profit_loss_statement_template_set',
                                                        null=True,
                                                        blank=True)
-
-    def get_template_set(self, template_set):
-        if template_set == self.template_set_balance_sheet:
-            if self.template_set_balance_sheet:
-                return self.template_set_balance_sheet
-            else:
-                raise TemplateSetMissingInAccountingPeriod((_("Template Set for balance sheet " +
-                                                              "is missing in Accounting Period" + str(self))))
-        elif template_set == self.template_profit_loss_statement:
-            if self.template_profit_loss_statement:
-                return self.template_profit_loss_statement
-            else:
-                raise TemplateSetMissingInAccountingPeriod((_("Template Set for profit loss statement" +
-                                                              " is missing in Accounting Period" + str(self))))
-
-    def get_fop_config_file(self, template_set):
-        template_set = self.get_template_set(template_set)
-        return template_set.get_fop_config_file()
-
-    def get_xsl_file(self, template_set):
-        template_set = self.get_template_set(template_set)
-        return template_set.get_xsl_file()
-
-    def create_pdf(self, template_set, printed_by):
-        import koalixcrm.core.documents.pdf_export
-        return koalixcrm.core.documents.pdf_export.PDFExport.create_pdf(self, template_set, printed_by)
 
     def overall_earnings(self):
         earnings = 0
@@ -90,31 +62,6 @@ class AccountingPeriod(models.Model):
             if account.account_type == "L":
                 liabilities += account.sum_of_all_bookings_through_now(self)
         return liabilities
-
-    def serialize_to_xml(self):
-        objects = [self, ]
-        main_xml = PDFExport.write_xml(objects)
-        accounts = Account.objects.all()
-        for account in accounts:
-            account_xml = account.serialize_to_xml(self)
-            main_xml = PDFExport.merge_xml(main_xml, account_xml)
-        main_xml = PDFExport.append_element_to_pattern(main_xml,
-                                                       "object/[@model='accounting.accountingperiod']",
-                                                       "Overall_Earnings",
-                                                       self.overall_earnings())
-        main_xml = PDFExport.append_element_to_pattern(main_xml,
-                                                       "object/[@model='accounting.accountingperiod']",
-                                                       "Overall_Spendings",
-                                                       self.overall_spendings())
-        main_xml = PDFExport.append_element_to_pattern(main_xml,
-                                                       "object/[@model='accounting.accountingperiod']",
-                                                       "Overall_Assets",
-                                                       self.overall_assets())
-        main_xml = PDFExport.append_element_to_pattern(main_xml,
-                                                       "object/[@model='accounting.accountingperiod']",
-                                                       "Overall_Liabilities",
-                                                       self.overall_liabilities())
-        return main_xml
 
     @staticmethod
     def get_current_valid_accounting_period():
