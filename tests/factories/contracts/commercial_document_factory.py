@@ -8,13 +8,15 @@ from tests.factories.contacts.user_factory import StaffUserFactory
 from tests.factories.contracts.contract_factory import StandardContractFactory
 from tests.factories.contacts.customer_factory import StandardCustomerFactory
 from tests.factories.core.currency_factory import StandardCurrencyFactory
-from tests.factories.djangoUserExtension.factory_document_template import StandardQuoteTemplateFactory
+from tests.factories.core.workspace_factory import DefaultWorkspaceFactory
+from tests.factories.djangoUserExtension.factory_document_template import StandardQuotationTemplateFactory
 
 
 class StandardCommercialDocumentFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = CommercialDocument
 
+    workspace = factory.SubFactory(DefaultWorkspaceFactory)
     contract = factory.SubFactory(StandardContractFactory)
     external_reference = "This is an external Reference"
     discount = "0"
@@ -29,6 +31,6 @@ class StandardCommercialDocumentFactory(factory.django.DjangoModelFactory):
     custom_date_field = make_date_utc(datetime.datetime(2018, 5, 20, 00))
     last_modification = make_date_utc(datetime.datetime(2018, 5, 25, 00))
     last_modified_by = factory.SubFactory(StaffUserFactory)
-    template_set = factory.SubFactory(StandardQuoteTemplateFactory)
+    template_set = factory.SubFactory(StandardQuotationTemplateFactory)
     derived_from_commercial_document = None
     last_print_date = make_date_utc(datetime.datetime(2018, 5, 26, 00))

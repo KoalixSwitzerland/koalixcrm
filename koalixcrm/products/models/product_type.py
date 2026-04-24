@@ -3,10 +3,11 @@
 from django.db import models
 from django.utils.translation import gettext as _
 
+from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
 from koalixcrm.products.models.product_price import ProductPrice
 
 
-class ProductType(models.Model):
+class ProductType(WorkspaceScopedModel):
     id = models.BigAutoField(primary_key=True)
     description = models.TextField(verbose_name=_("Description"),
                                    null=True,
@@ -32,11 +33,6 @@ class ProductType(models.Model):
                                          blank=True)
     date_of_creation = models.DateTimeField(verbose_name=_("Created at"),
                                             auto_now_add=True)
-    accounting_product_category = models.ForeignKey('accounting.ProductCategory',
-                                                    on_delete=models.CASCADE,
-                                                    verbose_name=_("Accounting Product Category"),
-                                                    null=True,
-                                                    blank=True)
 
     def get_price(self, date, unit, party, currency):
         """Find the applicable price for this ProductType at `date` for the

@@ -77,6 +77,17 @@ class CeleryWorkerM2MAuthentication(BaseAuthentication):
             if not user.is_active:
                 raise AuthenticationFailed('This service account is disabled.')
 
+            # WorkspaceContextMiddleware runs before DRF auth, so it sees
+            # AnonymousUser on M2M requests and leaves active_workspace=None.
+            # Fix it up here now that we know the authenticated service user,
+            # so workspace-scoped viewsets (Invoice, Quotation, ...) can
+            # filter their querysets.
+            if getattr(request, 'active_workspace', None) is None:
+                from koalixcrm.core.access import user_workspaces
+                ws = user_workspaces(user).order_by('pk').first()
+                if ws is not None:
+                    request.active_workspace = ws
+
             return (user, payload)
 
         except AuthenticationFailed:

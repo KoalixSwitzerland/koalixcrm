@@ -8,10 +8,10 @@ from tests.factories.contracts.contract_factory import StandardContractFactory
 from tests.factories.contracts.invoice_factory import StandardInvoiceFactory
 from tests.factories.contacts.user_factory import AdminUserFactory
 from tests.factories.contacts.customer_group_factory import StandardCustomerGroupFactory
-from tests.factories.djangoUserExtension.factory_document_template import StandardQuoteTemplateFactory
+from tests.factories.djangoUserExtension.factory_document_template import StandardQuotationTemplateFactory
 from tests.factories.djangoUserExtension.factory_document_template import StandardInvoiceTemplateFactory
 from tests.factories.djangoUserExtension.factory_document_template import StandardPurchaseOrderTemplateFactory
-from tests.factories.djangoUserExtension.factory_document_template import StandardDeliveryNoteTemplateFactory
+from tests.factories.djangoUserExtension.factory_document_template import StandardDespatchAdviceTemplateFactory
 from tests.factories.djangoUserExtension.factory_document_template import StandardPaymentReminderTemplateFactory
 from koalixcrm.contracts.models.quotation import Quotation
 from koalixcrm.contracts.models.invoice import Invoice
@@ -33,11 +33,11 @@ class CreateSalesDocumentFromContract(StaticLiveServerTestCase):
         cls.test_customer_group = StandardCustomerGroupFactory.create()
         cls.test_contract = StandardContractFactory.create()
         cls.test_invoice = StandardInvoiceFactory.create(contract=cls.test_contract)
-        cls.test_quote_template = StandardQuoteTemplateFactory.create()
+        cls.test_quotation_template = StandardQuotationTemplateFactory.create()
         cls.test_invoice_template = StandardInvoiceTemplateFactory.create()
         cls.test_purchase_order_template = StandardPurchaseOrderTemplateFactory.create()
         cls.test_payment_reminder_template = StandardPaymentReminderTemplateFactory.create()
-        cls.test_delivery_note_template = StandardDeliveryNoteTemplateFactory.create()
+        cls.test_despatch_advice_template = StandardDespatchAdviceTemplateFactory.create()
 
     @classmethod
     def tearDownClass(cls):
@@ -78,8 +78,8 @@ class CreateSalesDocumentFromContract(StaticLiveServerTestCase):
             print("Timed out waiting for page to load")
 
         test_parameters = {Quotation: {"action_name": "create_quotation",
-                                       "template_name": "quote_template",
-                                       "template_to_select": self.test_quote_template},
+                                       "template_name": "quotation_template",
+                                       "template_to_select": self.test_quotation_template},
                            Invoice: {"action_name": "create_invoice",
                                      "template_name": "invoice_template",
                                      "template_to_select": self.test_invoice_template},
@@ -90,8 +90,8 @@ class CreateSalesDocumentFromContract(StaticLiveServerTestCase):
                                              "template_name": "payment_reminder_template",
                                              "template_to_select": self.test_payment_reminder_template},
                            DespatchAdvice: {"action_name": "create_despatch_advice",
-                                            "template_name": "delivery_note_template",
-                                            "template_to_select": self.test_delivery_note_template},
+                                            "template_name": "despatch_advice_template",
+                                            "template_to_select": self.test_despatch_advice_template},
                            }
         for document_type in test_parameters:
             test_parameter = test_parameters[document_type]

@@ -4,6 +4,7 @@ ProductTypeAdmin for koalixcrm products
 """
 from django.contrib import admin
 from django.utils.translation import gettext as _
+from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
 from koalixcrm.products.models.product_type import ProductType
 from koalixcrm.products.admin.product_price_admin import ProductPriceInlineAdmin
 from koalixcrm.core.admin.unit_transform_admin import UnitTransformInlineAdmin
@@ -12,14 +13,14 @@ from koalixcrm.products.admin.customer_group_transform_admin import CustomerGrou
 
 
 @admin.register(ProductType)
-class ProductTypeAdmin(admin.ModelAdmin):
+class ProductTypeAdmin(WorkspaceScopedModelAdmin, admin.ModelAdmin):
     list_display = (
         'product_type_identifier',
         'title',
         'default_unit',
-        'tax',
-        'accounting_product_category')
+        'tax')
     list_display_links = ('product_type_identifier',)
+    list_filter = ('workspace',)
     fieldsets = (
         (_('Basics'), {
             'fields': (
@@ -27,8 +28,7 @@ class ProductTypeAdmin(admin.ModelAdmin):
                 'title',
                 'description',
                 'default_unit',
-                'tax',
-                'accounting_product_category')
+                'tax')
         }),
     )
     inlines = [ProductPriceInlineAdmin,

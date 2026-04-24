@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
 from koalixcrm.djangoUserExtension.models import (
-    PurchaseConfirmationTemplate,
+    SalesOrderTemplate,
     MonthlyProjectSummaryTemplate,
     WorkReportTemplate,
 )
 from koalixcrm.djangoUserExtension.models.document_template import (
     InvoiceTemplate,
-    QuoteTemplate,
-    DeliveryNoteTemplate,
+    QuotationTemplate,
+    DespatchAdviceTemplate,
     PaymentReminderTemplate,
     PurchaseOrderTemplate,
     ProfitLossStatementTemplate,
@@ -17,11 +17,11 @@ from koalixcrm.djangoUserExtension.models.document_template import (
 )
 
 admin.site.register(InvoiceTemplate, OptionDocumentTemplate)
-admin.site.register(QuoteTemplate, OptionDocumentTemplate)
-admin.site.register(DeliveryNoteTemplate, OptionDocumentTemplate)
+admin.site.register(QuotationTemplate, OptionDocumentTemplate)
+admin.site.register(DespatchAdviceTemplate, OptionDocumentTemplate)
 admin.site.register(PaymentReminderTemplate, OptionDocumentTemplate)
 admin.site.register(PurchaseOrderTemplate, OptionDocumentTemplate)
-admin.site.register(PurchaseConfirmationTemplate, OptionDocumentTemplate)
+admin.site.register(SalesOrderTemplate, OptionDocumentTemplate)
 admin.site.register(ProfitLossStatementTemplate, OptionDocumentTemplate)
 admin.site.register(BalanceSheetTemplate, OptionDocumentTemplate)
 admin.site.register(MonthlyProjectSummaryTemplate, OptionDocumentTemplate)

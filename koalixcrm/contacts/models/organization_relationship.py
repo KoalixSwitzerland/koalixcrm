@@ -4,9 +4,10 @@ from django.utils.translation import gettext as _
 
 from koalixcrm.contacts.models.organization import Organization
 from koalixcrm.core.const.party import ORG_RELATIONSHIP_CHOICES
+from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
 
 
-class OrganizationRelationship(models.Model):
+class OrganizationRelationship(WorkspaceScopedModel):
     id = models.BigAutoField(primary_key=True)
     parent = models.ForeignKey(
         Organization, on_delete=models.CASCADE,

@@ -28,3 +28,20 @@ class CommercialDocumentMediaViewSet(
     serializer_class = CommercialDocumentMediaJSONSerializer
     permission_classes = [IsAuthenticated, ModelPermissionsWithListView]
     http_method_names = ["get", "post", "head", "options"]
+
+    def get_queryset(self):
+        active = getattr(self.request, 'active_workspace', None)
+        if self.request.user.is_superuser:
+            return CommercialDocumentMedia.objects.all()
+        if active is not None:
+            return CommercialDocumentMedia.objects.filter(workspace=active)
+        return CommercialDocumentMedia.objects.none()
+
+    def perform_create(self, serializer):
+        from koalixcrm.core.models.workspace import Workspace
+        active = getattr(self.request, 'active_workspace', None)
+        if active is None and self.request.user.is_superuser:
+            active, _ = Workspace.objects.get_or_create(
+                name='Default Workspace', defaults={'is_active': True}
+            )
+        serializer.save(workspace=active)

@@ -5,9 +5,10 @@ from django.contrib import admin
 from django.utils.translation import gettext as _
 
 from koalixcrm.core.const.purpose import *
+from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
 
 
-class TextParagraphInDocumentTemplate(models.Model):
+class TextParagraphInDocumentTemplate(WorkspaceScopedModel):
     id = models.BigAutoField(primary_key=True)
     document_template = models.ForeignKey("djangoUserExtension.DocumentTemplate", on_delete=models.CASCADE)
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=2, choices=PURPOSESTEXTPARAGRAPHINDOCUMENTS)

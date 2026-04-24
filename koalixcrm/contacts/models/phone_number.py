@@ -2,8 +2,10 @@
 from django.db import models
 from django.utils.translation import gettext as _
 
+from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
 
-class PhoneNumber(models.Model):
+
+class PhoneNumber(WorkspaceScopedModel):
     id = models.BigAutoField(primary_key=True)
     phone_e164 = models.CharField(max_length=32, verbose_name=_("Phone (E.164)"))
 

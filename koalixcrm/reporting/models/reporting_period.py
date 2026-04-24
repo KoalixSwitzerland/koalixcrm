@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from datetime import *
+from datetime import timedelta
 from django.db import models
 from django.utils.translation import gettext as _
-from koalixcrm.shared.pdf_export import PDFExport
 from koalixcrm.core.exceptions import ReportingPeriodNotFound
 from rest_framework import serializers
 from django.core.exceptions import ValidationError
@@ -146,27 +145,6 @@ class ReportingPeriod(models.Model):
         else:
             allowed = False
         return allowed
-
-    def create_pdf(self, template_set, printed_by):
-        self.last_print_date = datetime.now()
-        self.save()
-        return PDFExport.create_pdf(self, template_set, printed_by)
-
-    def get_template_set(self):
-        return self.project.get_template_set()
-
-    def get_fop_config_file(self, template_set):
-        return self.project.get_fop_config_file(template_set=None)
-
-    def get_xsl_file(self, template_set):
-        return self.project.get_xsl_file(template_set=None)
-
-    def serialize_to_xml(self):
-        objects = [self, ]
-        main_xml = PDFExport.write_xml(objects)
-        project_xml = self.project.serialize_to_xml(reporting_period=self)
-        main_xml = PDFExport.merge_xml(main_xml, project_xml)
-        return main_xml
 
     def __str__(self):
         return str(self.id)+" "+self.title

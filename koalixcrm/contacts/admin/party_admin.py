@@ -10,6 +10,7 @@ from koalixcrm.contacts.admin.actions import (
     convert_contacts_to_organizations,
     convert_organizations_to_contacts,
 )
+from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
 from koalixcrm.contacts.models.party import Party
 from koalixcrm.contacts.models.organization import Organization
 from koalixcrm.contacts.models.natural_person import PartyContact
@@ -28,92 +29,99 @@ from koalixcrm.contacts.models.party_group_membership import PartyGroupMembershi
 
 
 @admin.register(Party)
-class PartyAdmin(admin.ModelAdmin):
+class PartyAdmin(WorkspaceScopedModelAdmin, admin.ModelAdmin):
     list_display = ('id', 'display_name', 'default_language', 'created_at')
+    list_filter = ('workspace',)
     search_fields = ('display_name',)
 
 
 @admin.register(Organization)
-class OrganizationAdmin(admin.ModelAdmin):
+class OrganizationAdmin(WorkspaceScopedModelAdmin, admin.ModelAdmin):
     list_display = ('id', 'display_name', 'legal_form', 'legal_name', 'legal_seat_country')
+    list_filter = ('workspace',)
     search_fields = ('display_name', 'legal_name', 'registration_number')
     actions = [convert_organizations_to_contacts]
 
 
 @admin.register(PartyContact)
-class PartyContactAdmin(admin.ModelAdmin):
+class PartyContactAdmin(WorkspaceScopedModelAdmin, admin.ModelAdmin):
     list_display = ('id', 'display_name', 'given_name', 'family_name', 'gdpr_consent_date')
+    list_filter = ('workspace',)
     search_fields = ('display_name', 'given_name', 'family_name')
     actions = [convert_contacts_to_organizations]
 
 
 @admin.register(PartyIdentification)
-class PartyIdentificationAdmin(admin.ModelAdmin):
+class PartyIdentificationAdmin(WorkspaceScopedModelAdmin, admin.ModelAdmin):
     list_display = ('id', 'party', 'scheme', 'value', 'valid_from', 'valid_to')
-    list_filter = ('scheme',)
+    list_filter = ('scheme', 'workspace')
 
 
 @admin.register(PartyRole)
-class PartyRoleAdmin(admin.ModelAdmin):
+class PartyRoleAdmin(WorkspaceScopedModelAdmin, admin.ModelAdmin):
     list_display = ('id', 'party', 'role_type', 'is_primary', 'valid_from', 'valid_to')
-    list_filter = ('role_type', 'is_primary')
+    list_filter = ('role_type', 'is_primary', 'workspace')
 
 
 @admin.register(OrganizationMembership)
-class OrganizationMembershipAdmin(admin.ModelAdmin):
+class OrganizationMembershipAdmin(WorkspaceScopedModelAdmin, admin.ModelAdmin):
     list_display = ('id', 'contact', 'organization', 'title', 'position', 'is_primary')
-    list_filter = ('is_primary',)
+    list_filter = ('is_primary', 'workspace')
 
 
 @admin.register(OrganizationRelationship)
-class OrganizationRelationshipAdmin(admin.ModelAdmin):
+class OrganizationRelationshipAdmin(WorkspaceScopedModelAdmin, admin.ModelAdmin):
     list_display = ('id', 'parent', 'child', 'relationship_type', 'valid_from', 'valid_to')
-    list_filter = ('relationship_type',)
+    list_filter = ('relationship_type', 'workspace')
 
 
 @admin.register(Address)
-class AddressAdmin(admin.ModelAdmin):
+class AddressAdmin(WorkspaceScopedModelAdmin, admin.ModelAdmin):
     list_display = ('id', 'address_line_1', 'zip_code', 'town', 'country')
+    list_filter = ('workspace',)
     search_fields = ('address_line_1', 'zip_code', 'town')
 
 
 @admin.register(AddressAssignment)
-class AddressAssignmentAdmin(admin.ModelAdmin):
+class AddressAssignmentAdmin(WorkspaceScopedModelAdmin, admin.ModelAdmin):
     list_display = ('id', 'party', 'address', 'purpose', 'is_primary', 'valid_from', 'valid_to')
-    list_filter = ('purpose', 'is_primary')
+    list_filter = ('purpose', 'is_primary', 'workspace')
 
 
 @admin.register(PhoneNumber)
-class PhoneNumberAdmin(admin.ModelAdmin):
+class PhoneNumberAdmin(WorkspaceScopedModelAdmin, admin.ModelAdmin):
     list_display = ('id', 'phone_e164')
+    list_filter = ('workspace',)
     search_fields = ('phone_e164',)
 
 
 @admin.register(PhoneAssignment)
-class PhoneAssignmentAdmin(admin.ModelAdmin):
+class PhoneAssignmentAdmin(WorkspaceScopedModelAdmin, admin.ModelAdmin):
     list_display = ('id', 'party', 'phone', 'purpose', 'is_primary')
-    list_filter = ('purpose', 'is_primary')
+    list_filter = ('purpose', 'is_primary', 'workspace')
 
 
 @admin.register(PartyEmail)
-class PartyEmailAdmin(admin.ModelAdmin):
+class PartyEmailAdmin(WorkspaceScopedModelAdmin, admin.ModelAdmin):
     list_display = ('id', 'email')
+    list_filter = ('workspace',)
     search_fields = ('email',)
 
 
 @admin.register(EmailAssignment)
-class EmailAssignmentAdmin(admin.ModelAdmin):
+class EmailAssignmentAdmin(WorkspaceScopedModelAdmin, admin.ModelAdmin):
     list_display = ('id', 'party', 'email', 'purpose', 'is_primary')
-    list_filter = ('purpose', 'is_primary')
+    list_filter = ('purpose', 'is_primary', 'workspace')
 
 
 @admin.register(PartyGroup)
-class PartyGroupAdmin(admin.ModelAdmin):
+class PartyGroupAdmin(WorkspaceScopedModelAdmin, admin.ModelAdmin):
     list_display = ('id', 'name', 'role_type_scope')
-    list_filter = ('role_type_scope',)
+    list_filter = ('role_type_scope', 'workspace')
     search_fields = ('name',)
 
 
 @admin.register(PartyGroupMembership)
-class PartyGroupMembershipAdmin(admin.ModelAdmin):
+class PartyGroupMembershipAdmin(WorkspaceScopedModelAdmin, admin.ModelAdmin):
     list_display = ('id', 'party', 'party_group')
+    list_filter = ('workspace',)

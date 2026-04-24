@@ -3,9 +3,10 @@ from django.db import models
 from django.utils.translation import gettext as _
 
 from koalixcrm.core.const.party import PARTY_ROLE_CHOICES
+from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
 
 
-class PartyGroup(models.Model):
+class PartyGroup(WorkspaceScopedModel):
     id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=300, verbose_name=_("Name"))
     role_type_scope = models.CharField(

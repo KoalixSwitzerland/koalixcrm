@@ -2,8 +2,10 @@
 from django.db import models
 from django.utils.translation import gettext as _
 
+from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
 
-class Product(models.Model):
+
+class Product(WorkspaceScopedModel):
     id = models.BigAutoField(primary_key=True)
     identifier = models.CharField(verbose_name=_("Product Number"),
                                   max_length=200,

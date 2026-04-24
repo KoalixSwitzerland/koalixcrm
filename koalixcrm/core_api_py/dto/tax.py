@@ -9,6 +9,4 @@ class Tax(BaseModel):
     def __init__(self, data: Dict[str, Any], client=None):
         self.tax_rate = None
         self.name = None
-        self.account_activa = None
-        self.account_passiva = None
         super().__init__(data)

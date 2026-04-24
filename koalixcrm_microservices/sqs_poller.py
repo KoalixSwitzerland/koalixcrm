@@ -5,10 +5,16 @@ import time
 from typing import Any, Dict
 
 from koalixcrm_utils.aws_clients import get_sqs_client
-from koalixcrm_mq_commands import CommandEnvelope, PDFExportCommand
+from koalixcrm_mq_commands import CommandEnvelope
 from koalixcrm_microservices.celery_app import app as celery_app
 
 logger = logging.getLogger(__name__)
+
+# Django-side task routing table. Each entry maps a CommandEnvelope.type
+# to one or more Celery task dotted paths consumed by the koalixcrm worker.
+# PDF export moved to the Java pdf-export-service, which polls its own
+# queue, so no route exists here for it — Django is publisher-only.
+TASK_ROUTES: Dict[str, list] = {}
 
 
 def _parse_message_body(body: str) -> Dict[str, Any]:
@@ -28,12 +34,6 @@ def dispatch_command(env: CommandEnvelope) -> bool:
     Returns True if the message was handled and can be deleted.
     """
     try:
-        TASK_ROUTES = {
-            PDFExportCommand.TYPE: [
-                'koalixcrm_microservices.pdf_export_task.tasks.run',
-            ],
-        }
-
         routes = TASK_ROUTES.get(env.type)
         if routes:
             payload = env.payload

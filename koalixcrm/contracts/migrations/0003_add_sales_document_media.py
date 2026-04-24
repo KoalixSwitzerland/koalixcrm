@@ -15,6 +15,11 @@ def cleanup_orphaned_admin_log(apps, schema_editor):
     subsequent migration.
     """
     cursor = schema_editor.connection.cursor()
+    # If django_admin_log hasn't been created yet (migration graph reordered
+    # this RunPython ahead of admin.0001_initial), there is nothing to clean.
+    table_names = schema_editor.connection.introspection.table_names(cursor)
+    if "django_admin_log" not in table_names:
+        return
     cursor.execute(
         "DELETE FROM django_admin_log "
         "WHERE content_type_id NOT IN (SELECT id FROM django_content_type)"

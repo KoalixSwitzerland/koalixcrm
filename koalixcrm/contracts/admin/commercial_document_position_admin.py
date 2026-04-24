@@ -1,7 +1,27 @@
 # -*- coding: utf-8 -*-
 
+from django.apps import apps
 from django.contrib import admin
 from koalixcrm.contracts.models.commercial_document_position import CommercialDocumentPosition
+
+
+def _position_fields():
+    base = [
+        'position_number',
+        'quantity',
+        'unit',
+    ]
+    if apps.is_installed('koalixcrm.products'):
+        base.append('product_type')
+    base += [
+        'description',
+        'discount',
+        'overwrite_product_price',
+        'position_price_per_unit',
+        'position_tax_rate',
+        'sent_on',
+    ]
+    return tuple(base)
 
 
 class CommercialDocumentInlinePosition(admin.TabularInline):
@@ -10,16 +30,7 @@ class CommercialDocumentInlinePosition(admin.TabularInline):
     classes = ['expand']
     fieldsets = (
         ('', {
-            'fields': (
-                'position_number',
-                'quantity',
-                'unit',
-                'product_type',
-                'description',
-                'discount',
-                'overwrite_product_price',
-                'position_price_per_unit',
-                'sent_on')
+            'fields': _position_fields(),
         }),
     )
     allow_add = True

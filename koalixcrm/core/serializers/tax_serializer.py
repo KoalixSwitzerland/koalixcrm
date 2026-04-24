@@ -1,7 +1,5 @@
 from rest_framework import serializers
 
-from koalixcrm.accounting.models.account import Account
-from koalixcrm.accounting.serializers.account_serializer import OptionAccountJSONSerializer
 from koalixcrm.core.models.tax import Tax
 
 
@@ -16,66 +14,27 @@ class OptionTaxJSONSerializer(serializers.ModelSerializer):
 
 
 class TaxJSONSerializer(serializers.ModelSerializer):
+    """Core-level Tax serializer. Accounting linkage (activa/passiva accounts)
+    is owned by `accounting.TaxAccountAssignment` since CR-2c and surfaced
+    through accounting-side serializers only."""
     tax_rate = serializers.CharField()
     name = serializers.CharField()
-    account_activa = OptionAccountJSONSerializer(allow_null=True)
-    account_passiva = OptionAccountJSONSerializer(allow_null=True)
 
     class Meta:
         model = Tax
         fields = ('id',
                   'tax_rate',
-                  'name',
-                  'account_activa',
-                  'account_passiva')
+                  'name')
 
     def create(self, validated_data):
         tax = Tax()
         tax.tax_rate = validated_data['tax_rate']
         tax.name = validated_data['name']
-
-        # Deserialize account activa
-        account_activa = validated_data.pop('account_activa')
-        if account_activa:
-            if account_activa.get('id', None):
-                tax.account_activa = Account.objects.get(id=account_activa.get('id', None))
-            else:
-                tax.account_activa = None
-
-        # Deserialize account passiva
-        account_passiva = validated_data.pop('account_passiva')
-        if account_passiva:
-            if account_passiva.get('id', None):
-                tax.account_passiva = Account.objects.get(id=account_passiva.get('id', None))
-            else:
-                tax.account_passiva = None
-
         tax.save()
         return tax
 
     def update(self, instance, validated_data):
         instance.tax_rate = validated_data['tax_rate']
         instance.name = validated_data['name']
-
-        # Deserialize account activa
-        account_activa = validated_data.pop('account_activa')
-        if account_activa:
-            if account_activa.get('id', instance.account_activa):
-                instance.account_activa = Account.objects.get(id=account_activa.get('id', None))
-            else:
-                instance.account_activa = instance.account_activa_id
-        else:
-            instance.account_activa = None
-
-        # Deserialize account passiva
-        account_passiva = validated_data.pop('account_passiva')
-        if account_passiva:
-            if account_passiva.get('id', instance.account_passiva):
-                instance.account_passiva = Account.objects.get(id=account_passiva.get('id', None))
-            else:
-                instance.account_passiva = instance.account_passiva_id
-        else:
-            instance.account_passiva = None
-
         instance.save()
         return instance

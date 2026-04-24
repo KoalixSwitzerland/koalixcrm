@@ -17,8 +17,7 @@ class HumanResourceAPITest(LiveServerTestCase):
         )
         self.human_resource = StandardHumanResourceFactory.create()
         self.api_client = KoalixCRMReportingAPIClient(
-            self.live_server_url, username='admin', password='adminpassword'
-        )
+            self.live_server_url, username='admin', password='adminpassword', workspace_id=1)
 
     def test_list(self):
         items = self.api_client.get_human_resource_list()

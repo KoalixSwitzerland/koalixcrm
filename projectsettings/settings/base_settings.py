@@ -6,6 +6,12 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
+# Application version.
+# CI injects this via the KOALIXCRM_VERSION env var (set from the docker
+# ARG APP_VERSION at image build time). Local runs without that env fall back
+# to a clearly non-release placeholder so they can't be mistaken for a build.
+KOALIXCRM_VERSION = os.getenv("KOALIXCRM_VERSION", "vX.Y.Z-develop")
+
 # Application definition
 PREREQUISITE_APPS = [
     'django.contrib.contenttypes',
@@ -19,6 +25,7 @@ PREREQUISITE_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'django_filters',
+    'drf_spectacular',
     'storages',
 ]
 
@@ -45,6 +52,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'koalixcrm.core.middleware.workspace_context.WorkspaceContextMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'koalixcrm.core.middleware.timezoneMiddleware.TimezoneMiddleware',
@@ -55,7 +63,11 @@ ROOT_URLCONF = 'projectsettings.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [
+            # koalixcrm.core templates override grappelli admin templates.
+            os.path.join(BASE_DIR, 'koalixcrm', 'core', 'templates'),
+            os.path.join(BASE_DIR, 'templates'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -63,6 +75,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'koalixcrm.core.context_processors.workspace_context',
             ],
         },
     },
@@ -130,6 +143,14 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'koalixcrm API',
+    'DESCRIPTION': 'koalixcrm REST API — per-app, versioned, workspace-scoped.',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
 }
 
 # OIDC Configuration (from environment variables)

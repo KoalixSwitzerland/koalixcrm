@@ -3,16 +3,17 @@
 from datetime import *
 from django.contrib import admin, messages
 from django.utils.translation import gettext as _
+from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
 from koalixcrm.contracts.models.commercial_document import (
     TextParagraphInCommercialDocument,
-    PostalAddressForCommercialDocument,
-    EmailAddressForCommercialDocument,
-    PhoneAddressForCommercialDocument,
+    CommercialDocumentAddressAssignment,
+    CommercialDocumentPhoneAssignment,
+    CommercialDocumentEmailAssignment,
 )
 from koalixcrm.contracts.models.commercial_document_position import CommercialDocumentPosition
 from koalixcrm.contracts.admin.commercial_document_position_admin import CommercialDocumentInlinePosition
 from koalixcrm.contracts.admin.commercial_document_media_admin import CommercialDocumentMediaInline
-from koalixcrm.products.models.product_type import ProductType
+from django.apps import apps
 import koalixcrm.contracts.models.calculations
 
 
@@ -29,53 +30,49 @@ class CommercialDocumentTextParagraph(admin.StackedInline):
 
 
 class CommercialDocumentPostalAddress(admin.StackedInline):
-    model = PostalAddressForCommercialDocument
+    model = CommercialDocumentAddressAssignment
     extra = 1
     classes = ['collapse']
+    raw_id_fields = ('address',)
     fieldsets = (
         ('Basics', {
-            'fields': ('prefix',
-                       'pre_name',
-                       'name',
-                       'address_line_1',
-                       'address_line_2',
-                       'address_line_3',
-                       'address_line_4',
-                       'zip_code',
-                       'town',
-                       'state',
-                       'country',
-                       'purpose')
+            'fields': ('address',
+                       'purpose',
+                       'is_primary',
+                       'valid_from',
+                       'valid_to')
         }),
     )
     allow_add = True
 
 
 class CommercialDocumentPhoneAddress(admin.TabularInline):
-    model = PhoneAddressForCommercialDocument
+    model = CommercialDocumentPhoneAssignment
     extra = 1
     classes = ['collapse']
+    raw_id_fields = ('phone_number',)
     fieldsets = (
         ('Basics', {
-            'fields': ('phone', 'purpose',)
+            'fields': ('phone_number', 'purpose', 'is_primary',)
         }),
     )
     allow_add = True
 
 
 class CommercialDocumentEmailAddress(admin.TabularInline):
-    model = EmailAddressForCommercialDocument
+    model = CommercialDocumentEmailAssignment
     extra = 1
     classes = ['collapse']
+    raw_id_fields = ('email',)
     fieldsets = (
         ('Basics', {
-            'fields': ('email', 'purpose',)
+            'fields': ('email', 'purpose', 'is_primary',)
         }),
     )
     allow_add = True
 
 
-class OptionCommercialDocument(admin.ModelAdmin):
+class OptionCommercialDocument(WorkspaceScopedModelAdmin, admin.ModelAdmin):
     list_display = ('id',
                     'description',
                     'contract',
@@ -89,7 +86,8 @@ class OptionCommercialDocument(admin.ModelAdmin):
                     'last_modification',
                     'last_print_date')
     list_display_links = ('id',)
-    list_filter = ('party',
+    list_filter = ('workspace',
+                   'party',
                    'contract',
                    'currency',
                    'staff',
@@ -129,10 +127,14 @@ class OptionCommercialDocument(admin.ModelAdmin):
         return super(OptionCommercialDocument, self).response_change(request, obj)
 
     def after_saving_model_and_related_inlines(self, request, obj):
+        no_price_errors = (CommercialDocumentPosition.NoPriceFound,)
+        if apps.is_installed('koalixcrm.products'):
+            product_type_model = apps.get_model('products', 'ProductType')
+            no_price_errors = no_price_errors + (product_type_model.NoPriceFound,)
         try:
             koalixcrm.contracts.models.calculations.Calculations.calculate_document_price(obj, date.today())
             self.message_user(request, "Successfully calculated Prices")
-        except (ProductType.NoPriceFound, CommercialDocumentPosition.NoPriceFound) as e:
+        except no_price_errors as e:
             self.message_user(request, "Unsuccessful in updating the Prices " + e.__str__(), level=messages.ERROR)
         return obj
 
@@ -216,18 +218,6 @@ class OptionCommercialDocument(admin.ModelAdmin):
 
     create_purchase_order.short_description = _("Create Purchase Order")
 
-    def create_pdf(self, request, queryset):
-        from koalixcrm.core.views.pdfexport import PDFExportView
-        for obj in queryset:
-            response = PDFExportView.export_pdf(self,
-                                                request,
-                                                obj,
-                                                ("/admin/contract_object_management/"+obj.__class__.__name__.lower()+"/"),
-                                                obj.template_set)
-            return response
-
-    create_pdf.short_description = _("Create PDF")
-
     def create_pdf_async(self, request, queryset):
         from koalixcrm.core.models.pdf_export_process import PDFExportProcess
         queued = 0
@@ -240,6 +230,7 @@ class OptionCommercialDocument(admin.ModelAdmin):
                 )
                 continue
             PDFExportProcess.objects.create(
+                workspace=getattr(request, 'active_workspace', None) or obj.workspace,
                 source_model=obj.__class__.__name__,
                 source_id=obj.id,
                 template_set=obj.template_set,
@@ -255,13 +246,16 @@ class OptionCommercialDocument(admin.ModelAdmin):
 
     create_pdf_async.short_description = _("Create PDF")
 
-    def create_project(self, request, queryset):
-        from koalixcrm.reporting.views.create_task import CreateTaskView
-        for obj in queryset:
-            response = CreateTaskView.create_project(self,
-                                                     request,
-                                                     obj,
-                                                     ("/admin/contract_object_management/"+obj.__class__.__name__.lower()+"/"))
-            return response
+    if apps.is_installed('koalixcrm.reporting'):
+        def create_project(self, request, queryset):
+            from koalixcrm.reporting.views.create_task import CreateTaskView
+            for obj in queryset:
+                response = CreateTaskView.create_project(
+                    self,
+                    request,
+                    obj,
+                    ("/admin/contract_object_management/" + obj.__class__.__name__.lower() + "/"),
+                )
+                return response
 
-    create_project.short_description = _("Create Project")
+        create_project.short_description = _("Create Project")

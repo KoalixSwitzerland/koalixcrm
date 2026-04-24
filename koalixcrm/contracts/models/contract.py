@@ -5,62 +5,109 @@ from django.contrib import admin
 from django.utils.translation import gettext as _
 
 from koalixcrm.plugin import *
-from koalixcrm.contacts.models.phone_address import PhoneAddress
-from koalixcrm.contacts.models.email_address import EmailAddress
-from koalixcrm.contacts.models.postal_address import PostalAddress
 from koalixcrm.contracts.models.invoice import Invoice
 from koalixcrm.contracts.models.quotation import Quotation
 from koalixcrm.contracts.models.purchase_order import PurchaseOrder
 from koalixcrm.global_support_functions import xstr
 from koalixcrm.core.const.purpose import *
+from koalixcrm.core.const.party import ASSIGNMENT_PURPOSE_CHOICES
 from koalixcrm.core.exceptions import *
 from koalixcrm.djangoUserExtension.models import UserExtension
+from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
 import koalixcrm.contracts.models.calculations
-import koalixcrm.core.documents.pdf_export
-
-class PostalAddressForContract(PostalAddress):
-    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT)
-    contract = models.ForeignKey('Contract', on_delete=models.CASCADE)
-
-    class Meta:
-        app_label = "contract_object_management"
-        db_table = "crm_postaladdressforcontract"
-        verbose_name = _('Postal Address For Contracts')
-        verbose_name_plural = _('Postal Address For Contracts')
-
-    def __str__(self):
-        return xstr(self.prename) + ' ' + xstr(self.name) + ' ' + xstr(self.addressline1)
 
 
-class PhoneAddressForContract(PhoneAddress):
-    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT)
-    contract = models.ForeignKey('Contract', on_delete=models.CASCADE)
-
-    class Meta:
-        app_label = "contract_object_management"
-        db_table = "crm_phoneaddressforcontract"
-        verbose_name = _('Phone Address For Contracts')
-        verbose_name_plural = _('Phone Address For Contracts')
-
-    def __str__(self):
-        return str(self.phone)
-
-
-class EmailAddressForContract(EmailAddress):
-    purpose = models.CharField(verbose_name=_("Purpose"), max_length=1, choices=PURPOSESADDRESSINCONTRACT)
-    contract = models.ForeignKey('Contract', on_delete=models.CASCADE)
+class ContractAddressAssignment(WorkspaceScopedModel):
+    id = models.BigAutoField(primary_key=True)
+    contract = models.ForeignKey(
+        'Contract', on_delete=models.CASCADE,
+        related_name='address_assignments',
+        verbose_name=_("Contract"),
+    )
+    address = models.ForeignKey(
+        'contacts.Address', on_delete=models.CASCADE,
+        related_name='contract_assignments',
+        verbose_name=_("Address"),
+    )
+    purpose = models.CharField(
+        max_length=16, choices=ASSIGNMENT_PURPOSE_CHOICES,
+        verbose_name=_("Purpose"),
+    )
+    is_primary = models.BooleanField(default=False, verbose_name=_("Is primary"))
+    valid_from = models.DateField(blank=True, null=True, verbose_name=_("Valid from"))
+    valid_to = models.DateField(blank=True, null=True, verbose_name=_("Valid to"))
 
     class Meta:
         app_label = "contract_object_management"
-        db_table = "crm_emailaddressforcontract"
-        verbose_name = _('Email Address For Contracts')
-        verbose_name_plural = _('Email Address For Contracts')
+        db_table = "crm_contractaddressassignment"
+        verbose_name = _('Contract Address Assignment')
+        verbose_name_plural = _('Contract Address Assignments')
 
     def __str__(self):
-        return str(self.email)
+        return f"{self.contract_id}-{self.purpose}-{self.address_id}"
 
 
-class Contract(models.Model):
+class ContractPhoneAssignment(WorkspaceScopedModel):
+    id = models.BigAutoField(primary_key=True)
+    contract = models.ForeignKey(
+        'Contract', on_delete=models.CASCADE,
+        related_name='phone_assignments',
+        verbose_name=_("Contract"),
+    )
+    phone_number = models.ForeignKey(
+        'contacts.PhoneNumber', on_delete=models.CASCADE,
+        related_name='contract_assignments',
+        verbose_name=_("Phone number"),
+    )
+    purpose = models.CharField(
+        max_length=16, choices=ASSIGNMENT_PURPOSE_CHOICES,
+        verbose_name=_("Purpose"),
+    )
+    is_primary = models.BooleanField(default=False, verbose_name=_("Is primary"))
+    valid_from = models.DateField(blank=True, null=True, verbose_name=_("Valid from"))
+    valid_to = models.DateField(blank=True, null=True, verbose_name=_("Valid to"))
+
+    class Meta:
+        app_label = "contract_object_management"
+        db_table = "crm_contractphoneassignment"
+        verbose_name = _('Contract Phone Assignment')
+        verbose_name_plural = _('Contract Phone Assignments')
+
+    def __str__(self):
+        return f"{self.contract_id}-{self.purpose}-{self.phone_number_id}"
+
+
+class ContractEmailAssignment(WorkspaceScopedModel):
+    id = models.BigAutoField(primary_key=True)
+    contract = models.ForeignKey(
+        'Contract', on_delete=models.CASCADE,
+        related_name='email_assignments',
+        verbose_name=_("Contract"),
+    )
+    email = models.ForeignKey(
+        'contacts.PartyEmail', on_delete=models.CASCADE,
+        related_name='contract_assignments',
+        verbose_name=_("Email"),
+    )
+    purpose = models.CharField(
+        max_length=16, choices=ASSIGNMENT_PURPOSE_CHOICES,
+        verbose_name=_("Purpose"),
+    )
+    is_primary = models.BooleanField(default=False, verbose_name=_("Is primary"))
+    valid_from = models.DateField(blank=True, null=True, verbose_name=_("Valid from"))
+    valid_to = models.DateField(blank=True, null=True, verbose_name=_("Valid to"))
+
+    class Meta:
+        app_label = "contract_object_management"
+        db_table = "crm_contractemailassignment"
+        verbose_name = _('Contract Email Assignment')
+        verbose_name_plural = _('Contract Email Assignments')
+
+    def __str__(self):
+        return f"{self.contract_id}-{self.purpose}-{self.email_id}"
+
+
+class Contract(WorkspaceScopedModel):
     id = models.BigAutoField(primary_key=True)
     staff = models.ForeignKey('auth.User',
                               on_delete=models.CASCADE,

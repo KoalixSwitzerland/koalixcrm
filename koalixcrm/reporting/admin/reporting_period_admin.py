@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.utils.translation import gettext as _
 from koalixcrm.reporting.models.reporting_period import ReportingPeriod, ReportingPeriodAdminForm
 from koalixcrm.reporting.admin.work_admin import WorkInlineAdminView
@@ -40,14 +40,41 @@ class ReportingPeriodAdmin(admin.ModelAdmin):
         obj.save()
 
     def create_report_pdf(self, request, queryset):
-        from koalixcrm.core.views.pdfexport import PDFExportView
+        """Enqueue an async PDFExportProcess per selected reporting period.
+        The Java worker fetches ``/reporting-periods/<id>/report-data/``
+        for the period-scoped snapshot, then renders + uploads the PDF.
+        """
+        from koalixcrm.core.models.pdf_export_process import PDFExportProcess
+        from koalixcrm.core.models.workspace import Workspace
+        workspace = getattr(request, 'active_workspace', None) or Workspace.objects.first()
+        queued = 0
         for obj in queryset:
-            response = PDFExportView.export_pdf(self,
-                                                request,
-                                                obj,
-                                                ("/admin/reporting/"+obj.__class__.__name__.lower()+"/"),
-                                                obj.project.default_template_set.monthly_project_summary_template)
-            return response
+            template_set = getattr(
+                obj.project.default_template_set, 'monthly_project_summary_template', None
+            )
+            if not template_set:
+                self.message_user(
+                    request,
+                    _("Monthly project summary template missing on project %(project)s") % {
+                        'project': obj.project
+                    },
+                    level=messages.ERROR,
+                )
+                continue
+            PDFExportProcess.objects.create(
+                workspace=workspace,
+                source_model=obj.__class__.__name__,
+                source_id=obj.id,
+                template_set=template_set,
+                triggered_by=request.user,
+            )
+            queued += 1
+        if queued:
+            self.message_user(
+                request,
+                _("%(count)d reporting-period report job(s) queued.") % {'count': queued},
+                level=messages.SUCCESS,
+            )
 
     create_report_pdf.short_description = _("Create Report PDF")
 

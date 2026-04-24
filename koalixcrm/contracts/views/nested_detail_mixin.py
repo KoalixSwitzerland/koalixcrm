@@ -18,7 +18,7 @@ class NestedDetailMixin:
     nested_serializer_class = None
 
     @action(detail=True, methods=["get"], url_path="nested", url_name="nested")
-    def nested(self, request, pk=None):
+    def nested(self, request, pk=None, **kwargs):
         serializer_class = self.nested_serializer_class
         if serializer_class is None:
             raise NotImplementedError(

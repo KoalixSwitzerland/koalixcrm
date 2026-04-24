@@ -87,17 +87,17 @@
               <fo:table-body font-size="9pt"
                          font-family="BitstreamVeraSans">
          <xsl:for-each select="object[@model='accounting.account']">
-          <xsl:sort select="field[@name='account_number']" data-type="number"/>
-             <xsl:choose><xsl:when test="field[@name='account_type'] = 'A'">
+          <xsl:sort select="account_number" data-type="number"/>
+             <xsl:choose><xsl:when test="account_type = 'A'">
              <fo:table-row keep-together="always">
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="start" >
-                      <xsl:value-of select="field[@name='account_number']"/>
+                      <xsl:value-of select="account_number"/>
                    </fo:block>
                 </fo:table-cell>
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="start" >
-                      <xsl:value-of select="field[@name='title']"/>
+                      <xsl:value-of select="title"/>
                    </fo:block>
                 </fo:table-cell>
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
@@ -152,18 +152,18 @@
           <fo:table-body font-size="9pt"
                          font-family="BitstreamVeraSans">
          <xsl:for-each select="object[@model='accounting.account']">
-          <xsl:sort select="field[@name='account_number']" data-type="number"/>
+          <xsl:sort select="account_number" data-type="number"/>
              <xsl:choose>
-             <xsl:when test="field[@name='account_type'] = 'L'">
+             <xsl:when test="account_type = 'L'">
              <fo:table-row keep-together="always">
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="start" >
-                      <xsl:value-of select="field[@name='account_number']"/>
+                      <xsl:value-of select="account_number"/>
                    </fo:block>
                 </fo:table-cell>
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">
                    <fo:block  text-align="start" >
-                      <xsl:value-of select="field[@name='title']"/>
+                      <xsl:value-of select="title"/>
                    </fo:block>
                 </fo:table-cell>
                 <fo:table-cell border-color="black" border-style="solid" border-width="0.5pt" padding="2.5pt">

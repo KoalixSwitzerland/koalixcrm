@@ -1,12 +1,12 @@
 """
-Signal for PDFExportProcess: on creation, send PDFExportCommand to SQS.
+Signal for PDFExportProcess: on creation, dispatch a PDFExportCommand via
+the configured dispatcher (see CR-4 / KOALIXCRM_PDF_EXPORT_DISPATCHER).
 """
 import logging
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from koalixcrm.core.models.pdf_export_process import PDFExportProcess
 from koalixcrm_mq_commands import PDFExportCommand
-from koalixcrm_utils.aws_clients import get_sqs_queue
 
 logger = logging.getLogger(__name__)
 
@@ -30,12 +30,12 @@ def trigger_pdf_export(sender, instance, created, **kwargs):
     )
 
     try:
-        queue = get_sqs_queue()
-        body = command.to_json()
-        queue.send_message(MessageBody=body)
-        logger.info(f"Sent PDFExportCommand to SQS for process {instance.id}")
+        from koalixcrm.core.pdf_export_dispatch import get_dispatcher
+        dispatcher = get_dispatcher()
+        dispatcher(command)
+        logger.info(f"Dispatched PDFExportCommand for process {instance.id}")
     except Exception as e:
-        logger.error(f"Failed to send PDFExportCommand to SQS for process {instance.id}: {e}", exc_info=True)
+        logger.error(f"Failed to dispatch PDFExportCommand for process {instance.id}: {e}", exc_info=True)
         instance.status = 'failed'
         instance.error_message = f"Failed to enqueue: {e}"
         instance.save(update_fields=['status', 'error_message', 'updated_at'])

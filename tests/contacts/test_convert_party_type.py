@@ -18,26 +18,35 @@ from koalixcrm.contacts.models.organization import Organization
 from koalixcrm.contacts.models.organization_membership import OrganizationMembership
 from koalixcrm.contacts.models.party import Party
 from koalixcrm.contacts.models.party_role import PartyRole
+from koalixcrm.core.models.workspace import Workspace
 
 
 class ConvertOrganizationToContactTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.ws, _ = Workspace.objects.get_or_create(name='Default Workspace', defaults={'is_active': True})
+
     def setUp(self):
         self.org = Organization.objects.create(
             display_name='Jane Doe',
             legal_name='Jane Doe',
+            workspace=self.ws,
         )
         self.address = Address.objects.create(
             address_line_1='Bahnhofstrasse 1', zip_code='8001',
             town='Zürich', country='CH',
+            workspace=self.ws,
         )
         self.assignment = AddressAssignment.objects.create(
             party=self.org.party_ptr, address=self.address,
             purpose='billing', is_primary=True,
             valid_from=date(1970, 1, 1),
+            workspace=self.ws,
         )
         self.role = PartyRole.objects.create(
             party=self.org.party_ptr, role_type='customer',
             is_primary=True, valid_from=date(1970, 1, 1),
+            workspace=self.ws,
         )
 
     def _run_action(self, queryset):
@@ -64,7 +73,7 @@ class ConvertOrganizationToContactTest(TestCase):
         self.assertEqual(contact.family_name, 'Doe')
 
     def test_single_word_name_lands_in_family_name(self):
-        org = Organization.objects.create(display_name='Madonna')
+        org = Organization.objects.create(display_name='Madonna', workspace=self.ws)
         self._run_action(Organization.objects.filter(pk=org.pk))
         contact = PartyContact.objects.get(pk=org.pk)
         self.assertEqual(contact.given_name, '')
@@ -72,10 +81,10 @@ class ConvertOrganizationToContactTest(TestCase):
 
     def test_memberships_are_removed(self):
         employee = PartyContact.objects.create(
-            display_name='Bob', given_name='Bob', family_name='',
+            display_name='Bob', given_name='Bob', family_name='', workspace=self.ws,
         )
         OrganizationMembership.objects.create(
-            contact=employee, organization=self.org, title='CFO',
+            contact=employee, organization=self.org, title='CFO', workspace=self.ws,
         )
         self._run_action(Organization.objects.filter(pk=self.org.pk))
         self.assertFalse(OrganizationMembership.objects.filter(
@@ -99,10 +108,15 @@ class ConvertOrganizationToContactTest(TestCase):
 
 
 class ConvertContactToOrganizationTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.ws, _ = Workspace.objects.get_or_create(name='Default Workspace', defaults={'is_active': True})
+
     def test_round_trip(self):
         contact = PartyContact.objects.create(
             display_name='Evil Corp',
             given_name='Evil', family_name='Corp',
+            workspace=self.ws,
         )
         modeladmin = MagicMock()
         request = MagicMock()

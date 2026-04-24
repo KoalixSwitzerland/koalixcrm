@@ -59,10 +59,10 @@ else:
         'queue_name_prefix': '',
     }
 
-# Task modules to import
-app.conf.imports = [
-    "koalixcrm_microservices.pdf_export_task.tasks",
-]
+# Task modules to import. Empty for now — PDF export moved to the Java
+# pdf-export-service which polls its own SQS queue. Future Python-side
+# Celery tasks should be listed here.
+app.conf.imports = []
 
 
 def _float_env(name: str, default: float) -> float:
@@ -72,12 +72,8 @@ def _float_env(name: str, default: float) -> float:
         return default
 
 
-app.conf.beat_schedule = {
-    'sqs-health-check': {
-        'task': 'koalixcrm_microservices.pdf_export_task.tasks.health_check',
-        'schedule': _float_env('SQS_HEALTHCHECK_SECONDS', 300.0),
-    },
-}
+# Beat schedule intentionally empty after the PDF worker moved to Java.
+app.conf.beat_schedule = {}
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=os.getenv('LOG_LEVEL', 'INFO'))

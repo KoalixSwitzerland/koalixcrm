@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from django.db import models
+from django.apps import apps
 from django.contrib import admin
+from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
+from django.db import models
 from django.utils.translation import gettext as _
+from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
 
 
 class Position(models.Model):
@@ -21,7 +24,7 @@ class Position(models.Model):
     product_type = models.ForeignKey("products.ProductType",
                                      on_delete=models.CASCADE,
                                      verbose_name=_("Product"),
-                                     blank=False,
+                                     blank=True,
                                      null=True)
     unit = models.ForeignKey("core.Unit",
                              on_delete=models.CASCADE,
@@ -36,6 +39,15 @@ class Position(models.Model):
                                                   max_digits=17,
                                                   decimal_places=2,
                                                   blank=True, null=True)
+    position_tax_rate = models.DecimalField(verbose_name=_("Tax Rate (%)"),
+                                            max_digits=5,
+                                            decimal_places=2,
+                                            blank=True,
+                                            null=True,
+                                            help_text=_(
+                                                "Used for tax calculation when no "
+                                                "product type is set on the position."
+                                            ))
     last_pricing_date = models.DateField(verbose_name=_("Last Pricing Date"),
                                          blank=True,
                                          null=True)
@@ -49,6 +61,27 @@ class Position(models.Model):
                                               blank=True,
                                               null=True)
 
+    def clean(self):
+        super().clean()
+        if self.product_type_id is None:
+            errors = {}
+            if not self.overwrite_product_price:
+                errors['overwrite_product_price'] = _(
+                    "Required when no product type is set on the position."
+                )
+            if self.position_price_per_unit is None:
+                errors['position_price_per_unit'] = _(
+                    "Required when no product type is set on the position."
+                )
+            if errors:
+                raise ValidationError(errors)
+        elif not apps.is_installed('koalixcrm.products'):
+            raise ValidationError({
+                'product_type': _(
+                    "Cannot reference a product type: the products app is not installed."
+                ),
+            })
+
     def __str__(self):
         return _("Position") + ": " + self.id.__str__()
 
@@ -60,7 +93,7 @@ class Position(models.Model):
         verbose_name_plural = _('Positions')
 
 
-class CommercialDocumentPosition(Position):
+class CommercialDocumentPosition(WorkspaceScopedModel, Position):
     commercial_document = models.ForeignKey("CommercialDocument", on_delete=models.CASCADE, verbose_name=_("Contract"))
 
     class Meta:
@@ -72,12 +105,16 @@ class CommercialDocumentPosition(Position):
     @staticmethod
     def add_positions(position_class, object_to_create_pdf):
         from koalixcrm.core.models.unit import Unit
-        from koalixcrm.products.models.product_type import ProductType
+        product_type_model = None
+        if apps.is_installed('koalixcrm.products'):
+            product_type_model = apps.get_model('products', 'ProductType')
         objects = list(position_class.objects.filter(commercial_document=object_to_create_pdf.id))
         for position in list(position_class.objects.filter(commercial_document=object_to_create_pdf.id)):
             objects += list(Position.objects.filter(id=position.id))
-            objects += list(ProductType.objects.filter(id=position.product_type.id))
-            objects += list(Unit.objects.filter(id=position.unit.id))
+            if product_type_model is not None and position.product_type_id is not None:
+                objects += list(product_type_model.objects.filter(id=position.product_type_id))
+            if position.unit_id is not None:
+                objects += list(Unit.objects.filter(id=position.unit_id))
         return objects
 
     def create_position(self, calling_model, attach_to_model):
@@ -94,6 +131,7 @@ class CommercialDocumentPosition(Position):
         self.sent_on = calling_model.sent_on
         self.overwrite_product_price = calling_model.overwrite_product_price
         self.position_price_per_unit = calling_model.position_price_per_unit
+        self.position_tax_rate = calling_model.position_tax_rate
         self.last_pricing_date = calling_model.last_pricing_date
         self.last_calculated_price = calling_model.last_calculated_price
         self.last_calculated_tax = calling_model.last_calculated_tax

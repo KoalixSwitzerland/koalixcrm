@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 from koalixcrm.reporting.models.project import Project
 from koalixcrm.core.models.currency import Currency
@@ -20,6 +21,7 @@ class OptionProjectJSONSerializer(serializers.ModelSerializer):
     default_template_set = OptionTemplateSetJSONSerializer(read_only=True)
     is_reporting_allowed = serializers.SerializerMethodField()
 
+    @extend_schema_field(str)
     def get_is_reporting_allowed(self, obj):
         if obj.is_reporting_allowed():
             return "True"
@@ -64,6 +66,7 @@ class ProjectJSONSerializer(serializers.ModelSerializer):
         tasks = obj.tasks.all()
         return TaskJSONSerializer(tasks, many=True, context=self.context).data
 
+    @extend_schema_field(str)
     def get_is_reporting_allowed(self, obj):
         if obj.is_reporting_allowed():
             return "True"

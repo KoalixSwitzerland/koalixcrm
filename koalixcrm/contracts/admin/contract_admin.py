@@ -3,10 +3,11 @@
 from django.contrib import admin
 from django.utils.translation import gettext as _
 from koalixcrm.plugin import *
+from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
 from koalixcrm.contracts.models.contract import (
-    PostalAddressForContract,
-    PhoneAddressForContract,
-    EmailAddressForContract,
+    ContractAddressAssignment,
+    ContractPhoneAssignment,
+    ContractEmailAssignment,
 )
 from koalixcrm.contracts.admin.quotation_admin import InlineQuotation
 from koalixcrm.contracts.admin.invoice_admin import InlineInvoice
@@ -21,54 +22,51 @@ import koalixcrm.contracts.models.purchase_order
 
 
 class ContractPostalAddress(admin.StackedInline):
-    model = PostalAddressForContract
+    model = ContractAddressAssignment
     extra = 1
     classes = ['collapse']
+    raw_id_fields = ('address',)
     fieldsets = (
         ('Basics', {
-            'fields': ('prefix',
-                       'pre_name',
-                       'name',
-                       'address_line_1',
-                       'address_line_2',
-                       'address_line_3',
-                       'address_line_4',
-                       'zip_code',
-                       'town',
-                       'state',
-                       'country',
-                       'purpose'),
+            'fields': ('address',
+                       'purpose',
+                       'is_primary',
+                       'valid_from',
+                       'valid_to'),
         }),
     )
     allow_add = True
 
 
 class ContractPhoneAddress(admin.TabularInline):
-    model = PhoneAddressForContract
+    model = ContractPhoneAssignment
     extra = 1
     classes = ['collapse']
+    raw_id_fields = ('phone_number',)
     fieldsets = (
         ('Basics', {
-            'fields': ('phone', 'purpose',)
+            'fields': ('phone_number', 'purpose', 'is_primary',)
         }),
     )
     allow_add = True
 
 
 class ContractEmailAddress(admin.TabularInline):
-    model = EmailAddressForContract
+    model = ContractEmailAssignment
     extra = 1
     classes = ['collapse']
+    raw_id_fields = ('email',)
     fieldsets = (
         ('Basics', {
             'fields': ('email',
-                       'purpose',)
+                       'purpose',
+                       'is_primary',)
         }),
     )
     allow_add = True
 
 
-class OptionContract(admin.ModelAdmin):
+class OptionContract(WorkspaceScopedModelAdmin, admin.ModelAdmin):
     list_display = ('id',
                     'description',
                     'buyer_party',
@@ -79,7 +77,8 @@ class OptionContract(admin.ModelAdmin):
                     'last_modification',
                     'last_modified_by')
     list_display_links = ('id',)
-    list_filter = ('buyer_party',
+    list_filter = ('workspace',
+                   'buyer_party',
                    'supplier_party',
                    'staff',
                    'default_currency')

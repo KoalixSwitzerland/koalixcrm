@@ -174,6 +174,7 @@ class PositionNestedSerializer(serializers.ModelSerializer):
             "product_type",
             "discount",
             "position_price_per_unit",
+            "position_tax_rate",
             "last_pricing_date",
             "last_calculated_price",
             "last_calculated_tax",
@@ -188,6 +189,8 @@ def _compute_tax_summary(positions):
         rate_key = "unknown"
         if p.product_type is not None and p.product_type.tax is not None:
             rate_key = str(p.product_type.tax.get_tax_rate())
+        elif p.position_tax_rate is not None:
+            rate_key = str(p.position_tax_rate)
         entry = buckets.setdefault(
             rate_key, {"rate": rate_key, "taxable_amount": Decimal(0), "tax_amount": Decimal(0)}
         )

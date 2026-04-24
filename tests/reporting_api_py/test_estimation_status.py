@@ -14,8 +14,7 @@ class EstimationStatusAPITest(LiveServerTestCase):
         )
         self.estimation_status = StartedEstimationStatusFactory.create()
         self.api_client = KoalixCRMReportingAPIClient(
-            self.live_server_url, username='admin', password='adminpassword'
-        )
+            self.live_server_url, username='admin', password='adminpassword', workspace_id=1)
 
     def test_list(self):
         items = self.api_client.get_estimation_status_list()

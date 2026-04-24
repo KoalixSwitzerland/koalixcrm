@@ -30,6 +30,7 @@ class StandardCustomerFactory(StandardContactFactory):
             role_type='customer',
             is_primary=True,
             valid_from='1970-01-01',
+            workspace=obj.workspace,
         )
 
     @factory.post_generation
@@ -40,4 +41,4 @@ class StandardCustomerFactory(StandardContactFactory):
         if not create or not extracted:
             return
         for group in extracted:
-            PartyGroupMembership.objects.create(party_id=obj.pk, party_group=group)
+            PartyGroupMembership.objects.create(party_id=obj.pk, party_group=group, workspace=obj.workspace)

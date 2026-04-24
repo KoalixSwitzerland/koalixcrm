@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 
 from datetime import *
+from django.contrib import admin, messages
 from django.db import models
-from django.contrib import admin
 from django.utils.translation import gettext as _
 from django import forms
 from koalixcrm.accounting.models import Account
-from koalixcrm.shared.pdf_export import PDFExport
 from koalixcrm.accounting.exceptions import AccountingPeriodNotFound
-from koalixcrm.accounting.exceptions import TemplateSetMissingInAccountingPeriod
 from koalixcrm.accounting.models import InlineBookings
 
 
@@ -32,32 +30,6 @@ class AccountingPeriod(models.Model):
                                                        related_name='db_profit_loss_statement_template_set',
                                                        null=True,
                                                        blank=True)
-
-    def get_template_set(self, template_set):
-        if template_set == self.template_set_balance_sheet:
-            if self.template_set_balance_sheet:
-                return self.template_set_balance_sheet
-            else:
-                raise TemplateSetMissingInAccountingPeriod((_("Template Set for balance sheet " +
-                                                              "is missing in Accounting Period" + str(self))))
-        elif template_set == self.template_profit_loss_statement:
-            if self.template_profit_loss_statement:
-                return self.template_profit_loss_statement
-            else:
-                raise TemplateSetMissingInAccountingPeriod((_("Template Set for profit loss statement" +
-                                                              " is missing in Accounting Period" + str(self))))
-
-    def get_fop_config_file(self, template_set):
-        template_set = self.get_template_set(template_set)
-        return template_set.get_fop_config_file()
-
-    def get_xsl_file(self, template_set):
-        template_set = self.get_template_set(template_set)
-        return template_set.get_xsl_file()
-
-    def create_pdf(self, template_set, printed_by):
-        import koalixcrm.core.documents.pdf_export
-        return koalixcrm.core.documents.pdf_export.PDFExport.create_pdf(self, template_set, printed_by)
 
     def overall_earnings(self):
         earnings = 0
@@ -90,31 +62,6 @@ class AccountingPeriod(models.Model):
             if account.account_type == "L":
                 liabilities += account.sum_of_all_bookings_through_now(self)
         return liabilities
-
-    def serialize_to_xml(self):
-        objects = [self, ]
-        main_xml = PDFExport.write_xml(objects)
-        accounts = Account.objects.all()
-        for account in accounts:
-            account_xml = account.serialize_to_xml(self)
-            main_xml = PDFExport.merge_xml(main_xml, account_xml)
-        main_xml = PDFExport.append_element_to_pattern(main_xml,
-                                                       "object/[@model='accounting.accountingperiod']",
-                                                       "Overall_Earnings",
-                                                       self.overall_earnings())
-        main_xml = PDFExport.append_element_to_pattern(main_xml,
-                                                       "object/[@model='accounting.accountingperiod']",
-                                                       "Overall_Spendings",
-                                                       self.overall_spendings())
-        main_xml = PDFExport.append_element_to_pattern(main_xml,
-                                                       "object/[@model='accounting.accountingperiod']",
-                                                       "Overall_Assets",
-                                                       self.overall_assets())
-        main_xml = PDFExport.append_element_to_pattern(main_xml,
-                                                       "object/[@model='accounting.accountingperiod']",
-                                                       "Overall_Liabilities",
-                                                       self.overall_liabilities())
-        return main_xml
 
     @staticmethod
     def get_current_valid_accounting_period():
@@ -223,27 +170,53 @@ class OptionAccountingPeriod(admin.ModelAdmin):
                 instance.staff = request.user
             instance.save()
 
-    def create_pdf_of_balance_sheet(self, request, queryset):
-        from koalixcrm.core.views.pdfexport import PDFExportView
+    def _enqueue_async_pdf(self, request, queryset, template_attr, label):
+        """Enqueue a PDFExportProcess per selected period for the given report
+        (balance sheet or profit/loss statement). The Java pdf-export-service
+        picks the message up from SQS and renders the PDF asynchronously —
+        watch the PDF Export Processes admin for status / result URL.
+        """
+        from koalixcrm.core.models.pdf_export_process import PDFExportProcess
+        from koalixcrm.core.models.workspace import Workspace
+        queued = 0
+        workspace = getattr(request, 'active_workspace', None) or Workspace.objects.first()
         for obj in queryset:
-            response = PDFExportView.export_pdf(self,
-                                                request,
-                                                obj,
-                                                ("/admin/accounting/"+obj.__class__.__name__.lower()+"/"),
-                                                obj.template_set_balance_sheet)
-            return response
+            template = getattr(obj, template_attr)
+            if not template:
+                self.message_user(
+                    request,
+                    _("Template missing for %(label)s on %(period)s")
+                        % {'label': label, 'period': obj},
+                    level=messages.ERROR,
+                )
+                continue
+            PDFExportProcess.objects.create(
+                workspace=workspace,
+                source_model=obj.__class__.__name__,
+                source_id=obj.id,
+                template_set=template,
+                triggered_by=request.user,
+            )
+            queued += 1
+        if queued:
+            self.message_user(
+                request,
+                _("%(count)d %(label)s job(s) queued. Check PDF Export Processes for status.")
+                    % {'count': queued, 'label': label},
+                level=messages.SUCCESS,
+            )
+
+    def create_pdf_of_balance_sheet(self, request, queryset):
+        self._enqueue_async_pdf(request, queryset,
+                                'template_set_balance_sheet',
+                                _("Balance Sheet"))
 
     create_pdf_of_balance_sheet.short_description = _("Create PDF of Balance Sheet")
 
     def create_pdf_of_profit_loss_statement(self, request, queryset):
-        from koalixcrm.core.views.pdfexport import PDFExportView
-        for obj in queryset:
-            response = PDFExportView.export_pdf(self,
-                                                request,
-                                                obj,
-                                                ("/admin/accounting/"+obj.__class__.__name__.lower()+"/"),
-                                                obj.template_profit_loss_statement,)
-            return response
+        self._enqueue_async_pdf(request, queryset,
+                                'template_profit_loss_statement',
+                                _("Profit/Loss Statement"))
 
     create_pdf_of_profit_loss_statement.short_description = _("Create PDF of Profit Loss Statement Sheet")
 

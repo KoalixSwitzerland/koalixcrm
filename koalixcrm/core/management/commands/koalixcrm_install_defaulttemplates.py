@@ -77,27 +77,53 @@ class Command(BaseCommand):
         currency.shortName = "USD"
         currency.rounding = "0.10"
         currency.save()
+        from koalixcrm.contacts.models.address import Address
+        from koalixcrm.contacts.models.phone_number import PhoneNumber
+        from koalixcrm.contacts.models.party_email import PartyEmail
+        from koalixcrm.core.models.workspace import Workspace
+        ws, _ = Workspace.objects.get_or_create(
+            name='Default Workspace',
+            defaults={'is_active': True},
+        )
+        user = User.objects.all()[0]
         user_extension = djangoUserExtension.models.UserExtension()
-        user_extension.defaultTemplateSet = template_set
-        user_extension.defaultCurrency = currency
-        user_extension.user = User.objects.all()[0]
+        user_extension.default_template_set = template_set
+        user_extension.default_currency = currency
+        user_extension.user = user
+        user_extension.workspace = ws
         user_extension.save()
-        postaladdress = djangoUserExtension.models.UserExtensionPostalAddress()
-        postaladdress.purpose = 'H'
-        postaladdress.name = "John"
-        postaladdress.prename = "Smith"
-        postaladdress.addressline1 = "Ave 1"
-        postaladdress.zipcode = 899887
-        postaladdress.town = "Smallville"
-        postaladdress.userExtension = user_extension
-        postaladdress.save()
-        phoneaddress = djangoUserExtension.models.UserExtensionPhoneAddress()
-        phoneaddress.phone = "1293847"
-        phoneaddress.purpose = 'H'
-        phoneaddress.userExtension = user_extension
-        phoneaddress.save()
-        emailaddress = djangoUserExtension.models.UserExtensionEmailAddress()
-        emailaddress.email = "john.smith@smallville.com"
-        emailaddress.purpose = 'H'
-        emailaddress.userExtension = user_extension
-        emailaddress.save()
+        address = Address.objects.create(
+            workspace=ws,
+            address_line_1="Ave 1",
+            zip_code="899887",
+            town="Smallville",
+        )
+        djangoUserExtension.models.UserAddressAssignment.objects.create(
+            workspace=ws,
+            user=user,
+            address=address,
+            purpose='primary',
+            is_primary=True,
+        )
+        phone = PhoneNumber.objects.create(
+            workspace=ws,
+            phone_e164="1293847",
+        )
+        djangoUserExtension.models.UserPhoneAssignment.objects.create(
+            workspace=ws,
+            user=user,
+            phone_number=phone,
+            purpose='primary',
+            is_primary=True,
+        )
+        email = PartyEmail.objects.create(
+            workspace=ws,
+            email="john.smith@smallville.com",
+        )
+        djangoUserExtension.models.UserEmailAssignment.objects.create(
+            workspace=ws,
+            user=user,
+            email=email,
+            purpose='primary',
+            is_primary=True,
+        )

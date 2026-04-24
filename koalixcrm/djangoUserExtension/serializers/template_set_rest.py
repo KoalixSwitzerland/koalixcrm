@@ -2,21 +2,21 @@ from rest_framework import serializers
 
 from koalixcrm.djangoUserExtension.models.template_set import TemplateSet
 from koalixcrm.djangoUserExtension.serializers.document_template_rest import OptionInvoiceTemplateJSONSerializer
-from koalixcrm.djangoUserExtension.serializers.document_template_rest import OptionQuoteTemplateJSONSerializer
-from koalixcrm.djangoUserExtension.serializers.document_template_rest import OptionDeliveryNoteTemplateJSONSerializer
+from koalixcrm.djangoUserExtension.serializers.document_template_rest import OptionQuotationTemplateJSONSerializer
+from koalixcrm.djangoUserExtension.serializers.document_template_rest import OptionDespatchAdviceTemplateJSONSerializer
 from koalixcrm.djangoUserExtension.serializers.document_template_rest import OptionPaymentReminderTemplateJSONSerializer
-from koalixcrm.djangoUserExtension.serializers.document_template_rest import OptionPurchaseConfirmationTemplateJSONSerializer
+from koalixcrm.djangoUserExtension.serializers.document_template_rest import OptionSalesOrderTemplateJSONSerializer
 from koalixcrm.djangoUserExtension.serializers.document_template_rest import OptionProfitLossStatementTemplateJSONSerializer
 from koalixcrm.djangoUserExtension.serializers.document_template_rest import OptionPurchaseOrderTemplateJSONSerializer
 from koalixcrm.djangoUserExtension.serializers.document_template_rest import OptionBalanceSheetTemplateJSONSerializer
 from koalixcrm.djangoUserExtension.serializers.document_template_rest import OptionMonthlyProjectSummaryTemplateTemplateJSONSerializer
 from koalixcrm.djangoUserExtension.serializers.document_template_rest import OptionWorkReportTemplateJSONSerializer
 from koalixcrm.djangoUserExtension.models.document_template import InvoiceTemplate
-from koalixcrm.djangoUserExtension.models.document_template import QuoteTemplate
-from koalixcrm.djangoUserExtension.models.document_template import DeliveryNoteTemplate
+from koalixcrm.djangoUserExtension.models.document_template import QuotationTemplate
+from koalixcrm.djangoUserExtension.models.document_template import DespatchAdviceTemplate
 from koalixcrm.djangoUserExtension.models.document_template import PaymentReminderTemplate
 from koalixcrm.djangoUserExtension.models.document_template import PurchaseOrderTemplate
-from koalixcrm.djangoUserExtension.models.document_template import PurchaseConfirmationTemplate
+from koalixcrm.djangoUserExtension.models.document_template import SalesOrderTemplate
 from koalixcrm.djangoUserExtension.models.document_template import ProfitLossStatementTemplate
 from koalixcrm.djangoUserExtension.models.document_template import BalanceSheetTemplate
 from koalixcrm.djangoUserExtension.models.document_template import MonthlyProjectSummaryTemplate
@@ -27,10 +27,10 @@ class OptionTemplateSetJSONSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)
     title = serializers.CharField(required=False)
     invoice_template = OptionInvoiceTemplateJSONSerializer(read_only=True)
-    quote_template = OptionQuoteTemplateJSONSerializer(read_only=True)
-    delivery_note_template = OptionDeliveryNoteTemplateJSONSerializer(read_only=True)
+    quotation_template = OptionQuotationTemplateJSONSerializer(read_only=True)
+    despatch_advice_template = OptionDespatchAdviceTemplateJSONSerializer(read_only=True)
     payment_reminder_template = OptionPaymentReminderTemplateJSONSerializer(read_only=True)
-    purchase_confirmation_template = OptionPurchaseConfirmationTemplateJSONSerializer(read_only=True)
+    sales_order_template = OptionSalesOrderTemplateJSONSerializer(read_only=True)
     purchase_order_template = OptionPurchaseOrderTemplateJSONSerializer(read_only=True)
     profit_loss_statement_template = OptionProfitLossStatementTemplateJSONSerializer(read_only=True)
     balance_sheet_statement_template = OptionBalanceSheetTemplateJSONSerializer(read_only=True)
@@ -42,10 +42,10 @@ class OptionTemplateSetJSONSerializer(serializers.ModelSerializer):
         fields = ('id',
                   'title',
                   'invoice_template',
-                  'quote_template',
-                  'delivery_note_template',
+                  'quotation_template',
+                  'despatch_advice_template',
                   'payment_reminder_template',
-                  'purchase_confirmation_template',
+                  'sales_order_template',
                   'purchase_order_template',
                   'profit_loss_statement_template',
                   'balance_sheet_statement_template',
@@ -56,10 +56,10 @@ class OptionTemplateSetJSONSerializer(serializers.ModelSerializer):
 class TemplateSetJSONSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)
     invoice_template = OptionInvoiceTemplateJSONSerializer(required=False, allow_null=True)
-    quote_template = OptionQuoteTemplateJSONSerializer(required=False, allow_null=True)
-    delivery_note_template = OptionDeliveryNoteTemplateJSONSerializer(required=False, allow_null=True)
+    quotation_template = OptionQuotationTemplateJSONSerializer(required=False, allow_null=True)
+    despatch_advice_template = OptionDespatchAdviceTemplateJSONSerializer(required=False, allow_null=True)
     payment_reminder_template = OptionPaymentReminderTemplateJSONSerializer(required=False, allow_null=True)
-    purchase_confirmation_template = OptionPurchaseConfirmationTemplateJSONSerializer(required=False, allow_null=True)
+    sales_order_template = OptionSalesOrderTemplateJSONSerializer(required=False, allow_null=True)
     purchase_order_template = OptionPurchaseOrderTemplateJSONSerializer(required=False, allow_null=True)
     profit_loss_statement_template = OptionProfitLossStatementTemplateJSONSerializer(required=False, allow_null=True)
     balance_sheet_statement_template = OptionBalanceSheetTemplateJSONSerializer(required=False, allow_null=True)
@@ -71,10 +71,10 @@ class TemplateSetJSONSerializer(serializers.ModelSerializer):
         fields = ('id',
                   'title',
                   'invoice_template',
-                  'quote_template',
-                  'delivery_note_template',
+                  'quotation_template',
+                  'despatch_advice_template',
                   'payment_reminder_template',
-                  'purchase_confirmation_template',
+                  'sales_order_template',
                   'purchase_order_template',
                   'profit_loss_statement_template',
                   'balance_sheet_statement_template',
@@ -90,20 +90,20 @@ class TemplateSetJSONSerializer(serializers.ModelSerializer):
                 template_set.invoice_template = InvoiceTemplate.objects.get(id=invoice_template.get('id', None))
             else:
                 template_set.invoice_template = None
-        # Deserialize quote template
-        quote_template = validated_data.pop('quote_template')
-        if quote_template:
-            if quote_template.get('id', None):
-                template_set.quote_template = QuoteTemplate.objects.get(id=quote_template.get('id', None))
+        # Deserialize quotation template
+        quotation_template = validated_data.pop('quotation_template')
+        if quotation_template:
+            if quotation_template.get('id', None):
+                template_set.quotation_template = QuotationTemplate.objects.get(id=quotation_template.get('id', None))
             else:
-                template_set.quote_template = None
-        # Deserialize delivery note template
-        delivery_note_template = validated_data.pop('delivery_note_template')
-        if delivery_note_template:
-            if delivery_note_template.get('id', None):
-                template_set.delivery_note_template = DeliveryNoteTemplate.objects.get(id=delivery_note_template.get('id', None))
+                template_set.quotation_template = None
+        # Deserialize despatch advice template
+        despatch_advice_template = validated_data.pop('despatch_advice_template')
+        if despatch_advice_template:
+            if despatch_advice_template.get('id', None):
+                template_set.despatch_advice_template = DespatchAdviceTemplate.objects.get(id=despatch_advice_template.get('id', None))
             else:
-                template_set.delivery_note_template = None
+                template_set.despatch_advice_template = None
         # Deserialize payment reminder template
         payment_reminder_template = validated_data.pop('payment_reminder_template')
         if payment_reminder_template:
@@ -111,13 +111,13 @@ class TemplateSetJSONSerializer(serializers.ModelSerializer):
                 template_set.payment_reminder_template = PaymentReminderTemplate.objects.get(id=payment_reminder_template.get('id', None))
             else:
                 template_set.payment_reminder_template = None
-        # Deserialize purchase_confirmation_template
-        purchase_confirmation_template = validated_data.pop('purchase_confirmation_template')
-        if purchase_confirmation_template:
-            if purchase_confirmation_template.get('id', None):
-                template_set.purchase_confirmation_template = PurchaseConfirmationTemplate.objects.get(id=purchase_confirmation_template.get('id', None))
+        # Deserialize sales_order_template
+        sales_order_template = validated_data.pop('sales_order_template')
+        if sales_order_template:
+            if sales_order_template.get('id', None):
+                template_set.sales_order_template = SalesOrderTemplate.objects.get(id=sales_order_template.get('id', None))
             else:
-                template_set.purchase_confirmation_template = None
+                template_set.sales_order_template = None
         # Deserialize purchase_order_template
         purchase_order_template = validated_data.pop('purchase_order_template')
         if purchase_order_template:
@@ -165,24 +165,24 @@ class TemplateSetJSONSerializer(serializers.ModelSerializer):
                 template_set.invoice_template = template_set.invoice_template_id
         else:
             template_set.invoice_template = None
-        # Deserialize quote template
-        quote_template = validated_data.pop('quote_template')
-        if quote_template:
-            if quote_template.get('id', None):
-                template_set.quote_template = QuoteTemplate.objects.get(id=quote_template.get('id', None))
+        # Deserialize quotation template
+        quotation_template = validated_data.pop('quotation_template')
+        if quotation_template:
+            if quotation_template.get('id', None):
+                template_set.quotation_template = QuotationTemplate.objects.get(id=quotation_template.get('id', None))
             else:
-                template_set.quote_template = template_set.quote_template_id
+                template_set.quotation_template = template_set.quotation_template_id
         else:
-            template_set.quote_template = None
-        # Deserialize delivery note template
-        delivery_note_template = validated_data.pop('delivery_note_template')
-        if delivery_note_template:
-            if delivery_note_template.get('id', None):
-                template_set.delivery_note_template = DeliveryNoteTemplate.objects.get(id=delivery_note_template.get('id', None))
+            template_set.quotation_template = None
+        # Deserialize despatch advice template
+        despatch_advice_template = validated_data.pop('despatch_advice_template')
+        if despatch_advice_template:
+            if despatch_advice_template.get('id', None):
+                template_set.despatch_advice_template = DespatchAdviceTemplate.objects.get(id=despatch_advice_template.get('id', None))
             else:
-                template_set.delivery_note_template = template_set.delivery_note_template_id
+                template_set.despatch_advice_template = template_set.despatch_advice_template_id
         else:
-            template_set.delivery_note_template = None
+            template_set.despatch_advice_template = None
         # Deserialize payment reminder template
         payment_reminder_template = validated_data.pop('payment_reminder_template')
         if payment_reminder_template:
@@ -192,15 +192,15 @@ class TemplateSetJSONSerializer(serializers.ModelSerializer):
                 template_set.payment_reminder_template = template_set.payment_reminder_template_id
         else:
             template_set.payment_reminder_template = None
-        # Deserialize purchase_confirmation_template
-        purchase_confirmation_template = validated_data.pop('purchase_confirmation_template')
-        if purchase_confirmation_template:
-            if purchase_confirmation_template.get('id', None):
-                template_set.purchase_confirmation_template = PurchaseConfirmationTemplate.objects.get(id=purchase_confirmation_template.get('id', None))
+        # Deserialize sales_order_template
+        sales_order_template = validated_data.pop('sales_order_template')
+        if sales_order_template:
+            if sales_order_template.get('id', None):
+                template_set.sales_order_template = SalesOrderTemplate.objects.get(id=sales_order_template.get('id', None))
             else:
-                template_set.purchase_confirmation_template = template_set.purchase_confirmation_template_id
+                template_set.sales_order_template = template_set.sales_order_template_id
         else:
-            template_set.purchase_confirmation_template = None
+            template_set.sales_order_template = None
         # Deserialize purchase_order_template
         purchase_order_template = validated_data.pop('purchase_order_template')
         if purchase_order_template:

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 from koalixcrm.reporting.models.task import Task
 from koalixcrm.reporting.models.project import Project
@@ -24,6 +25,7 @@ class OptionTaskJSONSerializer(serializers.ModelSerializer):
                   'last_status_change',
                   'is_reporting_allowed',)
 
+    @extend_schema_field(str)
     def get_is_reporting_allowed(self, obj):
         if obj.is_reporting_allowed():
             return "True"
@@ -47,6 +49,7 @@ class TaskJSONSerializer(serializers.ModelSerializer):
                   'last_status_change',
                   'is_reporting_allowed',)
 
+    @extend_schema_field(str)
     def get_is_reporting_allowed(self, obj):
         if obj.is_reporting_allowed():
             return "True"

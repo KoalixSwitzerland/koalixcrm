@@ -2,9 +2,11 @@ name: Build and Release PyPI Package
 
 on:
   push:
-    # Run this workflow when a new git tag is pushed
+    # Release tags (v1.2.3) and dev pre-release tags (v1.2.3-dev5) pushed by
+    # the docker-django workflow on every commit to `develop`.
     tags:
-      - '*'
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+      - 'v[0-9]+.[0-9]+.[0-9]+-dev[0-9]+'
 
 jobs:
   build_and_release:
@@ -13,17 +15,37 @@ jobs:
 
     steps:
       - name: Check out code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Python 3.10
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
+
+      - name: Resolve version from git tag
+        id: version
+        run: |
+          GIT_TAG="${GITHUB_REF_NAME}"
+          # v1.2.3        -> 1.2.3            (release)
+          # v1.2.3-dev5   -> 1.2.3.dev5       (PEP 440 pre-release)
+          RAW="${GIT_TAG#v}"
+          PEP440="${RAW/-dev/.dev}"
+          echo "git_tag=$GIT_TAG" >> "$GITHUB_OUTPUT"
+          echo "pep440=$PEP440" >> "$GITHUB_OUTPUT"
+          echo "Git tag: $GIT_TAG  =>  PEP 440: $PEP440"
+
+      - name: Stamp version into koalixcrm/version.py
+        run: |
+          printf 'KOALIXCRM_VERSION = "%s"\n' "${{ steps.version.outputs.pep440 }}" \
+            > koalixcrm/version.py
+          cat koalixcrm/version.py
 
       - name: Install dependencies
         run: python -m pip install --upgrade pip setuptools wheel
 
       - name: Build package
+        env:
+          KOALIXCRM_VERSION: ${{ steps.version.outputs.pep440 }}
         run: python setup.py sdist bdist_wheel
 
       - name: Install twine

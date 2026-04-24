@@ -1,0 +1,21 @@
+{% extends "admin/base.html" %}
+{#
+   CR-9 §9.6 — workspace header band.
+
+   Extends admin/base.html directly (same as grappelli's base_site.html does)
+   to avoid infinite template recursion. This replaces grappelli's base_site.html
+   for the koalixcrm admin.
+
+   APP_DIRS=True: Django finds this template first because koalixcrm.core appears
+   before grappelli in INSTALLED_APPS.  If that order ever changes, add
+   koalixcrm/core/templates explicitly to TEMPLATES[0]['DIRS'].
+#}
+{% load i18n grp_tags %}
+
+{% block title %}{{ title }} | {% get_site_title %}{% endblock %}
+
+{% block branding %}
+    {% include "admin/workspace_header.html" %}
+{% endblock %}
+
+{% block nav-global %}{% endblock %}

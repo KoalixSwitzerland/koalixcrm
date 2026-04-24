@@ -3,8 +3,10 @@
 from django.db import models
 from django.utils.translation import gettext as _
 
+from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
 
-class CustomerGroupTransform(models.Model):
+
+class CustomerGroupTransform(WorkspaceScopedModel):
     id = models.BigAutoField(primary_key=True)
     from_party_group = models.ForeignKey('contacts.PartyGroup',
                                          on_delete=models.PROTECT,

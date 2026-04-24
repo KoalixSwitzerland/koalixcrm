@@ -7,10 +7,12 @@ from django.utils.translation import gettext as _
 from koalixcrm.djangoUserExtension.models.text_paragraph import InlineTextParagraph
 from koalixcrm.global_support_functions import xstr
 from koalixcrm.core.exceptions import *
+from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
+from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
 from koalixcrm_utils.s3_storage import TemplateFileStorage
 
 
-class DocumentTemplate(models.Model):
+class DocumentTemplate(WorkspaceScopedModel):
     title = models.CharField(verbose_name=_("Title"),
                              max_length=100,
                              blank=True,
@@ -60,18 +62,18 @@ class InvoiceTemplate(DocumentTemplate):
         verbose_name_plural = _('Invoice templates')
 
 
-class QuoteTemplate(DocumentTemplate):
+class QuotationTemplate(DocumentTemplate):
     class Meta:
         app_label = "djangoUserExtension"
-        verbose_name = _('Quote template')
-        verbose_name_plural = _('Quote templates')
+        verbose_name = _('Quotation template')
+        verbose_name_plural = _('Quotation templates')
 
 
-class DeliveryNoteTemplate(DocumentTemplate):
+class DespatchAdviceTemplate(DocumentTemplate):
     class Meta:
         app_label = "djangoUserExtension"
-        verbose_name = _('Delivery note template')
-        verbose_name_plural = _('Delivery note templates')
+        verbose_name = _('Despatch advice template')
+        verbose_name_plural = _('Despatch advice templates')
 
 
 class PaymentReminderTemplate(DocumentTemplate):
@@ -88,11 +90,11 @@ class PurchaseOrderTemplate(DocumentTemplate):
         verbose_name_plural = _('Purchase order templates')
 
 
-class PurchaseConfirmationTemplate(DocumentTemplate):
+class SalesOrderTemplate(DocumentTemplate):
     class Meta:
         app_label = "djangoUserExtension"
-        verbose_name = _('Purchase confirmation template')
-        verbose_name_plural = _('Purchase confirmation templates')
+        verbose_name = _('Sales order template')
+        verbose_name_plural = _('Sales order templates')
 
 
 class ProfitLossStatementTemplate(DocumentTemplate):
@@ -123,9 +125,10 @@ class WorkReportTemplate(DocumentTemplate):
         verbose_name_plural = _('Work report templates')
 
 
-class OptionDocumentTemplate(admin.ModelAdmin):
+class OptionDocumentTemplate(WorkspaceScopedModelAdmin, admin.ModelAdmin):
     list_display = ('id', 'title')
     list_display_links = ('id', 'title')
+    list_filter = ('workspace',)
     ordering = ('id',)
     search_fields = ('id', 'title')
     fieldsets = (

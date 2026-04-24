@@ -11,5 +11,3 @@ class StandardTaxFactory(factory.django.DjangoModelFactory):
 
     tax_rate = "7.7"
     name = "Swiss MwSt 7.7%"
-    account_activa = None
-    account_passiva = None

@@ -5,7 +5,6 @@ CommercialDocument.party) and populates them from the legacy FKs via
 `koalixcrm.contracts.party_fk_rewire`. Legacy FKs remain in place as
 nullable shadows until #395.
 
-See PLAN_contact_party_data_model.md §PR #3.
 """
 import django.db.models.deletion
 from django.db import migrations, models
