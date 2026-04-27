@@ -41,10 +41,11 @@ from koalixcrm.core.serializers.unit_serializer import OptionUnitJSONSerializer
 class NestedAddressSerializer(serializers.Serializer):
     purpose = serializers.CharField(read_only=True)
     is_primary = serializers.BooleanField(read_only=True)
-    address_line_1 = serializers.SerializerMethodField()
-    address_line_2 = serializers.SerializerMethodField()
-    address_line_3 = serializers.SerializerMethodField()
-    address_line_4 = serializers.SerializerMethodField()
+    street = serializers.SerializerMethodField()
+    number = serializers.SerializerMethodField()
+    additional_address_line_1 = serializers.SerializerMethodField()
+    additional_address_line_2 = serializers.SerializerMethodField()
+    additional_address_line_3 = serializers.SerializerMethodField()
     zip_code = serializers.SerializerMethodField()
     town = serializers.SerializerMethodField()
     state = serializers.SerializerMethodField()
@@ -54,10 +55,11 @@ class NestedAddressSerializer(serializers.Serializer):
     def _addr(self, obj):
         return obj.address
 
-    def get_address_line_1(self, obj): return self._addr(obj).address_line_1
-    def get_address_line_2(self, obj): return self._addr(obj).address_line_2
-    def get_address_line_3(self, obj): return self._addr(obj).address_line_3
-    def get_address_line_4(self, obj): return self._addr(obj).address_line_4
+    def get_street(self, obj): return self._addr(obj).street
+    def get_number(self, obj): return self._addr(obj).number
+    def get_additional_address_line_1(self, obj): return self._addr(obj).additional_address_line_1
+    def get_additional_address_line_2(self, obj): return self._addr(obj).additional_address_line_2
+    def get_additional_address_line_3(self, obj): return self._addr(obj).additional_address_line_3
     def get_zip_code(self, obj): return self._addr(obj).zip_code
     def get_town(self, obj): return self._addr(obj).town
     def get_state(self, obj): return self._addr(obj).state
@@ -232,7 +234,8 @@ class _BaseCommercialDocumentNestedSerializer(serializers.ModelSerializer):
             "party",
             "staff",
             "currency",
-            "external_reference",
+            "party_reference",
+            "ext_business_appl_references",
             "description",
             "discount",
             "last_pricing_date",

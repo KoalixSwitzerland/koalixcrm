@@ -94,7 +94,8 @@ class AddressJSONSerializer(serializers.ModelSerializer):
         model = Address
         fields = (
             'id',
-            'address_line_1', 'address_line_2', 'address_line_3', 'address_line_4',
+            'street', 'number',
+            'additional_address_line_1', 'additional_address_line_2', 'additional_address_line_3',
             'zip_code', 'town', 'state', 'country', 'subdivision_code',
         )
 

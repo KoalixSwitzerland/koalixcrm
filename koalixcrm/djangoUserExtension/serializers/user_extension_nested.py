@@ -29,10 +29,11 @@ class UserMinimalSerializer(serializers.ModelSerializer):
 
 
 class UserAddressAssignmentSerializer(serializers.ModelSerializer):
-    address_line_1 = serializers.CharField(source='address.address_line_1', read_only=True)
-    address_line_2 = serializers.CharField(source='address.address_line_2', read_only=True)
-    address_line_3 = serializers.CharField(source='address.address_line_3', read_only=True)
-    address_line_4 = serializers.CharField(source='address.address_line_4', read_only=True)
+    street = serializers.CharField(source='address.street', read_only=True)
+    number = serializers.CharField(source='address.number', read_only=True)
+    additional_address_line_1 = serializers.CharField(source='address.additional_address_line_1', read_only=True)
+    additional_address_line_2 = serializers.CharField(source='address.additional_address_line_2', read_only=True)
+    additional_address_line_3 = serializers.CharField(source='address.additional_address_line_3', read_only=True)
     zip_code = serializers.CharField(source='address.zip_code', read_only=True)
     town = serializers.CharField(source='address.town', read_only=True)
     state = serializers.CharField(source='address.state', read_only=True)
@@ -47,10 +48,11 @@ class UserAddressAssignmentSerializer(serializers.ModelSerializer):
             "is_primary",
             "valid_from",
             "valid_to",
-            "address_line_1",
-            "address_line_2",
-            "address_line_3",
-            "address_line_4",
+            "street",
+            "number",
+            "additional_address_line_1",
+            "additional_address_line_2",
+            "additional_address_line_3",
             "zip_code",
             "town",
             "state",

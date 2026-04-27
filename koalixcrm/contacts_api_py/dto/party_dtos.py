@@ -97,10 +97,11 @@ class OrganizationRelationship(BaseModel):
 
 class Address(BaseModel):
     def __init__(self, data: Dict[str, Any], client=None):
-        self.address_line_1 = None
-        self.address_line_2 = None
-        self.address_line_3 = None
-        self.address_line_4 = None
+        self.street = None
+        self.number = None
+        self.additional_address_line_1 = None
+        self.additional_address_line_2 = None
+        self.additional_address_line_3 = None
         self.zip_code = None
         self.town = None
         self.state = None

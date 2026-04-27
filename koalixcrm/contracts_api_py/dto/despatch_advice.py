@@ -10,7 +10,8 @@ class DespatchAdvice(BaseModel):
     def __init__(self, data: Dict[str, Any], client=None):
         self.tracking_reference = None
         self.status = None
-        self.external_reference = None
+        self.party_reference = None
+        self.ext_business_appl_references = {}
         self.discount = None
         self.description = None
         self.currency = None

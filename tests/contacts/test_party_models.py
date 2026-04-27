@@ -153,7 +153,7 @@ class AddressModelTest(TestCase):
 
     def test_address_create(self):
         addr = Address.objects.create(
-            address_line_1="Bahnhofstrasse 1",
+            street="Bahnhofstrasse", number="1",
             zip_code="8001",
             town="Zürich",
             country='CH',
@@ -171,7 +171,7 @@ class AddressAssignmentModelTest(TestCase):
     def test_address_assignment_create(self):
         party = Party.objects.create(display_name="ACME AG", workspace=self.ws)
         addr = Address.objects.create(
-            address_line_1="Bahnhofstrasse 1", zip_code="8001", town="Zürich", country='CH',
+            street="Bahnhofstrasse", number="1", zip_code="8001", town="Zürich", country='CH',
             workspace=self.ws,
         )
         assignment = AddressAssignment.objects.create(

@@ -12,7 +12,8 @@ class PaymentReminder(BaseModel):
         self.payment_bank_reference = None
         self.iteration_number = None
         self.status = None
-        self.external_reference = None
+        self.party_reference = None
+        self.ext_business_appl_references = {}
         self.discount = None
         self.description = None
         self.currency = None

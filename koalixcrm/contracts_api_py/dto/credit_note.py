@@ -12,7 +12,8 @@ class CreditNote(BaseModel):
         self.status = None
         self.issue_date = None
         self.reason = None
-        self.external_reference = None
+        self.party_reference = None
+        self.ext_business_appl_references = {}
         self.discount = None
         self.description = None
         self.currency = None

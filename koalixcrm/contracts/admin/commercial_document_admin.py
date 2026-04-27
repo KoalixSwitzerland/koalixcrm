@@ -113,7 +113,8 @@ class OptionCommercialDocument(WorkspaceScopedModelAdmin, admin.ModelAdmin):
                        'currency',
                        'discount',
                        'staff',
-                       'external_reference',
+                       'party_reference',
+                       'ext_business_appl_references',
                        'template_set',
                        'custom_date_field')
         }),

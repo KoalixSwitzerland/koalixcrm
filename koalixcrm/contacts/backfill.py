@@ -14,7 +14,33 @@ the code only uses `apps.get_model(...)`.
 
 import datetime
 
+from django.conf import settings
+
 EPOCH = datetime.date(1970, 1, 1)
+
+
+_LEADING_NUMBER_LOCALES = {"en", "en-us", "en-gb", "en-ca", "en-au"}
+
+
+def _split_address_line_1(value):
+    """Split a legacy address_line_1 into (street, number).
+
+    Mirrors the rule used by contacts.0014_address_split_step2_data so that
+    backfilling from the legacy CSV/MTI rows produces the same shape as
+    migrating an existing Address row.
+    """
+    if not value:
+        return (value or None, None)
+    code = (getattr(settings, "LANGUAGE_CODE", "") or "").lower()
+    if code in _LEADING_NUMBER_LOCALES:
+        tokens = value.split(" ", 1)
+        if len(tokens) == 2 and tokens[0] and tokens[0][0].isdigit():
+            return (tokens[1].strip() or None, tokens[0].strip() or None)
+        return (value, None)
+    tokens = value.rsplit(" ", 1)
+    if len(tokens) == 2 and tokens[1] and tokens[1][0].isdigit():
+        return (tokens[0].strip() or None, tokens[1].strip() or None)
+    return (value, None)
 
 
 _LEGACY_PURPOSE_MAP = {
@@ -180,11 +206,13 @@ def forwards(apps, schema_editor):
         key = _addr_key(pa)
         addr_id = address_dedup.get(key)
         if addr_id is None:
+            street, number = _split_address_line_1(pa.address_line_1)
             addr_id = Address.objects.create(
-                address_line_1=pa.address_line_1,
-                address_line_2=pa.address_line_2,
-                address_line_3=pa.address_line_3,
-                address_line_4=pa.address_line_4,
+                street=street,
+                number=number,
+                additional_address_line_1=pa.address_line_2,
+                additional_address_line_2=pa.address_line_3,
+                additional_address_line_3=pa.address_line_4,
                 zip_code=str(pa.zip_code) if pa.zip_code is not None else None,
                 town=pa.town,
                 state=pa.state,

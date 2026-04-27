@@ -22,7 +22,7 @@ class StandardCommercialDocumentFactory(factory.django.DjangoModelFactory):
 
     workspace = factory.SubFactory(DefaultWorkspaceFactory)
     contract = factory.SubFactory(StandardContractFactory)
-    external_reference = "This is an external Reference"
+    party_reference = "This is a party Reference"
     discount = "0"
     description = "This is the description of a commercial document"
     last_pricing_date = make_date_utc(datetime.datetime(2018, 5, 1, 00))

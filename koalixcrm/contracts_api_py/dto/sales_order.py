@@ -8,7 +8,8 @@ class SalesOrder(BaseModel):
     """Client-side model representing a sales order."""
 
     def __init__(self, data: Dict[str, Any], client=None):
-        self.external_reference = None
+        self.party_reference = None
+        self.ext_business_appl_references = {}
         self.discount = None
         self.description = None
         self.currency = None

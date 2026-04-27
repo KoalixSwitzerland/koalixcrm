@@ -77,9 +77,9 @@ class OrganizationRelationshipAdmin(WorkspaceScopedModelAdmin, admin.ModelAdmin)
 
 @admin.register(Address)
 class AddressAdmin(WorkspaceScopedModelAdmin, admin.ModelAdmin):
-    list_display = ('id', 'address_line_1', 'zip_code', 'town', 'country')
+    list_display = ('id', 'street', 'zip_code', 'town', 'country')
     list_filter = ('workspace',)
-    search_fields = ('address_line_1', 'zip_code', 'town')
+    search_fields = ('street', 'zip_code', 'town')
 
 
 @admin.register(AddressAssignment)

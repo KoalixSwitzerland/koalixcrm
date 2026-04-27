@@ -11,7 +11,8 @@ class Invoice(BaseModel):
         self.payable_until = None
         self.payment_bank_reference = None
         self.status = None
-        self.external_reference = None
+        self.party_reference = None
+        self.ext_business_appl_references = {}
         self.discount = None
         self.description = None
         self.currency = None

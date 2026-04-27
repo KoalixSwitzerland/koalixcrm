@@ -102,7 +102,8 @@ class Command(BaseCommand):
         user_extension.save()
         address = Address.objects.create(
             workspace=ws,
-            address_line_1="Ave 1",
+            street="Ave",
+            number="1",
             zip_code="899887",
             town="Smallville",
         )

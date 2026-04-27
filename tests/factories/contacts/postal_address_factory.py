@@ -11,10 +11,11 @@ class StandardPostalAddressFactory(factory.django.DjangoModelFactory):
         model = Address
 
     workspace = factory.SubFactory(DefaultWorkspaceFactory)
-    address_line_1 = "Main-street 5"
-    address_line_2 = None
-    address_line_3 = None
-    address_line_4 = None
+    street = "Main-street"
+    number = "5"
+    additional_address_line_1 = None
+    additional_address_line_2 = None
+    additional_address_line_3 = None
     zip_code = "8000"
     town = "Zürich"
     state = "ZH"

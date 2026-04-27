@@ -40,7 +40,12 @@ class TextParagraphInCommercialDocument(WorkspaceScopedModel):
 
 class CommercialDocument(WorkspaceScopedModel):
     contract = models.ForeignKey("Contract", on_delete=models.CASCADE, verbose_name=_("Contract"))
-    external_reference = models.CharField(verbose_name=_("External Reference"), max_length=100, blank=True)
+    party_reference = models.CharField(verbose_name=_("Party Reference"), max_length=100, blank=True)
+    ext_business_appl_references = models.JSONField(
+        verbose_name=_("External Business Application References"),
+        blank=True,
+        default=dict,
+    )
     discount = models.DecimalField(max_digits=5, decimal_places=2, verbose_name=_("Discount"), blank=True, null=True)
     description = models.CharField(verbose_name=_("Description"), max_length=100, blank=True, null=True)
     last_pricing_date = models.DateField(verbose_name=_("Pricing Date"), blank=True, null=True)
