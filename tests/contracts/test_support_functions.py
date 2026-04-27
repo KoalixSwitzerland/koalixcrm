@@ -13,7 +13,6 @@ def fail_when_element_does_not_exist(testcase, xpath):
         testcase.selenium.find_element('xpath', xpath)
     except NoSuchElementException:
         testcase.assertTrue(False, xpath+" should exist but it does not")
-        pass
 
 
 def fail_when_element_exists(testcase, xpath):

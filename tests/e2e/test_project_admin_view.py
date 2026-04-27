@@ -31,7 +31,6 @@ class TestProjectAdminView(UITests):
             print("Timed out waiting for page to load")
         username = selenium.find_element('xpath', '//*[@id="id_username"]')
         password = selenium.find_element('xpath', '//*[@id="id_password"]')
-        submit_button = selenium.find_element('xpath', '/html/body/div/article/div/div/form/div/ul/li/input')
         username.send_keys("admin")
         password.send_keys("admin")
         time.sleep(5)

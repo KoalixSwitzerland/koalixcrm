@@ -86,7 +86,6 @@ class TimeTrackingWorkEntry(UITests):
         fail_when_element_does_not_exist(self, '//*[@id="id_form-1-project"]')
         add_more_button = self.selenium.find_element('xpath', '//*[@id="add_more"]')
         add_more_button.send_keys(Keys.RETURN)
-        delete_form = expected_conditions.presence_of_element_located((By.ID, 'id_form-1-DELETE'))
         delete_checkbox = self.selenium.find_element(By.ID, 'id_form-1-DELETE')
         if not delete_checkbox.is_selected():
             delete_checkbox.send_keys(Keys.SPACE)

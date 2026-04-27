@@ -81,7 +81,7 @@ class Command(BaseCommand):
         from koalixcrm.contacts.models.party_email import PartyEmail
         from koalixcrm.contacts.models.phone_number import PhoneNumber
         from koalixcrm.core.models.workspace import Workspace
-        ws, _ = Workspace.objects.get_or_create(
+        ws, _created = Workspace.objects.get_or_create(
             name='Default Workspace',
             defaults={'is_active': True},
         )
