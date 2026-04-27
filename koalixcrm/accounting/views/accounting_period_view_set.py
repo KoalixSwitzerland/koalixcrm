@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
+from typing import Any
+
 from rest_framework.decorators import action
+from rest_framework.request import Request
 from rest_framework.response import Response
 
 from koalixcrm.accounting.models import AccountingPeriod
@@ -14,8 +19,8 @@ class AccountingPeriodViewSet(BaseModelViewSet):
     queryset = AccountingPeriod.objects.all()
     serializer_class = AccountingPeriodJSONSerializer
 
-    @action(detail=True, methods=['get'], url_path='report-data')
-    def report_data(self, request, pk=None, **kwargs):
+    @action(detail=True, methods=["get"], url_path="report-data")
+    def report_data(self, request: Request, pk: int | None = None, **kwargs: Any) -> Response:
         """Self-contained snapshot for FOP balancesheet / profitlossstatement:
         period header + four overall aggregates + per-account sums for every
         account, in a single payload.

@@ -1,7 +1,16 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
+from datetime import date
+from typing import TYPE_CHECKING
+
 from django.contrib import admin
 from django.db import models
 from django.utils.translation import gettext as _
+
+if TYPE_CHECKING:
+    from django.forms import ModelForm
+    from django.http import HttpRequest
 
 
 class Booking(models.Model):
@@ -44,13 +53,13 @@ class Booking(models.Model):
         related_name="db_booking_lstmodified",
     )
 
-    def booking_date_only(self):
+    def booking_date_only(self) -> date:
         return self.booking_date.date()
 
     booking_date_only.short_description = _("Date")
 
-    def __str__(self):
-        return self.from_account.__str__() + " " + self.to_account.__str__() + " " + self.amount.__str__()
+    def __str__(self) -> str:
+        return f"{self.from_account} {self.to_account} {self.amount}"
 
     class Meta:
         app_label = "accounting"
@@ -79,7 +88,7 @@ class OptionBooking(admin.ModelAdmin):
     )
     save_as = True
 
-    def save_model(self, request, obj, form, change):
+    def save_model(self, request: HttpRequest, obj: Booking, form: ModelForm, change: bool) -> None:
         if change:
             obj.last_modified_by = request.user
         else:

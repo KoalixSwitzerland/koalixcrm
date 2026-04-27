@@ -9,11 +9,11 @@ from koalixcrm.accounting.models.product_category_assignment import (
 from koalixcrm.accounting.models.tax_account_assignment import TaxAccountAssignment
 
 __all__ = [
-    'Account',
-    'Booking',
-    'InlineBookings',
-    'AccountingPeriod',
-    'ProductCategory',
-    'ProductCategoryAssignment',
-    'TaxAccountAssignment',
+    "Account",
+    "Booking",
+    "InlineBookings",
+    "AccountingPeriod",
+    "ProductCategory",
+    "ProductCategoryAssignment",
+    "TaxAccountAssignment",
 ]

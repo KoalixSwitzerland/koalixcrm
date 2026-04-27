@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
+from decimal import Decimal
+from typing import TYPE_CHECKING, Any
+
 from django import forms
 from django.contrib import admin
 from django.db import models
@@ -6,6 +11,9 @@ from django.utils.translation import gettext as _
 
 from koalixcrm.accounting.const.accountTypeChoices import *
 from koalixcrm.accounting.exceptions import AccountingPeriodNotFound
+
+if TYPE_CHECKING:
+    from koalixcrm.accounting.models.accounting_period import AccountingPeriod
 
 
 class Account(models.Model):
@@ -19,28 +27,28 @@ class Account(models.Model):
     is_product_inventory_activa = models.BooleanField(verbose_name=_("Is a Product Inventory Account"))
     is_a_customer_payment_account = models.BooleanField(verbose_name=_("Is a Customer Payment Account"))
 
-    def sum_of_all_bookings(self):
-        calculated_sum = self.all_bookings(from_account=False) - self.all_bookings(from_account=True)
+    def sum_of_all_bookings(self) -> Decimal:
+        calculated_sum: Decimal = self.all_bookings(from_account=False) - self.all_bookings(from_account=True)
         if self.account_type == "E" or self.account_type == "L":
-            calculated_sum = 0 - calculated_sum
+            calculated_sum = -calculated_sum
         return calculated_sum
 
     sum_of_all_bookings.short_description = _("Value")
 
-    def sum_of_all_bookings_within_accounting_period(self, accounting_period):
-        calculated_sum = self.all_bookings_within_accounting_period(
+    def sum_of_all_bookings_within_accounting_period(self, accounting_period: AccountingPeriod) -> Decimal:
+        calculated_sum: Decimal = self.all_bookings_within_accounting_period(
             from_account=False, accounting_period=accounting_period
         ) - self.all_bookings_within_accounting_period(from_account=True, accounting_period=accounting_period)
         if self.account_type == "E" or self.account_type == "L":
             calculated_sum = -calculated_sum
         return calculated_sum
 
-    def sum_of_all_bookings_before_accounting_period(self, current_accounting_period):
+    def sum_of_all_bookings_before_accounting_period(self, current_accounting_period: AccountingPeriod) -> Decimal:
         try:
             accounting_periods = current_accounting_period.get_all_prior_accounting_periods()
         except AccountingPeriodNotFound:
-            return 0
-        sum_of_all_bookings = 0
+            return Decimal(0)
+        sum_of_all_bookings: Decimal = Decimal(0)
         for accounting_period in accounting_periods:
             sum_of_all_bookings += self.all_bookings_within_accounting_period(
                 from_account=False, accounting_period=accounting_period
@@ -49,16 +57,15 @@ class Account(models.Model):
             sum_of_all_bookings = -sum_of_all_bookings
         return sum_of_all_bookings
 
-    def sum_of_all_bookings_through_now(self, current_accounting_period):
+    def sum_of_all_bookings_through_now(self, current_accounting_period: AccountingPeriod) -> Decimal:
         within_accounting_period = self.sum_of_all_bookings_within_accounting_period(current_accounting_period)
         before_accounting_period = self.sum_of_all_bookings_before_accounting_period(current_accounting_period)
-        current_value = within_accounting_period + before_accounting_period
-        return current_value
+        return within_accounting_period + before_accounting_period
 
-    def all_bookings(self, from_account):
+    def all_bookings(self, from_account: bool) -> Decimal:
         from koalixcrm.accounting.models import Booking
 
-        sum_all = 0
+        sum_all: Decimal = Decimal(0)
         if from_account:
             bookings = Booking.objects.filter(from_account=self.id)
         else:
@@ -69,22 +76,24 @@ class Account(models.Model):
 
         return sum_all
 
-    def all_bookings_within_accounting_period(self, from_account, accounting_period):
+    def all_bookings_within_accounting_period(
+        self, from_account: bool, accounting_period: AccountingPeriod
+    ) -> Decimal:
         from koalixcrm.accounting.models import Booking
 
-        sum = 0
+        total: Decimal = Decimal(0)
         if from_account:
             bookings = Booking.objects.filter(from_account=self.id, accounting_period=accounting_period.id)
         else:
             bookings = Booking.objects.filter(to_account=self.id, accounting_period=accounting_period.id)
 
         for booking in list(bookings):
-            sum += booking.amount
+            total += booking.amount
 
-        return sum
+        return total
 
-    def __str__(self):
-        return self.account_number.__str__() + " " + self.title
+    def __str__(self) -> str:
+        return str(self.account_number) + " " + self.title
 
     class Meta:
         app_label = "accounting"
@@ -101,9 +110,9 @@ class AccountForm(forms.ModelForm):
         model = Account
         fields = "__all__"
 
-    def clean(self):
-        super(AccountForm, self).clean()
-        errors = []
+    def clean(self) -> dict[str, Any]:
+        super().clean()
+        errors: list[str] = []
         if self.cleaned_data["is_open_reliabilities_account"]:
             open_reliabilities_account = Account.objects.filter(is_open_reliabilities_account=True)
             if self.cleaned_data["account_type"] != "L":
