@@ -20,8 +20,8 @@ from rest_framework import serializers
 
 from koalixcrm.contacts.models.address_assignment import AddressAssignment
 from koalixcrm.contacts.models.email_assignment import EmailAssignment
-from koalixcrm.contacts.models.organization import Organization
 from koalixcrm.contacts.models.natural_person import PartyContact
+from koalixcrm.contacts.models.organization import Organization
 from koalixcrm.contacts.models.phone_assignment import PhoneAssignment
 from koalixcrm.contracts.models.commercial_document import CommercialDocument
 from koalixcrm.contracts.models.commercial_document_position import (

@@ -2,9 +2,10 @@
 
 from django.contrib import admin
 from django.utils.translation import gettext as _
-from koalixcrm.plugin import *
-from koalixcrm.contracts.models.quotation import Quotation
+
 from koalixcrm.contracts.admin.commercial_document_admin import OptionCommercialDocument
+from koalixcrm.contracts.models.quotation import Quotation
+from koalixcrm.plugin import *
 
 
 class OptionQuotation(OptionCommercialDocument):

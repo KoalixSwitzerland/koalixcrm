@@ -6,21 +6,21 @@ module is inert — importing it has no effect on the running URL conf.
 """
 from rest_framework.routers import DefaultRouter
 
-from koalixcrm.contracts_api_py.contracts_api import (
-    ContractViewSet,
-    InvoiceViewSet,
-    QuotationViewSet,
-    PurchaseOrderViewSet,
-    SalesOrderViewSet,
-    DespatchAdviceViewSet,
-    PaymentReminderViewSet,
-    CommercialDocumentPositionViewSet,
-    CreditNoteViewSet,
-)
 # CR-002 §2.1 note: commercial_document_media currently lives under
 # contracts.views; keep it in the Contracts router (§2.1 default recommendation).
 from koalixcrm.contracts.views.commercial_document_media_view_set import (
     CommercialDocumentMediaViewSet,
+)
+from koalixcrm.contracts_api_py.contracts_api import (
+    CommercialDocumentPositionViewSet,
+    ContractViewSet,
+    CreditNoteViewSet,
+    DespatchAdviceViewSet,
+    InvoiceViewSet,
+    PaymentReminderViewSet,
+    PurchaseOrderViewSet,
+    QuotationViewSet,
+    SalesOrderViewSet,
 )
 
 router = DefaultRouter()

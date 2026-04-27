@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from koalixcrm.djangoUserExtension.models.user_extension import UserExtension
 from django.utils.translation import gettext as _
+
+from koalixcrm.djangoUserExtension.models.user_extension import UserExtension
 
 
 class ResourceManager(models.Model):

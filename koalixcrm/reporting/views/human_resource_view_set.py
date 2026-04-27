@@ -5,15 +5,15 @@ from rest_framework import status as http_status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from koalixcrm.shared.base_model_view_set import BaseModelViewSet
 from koalixcrm.reporting.models.human_resource import HumanResource
-from koalixcrm.reporting.serializers.human_resource_serializer import (
-    HumanResourceJSONSerializer,
-)
 from koalixcrm.reporting.serializers.human_resource_report_serializer import (
     HumanResourceWorkReportSerializer,
     WorkReportBuilder,
 )
+from koalixcrm.reporting.serializers.human_resource_serializer import (
+    HumanResourceJSONSerializer,
+)
+from koalixcrm.shared.base_model_view_set import BaseModelViewSet
 
 
 class HumanResourceViewSet(BaseModelViewSet):

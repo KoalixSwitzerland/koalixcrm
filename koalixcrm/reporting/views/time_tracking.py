@@ -1,19 +1,23 @@
 # -*- coding: utf-8 -*-
 
 import datetime
-from django.http import HttpResponseRedirect, Http404
+
 from django.contrib import messages
-from django.shortcuts import render
-from django.utils.translation import gettext as _
-from django.template.context_processors import csrf
 from django.contrib.auth.decorators import login_required
+from django.http import Http404, HttpResponseRedirect
+from django.shortcuts import render
+from django.template.context_processors import csrf
+from django.utils.translation import gettext as _
+
+from koalixcrm.core.exceptions import ReportingPeriodNotFound, UserIsNoHumanResource
+from koalixcrm.djangoUserExtension.exceptions import (
+    TooManyUserExtensionsAvailable,
+    UserExtensionMissing,
+)
 from koalixcrm.djangoUserExtension.models import UserExtension
-from koalixcrm.core.exceptions import ReportingPeriodNotFound
-from koalixcrm.core.exceptions import UserIsNoHumanResource
-from koalixcrm.djangoUserExtension.exceptions import UserExtensionMissing, TooManyUserExtensionsAvailable
+from koalixcrm.reporting.models.human_resource import HumanResource
 from koalixcrm.reporting.views.range_selection_form import RangeSelectionForm
 from koalixcrm.reporting.views.work_entry_formset import BaseWorkEntryFormset
-from koalixcrm.reporting.models.human_resource import HumanResource
 
 
 @login_required

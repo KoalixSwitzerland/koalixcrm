@@ -1,11 +1,16 @@
 # -*- coding: utf-8 -*-
 from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
-from koalixcrm.reporting.models.task import Task
+
 from koalixcrm.reporting.models.project import Project
+from koalixcrm.reporting.models.task import Task
 from koalixcrm.reporting.models.task_status import TaskStatus
-from koalixcrm.reporting.serializers.project_serializer import OptionProjectJSONSerializer
-from koalixcrm.reporting.serializers.task_status_serializer import OptionTaskStatusJSONSerializer
+from koalixcrm.reporting.serializers.project_serializer import (
+    OptionProjectJSONSerializer,
+)
+from koalixcrm.reporting.serializers.task_status_serializer import (
+    OptionTaskStatusJSONSerializer,
+)
 
 
 class OptionTaskJSONSerializer(serializers.ModelSerializer):

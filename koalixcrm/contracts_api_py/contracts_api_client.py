@@ -2,16 +2,18 @@
 """API client for the koalixcrm Contracts app."""
 from typing import Any, Dict, List, Optional
 
-from koalixcrm.shared.api_client import BaseAPIClient
+from koalixcrm.contracts_api_py.dto.commercial_document_position import (
+    CommercialDocumentPosition,
+)
 from koalixcrm.contracts_api_py.dto.contract import Contract
-from koalixcrm.contracts_api_py.dto.invoice import Invoice
-from koalixcrm.contracts_api_py.dto.quotation import Quotation
-from koalixcrm.contracts_api_py.dto.purchase_order import PurchaseOrder
-from koalixcrm.contracts_api_py.dto.sales_order import SalesOrder
-from koalixcrm.contracts_api_py.dto.despatch_advice import DespatchAdvice
-from koalixcrm.contracts_api_py.dto.payment_reminder import PaymentReminder
-from koalixcrm.contracts_api_py.dto.commercial_document_position import CommercialDocumentPosition
 from koalixcrm.contracts_api_py.dto.credit_note import CreditNote
+from koalixcrm.contracts_api_py.dto.despatch_advice import DespatchAdvice
+from koalixcrm.contracts_api_py.dto.invoice import Invoice
+from koalixcrm.contracts_api_py.dto.payment_reminder import PaymentReminder
+from koalixcrm.contracts_api_py.dto.purchase_order import PurchaseOrder
+from koalixcrm.contracts_api_py.dto.quotation import Quotation
+from koalixcrm.contracts_api_py.dto.sales_order import SalesOrder
+from koalixcrm.shared.api_client import BaseAPIClient
 
 
 class KoalixCRMContractsAPIClient(BaseAPIClient):

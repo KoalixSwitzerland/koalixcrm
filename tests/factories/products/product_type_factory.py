@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 
-import factory
 import datetime
+
+import factory
+
+from koalixcrm.global_support_functions import make_date_utc
 from koalixcrm.products.models.product_type import ProductType
-from tests.factories.core.unit_factory import StandardUnitFactory
 from tests.factories.contacts.user_factory import StaffUserFactory
 from tests.factories.core.tax_factory import StandardTaxFactory
+from tests.factories.core.unit_factory import StandardUnitFactory
 from tests.factories.core.workspace_factory import DefaultWorkspaceFactory
-from koalixcrm.global_support_functions import make_date_utc
 
 
 class StandardProductTypeFactory(factory.django.DjangoModelFactory):

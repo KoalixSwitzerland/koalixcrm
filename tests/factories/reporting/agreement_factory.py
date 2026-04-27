@@ -1,16 +1,26 @@
 # -*- coding: utf-8 -*-
 
-import factory
 import datetime
-from koalixcrm.reporting.models.agreement import Agreement
-from tests.factories.reporting.resource_factory import StandardResourceFactory
-from tests.factories.reporting.human_resource_factory import StandardHumanResourceFactory
-from tests.factories.reporting.task_factory import StandardTaskFactory
-from tests.factories.core.unit_factory import StandardUnitFactory
-from tests.factories.reporting.resource_price_factory import StandardResourcePriceFactory
-from tests.factories.reporting.agreement_type_factory import StandardAgreementTypeFactory
-from tests.factories.reporting.agreement_status_factory import AgreedAgreementStatusFactory
+
+import factory
+
 from koalixcrm.global_support_functions import make_date_utc
+from koalixcrm.reporting.models.agreement import Agreement
+from tests.factories.core.unit_factory import StandardUnitFactory
+from tests.factories.reporting.agreement_status_factory import (
+    AgreedAgreementStatusFactory,
+)
+from tests.factories.reporting.agreement_type_factory import (
+    StandardAgreementTypeFactory,
+)
+from tests.factories.reporting.human_resource_factory import (
+    StandardHumanResourceFactory,
+)
+from tests.factories.reporting.resource_factory import StandardResourceFactory
+from tests.factories.reporting.resource_price_factory import (
+    StandardResourcePriceFactory,
+)
+from tests.factories.reporting.task_factory import StandardTaskFactory
 
 
 class StandardAgreementToTaskFactory(factory.django.DjangoModelFactory):

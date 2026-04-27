@@ -7,22 +7,22 @@ module is inert — importing it has no effect on the running URL conf.
 from rest_framework.routers import DefaultRouter
 
 from koalixcrm.contacts_api_py.contacts_api import (
+    AddressAssignmentViewSet,
+    AddressViewSet,
     CustomerBillingCycleViewSet,
-    PartyViewSet,
-    OrganizationViewSet,
-    PartyContactViewSet,
-    PartyIdentificationViewSet,
-    PartyRoleViewSet,
+    EmailAssignmentViewSet,
     OrganizationMembershipViewSet,
     OrganizationRelationshipViewSet,
-    AddressViewSet,
-    AddressAssignmentViewSet,
-    PhoneNumberViewSet,
-    PhoneAssignmentViewSet,
+    OrganizationViewSet,
+    PartyContactViewSet,
     PartyEmailViewSet,
-    EmailAssignmentViewSet,
-    PartyGroupViewSet,
     PartyGroupMembershipViewSet,
+    PartyGroupViewSet,
+    PartyIdentificationViewSet,
+    PartyRoleViewSet,
+    PartyViewSet,
+    PhoneAssignmentViewSet,
+    PhoneNumberViewSet,
 )
 
 router = DefaultRouter()

@@ -4,12 +4,15 @@ ProductTypeAdmin for koalixcrm products
 """
 from django.contrib import admin
 from django.utils.translation import gettext as _
-from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
-from koalixcrm.products.models.product_type import ProductType
-from koalixcrm.products.admin.product_price_admin import ProductPriceInlineAdmin
-from koalixcrm.core.admin.unit_transform_admin import UnitTransformInlineAdmin
+
 from koalixcrm.core.admin.currency_transform_admin import CurrencyTransformInlineAdmin
-from koalixcrm.products.admin.customer_group_transform_admin import CustomerGroupTransformInlineAdmin
+from koalixcrm.core.admin.unit_transform_admin import UnitTransformInlineAdmin
+from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
+from koalixcrm.products.admin.customer_group_transform_admin import (
+    CustomerGroupTransformInlineAdmin,
+)
+from koalixcrm.products.admin.product_price_admin import ProductPriceInlineAdmin
+from koalixcrm.products.models.product_type import ProductType
 
 
 @admin.register(ProductType)

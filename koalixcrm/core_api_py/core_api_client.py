@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 """KoalixCRM Core API Client"""
-from typing import Dict, List, Any, Optional
+from typing import Any, Dict, List, Optional
 
-from koalixcrm.shared.api_client import BaseAPIClient
 from koalixcrm.core_api_py.dto.currency import Currency
+from koalixcrm.core_api_py.dto.currency_transform import CurrencyTransform
 from koalixcrm.core_api_py.dto.tax import Tax
 from koalixcrm.core_api_py.dto.unit import Unit
-from koalixcrm.core_api_py.dto.currency_transform import CurrencyTransform
 from koalixcrm.core_api_py.dto.unit_transform import UnitTransform
+from koalixcrm.shared.api_client import BaseAPIClient
 
 
 class KoalixCRMCoreAPIClient(BaseAPIClient):

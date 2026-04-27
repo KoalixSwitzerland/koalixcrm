@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
-from koalixcrm.accounting.serializers.account_serializer import OptionAccountJSONSerializer
 from rest_framework import serializers
 
-from koalixcrm.accounting.models.product_category import ProductCategory
 from koalixcrm.accounting.models import Account
+from koalixcrm.accounting.models.product_category import ProductCategory
+from koalixcrm.accounting.serializers.account_serializer import (
+    OptionAccountJSONSerializer,
+)
 
 
 class ProductCategoryMinimalJSONSerializer(serializers.ModelSerializer):

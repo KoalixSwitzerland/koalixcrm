@@ -12,10 +12,10 @@ from django.contrib import admin
 
 
 def _patch_tax_admin():
-    from koalixcrm.core.models.tax import Tax
     from koalixcrm.accounting.admin.tax_account_assignment_admin import (
         TaxAccountAssignmentInline,
     )
+    from koalixcrm.core.models.tax import Tax
     try:
         existing = admin.site._registry[Tax]
     except KeyError:
@@ -31,10 +31,10 @@ def _patch_tax_admin():
 def _patch_product_type_admin():
     if not apps.is_installed('koalixcrm.products'):
         return
-    from koalixcrm.products.models.product_type import ProductType
     from koalixcrm.accounting.admin.product_category_assignment_admin import (
         ProductCategoryAssignmentInline,
     )
+    from koalixcrm.products.models.product_type import ProductType
     try:
         existing = admin.site._registry[ProductType]
     except KeyError:

@@ -2,10 +2,15 @@
 
 from django.contrib import admin, messages
 from django.utils.translation import gettext as _
-from koalixcrm.reporting.models.project import Project
+
+from koalixcrm.reporting.admin.generic_project_link_admin import (
+    GenericLinkInlineAdminView,
+)
+from koalixcrm.reporting.admin.reporting_period_admin import (
+    ReportingPeriodInlineAdminView,
+)
 from koalixcrm.reporting.admin.task_admin import TaskInlineAdminView
-from koalixcrm.reporting.admin.generic_project_link_admin import GenericLinkInlineAdminView
-from koalixcrm.reporting.admin.reporting_period_admin import ReportingPeriodInlineAdminView
+from koalixcrm.reporting.models.project import Project
 
 
 class ProjectAdminView(admin.ModelAdmin):

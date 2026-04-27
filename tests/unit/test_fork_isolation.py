@@ -20,7 +20,6 @@ import re
 
 import pytest
 
-
 REPO_ROOT = pathlib.Path(__file__).resolve().parents[2]
 PUBLIC_APPS = ('core', 'contacts', 'contracts', 'djangoUserExtension', 'products')
 FORBIDDEN_APPS = ('reporting', 'accounting', 'subscriptions')

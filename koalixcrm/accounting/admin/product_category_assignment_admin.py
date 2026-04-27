@@ -2,7 +2,9 @@
 from django.contrib import admin
 from django.utils.translation import gettext as _
 
-from koalixcrm.accounting.models.product_category_assignment import ProductCategoryAssignment
+from koalixcrm.accounting.models.product_category_assignment import (
+    ProductCategoryAssignment,
+)
 
 
 @admin.register(ProductCategoryAssignment)

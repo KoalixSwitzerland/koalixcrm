@@ -1,6 +1,6 @@
-import json
-import hashlib
 import base64
+import hashlib
+import json
 import logging
 from urllib.request import urlopen
 
@@ -73,7 +73,7 @@ def validate_jwt(token, authority_url, access_token=None, client_id=None):
 
     jwks = get_jwks(authority_url)
     if not jwks:
-        raise AuthenticationFailed(f'Could not retrieve signing keys from provider.')
+        raise AuthenticationFailed('Could not retrieve signing keys from provider.')
 
     try:
         unverified_header = jwt.get_unverified_header(token)

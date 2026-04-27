@@ -2,6 +2,7 @@
 
 from django.contrib import admin, messages
 from django.utils.translation import gettext as _
+
 from koalixcrm.reporting.admin.resource_price_admin import ResourcePriceInlineAdminView
 
 

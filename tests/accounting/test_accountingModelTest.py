@@ -1,9 +1,9 @@
 import datetime
-from django.test import TestCase
+
 from django.contrib.auth.models import User
-from koalixcrm.accounting.models import Account
-from koalixcrm.accounting.models import AccountingPeriod
-from koalixcrm.accounting.models import Booking
+from django.test import TestCase
+
+from koalixcrm.accounting.models import Account, AccountingPeriod, Booking
 from koalixcrm.global_support_functions import make_date_utc
 
 

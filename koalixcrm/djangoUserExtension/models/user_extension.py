@@ -2,18 +2,18 @@
 
 from django.apps import apps
 from django.conf import settings
-from django.db import models
 from django.contrib import admin
+from django.db import models
 from django.utils.translation import gettext as _
 
 from koalixcrm.contacts.models.address import Address
-from koalixcrm.contacts.models.phone_number import PhoneNumber
 from koalixcrm.contacts.models.party_email import PartyEmail
+from koalixcrm.contacts.models.phone_number import PhoneNumber
+from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
 from koalixcrm.core.const.party import ASSIGNMENT_PURPOSE_CHOICES
+from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
 from koalixcrm.djangoUserExtension.exceptions import *
 from koalixcrm.global_support_functions import xstr
-from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
-from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
 
 
 class UserExtension(WorkspaceScopedModel):
@@ -200,6 +200,7 @@ class OptionUserExtension(WorkspaceScopedModelAdmin, admin.ModelAdmin):
         the params field for date-range support.
         """
         from django.contrib import messages
+
         from koalixcrm.core.models.pdf_export_process import PDFExportProcess
         from koalixcrm.core.models.workspace import Workspace
         from koalixcrm.reporting.models.human_resource import HumanResource

@@ -3,12 +3,12 @@ from rest_framework.decorators import action
 from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.response import Response
 
-from koalixcrm.shared.base_model_view_set import BaseModelViewSet
 from koalixcrm.accounting.models import Account, AccountingPeriod
 from koalixcrm.accounting.serializers.account_serializer import (
-    AccountJSONSerializer,
     AccountBookingSumsSerializer,
+    AccountJSONSerializer,
 )
+from koalixcrm.shared.base_model_view_set import BaseModelViewSet
 
 
 class AccountViewSet(BaseModelViewSet):

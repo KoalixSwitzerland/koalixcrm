@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 
-from django.forms import NumberInput
-from koalixcrm.reporting.models.task import Task
-from koalixcrm.reporting.models.project import Project
 from django.contrib.admin.widgets import *
-from koalixcrm.global_support_functions import limit_string_length
+from django.forms import NumberInput
+
 from koalixcrm.djangoUserExtension.models import UserExtension
-from koalixcrm.reporting.models.reporting_period import ReportingPeriod
+from koalixcrm.global_support_functions import limit_string_length
 from koalixcrm.reporting.models.human_resource import HumanResource
+from koalixcrm.reporting.models.project import Project
+from koalixcrm.reporting.models.reporting_period import ReportingPeriod
+from koalixcrm.reporting.models.task import Task
 
 
 class WorkEntry(forms.Form):
@@ -88,6 +89,7 @@ class WorkEntry(forms.Form):
 
     def update_work(self, request):
         from django.core.exceptions import PermissionDenied
+
         from koalixcrm.reporting.models.work import Work
         if self.has_changed():
             current_human_resource = HumanResource.objects.get(user=UserExtension.get_user_extension(request.user))

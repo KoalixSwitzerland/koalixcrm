@@ -2,8 +2,8 @@
 from django.db import models
 from django.utils.translation import gettext as _
 
-from koalixcrm.contacts.models.party import Party
 from koalixcrm.contacts.models.address import Address
+from koalixcrm.contacts.models.party import Party
 from koalixcrm.core.const.party import ASSIGNMENT_PURPOSE_CHOICES
 from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
 

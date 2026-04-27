@@ -3,7 +3,7 @@
 Base DTO class for all koalixcrm client-side models.
 Ported from qq_workflow_support_webapp_backend pattern.
 """
-from typing import Dict, Any
+from typing import Any, Dict
 
 
 class BaseModel:

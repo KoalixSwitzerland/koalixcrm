@@ -9,15 +9,14 @@ from django.contrib.auth.models import User
 from django.test import RequestFactory
 
 from koalixcrm.core.managers.workspace_aware import (
+    WorkspaceAwareManager,
     WorkspaceContextMissing,
     activate_workspace,
     deactivate_workspace,
     get_active_workspace,
     workspace_context,
-    WorkspaceAwareManager,
 )
 from koalixcrm.core.models.workspace import Workspace
-
 
 # ---------------------------------------------------------------------------
 # Fixtures
@@ -166,7 +165,9 @@ class TestWorkspaceContextMiddleware:
         return request
 
     def _run_middleware(self, request):
-        from koalixcrm.core.middleware.workspace_context import WorkspaceContextMiddleware
+        from koalixcrm.core.middleware.workspace_context import (
+            WorkspaceContextMiddleware,
+        )
 
         responses = []
 
@@ -182,7 +183,8 @@ class TestWorkspaceContextMiddleware:
 
     def test_single_workspace_auto_activates(self, ws_a):
         from django.contrib.auth.models import Group
-        from koalixcrm.core.models.access import RoleInWorkspace, Role
+
+        from koalixcrm.core.models.access import Role, RoleInWorkspace
 
         user = User.objects.create_user(username='u_single', password='pass', is_staff=True)
         group = Group.objects.create(name='g_single')
@@ -198,7 +200,8 @@ class TestWorkspaceContextMiddleware:
 
     def test_multiple_workspaces_picks_lowest_pk(self, ws_a, ws_b):
         from django.contrib.auth.models import Group
-        from koalixcrm.core.models.access import RoleInWorkspace, Role
+
+        from koalixcrm.core.models.access import Role, RoleInWorkspace
 
         user = User.objects.create_user(username='u_multi', password='pass', is_staff=True)
         group = Group.objects.create(name='g_multi')
@@ -222,7 +225,8 @@ class TestWorkspaceContextMiddleware:
 
     def test_session_workspace_id_used_when_valid(self, ws_a, ws_b):
         from django.contrib.auth.models import Group
-        from koalixcrm.core.models.access import RoleInWorkspace, Role
+
+        from koalixcrm.core.models.access import Role, RoleInWorkspace
 
         user = User.objects.create_user(username='u_session', password='pass', is_staff=True)
         group = Group.objects.create(name='g_session')
@@ -237,7 +241,10 @@ class TestWorkspaceContextMiddleware:
 
     def test_unauthenticated_request_skipped(self):
         from django.contrib.auth.models import AnonymousUser
-        from koalixcrm.core.middleware.workspace_context import WorkspaceContextMiddleware
+
+        from koalixcrm.core.middleware.workspace_context import (
+            WorkspaceContextMiddleware,
+        )
 
         called_with = []
 
@@ -265,9 +272,11 @@ class TestWorkspaceContextMiddleware:
 class TestWorkspaceScopedModelAdminSaveModel:
 
     def _make_admin(self, model_class):
-        from django.contrib.admin import site
-        from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
-        from django.contrib.admin import ModelAdmin
+        from django.contrib.admin import ModelAdmin, site
+
+        from koalixcrm.core.admin.workspace_scoped_admin import (
+            WorkspaceScopedModelAdmin,
+        )
 
         class ScopedAdmin(WorkspaceScopedModelAdmin, ModelAdmin):
             pass
@@ -296,8 +305,9 @@ class TestWorkspaceScopedModelAdminSaveModel:
         assert obj.workspace_id == ws_a.id
 
     def test_save_raises_on_mismatched_workspace(self, ws_a, ws_b):
-        from koalixcrm.core.models.pdf_export_process import PDFExportProcess
         from django.core.exceptions import PermissionDenied
+
+        from koalixcrm.core.models.pdf_export_process import PDFExportProcess
 
         admin = self._make_admin(PDFExportProcess)
 
@@ -314,8 +324,9 @@ class TestWorkspaceScopedModelAdminSaveModel:
             admin.save_model(request, obj, None, False)
 
     def test_superuser_bypasses_workspace_check(self, ws_a, ws_b, admin_user):
-        from koalixcrm.core.models.pdf_export_process import PDFExportProcess
         from unittest.mock import patch
+
+        from koalixcrm.core.models.pdf_export_process import PDFExportProcess
 
         admin_obj = self._make_admin(PDFExportProcess)
 
@@ -369,9 +380,10 @@ class TestPDFExportProcessWorkspaceScoped:
         assert proc.workspace_id == ws_a.pk
 
     def test_visible_to_returns_correct_rows(self, ws_a, ws_b):
-        from koalixcrm.core.models.pdf_export_process import PDFExportProcess
         from django.contrib.auth.models import Group
-        from koalixcrm.core.models.access import RoleInWorkspace, Role
+
+        from koalixcrm.core.models.access import Role, RoleInWorkspace
+        from koalixcrm.core.models.pdf_export_process import PDFExportProcess
 
         user = User.objects.create_user(username='u_visible', password='pass')
         group = Group.objects.create(name='g_visible')

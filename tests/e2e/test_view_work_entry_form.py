@@ -1,17 +1,25 @@
 # -*- coding: utf-8 -*-
-import pytest
 import datetime
+
+import pytest
+
+from koalixcrm.reporting.models.work import Work
 from tests.contracts.test_support_functions import *
-from tests.factories.contacts.user_factory import AdminUserFactory
+from tests.e2e.UITests import UITests
 from tests.factories.contacts.customer_factory import StandardCustomerFactory
 from tests.factories.contacts.customer_group_factory import StandardCustomerGroupFactory
+from tests.factories.contacts.user_factory import AdminUserFactory
 from tests.factories.core.currency_factory import StandardCurrencyFactory
-from tests.factories.djangoUserExtension.factory_user_extension import StandardUserExtensionFactory
-from tests.factories.reporting.reporting_period_factory import StandardReportingPeriodFactory
+from tests.factories.djangoUserExtension.factory_user_extension import (
+    StandardUserExtensionFactory,
+)
+from tests.factories.reporting.human_resource_factory import (
+    StandardHumanResourceFactory,
+)
+from tests.factories.reporting.reporting_period_factory import (
+    StandardReportingPeriodFactory,
+)
 from tests.factories.reporting.task_factory import StandardTaskFactory
-from tests.e2e.UITests import UITests
-from koalixcrm.reporting.models.work import Work
-from tests.factories.reporting.human_resource_factory import StandardHumanResourceFactory
 
 
 class TimeTrackingWorkEntry(UITests):

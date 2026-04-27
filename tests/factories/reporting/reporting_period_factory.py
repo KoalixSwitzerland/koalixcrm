@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import factory
+
 from koalixcrm.reporting.models.reporting_period import ReportingPeriod
 from tests.factories.reporting.project_factory import StandardProjectFactory
-from tests.factories.reporting.reporting_period_status_factory import ReportingReportingPeriodStatusFactory
+from tests.factories.reporting.reporting_period_status_factory import (
+    ReportingReportingPeriodStatusFactory,
+)
 
 
 class StandardReportingPeriodFactory(factory.django.DjangoModelFactory):

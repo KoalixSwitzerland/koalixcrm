@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import factory
+
 from koalixcrm.contacts.models import CustomerBillingCycle
 from tests.factories.core.workspace_factory import DefaultWorkspaceFactory
 

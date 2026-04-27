@@ -1,12 +1,18 @@
 # -*- coding: utf-8 -*-
 
-import factory
 import datetime
-from koalixcrm.reporting.models.work import Work
-from tests.factories.reporting.task_factory import StandardTaskFactory
-from tests.factories.reporting.reporting_period_factory import StandardReportingPeriodFactory
-from tests.factories.reporting.human_resource_factory import StandardHumanResourceFactory
+
+import factory
+
 from koalixcrm.global_support_functions import make_date_utc
+from koalixcrm.reporting.models.work import Work
+from tests.factories.reporting.human_resource_factory import (
+    StandardHumanResourceFactory,
+)
+from tests.factories.reporting.reporting_period_factory import (
+    StandardReportingPeriodFactory,
+)
+from tests.factories.reporting.task_factory import StandardTaskFactory
 
 
 class StandardWorkFactory(factory.django.DjangoModelFactory):

@@ -1,21 +1,21 @@
 # -*- coding: utf-8 -*-
 from .customer_billing_cycle_view_set import CustomerBillingCycleViewSet
 from .party_view_sets import (
-    PartyViewSet,
-    OrganizationViewSet,
-    PartyContactViewSet,
-    PartyIdentificationViewSet,
-    PartyRoleViewSet,
+    AddressAssignmentViewSet,
+    AddressViewSet,
+    EmailAssignmentViewSet,
     OrganizationMembershipViewSet,
     OrganizationRelationshipViewSet,
-    AddressViewSet,
-    AddressAssignmentViewSet,
-    PhoneNumberViewSet,
-    PhoneAssignmentViewSet,
+    OrganizationViewSet,
+    PartyContactViewSet,
     PartyEmailViewSet,
-    EmailAssignmentViewSet,
-    PartyGroupViewSet,
     PartyGroupMembershipViewSet,
+    PartyGroupViewSet,
+    PartyIdentificationViewSet,
+    PartyRoleViewSet,
+    PartyViewSet,
+    PhoneAssignmentViewSet,
+    PhoneNumberViewSet,
 )
 
 __all__ = [

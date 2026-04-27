@@ -1,9 +1,11 @@
 """
 CustomerBillingCycleViewSet for koalixcrm crm
 """
-from koalixcrm.shared.base_model_view_set import BaseModelViewSet
 from koalixcrm.contacts.models.customer_billing_cycle import CustomerBillingCycle
-from koalixcrm.contacts.serializers.customer_billing_cycle_serializer import CustomerBillingCycleJSONSerializer
+from koalixcrm.contacts.serializers.customer_billing_cycle_serializer import (
+    CustomerBillingCycleJSONSerializer,
+)
+from koalixcrm.shared.base_model_view_set import BaseModelViewSet
 
 
 class CustomerBillingCycleViewSet(BaseModelViewSet):

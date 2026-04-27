@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
-from koalixcrm.shared.base_model_view_set import BaseModelViewSet
 from koalixcrm.contracts.models.sales_order import SalesOrder
-from koalixcrm.contracts.serializers.sales_order_serializer import SalesOrderJSONSerializer
+from koalixcrm.contracts.serializers.sales_order_serializer import (
+    SalesOrderJSONSerializer,
+)
+from koalixcrm.shared.base_model_view_set import BaseModelViewSet
 
 
 class SalesOrderViewSet(BaseModelViewSet):

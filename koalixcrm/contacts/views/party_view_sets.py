@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 """DRF viewsets for the new Party data model (issue #394)."""
-from koalixcrm.shared.base_model_view_set import BaseModelViewSet
-
 from koalixcrm.contacts.models.address import Address
 from koalixcrm.contacts.models.address_assignment import AddressAssignment
 from koalixcrm.contacts.models.email_assignment import EmailAssignment
@@ -34,6 +32,7 @@ from koalixcrm.contacts.serializers.party_serializers import (
     PhoneAssignmentJSONSerializer,
     PhoneNumberJSONSerializer,
 )
+from koalixcrm.shared.base_model_view_set import BaseModelViewSet
 
 
 class WorkspaceScopedViewSetMixin:

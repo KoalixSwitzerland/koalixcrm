@@ -2,16 +2,16 @@
 
 from django import forms
 from django.apps import apps
-from django.contrib import admin
-from django.http import HttpResponseRedirect
-from django.utils.translation import gettext as _
+from django.contrib import admin, messages
 from django.contrib.admin import helpers
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from django.contrib import messages
 from django.template.context_processors import csrf
-from koalixcrm.plugin import *
-from koalixcrm.contracts.models.invoice import Invoice
+from django.utils.translation import gettext as _
+
 from koalixcrm.contracts.admin.commercial_document_admin import OptionCommercialDocument
+from koalixcrm.contracts.models.invoice import Invoice
+from koalixcrm.plugin import *
 
 
 def _activa_account_queryset():
@@ -46,7 +46,10 @@ class OptionInvoice(OptionCommercialDocument):
             self.fields['payment_account'].queryset = _activa_account_queryset()
 
     def register_invoice_in_accounting(self, request, queryset):
-        from koalixcrm.core.exceptions import OpenInterestAccountMissing, IncompleteInvoice
+        from koalixcrm.core.exceptions import (
+            IncompleteInvoice,
+            OpenInterestAccountMissing,
+        )
         try:
             for obj in queryset:
                 obj.register_invoice_in_accounting(request)
@@ -87,8 +90,8 @@ class OptionInvoice(OptionCommercialDocument):
     register_payment_in_accounting.short_description = _("Register Payment in Accounting")
 
     def create_credit_note_from_invoice(self, request, queryset):
-        from koalixcrm.contracts.views.newdocument import CreateNewDocumentView
         import koalixcrm.contracts.models.credit_note
+        from koalixcrm.contracts.views.newdocument import CreateNewDocumentView
         for obj in queryset:
             response = CreateNewDocumentView.create_new_document(
                 self,

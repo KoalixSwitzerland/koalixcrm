@@ -2,14 +2,14 @@
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from koalixcrm.shared.base_model_view_set import BaseModelViewSet
 from koalixcrm.reporting.models.reporting_period import ReportingPeriod
-from koalixcrm.reporting.serializers.reporting_period_serializer import (
-    ReportingPeriodJSONSerializer,
-)
 from koalixcrm.reporting.serializers.project_report_serializer import (
     ProjectReportSerializer,
 )
+from koalixcrm.reporting.serializers.reporting_period_serializer import (
+    ReportingPeriodJSONSerializer,
+)
+from koalixcrm.shared.base_model_view_set import BaseModelViewSet
 
 
 class ReportingPeriodViewSet(BaseModelViewSet):

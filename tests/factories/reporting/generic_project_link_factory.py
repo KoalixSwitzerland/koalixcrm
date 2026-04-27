@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 
 import factory
-from koalixcrm.reporting.models.generic_project_link import GenericProjectLink
-from tests.factories.reporting.project_factory import StandardProjectFactory
-from tests.factories.reporting.task_link_type_factory import RelatedToTaskLinkTypeFactory
-from tests.factories.contacts.user_factory import StaffUserFactory
-from tests.factories.reporting.task_factory import StandardTaskFactory
 from django.contrib.contenttypes.models import ContentType
+
+from koalixcrm.reporting.models.generic_project_link import GenericProjectLink
+from tests.factories.contacts.user_factory import StaffUserFactory
+from tests.factories.reporting.project_factory import StandardProjectFactory
+from tests.factories.reporting.task_factory import StandardTaskFactory
+from tests.factories.reporting.task_link_type_factory import (
+    RelatedToTaskLinkTypeFactory,
+)
 
 
 class StandardGenericTaskLinkFactory(factory.django.DjangoModelFactory):

@@ -1,16 +1,18 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from django.contrib import admin, messages
 from django.utils.translation import gettext as _
-from koalixcrm.core.const.purpose import *
-from koalixcrm.core.const.party import ASSIGNMENT_PURPOSE_CHOICES
-from koalixcrm.global_support_functions import xstr
-from koalixcrm.contracts.models.commercial_document_position import CommercialDocumentPosition
-from koalixcrm.djangoUserExtension.models import TextParagraphInDocumentTemplate, UserExtension
-from koalixcrm.products.models.product_type import ProductType
+
 import koalixcrm.contracts.models.calculations
+from koalixcrm.contracts.models.commercial_document_position import (
+    CommercialDocumentPosition,
+)
+from koalixcrm.core.const.party import ASSIGNMENT_PURPOSE_CHOICES
+from koalixcrm.core.const.purpose import *
 from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
+from koalixcrm.djangoUserExtension.models import (
+    TextParagraphInDocumentTemplate,
+)
 
 
 class TextParagraphInCommercialDocument(WorkspaceScopedModel):

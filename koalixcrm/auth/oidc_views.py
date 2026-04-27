@@ -187,8 +187,8 @@ class OAuthCallbackView(View):
 
             id_token = token_data.get('id_token')
             if id_token:
-                import json
                 import base64
+                import json
                 payload_b64 = id_token.split('.')[1]
                 payload_b64 += '=' * (4 - len(payload_b64) % 4)
                 claims = json.loads(base64.urlsafe_b64decode(payload_b64))

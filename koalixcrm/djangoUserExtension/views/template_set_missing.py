@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from django.http import HttpResponseRedirect, Http404
-from django.shortcuts import render
-from django.template.context_processors import csrf
 from django.contrib.admin import helpers
 from django.contrib.admin.widgets import *
+from django.http import Http404, HttpResponseRedirect
+from django.shortcuts import render
+from django.template.context_processors import csrf
+
 from koalixcrm.djangoUserExtension.exceptions import TooManyUserExtensionsAvailable
 
 

@@ -3,6 +3,7 @@
 CurrencyAdmin for koalixcrm settings
 """
 from django.contrib import admin
+
 from koalixcrm.core.models.currency import Currency
 
 

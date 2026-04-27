@@ -19,13 +19,13 @@ import os
 import uuid
 
 import matplotlib
+
 matplotlib.use('Agg')  # headless backend for worker / API processes
 import matplotlib.dates as mdates  # noqa: E402
-from matplotlib import pyplot  # noqa: E402
 import pandas  # noqa: E402
+from matplotlib import pyplot  # noqa: E402
 
 from koalixcrm_utils.aws_clients import get_s3_client
-
 
 CHART_KEY_PREFIX = os.getenv("S3_REPORT_CHART_PREFIX", "report-charts")
 PRESIGNED_URL_EXPIRES_IN = int(os.getenv("PRESIGNED_URL_EXPIRES_IN", "300"))

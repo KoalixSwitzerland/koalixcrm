@@ -10,22 +10,22 @@ from koalixcrm.contacts.admin.actions import (
     convert_contacts_to_organizations,
     convert_organizations_to_contacts,
 )
-from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
-from koalixcrm.contacts.models.party import Party
-from koalixcrm.contacts.models.organization import Organization
-from koalixcrm.contacts.models.natural_person import PartyContact
-from koalixcrm.contacts.models.party_identification import PartyIdentification
-from koalixcrm.contacts.models.party_role import PartyRole
-from koalixcrm.contacts.models.organization_membership import OrganizationMembership
-from koalixcrm.contacts.models.organization_relationship import OrganizationRelationship
 from koalixcrm.contacts.models.address import Address
 from koalixcrm.contacts.models.address_assignment import AddressAssignment
-from koalixcrm.contacts.models.phone_number import PhoneNumber
-from koalixcrm.contacts.models.phone_assignment import PhoneAssignment
-from koalixcrm.contacts.models.party_email import PartyEmail
 from koalixcrm.contacts.models.email_assignment import EmailAssignment
+from koalixcrm.contacts.models.natural_person import PartyContact
+from koalixcrm.contacts.models.organization import Organization
+from koalixcrm.contacts.models.organization_membership import OrganizationMembership
+from koalixcrm.contacts.models.organization_relationship import OrganizationRelationship
+from koalixcrm.contacts.models.party import Party
+from koalixcrm.contacts.models.party_email import PartyEmail
 from koalixcrm.contacts.models.party_group import PartyGroup
 from koalixcrm.contacts.models.party_group_membership import PartyGroupMembership
+from koalixcrm.contacts.models.party_identification import PartyIdentification
+from koalixcrm.contacts.models.party_role import PartyRole
+from koalixcrm.contacts.models.phone_assignment import PhoneAssignment
+from koalixcrm.contacts.models.phone_number import PhoneNumber
+from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
 
 
 @admin.register(Party)

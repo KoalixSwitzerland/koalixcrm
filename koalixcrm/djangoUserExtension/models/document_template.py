@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 
-from django.db import models
 from django.contrib import admin
+from django.db import models
 from django.utils.translation import gettext as _
 
-from koalixcrm.djangoUserExtension.models.text_paragraph import InlineTextParagraph
-from koalixcrm.global_support_functions import xstr
+from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
 from koalixcrm.core.exceptions import *
 from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
-from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
+from koalixcrm.djangoUserExtension.models.text_paragraph import InlineTextParagraph
+from koalixcrm.global_support_functions import xstr
 from koalixcrm_utils.s3_storage import TemplateFileStorage
 
 

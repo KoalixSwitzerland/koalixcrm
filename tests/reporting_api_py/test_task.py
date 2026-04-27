@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-from django.test import LiveServerTestCase
 from django.contrib.auth.models import User
+from django.test import LiveServerTestCase
 
 from koalixcrm.reporting_api_py.reporting_api_client import KoalixCRMReportingAPIClient
-from tests.factories.reporting.task_factory import StandardTaskFactory
 from tests.factories.reporting.project_factory import StandardProjectFactory
+from tests.factories.reporting.task_factory import StandardTaskFactory
 from tests.factories.reporting.task_status_factory import StartedTaskStatusFactory
 
 

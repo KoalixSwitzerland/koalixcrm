@@ -1,20 +1,28 @@
 # -*- coding: utf-8 -*-
-import pytest
 import datetime
-from tests.contracts.test_support_functions import *
-from tests.factories.contacts.user_factory import AdminUserFactory
-from tests.factories.contacts.customer_factory import StandardCustomerFactory
-from tests.factories.contacts.customer_group_factory import StandardCustomerGroupFactory
-from tests.factories.core.currency_factory import StandardCurrencyFactory
-from tests.factories.djangoUserExtension.factory_user_extension import StandardUserExtensionFactory
-from tests.factories.reporting.reporting_period_factory import StandardReportingPeriodFactory
-from tests.factories.reporting.task_factory import StandardTaskFactory
-from koalixcrm.reporting.models.work import Work
-from tests.e2e.UITests import UITests
-from selenium.webdriver.support import expected_conditions
+
+import pytest
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from tests.factories.reporting.human_resource_factory import StandardHumanResourceFactory
+from selenium.webdriver.support import expected_conditions
+
+from koalixcrm.reporting.models.work import Work
+from tests.contracts.test_support_functions import *
+from tests.e2e.UITests import UITests
+from tests.factories.contacts.customer_factory import StandardCustomerFactory
+from tests.factories.contacts.customer_group_factory import StandardCustomerGroupFactory
+from tests.factories.contacts.user_factory import AdminUserFactory
+from tests.factories.core.currency_factory import StandardCurrencyFactory
+from tests.factories.djangoUserExtension.factory_user_extension import (
+    StandardUserExtensionFactory,
+)
+from tests.factories.reporting.human_resource_factory import (
+    StandardHumanResourceFactory,
+)
+from tests.factories.reporting.reporting_period_factory import (
+    StandardReportingPeriodFactory,
+)
+from tests.factories.reporting.task_factory import StandardTaskFactory
 
 
 class TimeTrackingWorkEntry(UITests):

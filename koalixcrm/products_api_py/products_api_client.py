@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 """KoalixCRM Products API Client"""
-from typing import Dict, List, Any, Optional
+from typing import Any, Dict, List, Optional
 
-from koalixcrm.shared.api_client import BaseAPIClient
-from koalixcrm.products_api_py.dto.product_type import ProductType
+from koalixcrm.products_api_py.dto.customer_group_transform import (
+    CustomerGroupTransform,
+)
 from koalixcrm.products_api_py.dto.product import Product
 from koalixcrm.products_api_py.dto.product_price import ProductPrice
-from koalixcrm.products_api_py.dto.price import Price
-from koalixcrm.products_api_py.dto.customer_group_transform import CustomerGroupTransform
+from koalixcrm.products_api_py.dto.product_type import ProductType
+from koalixcrm.shared.api_client import BaseAPIClient
 
 
 class KoalixCRMProductsAPIClient(BaseAPIClient):

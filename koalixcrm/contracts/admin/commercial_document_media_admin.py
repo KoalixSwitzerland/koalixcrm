@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib import admin
-from django.utils.translation import gettext as _
-from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
+
 from koalixcrm.contracts.models.commercial_document_media import CommercialDocumentMedia
+from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
 
 
 class CommercialDocumentMediaAdmin(WorkspaceScopedModelAdmin, admin.ModelAdmin):

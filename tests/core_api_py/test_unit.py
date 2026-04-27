@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from django.test import LiveServerTestCase
 from django.contrib.auth.models import User
+from django.test import LiveServerTestCase
 
+from koalixcrm.core.models.unit import Unit
 from koalixcrm.core_api_py.core_api_client import KoalixCRMCoreAPIClient
 from tests.factories.core.unit_factory import StandardUnitFactory
-from koalixcrm.core.models.unit import Unit
 
 
 class UnitAPITest(LiveServerTestCase):

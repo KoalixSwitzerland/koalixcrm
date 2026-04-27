@@ -1,4 +1,5 @@
 from rest_framework import serializers
+
 from koalixcrm.reporting.models.project_status import ProjectStatus
 
 

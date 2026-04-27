@@ -20,7 +20,7 @@ See `docs/migration-v1.14.0-to-v2.0.0.md` for what to do when a check
 fails.
 """
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import List
 
 
 @dataclass

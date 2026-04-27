@@ -1,5 +1,14 @@
 # -*- coding: utf-8 -*-
-from koalixcrm.accounting.serializers.account_serializer import AccountJSONSerializer, OptionAccountJSONSerializer
-from koalixcrm.accounting.serializers.accounting_period_serializer import AccountingPeriodJSONSerializer, OptionAccountingPeriodJSONSerializer
+from koalixcrm.accounting.serializers.account_serializer import (
+    AccountJSONSerializer,
+    OptionAccountJSONSerializer,
+)
+from koalixcrm.accounting.serializers.accounting_period_serializer import (
+    AccountingPeriodJSONSerializer,
+    OptionAccountingPeriodJSONSerializer,
+)
 from koalixcrm.accounting.serializers.booking_serializer import BookingJSONSerializer
-from koalixcrm.accounting.serializers.product_category_serializer import ProductCategoryJSONSerializer, ProductCategoryMinimalJSONSerializer
+from koalixcrm.accounting.serializers.product_category_serializer import (
+    ProductCategoryJSONSerializer,
+    ProductCategoryMinimalJSONSerializer,
+)

@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from decimal import Decimal
+
 from django.db import models
-from django.utils.translation import gettext as _
 from django.utils.html import format_html
+from django.utils.translation import gettext as _
+
 from koalixcrm.reporting.models.reporting_period import ReportingPeriod
 from koalixcrm.reporting.models.task import Task
 
@@ -55,7 +57,6 @@ class Project(models.Model):
     link_to_project.short_description = _("Project")
 
     def get_reporting_period(self, search_date):
-        from koalixcrm.reporting.models.reporting_period import ReportingPeriod
         """Returns the reporting period that is valid. Valid is a reporting period when the provided date
           lies between begin and end of the reporting period
 
@@ -324,7 +325,6 @@ class Project(models.Model):
 
         Raises:
           No exceptions planned"""
-        from koalixcrm.reporting.models.reporting_period import ReportingPeriod
         reporting_periods = ReportingPeriod.objects.filter(project=self.id, status__is_done=False)
         if len(reporting_periods) != 0:
             if not self.project_status.is_done:

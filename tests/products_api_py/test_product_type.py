@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from django.test import LiveServerTestCase
 from django.contrib.auth.models import User
+from django.test import LiveServerTestCase
 
-from koalixcrm.products_api_py.products_api_client import KoalixCRMProductsAPIClient
-from tests.factories.products.product_type_factory import StandardProductTypeFactory
-from tests.factories.core.unit_factory import StandardUnitFactory
-from tests.factories.core.tax_factory import StandardTaxFactory
 from koalixcrm.products.models.product_type import ProductType
+from koalixcrm.products_api_py.products_api_client import KoalixCRMProductsAPIClient
+from tests.factories.core.tax_factory import StandardTaxFactory
+from tests.factories.core.unit_factory import StandardUnitFactory
+from tests.factories.products.product_type_factory import StandardProductTypeFactory
 
 
 class ProductTypeAPITest(LiveServerTestCase):

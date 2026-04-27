@@ -1,10 +1,14 @@
 from rest_framework import serializers
 
 from koalixcrm.reporting.models.resource import Resource
-from koalixcrm.reporting.models.resource_type import ResourceType
 from koalixcrm.reporting.models.resource_manager import ResourceManager
-from koalixcrm.reporting.serializers.resource_manager_serializer import OptionResourceManagerJSONSerializer
-from koalixcrm.reporting.serializers.resource_type_serializer import OptionResourceTypeJSONSerializer
+from koalixcrm.reporting.models.resource_type import ResourceType
+from koalixcrm.reporting.serializers.resource_manager_serializer import (
+    OptionResourceManagerJSONSerializer,
+)
+from koalixcrm.reporting.serializers.resource_type_serializer import (
+    OptionResourceTypeJSONSerializer,
+)
 
 
 class OptionResourceJSONSerializer(serializers.ModelSerializer):

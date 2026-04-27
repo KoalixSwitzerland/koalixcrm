@@ -1,19 +1,22 @@
 # -*- coding: utf-8 -*-
-from django.http import Http404
-from django.http import HttpResponseRedirect
-from django.shortcuts import render
-from django.core.exceptions import ObjectDoesNotExist
-from django.utils.translation import gettext as _
+from datetime import date
+
 from django.contrib.contenttypes.models import ContentType
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import Http404, HttpResponseRedirect
+from django.shortcuts import render
+from django.utils.translation import gettext as _
+
+from koalixcrm.contracts.models.commercial_document import CommercialDocument
+from koalixcrm.contracts.models.commercial_document_position import (
+    CommercialDocumentPosition,
+)
 from koalixcrm.core.exceptions import *
 from koalixcrm.djangoUserExtension.exceptions import *
-from koalixcrm.contracts.models.commercial_document import CommercialDocument
-from koalixcrm.contracts.models.commercial_document_position import CommercialDocumentPosition
-from koalixcrm.reporting.models.task import Task
+from koalixcrm.global_support_functions import *
 from koalixcrm.reporting.models.generic_task_link import GenericTaskLink
 from koalixcrm.reporting.models.project import Project
-from koalixcrm.global_support_functions import *
-from datetime import date
+from koalixcrm.reporting.models.task import Task
 
 
 class CreateTaskView:

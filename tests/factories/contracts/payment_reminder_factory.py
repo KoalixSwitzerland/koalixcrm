@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from koalixcrm.contracts.models.payment_reminder import PaymentReminder
-from tests.factories.contracts.commercial_document_factory import StandardCommercialDocumentFactory
+from tests.factories.contracts.commercial_document_factory import (
+    StandardCommercialDocumentFactory,
+)
 
 
 class StandardPaymentReminderFactory(StandardCommercialDocumentFactory):

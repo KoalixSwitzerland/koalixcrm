@@ -2,8 +2,12 @@
 
 from django.contrib import admin, messages
 from django.utils.translation import gettext as _
-from koalixcrm.reporting.models.reporting_period import ReportingPeriod, ReportingPeriodAdminForm
+
 from koalixcrm.reporting.admin.work_admin import WorkInlineAdminView
+from koalixcrm.reporting.models.reporting_period import (
+    ReportingPeriod,
+    ReportingPeriodAdminForm,
+)
 
 
 class ReportingPeriodAdmin(admin.ModelAdmin):

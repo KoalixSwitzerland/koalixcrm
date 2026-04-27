@@ -9,12 +9,11 @@ The PDF worker calls:
   presigned S3 URL for the XSL-FO stylesheet (same for ``fop-config`` and
   ``logo``). Missing optional assets return ``404``.
 """
+from django.http import HttpResponseRedirect
 from rest_framework import mixins, viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import NotFound
 from rest_framework.permissions import IsAuthenticated
-
-from django.http import HttpResponseRedirect
 
 from koalixcrm.djangoUserExtension.models.document_template import DocumentTemplate
 from koalixcrm.djangoUserExtension.serializers.document_template_serializer import (

@@ -3,11 +3,15 @@
 # DJANGO IMPORTS
 from django.urls import path
 
-from koalixcrm.reporting.views.time_tracking import work_report
-from koalixcrm.djangoUserExtension.views.user_extension_missing import user_extension_missing
-from koalixcrm.reporting.views.reporting_period_missing import reporting_period_missing
-from koalixcrm.reporting.views.user_is_not_human_resource import user_is_not_human_resource
 from koalixcrm.core.views.set_timezone import set_timezone
+from koalixcrm.djangoUserExtension.views.user_extension_missing import (
+    user_extension_missing,
+)
+from koalixcrm.reporting.views.reporting_period_missing import reporting_period_missing
+from koalixcrm.reporting.views.time_tracking import work_report
+from koalixcrm.reporting.views.user_is_not_human_resource import (
+    user_is_not_human_resource,
+)
 
 urlpatterns = [
     path('time_tracking/', work_report, name="monthly_report"),

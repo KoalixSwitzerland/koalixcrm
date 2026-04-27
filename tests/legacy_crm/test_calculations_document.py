@@ -1,20 +1,31 @@
-import pytest
 import datetime
+
+import pytest
 from django.test import TestCase
+
 from koalixcrm.contracts.models.calculations import Calculations
-from tests.factories.core.currency_factory import StandardCurrencyFactory
-from tests.factories.contracts.quotation_factory import StandardQuotationFactory
-from tests.factories.contracts.commercial_document_position_factory import StandardCommercialDocumentPositionFactory
-from tests.factories.products.product_type_factory import StandardProductTypeFactory
-from tests.factories.products.product_price_factory import StandardPriceFactory
-from tests.factories.contacts.customer_factory import StandardCustomerFactory
-from tests.factories.contacts.customer_group_factory import StandardCustomerGroupFactory, AdvancedCustomerGroupFactory
-from tests.factories.core.tax_factory import StandardTaxFactory
-from tests.factories.core.unit_factory import StandardUnitFactory, SmallUnitFactory
-from tests.factories.products.customer_group_transform_factory import StandardCustomerGroupTransformFactory
-from tests.factories.core.unit_transform_factory import StandardUnitTransformFactory
-from tests.factories.core.currency_transform_factory import StandardCurrencyTransformFactory
 from koalixcrm.global_support_functions import make_date_utc
+from tests.factories.contacts.customer_factory import StandardCustomerFactory
+from tests.factories.contacts.customer_group_factory import (
+    AdvancedCustomerGroupFactory,
+    StandardCustomerGroupFactory,
+)
+from tests.factories.contracts.commercial_document_position_factory import (
+    StandardCommercialDocumentPositionFactory,
+)
+from tests.factories.contracts.quotation_factory import StandardQuotationFactory
+from tests.factories.core.currency_factory import StandardCurrencyFactory
+from tests.factories.core.currency_transform_factory import (
+    StandardCurrencyTransformFactory,
+)
+from tests.factories.core.tax_factory import StandardTaxFactory
+from tests.factories.core.unit_factory import SmallUnitFactory, StandardUnitFactory
+from tests.factories.core.unit_transform_factory import StandardUnitTransformFactory
+from tests.factories.products.customer_group_transform_factory import (
+    StandardCustomerGroupTransformFactory,
+)
+from tests.factories.products.product_price_factory import StandardPriceFactory
+from tests.factories.products.product_type_factory import StandardProductTypeFactory
 
 
 class DocumentCalculationsTest(TestCase):

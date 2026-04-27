@@ -2,11 +2,11 @@
 """API client for the koalixcrm Accounting app."""
 from typing import Any, Dict, List, Optional
 
-from koalixcrm.shared.api_client import BaseAPIClient
 from koalixcrm.accounting_api_py.dto.account import Account
 from koalixcrm.accounting_api_py.dto.accounting_period import AccountingPeriod
 from koalixcrm.accounting_api_py.dto.booking import Booking
 from koalixcrm.accounting_api_py.dto.product_category import ProductCategory
+from koalixcrm.shared.api_client import BaseAPIClient
 
 
 class KoalixCRMAccountingAPIClient(BaseAPIClient):

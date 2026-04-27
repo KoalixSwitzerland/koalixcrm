@@ -19,8 +19,8 @@ import urllib.parse
 from os import getenv
 from typing import Any, Dict, List, Optional, Type
 
-from koalixcrm.shared.token_cache import TokenCache
 from koalixcrm.shared.object_cache import ObjectCache, T
+from koalixcrm.shared.token_cache import TokenCache
 
 logger = logging.getLogger(__name__)
 

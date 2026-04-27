@@ -4,8 +4,9 @@ from django.db import models
 from django.forms import ValidationError
 from django.utils.html import format_html
 from django.utils.translation import gettext as _
-from koalixcrm.global_support_functions import *
+
 from koalixcrm.core.exceptions import ReportingPeriodDoneDeleteNotPossible
+from koalixcrm.global_support_functions import *
 
 
 class Work(models.Model):
@@ -57,7 +58,7 @@ class Work(models.Model):
             return limit_string_length(self.description, 100)
         else:
             return _("Please add description")
-    get_short_description.short_description = _("Short description");
+    get_short_description.short_description = _("Short description")
 
     def effort_hours(self):
         if self.effort_seconds() != 0:

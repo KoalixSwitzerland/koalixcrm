@@ -23,7 +23,7 @@ class Booking(models.Model):
     def booking_date_only(self):
         return self.booking_date.date()
 
-    booking_date_only.short_description = _("Date");
+    booking_date_only.short_description = _("Date")
 
     def __str__(self):
         return self.from_account.__str__() + " " + self.to_account.__str__() + " " + self.amount.__str__()

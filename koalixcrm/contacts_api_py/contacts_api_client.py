@@ -6,27 +6,55 @@ Contact{Postal,Phone,Email}Address endpoints and their client methods
 are gone as of v2.0.0 (issue #395). Everything goes through the Party
 data model DTOs below.
 """
-from typing import Dict, List, Any, Optional
+from typing import Any, Dict, List, Optional
 
-from koalixcrm.shared.api_client import BaseAPIClient
 from koalixcrm.contacts_api_py.dto.customer_billing_cycle import CustomerBillingCycle
 from koalixcrm.contacts_api_py.dto.party_dtos import (
-    Party as PartyDto,
-    Organization as OrganizationDto,
-    PartyContact as PartyContactDto,
-    PartyIdentification as PartyIdentificationDto,
-    PartyRole as PartyRoleDto,
-    OrganizationMembership as OrganizationMembershipDto,
-    OrganizationRelationship as OrganizationRelationshipDto,
     Address as AddressDto,
+)
+from koalixcrm.contacts_api_py.dto.party_dtos import (
     AddressAssignment as AddressAssignmentDto,
-    PhoneNumber as PhoneNumberDto,
-    PhoneAssignment as PhoneAssignmentDto,
-    PartyEmail as PartyEmailDto,
+)
+from koalixcrm.contacts_api_py.dto.party_dtos import (
     EmailAssignment as EmailAssignmentDto,
+)
+from koalixcrm.contacts_api_py.dto.party_dtos import (
+    Organization as OrganizationDto,
+)
+from koalixcrm.contacts_api_py.dto.party_dtos import (
+    OrganizationMembership as OrganizationMembershipDto,
+)
+from koalixcrm.contacts_api_py.dto.party_dtos import (
+    OrganizationRelationship as OrganizationRelationshipDto,
+)
+from koalixcrm.contacts_api_py.dto.party_dtos import (
+    Party as PartyDto,
+)
+from koalixcrm.contacts_api_py.dto.party_dtos import (
+    PartyContact as PartyContactDto,
+)
+from koalixcrm.contacts_api_py.dto.party_dtos import (
+    PartyEmail as PartyEmailDto,
+)
+from koalixcrm.contacts_api_py.dto.party_dtos import (
     PartyGroup as PartyGroupDto,
+)
+from koalixcrm.contacts_api_py.dto.party_dtos import (
     PartyGroupMembership as PartyGroupMembershipDto,
 )
+from koalixcrm.contacts_api_py.dto.party_dtos import (
+    PartyIdentification as PartyIdentificationDto,
+)
+from koalixcrm.contacts_api_py.dto.party_dtos import (
+    PartyRole as PartyRoleDto,
+)
+from koalixcrm.contacts_api_py.dto.party_dtos import (
+    PhoneAssignment as PhoneAssignmentDto,
+)
+from koalixcrm.contacts_api_py.dto.party_dtos import (
+    PhoneNumber as PhoneNumberDto,
+)
+from koalixcrm.shared.api_client import BaseAPIClient
 
 
 class KoalixCRMContactsAPIClient(BaseAPIClient):

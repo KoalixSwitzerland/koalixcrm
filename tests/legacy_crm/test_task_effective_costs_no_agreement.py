@@ -1,19 +1,31 @@
 import datetime
+
 import pytest
 from django.test import TestCase
-from tests.factories.contacts.user_factory import AdminUserFactory
-from tests.factories.contacts.customer_billing_cycle_factory import StandardCustomerBillingCycleFactory
+
+from koalixcrm.global_support_functions import make_date_utc
+from tests.factories.contacts.customer_billing_cycle_factory import (
+    StandardCustomerBillingCycleFactory,
+)
 from tests.factories.contacts.customer_factory import StandardCustomerFactory
 from tests.factories.contacts.customer_group_factory import StandardCustomerGroupFactory
-from tests.factories.core.unit_factory import StandardUnitFactory
+from tests.factories.contacts.user_factory import AdminUserFactory
 from tests.factories.core.currency_factory import StandardCurrencyFactory
-from tests.factories.reporting.reporting_period_factory import StandardReportingPeriodFactory
-from tests.factories.reporting.human_resource_factory import StandardHumanResourceFactory
-from tests.factories.reporting.work_factory import StandardWorkFactory
+from tests.factories.core.unit_factory import StandardUnitFactory
+from tests.factories.reporting.estimation_factory import (
+    StandardHumanResourceEstimationToTaskFactory,
+)
+from tests.factories.reporting.human_resource_factory import (
+    StandardHumanResourceFactory,
+)
+from tests.factories.reporting.reporting_period_factory import (
+    StandardReportingPeriodFactory,
+)
+from tests.factories.reporting.resource_price_factory import (
+    StandardResourcePriceFactory,
+)
 from tests.factories.reporting.task_factory import StandardTaskFactory
-from tests.factories.reporting.resource_price_factory import StandardResourcePriceFactory
-from tests.factories.reporting.estimation_factory import StandardHumanResourceEstimationToTaskFactory
-from koalixcrm.global_support_functions import make_date_utc
+from tests.factories.reporting.work_factory import StandardWorkFactory
 
 
 class TaskEffectiveCostsWithoutAgreement(TestCase):

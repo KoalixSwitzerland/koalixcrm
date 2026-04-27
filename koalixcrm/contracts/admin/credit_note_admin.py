@@ -2,8 +2,9 @@
 
 from django.contrib import admin, messages
 from django.utils.translation import gettext as _
-from koalixcrm.contracts.models.credit_note import CreditNote
+
 from koalixcrm.contracts.admin.commercial_document_admin import OptionCommercialDocument
+from koalixcrm.contracts.models.credit_note import CreditNote
 
 
 class OptionCreditNote(OptionCommercialDocument):
@@ -18,7 +19,10 @@ class OptionCreditNote(OptionCommercialDocument):
     )
 
     def register_credit_note_in_accounting(self, request, queryset):
-        from koalixcrm.core.exceptions import OpenInterestAccountMissing, IncompleteInvoice
+        from koalixcrm.core.exceptions import (
+            IncompleteInvoice,
+            OpenInterestAccountMissing,
+        )
         try:
             for obj in queryset:
                 obj.register_credit_note_in_accounting(request)

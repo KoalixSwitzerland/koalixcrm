@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
-import factory
 import datetime
+
+import factory
+
+from koalixcrm.global_support_functions import make_date_utc
 from koalixcrm.reporting.models.task import Task
 from tests.factories.reporting.project_factory import StandardProjectFactory
 from tests.factories.reporting.task_status_factory import StartedTaskStatusFactory
-from koalixcrm.global_support_functions import make_date_utc
 
 
 class StandardTaskFactory(factory.django.DjangoModelFactory):

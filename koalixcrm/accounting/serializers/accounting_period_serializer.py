@@ -2,9 +2,11 @@
 
 from rest_framework import serializers
 
-from koalixcrm.accounting.models.accounting_period import AccountingPeriod
 from koalixcrm.accounting.models import Account
-from koalixcrm.accounting.serializers.account_serializer import AccountBookingSumsSerializer
+from koalixcrm.accounting.models.accounting_period import AccountingPeriod
+from koalixcrm.accounting.serializers.account_serializer import (
+    AccountBookingSumsSerializer,
+)
 
 
 class OptionAccountingPeriodJSONSerializer(serializers.ModelSerializer):

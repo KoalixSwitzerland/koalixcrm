@@ -6,7 +6,10 @@ duration of each request.
 CR-9 §9.3.
 """
 
-from koalixcrm.core.managers.workspace_aware import activate_workspace, deactivate_workspace
+from koalixcrm.core.managers.workspace_aware import (
+    activate_workspace,
+    deactivate_workspace,
+)
 
 
 class WorkspaceContextMiddleware:

@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 
 import factory
+
 from koalixcrm.products.models.customer_group_transform import CustomerGroupTransform
-from tests.factories.products.product_type_factory import StandardProductTypeFactory
-from tests.factories.contacts.customer_group_factory import AdvancedCustomerGroupFactory
-from tests.factories.contacts.customer_group_factory import StandardCustomerGroupFactory
+from tests.factories.contacts.customer_group_factory import (
+    AdvancedCustomerGroupFactory,
+    StandardCustomerGroupFactory,
+)
 from tests.factories.core.workspace_factory import DefaultWorkspaceFactory
+from tests.factories.products.product_type_factory import StandardProductTypeFactory
 
 
 class StandardCustomerGroupTransformFactory(factory.django.DjangoModelFactory):

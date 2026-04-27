@@ -27,7 +27,6 @@ from django.db import connection
 from django.db.migrations.loader import MigrationLoader
 from django.db.migrations.recorder import MigrationRecorder
 
-
 CREATE_MODEL_OP_NAMES = ("CreateModel", "CreateModelIfNotExists")
 
 # Matches legacy `id integer NOT NULL` column declarations that are missing

@@ -1,6 +1,6 @@
 import json
 import logging
-from urllib.request import urlopen, Request
+from urllib.request import Request, urlopen
 
 import jwt
 from django.conf import settings
@@ -9,7 +9,7 @@ from django.db import IntegrityError, transaction
 from rest_framework.authentication import BaseAuthentication
 from rest_framework.exceptions import AuthenticationFailed
 
-from .oidc_utils import get_token_auth_header, get_jwks, get_oidc_discovery
+from .oidc_utils import get_jwks, get_oidc_discovery, get_token_auth_header
 
 logger = logging.getLogger(__name__)
 UserModel = get_user_model()

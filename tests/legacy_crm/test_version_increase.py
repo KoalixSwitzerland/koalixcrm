@@ -1,7 +1,9 @@
-from django.test import TestCase
-from subprocess import Popen, PIPE
-from koalixcrm.version import KOALIXCRM_VERSION
+from subprocess import PIPE, Popen
+
 import pytest
+from django.test import TestCase
+
+from koalixcrm.version import KOALIXCRM_VERSION
 
 
 class VersionIncreaseTest(TestCase):

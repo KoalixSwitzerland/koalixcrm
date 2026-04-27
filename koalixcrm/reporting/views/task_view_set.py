@@ -2,6 +2,7 @@
 TaskViewSet for koalixcrm reporting
 """
 from koalixcrm.shared.base_model_view_set import BaseModelViewSet
+
 from ..models.task import Task
 from ..serializers.task_serializer import TaskJSONSerializer
 

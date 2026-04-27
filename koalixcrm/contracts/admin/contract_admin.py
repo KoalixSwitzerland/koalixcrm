@@ -2,23 +2,24 @@
 
 from django.contrib import admin
 from django.utils.translation import gettext as _
-from koalixcrm.plugin import *
-from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
-from koalixcrm.contracts.models.contract import (
-    ContractAddressAssignment,
-    ContractPhoneAssignment,
-    ContractEmailAssignment,
-)
-from koalixcrm.contracts.admin.quotation_admin import InlineQuotation
-from koalixcrm.contracts.admin.invoice_admin import InlineInvoice
-from koalixcrm.contracts.admin.credit_note_admin import InlineCreditNote
-import koalixcrm.contracts.models.quotation
+
 import koalixcrm.contracts.models.credit_note
-import koalixcrm.contracts.models.invoice
-import koalixcrm.contracts.models.sales_order
 import koalixcrm.contracts.models.despatch_advice
+import koalixcrm.contracts.models.invoice
 import koalixcrm.contracts.models.payment_reminder
 import koalixcrm.contracts.models.purchase_order
+import koalixcrm.contracts.models.quotation
+import koalixcrm.contracts.models.sales_order
+from koalixcrm.contracts.admin.credit_note_admin import InlineCreditNote
+from koalixcrm.contracts.admin.invoice_admin import InlineInvoice
+from koalixcrm.contracts.admin.quotation_admin import InlineQuotation
+from koalixcrm.contracts.models.contract import (
+    ContractAddressAssignment,
+    ContractEmailAssignment,
+    ContractPhoneAssignment,
+)
+from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
+from koalixcrm.plugin import *
 
 
 class ContractPostalAddress(admin.StackedInline):

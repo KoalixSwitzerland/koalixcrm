@@ -7,10 +7,10 @@ module is inert — importing it has no effect on the running URL conf.
 from rest_framework.routers import DefaultRouter
 
 from koalixcrm.products_api_py.products_api import (
+    CustomerGroupTransformViewSet,
+    ProductPriceViewSet,
     ProductTypeViewSet,
     ProductViewSet,
-    ProductPriceViewSet,
-    CustomerGroupTransformViewSet,
 )
 
 router = DefaultRouter()

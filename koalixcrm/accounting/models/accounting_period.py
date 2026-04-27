@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 
 from datetime import *
+
+from django import forms
 from django.contrib import admin, messages
 from django.db import models
 from django.utils.translation import gettext as _
-from django import forms
-from koalixcrm.accounting.models import Account
+
 from koalixcrm.accounting.exceptions import AccountingPeriodNotFound
-from koalixcrm.accounting.models import InlineBookings
+from koalixcrm.accounting.models import Account, InlineBookings
 
 
 class AccountingPeriod(models.Model):

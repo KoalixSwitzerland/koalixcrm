@@ -1,18 +1,27 @@
 # -*- coding: utf-8 -*-
 from rest_framework import serializers
-from koalixcrm.reporting.models.agreement import Agreement
-from koalixcrm.reporting.models.agreement_type import AgreementType
-from koalixcrm.reporting.models.agreement_status import AgreementStatus
-from koalixcrm.reporting.models.resource_price import ResourcePrice
-from koalixcrm.reporting.models.resource import Resource
-from koalixcrm.reporting.models.task import Task
+
 from koalixcrm.core.models.unit import Unit
-from koalixcrm.reporting.serializers.task_serializer import OptionTaskJSONSerializer
 from koalixcrm.core.serializers.unit_serializer import OptionUnitJSONSerializer
-from koalixcrm.reporting.serializers.resource_price_serializer import OptionResourcePriceJSONSerializer
-from koalixcrm.reporting.serializers.agreement_type_serializer import OptionAgreementTypeJSONSerializer
-from koalixcrm.reporting.serializers.agreement_status_serializer import OptionAgreementStatusJSONSerializer
-from koalixcrm.reporting.serializers.resource_serializer import OptionResourceJSONSerializer
+from koalixcrm.reporting.models.agreement import Agreement
+from koalixcrm.reporting.models.agreement_status import AgreementStatus
+from koalixcrm.reporting.models.agreement_type import AgreementType
+from koalixcrm.reporting.models.resource import Resource
+from koalixcrm.reporting.models.resource_price import ResourcePrice
+from koalixcrm.reporting.models.task import Task
+from koalixcrm.reporting.serializers.agreement_status_serializer import (
+    OptionAgreementStatusJSONSerializer,
+)
+from koalixcrm.reporting.serializers.agreement_type_serializer import (
+    OptionAgreementTypeJSONSerializer,
+)
+from koalixcrm.reporting.serializers.resource_price_serializer import (
+    OptionResourcePriceJSONSerializer,
+)
+from koalixcrm.reporting.serializers.resource_serializer import (
+    OptionResourceJSONSerializer,
+)
+from koalixcrm.reporting.serializers.task_serializer import OptionTaskJSONSerializer
 
 
 class AgreementJSONSerializer(serializers.ModelSerializer):

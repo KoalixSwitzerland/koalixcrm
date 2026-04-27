@@ -1,14 +1,15 @@
 from decimal import Decimal
+
 from django.db import models
-from django.utils.translation import gettext as _
 from django.utils.html import format_html
-from koalixcrm.reporting.models.agreement import Agreement
-from koalixcrm.reporting.models.work import Work
-from koalixcrm.reporting.models.resource_price import ResourcePrice
-from koalixcrm.reporting.models.estimation import Estimation
-from koalixcrm.core.exceptions import ReportingPeriodNotFound
-from rest_framework import serializers
+from django.utils.translation import gettext as _
+
 from koalixcrm import global_support_functions
+from koalixcrm.core.exceptions import ReportingPeriodNotFound
+from koalixcrm.reporting.models.agreement import Agreement
+from koalixcrm.reporting.models.estimation import Estimation
+from koalixcrm.reporting.models.resource_price import ResourcePrice
+from koalixcrm.reporting.models.work import Work
 
 
 class Task(models.Model):

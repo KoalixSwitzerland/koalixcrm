@@ -3,6 +3,7 @@
 TaxAdmin for koalixcrm settings
 """
 from django.contrib import admin
+
 from koalixcrm.core.models.tax import Tax
 
 

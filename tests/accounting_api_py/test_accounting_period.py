@@ -1,11 +1,15 @@
 # -*- coding: utf-8 -*-
 
-from django.test import LiveServerTestCase
 from django.contrib.auth.models import User
+from django.test import LiveServerTestCase
 
-from koalixcrm.accounting_api_py.accounting_api_client import KoalixCRMAccountingAPIClient
-from tests.factories.accounting.accounting_period_factory import StandardAccountingPeriodFactory
 from koalixcrm.accounting.models import AccountingPeriod
+from koalixcrm.accounting_api_py.accounting_api_client import (
+    KoalixCRMAccountingAPIClient,
+)
+from tests.factories.accounting.accounting_period_factory import (
+    StandardAccountingPeriodFactory,
+)
 
 
 class AccountingPeriodAPITest(LiveServerTestCase):

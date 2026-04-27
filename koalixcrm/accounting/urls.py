@@ -7,8 +7,8 @@ module is inert — importing it has no effect on the running URL conf.
 from rest_framework.routers import DefaultRouter
 
 from koalixcrm.accounting_api_py.accounting_api import (
-    AccountViewSet,
     AccountingPeriodViewSet,
+    AccountViewSet,
     BookingViewSet,
     ProductCategoryViewSet,
 )

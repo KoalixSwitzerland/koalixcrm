@@ -2,13 +2,13 @@
 
 from os import path
 
-from koalixcrm import crm
-from koalixcrm import djangoUserExtension
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
-from filebrowser.base import FileObject
 from django.utils.translation import gettext as _
-from django.conf import settings
+from filebrowser.base import FileObject
+
+from koalixcrm import crm, djangoUserExtension
 
 DEFAULT_FILE = 'dashboard.py'
 
@@ -28,10 +28,10 @@ class Command(BaseCommand):
     @staticmethod
     def path_of_default_template_file(language, file_name):
         file_path = path.join(settings.STATIC_ROOT, "default_templates", language, file_name)
-        f = None;
+        f = None
         try:
             f = open(file_path,'r')
-        except (FileNotFoundError) as e:
+        except (FileNotFoundError):
             print(_("File not found:") + file_path)
             print(_("Run collectstatic command and fix potential errors"))
         finally:
@@ -78,8 +78,8 @@ class Command(BaseCommand):
         currency.rounding = "0.10"
         currency.save()
         from koalixcrm.contacts.models.address import Address
-        from koalixcrm.contacts.models.phone_number import PhoneNumber
         from koalixcrm.contacts.models.party_email import PartyEmail
+        from koalixcrm.contacts.models.phone_number import PhoneNumber
         from koalixcrm.core.models.workspace import Workspace
         ws, _ = Workspace.objects.get_or_create(
             name='Default Workspace',

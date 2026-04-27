@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib import admin
+
 from koalixcrm.reporting.models.generic_task_link import GenericTaskLink
 
 

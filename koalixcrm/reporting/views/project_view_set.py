@@ -1,13 +1,14 @@
 """ProjectViewSet for koalixcrm reporting."""
+from rest_framework import status as http_status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework import status as http_status
 
 from koalixcrm.shared.base_model_view_set import BaseModelViewSet
+
 from ..models.project import Project
 from ..models.reporting_period import ReportingPeriod
-from ..serializers.project_serializer import ProjectJSONSerializer
 from ..serializers.project_report_serializer import ProjectReportSerializer
+from ..serializers.project_serializer import ProjectJSONSerializer
 
 
 class ProjectViewSet(BaseModelViewSet):

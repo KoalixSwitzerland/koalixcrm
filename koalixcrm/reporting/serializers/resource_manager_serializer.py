@@ -1,8 +1,10 @@
 from rest_framework import serializers
 
 from koalixcrm.djangoUserExtension.models.user_extension import UserExtension
+from koalixcrm.djangoUserExtension.serializers.user_extension_rest import (
+    OptionUserExtensionJSONSerializer,
+)
 from koalixcrm.reporting.models.resource_manager import ResourceManager
-from koalixcrm.djangoUserExtension.serializers.user_extension_rest import OptionUserExtensionJSONSerializer
 
 
 class OptionResourceManagerJSONSerializer(serializers.ModelSerializer):

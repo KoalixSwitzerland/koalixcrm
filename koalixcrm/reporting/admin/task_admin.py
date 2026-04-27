@@ -2,11 +2,12 @@
 
 from django.contrib import admin
 from django.utils.translation import gettext as _
-from koalixcrm.reporting.models.task import Task
+
 from koalixcrm.reporting.admin.agreement_admin import AgreementInlineAdminView
 from koalixcrm.reporting.admin.estimation_admin import EstimationInlineAdminView
 from koalixcrm.reporting.admin.generic_task_link_admin import InlineGenericTaskLink
 from koalixcrm.reporting.admin.work_admin import WorkInlineAdminView
+from koalixcrm.reporting.models.task import Task
 
 
 class TaskAdminView(admin.ModelAdmin):

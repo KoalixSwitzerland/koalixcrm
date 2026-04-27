@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django import forms
+
 from koalixcrm.reporting.views.work_entry_form import WorkEntry
 
 

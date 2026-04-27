@@ -4,9 +4,9 @@ import os
 import time
 from typing import Any, Dict
 
-from koalixcrm_utils.aws_clients import get_sqs_client
-from koalixcrm_mq_commands import CommandEnvelope
 from koalixcrm_microservices.celery_app import app as celery_app
+from koalixcrm_mq_commands import CommandEnvelope
+from koalixcrm_utils.aws_clients import get_sqs_client
 
 logger = logging.getLogger(__name__)
 

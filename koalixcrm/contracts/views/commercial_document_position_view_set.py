@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
+from koalixcrm.contracts.models.commercial_document_position import (
+    CommercialDocumentPosition,
+)
+from koalixcrm.contracts.serializers.commercial_document_position_serializer import (
+    CommercialDocumentPositionJSONSerializer,
+)
 from koalixcrm.shared.base_model_view_set import BaseModelViewSet
-from koalixcrm.contracts.models.commercial_document_position import CommercialDocumentPosition
-from koalixcrm.contracts.serializers.commercial_document_position_serializer import CommercialDocumentPositionJSONSerializer
 
 
 class CommercialDocumentPositionViewSet(BaseModelViewSet):

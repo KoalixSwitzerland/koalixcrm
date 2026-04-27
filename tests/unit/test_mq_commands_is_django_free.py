@@ -13,7 +13,6 @@ import subprocess  # nosec B404 - trusted literal invocation, see test body
 import sys
 import textwrap
 
-
 SCRIPT = textwrap.dedent(
     """
     import os, sys

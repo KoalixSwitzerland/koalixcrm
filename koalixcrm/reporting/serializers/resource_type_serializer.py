@@ -1,4 +1,5 @@
 from rest_framework import serializers
+
 from koalixcrm.reporting.models.resource_type import ResourceType
 
 

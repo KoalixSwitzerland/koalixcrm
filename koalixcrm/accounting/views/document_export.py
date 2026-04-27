@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 from os import path
 from wsgiref.util import FileWrapper
-from django.http import Http404
-from django.http import HttpResponse
-from django.http import HttpResponseRedirect
+
+from django.http import Http404, HttpResponse, HttpResponseRedirect
+from django.utils.translation import gettext as _
+
 from koalixcrm.core.exceptions import *
 from koalixcrm.djangoUserExtension.exceptions import *
-from django.utils.translation import gettext as _
 
 
 def export_pdf(calling_model_admin, request, whereToCreateFrom, whatToCreate, redirectTo):

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib import admin
+
 from koalixcrm.contacts.models.customer_billing_cycle import CustomerBillingCycle
 from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
 

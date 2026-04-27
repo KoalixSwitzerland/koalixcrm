@@ -1,20 +1,17 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from django.contrib import admin
 from django.utils.translation import gettext as _
 
-from koalixcrm.plugin import *
 from koalixcrm.contracts.models.invoice import Invoice
-from koalixcrm.contracts.models.quotation import Quotation
 from koalixcrm.contracts.models.purchase_order import PurchaseOrder
-from koalixcrm.global_support_functions import xstr
-from koalixcrm.core.const.purpose import *
+from koalixcrm.contracts.models.quotation import Quotation
 from koalixcrm.core.const.party import ASSIGNMENT_PURPOSE_CHOICES
+from koalixcrm.core.const.purpose import *
 from koalixcrm.core.exceptions import *
-from koalixcrm.djangoUserExtension.models import UserExtension
 from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
-import koalixcrm.contracts.models.calculations
+from koalixcrm.djangoUserExtension.models import UserExtension
+from koalixcrm.plugin import *
 
 
 class ContractAddressAssignment(WorkspaceScopedModel):

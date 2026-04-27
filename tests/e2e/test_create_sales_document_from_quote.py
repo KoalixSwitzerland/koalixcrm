@@ -1,19 +1,23 @@
 # -*- coding: utf-8 -*-
-import pytest
 import os
+
+import pytest
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
-from tests.contracts.test_support_functions import *
-from tests.factories.contracts.contract_factory import StandardContractFactory
-from tests.factories.contracts.quotation_factory import StandardQuotationFactory
-from tests.factories.contacts.user_factory import AdminUserFactory
-from tests.factories.contacts.customer_group_factory import StandardCustomerGroupFactory
-from tests.factories.djangoUserExtension.factory_document_template import StandardQuotationTemplateFactory
-from tests.factories.djangoUserExtension.factory_document_template import StandardInvoiceTemplateFactory
-from tests.factories.djangoUserExtension.factory_document_template import StandardPurchaseOrderTemplateFactory
-from koalixcrm.contracts.models.quotation import Quotation
+
 from koalixcrm.contracts.models.invoice import Invoice
 from koalixcrm.contracts.models.purchase_order import PurchaseOrder
+from koalixcrm.contracts.models.quotation import Quotation
+from tests.contracts.test_support_functions import *
+from tests.factories.contacts.customer_group_factory import StandardCustomerGroupFactory
+from tests.factories.contacts.user_factory import AdminUserFactory
+from tests.factories.contracts.contract_factory import StandardContractFactory
+from tests.factories.contracts.quotation_factory import StandardQuotationFactory
+from tests.factories.djangoUserExtension.factory_document_template import (
+    StandardInvoiceTemplateFactory,
+    StandardPurchaseOrderTemplateFactory,
+    StandardQuotationTemplateFactory,
+)
 
 
 class CreateSalesDocumentFromContract(StaticLiveServerTestCase):

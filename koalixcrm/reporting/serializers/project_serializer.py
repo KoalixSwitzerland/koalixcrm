@@ -1,15 +1,19 @@
 # -*- coding: utf-8 -*-
 from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
-from koalixcrm.reporting.models.project import Project
+
 from koalixcrm.core.models.currency import Currency
-from koalixcrm.reporting.models.project_status import ProjectStatus
-from koalixcrm.reporting.serializers.project_status_serializer import OptionProjectStatusJSONSerializer
 from koalixcrm.core.serializers.currency_serializer import CurrencyJSONSerializer
-from koalixcrm.djangoUserExtension.serializers.user_rest import UserSerializer
-from koalixcrm.djangoUserExtension.serializers.template_set_rest import OptionTemplateSetJSONSerializer
 from koalixcrm.djangoUserExtension.models.template_set import TemplateSet
-import koalixcrm
+from koalixcrm.djangoUserExtension.serializers.template_set_rest import (
+    OptionTemplateSetJSONSerializer,
+)
+from koalixcrm.djangoUserExtension.serializers.user_rest import UserSerializer
+from koalixcrm.reporting.models.project import Project
+from koalixcrm.reporting.models.project_status import ProjectStatus
+from koalixcrm.reporting.serializers.project_status_serializer import (
+    OptionProjectStatusJSONSerializer,
+)
 
 
 class OptionProjectJSONSerializer(serializers.ModelSerializer):

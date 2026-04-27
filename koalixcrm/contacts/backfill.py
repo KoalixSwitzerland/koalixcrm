@@ -13,7 +13,6 @@ the code only uses `apps.get_model(...)`.
 """
 import datetime
 
-
 EPOCH = datetime.date(1970, 1, 1)
 
 

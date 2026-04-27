@@ -10,23 +10,25 @@ Each app owns its own ``urls.py`` (or ``api_urls.py`` where a legacy HTML
 OpenAPI schema / Swagger / Redoc triplet.
 """
 
-from django.urls import path, include
 from django.conf.urls.static import *  # noqa: F401,F403 — keeps legacy `static`/`settings` re-exports
-from django.contrib.staticfiles.urls import static
 from django.contrib import admin
+from django.contrib.staticfiles.urls import static
 from django.shortcuts import redirect
-from filebrowser.sites import site
+from django.urls import include, path
 from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularRedocView,
     SpectacularSwaggerView,
 )
+from filebrowser.sites import site
 
 from koalixcrm.auth.oidc_views import (
-    LoginSelectionView, OAuthLoginView, OAuthCallbackView, MultiProviderLogoutView,
+    LoginSelectionView,
+    MultiProviderLogoutView,
+    OAuthCallbackView,
+    OAuthLoginView,
 )
 from koalixcrm.core.views.workspace_switch import WorkspaceSwitchView
-
 
 # ---------------------------------------------------------------------------
 # Per-app URL conf lists (fed to per-app SpectacularAPIView) and per-app

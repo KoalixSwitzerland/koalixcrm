@@ -2,8 +2,8 @@
 from django.db import models
 from django.utils.translation import gettext as _
 
-from koalixcrm.contacts.models.organization import Organization
 from koalixcrm.contacts.models.natural_person import PartyContact
+from koalixcrm.contacts.models.organization import Organization
 from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
 
 

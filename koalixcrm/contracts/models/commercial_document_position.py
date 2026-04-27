@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from django.apps import apps
-from django.contrib import admin
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.translation import gettext as _
+
 from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
 
 

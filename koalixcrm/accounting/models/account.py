@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-from django.db import models
-from django.contrib import admin
-from django.utils.translation import gettext as _
 from django import forms
+from django.contrib import admin
+from django.db import models
+from django.utils.translation import gettext as _
 
 from koalixcrm.accounting.const.accountTypeChoices import *
 from koalixcrm.accounting.exceptions import AccountingPeriodNotFound

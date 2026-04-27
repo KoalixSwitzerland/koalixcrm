@@ -10,16 +10,15 @@ of the issuing user — plus the user's default currency.
 Shape is additive over the legacy :class:`OptionUserExtensionJSONSerializer`:
 the legacy one stays in place for the existing Python clients.
 """
-from rest_framework import serializers
-
 from django.contrib.auth.models import User
+from rest_framework import serializers
 
 from koalixcrm.core.serializers.currency_serializer import CurrencyJSONSerializer
 from koalixcrm.djangoUserExtension.models.user_extension import (
-    UserExtension,
     UserAddressAssignment,
-    UserPhoneAssignment,
     UserEmailAssignment,
+    UserExtension,
+    UserPhoneAssignment,
 )
 
 

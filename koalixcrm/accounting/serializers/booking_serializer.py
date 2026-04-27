@@ -2,11 +2,15 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
+from koalixcrm.accounting.models import Account
 from koalixcrm.accounting.models.accounting_period import AccountingPeriod
 from koalixcrm.accounting.models.booking import Booking
-from koalixcrm.accounting.models import Account
-from koalixcrm.accounting.serializers.account_serializer import OptionAccountJSONSerializer
-from koalixcrm.accounting.serializers.accounting_period_serializer import OptionAccountingPeriodJSONSerializer
+from koalixcrm.accounting.serializers.account_serializer import (
+    OptionAccountJSONSerializer,
+)
+from koalixcrm.accounting.serializers.accounting_period_serializer import (
+    OptionAccountingPeriodJSONSerializer,
+)
 
 
 class UserJSONSerializer(serializers.ModelSerializer):

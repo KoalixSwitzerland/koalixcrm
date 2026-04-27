@@ -2,6 +2,7 @@
 
 from django.contrib import admin
 from django.contrib.contenttypes.admin import GenericTabularInline
+
 from koalixcrm.reporting.models.generic_project_link import GenericProjectLink
 
 

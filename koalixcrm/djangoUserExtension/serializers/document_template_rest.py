@@ -1,15 +1,17 @@
 from rest_framework import serializers
 
-from koalixcrm.djangoUserExtension.models.document_template import InvoiceTemplate
-from koalixcrm.djangoUserExtension.models.document_template import QuotationTemplate
-from koalixcrm.djangoUserExtension.models.document_template import DespatchAdviceTemplate
-from koalixcrm.djangoUserExtension.models.document_template import PaymentReminderTemplate
-from koalixcrm.djangoUserExtension.models.document_template import PurchaseOrderTemplate
-from koalixcrm.djangoUserExtension.models.document_template import SalesOrderTemplate
-from koalixcrm.djangoUserExtension.models.document_template import ProfitLossStatementTemplate
-from koalixcrm.djangoUserExtension.models.document_template import BalanceSheetTemplate
-from koalixcrm.djangoUserExtension.models.document_template import MonthlyProjectSummaryTemplate
-from koalixcrm.djangoUserExtension.models.document_template import WorkReportTemplate
+from koalixcrm.djangoUserExtension.models.document_template import (
+    BalanceSheetTemplate,
+    DespatchAdviceTemplate,
+    InvoiceTemplate,
+    MonthlyProjectSummaryTemplate,
+    PaymentReminderTemplate,
+    ProfitLossStatementTemplate,
+    PurchaseOrderTemplate,
+    QuotationTemplate,
+    SalesOrderTemplate,
+    WorkReportTemplate,
+)
 
 
 class OptionDocumentTemplateJSONSerializer(serializers.ModelSerializer):

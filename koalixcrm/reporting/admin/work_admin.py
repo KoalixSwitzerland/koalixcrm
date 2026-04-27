@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.utils.translation import gettext as _
-from django.contrib import messages
+
 from koalixcrm.reporting.models.work import Work
 
 

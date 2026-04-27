@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from rest_framework import serializers
+
 from koalixcrm.products.models.customer_group_transform import CustomerGroupTransform
 
 

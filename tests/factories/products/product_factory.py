@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import factory
+
 from koalixcrm.products.models.product import Product
 from tests.factories.core.workspace_factory import DefaultWorkspaceFactory
 

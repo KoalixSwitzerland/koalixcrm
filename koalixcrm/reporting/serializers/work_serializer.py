@@ -1,11 +1,15 @@
 from rest_framework import serializers
 
-from koalixcrm.reporting.models.work import Work
 from koalixcrm.reporting.models.human_resource import HumanResource
-from koalixcrm.reporting.models.task import Task
 from koalixcrm.reporting.models.reporting_period import ReportingPeriod
-from koalixcrm.reporting.serializers.human_resource_serializer import OptionHumanResourceJSONSerializer
-from koalixcrm.reporting.serializers.reporting_period_serializer import OptionReportingPeriodJSONSerializer
+from koalixcrm.reporting.models.task import Task
+from koalixcrm.reporting.models.work import Work
+from koalixcrm.reporting.serializers.human_resource_serializer import (
+    OptionHumanResourceJSONSerializer,
+)
+from koalixcrm.reporting.serializers.reporting_period_serializer import (
+    OptionReportingPeriodJSONSerializer,
+)
 from koalixcrm.reporting.serializers.task_serializer import OptionTaskJSONSerializer
 
 

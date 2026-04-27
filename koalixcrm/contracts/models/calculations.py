@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from decimal import Decimal
-from koalixcrm.contracts.models.commercial_document_position import CommercialDocumentPosition
+
+from koalixcrm.contracts.models.commercial_document_position import (
+    CommercialDocumentPosition,
+)
 
 
 class Calculations:

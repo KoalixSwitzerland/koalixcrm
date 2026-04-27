@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 
 from datetime import timedelta
-from django.db import models
-from django.utils.translation import gettext as _
-from koalixcrm.core.exceptions import ReportingPeriodNotFound
-from rest_framework import serializers
+
 from django.core.exceptions import ValidationError
+from django.db import models
 from django.forms import ModelForm
+from django.utils.translation import gettext as _
+from rest_framework import serializers
+
+from koalixcrm.core.exceptions import ReportingPeriodNotFound
 
 
 class ReportingPeriod(models.Model):

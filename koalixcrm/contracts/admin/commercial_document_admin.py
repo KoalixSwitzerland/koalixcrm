@@ -1,20 +1,28 @@
 # -*- coding: utf-8 -*-
 
 from datetime import *
+
+from django.apps import apps
 from django.contrib import admin, messages
 from django.utils.translation import gettext as _
-from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
-from koalixcrm.contracts.models.commercial_document import (
-    TextParagraphInCommercialDocument,
-    CommercialDocumentAddressAssignment,
-    CommercialDocumentPhoneAssignment,
-    CommercialDocumentEmailAssignment,
-)
-from koalixcrm.contracts.models.commercial_document_position import CommercialDocumentPosition
-from koalixcrm.contracts.admin.commercial_document_position_admin import CommercialDocumentInlinePosition
-from koalixcrm.contracts.admin.commercial_document_media_admin import CommercialDocumentMediaInline
-from django.apps import apps
+
 import koalixcrm.contracts.models.calculations
+from koalixcrm.contracts.admin.commercial_document_media_admin import (
+    CommercialDocumentMediaInline,
+)
+from koalixcrm.contracts.admin.commercial_document_position_admin import (
+    CommercialDocumentInlinePosition,
+)
+from koalixcrm.contracts.models.commercial_document import (
+    CommercialDocumentAddressAssignment,
+    CommercialDocumentEmailAssignment,
+    CommercialDocumentPhoneAssignment,
+    TextParagraphInCommercialDocument,
+)
+from koalixcrm.contracts.models.commercial_document_position import (
+    CommercialDocumentPosition,
+)
+from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
 
 
 class CommercialDocumentTextParagraph(admin.StackedInline):

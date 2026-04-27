@@ -2,6 +2,7 @@
 
 from django.db import models
 from django.utils.translation import gettext as _
+
 from koalixcrm.djangoUserExtension.models.user_extension import UserExtension
 from koalixcrm.reporting.models.resource import Resource
 from koalixcrm.reporting.models.work import Work
