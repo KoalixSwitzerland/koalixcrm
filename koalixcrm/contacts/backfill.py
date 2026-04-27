@@ -11,63 +11,64 @@ management commands pass `django.apps.apps` + `None`. Either works because
 the code only uses `apps.get_model(...)`.
 
 """
+
 import datetime
 
 EPOCH = datetime.date(1970, 1, 1)
 
 
 _LEGACY_PURPOSE_MAP = {
-    'H': 'other',    # Private
-    'O': 'billing',  # Business
-    'P': 'other',    # Mobile Private — only meaningful for phone
-    'B': 'billing',  # Mobile Business — only meaningful for phone
+    "H": "other",  # Private
+    "O": "billing",  # Business
+    "P": "other",  # Mobile Private — only meaningful for phone
+    "B": "billing",  # Mobile Business — only meaningful for phone
 }
 
 
 def _map_purpose(legacy_code):
     if not legacy_code:
-        return 'other'
-    return _LEGACY_PURPOSE_MAP.get(legacy_code, 'other')
+        return "other"
+    return _LEGACY_PURPOSE_MAP.get(legacy_code, "other")
 
 
 def _addr_key(row):
     return (
-        row.address_line_1 or '',
-        row.address_line_2 or '',
-        row.address_line_3 or '',
-        row.address_line_4 or '',
+        row.address_line_1 or "",
+        row.address_line_2 or "",
+        row.address_line_3 or "",
+        row.address_line_4 or "",
         row.zip_code,
-        row.town or '',
-        row.state or '',
-        row.country or '',
-        row.subdivision_code or '',
+        row.town or "",
+        row.state or "",
+        row.country or "",
+        row.subdivision_code or "",
     )
 
 
 def forwards(apps, schema_editor):
-    LegacyContact = apps.get_model('contacts', 'Contact')
-    LegacyCustomer = apps.get_model('contacts', 'Customer')
-    LegacySupplier = apps.get_model('contacts', 'Supplier')
-    LegacyPerson = apps.get_model('contacts', 'Person')
-    LegacyContactPersonAssoc = apps.get_model('contacts', 'ContactPersonAssociation')
-    LegacyPostalAddr = apps.get_model('contacts', 'PostalAddressForContact')
-    LegacyEmailAddr = apps.get_model('contacts', 'EmailAddressForContact')
-    LegacyPhoneAddr = apps.get_model('contacts', 'PhoneAddressForContact')
-    LegacyCustomerGroup = apps.get_model('contacts', 'CustomerGroup')
+    LegacyContact = apps.get_model("contacts", "Contact")
+    LegacyCustomer = apps.get_model("contacts", "Customer")
+    LegacySupplier = apps.get_model("contacts", "Supplier")
+    LegacyPerson = apps.get_model("contacts", "Person")
+    LegacyContactPersonAssoc = apps.get_model("contacts", "ContactPersonAssociation")
+    LegacyPostalAddr = apps.get_model("contacts", "PostalAddressForContact")
+    LegacyEmailAddr = apps.get_model("contacts", "EmailAddressForContact")
+    LegacyPhoneAddr = apps.get_model("contacts", "PhoneAddressForContact")
+    LegacyCustomerGroup = apps.get_model("contacts", "CustomerGroup")
 
-    Party = apps.get_model('contacts', 'Party')
-    Organization = apps.get_model('contacts', 'Organization')
-    PartyContact = apps.get_model('contacts', 'PartyContact')
-    PartyRole = apps.get_model('contacts', 'PartyRole')
-    OrganizationMembership = apps.get_model('contacts', 'OrganizationMembership')
-    Address = apps.get_model('contacts', 'Address')
-    AddressAssignment = apps.get_model('contacts', 'AddressAssignment')
-    PhoneNumber = apps.get_model('contacts', 'PhoneNumber')
-    PhoneAssignment = apps.get_model('contacts', 'PhoneAssignment')
-    PartyEmail = apps.get_model('contacts', 'PartyEmail')
-    EmailAssignment = apps.get_model('contacts', 'EmailAssignment')
-    PartyGroup = apps.get_model('contacts', 'PartyGroup')
-    PartyGroupMembership = apps.get_model('contacts', 'PartyGroupMembership')
+    Party = apps.get_model("contacts", "Party")
+    Organization = apps.get_model("contacts", "Organization")
+    PartyContact = apps.get_model("contacts", "PartyContact")
+    PartyRole = apps.get_model("contacts", "PartyRole")
+    OrganizationMembership = apps.get_model("contacts", "OrganizationMembership")
+    Address = apps.get_model("contacts", "Address")
+    AddressAssignment = apps.get_model("contacts", "AddressAssignment")
+    PhoneNumber = apps.get_model("contacts", "PhoneNumber")
+    PhoneAssignment = apps.get_model("contacts", "PhoneAssignment")
+    PartyEmail = apps.get_model("contacts", "PartyEmail")
+    EmailAssignment = apps.get_model("contacts", "EmailAssignment")
+    PartyGroup = apps.get_model("contacts", "PartyGroup")
+    PartyGroupMembership = apps.get_model("contacts", "PartyGroupMembership")
 
     contact_id_to_party_id = {}
     person_id_to_party_id = {}
@@ -82,7 +83,7 @@ def forwards(apps, schema_editor):
     #    parent's auto_now_add fields.
     for legacy_c in LegacyContact.objects.all():
         org = Organization.objects.create(
-            display_name=legacy_c.name or f'Party {legacy_c.id}',
+            display_name=legacy_c.name or f"Party {legacy_c.id}",
             legal_name=legacy_c.name,
         )
         contact_id_to_party_id[legacy_c.id] = org.pk
@@ -97,8 +98,10 @@ def forwards(apps, schema_editor):
         if not party_id:
             continue
         PartyRole.objects.create(
-            party_id=party_id, role_type='customer',
-            is_primary=True, valid_from=EPOCH,
+            party_id=party_id,
+            role_type="customer",
+            is_primary=True,
+            valid_from=EPOCH,
         )
 
     # 3. Supplier -> PartyRole(supplier).
@@ -107,14 +110,16 @@ def forwards(apps, schema_editor):
         if not party_id:
             continue
         PartyRole.objects.create(
-            party_id=party_id, role_type='supplier',
-            is_primary=True, valid_from=EPOCH,
+            party_id=party_id,
+            role_type="supplier",
+            is_primary=True,
+            valid_from=EPOCH,
         )
 
     # 4. Legacy Person rows -> Party + PartyContact. Promote Person.email /
     #    Person.phone into standalone + assignment rows.
     for p in LegacyPerson.objects.all():
-        display = ' '.join(x for x in [p.pre_name, p.name] if x) or f'Person {p.id}'
+        display = " ".join(x for x in [p.pre_name, p.name] if x) or f"Person {p.id}"
         contact = PartyContact.objects.create(
             display_name=display,
             prefix=p.prefix,
@@ -130,8 +135,11 @@ def forwards(apps, schema_editor):
                 email_id = PartyEmail.objects.create(email=p.email).id
                 email_dedup[p.email] = email_id
             EmailAssignment.objects.create(
-                party_id=party.id, email_id=email_id,
-                purpose='primary', is_primary=True, valid_from=EPOCH,
+                party_id=party.id,
+                email_id=email_id,
+                purpose="primary",
+                is_primary=True,
+                valid_from=EPOCH,
             )
 
         if p.phone:
@@ -140,8 +148,11 @@ def forwards(apps, schema_editor):
                 phone_id = PhoneNumber.objects.create(phone_e164=p.phone).id
                 phone_dedup[p.phone] = phone_id
             PhoneAssignment.objects.create(
-                party_id=party.id, phone_id=phone_id,
-                purpose='primary', is_primary=True, valid_from=EPOCH,
+                party_id=party.id,
+                phone_id=phone_id,
+                purpose="primary",
+                is_primary=True,
+                valid_from=EPOCH,
             )
 
     # 5. ContactPersonAssociation -> OrganizationMembership.
@@ -185,9 +196,11 @@ def forwards(apps, schema_editor):
         if not party_id:
             continue
         AddressAssignment.objects.create(
-            party_id=party_id, address_id=addr_id,
+            party_id=party_id,
+            address_id=addr_id,
             purpose=_map_purpose(pa.purpose),
-            is_primary=False, valid_from=EPOCH,
+            is_primary=False,
+            valid_from=EPOCH,
         )
 
     # 7. EmailAddressForContact -> PartyEmail (dedup) + EmailAssignment.
@@ -202,9 +215,11 @@ def forwards(apps, schema_editor):
         if not party_id:
             continue
         EmailAssignment.objects.create(
-            party_id=party_id, email_id=email_id,
+            party_id=party_id,
+            email_id=email_id,
             purpose=_map_purpose(ea.purpose),
-            is_primary=False, valid_from=EPOCH,
+            is_primary=False,
+            valid_from=EPOCH,
         )
 
     # 8. PhoneAddressForContact -> PhoneNumber (dedup) + PhoneAssignment.
@@ -219,14 +234,16 @@ def forwards(apps, schema_editor):
         if not party_id:
             continue
         PhoneAssignment.objects.create(
-            party_id=party_id, phone_id=phone_id,
+            party_id=party_id,
+            phone_id=phone_id,
             purpose=_map_purpose(ph.purpose),
-            is_primary=False, valid_from=EPOCH,
+            is_primary=False,
+            valid_from=EPOCH,
         )
 
     # 9. CustomerGroup -> PartyGroup(role_type_scope='customer').
     for cg in LegacyCustomerGroup.objects.all():
-        pg = PartyGroup.objects.create(name=cg.name, role_type_scope='customer')
+        pg = PartyGroup.objects.create(name=cg.name, role_type_scope="customer")
         group_id_to_new_group_id[cg.id] = pg.id
 
     # 10. Customer.is_member_of (M2M) -> PartyGroupMembership.
@@ -244,19 +261,17 @@ def forwards(apps, schema_editor):
     legacy_contact_count = LegacyContact.objects.count()
     legacy_person_count = LegacyPerson.objects.count()
     assert Party.objects.count() == legacy_contact_count + legacy_person_count, (
-        f"Party count: got {Party.objects.count()}, "
-        f"expected {legacy_contact_count + legacy_person_count}"
+        f"Party count: got {Party.objects.count()}, expected {legacy_contact_count + legacy_person_count}"
     )
     assert Organization.objects.count() == legacy_contact_count, (
-        f"Organization count: got {Organization.objects.count()}, "
-        f"expected {legacy_contact_count}"
+        f"Organization count: got {Organization.objects.count()}, expected {legacy_contact_count}"
     )
     expected_customer_roles = LegacyCustomer.objects.count()
-    assert PartyRole.objects.filter(role_type='customer').count() == expected_customer_roles, (
+    assert PartyRole.objects.filter(role_type="customer").count() == expected_customer_roles, (
         "customer-role count mismatch"
     )
     expected_supplier_roles = LegacySupplier.objects.count()
-    assert PartyRole.objects.filter(role_type='supplier').count() == expected_supplier_roles, (
+    assert PartyRole.objects.filter(role_type="supplier").count() == expected_supplier_roles, (
         "supplier-role count mismatch"
     )
 
@@ -264,23 +279,23 @@ def forwards(apps, schema_editor):
 def reverse(apps, schema_editor):
     """Truncate the new tables. Legacy tables are never touched."""
     for model_name in (
-        'PartyGroupMembership',
-        'PartyGroup',
-        'EmailAssignment',
-        'PartyEmail',
-        'PhoneAssignment',
-        'PhoneNumber',
-        'AddressAssignment',
-        'Address',
-        'OrganizationRelationship',
-        'OrganizationMembership',
-        'PartyRole',
-        'PartyIdentification',
-        'PartyContact',
-        'Organization',
-        'Party',
+        "PartyGroupMembership",
+        "PartyGroup",
+        "EmailAssignment",
+        "PartyEmail",
+        "PhoneAssignment",
+        "PhoneNumber",
+        "AddressAssignment",
+        "Address",
+        "OrganizationRelationship",
+        "OrganizationMembership",
+        "PartyRole",
+        "PartyIdentification",
+        "PartyContact",
+        "Organization",
+        "Party",
     ):
-        apps.get_model('contacts', model_name).objects.all().delete()
+        apps.get_model("contacts", model_name).objects.all().delete()
 
 
 def build_legacy_contact_to_party_mapping(apps):
@@ -295,12 +310,12 @@ def build_legacy_contact_to_party_mapping(apps):
     fresh migrations and for any deployment that applied PRs #392 and #393
     as a pair, which is the only supported path.
     """
-    LegacyContact = apps.get_model('contacts', 'Contact')
-    Organization = apps.get_model('contacts', 'Organization')
+    LegacyContact = apps.get_model("contacts", "Contact")
+    Organization = apps.get_model("contacts", "Organization")
 
     mapping = {}
-    legacy_ids = list(LegacyContact.objects.order_by('pk').values_list('pk', flat=True))
-    party_ids = list(Organization.objects.order_by('pk').values_list('pk', flat=True))
+    legacy_ids = list(LegacyContact.objects.order_by("pk").values_list("pk", flat=True))
+    party_ids = list(Organization.objects.order_by("pk").values_list("pk", flat=True))
     if len(legacy_ids) != len(party_ids):
         raise RuntimeError(
             f"Legacy Contact / Organization count mismatch: "
@@ -319,16 +334,11 @@ def build_legacy_customer_group_to_party_group_mapping(apps):
     (PR #393) creates one PartyGroup per legacy CustomerGroup in pk order,
     so zipping the two lists back together reproduces the mapping.
     """
-    LegacyCustomerGroup = apps.get_model('contacts', 'CustomerGroup')
-    PartyGroup = apps.get_model('contacts', 'PartyGroup')
+    LegacyCustomerGroup = apps.get_model("contacts", "CustomerGroup")
+    PartyGroup = apps.get_model("contacts", "PartyGroup")
 
-    legacy_ids = list(
-        LegacyCustomerGroup.objects.order_by('pk').values_list('pk', flat=True)
-    )
-    new_ids = list(
-        PartyGroup.objects.filter(role_type_scope='customer')
-        .order_by('pk').values_list('pk', flat=True)
-    )
+    legacy_ids = list(LegacyCustomerGroup.objects.order_by("pk").values_list("pk", flat=True))
+    new_ids = list(PartyGroup.objects.filter(role_type_scope="customer").order_by("pk").values_list("pk", flat=True))
     if len(legacy_ids) != len(new_ids):
         raise RuntimeError(
             f"Legacy CustomerGroup / PartyGroup count mismatch: "
@@ -346,22 +356,22 @@ def row_count_report(apps):
     dryrun its expected-vs-zero view; computing it after the migration gives
     reconcile its expected-vs-actual view.
     """
-    LegacyContact = apps.get_model('contacts', 'Contact')
-    LegacyCustomer = apps.get_model('contacts', 'Customer')
-    LegacySupplier = apps.get_model('contacts', 'Supplier')
-    LegacyPerson = apps.get_model('contacts', 'Person')
-    LegacyContactPersonAssoc = apps.get_model('contacts', 'ContactPersonAssociation')
-    LegacyPostalAddr = apps.get_model('contacts', 'PostalAddressForContact')
-    LegacyEmailAddr = apps.get_model('contacts', 'EmailAddressForContact')
-    LegacyPhoneAddr = apps.get_model('contacts', 'PhoneAddressForContact')
-    LegacyCustomerGroup = apps.get_model('contacts', 'CustomerGroup')
+    LegacyContact = apps.get_model("contacts", "Contact")
+    LegacyCustomer = apps.get_model("contacts", "Customer")
+    LegacySupplier = apps.get_model("contacts", "Supplier")
+    LegacyPerson = apps.get_model("contacts", "Person")
+    LegacyContactPersonAssoc = apps.get_model("contacts", "ContactPersonAssociation")
+    LegacyPostalAddr = apps.get_model("contacts", "PostalAddressForContact")
+    LegacyEmailAddr = apps.get_model("contacts", "EmailAddressForContact")
+    LegacyPhoneAddr = apps.get_model("contacts", "PhoneAddressForContact")
+    LegacyCustomerGroup = apps.get_model("contacts", "CustomerGroup")
 
-    Party = apps.get_model('contacts', 'Party')
-    Organization = apps.get_model('contacts', 'Organization')
-    PartyContact = apps.get_model('contacts', 'PartyContact')
-    PartyRole = apps.get_model('contacts', 'PartyRole')
-    OrganizationMembership = apps.get_model('contacts', 'OrganizationMembership')
-    PartyGroup = apps.get_model('contacts', 'PartyGroup')
+    Party = apps.get_model("contacts", "Party")
+    Organization = apps.get_model("contacts", "Organization")
+    PartyContact = apps.get_model("contacts", "PartyContact")
+    PartyRole = apps.get_model("contacts", "PartyRole")
+    OrganizationMembership = apps.get_model("contacts", "OrganizationMembership")
+    PartyGroup = apps.get_model("contacts", "PartyGroup")
 
     contact_n = LegacyContact.objects.count()
     person_n = LegacyPerson.objects.count()
@@ -370,18 +380,26 @@ def row_count_report(apps):
 
     return [
         # label, expected_new_count, actual_new_count
-        ('Party',                    contact_n + person_n, Party.objects.count()),
-        ('Organization',             contact_n,            Organization.objects.count()),
-        ('PartyContact',             person_n,             PartyContact.objects.count()),
-        ('PartyRole(customer)',      customer_n,           PartyRole.objects.filter(role_type='customer').count()),
-        ('PartyRole(supplier)',      supplier_n,           PartyRole.objects.filter(role_type='supplier').count()),
-        ('OrganizationMembership',   LegacyContactPersonAssoc.objects.count(), OrganizationMembership.objects.count()),
-        ('AddressAssignment (from postal)', LegacyPostalAddr.objects.count(),  apps.get_model('contacts', 'AddressAssignment').objects.count()),
-        ('EmailAssignment (from email-for-contact + person.email)',
-            LegacyEmailAddr.objects.count() + LegacyPerson.objects.exclude(email='').count(),
-            apps.get_model('contacts', 'EmailAssignment').objects.count()),
-        ('PhoneAssignment (from phone-for-contact + person.phone)',
-            LegacyPhoneAddr.objects.count() + LegacyPerson.objects.exclude(phone='').count(),
-            apps.get_model('contacts', 'PhoneAssignment').objects.count()),
-        ('PartyGroup',               LegacyCustomerGroup.objects.count(), PartyGroup.objects.count()),
+        ("Party", contact_n + person_n, Party.objects.count()),
+        ("Organization", contact_n, Organization.objects.count()),
+        ("PartyContact", person_n, PartyContact.objects.count()),
+        ("PartyRole(customer)", customer_n, PartyRole.objects.filter(role_type="customer").count()),
+        ("PartyRole(supplier)", supplier_n, PartyRole.objects.filter(role_type="supplier").count()),
+        ("OrganizationMembership", LegacyContactPersonAssoc.objects.count(), OrganizationMembership.objects.count()),
+        (
+            "AddressAssignment (from postal)",
+            LegacyPostalAddr.objects.count(),
+            apps.get_model("contacts", "AddressAssignment").objects.count(),
+        ),
+        (
+            "EmailAssignment (from email-for-contact + person.email)",
+            LegacyEmailAddr.objects.count() + LegacyPerson.objects.exclude(email="").count(),
+            apps.get_model("contacts", "EmailAssignment").objects.count(),
+        ),
+        (
+            "PhoneAssignment (from phone-for-contact + person.phone)",
+            LegacyPhoneAddr.objects.count() + LegacyPerson.objects.exclude(phone="").count(),
+            apps.get_model("contacts", "PhoneAssignment").objects.count(),
+        ),
+        ("PartyGroup", LegacyCustomerGroup.objects.count(), PartyGroup.objects.count()),
     ]

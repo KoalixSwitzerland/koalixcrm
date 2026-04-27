@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """API client for the koalixcrm Contracts app."""
+
 from typing import Any, Dict, List, Optional
 
 from koalixcrm.contracts_api_py.dto.commercial_document_position import (
@@ -19,8 +20,8 @@ from koalixcrm.shared.api_client import BaseAPIClient
 class KoalixCRMContractsAPIClient(BaseAPIClient):
     """API client for managing contracts, commercial documents, and related entities."""
 
-    api_path_env_var = 'KOALIXCRM_CONTRACTS_API_PATH'
-    api_path_default = '/koalixcrm_contracts/api/v1/'
+    api_path_env_var = "KOALIXCRM_CONTRACTS_API_PATH"
+    api_path_default = "/koalixcrm_contracts/api/v1/"
     uses_workspace_id = True
 
     # ------------------------------------------------------------------
@@ -188,7 +189,9 @@ class KoalixCRMContractsAPIClient(BaseAPIClient):
             return obj
         return None
 
-    def update_commercial_document_position(self, object_id: int, data: Dict[str, Any]) -> Optional[CommercialDocumentPosition]:
+    def update_commercial_document_position(
+        self, object_id: int, data: Dict[str, Any]
+    ) -> Optional[CommercialDocumentPosition]:
         return self._put_full_update(CommercialDocumentPosition, "/commercial-document-positions", object_id, data)
 
     # ------------------------------------------------------------------

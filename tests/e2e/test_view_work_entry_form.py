@@ -23,7 +23,6 @@ from tests.factories.reporting.task_factory import StandardTaskFactory
 
 
 class TimeTrackingWorkEntry(UITests):
-
     def setUp(self):
         super().setUp()
         self.test_user = AdminUserFactory.create()
@@ -37,8 +36,8 @@ class TimeTrackingWorkEntry(UITests):
         self.test_currency = StandardCurrencyFactory.create()
         self.test_reporting_period = StandardReportingPeriodFactory.create()
         self.test_1st_task = StandardTaskFactory.create(
-            title="1st Test Task",
-            project=self.test_reporting_period.project)
+            title="1st Test Task", project=self.test_reporting_period.project
+        )
 
     def tearDown(self):
         super().tearDown()
@@ -47,24 +46,24 @@ class TimeTrackingWorkEntry(UITests):
     def test_registration_of_work(self):
         selenium = self.selenium
         # login
-        selenium.get('%s%s' % (self.live_server_url, '/koalixcrm/crm/reporting/time_tracking/'))
+        selenium.get("%s%s" % (self.live_server_url, "/koalixcrm/crm/reporting/time_tracking/"))
         # the browser will be redirected to the login page
         timeout = 5
         try:
-            element_present = expected_conditions.presence_of_element_located((By.ID, 'id_username'))
+            element_present = expected_conditions.presence_of_element_located((By.ID, "id_username"))
             WebDriverWait(selenium, timeout).until(element_present)
         except TimeoutException:
             print("Timed out waiting for page to load")
-        username = selenium.find_element('xpath', '//*[@id="id_username"]')
-        password = selenium.find_element('xpath', '//*[@id="id_password"]')
-        submit_button = selenium.find_element('xpath', '/html/body/div/article/div/div/form/div/ul/li/input')
+        username = selenium.find_element("xpath", '//*[@id="id_username"]')
+        password = selenium.find_element("xpath", '//*[@id="id_password"]')
+        submit_button = selenium.find_element("xpath", "/html/body/div/article/div/div/form/div/ul/li/input")
         username.send_keys("admin")
         password.send_keys("admin")
         submit_button.send_keys(Keys.RETURN)
         time.sleep(5)
-        selenium.get('%s%s' % (self.live_server_url, '/koalixcrm/crm/reporting/time_tracking/'))
+        selenium.get("%s%s" % (self.live_server_url, "/koalixcrm/crm/reporting/time_tracking/"))
         try:
-            element_present = expected_conditions.presence_of_element_located((By.ID, 'id_form-0-project'))
+            element_present = expected_conditions.presence_of_element_located((By.ID, "id_form-0-project"))
             WebDriverWait(selenium, timeout).until(element_present)
         except TimeoutException:
             print("Timed out waiting for page to load")
@@ -78,25 +77,27 @@ class TimeTrackingWorkEntry(UITests):
         fail_when_element_does_not_exist(self, '//*[@id="id_form-0-worked_hours"]')
         fail_when_element_does_not_exist(self, '//*[@id="id_form-0-description"]')
         fail_when_element_does_not_exist(self, '//*[@name="save"]')
-        project = selenium.find_element('xpath', '//*[@id="id_form-0-project"]')
-        datetime_start_date = selenium.find_element('xpath', '//*[@id="id_form-0-datetime_start_0"]')
-        datetime_start_time = selenium.find_element('xpath', '//*[@id="id_form-0-datetime_start_1"]')
-        datetime_stop_date = selenium.find_element('xpath', '//*[@id="id_form-0-datetime_stop_0"]')
-        datetime_stop_time = selenium.find_element('xpath', '//*[@id="id_form-0-datetime_stop_1"]')
-        description = selenium.find_element('xpath', '//*[@id="id_form-0-description"]')
+        project = selenium.find_element("xpath", '//*[@id="id_form-0-project"]')
+        datetime_start_date = selenium.find_element("xpath", '//*[@id="id_form-0-datetime_start_0"]')
+        datetime_start_time = selenium.find_element("xpath", '//*[@id="id_form-0-datetime_start_1"]')
+        datetime_stop_date = selenium.find_element("xpath", '//*[@id="id_form-0-datetime_stop_0"]')
+        datetime_stop_time = selenium.find_element("xpath", '//*[@id="id_form-0-datetime_stop_1"]')
+        description = selenium.find_element("xpath", '//*[@id="id_form-0-description"]')
         project.send_keys(self.test_reporting_period.project.id.__str__())
         datetime_start_date.send_keys(datetime.date.today().__str__())
         datetime_stop_date.send_keys(datetime.date.today().__str__())
         datetime_start_time.send_keys(datetime.time(11, 55).__str__())
         datetime_stop_time.send_keys(datetime.time(12, 55).__str__())
         description.send_keys("This is a test work entered through the front-end")
-        task = selenium.find_element('xpath', '//*[@id="id_form-0-task"]/option[text()="'+self.test_1st_task.title+'"]')
+        task = selenium.find_element(
+            "xpath", '//*[@id="id_form-0-task"]/option[text()="' + self.test_1st_task.title + '"]'
+        )
         task.click()
-        save_button = selenium.find_element('name', 'save')
+        save_button = selenium.find_element("name", "save")
         save_button.send_keys(Keys.RETURN)
         time.sleep(1)
         try:
-            element_present = expected_conditions.presence_of_element_located((By.ID, 'id_form-1-project'))
+            element_present = expected_conditions.presence_of_element_located((By.ID, "id_form-1-project"))
             WebDriverWait(selenium, timeout).until(element_present)
         except TimeoutException:
             print("Timed out waiting for page to load")

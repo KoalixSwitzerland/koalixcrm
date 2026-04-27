@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """KoalixCRM Products API Client"""
+
 from typing import Any, Dict, List, Optional
 
 from koalixcrm.products_api_py.dto.customer_group_transform import (
@@ -12,8 +13,8 @@ from koalixcrm.shared.api_client import BaseAPIClient
 
 
 class KoalixCRMProductsAPIClient(BaseAPIClient):
-    api_path_env_var = 'KOALIXCRM_PRODUCTS_API_PATH'
-    api_path_default = '/koalixcrm_products/api/v1/'
+    api_path_env_var = "KOALIXCRM_PRODUCTS_API_PATH"
+    api_path_default = "/koalixcrm_products/api/v1/"
     uses_workspace_id = True
 
     def __init__(self, api_url=None, username=None, password=None, workspace_id=None):
@@ -100,5 +101,7 @@ class KoalixCRMProductsAPIClient(BaseAPIClient):
             return obj
         return None
 
-    def update_customer_group_transform(self, object_id: int, data: Dict[str, Any]) -> Optional[CustomerGroupTransform]:
+    def update_customer_group_transform(
+        self, object_id: int, data: Dict[str, Any]
+    ) -> Optional[CustomerGroupTransform]:
         return self._put_full_update(CustomerGroupTransform, "/customer-group-transforms", object_id, data)

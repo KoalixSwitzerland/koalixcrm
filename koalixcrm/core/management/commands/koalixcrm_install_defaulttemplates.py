@@ -10,14 +10,16 @@ from filebrowser.base import FileObject
 
 from koalixcrm import crm, djangoUserExtension
 
-DEFAULT_FILE = 'dashboard.py'
+DEFAULT_FILE = "dashboard.py"
 
 
 class Command(BaseCommand):
     help = (
-    'This Command is going to install the default Templates, given by the koalixcrm base installation, in your django instance. Be sure you first run syncdb')
-    args = '[]'
-    label = 'application name'
+        "This Command is going to install the default Templates, given by the koalixcrm base installation, "
+        "in your django instance. Be sure you first run syncdb"
+    )
+    args = "[]"
+    label = "application name"
 
     @staticmethod
     def store_default_template_xsl_file(language, file_name):
@@ -30,8 +32,8 @@ class Command(BaseCommand):
         file_path = path.join(settings.STATIC_ROOT, "default_templates", language, file_name)
         f = None
         try:
-            f = open(file_path,'r')
-        except (FileNotFoundError):
+            f = open(file_path, "r")
+        except FileNotFoundError:
             print(_("File not found:") + file_path)
             print(_("Run collectstatic command and fix potential errors"))
         finally:
@@ -49,23 +51,28 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         template_set = djangoUserExtension.models.TemplateSet()
-        template_set.title = 'default_template_set'
+        template_set.title = "default_template_set"
         template_set.invoiceXSLFile = Command.store_default_template_xsl_file("en", "invoice.xsl")
         template_set.quotationXSLFile = Command.store_default_template_xsl_file("en", "quotation.xsl")
         template_set.salesorderXSLFile = Command.store_default_template_xsl_file("en", "salesorder.xsl")
         template_set.purchaseorderXSLFile = Command.store_default_template_xsl_file("en", "purchaseorder.xsl")
         template_set.despatchadviceXSLFile = Command.store_default_template_xsl_file("en", "despatchadvice.xsl")
 
-        if 'koalixcrm.accounting' in settings.INSTALLED_APPS:
-            template_set.profitLossStatementXSLFile = Command.store_default_template_xsl_file("en", "profitlossstatement.xsl")
+        if "koalixcrm.accounting" in settings.INSTALLED_APPS:
+            template_set.profitLossStatementXSLFile = Command.store_default_template_xsl_file(
+                "en", "profitlossstatement.xsl"
+            )
             template_set.balancesheetXSLFile = Command.store_default_template_xsl_file("en", "balancesheet.xsl")
 
         template_set.logo = FileObject(Command.path_of_default_template_file("generic", "logo.jpg"))
-        template_set.fopConfigurationFile = FileObject(Command.path_of_default_template_file("generic", "fontconfig.xml"))
+        template_set.fopConfigurationFile = FileObject(
+            Command.path_of_default_template_file("generic", "fontconfig.xml")
+        )
         template_set.bankingaccountref = "xx-xxxxxx-x"
         template_set.addresser = _("John Smit, Sample Company, 8976 Smallville")
         template_set.headerTextsalesorders = _(
-            "According to your wishes the contract consists of the following positions:")
+            "According to your wishes the contract consists of the following positions:"
+        )
         template_set.footerTextsalesorders = _("Thank you for your interest in our company \n Best regards")
         template_set.headerTextpurchaseorders = _("We would like to order the following positions:")
         template_set.footerTextpurchaseorders = _("Best regards")
@@ -81,9 +88,10 @@ class Command(BaseCommand):
         from koalixcrm.contacts.models.party_email import PartyEmail
         from koalixcrm.contacts.models.phone_number import PhoneNumber
         from koalixcrm.core.models.workspace import Workspace
+
         ws, _created = Workspace.objects.get_or_create(
-            name='Default Workspace',
-            defaults={'is_active': True},
+            name="Default Workspace",
+            defaults={"is_active": True},
         )
         user = User.objects.all()[0]
         user_extension = djangoUserExtension.models.UserExtension()
@@ -102,7 +110,7 @@ class Command(BaseCommand):
             workspace=ws,
             user=user,
             address=address,
-            purpose='primary',
+            purpose="primary",
             is_primary=True,
         )
         phone = PhoneNumber.objects.create(
@@ -113,7 +121,7 @@ class Command(BaseCommand):
             workspace=ws,
             user=user,
             phone_number=phone,
-            purpose='primary',
+            purpose="primary",
             is_primary=True,
         )
         email = PartyEmail.objects.create(
@@ -124,6 +132,6 @@ class Command(BaseCommand):
             workspace=ws,
             user=user,
             email=email,
-            purpose='primary',
+            purpose="primary",
             is_primary=True,
         )

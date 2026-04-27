@@ -6,6 +6,7 @@ Contact{Postal,Phone,Email}Address endpoints and their client methods
 are gone as of v2.0.0 (issue #395). Everything goes through the Party
 data model DTOs below.
 """
+
 from typing import Any, Dict, List, Optional
 
 from koalixcrm.contacts_api_py.dto.customer_billing_cycle import CustomerBillingCycle
@@ -58,8 +59,8 @@ from koalixcrm.shared.api_client import BaseAPIClient
 
 
 class KoalixCRMContactsAPIClient(BaseAPIClient):
-    api_path_env_var = 'KOALIXCRM_CONTACTS_API_PATH'
-    api_path_default = '/koalixcrm_contacts/api/v1/'
+    api_path_env_var = "KOALIXCRM_CONTACTS_API_PATH"
+    api_path_default = "/koalixcrm_contacts/api/v1/"
     uses_workspace_id = True
 
     def __init__(self, api_url=None, username=None, password=None, workspace_id=None):
@@ -196,7 +197,9 @@ class KoalixCRMContactsAPIClient(BaseAPIClient):
             return obj
         return None
 
-    def update_organization_membership(self, object_id: int, data: Dict[str, Any]) -> Optional[OrganizationMembershipDto]:
+    def update_organization_membership(
+        self, object_id: int, data: Dict[str, Any]
+    ) -> Optional[OrganizationMembershipDto]:
         return self._put_full_update(OrganizationMembershipDto, "/organization-memberships", object_id, data)
 
     # --- OrganizationRelationship ---
@@ -214,7 +217,9 @@ class KoalixCRMContactsAPIClient(BaseAPIClient):
             return obj
         return None
 
-    def update_organization_relationship(self, object_id: int, data: Dict[str, Any]) -> Optional[OrganizationRelationshipDto]:
+    def update_organization_relationship(
+        self, object_id: int, data: Dict[str, Any]
+    ) -> Optional[OrganizationRelationshipDto]:
         return self._put_full_update(OrganizationRelationshipDto, "/organization-relationships", object_id, data)
 
     # --- Address (new standalone) ---

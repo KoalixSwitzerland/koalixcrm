@@ -31,88 +31,72 @@ class TextParagraphInCommercialDocument(WorkspaceScopedModel):
     class Meta:
         app_label = "contract_object_management"
         db_table = "crm_textparagraphincommercialdocument"
-        verbose_name = _('Text Paragraph In Commercial Document')
-        verbose_name_plural = _('Text Paragraphs In Commercial Documents')
+        verbose_name = _("Text Paragraph In Commercial Document")
+        verbose_name_plural = _("Text Paragraphs In Commercial Documents")
 
     def __str__(self):
         return self.id.__str__()
 
 
 class CommercialDocument(WorkspaceScopedModel):
-    contract = models.ForeignKey("Contract",
-                                 on_delete=models.CASCADE,
-                                 verbose_name=_('Contract'))
-    external_reference = models.CharField(verbose_name=_("External Reference"),
-                                          max_length=100,
-                                          blank=True)
-    discount = models.DecimalField(max_digits=5,
-                                   decimal_places=2,
-                                   verbose_name=_("Discount"),
-                                   blank=True,
-                                   null=True)
-    description = models.CharField(verbose_name=_("Description"),
-                                   max_length=100,
-                                   blank=True,
-                                   null=True)
-    last_pricing_date = models.DateField(verbose_name=_("Pricing Date"),
-                                         blank=True,
-                                         null=True)
-    last_calculated_price = models.DecimalField(max_digits=17,
-                                                decimal_places=2,
-                                                verbose_name=_("Price without Tax "),
-                                                blank=True,
-                                                null=True)
-    last_calculated_tax = models.DecimalField(max_digits=17,
-                                              decimal_places=2,
-                                              verbose_name=_("Tax"),
-                                              blank=True,
-                                              null=True)
-    party = models.ForeignKey("contacts.Party",
-                              on_delete=models.PROTECT,
-                              related_name="commercial_documents",
-                              verbose_name=_("Party"))
-    staff = models.ForeignKey('auth.User',
-                              on_delete=models.CASCADE,
-                              limit_choices_to={'is_staff': True},
-                              blank=True,
-                              verbose_name=_("Staff"),
-                              related_name="db_relscstaff",
-                              null=True)
-    currency = models.ForeignKey("core.Currency", on_delete=models.CASCADE, verbose_name=_("Currency"),
-                                 blank=False, null=False)
-    date_of_creation = models.DateTimeField(verbose_name=_("Created at"),
-                                            auto_now_add=True)
-    custom_date_field = models.DateField(verbose_name=_("Custom Date"),
-                                         blank=True,
-                                         null=True)
-    last_modification = models.DateTimeField(verbose_name=_("Last modified"),
-                                             auto_now=True)
-    last_modified_by = models.ForeignKey('auth.User', on_delete=models.CASCADE, limit_choices_to={'is_staff': True},
-                                         verbose_name=_("Last modified by"),
-                                         related_name="db_lstscmodified",
-                                         null=True,
-                                         blank="True")
-    template_set = models.ForeignKey("djangoUserExtension.DocumentTemplate",
-                                     on_delete=models.CASCADE,
-                                     verbose_name=_("Referred Template"),
-                                     null=True,
-                                     blank=True)
-    derived_from_commercial_document = models.ForeignKey("CommercialDocument",
-                                                    on_delete=models.CASCADE,
-                                                    blank=True,
-                                                    null=True)
-    last_print_date = models.DateTimeField(verbose_name=_("Last printed"),
-                                           blank=True,
-                                           null=True)
+    contract = models.ForeignKey("Contract", on_delete=models.CASCADE, verbose_name=_("Contract"))
+    external_reference = models.CharField(verbose_name=_("External Reference"), max_length=100, blank=True)
+    discount = models.DecimalField(max_digits=5, decimal_places=2, verbose_name=_("Discount"), blank=True, null=True)
+    description = models.CharField(verbose_name=_("Description"), max_length=100, blank=True, null=True)
+    last_pricing_date = models.DateField(verbose_name=_("Pricing Date"), blank=True, null=True)
+    last_calculated_price = models.DecimalField(
+        max_digits=17, decimal_places=2, verbose_name=_("Price without Tax "), blank=True, null=True
+    )
+    last_calculated_tax = models.DecimalField(
+        max_digits=17, decimal_places=2, verbose_name=_("Tax"), blank=True, null=True
+    )
+    party = models.ForeignKey(
+        "contacts.Party", on_delete=models.PROTECT, related_name="commercial_documents", verbose_name=_("Party")
+    )
+    staff = models.ForeignKey(
+        "auth.User",
+        on_delete=models.CASCADE,
+        limit_choices_to={"is_staff": True},
+        blank=True,
+        verbose_name=_("Staff"),
+        related_name="db_relscstaff",
+        null=True,
+    )
+    currency = models.ForeignKey(
+        "core.Currency", on_delete=models.CASCADE, verbose_name=_("Currency"), blank=False, null=False
+    )
+    date_of_creation = models.DateTimeField(verbose_name=_("Created at"), auto_now_add=True)
+    custom_date_field = models.DateField(verbose_name=_("Custom Date"), blank=True, null=True)
+    last_modification = models.DateTimeField(verbose_name=_("Last modified"), auto_now=True)
+    last_modified_by = models.ForeignKey(
+        "auth.User",
+        on_delete=models.CASCADE,
+        limit_choices_to={"is_staff": True},
+        verbose_name=_("Last modified by"),
+        related_name="db_lstscmodified",
+        null=True,
+        blank="True",
+    )
+    template_set = models.ForeignKey(
+        "djangoUserExtension.DocumentTemplate",
+        on_delete=models.CASCADE,
+        verbose_name=_("Referred Template"),
+        null=True,
+        blank=True,
+    )
+    derived_from_commercial_document = models.ForeignKey(
+        "CommercialDocument", on_delete=models.CASCADE, blank=True, null=True
+    )
+    last_print_date = models.DateTimeField(verbose_name=_("Last printed"), blank=True, null=True)
 
     class Meta:
         app_label = "contract_object_management"
         db_table = "crm_commercialdocument"
-        verbose_name = _('Commercial Document')
-        verbose_name_plural = _('Commercial Documents')
+        verbose_name = _("Commercial Document")
+        verbose_name_plural = _("Commercial Documents")
 
     def is_complete_with_price(self):
-        """ Checks whether the CommercialDocument is completed with a price, in case the
+        """Checks whether the CommercialDocument is completed with a price, in case the
         CommercialDocument was not completed or the price calculation was not performed,
         the method returns false"""
 
@@ -145,7 +129,9 @@ class CommercialDocument(WorkspaceScopedModel):
 
     def attach_commercial_document_positions(self, calling_model):
         if isinstance(calling_model, CommercialDocument):
-            commercial_document_positions = CommercialDocumentPosition.objects.filter(commercial_document=calling_model.id)
+            commercial_document_positions = CommercialDocumentPosition.objects.filter(
+                commercial_document=calling_model.id
+            )
             for commercial_document_position in list(commercial_document_positions):
                 new_position = CommercialDocumentPosition()
                 new_position.create_position(commercial_document_position, self)
@@ -157,17 +143,20 @@ class CommercialDocument(WorkspaceScopedModel):
 class CommercialDocumentAddressAssignment(WorkspaceScopedModel):
     id = models.BigAutoField(primary_key=True)
     document = models.ForeignKey(
-        "CommercialDocument", on_delete=models.CASCADE,
-        related_name='address_assignments',
+        "CommercialDocument",
+        on_delete=models.CASCADE,
+        related_name="address_assignments",
         verbose_name=_("Commercial Document"),
     )
     address = models.ForeignKey(
-        'contacts.Address', on_delete=models.CASCADE,
-        related_name='commercial_document_assignments',
+        "contacts.Address",
+        on_delete=models.CASCADE,
+        related_name="commercial_document_assignments",
         verbose_name=_("Address"),
     )
     purpose = models.CharField(
-        max_length=16, choices=ASSIGNMENT_PURPOSE_CHOICES,
+        max_length=16,
+        choices=ASSIGNMENT_PURPOSE_CHOICES,
         verbose_name=_("Purpose"),
     )
     is_primary = models.BooleanField(default=False, verbose_name=_("Is primary"))
@@ -177,8 +166,8 @@ class CommercialDocumentAddressAssignment(WorkspaceScopedModel):
     class Meta:
         app_label = "contract_object_management"
         db_table = "crm_commercialdocumentaddressassignment"
-        verbose_name = _('Commercial Document Address Assignment')
-        verbose_name_plural = _('Commercial Document Address Assignments')
+        verbose_name = _("Commercial Document Address Assignment")
+        verbose_name_plural = _("Commercial Document Address Assignments")
 
     def __str__(self):
         return f"{self.document_id}-{self.purpose}-{self.address_id}"
@@ -187,17 +176,20 @@ class CommercialDocumentAddressAssignment(WorkspaceScopedModel):
 class CommercialDocumentPhoneAssignment(WorkspaceScopedModel):
     id = models.BigAutoField(primary_key=True)
     document = models.ForeignKey(
-        "CommercialDocument", on_delete=models.CASCADE,
-        related_name='phone_assignments',
+        "CommercialDocument",
+        on_delete=models.CASCADE,
+        related_name="phone_assignments",
         verbose_name=_("Commercial Document"),
     )
     phone_number = models.ForeignKey(
-        'contacts.PhoneNumber', on_delete=models.CASCADE,
-        related_name='commercial_document_assignments',
+        "contacts.PhoneNumber",
+        on_delete=models.CASCADE,
+        related_name="commercial_document_assignments",
         verbose_name=_("Phone number"),
     )
     purpose = models.CharField(
-        max_length=16, choices=ASSIGNMENT_PURPOSE_CHOICES,
+        max_length=16,
+        choices=ASSIGNMENT_PURPOSE_CHOICES,
         verbose_name=_("Purpose"),
     )
     is_primary = models.BooleanField(default=False, verbose_name=_("Is primary"))
@@ -207,8 +199,8 @@ class CommercialDocumentPhoneAssignment(WorkspaceScopedModel):
     class Meta:
         app_label = "contract_object_management"
         db_table = "crm_commercialdocumentphoneassignment"
-        verbose_name = _('Commercial Document Phone Assignment')
-        verbose_name_plural = _('Commercial Document Phone Assignments')
+        verbose_name = _("Commercial Document Phone Assignment")
+        verbose_name_plural = _("Commercial Document Phone Assignments")
 
     def __str__(self):
         return f"{self.document_id}-{self.purpose}-{self.phone_number_id}"
@@ -217,17 +209,20 @@ class CommercialDocumentPhoneAssignment(WorkspaceScopedModel):
 class CommercialDocumentEmailAssignment(WorkspaceScopedModel):
     id = models.BigAutoField(primary_key=True)
     document = models.ForeignKey(
-        "CommercialDocument", on_delete=models.CASCADE,
-        related_name='email_assignments',
+        "CommercialDocument",
+        on_delete=models.CASCADE,
+        related_name="email_assignments",
         verbose_name=_("Commercial Document"),
     )
     email = models.ForeignKey(
-        'contacts.PartyEmail', on_delete=models.CASCADE,
-        related_name='commercial_document_assignments',
+        "contacts.PartyEmail",
+        on_delete=models.CASCADE,
+        related_name="commercial_document_assignments",
         verbose_name=_("Email"),
     )
     purpose = models.CharField(
-        max_length=16, choices=ASSIGNMENT_PURPOSE_CHOICES,
+        max_length=16,
+        choices=ASSIGNMENT_PURPOSE_CHOICES,
         verbose_name=_("Purpose"),
     )
     is_primary = models.BooleanField(default=False, verbose_name=_("Is primary"))
@@ -237,8 +232,8 @@ class CommercialDocumentEmailAssignment(WorkspaceScopedModel):
     class Meta:
         app_label = "contract_object_management"
         db_table = "crm_commercialdocumentemailassignment"
-        verbose_name = _('Commercial Document Email Assignment')
-        verbose_name_plural = _('Commercial Document Email Assignments')
+        verbose_name = _("Commercial Document Email Assignment")
+        verbose_name_plural = _("Commercial Document Email Assignments")
 
     def __str__(self):
         return f"{self.document_id}-{self.purpose}-{self.email_id}"

@@ -13,17 +13,25 @@ class DespatchAdvice(CommercialDocument):
 
     def create_from_reference(self, calling_model):
         self.create_commercial_document(calling_model)
-        self.status = 'C'
+        self.status = "C"
         self.template_set = self.contract.get_template_set(self)
         self.save()
         self.attach_commercial_document_positions(calling_model)
         self.attach_text_paragraphs()
 
     def __str__(self):
-        return _("Despatch Advice") + ": " + self.id.__str__() + " " + _("from Contract") + ": " + self.contract.id.__str__()
+        return (
+            _("Despatch Advice")
+            + ": "
+            + self.id.__str__()
+            + " "
+            + _("from Contract")
+            + ": "
+            + self.contract.id.__str__()
+        )
 
     class Meta:
         app_label = "contract_object_management"
         db_table = "crm_despatchadvice"
-        verbose_name = _('Despatch Advice')
-        verbose_name_plural = _('Despatch Advices')
+        verbose_name = _("Despatch Advice")
+        verbose_name_plural = _("Despatch Advices")
