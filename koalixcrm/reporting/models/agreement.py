@@ -1,9 +1,15 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 from django.db import models
 from django.utils.translation import gettext as _
 
 from koalixcrm.reporting.models.resource_price import ResourcePrice
+
+if TYPE_CHECKING:
+    from koalixcrm.reporting.models.work import Work
 
 
 class Agreement(models.Model):
@@ -31,10 +37,10 @@ class Agreement(models.Model):
                                  blank=True,
                                  null=True)
 
-    def calculated_costs(self):
+    def calculated_costs(self) -> int:
         return 0
 
-    def match_with_work(self, work):
+    def match_with_work(self, work: 'Work') -> bool:
         """This method checks whether the provided work can be covered by the agreement.
         the method checks whether the reported work corresponds with the resource and whether the
         reported work was within the time-frame of the agreement.
@@ -55,7 +61,7 @@ class Agreement(models.Model):
                     matches = True
         return matches
 
-    def __str__(self):
+    def __str__(self) -> str:
         return _("Agreement of Resource Consumption") + ": " + str(self.id)
 
     class Meta:

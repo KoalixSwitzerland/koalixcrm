@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
 from koalixcrm.reporting.models.resource_manager import ResourceManager
 from koalixcrm.reporting.serializers.resource_manager_serializer import (
     ResourceManagerJSONSerializer,

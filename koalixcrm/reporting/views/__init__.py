@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
 from .agreement_status_view_set import AgreementStatusViewSet
 from .agreement_type_view_set import AgreementTypeViewSet
 from .agreement_view_set import AgreementViewSet

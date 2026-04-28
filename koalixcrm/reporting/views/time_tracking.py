@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 
 import datetime
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404, HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.template.context_processors import csrf
 from django.utils.translation import gettext as _
@@ -21,7 +22,7 @@ from koalixcrm.reporting.views.work_entry_formset import BaseWorkEntryFormset
 
 
 @login_required
-def work_report(request):
+def work_report(request: HttpRequest) -> HttpResponse:
     try:
         human_resource = HumanResource.objects.filter(user=UserExtension.get_user_extension(request.user))
         if len(human_resource) == 0:

@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
+from typing import Any
+
 from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 
@@ -31,7 +35,7 @@ class OptionTaskJSONSerializer(serializers.ModelSerializer):
                   'is_reporting_allowed',)
 
     @extend_schema_field(str)
-    def get_is_reporting_allowed(self, obj):
+    def get_is_reporting_allowed(self, obj: Task) -> str:
         if obj.is_reporting_allowed():
             return "True"
         else:
@@ -55,13 +59,13 @@ class TaskJSONSerializer(serializers.ModelSerializer):
                   'is_reporting_allowed',)
 
     @extend_schema_field(str)
-    def get_is_reporting_allowed(self, obj):
+    def get_is_reporting_allowed(self, obj: Task) -> str:
         if obj.is_reporting_allowed():
             return "True"
         else:
             return "False"
 
-    def create(self, validated_data):
+    def create(self, validated_data: dict[str, Any]) -> Task:
         task = Task()
         # Deserialize project
         project = validated_data.pop('project')
@@ -83,7 +87,7 @@ class TaskJSONSerializer(serializers.ModelSerializer):
         task.save()
         return task
 
-    def update(self, task, validated_data):
+    def update(self, task: Task, validated_data: dict[str, Any]) -> Task:
         # Deserialize project
         project = validated_data.pop('project')
         if project:

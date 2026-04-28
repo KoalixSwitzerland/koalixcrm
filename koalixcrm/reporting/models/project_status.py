@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 
 from django.db import models
 from django.utils.translation import gettext as _
@@ -22,7 +23,7 @@ class ProjectStatus(models.Model):
         verbose_name = _('Project Status')
         verbose_name_plural = _('Project Status')
 
-    def __str__(self):
+    def __str__(self) -> str:
         return str(self.id) + " " + str(self.title)
 
 

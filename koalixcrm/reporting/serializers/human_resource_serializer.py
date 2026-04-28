@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+from typing import Any
+
 from rest_framework import serializers
 
 from koalixcrm.djangoUserExtension.models.user_extension import UserExtension
@@ -42,7 +46,7 @@ class HumanResourceJSONSerializer(serializers.ModelSerializer):
                   'resource_type',
                   'resource_manager')
 
-    def create(self, validated_data):
+    def create(self, validated_data: dict[str, Any]) -> HumanResource:
         resource = HumanResource()
         # Deserialize resource_type
         resource_type = validated_data.pop('resource_type')
@@ -68,7 +72,7 @@ class HumanResourceJSONSerializer(serializers.ModelSerializer):
         resource.save()
         return resource
 
-    def update(self, resource, validated_data):
+    def update(self, resource: HumanResource, validated_data: dict[str, Any]) -> HumanResource:
         # Deserialize resource_type
         resource_type = validated_data.pop('resource_type')
         if resource_type:

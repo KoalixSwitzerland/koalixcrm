@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+from typing import Any
+
 from rest_framework import serializers
 
 from koalixcrm.reporting.models.human_resource import HumanResource
@@ -63,7 +67,7 @@ class WorkJSONSerializer(serializers.ModelSerializer):
                   'short_description',
                   'description',)
 
-    def create(self, validated_data):
+    def create(self, validated_data: dict[str, Any]) -> Work:
         work = Work()
         # Deserialize human_resource
         human_resource = validated_data.pop('human_resource')
@@ -95,7 +99,7 @@ class WorkJSONSerializer(serializers.ModelSerializer):
         work.save()
         return work
 
-    def update(self, work, validated_data):
+    def update(self, work: Work, validated_data: dict[str, Any]) -> Work:
         # Deserialize human_resource
         human_resource = validated_data.pop('human_resource')
         if human_resource:

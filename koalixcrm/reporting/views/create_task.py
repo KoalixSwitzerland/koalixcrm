@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
 from datetime import date
+from typing import Any
 
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ObjectDoesNotExist
@@ -22,10 +25,10 @@ from koalixcrm.reporting.models.task import Task
 class CreateTaskView:
 
     @staticmethod
-    def create_task_from_commercial_document_position(commercial_document_position,
-                                                 user,
-                                                 document,
-                                                 project):
+    def create_task_from_commercial_document_position(commercial_document_position: CommercialDocumentPosition,
+                                                 user: Any,
+                                                 document: CommercialDocument,
+                                                 project: Project) -> Task:
         date_now = date.today()
         content_type_commercial_document_position = ContentType.objects.get_for_model(CommercialDocumentPosition)
         task_title = limit_string_length(commercial_document_position.description, 30)
@@ -62,7 +65,7 @@ class CreateTaskView:
         return task
 
     @staticmethod
-    def create_project_from_document(user, document):
+    def create_project_from_document(user: Any, document: CommercialDocument) -> Project:
         commercial_document_positions = CommercialDocumentPosition.objects.filter(commercial_document=document)
         project_name = limit_string_length(document.contract.description, 30)
         project = Project.objects.create(project_manager=user,
@@ -81,7 +84,7 @@ class CreateTaskView:
         return project
 
     @staticmethod
-    def create_project(calling_model_admin, request, document, redirect_to):
+    def create_project(calling_model_admin: Any, request: Any, document: CommercialDocument, redirect_to: str) -> Any:
         """This method creates tasks from the positions of a commercial document
 
             Args:

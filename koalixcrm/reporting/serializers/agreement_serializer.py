@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
+from typing import Any
+
 from rest_framework import serializers
 
 from koalixcrm.core.models.unit import Unit
@@ -45,7 +49,7 @@ class AgreementJSONSerializer(serializers.ModelSerializer):
                   'type',
                   'status')
 
-    def create(self, validated_data):
+    def create(self, validated_data: dict[str, Any]) -> Agreement:
         agreement = Agreement()
         agreement.amount = validated_data['amount']
         agreement.date_from = validated_data['date_from']
@@ -96,7 +100,7 @@ class AgreementJSONSerializer(serializers.ModelSerializer):
         agreement.save()
         return agreement
 
-    def update(self, agreement, validated_data):
+    def update(self, agreement: Agreement, validated_data: dict[str, Any]) -> Agreement:
         agreement.amount = validated_data['amount']
         agreement.date_from = validated_data['date_from']
         agreement.date_until = validated_data['date_until']

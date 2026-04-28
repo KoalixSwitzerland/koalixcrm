@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
 from koalixcrm.reporting.models.project_link_type import ProjectLinkType
 from koalixcrm.reporting.serializers.project_link_type_serializer import (
     ProjectLinkTypeJSONSerializer,

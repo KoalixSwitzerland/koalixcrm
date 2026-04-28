@@ -1,6 +1,8 @@
 """
 TaskViewSet for koalixcrm reporting
 """
+from __future__ import annotations
+
 from koalixcrm.shared.base_model_view_set import BaseModelViewSet
 
 from ..models.task import Task

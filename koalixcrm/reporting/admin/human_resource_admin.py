@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
+from typing import Any
 
 from django.contrib import admin, messages
+from django.db.models import QuerySet
+from django.http import HttpRequest
 from django.utils.translation import gettext as _
 
 from koalixcrm.reporting.admin.resource_price_admin import ResourcePriceInlineAdminView
@@ -25,7 +30,7 @@ class HumanResourceAdminView(admin.ModelAdmin):
         }),
     )
 
-    def create_work_report_pdf(self, request, queryset):
+    def create_work_report_pdf(self, request: HttpRequest, queryset: QuerySet[Any]) -> None:
         """Enqueue an async PDFExportProcess per selected human resource. The
         Java worker fetches ``/human-resources/<id>/work-report-data/`` and
         renders the work_report XSL.

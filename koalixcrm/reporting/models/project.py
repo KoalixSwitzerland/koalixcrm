@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 
+import datetime
 from decimal import Decimal
+from typing import Any
 
 from django.db import models
 from django.utils.html import format_html
@@ -46,7 +49,7 @@ class Project(models.Model):
         related_name="db_project_last_modified",
     )
 
-    def link_to_project(self):
+    def link_to_project(self) -> str:
         if self.id:
             return format_html(
                 "<a href='/admin/reporting/project/%s' >%s</a>" % (str(self.id), str(self.project_name))
@@ -56,7 +59,7 @@ class Project(models.Model):
 
     link_to_project.short_description = _("Project")
 
-    def get_reporting_period(self, search_date):
+    def get_reporting_period(self, search_date: datetime.date) -> 'ReportingPeriod':
         """Returns the reporting period that is valid. Valid is a reporting period when the provided date
           lies between begin and end of the reporting period
 
@@ -70,26 +73,26 @@ class Project(models.Model):
           ReportPeriodNotFound when there is no valid reporting Period"""
         return ReportingPeriod.get_reporting_period(self, search_date)
 
-    def effective_costs(self, reporting_period=None, confirmed=False):
+    def effective_costs(self, reporting_period: Any = None, confirmed: bool = False) -> Any:
         effective_cost = 0
         for task in Task.objects.filter(project=self.id):
             effective_cost += task.effective_costs(reporting_period=reporting_period, confirmed=confirmed)
         self.default_currency.round(effective_cost)
         return effective_cost
 
-    def effective_costs_confirmed(self):
+    def effective_costs_confirmed(self) -> Any:
         return self.effective_costs(confirmed=True)
 
     effective_costs_confirmed.short_description = _("Effective Confirmed Costs")
     effective_costs_confirmed.tags = True
 
-    def effective_costs_not_confirmed(self):
+    def effective_costs_not_confirmed(self) -> Any:
         return self.effective_costs(confirmed=False)
 
     effective_costs_not_confirmed.short_description = _("Effective Not Confirmed Costs")
     effective_costs_not_confirmed.tags = True
 
-    def effective_effort(self, reporting_period=None):
+    def effective_effort(self, reporting_period: Any = None) -> Any:
         effective_effort = 0
         for task in Task.objects.filter(project=self.id):
             effective_effort += task.effective_effort(reporting_period=reporting_period)
@@ -98,7 +101,7 @@ class Project(models.Model):
     effective_effort.short_description = _("Effective Accumulated effort")
     effective_effort.tags = True
 
-    def planned_costs_in_buckets(self, reporting_period=None, buckets=None):
+    def planned_costs_in_buckets(self, reporting_period: Any = None, buckets: Any = None) -> dict:
         """The function return the planned overall costs
 
         Args:
@@ -131,7 +134,7 @@ class Project(models.Model):
         self.default_currency.round(planned_effort_accumulated["sum_costs"])
         return planned_effort_accumulated
 
-    def planned_costs(self, reporting_period=None, remaining=True):
+    def planned_costs(self, reporting_period: Any = None, remaining: bool = True) -> Any:
         all_project_tasks = Task.objects.filter(project=self.id)
         planned_costs = 0
         if all_project_tasks:
@@ -139,13 +142,13 @@ class Project(models.Model):
                 planned_costs += task.planned_costs(reporting_period=reporting_period, remaining=remaining)
         return planned_costs
 
-    def planned_total_costs(self):
+    def planned_total_costs(self) -> Any:
         return self.planned_costs(remaining=False)
 
     planned_total_costs.short_description = _("Planned Total Costs")
     planned_total_costs.tags = True
 
-    def effective_start(self):
+    def effective_start(self) -> datetime.date | None:
         """The function return the effective start of a project as a date
 
         Args:
@@ -178,7 +181,7 @@ class Project(models.Model):
     effective_start.short_description = _("Effective Start")
     effective_start.tags = True
 
-    def effective_end(self):
+    def effective_end(self) -> datetime.date | None:
         """The function return the effective end of a project as a date
 
         Args:
@@ -217,7 +220,7 @@ class Project(models.Model):
     effective_end.short_description = _("Effective End")
     effective_end.tags = True
 
-    def effective_duration(self):
+    def effective_duration(self) -> str:
         """The function return the effective overall duration of a project as a string in days
 
         Args:
@@ -242,7 +245,7 @@ class Project(models.Model):
     effective_duration.short_description = _("Effective Duration [dys]")
     effective_duration.tags = True
 
-    def planned_start(self):
+    def planned_start(self) -> datetime.date | None:
         """The function return planned overall start of a project as a date
 
         Args:
@@ -268,7 +271,7 @@ class Project(models.Model):
         else:
             return None
 
-    def planned_end(self):
+    def planned_end(self) -> datetime.date | None:
         """The function return planned overall end of a project as a date
 
         Args:
@@ -294,7 +297,7 @@ class Project(models.Model):
         else:
             return None
 
-    def planned_duration(self):
+    def planned_duration(self) -> str:
         """The function return planned overall duration of a project as a string in days
 
         Args:
@@ -316,13 +319,13 @@ class Project(models.Model):
     planned_duration.short_description = _("Planned Duration [dys]")
     planned_duration.tags = True
 
-    def get_project_name(self):
+    def get_project_name(self) -> str:
         if self.project_name:
             return self.project_name
         else:
             return "n/a"
 
-    def is_reporting_allowed(self):
+    def is_reporting_allowed(self) -> bool:
         """The function returns a boolean True when it is allowed to report on the project
 
         Args:
@@ -342,7 +345,7 @@ class Project(models.Model):
         else:
             return False
 
-    def __str__(self):
+    def __str__(self) -> str:
         return str(self.id) + " " + self.get_project_name()
 
     class Meta:

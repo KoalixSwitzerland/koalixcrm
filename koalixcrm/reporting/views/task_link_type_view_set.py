@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
 from koalixcrm.reporting.models.task_link_type import TaskLinkType
 from koalixcrm.reporting.serializers.task_link_type_serializer import (
     TaskLinkTypeJSONSerializer,

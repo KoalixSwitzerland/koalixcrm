@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
 from koalixcrm.reporting.models.estimation import Estimation
 from koalixcrm.reporting.serializers.estimation_serializer import (
     EstimationJSONSerializer,

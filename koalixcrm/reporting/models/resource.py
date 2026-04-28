@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 
 from django.db import models
 from django.utils.translation import gettext as _
@@ -16,7 +17,7 @@ class Resource(models.Model):
                                       blank=True,
                                       null=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         from koalixcrm.reporting.models.human_resource import HumanResource
         human_resource = HumanResource.objects.get(id=self.id)
         if human_resource:

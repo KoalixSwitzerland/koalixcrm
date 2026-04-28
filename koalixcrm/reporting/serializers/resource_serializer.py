@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+from typing import Any
+
 from rest_framework import serializers
 
 from koalixcrm.reporting.models.resource import Resource
@@ -32,7 +36,7 @@ class ResourceJSONSerializer(serializers.ModelSerializer):
         fields = ('resource_type',
                   'resource_manager')
 
-    def create(self, validated_data):
+    def create(self, validated_data: dict[str, Any]) -> None:
         resource = Resource()
         # Deserialize resource_type
         resource_type = validated_data.pop('resource_type')
@@ -49,7 +53,7 @@ class ResourceJSONSerializer(serializers.ModelSerializer):
             else:
                 resource.resource_manager = None
 
-    def update(self, resource, validated_data):
+    def update(self, resource: Resource, validated_data: dict[str, Any]) -> None:
         # Deserialize resource_type
         resource_type = validated_data.pop('resource_type')
         if resource_type:

@@ -1,6 +1,12 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
+from typing import Any
 
 from django.contrib import admin, messages
+from django.db.models import Model, QuerySet
+from django.forms import ModelForm
+from django.http import HttpRequest
 from django.utils.translation import gettext as _
 
 from koalixcrm.reporting.admin.work_admin import WorkInlineAdminView
@@ -35,7 +41,7 @@ class ReportingPeriodAdmin(admin.ModelAdmin):
     inlines = [WorkInlineAdminView, ]
     actions = ['create_report_pdf', ]
 
-    def save_model(self, request, obj, form, change):
+    def save_model(self, request: HttpRequest, obj: Model, form: ModelForm, change: bool) -> None:
         if change:
             obj.last_modified_by = request.user
         else:
@@ -43,7 +49,7 @@ class ReportingPeriodAdmin(admin.ModelAdmin):
             obj.staff = request.user
         obj.save()
 
-    def create_report_pdf(self, request, queryset):
+    def create_report_pdf(self, request: HttpRequest, queryset: QuerySet[Any]) -> None:
         """Enqueue an async PDFExportProcess per selected reporting period.
         The Java worker fetches ``/reporting-periods/<id>/report-data/``
         for the period-scoped snapshot, then renders + uploads the PDF.
@@ -95,8 +101,8 @@ class ReportingPeriodInlineAdminView(admin.TabularInline):
         }),
     )
 
-    def has_add_permission(self, request, obj=None):
+    def has_add_permission(self, request: HttpRequest, obj: Any = None) -> bool:
         return False
 
-    def has_delete_permission(self, request, obj=None):
+    def has_delete_permission(self, request: HttpRequest, obj: Any = None) -> bool:
         return False

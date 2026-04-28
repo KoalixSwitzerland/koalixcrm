@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
 from koalixcrm.reporting.models.agreement_status import AgreementStatus
 from koalixcrm.reporting.serializers.agreement_status_serializer import (
     AgreementStatusJSONSerializer,

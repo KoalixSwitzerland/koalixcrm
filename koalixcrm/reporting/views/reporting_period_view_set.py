@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
+from typing import Any
+
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -17,7 +21,7 @@ class ReportingPeriodViewSet(BaseModelViewSet):
     serializer_class = ReportingPeriodJSONSerializer
 
     @action(detail=True, methods=['get'], url_path='report-data')
-    def report_data(self, request, pk=None, **kwargs):
+    def report_data(self, request: Any, pk: Any = None, **kwargs: Any) -> Response:
         """A reporting-period report is just a period-scoped project report —
         the legacy ``ReportingPeriod.serialize_to_xml`` delegated to
         ``Project.serialize_to_xml(reporting_period=self)``. We do the same

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
@@ -30,7 +31,7 @@ class GenericProjectLink(models.Model):
                                          verbose_name=_("Last modified by"),
                                          related_name="db_project_link_last_modified")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return _("Link to") + " " + str(self.project)
 
     class Meta:

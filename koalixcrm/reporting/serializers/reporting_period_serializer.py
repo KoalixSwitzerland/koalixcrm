@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
+from typing import Any
+
 from rest_framework import serializers
 
 from koalixcrm.reporting.models.project import Project
@@ -46,7 +50,7 @@ class ReportingPeriodJSONSerializer(serializers.ModelSerializer):
                   'end',
                   'status')
 
-    def create(self, validated_data):
+    def create(self, validated_data: dict[str, Any]) -> ReportingPeriod:
         reporting_period = ReportingPeriod()
         # Deserialize project
         project = validated_data.pop('project')
@@ -68,7 +72,7 @@ class ReportingPeriodJSONSerializer(serializers.ModelSerializer):
         reporting_period.save()
         return reporting_period
 
-    def update(self, reporting_period, validated_data):
+    def update(self, reporting_period: ReportingPeriod, validated_data: dict[str, Any]) -> ReportingPeriod:
         # Deserialize project
         project = validated_data.pop('project')
         if project:

@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
+import datetime
+from typing import Any
 
 from django import forms
 
@@ -6,11 +10,11 @@ from koalixcrm.reporting.views.work_entry_form import WorkEntry
 
 
 class BaseWorkEntryFormset(forms.BaseFormSet):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         super(BaseWorkEntryFormset, self).__init__(*args, **kwargs)
 
     @staticmethod
-    def generate_initial_data(start_date, stop_date, human_resource):
+    def generate_initial_data(start_date: datetime.date, stop_date: datetime.date, human_resource: Any) -> list[dict[str, Any]]:
         from koalixcrm.reporting.models.work import Work
 
         list_of_work = Work.objects.filter(
@@ -32,7 +36,7 @@ class BaseWorkEntryFormset(forms.BaseFormSet):
         return initial
 
     @staticmethod
-    def load_formset(range_selection_form, request):
+    def load_formset(range_selection_form: Any, request: Any) -> Any:
         WorkEntryFormSet = forms.formset_factory(
             WorkEntry, extra=1, max_num=60, can_delete=True, formset=BaseWorkEntryFormset
         )
@@ -43,12 +47,12 @@ class BaseWorkEntryFormset(forms.BaseFormSet):
         return pre_check_formset
 
     @staticmethod
-    def compose_form_kwargs(from_date, to_date):
+    def compose_form_kwargs(from_date: datetime.date, to_date: datetime.date) -> dict[str, Any]:
         form_kwargs = {"from_date": from_date, "to_date": to_date}
         return form_kwargs
 
     @staticmethod
-    def create_updated_formset(range_selection_form, human_resource):
+    def create_updated_formset(range_selection_form: Any, human_resource: Any) -> Any:
         WorkEntryFormSet = forms.formset_factory(
             WorkEntry, extra=1, max_num=60, can_delete=True, formset=BaseWorkEntryFormset
         )
@@ -60,7 +64,7 @@ class BaseWorkEntryFormset(forms.BaseFormSet):
         return formset
 
     @staticmethod
-    def create_new_formset(from_date, to_date, human_resource):
+    def create_new_formset(from_date: datetime.date, to_date: datetime.date, human_resource: Any) -> Any:
         WorkEntryFormSet = forms.formset_factory(
             WorkEntry, extra=1, max_num=60, can_delete=True, formset=BaseWorkEntryFormset
         )

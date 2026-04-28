@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 
 from django.db import models
 from django.utils.translation import gettext as _
@@ -15,5 +16,5 @@ class ProjectLinkType(models.Model):
         verbose_name = _('Project Link Type')
         verbose_name_plural = _('Project Link Type')
 
-    def __str__(self):
+    def __str__(self) -> str:
         return str(self.id) + " " + str(self.title)

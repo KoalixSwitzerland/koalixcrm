@@ -8,6 +8,8 @@ Note: this module is **not** named ``urls.py`` because ``koalixcrm/reporting/url
 already serves the legacy server-rendered reporting views (mounted at
 ``/koalixcrm/crm/reporting/``). See CR-002 §3.5.
 """
+from __future__ import annotations
+
 from rest_framework.routers import DefaultRouter
 
 from koalixcrm.reporting_api_py.reporting_api import (

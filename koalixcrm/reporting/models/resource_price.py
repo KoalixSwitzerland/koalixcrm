@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 
 from django.db import models
 from django.utils.translation import gettext as _
@@ -14,7 +15,7 @@ class ResourcePrice(Price):
                                  blank=False,
                                  null=False)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return str(self.price) + " " + str(self.currency.short_name)
 
     class Meta:

@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
+from typing import Any
 
 from django.contrib.admin.widgets import *
 from django.forms import NumberInput
+from django.http import HttpRequest
 
 from koalixcrm.djangoUserExtension.models import UserExtension
 from koalixcrm.global_support_functions import limit_string_length
@@ -27,7 +31,7 @@ class WorkEntry(forms.Form):
     description = forms.CharField(widget=AdminTextareaWidget, required=True)
     work_id = forms.IntegerField(widget=forms.HiddenInput(), required=False)
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         self.from_date = kwargs.pop("from_date")
         self.to_date = kwargs.pop("to_date")
         self.original_from_date = self.from_date
@@ -35,7 +39,7 @@ class WorkEntry(forms.Form):
         super(WorkEntry, self).__init__(*args, **kwargs)
 
     @staticmethod
-    def check_working_hours(cleaned_data):
+    def check_working_hours(cleaned_data: dict[str, Any]) -> bool:
         """This method checks that the working hour is correctly proved either using the start_stop pattern
         or by providing the worked_hours in total.
 
@@ -71,7 +75,7 @@ class WorkEntry(forms.Form):
             )
         return True
 
-    def clean(self):
+    def clean(self) -> dict[str, Any]:
         cleaned_data = super(WorkEntry, self).clean()
         if "date" in cleaned_data:
             date = cleaned_data["date"]
@@ -87,7 +91,7 @@ class WorkEntry(forms.Form):
         WorkEntry.check_working_hours(cleaned_data)
         return cleaned_data
 
-    def update_work(self, request):
+    def update_work(self, request: HttpRequest) -> None:
         from django.core.exceptions import PermissionDenied
 
         from koalixcrm.reporting.models.work import Work

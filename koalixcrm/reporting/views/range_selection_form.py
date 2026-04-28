@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
+import datetime
 
 from django.contrib.admin.widgets import *
 
@@ -16,7 +19,7 @@ class RangeSelectionForm(forms.Form):
     original_to_date = forms.DateField(widget=forms.HiddenInput(),
                                        required=False)
 
-    def evaluate_pre_check_from_date(self):
+    def evaluate_pre_check_from_date(self) -> datetime.date:
         original_from_date = self.cleaned_data['original_from_date']
         new_from_date = self.cleaned_data['from_date']
         if original_from_date < new_from_date:
@@ -25,7 +28,7 @@ class RangeSelectionForm(forms.Form):
             from_date = new_from_date
         return from_date
 
-    def evaluate_pre_check_to_date(self):
+    def evaluate_pre_check_to_date(self) -> datetime.date:
         original_to_date = self.cleaned_data['original_to_date']
         new_to_date = self.cleaned_data['to_date']
 
@@ -35,14 +38,14 @@ class RangeSelectionForm(forms.Form):
             to_date = new_to_date
         return to_date
 
-    def update_from_input(self):
+    def update_from_input(self) -> None:
         self.from_date = self.cleaned_data['from_date']
         self.to_date = self.cleaned_data['to_date']
         self.original_from_date = self.from_date
         self.original_to_date = self.to_date
 
     @staticmethod
-    def create_range_selection_form(from_date, to_date):
+    def create_range_selection_form(from_date: datetime.date, to_date: datetime.date) -> 'RangeSelectionForm':
         initial_form_data = {'from_date': from_date,
                              'to_date': to_date,
                              'original_from_date': from_date,

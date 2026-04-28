@@ -1,4 +1,8 @@
+from __future__ import annotations
+
+import datetime
 from decimal import Decimal
+from typing import Any
 
 from django.db import models
 from django.utils.html import format_html
@@ -25,11 +29,11 @@ class Task(models.Model):
     last_status_change = models.DateField(verbose_name=_("Last Status Change"), blank=True, null=False)
     previous_status = None
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         super(Task, self).__init__(*args, **kwargs)
         self.previous_status = self.status
 
-    def save(self, *args, **kwargs):
+    def save(self, *args: Any, **kwargs: Any) -> None:
         if self.id is not None:
             if self.status != self.previous_status:
                 self.last_status_change = global_support_functions.get_today_date()
@@ -37,7 +41,7 @@ class Task(models.Model):
             self.last_status_change = global_support_functions.get_today_date()
         super(Task, self).save(*args, **kwargs)
 
-    def link_to_task(self):
+    def link_to_task(self) -> str:
         if self.id:
             return format_html("<a href='/admin/reporting/task/%s' >%s</a>" % (str(self.id), str(self.title)))
         else:
@@ -45,7 +49,7 @@ class Task(models.Model):
 
     link_to_task.short_description = _("Task")
 
-    def planned_duration(self):
+    def planned_duration(self) -> Any:
         if (not self.planned_start()) or (not self.planned_end()):
             duration_in_days = "n/a"
         elif self.planned_start() > self.planned_end():
@@ -57,7 +61,7 @@ class Task(models.Model):
     planned_duration.short_description = _("Planned Duration [dys]")
     planned_duration.tags = True
 
-    def planned_start(self):
+    def planned_start(self) -> datetime.date | None:
         """The function return the planned start of a task as a date based on the estimations which are
         attached to the task in case there was no estimation attached to this task, the function returns None
 
@@ -84,7 +88,7 @@ class Task(models.Model):
     planned_start.short_description = _("Planned Start")
     planned_start.tags = True
 
-    def planned_end(self):
+    def planned_end(self) -> datetime.date | None:
         """The function return the planned end of a task as a date based on the estimations which are
         attached to the task in case there was no estimation attached to this task, the function returns None
 
@@ -111,7 +115,7 @@ class Task(models.Model):
     planned_end.short_description = _("Planned End")
     planned_end.tags = True
 
-    def planned_effort(self, reporting_period=None, remaining=False):
+    def planned_effort(self, reporting_period: Any = None, remaining: bool = False) -> Any:
         """The function return the planned effort of resources which have been estimated for this task
         at a specific reporting period. When no reporting_period is provided, the last reporting period
         is selected
@@ -154,7 +158,7 @@ class Task(models.Model):
     planned_effort.short_description = _("Planned Effort")
     planned_effort.tags = True
 
-    def get_latest_estimation(self):
+    def get_latest_estimation(self) -> Any:
         estimations = Estimation.objects.filter(task=self.id)
         latest_estimation = None
         for estimation in estimations:
@@ -165,7 +169,7 @@ class Task(models.Model):
                     latest_estimation = estimation
         return latest_estimation
 
-    def planned_costs_in_buckets(self, reporting_period=None, buckets=None):
+    def planned_costs_in_buckets(self, reporting_period: Any = None, buckets: Any = None) -> dict:
         """The function returns the planned costs of resources which have been estimated for this task
          at a specific reporting period plus the costs of the effective effort before the provided reporting_period
          When no reporting_period is provided. The costs are split into the provided buckets.
@@ -202,7 +206,7 @@ class Task(models.Model):
                         planned_costs["sum_costs"] = planned_costs[bucket]
         return planned_costs
 
-    def planned_costs(self, reporting_period=None, remaining=False):
+    def planned_costs(self, reporting_period: Any = None, remaining: bool = False) -> Any:
         """The function returns the planned overall costs of resources which have been estimated for this task
          at a specific reporting period plus the costs of the effective effort before the provided reporting_period
          When no reporting_period is provided, the last reporting period is selected.
@@ -238,13 +242,13 @@ class Task(models.Model):
     planned_costs.short_description = _("Planned Costs")
     planned_costs.tags = True
 
-    def planned_total_costs(self):
+    def planned_total_costs(self) -> Any:
         return self.planned_costs(remaining=False)
 
     planned_total_costs.short_description = _("Planned Total Costs")
     planned_total_costs.tags = True
 
-    def effective_start(self):
+    def effective_start(self) -> datetime.date | None:
         """The function return the effective start of a task as a date.
 
         Args:
@@ -270,7 +274,7 @@ class Task(models.Model):
     effective_start.short_description = _("Effective Start")
     effective_start.tags = True
 
-    def task_end(self):
+    def task_end(self) -> bool:
         """The function returns a boolean value True when the task is on
         status done.
 
@@ -290,7 +294,7 @@ class Task(models.Model):
             task_ended = False
         return task_ended
 
-    def effective_end(self):
+    def effective_end(self) -> datetime.date | None:
         """When the task has already ended, the
         function return the effective end of a task as a date based on the reported work
 
@@ -320,7 +324,7 @@ class Task(models.Model):
     effective_end.short_description = _("Effective End")
     effective_end.tags = True
 
-    def effective_duration(self):
+    def effective_duration(self) -> str:
         """The function return the effective overall duration of a task as a string in days
 
         Args:
@@ -345,13 +349,13 @@ class Task(models.Model):
     effective_duration.short_description = _("Effective Duration [dys]")
     effective_duration.tags = True
 
-    def effective_effort_overall(self):
+    def effective_effort_overall(self) -> Decimal:
         return self.effective_effort(reporting_period=None)
 
     effective_effort_overall.short_description = _("Effective Effort [hrs]")
     effective_effort_overall.tags = True
 
-    def effective_effort(self, reporting_period=None):
+    def effective_effort(self, reporting_period: Any = None) -> Decimal:
         """Effective effort returns the effective effort on a task
         when reporting_period is None, the effective effort overall is calculated
         when reporting_period is specified, the effective effort in this period is calculated"""
@@ -365,7 +369,7 @@ class Task(models.Model):
         sum_effort_in_hours = sum_effort / 3600
         return Decimal(sum_effort_in_hours)
 
-    def effective_costs(self, reporting_period=None, confirmed=True):
+    def effective_costs(self, reporting_period: Any = None, confirmed: bool = True) -> Decimal:
         """Returns the effective costs on a task
 
         Args:
@@ -430,19 +434,19 @@ class Task(models.Model):
         sum_costs = self.project.default_currency.round(sum_costs)
         return sum_costs
 
-    def effective_costs_confirmed(self):
+    def effective_costs_confirmed(self) -> Decimal:
         return self.effective_costs()
 
     effective_costs_confirmed.short_description = _("Effective costs confirmed")
     effective_costs_confirmed.tags = True
 
-    def effective_costs_not_confirmed(self):
+    def effective_costs_not_confirmed(self) -> Decimal:
         return self.effective_costs(confirmed=False)
 
     effective_costs_not_confirmed.short_description = _("Effective costs not confirmed")
     effective_costs_not_confirmed.tags = True
 
-    def is_reporting_allowed(self):
+    def is_reporting_allowed(self) -> bool:
         """Returns True when the task is available for reporting.
 
         Args:
@@ -465,13 +469,13 @@ class Task(models.Model):
     is_reporting_allowed.short_description = _("Reporting")
     is_reporting_allowed.tags = True
 
-    def get_title(self):
+    def get_title(self) -> str:
         if self.title:
             return self.title
         else:
             return "n/a"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return str(self.id) + " " + self.get_title()
 
     class Meta:

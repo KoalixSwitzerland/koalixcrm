@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
+from typing import Any
+
 from rest_framework import serializers
 
 from koalixcrm.reporting.models.estimation import Estimation
@@ -33,7 +37,7 @@ class EstimationJSONSerializer(serializers.ModelSerializer):
                   'status',
                   'reporting_period')
 
-    def create(self, validated_data):
+    def create(self, validated_data: dict[str, Any]) -> Estimation:
         estimation = Estimation()
         estimation.amount = validated_data['amount']
         estimation.date_from = validated_data['date_from']
@@ -67,7 +71,7 @@ class EstimationJSONSerializer(serializers.ModelSerializer):
         estimation.save()
         return estimation
 
-    def update(self, estimation, validated_data):
+    def update(self, estimation: Estimation, validated_data: dict[str, Any]) -> Estimation:
         estimation.amount = validated_data['amount']
         estimation.date_from = validated_data['date_from']
         estimation.date_until = validated_data['date_until']

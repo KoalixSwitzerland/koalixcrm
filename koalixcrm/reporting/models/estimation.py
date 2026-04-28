@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 
+import datetime
 from decimal import *
+from typing import Any
 
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -37,7 +40,7 @@ class Estimation(models.Model):
         null=False,
     )
 
-    def duration_in_days(self):
+    def duration_in_days(self) -> int:
         """The function returns the calculated difference between the date_until and the date_from
         and returns the value as number of days
 
@@ -53,7 +56,7 @@ class Estimation(models.Model):
         duration = duration_time_delta.days
         return duration
 
-    def calculated_costs(self, bucket_start=None, bucket_end=None):
+    def calculated_costs(self, bucket_start: datetime.date | None = None, bucket_end: datetime.date | None = None) -> Any:
         """The function returns the calculated costs in total or the calculated costs within a specific start and
         stop-frame.
 
@@ -98,7 +101,7 @@ class Estimation(models.Model):
             costs = overall_costs * Decimal((selected_duration / self.duration_in_days()))
         return costs
 
-    def __str__(self):
+    def __str__(self) -> str:
         return _("Estimation of Resource Consumption") + ": " + str(self.id)
 
     class Meta:
@@ -109,7 +112,7 @@ class Estimation(models.Model):
 
 
 class EstimationAdminForm(BaseInlineFormSet):
-    def clean(self):
+    def clean(self) -> None:
         """Check that the estimation is only attached to a reporting period which is not yet closed,
         also check that the date_from is at least one day before the date_until"""
         for f in self.forms:

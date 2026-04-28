@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
 import datetime
+from typing import Any
 
 from rest_framework import status as http_status
 from rest_framework.decorators import action
@@ -21,7 +24,7 @@ class HumanResourceViewSet(BaseModelViewSet):
     serializer_class = HumanResourceJSONSerializer
 
     @action(detail=True, methods=['get'], url_path='work-report-data')
-    def work_report_data(self, request, pk=None, **kwargs):
+    def work_report_data(self, request: Any, pk: Any = None, **kwargs: Any) -> Response:
         """Self-contained snapshot for the work_report XSL. Pass
         ``?range_from=YYYY-MM-DD&range_to=YYYY-MM-DD`` (defaults: 60 days
         back to today, mirroring the legacy serialize_to_xml defaults).
@@ -41,7 +44,7 @@ class HumanResourceViewSet(BaseModelViewSet):
         return Response(HumanResourceWorkReportSerializer(payload).data)
 
     @staticmethod
-    def _parse(name, request, default):
+    def _parse(name: str, request: Any, default: datetime.date) -> datetime.date:
         raw = request.query_params.get(name)
         if not raw:
             return default

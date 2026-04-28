@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 
 from django.db import models
 from django.utils.translation import gettext as _
@@ -22,7 +23,7 @@ class ReportingPeriodStatus(models.Model):
         verbose_name = _('Reporting Period Status')
         verbose_name_plural = _('Reporting Period Status')
 
-    def __str__(self):
+    def __str__(self) -> str:
         if self.title:
             return str(self.title)
         else:
