@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 
-from datetime import *
+from datetime import date, timedelta
+from decimal import Decimal
+from typing import TYPE_CHECKING
 
 from django.db import models
 from django.utils.html import format_html
@@ -15,6 +18,11 @@ from koalixcrm.core.const.status import *
 from koalixcrm.core.exceptions import *
 from koalixcrm.global_support_functions import limit_string_length
 
+if TYPE_CHECKING:
+    from django.http import HttpRequest
+
+    from koalixcrm.accounting.models.account import Account
+
 
 class Invoice(CommercialDocument):
     payable_until = models.DateField(verbose_name=_("To pay until"))
@@ -22,7 +30,7 @@ class Invoice(CommercialDocument):
                                               null=True)
     status = models.CharField(max_length=1, choices=INVOICESTATUS)
 
-    def link_to_invoice(self):
+    def link_to_invoice(self) -> str:
         if self.id:
             return format_html("<a href='/admin/contract_object_management/invoice/%s' >%s</a>" % (str(self.id),
                                                                             limit_string_length(str(self.description),
@@ -31,7 +39,7 @@ class Invoice(CommercialDocument):
             return "Not present"
     link_to_invoice.short_description = _("Invoice")
 
-    def create_from_reference(self, calling_model):
+    def create_from_reference(self, calling_model: models.Model) -> None:
         self.create_commercial_document(calling_model)
         self.status = 'C'
         cycle = self.party.default_billing_cycle
@@ -42,7 +50,7 @@ class Invoice(CommercialDocument):
         self.attach_commercial_document_positions(calling_model)
         self.attach_text_paragraphs()
 
-    def register_invoice_in_accounting(self, request):
+    def register_invoice_in_accounting(self, request: HttpRequest) -> None:
         dict_prices = dict()
         dict_tax = dict()
         current_valid_accounting_period = accounting.models.AccountingPeriod.get_current_valid_accounting_period()
@@ -71,7 +79,9 @@ class Invoice(CommercialDocument):
             booking.lastmodifiedby = request.user
             booking.save()
 
-    def register_payment_in_accounting(self, request, amount, payment_account):
+    def register_payment_in_accounting(
+        self, request: HttpRequest, amount: Decimal, payment_account: Account
+    ) -> None:
         current_valid_accounting_period = accounting.models.AccountingPeriod.get_current_valid_accounting_period()
         activa_account = accounting.models.Account.objects.filter(isopeninterestaccount=True)
         booking = accounting.models.Booking()
@@ -85,8 +95,8 @@ class Invoice(CommercialDocument):
         booking.lastmodifiedby = request.user
         booking.save()
 
-    def __str__(self):
-        return _("Invoice") + ": " + self.id.__str__() + " " + _("from Contract") + ": " + self.contract.id.__str__()
+    def __str__(self) -> str:
+        return _("Invoice") + ": " + str(self.id) + " " + _("from Contract") + ": " + str(self.contract.id)
 
     class Meta:
         app_label = "contract_object_management"

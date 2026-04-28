@@ -10,15 +10,20 @@ Kept as a separate action (instead of swapping the default serializer) so that
 existing shallow clients continue to work and so that write operations still
 flow through the simpler flat serializers.
 """
+from __future__ import annotations
+
+from typing import Any
+
 from rest_framework.decorators import action
+from rest_framework.request import Request
 from rest_framework.response import Response
 
 
 class NestedDetailMixin:
-    nested_serializer_class = None
+    nested_serializer_class: type | None = None
 
     @action(detail=True, methods=["get"], url_path="nested", url_name="nested")
-    def nested(self, request, pk=None, **kwargs):
+    def nested(self, request: Request, pk: int | None = None, **kwargs: Any) -> Response:
         serializer_class = self.nested_serializer_class
         if serializer_class is None:
             raise NotImplementedError(

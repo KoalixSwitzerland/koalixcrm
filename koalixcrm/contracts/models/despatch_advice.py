@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 
 from django.db import models
 from django.utils.translation import gettext as _
@@ -11,7 +12,7 @@ class DespatchAdvice(CommercialDocument):
     tracking_reference = models.CharField(verbose_name=_("Tracking Reference"), max_length=100, blank=True)
     status = models.CharField(max_length=1, choices=DESPATCHADVICESTATUS)
 
-    def create_from_reference(self, calling_model):
+    def create_from_reference(self, calling_model: models.Model) -> None:
         self.create_commercial_document(calling_model)
         self.status = "C"
         self.template_set = self.contract.get_template_set(self)
@@ -19,15 +20,15 @@ class DespatchAdvice(CommercialDocument):
         self.attach_commercial_document_positions(calling_model)
         self.attach_text_paragraphs()
 
-    def __str__(self):
+    def __str__(self) -> str:
         return (
             _("Despatch Advice")
             + ": "
-            + self.id.__str__()
+            + str(self.id)
             + " "
             + _("from Contract")
             + ": "
-            + self.contract.id.__str__()
+            + str(self.contract.id)
         )
 
     class Meta:

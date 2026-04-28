@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 
 from django.db import models
 from django.utils.translation import gettext as _
@@ -12,7 +13,7 @@ class PurchaseOrder(CommercialDocument):
     # PurchaseOrder.supplier FK was dropped in #395 G3.
     status = models.CharField(max_length=1, choices=PURCHASEORDERSTATUS)
 
-    def create_from_reference(self, calling_model):
+    def create_from_reference(self, calling_model: models.Model) -> None:
         self.create_commercial_document(calling_model)
         self.status = "O"
         self.template_set = self.contract.get_template_set(self)
@@ -21,15 +22,15 @@ class PurchaseOrder(CommercialDocument):
         self.attach_text_paragraphs()
         self.staff = calling_model.staff
 
-    def __str__(self):
+    def __str__(self) -> str:
         return (
             _("Purchase Order")
             + ": "
-            + self.id.__str__()
+            + str(self.id)
             + " "
             + _("from Contract")
             + ": "
-            + self.contract.id.__str__()
+            + str(self.contract.id)
         )
 
     class Meta:

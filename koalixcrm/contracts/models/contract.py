@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 
+from typing import TYPE_CHECKING, Any
+
+from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import gettext as _
 
@@ -12,6 +16,11 @@ from koalixcrm.core.exceptions import *
 from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
 from koalixcrm.djangoUserExtension.models import UserExtension
 from koalixcrm.plugin import *
+
+if TYPE_CHECKING:
+    from koalixcrm.contracts.models.invoice import Invoice
+    from koalixcrm.contracts.models.purchase_order import PurchaseOrder
+    from koalixcrm.contracts.models.quotation import Quotation
 
 
 class ContractAddressAssignment(WorkspaceScopedModel):
@@ -40,7 +49,7 @@ class ContractAddressAssignment(WorkspaceScopedModel):
         verbose_name = _('Contract Address Assignment')
         verbose_name_plural = _('Contract Address Assignments')
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.contract_id}-{self.purpose}-{self.address_id}"
 
 
@@ -70,7 +79,7 @@ class ContractPhoneAssignment(WorkspaceScopedModel):
         verbose_name = _('Contract Phone Assignment')
         verbose_name_plural = _('Contract Phone Assignments')
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.contract_id}-{self.purpose}-{self.phone_number_id}"
 
 
@@ -100,7 +109,7 @@ class ContractEmailAssignment(WorkspaceScopedModel):
         verbose_name = _('Contract Email Assignment')
         verbose_name_plural = _('Contract Email Assignments')
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.contract_id}-{self.purpose}-{self.email_id}"
 
 
@@ -152,14 +161,14 @@ class Contract(WorkspaceScopedModel):
         verbose_name = _('Contract')
         verbose_name_plural = _('Contracts')
 
-    def get_template_set(self, calling_model):
+    def get_template_set(self, calling_model: models.Model) -> Any:
         if self.default_template_set:
             required_template_set = str(type(calling_model).__name__)
             return self.default_template_set.get_template_set(required_template_set)
         else:
             raise TemplateSetMissingInContract("The Contract has no Default Template Set selected")
 
-    def create_from_reference(self, calling_model, staff):
+    def create_from_reference(self, calling_model: models.Model, staff: User) -> Contract:
         staff_user_extension = UserExtension.get_user_extension(staff.id)
         self.default_customer = calling_model
         self.default_currency = staff_user_extension.defaultCurrency
@@ -169,22 +178,22 @@ class Contract(WorkspaceScopedModel):
         self.save()
         return self
 
-    def create_invoice(self):
+    def create_invoice(self) -> Invoice:
         invoice = Invoice()
         invoice.create_from_reference(self)
         return invoice
 
-    def create_quotation(self):
+    def create_quotation(self) -> Quotation:
         quotation = Quotation()
         quotation.create_from_reference(self)
         return quotation
 
-    def create_purchase_order(self):
+    def create_purchase_order(self) -> PurchaseOrder:
         purchase_order = PurchaseOrder()
         purchase_order.create_from_reference(self)
         return purchase_order
 
-    def __str__(self):
+    def __str__(self) -> str:
         return _("Contract") + " " + str(self.id)
 
 

@@ -13,10 +13,17 @@ PurchaseOrder are gone. The nested shape here reflects that — the JSON
 field `party` replaces the old `customer` (and the separate `supplier`
 field on PurchaseOrder is also gone; POs use the inherited `party`).
 """
+from __future__ import annotations
+
 from collections import OrderedDict
 from decimal import Decimal
+from typing import TYPE_CHECKING, Any
 
 from rest_framework import serializers
+
+if TYPE_CHECKING:
+    from koalixcrm.contacts.models.party import Party
+    from koalixcrm.contracts.models.commercial_document import CommercialDocument as CommercialDocumentModel
 
 from koalixcrm.contacts.models.address_assignment import AddressAssignment
 from koalixcrm.contacts.models.email_assignment import EmailAssignment
@@ -52,19 +59,19 @@ class NestedAddressSerializer(serializers.Serializer):
     country = serializers.SerializerMethodField()
     subdivision_code = serializers.SerializerMethodField()
 
-    def _addr(self, obj):
+    def _addr(self, obj: Any) -> Any:
         return obj.address
 
-    def get_street(self, obj): return self._addr(obj).street
-    def get_number(self, obj): return self._addr(obj).number
-    def get_additional_address_line_1(self, obj): return self._addr(obj).additional_address_line_1
-    def get_additional_address_line_2(self, obj): return self._addr(obj).additional_address_line_2
-    def get_additional_address_line_3(self, obj): return self._addr(obj).additional_address_line_3
-    def get_zip_code(self, obj): return self._addr(obj).zip_code
-    def get_town(self, obj): return self._addr(obj).town
-    def get_state(self, obj): return self._addr(obj).state
-    def get_country(self, obj): return self._addr(obj).country
-    def get_subdivision_code(self, obj): return self._addr(obj).subdivision_code
+    def get_street(self, obj: Any) -> Any: return self._addr(obj).street
+    def get_number(self, obj: Any) -> Any: return self._addr(obj).number
+    def get_additional_address_line_1(self, obj: Any) -> Any: return self._addr(obj).additional_address_line_1
+    def get_additional_address_line_2(self, obj: Any) -> Any: return self._addr(obj).additional_address_line_2
+    def get_additional_address_line_3(self, obj: Any) -> Any: return self._addr(obj).additional_address_line_3
+    def get_zip_code(self, obj: Any) -> Any: return self._addr(obj).zip_code
+    def get_town(self, obj: Any) -> Any: return self._addr(obj).town
+    def get_state(self, obj: Any) -> Any: return self._addr(obj).state
+    def get_country(self, obj: Any) -> Any: return self._addr(obj).country
+    def get_subdivision_code(self, obj: Any) -> Any: return self._addr(obj).subdivision_code
 
 
 class NestedPhoneSerializer(serializers.Serializer):
@@ -72,7 +79,7 @@ class NestedPhoneSerializer(serializers.Serializer):
     is_primary = serializers.BooleanField(read_only=True)
     phone_e164 = serializers.SerializerMethodField()
 
-    def get_phone_e164(self, obj):
+    def get_phone_e164(self, obj: Any) -> str:
         return obj.phone.phone_e164
 
 
@@ -81,7 +88,7 @@ class NestedEmailSerializer(serializers.Serializer):
     is_primary = serializers.BooleanField(read_only=True)
     email = serializers.SerializerMethodField()
 
-    def get_email(self, obj):
+    def get_email(self, obj: Any) -> str:
         return obj.email.email
 
 
@@ -105,14 +112,14 @@ class PartyNestedSerializer(serializers.Serializer):
     phone_numbers = serializers.SerializerMethodField()
     email_addresses = serializers.SerializerMethodField()
 
-    def get_type(self, obj):
+    def get_type(self, obj: Party) -> str:
         if Organization.objects.filter(party_ptr_id=obj.id).exists():
             return 'organization'
         if PartyContact.objects.filter(party_ptr_id=obj.id).exists():
             return 'contact'
         return 'party'  # bare Party (shouldn't happen for documents)
 
-    def get_organization(self, obj):
+    def get_organization(self, obj: Party) -> dict[str, Any] | None:
         org = Organization.objects.filter(party_ptr_id=obj.id).first()
         if not org:
             return None
@@ -123,7 +130,7 @@ class PartyNestedSerializer(serializers.Serializer):
             'legal_seat_country': org.legal_seat_country,
         }
 
-    def get_contact(self, obj):
+    def get_contact(self, obj: Party) -> dict[str, Any] | None:
         contact = PartyContact.objects.filter(party_ptr_id=obj.id).first()
         if not contact:
             return None
@@ -133,15 +140,15 @@ class PartyNestedSerializer(serializers.Serializer):
             'family_name': contact.family_name,
         }
 
-    def get_postal_addresses(self, obj):
+    def get_postal_addresses(self, obj: Party) -> list[dict[str, Any]]:
         rows = AddressAssignment.objects.filter(party=obj).select_related('address')
         return NestedAddressSerializer(rows, many=True).data
 
-    def get_phone_numbers(self, obj):
+    def get_phone_numbers(self, obj: Party) -> list[dict[str, Any]]:
         rows = PhoneAssignment.objects.filter(party=obj).select_related('phone')
         return NestedPhoneSerializer(rows, many=True).data
 
-    def get_email_addresses(self, obj):
+    def get_email_addresses(self, obj: Party) -> list[dict[str, Any]]:
         rows = EmailAssignment.objects.filter(party=obj).select_related('email')
         return NestedEmailSerializer(rows, many=True).data
 
@@ -155,7 +162,7 @@ class ProductTypeNestedSerializer(serializers.Serializer):
     tax = OptionTaxJSONSerializer(read_only=True)
     tax_rate = serializers.SerializerMethodField()
 
-    def get_tax_rate(self, obj):
+    def get_tax_rate(self, obj: Any) -> str | None:
         if obj.tax is None:
             return None
         return str(obj.tax.get_tax_rate())
@@ -184,9 +191,9 @@ class PositionNestedSerializer(serializers.ModelSerializer):
         )
 
 
-def _compute_tax_summary(positions):
+def _compute_tax_summary(positions: list[CommercialDocumentPosition]) -> list[dict[str, str]]:
     """Aggregate positions by tax rate. Returns a list ordered by rate."""
-    buckets = OrderedDict()
+    buckets: OrderedDict[str, dict[str, Any]] = OrderedDict()
     for p in positions:
         rate_key = "unknown"
         if p.product_type is not None and p.product_type.tax is not None:
@@ -250,23 +257,23 @@ class _BaseCommercialDocumentNestedSerializer(serializers.ModelSerializer):
             "user_extension",
         )
 
-    def get_type(self, obj):
+    def get_type(self, obj: CommercialDocumentModel) -> str:
         return type(obj).__name__
 
-    def _positions(self, obj):
+    def _positions(self, obj: CommercialDocumentModel) -> list[CommercialDocumentPosition]:
         return list(
             CommercialDocumentPosition.objects.filter(commercial_document=obj.id).order_by(
                 "position_number"
             )
         )
 
-    def get_items(self, obj):
+    def get_items(self, obj: CommercialDocumentModel) -> list[dict[str, Any]]:
         return PositionNestedSerializer(self._positions(obj), many=True).data
 
-    def get_tax_summary(self, obj):
+    def get_tax_summary(self, obj: CommercialDocumentModel) -> list[dict[str, str]]:
         return _compute_tax_summary(self._positions(obj))
 
-    def get_user_extension(self, obj):
+    def get_user_extension(self, obj: CommercialDocumentModel) -> int | None:
         if obj.staff_id is None:
             return None
         from koalixcrm.djangoUserExtension.models.user_extension import UserExtension

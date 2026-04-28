@@ -1,6 +1,11 @@
 """
 ContractViewSet for koalixcrm contract_object_management
 """
+from __future__ import annotations
+
+from django.db.models import QuerySet
+from rest_framework.serializers import BaseSerializer
+
 from koalixcrm.shared.base_model_view_set import BaseModelViewSet
 
 from ..models.contract import Contract
@@ -11,7 +16,7 @@ class ContractViewSet(BaseModelViewSet):
     queryset = Contract.objects.all()
     serializer_class = ContractJSONSerializer
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet[Contract]:
         active = getattr(self.request, 'active_workspace', None)
         if self.request.user.is_superuser:
             return Contract.objects.all()
@@ -19,7 +24,7 @@ class ContractViewSet(BaseModelViewSet):
             return Contract.objects.filter(workspace=active)
         return Contract.objects.none()
 
-    def perform_create(self, serializer):
+    def perform_create(self, serializer: BaseSerializer) -> None:
         from koalixcrm.core.models.workspace import Workspace
         active = getattr(self.request, 'active_workspace', None)
         if active is None and self.request.user.is_superuser:

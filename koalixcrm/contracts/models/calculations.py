@@ -1,16 +1,23 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 
+from datetime import date
 from decimal import Decimal
+from typing import TYPE_CHECKING, Any
 
 from koalixcrm.contracts.models.commercial_document_position import (
     CommercialDocumentPosition,
 )
 
+if TYPE_CHECKING:
+    from koalixcrm.contracts.models.commercial_document import CommercialDocument
+    from koalixcrm.core.models.currency import Currency
+
 
 class Calculations:
 
     @staticmethod
-    def calculate_document_price(document, pricing_date):
+    def calculate_document_price(document: CommercialDocument, pricing_date: date) -> int:
         """Performs a price recalculation on contact documents.
         The calculated price is stored in the last_calculated_price and last_calculated_tax.
         The date when the price was calculated is stored in last_pricing_date
@@ -27,8 +34,8 @@ class Calculations:
             Can trow Product.NoPriceFound when Product Price was overwritten but the price was not set
             Can trow Position.NoPriceFound when Position Price has no value but overwrite price is set """
 
-        price = 0
-        tax = 0
+        price: Decimal = Decimal(0)
+        tax: Decimal = Decimal(0)
         positions = CommercialDocumentPosition.objects.filter(commercial_document=document.id)
         party_for_price_calculation = document.party
         if positions.exists():
@@ -56,7 +63,12 @@ class Calculations:
         return 1
 
     @staticmethod
-    def calculate_position_price(position, pricing_date, party, currency):
+    def calculate_position_price(
+        position: CommercialDocumentPosition,
+        pricing_date: date,
+        party: Any,
+        currency: Currency,
+    ) -> Decimal:
         """Compute the position price. Requires either (a) a product type that
         can answer `get_price(...)`, or (b) `overwrite_product_price=True` with
         `position_price_per_unit` set. The second shape is also used when the
@@ -81,7 +93,7 @@ class Calculations:
         return position.last_calculated_price
 
     @staticmethod
-    def calculate_position_tax(position, currency):
+    def calculate_position_tax(position: CommercialDocumentPosition, currency: Currency) -> Decimal:
         """Compute position tax. Tax rate source order:
         1. `position.product_type.get_tax_rate()` if a product type is linked.
         2. `position.position_tax_rate` as position-local fallback.

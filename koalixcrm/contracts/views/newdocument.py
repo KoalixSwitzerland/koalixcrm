@@ -1,13 +1,28 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from django.contrib import messages
 from django.http import Http404, HttpResponseRedirect
 from django.utils.translation import gettext as _
 
 from koalixcrm.core.exceptions import *
 
+if TYPE_CHECKING:
+    from django.contrib.admin import ModelAdmin
+    from django.db.models import Model
+    from django.http import HttpRequest
+
 
 class CreateNewDocumentView:
-    def create_new_document(calling_model_admin, request, calling_model, requested_document_type, redirect_to):
+    def create_new_document(
+        calling_model_admin: ModelAdmin,
+        request: HttpRequest,
+        calling_model: Model,
+        requested_document_type: type[Model],
+        redirect_to: str,
+    ) -> HttpResponseRedirect:
         """This method exports PDFs provided by different Models in the crm application
 
             Args:

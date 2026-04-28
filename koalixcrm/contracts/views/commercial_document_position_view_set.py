@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
+from django.db.models import QuerySet
+from rest_framework.serializers import BaseSerializer
+
 from koalixcrm.contracts.models.commercial_document_position import (
     CommercialDocumentPosition,
 )
@@ -12,7 +17,7 @@ class CommercialDocumentPositionViewSet(BaseModelViewSet):
     queryset = CommercialDocumentPosition.objects.all()
     serializer_class = CommercialDocumentPositionJSONSerializer
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet[CommercialDocumentPosition]:
         active = getattr(self.request, 'active_workspace', None)
         if self.request.user.is_superuser:
             return CommercialDocumentPosition.objects.all()
@@ -20,7 +25,7 @@ class CommercialDocumentPositionViewSet(BaseModelViewSet):
             return CommercialDocumentPosition.objects.filter(workspace=active)
         return CommercialDocumentPosition.objects.none()
 
-    def perform_create(self, serializer):
+    def perform_create(self, serializer: BaseSerializer) -> None:
         from koalixcrm.core.models.workspace import Workspace
         active = getattr(self.request, 'active_workspace', None)
         if active is None and self.request.user.is_superuser:

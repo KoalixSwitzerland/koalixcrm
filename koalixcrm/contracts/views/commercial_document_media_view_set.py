@@ -6,8 +6,12 @@ The PDF worker POSTs a row here after uploading the rendered PDF to S3.
 GET is also enabled so Django admins / other consumers can inspect media
 history. PATCH/PUT/DELETE are not exposed — media rows are append-only.
 """
+from __future__ import annotations
+
+from django.db.models import QuerySet
 from rest_framework import mixins, viewsets
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.serializers import BaseSerializer
 
 from koalixcrm.contracts.models.commercial_document_media import (
     CommercialDocumentMedia,
@@ -29,7 +33,7 @@ class CommercialDocumentMediaViewSet(
     permission_classes = [IsAuthenticated, ModelPermissionsWithListView]
     http_method_names = ["get", "post", "head", "options"]
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet[CommercialDocumentMedia]:
         active = getattr(self.request, 'active_workspace', None)
         if self.request.user.is_superuser:
             return CommercialDocumentMedia.objects.all()
@@ -37,7 +41,7 @@ class CommercialDocumentMediaViewSet(
             return CommercialDocumentMedia.objects.filter(workspace=active)
         return CommercialDocumentMedia.objects.none()
 
-    def perform_create(self, serializer):
+    def perform_create(self, serializer: BaseSerializer) -> None:
         from koalixcrm.core.models.workspace import Workspace
         active = getattr(self.request, 'active_workspace', None)
         if active is None and self.request.user.is_superuser:

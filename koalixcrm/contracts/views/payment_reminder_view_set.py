@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
+from django.db.models import QuerySet
+from rest_framework.serializers import BaseSerializer
+
 from koalixcrm.contracts.models.payment_reminder import PaymentReminder
 from koalixcrm.contracts.serializers.nested_commercial_document import (
     PaymentReminderNestedSerializer,
@@ -15,7 +20,7 @@ class PaymentReminderViewSet(NestedDetailMixin, BaseModelViewSet):
     serializer_class = PaymentReminderJSONSerializer
     nested_serializer_class = PaymentReminderNestedSerializer
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet[PaymentReminder]:
         active = getattr(self.request, 'active_workspace', None)
         if self.request.user.is_superuser:
             return PaymentReminder.objects.all()
@@ -23,7 +28,7 @@ class PaymentReminderViewSet(NestedDetailMixin, BaseModelViewSet):
             return PaymentReminder.objects.filter(workspace=active)
         return PaymentReminder.objects.none()
 
-    def perform_create(self, serializer):
+    def perform_create(self, serializer: BaseSerializer) -> None:
         from koalixcrm.core.models.workspace import Workspace
         active = getattr(self.request, 'active_workspace', None)
         if active is None and self.request.user.is_superuser:

@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any
 
 from django import forms
 from django.apps import apps
@@ -13,8 +16,12 @@ from koalixcrm.contracts.admin.commercial_document_admin import OptionCommercial
 from koalixcrm.contracts.models.invoice import Invoice
 from koalixcrm.plugin import *
 
+if TYPE_CHECKING:
+    from django.db.models import QuerySet
+    from django.http import HttpRequest, HttpResponse
 
-def _activa_account_queryset():
+
+def _activa_account_queryset() -> Any:
     """Queryset of accounting.Account rows of type 'A' (activa).
 
     Returns an empty queryset when the accounting app is not installed, so
@@ -42,11 +49,11 @@ class OptionInvoice(OptionCommercialDocument):
         _selected_action = forms.CharField(widget=forms.MultipleHiddenInput)
         payment_account = forms.ModelChoiceField(queryset=None)
 
-        def __init__(self, *args, **kwargs):
+        def __init__(self, *args: Any, **kwargs: Any) -> None:
             super().__init__(*args, **kwargs)
             self.fields["payment_account"].queryset = _activa_account_queryset()
 
-    def register_invoice_in_accounting(self, request, queryset):
+    def register_invoice_in_accounting(self, request: HttpRequest, queryset: QuerySet[Invoice]) -> None:
         from koalixcrm.core.exceptions import (
             IncompleteInvoice,
             OpenInterestAccountMissing,
@@ -66,7 +73,9 @@ class OptionInvoice(OptionCommercialDocument):
 
     register_invoice_in_accounting.short_description = _("Register Invoice in Accounting")
 
-    def register_payment_in_accounting(self, request, queryset):
+    def register_payment_in_accounting(
+        self, request: HttpRequest, queryset: QuerySet[Invoice]
+    ) -> HttpResponse | HttpResponseRedirect | None:
         form = None
         if request.POST.get("post"):
             if "cancel" in request.POST:
@@ -91,7 +100,9 @@ class OptionInvoice(OptionCommercialDocument):
 
     register_payment_in_accounting.short_description = _("Register Payment in Accounting")
 
-    def create_credit_note_from_invoice(self, request, queryset):
+    def create_credit_note_from_invoice(
+        self, request: HttpRequest, queryset: QuerySet[Invoice]
+    ) -> HttpResponse | HttpResponseRedirect | None:
         import koalixcrm.contracts.models.credit_note
         from koalixcrm.contracts.views.newdocument import CreateNewDocumentView
 

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 
-from datetime import *
+from datetime import date
 
 from django.db import models
 from django.utils.html import format_html
@@ -15,7 +16,7 @@ class Quotation(CommercialDocument):
     valid_until = models.DateField(verbose_name=_("Valid until"))
     status = models.CharField(max_length=1, choices=QUOTATIONSTATUS, verbose_name=_('Status'))
 
-    def link_to_quotation(self):
+    def link_to_quotation(self) -> str:
         if self.id:
             return format_html("<a href='/admin/contract_object_management/quotation/%s' >%s</a>" % (str(self.id),
                                                                           limit_string_length(str(self.description),
@@ -24,7 +25,7 @@ class Quotation(CommercialDocument):
             return "Not present"
     link_to_quotation.short_description = _("Quotation")
 
-    def create_from_reference(self, calling_model):
+    def create_from_reference(self, calling_model: models.Model) -> None:
         self.create_commercial_document(calling_model)
         self.status = 'I'
         self.valid_until = date.today().__str__()
@@ -34,8 +35,8 @@ class Quotation(CommercialDocument):
         self.attach_commercial_document_positions(calling_model)
         self.attach_text_paragraphs()
 
-    def __str__(self):
-        return _("Quotation") + ": " + self.id.__str__() + " " + _("from Contract") + ": " + self.contract.id.__str__()
+    def __str__(self) -> str:
+        return _("Quotation") + ": " + str(self.id) + " " + _("from Contract") + ": " + str(self.contract.id)
 
     class Meta:
         app_label = "contract_object_management"

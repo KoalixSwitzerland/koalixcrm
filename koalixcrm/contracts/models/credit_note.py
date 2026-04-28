@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 
-from datetime import *
+from datetime import date
+from typing import TYPE_CHECKING
 
 from django.db import models
 from django.utils.html import format_html
@@ -14,6 +16,9 @@ from koalixcrm.contracts.models.commercial_document_position import (
 from koalixcrm.core.const.status import *
 from koalixcrm.core.exceptions import *
 from koalixcrm.global_support_functions import limit_string_length
+
+if TYPE_CHECKING:
+    from django.http import HttpRequest
 
 
 class CreditNote(CommercialDocument):
@@ -33,7 +38,7 @@ class CreditNote(CommercialDocument):
         default="",
     )
 
-    def link_to_credit_note(self):
+    def link_to_credit_note(self) -> str:
         if self.id:
             return format_html(
                 "<a href='/admin/contract_object_management/creditnote/%s' >%s</a>"
@@ -44,7 +49,7 @@ class CreditNote(CommercialDocument):
 
     link_to_credit_note.short_description = _("Credit Note")
 
-    def create_from_reference(self, calling_model):
+    def create_from_reference(self, calling_model: models.Model) -> None:
         from koalixcrm.contracts.models.invoice import Invoice
 
         self.create_commercial_document(calling_model)
@@ -57,7 +62,7 @@ class CreditNote(CommercialDocument):
         self.attach_commercial_document_positions(calling_model)
         self.attach_text_paragraphs()
 
-    def register_credit_note_in_accounting(self, request):
+    def register_credit_note_in_accounting(self, request: HttpRequest) -> None:
         dict_prices = dict()
         dict_tax = dict()
         current_valid_accounting_period = accounting.models.AccountingPeriod.get_current_valid_accounting_period()
@@ -87,15 +92,15 @@ class CreditNote(CommercialDocument):
             booking.lastmodifiedby = request.user
             booking.save()
 
-    def __str__(self):
+    def __str__(self) -> str:
         return (
             _("Credit Note")
             + ": "
-            + self.id.__str__()
+            + str(self.id)
             + " "
             + _("from Contract")
             + ": "
-            + self.contract.id.__str__()
+            + str(self.contract.id)
         )
 
     class Meta:

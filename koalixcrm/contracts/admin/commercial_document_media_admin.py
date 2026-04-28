@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
+from typing import Any
 
 from django.contrib import admin
 
@@ -43,5 +46,5 @@ class CommercialDocumentMediaInline(admin.TabularInline):
     can_delete = False
     show_change_link = True
 
-    def has_add_permission(self, request, obj=None):
+    def has_add_permission(self, request: Any, obj: Any = None) -> bool:
         return False

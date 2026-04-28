@@ -98,5 +98,5 @@ class CommercialDocumentMedia(WorkspaceScopedModel):
         verbose_name_plural = _("Commercial Document Media")
         ordering = ['-created_at']
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"CommercialDocumentMedia #{self.id} [{self.status}] doc={self.commercial_document_id}"

@@ -1,10 +1,17 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 from django.contrib import admin, messages
 from django.utils.translation import gettext as _
 
 from koalixcrm.contracts.admin.commercial_document_admin import OptionCommercialDocument
 from koalixcrm.contracts.models.credit_note import CreditNote
+
+if TYPE_CHECKING:
+    from django.db.models import QuerySet
+    from django.http import HttpRequest
 
 
 class OptionCreditNote(OptionCommercialDocument):
@@ -19,7 +26,7 @@ class OptionCreditNote(OptionCommercialDocument):
         (_("Credit Note specific"), {"fields": ("corrects_invoice", "status", "issue_date", "reason")}),
     )
 
-    def register_credit_note_in_accounting(self, request, queryset):
+    def register_credit_note_in_accounting(self, request: HttpRequest, queryset: QuerySet[CreditNote]) -> None:
         from koalixcrm.core.exceptions import (
             IncompleteInvoice,
             OpenInterestAccountMissing,

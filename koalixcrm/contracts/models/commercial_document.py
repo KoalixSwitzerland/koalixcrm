@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 
 from django.db import models
 from django.utils.translation import gettext as _
@@ -21,7 +22,11 @@ class TextParagraphInCommercialDocument(WorkspaceScopedModel):
     purpose = models.CharField(verbose_name=_("Purpose"), max_length=2, choices=PURPOSESTEXTPARAGRAPHINDOCUMENTS)
     text_paragraph = models.TextField(verbose_name=_("Text"), blank=False, null=False)
 
-    def create_paragraph(self, default_paragraph, commercial_document):
+    def create_paragraph(
+        self,
+        default_paragraph: TextParagraphInDocumentTemplate,
+        commercial_document: CommercialDocument,
+    ) -> None:
         self.commercial_document = commercial_document
         self.purpose = default_paragraph.purpose
         self.text_paragraph = default_paragraph.text_paragraph
@@ -34,8 +39,8 @@ class TextParagraphInCommercialDocument(WorkspaceScopedModel):
         verbose_name = _("Text Paragraph In Commercial Document")
         verbose_name_plural = _("Text Paragraphs In Commercial Documents")
 
-    def __str__(self):
-        return self.id.__str__()
+    def __str__(self) -> str:
+        return str(self.id)
 
 
 class CommercialDocument(WorkspaceScopedModel):
@@ -100,7 +105,7 @@ class CommercialDocument(WorkspaceScopedModel):
         verbose_name = _("Commercial Document")
         verbose_name_plural = _("Commercial Documents")
 
-    def is_complete_with_price(self):
+    def is_complete_with_price(self) -> bool:
         """Checks whether the CommercialDocument is completed with a price, in case the
         CommercialDocument was not completed or the price calculation was not performed,
         the method returns false"""
@@ -110,7 +115,7 @@ class CommercialDocument(WorkspaceScopedModel):
         else:
             return False
 
-    def create_commercial_document(self, calling_model):
+    def create_commercial_document(self, calling_model: models.Model) -> None:
         self.staff = calling_model.staff
         if isinstance(calling_model, koalixcrm.contracts.models.contract.Contract):
             self.contract = calling_model
@@ -126,13 +131,13 @@ class CommercialDocument(WorkspaceScopedModel):
             self.description = calling_model.description
             self.discount = calling_model.discount
 
-    def attach_text_paragraphs(self):
+    def attach_text_paragraphs(self) -> None:
         default_paragraphs = TextParagraphInDocumentTemplate.objects.filter(document_template=self.template_set)
         for default_paragraph in list(default_paragraphs):
             paragraph = TextParagraphInCommercialDocument()
             paragraph.create_paragraph(default_paragraph, self)
 
-    def attach_commercial_document_positions(self, calling_model):
+    def attach_commercial_document_positions(self, calling_model: models.Model) -> None:
         if isinstance(calling_model, CommercialDocument):
             commercial_document_positions = CommercialDocumentPosition.objects.filter(
                 commercial_document=calling_model.id
@@ -141,7 +146,7 @@ class CommercialDocument(WorkspaceScopedModel):
                 new_position = CommercialDocumentPosition()
                 new_position.create_position(commercial_document_position, self)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return _("Commercial Document") + ": " + str(self.id) + " " + _("from Contract") + ": " + str(self.contract.id)
 
 
@@ -174,7 +179,7 @@ class CommercialDocumentAddressAssignment(WorkspaceScopedModel):
         verbose_name = _("Commercial Document Address Assignment")
         verbose_name_plural = _("Commercial Document Address Assignments")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.document_id}-{self.purpose}-{self.address_id}"
 
 
@@ -207,7 +212,7 @@ class CommercialDocumentPhoneAssignment(WorkspaceScopedModel):
         verbose_name = _("Commercial Document Phone Assignment")
         verbose_name_plural = _("Commercial Document Phone Assignments")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.document_id}-{self.purpose}-{self.phone_number_id}"
 
 
@@ -240,5 +245,5 @@ class CommercialDocumentEmailAssignment(WorkspaceScopedModel):
         verbose_name = _("Commercial Document Email Assignment")
         verbose_name_plural = _("Commercial Document Email Assignments")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.document_id}-{self.purpose}-{self.email_id}"

@@ -6,10 +6,14 @@ in a standalone module because migration filenames start with a digit and
 aren't importable as Python modules.
 
 """
+from __future__ import annotations
+
+from typing import Any
+
 from koalixcrm.contacts.backfill import build_legacy_contact_to_party_mapping
 
 
-def populate_party_fks(apps, schema_editor):
+def populate_party_fks(apps: Any, schema_editor: Any) -> None:
     Contract = apps.get_model('contract_object_management', 'Contract')
     CommercialDocument = apps.get_model('contract_object_management', 'CommercialDocument')
 
@@ -42,7 +46,7 @@ def populate_party_fks(apps, schema_editor):
             doc.save(update_fields=['party'])
 
 
-def clear_party_fks(apps, schema_editor):
+def clear_party_fks(apps: Any, schema_editor: Any) -> None:
     Contract = apps.get_model('contract_object_management', 'Contract')
     CommercialDocument = apps.get_model('contract_object_management', 'CommercialDocument')
     Contract.objects.update(buyer_party=None, supplier_party=None)
