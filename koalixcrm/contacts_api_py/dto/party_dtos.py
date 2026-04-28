@@ -9,13 +9,18 @@ Consolidated into a single module (rather than one file per class,
 as the legacy DTOs did) because they are value-object shells with
 no custom behaviour.
 """
-from typing import Any, Dict
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any
 
 from koalixcrm.shared.base_model import BaseModel
 
+if TYPE_CHECKING:
+    from koalixcrm.shared.api_client import BaseAPIClient
+
 
 class Party(BaseModel):
-    def __init__(self, data: Dict[str, Any], client=None):
+    def __init__(self, data: dict[str, Any], client: BaseAPIClient | None = None) -> None:
         self.display_name = None
         self.default_language = None
         self.created_at = None
@@ -25,7 +30,7 @@ class Party(BaseModel):
 
 
 class Organization(BaseModel):
-    def __init__(self, data: Dict[str, Any], client=None):
+    def __init__(self, data: dict[str, Any], client: BaseAPIClient | None = None) -> None:
         self.display_name = None
         self.default_language = None
         self.legal_form = None
@@ -40,7 +45,7 @@ class Organization(BaseModel):
 class PartyContact(BaseModel):
     """Natural-person Party (transitional name — see ADR 0001)."""
 
-    def __init__(self, data: Dict[str, Any], client=None):
+    def __init__(self, data: dict[str, Any], client: BaseAPIClient | None = None) -> None:
         self.display_name = None
         self.default_language = None
         self.prefix = None
@@ -54,7 +59,7 @@ class PartyContact(BaseModel):
 
 
 class PartyIdentification(BaseModel):
-    def __init__(self, data: Dict[str, Any], client=None):
+    def __init__(self, data: dict[str, Any], client: BaseAPIClient | None = None) -> None:
         self.party = None
         self.scheme = None
         self.value = None
@@ -64,7 +69,7 @@ class PartyIdentification(BaseModel):
 
 
 class PartyRole(BaseModel):
-    def __init__(self, data: Dict[str, Any], client=None):
+    def __init__(self, data: dict[str, Any], client: BaseAPIClient | None = None) -> None:
         self.party = None
         self.role_type = None
         self.is_primary = None
@@ -74,7 +79,7 @@ class PartyRole(BaseModel):
 
 
 class OrganizationMembership(BaseModel):
-    def __init__(self, data: Dict[str, Any], client=None):
+    def __init__(self, data: dict[str, Any], client: BaseAPIClient | None = None) -> None:
         self.contact = None
         self.organization = None
         self.title = None
@@ -86,7 +91,7 @@ class OrganizationMembership(BaseModel):
 
 
 class OrganizationRelationship(BaseModel):
-    def __init__(self, data: Dict[str, Any], client=None):
+    def __init__(self, data: dict[str, Any], client: BaseAPIClient | None = None) -> None:
         self.parent = None
         self.child = None
         self.relationship_type = None
@@ -96,7 +101,7 @@ class OrganizationRelationship(BaseModel):
 
 
 class Address(BaseModel):
-    def __init__(self, data: Dict[str, Any], client=None):
+    def __init__(self, data: dict[str, Any], client: BaseAPIClient | None = None) -> None:
         self.street = None
         self.number = None
         self.additional_address_line_1 = None
@@ -111,7 +116,7 @@ class Address(BaseModel):
 
 
 class AddressAssignment(BaseModel):
-    def __init__(self, data: Dict[str, Any], client=None):
+    def __init__(self, data: dict[str, Any], client: BaseAPIClient | None = None) -> None:
         self.party = None
         self.address = None
         self.purpose = None
@@ -122,13 +127,13 @@ class AddressAssignment(BaseModel):
 
 
 class PhoneNumber(BaseModel):
-    def __init__(self, data: Dict[str, Any], client=None):
+    def __init__(self, data: dict[str, Any], client: BaseAPIClient | None = None) -> None:
         self.phone_e164 = None
         super().__init__(data)
 
 
 class PhoneAssignment(BaseModel):
-    def __init__(self, data: Dict[str, Any], client=None):
+    def __init__(self, data: dict[str, Any], client: BaseAPIClient | None = None) -> None:
         self.party = None
         self.phone = None
         self.purpose = None
@@ -139,13 +144,13 @@ class PhoneAssignment(BaseModel):
 
 
 class PartyEmail(BaseModel):
-    def __init__(self, data: Dict[str, Any], client=None):
+    def __init__(self, data: dict[str, Any], client: BaseAPIClient | None = None) -> None:
         self.email = None
         super().__init__(data)
 
 
 class EmailAssignment(BaseModel):
-    def __init__(self, data: Dict[str, Any], client=None):
+    def __init__(self, data: dict[str, Any], client: BaseAPIClient | None = None) -> None:
         self.party = None
         self.email = None
         self.purpose = None
@@ -156,14 +161,14 @@ class EmailAssignment(BaseModel):
 
 
 class PartyGroup(BaseModel):
-    def __init__(self, data: Dict[str, Any], client=None):
+    def __init__(self, data: dict[str, Any], client: BaseAPIClient | None = None) -> None:
         self.name = None
         self.role_type_scope = None
         super().__init__(data)
 
 
 class PartyGroupMembership(BaseModel):
-    def __init__(self, data: Dict[str, Any], client=None):
+    def __init__(self, data: dict[str, Any], client: BaseAPIClient | None = None) -> None:
         self.party = None
         self.party_group = None
         super().__init__(data)

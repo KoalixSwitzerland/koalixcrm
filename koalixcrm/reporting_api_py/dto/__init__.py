@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """Reporting DTO classes."""
 
+from __future__ import annotations
+
 from koalixcrm.reporting_api_py.dto.agreement import Agreement
 from koalixcrm.reporting_api_py.dto.agreement_status import AgreementStatus
 from koalixcrm.reporting_api_py.dto.agreement_type import AgreementType

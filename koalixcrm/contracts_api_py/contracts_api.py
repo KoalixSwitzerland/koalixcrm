@@ -4,6 +4,9 @@ Contract Object Management API entry point.
 
 Exposes Contract/Document REST viewsets for URL routing.
 """
+
+from __future__ import annotations
+
 from koalixcrm.contracts.views.commercial_document_position_view_set import (
     CommercialDocumentPositionViewSet,
 )

@@ -1,6 +1,9 @@
 """
 UnitTransformViewSet for koalixcrm settings
 """
+
+from __future__ import annotations
+
 from koalixcrm.core.models.unit_transform import UnitTransform
 from koalixcrm.core.serializers.unit_transform_serializer import (
     UnitTransformJSONSerializer,

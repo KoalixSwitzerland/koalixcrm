@@ -5,6 +5,9 @@ Exposes Contacts REST viewsets for URL routing. Post-v2.0.0 the legacy
 Customer / Supplier / Person / Contact / CustomerGroup viewsets are gone;
 everything goes through the Party data model.
 """
+
+from __future__ import annotations
+
 from koalixcrm.contacts.views.customer_billing_cycle_view_set import (
     CustomerBillingCycleViewSet,
 )

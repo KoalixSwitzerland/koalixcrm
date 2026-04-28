@@ -4,6 +4,9 @@ Reporting API entry point.
 
 Exposes Reporting REST viewsets for URL routing.
 """
+
+from __future__ import annotations
+
 from koalixcrm.reporting.views.agreement_status_view_set import AgreementStatusViewSet
 from koalixcrm.reporting.views.agreement_type_view_set import AgreementTypeViewSet
 from koalixcrm.reporting.views.agreement_view_set import AgreementViewSet

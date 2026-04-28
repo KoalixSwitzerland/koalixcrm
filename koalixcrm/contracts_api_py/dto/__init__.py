@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """Contract Object Management DTO classes."""
 
+from __future__ import annotations
+
 from koalixcrm.contracts_api_py.dto.commercial_document import CommercialDocument
 from koalixcrm.contracts_api_py.dto.commercial_document_position import (
     CommercialDocumentPosition,
