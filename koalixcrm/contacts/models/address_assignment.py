@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
 from django.db import models
 from django.utils.translation import gettext as _
 
@@ -34,5 +36,5 @@ class AddressAssignment(WorkspaceScopedModel):
         verbose_name = _("Address assignment")
         verbose_name_plural = _("Address assignments")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.party_id}-{self.purpose}-{self.address_id}"

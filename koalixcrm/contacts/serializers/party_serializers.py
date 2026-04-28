@@ -5,6 +5,8 @@ Minimal ModelSerializer layer — nested / custom create/update behaviour is
 deferred until the API shape is agreed. All 15 new models are exposed as
 flat JSON resources; relationships are serialized as IDs.
 """
+from __future__ import annotations
+
 from rest_framework import serializers
 
 from koalixcrm.contacts.models.address import Address

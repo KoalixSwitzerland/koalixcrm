@@ -4,6 +4,8 @@ Mounted at ``/koalixcrm_contacts/api/v1/<workspace_id>/`` from
 ``projectsettings/urls.py`` once CR-R2 of CR-002 lands. Until then this
 module is inert — importing it has no effect on the running URL conf.
 """
+from __future__ import annotations
+
 from rest_framework.routers import DefaultRouter
 
 from koalixcrm.contacts_api_py.contacts_api import (

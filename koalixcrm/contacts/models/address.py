@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
 from django.db import models
 from django.utils.translation import gettext as _
 
@@ -56,7 +58,7 @@ class Address(WorkspaceScopedModel):
         verbose_name = _("Address")
         verbose_name_plural = _("Addresses")
 
-    def __str__(self):
+    def __str__(self) -> str:
         line = " ".join(p for p in [self.street, self.number] if p)
         parts = [line, self.zip_code, self.town, self.country]
         return ' '.join(p for p in parts if p)

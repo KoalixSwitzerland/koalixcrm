@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 """DRF viewsets for the new Party data model (issue #394)."""
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from koalixcrm.contacts.models.address import Address
 from koalixcrm.contacts.models.address_assignment import AddressAssignment
 from koalixcrm.contacts.models.email_assignment import EmailAssignment
@@ -34,11 +38,15 @@ from koalixcrm.contacts.serializers.party_serializers import (
 )
 from koalixcrm.shared.base_model_view_set import BaseModelViewSet
 
+if TYPE_CHECKING:
+    from django.db.models import QuerySet
+    from rest_framework.serializers import BaseSerializer
+
 
 class WorkspaceScopedViewSetMixin:
     """Filter queryset by active_workspace; stamp workspace on create."""
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet:
         qs = super().get_queryset()
         active = getattr(self.request, 'active_workspace', None)
         if active is not None:
@@ -47,7 +55,7 @@ class WorkspaceScopedViewSetMixin:
             return qs.none()
         return qs
 
-    def perform_create(self, serializer):
+    def perform_create(self, serializer: BaseSerializer) -> None:
         from koalixcrm.core.models.workspace import Workspace
         active = getattr(self.request, 'active_workspace', None)
         if active is None and self.request.user.is_superuser:

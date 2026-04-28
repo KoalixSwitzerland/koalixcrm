@@ -21,6 +21,10 @@ crm_organization / crm_partycontact is swapped. OrganizationMembership
 and OrganizationRelationship rows involving the converted Organization
 are deleted (they become meaningless for a natural person).
 """
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from django.contrib import admin, messages
 from django.db import connection, models, transaction
 from django.utils.translation import gettext_lazy as _
@@ -30,8 +34,13 @@ from koalixcrm.contacts.models.organization import Organization
 from koalixcrm.contacts.models.organization_membership import OrganizationMembership
 from koalixcrm.contacts.models.organization_relationship import OrganizationRelationship
 
+if TYPE_CHECKING:
+    from django.contrib.admin import ModelAdmin
+    from django.db.models import QuerySet
+    from django.http import HttpRequest
 
-def _split_display_name(display_name):
+
+def _split_display_name(display_name: str | None) -> tuple[str, str]:
     """Best-effort split of 'Jane Doe' → ('Jane', 'Doe').
 
     Falls back to empty given_name + full string as family_name when the
@@ -50,7 +59,9 @@ def _split_display_name(display_name):
 @admin.action(description=_(
     "Convert selected Organizations to Contacts (natural persons)"
 ))
-def convert_organizations_to_contacts(modeladmin, request, queryset):
+def convert_organizations_to_contacts(
+    modeladmin: ModelAdmin, request: HttpRequest, queryset: QuerySet[Organization]
+) -> None:
     converted = 0
     skipped_existing = 0
     removed_memberships = 0
@@ -107,7 +118,9 @@ def convert_organizations_to_contacts(modeladmin, request, queryset):
 @admin.action(description=_(
     "Convert selected Contacts to Organizations"
 ))
-def convert_contacts_to_organizations(modeladmin, request, queryset):
+def convert_contacts_to_organizations(
+    modeladmin: ModelAdmin, request: HttpRequest, queryset: QuerySet[PartyContact]
+) -> None:
     converted = 0
     skipped_existing = 0
 

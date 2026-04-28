@@ -11,10 +11,16 @@ management commands pass `django.apps.apps` + `None`. Either works because
 the code only uses `apps.get_model(...)`.
 
 """
+from __future__ import annotations
 
 import datetime
+from typing import TYPE_CHECKING, Any
 
 from django.conf import settings
+
+if TYPE_CHECKING:
+    from django.apps.registry import Apps
+    from django.db.backends.base.schema import BaseDatabaseSchemaEditor
 
 EPOCH = datetime.date(1970, 1, 1)
 
@@ -22,7 +28,7 @@ EPOCH = datetime.date(1970, 1, 1)
 _LEADING_NUMBER_LOCALES = {"en", "en-us", "en-gb", "en-ca", "en-au"}
 
 
-def _split_address_line_1(value):
+def _split_address_line_1(value: str | None) -> tuple[str | None, str | None]:
     """Split a legacy address_line_1 into (street, number).
 
     Mirrors the rule used by contacts.0014_address_split_step2_data so that
@@ -51,13 +57,13 @@ _LEGACY_PURPOSE_MAP = {
 }
 
 
-def _map_purpose(legacy_code):
+def _map_purpose(legacy_code: str | None) -> str:
     if not legacy_code:
         return "other"
     return _LEGACY_PURPOSE_MAP.get(legacy_code, "other")
 
 
-def _addr_key(row):
+def _addr_key(row: Any) -> tuple[str, ...]:
     return (
         row.address_line_1 or "",
         row.address_line_2 or "",
@@ -71,7 +77,7 @@ def _addr_key(row):
     )
 
 
-def forwards(apps, schema_editor):
+def forwards(apps: Apps, schema_editor: BaseDatabaseSchemaEditor | None) -> None:
     LegacyContact = apps.get_model("contacts", "Contact")
     LegacyCustomer = apps.get_model("contacts", "Customer")
     LegacySupplier = apps.get_model("contacts", "Supplier")
@@ -304,7 +310,7 @@ def forwards(apps, schema_editor):
     )
 
 
-def reverse(apps, schema_editor):
+def reverse(apps: Apps, schema_editor: BaseDatabaseSchemaEditor | None) -> None:
     """Truncate the new tables. Legacy tables are never touched."""
     for model_name in (
         "PartyGroupMembership",
@@ -326,7 +332,7 @@ def reverse(apps, schema_editor):
         apps.get_model("contacts", model_name).objects.all().delete()
 
 
-def build_legacy_contact_to_party_mapping(apps):
+def build_legacy_contact_to_party_mapping(apps: Apps) -> dict[int, int]:
     """Reconstruct `legacy_contact_id -> new_party_id` without shadow columns.
 
     The backfill (PR #393) creates one Organization row per legacy Contact row,
@@ -355,7 +361,7 @@ def build_legacy_contact_to_party_mapping(apps):
     return mapping
 
 
-def build_legacy_customer_group_to_party_group_mapping(apps):
+def build_legacy_customer_group_to_party_group_mapping(apps: Apps) -> dict[int, int]:
     """Reconstruct `legacy_customer_group_id -> new_party_group_id`.
 
     Same approach as `build_legacy_contact_to_party_mapping`: the backfill
@@ -376,7 +382,7 @@ def build_legacy_customer_group_to_party_group_mapping(apps):
     return dict(zip(legacy_ids, new_ids))
 
 
-def row_count_report(apps):
+def row_count_report(apps: Apps) -> list[tuple[str, int, int]]:
     """Compute a {label: (legacy_count, new_count, delta)} report.
 
     Shared between the `contacts_backfill_dryrun` and `contacts_backfill_reconcile`

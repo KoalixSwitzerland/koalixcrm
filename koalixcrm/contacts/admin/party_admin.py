@@ -4,6 +4,8 @@
 Scope: registration + list display only. Full admin UX (inlines, actions,
 fieldsets) arrives in PR #394 once the new model is authoritative.
 """
+from __future__ import annotations
+
 from django.contrib import admin
 
 from koalixcrm.contacts.admin.actions import (

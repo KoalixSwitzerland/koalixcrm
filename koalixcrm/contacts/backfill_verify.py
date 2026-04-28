@@ -19,8 +19,13 @@ three places:
 See `docs/migration-v1.14.0-to-v2.0.0.md` for what to do when a check
 fails.
 """
+from __future__ import annotations
+
 from dataclasses import dataclass
-from typing import List
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from django.apps.registry import Apps
 
 
 @dataclass
@@ -44,7 +49,7 @@ class BackfillVerificationError(RuntimeError):
     the migration — the migration should abort.
     """
 
-    def __init__(self, failed_checks: List[Check]):
+    def __init__(self, failed_checks: list[Check]):
         self.failed_checks = failed_checks
         super().__init__(self._format())
 
@@ -69,7 +74,7 @@ class BackfillVerificationError(RuntimeError):
         return "\n".join(lines)
 
 
-def verify_ready_for_cutover(apps, *, raise_on_failure: bool = True) -> List[Check]:
+def verify_ready_for_cutover(apps: Apps, *, raise_on_failure: bool = True) -> list[Check]:
     """Run every pre-cutover invariant. Return the full check list.
 
     When `raise_on_failure=True` and one or more checks fail, raise
@@ -85,7 +90,7 @@ def verify_ready_for_cutover(apps, *, raise_on_failure: bool = True) -> List[Che
     return checks
 
 
-def _run_checks(apps) -> List[Check]:
+def _run_checks(apps: Apps) -> list[Check]:
     LegacyContact = apps.get_model('contacts', 'Contact')
     LegacyCustomer = apps.get_model('contacts', 'Customer')
     LegacySupplier = apps.get_model('contacts', 'Supplier')
@@ -116,9 +121,9 @@ def _run_checks(apps) -> List[Check]:
     customer_n = LegacyCustomer.objects.count()
     supplier_n = LegacySupplier.objects.count()
 
-    checks: List[Check] = []
+    checks: list[Check] = []
 
-    def add(name, legacy_count, new_count, *, hint: str = ''):
+    def add(name: str, legacy_count: int, new_count: int, *, hint: str = '') -> None:
         checks.append(Check(
             name=name,
             passed=(legacy_count == new_count),
