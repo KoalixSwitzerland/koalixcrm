@@ -8,7 +8,6 @@ from django.db import models
 from django.utils.html import format_html
 from django.utils.translation import gettext as _
 
-from koalixcrm import accounting
 from koalixcrm.contracts.models.commercial_document import CommercialDocument
 from koalixcrm.contracts.models.commercial_document_position import (
     CommercialDocumentPosition,
@@ -63,6 +62,7 @@ class CreditNote(CommercialDocument):
         self.attach_text_paragraphs()
 
     def register_credit_note_in_accounting(self, request: HttpRequest) -> None:
+        from koalixcrm import accounting  # local import: accounting is an optional plugin
         dict_prices = dict()
         dict_tax = dict()
         current_valid_accounting_period = accounting.models.AccountingPeriod.get_current_valid_accounting_period()

@@ -9,7 +9,6 @@ from django.db import models
 from django.utils.html import format_html
 from django.utils.translation import gettext as _
 
-from koalixcrm import accounting
 from koalixcrm.contracts.models.commercial_document import CommercialDocument
 from koalixcrm.contracts.models.commercial_document_position import (
     CommercialDocumentPosition,
@@ -51,6 +50,7 @@ class Invoice(CommercialDocument):
         self.attach_text_paragraphs()
 
     def register_invoice_in_accounting(self, request: HttpRequest) -> None:
+        from koalixcrm import accounting  # local import: accounting is an optional plugin
         dict_prices = dict()
         dict_tax = dict()
         current_valid_accounting_period = accounting.models.AccountingPeriod.get_current_valid_accounting_period()
@@ -82,6 +82,7 @@ class Invoice(CommercialDocument):
     def register_payment_in_accounting(
         self, request: HttpRequest, amount: Decimal, payment_account: Account
     ) -> None:
+        from koalixcrm import accounting  # local import: accounting is an optional plugin
         current_valid_accounting_period = accounting.models.AccountingPeriod.get_current_valid_accounting_period()
         activa_account = accounting.models.Account.objects.filter(isopeninterestaccount=True)
         booking = accounting.models.Booking()
