@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
+from decimal import Decimal
 
 from django.db import models
 from django.utils.translation import gettext as _
@@ -29,10 +32,10 @@ class CurrencyTransform(models.Model):
                                  max_digits=17,
                                  decimal_places=2,)
 
-    def get_transform_factor(self):
+    def get_transform_factor(self) -> Decimal:
         return self.factor
 
-    def __str__(self):
+    def __str__(self) -> str:
         return "From " + self.from_currency.short_name + " to " + self.to_currency.short_name
 
     class Meta:

@@ -1,3 +1,8 @@
+from __future__ import annotations
+
+from typing import Any
+
+
 class LimitedAdminInlineMixin(object):
     """
     InlineAdmin mixin limiting the selection of related items according to
@@ -22,7 +27,7 @@ class LimitedAdminInlineMixin(object):
     """
 
     @staticmethod
-    def limit_inline_choices(formset, field, empty=False, **filters):
+    def limit_inline_choices(formset: Any, field: str, empty: bool = False, **filters: Any) -> None:
         """
         This function fetches the queryset with available choices for a given
         `field` and filters it based on the criteria specified in filters,
@@ -36,7 +41,7 @@ class LimitedAdminInlineMixin(object):
             qs = qs.filter(**filters)
             formset.form.base_fields[field].queryset = qs
 
-    def get_formset(self, request, obj=None, **kwargs):
+    def get_formset(self, request: Any, obj: Any = None, **kwargs: Any) -> Any:
         """
         Make sure we can only select variations that relate to the current
         item.

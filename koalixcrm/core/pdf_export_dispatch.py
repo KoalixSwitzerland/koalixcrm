@@ -13,6 +13,8 @@ the caller handles logging + marking the process as failed.
 """
 from __future__ import annotations
 
+from typing import Callable
+
 from django.conf import settings
 from django.utils.module_loading import import_string
 
@@ -28,7 +30,7 @@ def default_sqs_dispatcher(command: PDFExportCommand) -> None:
     queue.send_message(MessageBody=command.to_json())
 
 
-def get_dispatcher():
+def get_dispatcher() -> Callable[[PDFExportCommand], None]:
     """Resolve the configured dispatcher at call time (not import time)."""
     dotted = getattr(settings, "KOALIXCRM_PDF_EXPORT_DISPATCHER", _DEFAULT)
     return import_string(dotted)

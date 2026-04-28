@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
 from rest_framework import serializers
 
 from koalixcrm.core.models.currency_transform import CurrencyTransform

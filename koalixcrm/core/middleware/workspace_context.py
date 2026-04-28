@@ -5,18 +5,26 @@ duration of each request.
 
 CR-9 §9.3.
 """
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Callable
 
 from koalixcrm.core.managers.workspace_aware import (
     activate_workspace,
     deactivate_workspace,
 )
 
+if TYPE_CHECKING:
+    from django.http import HttpRequest, HttpResponse
+
+    from koalixcrm.core.models.workspace import Workspace
+
 
 class WorkspaceContextMiddleware:
-    def __init__(self, get_response):
+    def __init__(self, get_response: Callable[[HttpRequest], HttpResponse]) -> None:
         self.get_response = get_response
 
-    def __call__(self, request):
+    def __call__(self, request: HttpRequest) -> HttpResponse:
         if not getattr(request, 'user', None) or not request.user.is_authenticated:
             request.active_workspace = None
             return self.get_response(request)
@@ -34,7 +42,7 @@ class WorkspaceContextMiddleware:
 
         return response
 
-    def _resolve_workspace(self, request):
+    def _resolve_workspace(self, request: HttpRequest) -> Workspace | None:
         from koalixcrm.core.access import user_workspaces
         from koalixcrm.core.models.workspace import Workspace
 

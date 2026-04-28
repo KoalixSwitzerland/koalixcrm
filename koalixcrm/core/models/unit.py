@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 
 from django.db import models
 from django.utils.translation import gettext as _
@@ -19,7 +20,7 @@ class Unit(models.Model):
         null=True,
     )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.short_name
 
     class Meta:

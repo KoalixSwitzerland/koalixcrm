@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
 from datetime import *
+from typing import Any
 
 from django.db import models
 from django.utils.translation import gettext as _
@@ -16,12 +19,12 @@ class Subscription(models.Model):
         "SubscriptionType", on_delete=models.CASCADE, verbose_name=_("Subscription Type"), null=True
     )
 
-    def create_subscription_from_contract(self, contract):
+    def create_subscription_from_contract(self, contract: Any) -> 'Subscription':
         self.contract = contract
         self.save()
         return self
 
-    def create_quotation(self):
+    def create_quotation(self) -> Any:
         quotation = koalixcrm.core.documents.quotation.Quotation()
         quotation.contract = self.contract
         quotation.discount = 0
@@ -34,7 +37,7 @@ class Subscription(models.Model):
         quotation.save()
         return quotation
 
-    def create_invoice(self):
+    def create_invoice(self) -> Any:
         invoice = koalixcrm.core.documents.invoice.Invoice()
         invoice.contract = self.contract
         invoice.discount = 0

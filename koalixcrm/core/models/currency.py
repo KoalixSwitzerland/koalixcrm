@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 
 from decimal import Decimal
 
@@ -18,7 +19,7 @@ class Currency(models.Model):
                                    blank=True,
                                    null=True)
 
-    def get_rounding(self):
+    def get_rounding(self) -> Decimal:
         """Returns either the stored rounding value for a currency or a default rounding value of 0.05
 
         Args: no arguments
@@ -31,7 +32,7 @@ class Currency(models.Model):
         else:
             return self.rounding
 
-    def round(self, value):
+    def round(self, value: Decimal) -> Decimal:
         """Rounds the input value to the rounding resolution which is defined in the variable "rounding"
 
         Args: Decimal value value
@@ -42,7 +43,7 @@ class Currency(models.Model):
         rounded_value = int(value / self.get_rounding()) * self.get_rounding()
         return rounded_value
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.short_name
 
     class Meta:

@@ -11,6 +11,8 @@ See `docs/architecture/optional_apps.md` for the full pattern.
 """
 from __future__ import annotations
 
+from typing import Any
+
 from django.apps import AppConfig, apps
 from django.core.checks import Error, register
 
@@ -21,8 +23,8 @@ def register_peer_check(app_config: AppConfig) -> None:
         return
 
     @register()
-    def _check_required_peers(app_configs, **kwargs):
-        errors = []
+    def _check_required_peers(app_configs: Any, **kwargs: Any) -> list[Error]:
+        errors: list[Error] = []
         for peer in required:
             if not apps.is_installed(peer):
                 errors.append(Error(

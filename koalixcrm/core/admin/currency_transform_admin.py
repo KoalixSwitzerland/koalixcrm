@@ -2,6 +2,8 @@
 """
 CurrencyTransformInlineAdmin for koalixcrm settings
 """
+from __future__ import annotations
+
 from django.contrib import admin
 
 from koalixcrm.core.models.currency_transform import CurrencyTransform

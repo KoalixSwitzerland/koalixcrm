@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 
 from django.contrib.auth.models import User
 from django.db import models
@@ -88,5 +89,5 @@ class PDFExportProcess(WorkspaceScopedModel):
         verbose_name_plural = _("PDF Export Processes")
         ordering = ['-created_at']
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"PDFExport #{self.id} [{self.status}] {self.source_model}:{self.source_id}"

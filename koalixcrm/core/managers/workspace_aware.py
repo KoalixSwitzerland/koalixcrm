@@ -9,11 +9,14 @@ from __future__ import annotations
 
 from contextlib import contextmanager
 from contextvars import ContextVar
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Iterator
 
 from django.db import models
 
 if TYPE_CHECKING:
+    from django.contrib.auth.models import AbstractBaseUser
+    from django.db.models import QuerySet
+
     from koalixcrm.core.models.workspace import Workspace
 
 _active_workspace: ContextVar['Workspace | None'] = ContextVar(
@@ -38,7 +41,7 @@ def get_active_workspace() -> 'Workspace | None':
 
 
 @contextmanager
-def workspace_context(ws: 'Workspace'):
+def workspace_context(ws: 'Workspace') -> Iterator['Workspace']:
     token = _active_workspace.set(ws)
     try:
         yield ws
@@ -49,7 +52,7 @@ def workspace_context(ws: 'Workspace'):
 class WorkspaceAwareManager(models.Manager):
     raise_on_missing_context: bool = False
 
-    def get_queryset(self):
+    def get_queryset(self) -> 'QuerySet':
         qs = super().get_queryset()
         active = _active_workspace.get()
         if active is not None:
@@ -60,6 +63,6 @@ class WorkspaceAwareManager(models.Manager):
             )
         return qs
 
-    def visible_to(self, user):
+    def visible_to(self, user: 'AbstractBaseUser') -> 'QuerySet':
         from koalixcrm.core.access import user_workspaces
         return self.filter(workspace__in=user_workspaces(user))

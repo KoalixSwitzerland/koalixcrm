@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+from typing import Any
+
 from rest_framework import serializers
 
 from koalixcrm.core.models.unit import Unit
@@ -33,7 +37,7 @@ class UnitJSONSerializer(serializers.ModelSerializer):
                   'fraction_factor_to_next_higher_unit')
         depth = 1
 
-    def create(self, validated_data):
+    def create(self, validated_data: dict[str, Any]) -> Unit:
         unit = Unit()
         unit.description = validated_data['description']
         unit.short_name = validated_data['short_name']
@@ -49,7 +53,7 @@ class UnitJSONSerializer(serializers.ModelSerializer):
         unit.save()
         return unit
 
-    def update(self, instance, validated_data):
+    def update(self, instance: Unit, validated_data: dict[str, Any]) -> Unit:
         instance.description = validated_data.get('description', instance.description)
         instance.short_name = validated_data.get('short_name', instance.short_name)
 

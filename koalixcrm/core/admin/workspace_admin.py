@@ -4,6 +4,7 @@ Admin registration for Workspace.
 
 CR-8 §8.1.
 """
+from __future__ import annotations
 
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _

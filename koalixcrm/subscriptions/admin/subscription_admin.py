@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
+from typing import Any
+
 from django.contrib import admin
 from django.http import HttpResponseRedirect
 from django.utils.translation import gettext as _
@@ -55,7 +59,7 @@ class OptionSubscription(admin.ModelAdmin):
     inlines = [AdminSubscriptionEvent]
 
     @staticmethod
-    def create_invoice(queryset):
+    def create_invoice(queryset: Any) -> HttpResponseRedirect:
         for obj in queryset:
             invoice = obj.create_invoice()
             response = HttpResponseRedirect('/admin/crm/invoice/' + str(invoice.id))
@@ -63,13 +67,13 @@ class OptionSubscription(admin.ModelAdmin):
     create_invoice.short_description = _("Create Invoice")
 
     @staticmethod
-    def create_quotation(queryset):
+    def create_quotation(queryset: Any) -> HttpResponseRedirect:
         for obj in queryset:
             invoice = obj.create_invoice()
             response = HttpResponseRedirect('/admin/crm/invoice/' + str(invoice.id))
         return response
 
-    def save_model(self, request, obj, form, change):
+    def save_model(self, request: Any, obj: Any, form: Any, change: bool) -> None:
         if change:
             obj.last_modified_by = request.user
         else:
@@ -98,7 +102,7 @@ class OptionSubscriptionType(admin.ModelAdmin):
     )
 
 
-def create_subscription(a, request, queryset):
+def create_subscription(a: Any, request: Any, queryset: Any) -> HttpResponseRedirect:
     for contract in queryset:
         subscription = Subscription()
         subscription.create_subscription_from_contract(crmmodels.Contract.objects.get(id=contract.id))

@@ -4,6 +4,7 @@ Access-control models: Role enum, RoleInWorkspace.
 
 CR-8 §8.2 – §8.3.  Object-level grants (RoleOnObject) are deferred to CR-10.
 """
+from __future__ import annotations
 
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -48,7 +49,7 @@ class RoleInWorkspace(models.Model):
         verbose_name=_('Role'),
     )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'{self.group.name} \u2192 {self.workspace.name} ({self.get_role_display()})'
 
     class Meta:

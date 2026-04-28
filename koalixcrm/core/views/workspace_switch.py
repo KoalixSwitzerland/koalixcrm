@@ -5,6 +5,9 @@ session, writes an audit row, and redirects to the admin index.
 
 CR-8 §8.6.
 """
+from __future__ import annotations
+
+from typing import Any
 
 from django.contrib.admin.views.decorators import staff_member_required
 from django.core.exceptions import PermissionDenied
@@ -30,7 +33,7 @@ class WorkspaceSwitchView(View):
 
     http_method_names = ['post']
 
-    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+    def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         if not request.user.is_authenticated:
             raise PermissionDenied
 

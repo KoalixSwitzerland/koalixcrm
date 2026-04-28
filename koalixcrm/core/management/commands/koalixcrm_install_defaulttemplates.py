@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 
 from os import path
+from typing import Any
 
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -22,13 +24,13 @@ class Command(BaseCommand):
     label = "application name"
 
     @staticmethod
-    def store_default_template_xsl_file(language, file_name):
+    def store_default_template_xsl_file(language: str, file_name: str) -> Any:
         file_path = Command.path_of_default_template_file(language, file_name)
         xsl_file = Command.store_xsl_file(file_path)
         return xsl_file
 
     @staticmethod
-    def path_of_default_template_file(language, file_name):
+    def path_of_default_template_file(language: str, file_name: str) -> str:
         file_path = path.join(settings.STATIC_ROOT, "default_templates", language, file_name)
         f = None
         try:
@@ -42,14 +44,14 @@ class Command(BaseCommand):
         return file_path
 
     @staticmethod
-    def store_xsl_file(xsl_file_path):
+    def store_xsl_file(xsl_file_path: str) -> Any:
         xsl_file = djangoUserExtension.models.XSLFile()
         xsl_file.title = path.basename(xsl_file_path)
         xsl_file.xslfile = FileObject(xsl_file_path)
         xsl_file.save()
         return xsl_file
 
-    def handle(self, *args, **options):
+    def handle(self, *args: Any, **options: Any) -> None:
         template_set = djangoUserExtension.models.TemplateSet()
         template_set.title = "default_template_set"
         template_set.invoiceXSLFile = Command.store_default_template_xsl_file("en", "invoice.xsl")
