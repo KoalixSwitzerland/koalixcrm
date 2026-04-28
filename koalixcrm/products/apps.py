@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
 from django.apps import AppConfig
 
 
@@ -9,6 +11,6 @@ class ProductsConfig(AppConfig):
     required_peers: tuple[str, ...] = ('koalixcrm.core',)
     optional_peers: tuple[str, ...] = ('koalixcrm.accounting',)
 
-    def ready(self):
+    def ready(self) -> None:
         from koalixcrm.core.app_checks import register_peer_check
         register_peer_check(self)

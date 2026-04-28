@@ -2,6 +2,8 @@
 """
 ProductTypeAdmin for koalixcrm products
 """
+from __future__ import annotations
+
 from django.contrib import admin
 from django.utils.translation import gettext as _
 

@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
+import datetime
+from decimal import Decimal
+from typing import TYPE_CHECKING
 
 from django.db import models
 from django.utils.translation import gettext as _
@@ -11,6 +16,10 @@ from koalixcrm.core.models.unit import Unit
 from koalixcrm.core.models.unit_transform import UnitTransform
 from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
 from koalixcrm.products.models.customer_group_transform import CustomerGroupTransform
+
+if TYPE_CHECKING:
+    from koalixcrm.contacts.models.party import Party
+    from koalixcrm.products.models.product_type import ProductType
 
 
 class Price(WorkspaceScopedModel):
@@ -39,10 +48,10 @@ class Price(WorkspaceScopedModel):
                                    blank=True,
                                    null=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return str(self.id) + " " +str(self.price) + " " + str(self.currency.short_name)
 
-    def is_valid_from_criteria_fulfilled(self, date):
+    def is_valid_from_criteria_fulfilled(self, date: datetime.date) -> bool:
         if self.valid_from is None:
             return True
         elif (self.valid_from - date).days <= 0:
@@ -50,7 +59,7 @@ class Price(WorkspaceScopedModel):
         else:
             return False
 
-    def is_valid_until_criteria_fulfilled(self, date):
+    def is_valid_until_criteria_fulfilled(self, date: datetime.date) -> bool:
         if self.valid_until is None:
             return True
         elif (date - self.valid_until).days <= 0:
@@ -58,7 +67,7 @@ class Price(WorkspaceScopedModel):
         else:
             return False
 
-    def is_party_group_criteria_fulfilled(self, party_group):
+    def is_party_group_criteria_fulfilled(self, party_group: object) -> bool:
         if self.party_group is None:
             return True
         elif self.party_group == party_group:
@@ -66,19 +75,19 @@ class Price(WorkspaceScopedModel):
         else:
             return False
 
-    def is_currency_criteria_fulfilled(self, currency):
+    def is_currency_criteria_fulfilled(self, currency: Currency) -> bool:
         if self.currency == currency:
             return True
         else:
             return False
 
-    def is_unit_criteria_fulfilled(self, unit):
+    def is_unit_criteria_fulfilled(self, unit: Unit) -> bool:
         if self.unit == unit:
             return True
         else:
             return False
 
-    def is_date_in_range(self, date):
+    def is_date_in_range(self, date: datetime.date) -> bool:
         if (self.valid_from is None) and (self.valid_until is None):
             return True
         elif self.valid_until is None:
@@ -96,7 +105,7 @@ class Price(WorkspaceScopedModel):
         else:
             return False
 
-    def get_currency_transform_factor(self, currency, product_type):
+    def get_currency_transform_factor(self, currency: Currency, product_type: ProductType | int) -> Decimal | int:
         """check currency conditions and factor"""
         currency_factor = 0
         if self.currency == currency:
@@ -109,7 +118,7 @@ class Price(WorkspaceScopedModel):
                 currency_factor = currency_transform.get_transform_factor()
         return currency_factor
 
-    def get_unit_transform_factor(self, unit, product_type):
+    def get_unit_transform_factor(self, unit: Unit, product_type: ProductType | int) -> Decimal | int:
         """check unit conditions and factor"""
         unit_factor = 0
         if self.unit == unit:
@@ -122,7 +131,7 @@ class Price(WorkspaceScopedModel):
                 unit_factor = unit_transform.get_transform_factor()
         return unit_factor
 
-    def get_party_group_transform_factor(self, party, product_type):
+    def get_party_group_transform_factor(self, party: Party | None, product_type: ProductType | int) -> Decimal | int:
         """Search through all PartyGroup memberships the party belongs to.
         Return factor 1 for a perfect match, else the lowest transform factor.
 

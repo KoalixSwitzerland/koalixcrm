@@ -1,10 +1,20 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
+import datetime
+from decimal import Decimal
+from typing import TYPE_CHECKING
 
 from django.db import models
 from django.utils.translation import gettext as _
 
 from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
 from koalixcrm.products.models.product_price import ProductPrice
+
+if TYPE_CHECKING:
+    from koalixcrm.contacts.models.party import Party
+    from koalixcrm.core.models.currency import Currency
+    from koalixcrm.core.models.unit import Unit
 
 
 class ProductType(WorkspaceScopedModel):
@@ -34,7 +44,13 @@ class ProductType(WorkspaceScopedModel):
     date_of_creation = models.DateTimeField(verbose_name=_("Created at"),
                                             auto_now_add=True)
 
-    def get_price(self, date, unit, party, currency):
+    def get_price(
+        self,
+        date: datetime.date,
+        unit: Unit,
+        party: Party | None,
+        currency: Currency,
+    ) -> Decimal:
         """Find the applicable price for this ProductType at `date` for the
         given `party`, returning the price as a Decimal.
 
@@ -69,10 +85,10 @@ class ProductType(WorkspaceScopedModel):
         else:
             raise ProductType.NoPriceFound(party, unit, date, currency, self)
 
-    def get_tax_rate(self):
+    def get_tax_rate(self) -> Decimal:
         return self.tax.get_tax_rate()
 
-    def __str__(self):
+    def __str__(self) -> str:
         return str(self.product_type_identifier) + ' ' + self.title.__str__()
 
     class Meta:
@@ -82,14 +98,21 @@ class ProductType(WorkspaceScopedModel):
         verbose_name_plural = _('Product Types')
 
     class NoPriceFound(Exception):
-        def __init__(self, party, unit, date, currency, product):
+        def __init__(
+            self,
+            party: Party | None,
+            unit: Unit,
+            date: datetime.date,
+            currency: Currency,
+            product: ProductType,
+        ) -> None:
             self.party = party
             self.unit = unit
             self.date = date
             self.product = product
             self.currency = currency
 
-        def __str__(self):
+        def __str__(self) -> str:
             return _("There is no Price for this product type") + ": " + self.product.__str__() + _(
                 "that matches the date") + ": " + self.date.__str__() + " ," + _(
                 "party") + ": " + self.party.__str__() + " ," + _(
