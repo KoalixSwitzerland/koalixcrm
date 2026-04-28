@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 
 from django.contrib.admin import helpers
 from django.contrib.admin.widgets import *
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404, HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.template.context_processors import csrf
 
@@ -19,7 +20,7 @@ class TemplateSetMissingFrom(forms.Form):
                                    choices=NEXT_STEPS)
 
 
-def template_set_missing(request):
+def template_set_missing(request: HttpRequest) -> HttpResponse:
     try:
         if request.POST.get('post'):
             if 'confirm_selection' in request.POST:

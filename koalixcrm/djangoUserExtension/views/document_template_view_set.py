@@ -9,11 +9,18 @@ The PDF worker calls:
   presigned S3 URL for the XSL-FO stylesheet (same for ``fop-config`` and
   ``logo``). Missing optional assets return ``404``.
 """
+from __future__ import annotations
+
+from typing import Any
+
+from django.db.models import QuerySet
+from django.db.models.fields.files import FieldFile
 from django.http import HttpResponseRedirect
 from rest_framework import mixins, viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import NotFound
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.serializers import BaseSerializer
 
 from koalixcrm.djangoUserExtension.models.document_template import DocumentTemplate
 from koalixcrm.djangoUserExtension.serializers.document_template_serializer import (
@@ -33,7 +40,7 @@ class DocumentTemplateViewSet(
     permission_classes = [IsAuthenticated, ModelPermissionsWithListView]
     http_method_names = ["get", "head", "options"]
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet[DocumentTemplate]:
         active = getattr(self.request, 'active_workspace', None)
         if self.request.user.is_superuser:
             return DocumentTemplate.objects.all()
@@ -41,7 +48,7 @@ class DocumentTemplateViewSet(
             return DocumentTemplate.objects.none()
         return DocumentTemplate.objects.filter(workspace=active)
 
-    def perform_create(self, serializer):
+    def perform_create(self, serializer: BaseSerializer) -> None:
         from koalixcrm.core.models.workspace import Workspace
         active = getattr(self.request, 'active_workspace', None)
         if active is None and self.request.user.is_superuser:
@@ -50,22 +57,22 @@ class DocumentTemplateViewSet(
             )
         serializer.save(workspace=active)
 
-    def _redirect_to_field(self, field_file, asset_name):
+    def _redirect_to_field(self, field_file: FieldFile, asset_name: str) -> HttpResponseRedirect:
         if not field_file:
             raise NotFound(detail=f"{asset_name} not set on this template")
         url = presigned_get_url_for_field(field_file)
         return HttpResponseRedirect(url)
 
     @action(detail=True, methods=["get"], url_path="xsl", url_name="xsl")
-    def xsl(self, request, pk=None, **kwargs):
+    def xsl(self, request: Any, pk: int | None = None, **kwargs: Any) -> HttpResponseRedirect:
         return self._redirect_to_field(self.get_object().xsl_file, "xsl_file")
 
     @action(detail=True, methods=["get"], url_path="fop-config", url_name="fop-config")
-    def fop_config(self, request, pk=None, **kwargs):
+    def fop_config(self, request: Any, pk: int | None = None, **kwargs: Any) -> HttpResponseRedirect:
         return self._redirect_to_field(
             self.get_object().fop_config_file, "fop_config_file"
         )
 
     @action(detail=True, methods=["get"], url_path="logo", url_name="logo")
-    def logo(self, request, pk=None, **kwargs):
+    def logo(self, request: Any, pk: int | None = None, **kwargs: Any) -> HttpResponseRedirect:
         return self._redirect_to_field(self.get_object().logo, "logo")

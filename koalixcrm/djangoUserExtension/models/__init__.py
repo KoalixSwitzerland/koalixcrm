@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
 from koalixcrm.djangoUserExtension.models.document_template import *
 from koalixcrm.djangoUserExtension.models.template_set import *
 from koalixcrm.djangoUserExtension.models.text_paragraph import *

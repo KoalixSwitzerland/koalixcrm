@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 
 from django.contrib import admin
 from django.db import models
+from django.db.models.fields.files import FieldFile
 from django.utils.translation import gettext as _
 
 from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
@@ -34,13 +36,13 @@ class DocumentTemplate(WorkspaceScopedModel):
                             null=True,
                             max_length=200)
 
-    def get_fop_config_file(self):
+    def get_fop_config_file(self) -> FieldFile:
         if self.fop_config_file:
             return self.fop_config_file
         else:
             raise TemplateFOPConfigFileMissing(_("Fop Config File missing in Document Template"+str(self)))
 
-    def get_xsl_file(self):
+    def get_xsl_file(self) -> FieldFile:
         if self.xsl_file:
             return self.xsl_file
         else:
@@ -51,7 +53,7 @@ class DocumentTemplate(WorkspaceScopedModel):
         verbose_name = _('Document template')
         verbose_name_plural = _('Document templates')
 
-    def __str__(self):
+    def __str__(self) -> str:
         return xstr(self.id) + ' ' + xstr(self.title.__str__())
 
 

@@ -1,10 +1,20 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any
 
 from django.apps import apps
 from django.conf import settings
 from django.contrib import admin
+from django.contrib.auth.models import AbstractBaseUser
 from django.db import models
+from django.db.models import QuerySet
+from django.db.models.fields.files import FieldFile
+from django.http import HttpRequest
 from django.utils.translation import gettext as _
+
+if TYPE_CHECKING:
+    from koalixcrm.djangoUserExtension.models.document_template import DocumentTemplate
 
 from koalixcrm.contacts.models.address import Address
 from koalixcrm.contacts.models.party_email import PartyEmail
@@ -23,7 +33,7 @@ class UserExtension(WorkspaceScopedModel):
     default_currency = models.ForeignKey("core.Currency", on_delete=models.CASCADE)
 
     @staticmethod
-    def objects_to_serialize(object_to_create_pdf, reference_user):
+    def objects_to_serialize(object_to_create_pdf: Any, reference_user: AbstractBaseUser) -> list[Any]:
         from django.contrib import auth
 
         objects = list(auth.models.User.objects.filter(id=reference_user.id))
@@ -42,7 +52,7 @@ class UserExtension(WorkspaceScopedModel):
         return objects
 
     @staticmethod
-    def get_user_extension(django_user):
+    def get_user_extension(django_user: AbstractBaseUser) -> "UserExtension":
         user_extensions = UserExtension.objects.filter(user=django_user)
         if len(user_extensions) > 1:
             raise TooManyUserExtensionsAvailable(
@@ -52,7 +62,7 @@ class UserExtension(WorkspaceScopedModel):
             raise UserExtensionMissing(_("No User Extension define for user ") + django_user.__str__())
         return user_extensions[0]
 
-    def get_template_set(self, template_set):
+    def get_template_set(self, template_set: "DocumentTemplate") -> "DocumentTemplate":
         if template_set == self.default_template_set.work_report_template:
             if self.default_template_set.work_report_template:
                 return self.default_template_set.work_report_template
@@ -61,11 +71,11 @@ class UserExtension(WorkspaceScopedModel):
                     (_("Template Set for work report " + "is missing for User Extension" + str(self)))
                 )
 
-    def get_fop_config_file(self, template_set):
+    def get_fop_config_file(self, template_set: "DocumentTemplate") -> FieldFile:
         template_set = self.get_template_set(template_set)
         return template_set.get_fop_config_file()
 
-    def get_xsl_file(self, template_set):
+    def get_xsl_file(self, template_set: "DocumentTemplate") -> FieldFile:
         template_set = self.get_template_set(template_set)
         return template_set.get_xsl_file()
 
@@ -74,7 +84,7 @@ class UserExtension(WorkspaceScopedModel):
         verbose_name = _("User Extension")
         verbose_name_plural = _("User Extension")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return xstr(self.id) + " " + xstr(self.user.__str__())
 
 
@@ -106,7 +116,7 @@ class UserAddressAssignment(WorkspaceScopedModel):
         verbose_name = _("Address assignment for User")
         verbose_name_plural = _("Address assignments for User")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.user_id}-{self.purpose}-{self.address_id}"
 
 
@@ -138,7 +148,7 @@ class UserPhoneAssignment(WorkspaceScopedModel):
         verbose_name = _("Phone assignment for User")
         verbose_name_plural = _("Phone assignments for User")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.user_id}-{self.purpose}-{self.phone_number_id}"
 
 
@@ -170,7 +180,7 @@ class UserEmailAssignment(WorkspaceScopedModel):
         verbose_name = _("Email assignment for User")
         verbose_name_plural = _("Email assignments for User")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.user_id}-{self.purpose}-{self.email_id}"
 
 
@@ -186,7 +196,7 @@ class OptionUserExtension(WorkspaceScopedModelAdmin, admin.ModelAdmin):
     search_fields = ("id", "user")
     fieldsets = ((_("Basics"), {"fields": ("user", "default_template_set", "default_currency")}),)
 
-    def create_work_report_pdf(self, request, queryset):
+    def create_work_report_pdf(self, request: HttpRequest, queryset: QuerySet[UserExtension]) -> None:
         """Enqueue async work-report PDFs for the HumanResource attached to
         each selected UserExtension. Mirrors HumanResourceAdminView's
         action; defaults to the trailing 60-day range until #404 lands

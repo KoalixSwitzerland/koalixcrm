@@ -10,6 +10,8 @@ Provides:
 - Custom origin verification header support
 - Object caching, pagination, and CRUD helpers
 """
+from __future__ import annotations
+
 import base64
 import http.client
 import json
@@ -45,7 +47,13 @@ class BaseAPIClient:
     uses_workspace_id: bool = False
     uses_object_cache: bool = True
 
-    def __init__(self, api_url: str = None, username: str = None, password: str = None, workspace_id: int = None):
+    def __init__(
+        self,
+        api_url: str | None = None,
+        username: str | None = None,
+        password: str | None = None,
+        workspace_id: int | None = None,
+    ) -> None:
         # Store authentication method
         self.username = username
         self.password = password
@@ -83,7 +91,7 @@ class BaseAPIClient:
     # Authentication
     # ------------------------------------------------------------------
 
-    def _login_with_session(self):
+    def _login_with_session(self) -> None:
         """
         Login to Django using Basic Authentication (username/password).
         For testing with LiveServerTestCase, we use HTTP Basic Auth which Django REST framework supports.
@@ -121,7 +129,7 @@ class BaseAPIClient:
                 f"Failed to discover token endpoint from {well_known_url}: {e}"
             ) from e
 
-    def get_token(self) -> tuple:
+    def get_token(self) -> tuple[str, str]:
         """
         Get an access token using client credentials flow.
         First checks the cache, and if no valid token is found, gets a new one.
@@ -203,11 +211,11 @@ class BaseAPIClient:
     # Request execution
     # ------------------------------------------------------------------
 
-    def _make_request(self, endpoint: str, method: str = "GET", data: Dict[str, Any] = None) -> Any:
+    def _make_request(self, endpoint: str, method: str = "GET", data: Dict[str, Any] | None = None) -> Any:
         """Make a request to the API and return the response data."""
         return self._execute_request(endpoint, method, data)
 
-    def _build_connection(self):
+    def _build_connection(self) -> tuple[http.client.HTTPConnection, str, int]:
         """Parse the API URL and return (connection, host, port)."""
         if not self.api:
             raise ValueError("KOALIXCRM_API_URL environment variable is not set")
@@ -293,7 +301,7 @@ class BaseAPIClient:
             )
 
     def _execute_request(self, endpoint: str, method: str = "GET",
-                         data: Dict[str, Any] = None, retry: bool = True) -> Any:
+                         data: Dict[str, Any] | None = None, retry: bool = True) -> Any:
         """Execute an API request with the current token or session."""
         # Ensure auth credentials are current
         if self.use_session_auth and not self._session_token:

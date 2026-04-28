@@ -3,17 +3,19 @@
 Base DTO class for all koalixcrm client-side models.
 Ported from qq_workflow_support_webapp_backend pattern.
 """
+from __future__ import annotations
+
 from typing import Any, Dict
 
 
 class BaseModel:
     """Base class for all client-side models (DTOs)."""
 
-    def __init__(self, data: Dict[str, Any]):
+    def __init__(self, data: Dict[str, Any]) -> None:
         self._data = data
         self._populate_from_data(data)
 
-    def _populate_from_data(self, data: Dict[str, Any]):
+    def _populate_from_data(self, data: Dict[str, Any]) -> None:
         """Populate object attributes from data dictionary."""
         for key, value in data.items():
             if key != 'id':

@@ -3,6 +3,8 @@
 Object cache for koalixcrm API clients.
 Ported from qq_workflow_support_webapp_backend.
 """
+from __future__ import annotations
+
 from typing import Optional, Type, TypeVar
 
 T = TypeVar('T')
@@ -13,8 +15,8 @@ __all__ = ['ObjectCache', 'T']
 class ObjectCache:
     """Cache for storing objects to ensure each instance is only created once."""
 
-    def __init__(self):
-        self._cache = {}
+    def __init__(self) -> None:
+        self._cache: dict[tuple[str, int], object] = {}
 
     def get(self, model_class: Type[T], object_id: int) -> Optional[T]:
         """Get an object from the cache by its class and ID."""
@@ -29,3 +31,4 @@ class ObjectCache:
     def clear(self) -> None:
         """Clear the cache."""
         self._cache = {}
+

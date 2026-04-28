@@ -2,6 +2,8 @@
 """
 Base ViewSet for all koalixcrm REST API endpoints.
 """
+from __future__ import annotations
+
 from rest_framework import filters, viewsets
 from rest_framework.permissions import IsAuthenticated
 

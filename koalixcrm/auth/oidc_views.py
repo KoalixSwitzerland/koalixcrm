@@ -1,11 +1,14 @@
+from __future__ import annotations
+
 import logging
 import urllib.parse
+from typing import Any
 
 from authlib.integrations.django_client import OAuth
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.views import LogoutView
-from django.http import HttpResponse
+from django.http import HttpRequest, HttpResponse, HttpResponseBase
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.views import View
@@ -31,7 +34,7 @@ if getattr(settings, 'ADMIN_OIDC_ISSUER', None):
     )
 
 
-def _build_absolute_url(request, path):
+def _build_absolute_url(request: HttpRequest, path: str) -> str:
     """Build an absolute URL using SITE_URL if available, otherwise from the request."""
     site_url = getattr(settings, 'SITE_URL', '')
     if site_url:
@@ -45,7 +48,7 @@ class LoginSelectionView(View):
     otherwise falls back to Django's built-in admin login form so that
     local development and e2e tests work without a live Keycloak.
     """
-    def get(self, request):
+    def get(self, request: HttpRequest) -> HttpResponseBase:
         next_url = request.GET.get('next', '')
 
         if request.user.is_authenticated:
@@ -71,7 +74,7 @@ class LoginSelectionView(View):
             },
         )(request)
 
-    def post(self, request):
+    def post(self, request: HttpRequest) -> HttpResponseBase:
         # Delegate credential POSTs to the fallback admin login form when
         # OIDC isn't configured; the authlib flow doesn't use POST.
         if hasattr(oauth, 'oidc'):
@@ -91,7 +94,7 @@ class OAuthLoginView(View):
     """
     Initiates the OAuth flow for a specific provider.
     """
-    def get(self, request, provider):
+    def get(self, request: HttpRequest, provider: str) -> HttpResponseBase:
         if provider not in SUPPORTED_PROVIDERS:
             return HttpResponse(f'Unsupported provider: {provider}', status=400)
 
@@ -124,7 +127,7 @@ class OAuthCallbackView(View):
     Handles the OAuth callback. Exchanges authorization code for tokens,
     creates/links the user, and redirects to the admin.
     """
-    def get(self, request, provider):
+    def get(self, request: HttpRequest, provider: str) -> HttpResponseBase:
         if provider not in SUPPORTED_PROVIDERS:
             return HttpResponse(f'Unsupported provider: {provider}', status=400)
 
@@ -170,7 +173,7 @@ class OAuthCallbackView(View):
             logger.error(f"OAuth callback error: {type(e).__name__}: {e}", exc_info=True)
             return HttpResponse(f"Authentication error: {type(e).__name__}: {e}", status=500)
 
-    def _extract_user_info(self, provider, token_data):
+    def _extract_user_info(self, provider: str, token_data: dict[str, Any]) -> dict[str, Any] | None:
         """Extract user info from OIDC token data."""
         try:
             userinfo = token_data.get('userinfo')
@@ -199,7 +202,7 @@ class OAuthCallbackView(View):
             logger.error(f"Error extracting user info: {e}", exc_info=True)
         return None
 
-    def _normalize_claims(self, claims):
+    def _normalize_claims(self, claims: dict[str, Any]) -> dict[str, Any]:
         return {
             'sub': claims.get('sub'),
             'email': claims.get('email'),
@@ -215,7 +218,7 @@ class MultiProviderLogoutView(LogoutView):
     """
     Logout with federated OIDC end_session_endpoint support.
     """
-    def dispatch(self, request, *args, **kwargs):
+    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponseBase:
         logout(request)
 
         next_url = request.GET.get('next', '')

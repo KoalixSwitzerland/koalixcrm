@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from django.apps import AppConfig
 
 
@@ -8,6 +10,6 @@ class DjangoUserExtensionConfig(AppConfig):
     required_peers: tuple[str, ...] = ('koalixcrm.core', 'koalixcrm.contacts')
     optional_peers: tuple[str, ...] = ('koalixcrm.reporting',)
 
-    def ready(self):
+    def ready(self) -> None:
         from koalixcrm.core.app_checks import register_peer_check
         register_peer_check(self)

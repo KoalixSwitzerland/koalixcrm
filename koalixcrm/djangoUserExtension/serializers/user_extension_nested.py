@@ -10,6 +10,10 @@ of the issuing user — plus the user's default currency.
 Shape is additive over the legacy :class:`OptionUserExtensionJSONSerializer`:
 the legacy one stays in place for the existing Python clients.
 """
+from __future__ import annotations
+
+from typing import Any
+
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
@@ -96,14 +100,14 @@ class UserExtensionNestedSerializer(serializers.ModelSerializer):
             "email_addresses",
         )
 
-    def get_postal_addresses(self, instance):
+    def get_postal_addresses(self, instance: UserExtension) -> list[dict[str, Any]]:
         rows = UserAddressAssignment.objects.filter(user=instance.user_id)
         return UserAddressAssignmentSerializer(rows, many=True).data
 
-    def get_phone_addresses(self, instance):
+    def get_phone_addresses(self, instance: UserExtension) -> list[dict[str, Any]]:
         rows = UserPhoneAssignment.objects.filter(user=instance.user_id)
         return UserPhoneAssignmentSerializer(rows, many=True).data
 
-    def get_email_addresses(self, instance):
+    def get_email_addresses(self, instance: UserExtension) -> list[dict[str, Any]]:
         rows = UserEmailAssignment.objects.filter(user=instance.user_id)
         return UserEmailAssignmentSerializer(rows, many=True).data

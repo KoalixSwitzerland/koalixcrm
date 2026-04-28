@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
 from django.contrib import admin
 
 from koalixcrm.djangoUserExtension.models import (

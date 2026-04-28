@@ -1,11 +1,15 @@
+from __future__ import annotations
+
 import base64
 import hashlib
 import json
 import logging
+from typing import Any
 from urllib.request import urlopen
 
 import jwt
 from django.core.cache import cache
+from django.http import HttpRequest
 from rest_framework.exceptions import AuthenticationFailed
 
 logger = logging.getLogger(__name__)
@@ -14,7 +18,7 @@ JWKS_CACHE_TIMEOUT = 60 * 60
 OIDC_DISCOVERY_CACHE_TIMEOUT = 60 * 60
 
 
-def get_oidc_discovery(issuer_url):
+def get_oidc_discovery(issuer_url: str | None) -> dict[str, Any] | None:
     """Fetch and cache the OIDC discovery document."""
     if not issuer_url:
         logger.error("get_oidc_discovery called without issuer_url")
@@ -37,7 +41,7 @@ def get_oidc_discovery(issuer_url):
         return None
 
 
-def get_jwks(authority_url):
+def get_jwks(authority_url: str | None) -> dict[str, Any] | None:
     """Get the JSON Web Key Set from the OIDC provider, with caching."""
     if not authority_url:
         logger.error("get_jwks called without authority_url")
@@ -66,7 +70,12 @@ def get_jwks(authority_url):
         return None
 
 
-def validate_jwt(token, authority_url, access_token=None, client_id=None):
+def validate_jwt(
+    token: str,
+    authority_url: str | None,
+    access_token: str | None = None,
+    client_id: str | None = None,
+) -> dict[str, Any]:
     """Validate a JWT token against an OIDC provider."""
     if not authority_url:
         raise AuthenticationFailed('OIDC issuer URL is required for JWT validation.')
@@ -122,7 +131,7 @@ def validate_jwt(token, authority_url, access_token=None, client_id=None):
         raise AuthenticationFailed(f'Unable to parse authentication token: {str(e)}')
 
 
-def _verify_at_hash(at_hash, access_token):
+def _verify_at_hash(at_hash: str, access_token: str) -> None:
     """Verify the at_hash claim in an ID token matches the access token."""
     digest = hashlib.sha256(access_token.encode('ascii')).digest()
     expected = base64.urlsafe_b64encode(digest[:16]).rstrip(b'=').decode('ascii')
@@ -130,7 +139,7 @@ def _verify_at_hash(at_hash, access_token):
         raise jwt.InvalidTokenError('at_hash mismatch')
 
 
-def get_token_auth_header(request):
+def get_token_auth_header(request: HttpRequest) -> str | None:
     """Get the Access Token from the Authorization Header."""
     auth = request.META.get("HTTP_AUTHORIZATION", "")
     parts = auth.split()

@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+from typing import Any
+
 from rest_framework import serializers
 
 from koalixcrm.djangoUserExtension.models.document_template import (
@@ -91,7 +95,7 @@ class TemplateSetJSONSerializer(serializers.ModelSerializer):
             "work_report_template",
         )
 
-    def create(self, validated_data):
+    def create(self, validated_data: dict[str, Any]) -> TemplateSet:
         template_set = TemplateSet()
         # Deserialize invoice template
         invoice_template = validated_data.pop("invoice_template")
@@ -181,7 +185,7 @@ class TemplateSetJSONSerializer(serializers.ModelSerializer):
                 template_set.work_report_template = None
         template_set.save()
 
-    def update(self, template_set, validated_data):
+    def update(self, template_set: TemplateSet, validated_data: dict[str, Any]) -> TemplateSet:
         # Deserialize invoice template
         invoice_template = validated_data.pop("invoice_template")
         if invoice_template:

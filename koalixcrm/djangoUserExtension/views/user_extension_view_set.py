@@ -5,8 +5,12 @@ Read-only ViewSet for :class:`UserExtension`.
 The PDF worker fetches this aggregate to render the issuing user's company
 block in the XSL-FO document.
 """
+from __future__ import annotations
+
+from django.db.models import QuerySet
 from rest_framework import mixins, viewsets
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.serializers import BaseSerializer
 
 from koalixcrm.djangoUserExtension.models.user_extension import UserExtension
 from koalixcrm.djangoUserExtension.serializers.user_extension_nested import (
@@ -25,7 +29,7 @@ class UserExtensionViewSet(
     permission_classes = [IsAuthenticated, ModelPermissionsWithListView]
     http_method_names = ["get", "head", "options"]
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet[UserExtension]:
         active = getattr(self.request, 'active_workspace', None)
         if self.request.user.is_superuser:
             return UserExtension.objects.all()
@@ -33,7 +37,7 @@ class UserExtensionViewSet(
             return UserExtension.objects.none()
         return UserExtension.objects.filter(workspace=active)
 
-    def perform_create(self, serializer):
+    def perform_create(self, serializer: BaseSerializer) -> None:
         from koalixcrm.core.models.workspace import Workspace
         active = getattr(self.request, 'active_workspace', None)
         if active is None and self.request.user.is_superuser:
