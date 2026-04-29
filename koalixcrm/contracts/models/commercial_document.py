@@ -117,6 +117,9 @@ class CommercialDocument(WorkspaceScopedModel):
 
     def create_commercial_document(self, calling_model: models.Model) -> None:
         self.staff = calling_model.staff
+        # Inherit workspace from the source row so model-level admin actions that bypass
+        # WorkspaceScopedModelAdmin.save_model still satisfy the NOT NULL workspace_id.
+        self.workspace = calling_model.workspace
         if isinstance(calling_model, koalixcrm.contracts.models.contract.Contract):
             self.contract = calling_model
             self.party = calling_model.buyer_party

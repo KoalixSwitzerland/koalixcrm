@@ -168,7 +168,7 @@ class OptionCommercialDocument(WorkspaceScopedModelAdmin, admin.ModelAdmin):
         else:
             obj.last_modified_by = request.user
             obj.staff = request.user
-        obj.save()
+        super().save_model(request, obj, form, change)
 
     def create_quotation(self, request: HttpRequest, queryset: QuerySet[CommercialDocumentModel]) -> HttpResponse | HttpResponseRedirect | None:
         from koalixcrm.contracts.views.newdocument import CreateNewDocumentView
