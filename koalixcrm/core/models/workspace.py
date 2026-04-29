@@ -4,6 +4,7 @@ Workspace model — the tenant (coarse scope) shared between koalixcrm and WFS.
 
 CR-8 §8.1.
 """
+from __future__ import annotations
 
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -50,7 +51,7 @@ class Workspace(models.Model):
     date_added = models.DateField(auto_now_add=True, verbose_name=_('Date Added'))
     last_modified = models.DateField(auto_now=True, verbose_name=_('Last Modified'))
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
     class Meta:

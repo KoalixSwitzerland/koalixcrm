@@ -12,6 +12,6 @@ class ContractObjectManagementConfig(AppConfig):
         'koalixcrm.djangoUserExtension',
     )
 
-    def ready(self):
+    def ready(self) -> None:
         from koalixcrm.core.app_checks import register_peer_check
         register_peer_check(self)

@@ -5,9 +5,11 @@ from selenium import webdriver
 class UITests(StaticLiveServerTestCase):
 
     def setUp(self):
-        firefox_options = webdriver.firefox.options.Options()
-        firefox_options.add_argument("--headless")
-        self.selenium = webdriver.Firefox(options=firefox_options)
+        chrome_options = webdriver.chrome.options.Options()
+        chrome_options.add_argument("--headless=new")
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        self.selenium = webdriver.Chrome(options=chrome_options)
         self.selenium.implicitly_wait(10)
 
     def tearDown(self):
@@ -24,7 +26,15 @@ class UITests(StaticLiveServerTestCase):
                 )
             else:
                 errors = []
-        if len(errors) > 0:
-            test_method_name = self._testMethodName
+        import os
+        os.makedirs("test_results/Screenshots", exist_ok=True)
+        test_method_name = self._testMethodName
+        try:
             self.selenium.save_screenshot("test_results/Screenshots/%s.png" % test_method_name)
+            with open("test_results/Screenshots/%s.html" % test_method_name, "w") as fh:
+                fh.write(self.selenium.page_source)
+            with open("test_results/Screenshots/%s.url" % test_method_name, "w") as fh:
+                fh.write(self.selenium.current_url)
+        except Exception:
+            pass
         self.selenium.quit()

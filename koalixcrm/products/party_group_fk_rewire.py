@@ -6,12 +6,20 @@ Called from migration 0002_party_group_fks (via RunPython) and from tests.
 Separate module because migration filenames start with a digit.
 
 """
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from koalixcrm.contacts.backfill import (
     build_legacy_customer_group_to_party_group_mapping,
 )
 
+if TYPE_CHECKING:
+    from django.apps.registry import Apps
+    from django.db.backends.base.schema import BaseDatabaseSchemaEditor
 
-def populate_party_group_fks(apps, schema_editor):
+
+def populate_party_group_fks(apps: Apps, schema_editor: BaseDatabaseSchemaEditor | None) -> None:
     Price = apps.get_model('products', 'Price')
     CustomerGroupTransform = apps.get_model('products', 'CustomerGroupTransform')
 
@@ -44,7 +52,7 @@ def populate_party_group_fks(apps, schema_editor):
             t.save(update_fields=['to_party_group'])
 
 
-def clear_party_group_fks(apps, schema_editor):
+def clear_party_group_fks(apps: Apps, schema_editor: BaseDatabaseSchemaEditor | None) -> None:
     Price = apps.get_model('products', 'Price')
     CustomerGroupTransform = apps.get_model('products', 'CustomerGroupTransform')
     Price.objects.update(party_group=None)

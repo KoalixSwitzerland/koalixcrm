@@ -23,7 +23,7 @@
                 $.getJSON("/koalixcrm_reporting/api/v1/{{ active_workspace.id }}/tasks/?format=json", {project: $(this).val()}, function (tasks) {
                     var options = '<option value="">--------&nbsp;</option>';
                     for (var i = 0; i < tasks.length; i++) {
-                        if (tasks[i].isReportingAllowed === "True") {
+                        if (tasks[i].is_reporting_allowed === "True") {
                             options += '<option value="' + tasks[i].id + '">' + tasks[i].title + '</option>';
                         }
                     }

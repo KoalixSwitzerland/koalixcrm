@@ -1,10 +1,14 @@
+from __future__ import annotations
+
+from typing import Any
+
 from rest_framework import serializers
 
-from koalixcrm.products.models.product_type import ProductType
 from koalixcrm.core.models.tax import Tax
 from koalixcrm.core.models.unit import Unit
 from koalixcrm.core.serializers.tax_serializer import OptionTaxJSONSerializer
 from koalixcrm.core.serializers.unit_serializer import OptionUnitJSONSerializer
+from koalixcrm.products.models.product_type import ProductType
 
 
 class ProductJSONSerializer(serializers.ModelSerializer):
@@ -24,7 +28,7 @@ class ProductJSONSerializer(serializers.ModelSerializer):
                   'tax')
         depth = 1
 
-    def create(self, validated_data):
+    def create(self, validated_data: dict[str, Any]) -> ProductType:
         product = ProductType()
         product.workspace = validated_data.get('workspace')
         product.product_type_identifier = validated_data.get('product_type_identifier')
@@ -45,7 +49,7 @@ class ProductJSONSerializer(serializers.ModelSerializer):
         product.save()
         return product
 
-    def update(self, instance, validated_data):
+    def update(self, instance: ProductType, validated_data: dict[str, Any]) -> ProductType:
         instance.title = validated_data.get('title', instance.title)
         instance.product_type_identifier = validated_data.get(
             'product_type_identifier', instance.product_type_identifier

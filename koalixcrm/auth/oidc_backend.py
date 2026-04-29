@@ -1,8 +1,12 @@
+from __future__ import annotations
+
 import logging
+from typing import Any
 
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import AbstractBaseUser, Group
 from django.db import IntegrityError, transaction
+from django.http import HttpRequest
 
 from .oidc_utils import validate_jwt
 
@@ -10,7 +14,7 @@ logger = logging.getLogger(__name__)
 UserModel = get_user_model()
 
 
-def _sync_groups_from_provider(user, claims):
+def _sync_groups_from_provider(user: AbstractBaseUser, claims: dict[str, Any]) -> None:
     """
     Additively sync groups from OIDC provider claims to Django groups.
 
@@ -53,7 +57,14 @@ class OIDCAuthenticationBackend:
     Groups from the provider are additively merged into Django groups.
     """
 
-    def authenticate(self, request, provider=None, user_info=None, id_token=None, **kwargs):
+    def authenticate(
+        self,
+        request: HttpRequest | None,
+        provider: str | None = None,
+        user_info: dict[str, Any] | None = None,
+        id_token: str | None = None,
+        **kwargs: Any,
+    ) -> AbstractBaseUser | None:
         if provider and user_info:
             return self._authenticate_with_user_info(provider, user_info)
 
@@ -62,7 +73,9 @@ class OIDCAuthenticationBackend:
 
         return None
 
-    def _authenticate_with_user_info(self, provider, user_info):
+    def _authenticate_with_user_info(
+        self, provider: str, user_info: dict[str, Any]
+    ) -> AbstractBaseUser | None:
         """Authenticate using standardized user info from any OAuth provider."""
         user_email = user_info.get('email')
         if not user_email:
@@ -90,7 +103,7 @@ class OIDCAuthenticationBackend:
             logger.error(f"Authentication error for {provider} user {user_email}: {e}", exc_info=True)
             return None
 
-    def _authenticate_with_id_token(self, id_token, **kwargs):
+    def _authenticate_with_id_token(self, id_token: str, **kwargs: Any) -> AbstractBaseUser | None:
         """Legacy authentication path using JWT validation."""
         access_token = kwargs.get('access_token')
 
@@ -117,7 +130,7 @@ class OIDCAuthenticationBackend:
             return None
 
     @staticmethod
-    def _find_or_create_user(email, user_info):
+    def _find_or_create_user(email: str, user_info: dict[str, Any]) -> AbstractBaseUser | None:
         """Find an existing user by email or create a new one."""
         try:
             return UserModel.objects.get(email=email)
@@ -140,7 +153,7 @@ class OIDCAuthenticationBackend:
             logger.error(f"Could not create user for email {email}: {str(e)}")
             return None
 
-    def get_user(self, user_id):
+    def get_user(self, user_id: int) -> AbstractBaseUser | None:
         try:
             return UserModel.objects.get(pk=user_id)
         except UserModel.DoesNotExist:

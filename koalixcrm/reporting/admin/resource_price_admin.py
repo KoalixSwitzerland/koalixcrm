@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 
 from django.contrib import admin
+
 from koalixcrm.reporting.models.resource_price import ResourcePrice
 
 

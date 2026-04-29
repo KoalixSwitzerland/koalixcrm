@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 
 from django.db import models
 from django.utils.translation import gettext as _
@@ -19,7 +20,7 @@ class CustomerBillingCycle(WorkspaceScopedModel):
         verbose_name = _('Customer Billing Cycle')
         verbose_name_plural = _('Customer Billing Cycle')
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.id.__str__() + ' ' + self.name
 
 

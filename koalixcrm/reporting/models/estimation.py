@@ -1,51 +1,49 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 
-from django.db import models
-from django.utils.translation import gettext as _
-from koalixcrm.reporting.models.resource_price import ResourcePrice
+import datetime
 from decimal import *
+from typing import Any
+
 from django.core.exceptions import ValidationError
+from django.db import models
 from django.forms import BaseInlineFormSet
+from django.utils.translation import gettext as _
+
 from koalixcrm.core.exceptions import ReportingPeriodNotFound
+from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
+from koalixcrm.reporting.models.resource_price import ResourcePrice
 
 
-class Estimation(models.Model):
+class Estimation(WorkspaceScopedModel):
     """The estimation describes the estimated amount of resources which is still required to finish a task
     the estimation is done within a reporting period that is not yet closed. The estimation is done only considering
     all effective efforts that was reported in the previous and closed reporting periods"""
-    id = models.BigAutoField(primary_key=True)
-    task = models.ForeignKey("Task",
-                             on_delete=models.CASCADE,
-                             verbose_name=_('Task'),
-                             blank=False,
-                             null=False)
-    resource = models.ForeignKey("Resource",
-                                 on_delete=models.CASCADE)
-    date_from = models.DateField(verbose_name=_("Estimation From"),
-                                 blank=False,
-                                 null=False)
-    date_until = models.DateField(verbose_name=_("Estimation Until"),
-                                  blank=False,
-                                  null=False)
-    amount = models.DecimalField(verbose_name=_("Amount"),
-                                 max_digits=5,
-                                 decimal_places=2,
-                                 blank=True,
-                                 null=True)
-    status = models.ForeignKey("EstimationStatus",
-                               on_delete=models.CASCADE,
-                               verbose_name=_('Status of the estimation'),
-                               blank=False,
-                               null=False)
-    reporting_period = models.ForeignKey("ReportingPeriod",
-                                         on_delete=models.CASCADE,
-                                         verbose_name=_('Reporting Period based on which the estimation was done'),
-                                         blank=False,
-                                         null=False)
 
-    def duration_in_days(self):
-        """The function returns the calculated difference between the date_until and the date_from and returns the value
-        as number of days
+    id = models.BigAutoField(primary_key=True)
+    task = models.ForeignKey("Task", on_delete=models.CASCADE, verbose_name=_("Task"), blank=False, null=False)
+    resource = models.ForeignKey("Resource", on_delete=models.CASCADE)
+    date_from = models.DateField(verbose_name=_("Estimation From"), blank=False, null=False)
+    date_until = models.DateField(verbose_name=_("Estimation Until"), blank=False, null=False)
+    amount = models.DecimalField(verbose_name=_("Amount"), max_digits=5, decimal_places=2, blank=True, null=True)
+    status = models.ForeignKey(
+        "EstimationStatus",
+        on_delete=models.CASCADE,
+        verbose_name=_("Status of the estimation"),
+        blank=False,
+        null=False,
+    )
+    reporting_period = models.ForeignKey(
+        "ReportingPeriod",
+        on_delete=models.CASCADE,
+        verbose_name=_("Reporting Period based on which the estimation was done"),
+        blank=False,
+        null=False,
+    )
+
+    def duration_in_days(self) -> int:
+        """The function returns the calculated difference between the date_until and the date_from
+        and returns the value as number of days
 
         Args:
         no arguments needed
@@ -59,7 +57,7 @@ class Estimation(models.Model):
         duration = duration_time_delta.days
         return duration
 
-    def calculated_costs(self, bucket_start=None, bucket_end=None):
+    def calculated_costs(self, bucket_start: datetime.date | None = None, bucket_end: datetime.date | None = None) -> Any:
         """The function returns the calculated costs in total or the calculated costs within a specific start and
         stop-frame.
 
@@ -96,7 +94,7 @@ class Estimation(models.Model):
             overall_costs = 0
         else:
             for resource_price in default_resource_price:
-                overall_costs = self.amount*resource_price.price
+                overall_costs = self.amount * resource_price.price
                 break
         if self.duration_in_days() <= selected_duration:
             costs = overall_costs
@@ -104,47 +102,50 @@ class Estimation(models.Model):
             costs = overall_costs * Decimal((selected_duration / self.duration_in_days()))
         return costs
 
-    def __str__(self):
+    def __str__(self) -> str:
         return _("Estimation of Resource Consumption") + ": " + str(self.id)
 
     class Meta:
         app_label = "reporting"
         db_table = "crm_estimation"
-        verbose_name = _('Estimation of Resource Consumption')
-        verbose_name_plural = _('Estimation of Resource Consumptions')
+        verbose_name = _("Estimation of Resource Consumption")
+        verbose_name_plural = _("Estimation of Resource Consumptions")
 
 
 class EstimationAdminForm(BaseInlineFormSet):
-    def clean(self):
+    def clean(self) -> None:
         """Check that the estimation is only attached to a reporting period which is not yet closed,
         also check that the date_from is at least one day before the date_until"""
         for f in self.forms:
             if any(f.errors):
                 pass
             else:
-                if 'date_from' in f.cleaned_data:
-                    date_from = f.cleaned_data['date_from']
+                if "date_from" in f.cleaned_data:
+                    date_from = f.cleaned_data["date_from"]
                 else:
                     break
-                date_until = f.cleaned_data['date_until']
-                reporting_period = f.cleaned_data['reporting_period']
-                task = f.cleaned_data['task']
-                if f.cleaned_data['id']:
+                date_until = f.cleaned_data["date_until"]
+                reporting_period = f.cleaned_data["reporting_period"]
+                task = f.cleaned_data["task"]
+                if f.cleaned_data["id"]:
                     limit_of_acceptable_estimations = 1
                 else:
                     limit_of_acceptable_estimations = 0
                 existing_estimations = Estimation.objects.filter(reporting_period=reporting_period, task=task)
                 if len(existing_estimations) > limit_of_acceptable_estimations:
-                    raise ValidationError('There may only be one estimation per reporting period per task')
+                    raise ValidationError("There may only be one estimation per reporting period per task")
                 try:
-                    predecessor_reporting_period = reporting_period.get_predecessor(reporting_period,
-                                                                                    reporting_period.project)
+                    predecessor_reporting_period = reporting_period.get_predecessor(
+                        reporting_period, reporting_period.project
+                    )
                     if not predecessor_reporting_period.status.is_done:
-                        raise ValidationError('Please select a reporting period which has a predecessor'
-                                              ' reporting period which is already in state "done"')
+                        raise ValidationError(
+                            "Please select a reporting period which has a predecessor"
+                            ' reporting period which is already in state "done"'
+                        )
                 except ReportingPeriodNotFound:
                     pass
                 if reporting_period.status.is_done:
                     raise ValidationError('Please select a reporting period which is not yet in state "done"')
                 if date_from >= date_until:
-                    raise ValidationError('The date until must be at least one day after date from')
+                    raise ValidationError("The date until must be at least one day after date from")

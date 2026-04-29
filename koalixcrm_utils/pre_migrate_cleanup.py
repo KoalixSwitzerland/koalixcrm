@@ -18,8 +18,8 @@ Safe to run on fresh installs (no-op) and idempotent on upgrades.
 
 import json
 import os
-import sys
 import sqlite3
+import sys
 
 
 def extract_data(db_path, dump_path):

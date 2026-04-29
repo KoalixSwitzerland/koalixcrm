@@ -1,18 +1,27 @@
-import pytest
 import datetime
+
+import pytest
 from django.test import TestCase
+
 from koalixcrm.contracts.models.calculations import Calculations
-from tests.factories.core.currency_factory import StandardCurrencyFactory
-from tests.factories.contracts.quotation_factory import StandardQuotationFactory
-from tests.factories.contracts.commercial_document_position_factory import StandardCommercialDocumentPositionFactory
-from tests.factories.products.product_type_factory import StandardProductTypeFactory
-from tests.factories.products.product_price_factory import StandardPriceFactory
-from tests.factories.contacts.customer_factory import StandardCustomerFactory
-from tests.factories.contacts.customer_group_factory import StandardCustomerGroupFactory, AdvancedCustomerGroupFactory
-from tests.factories.core.tax_factory import StandardTaxFactory
-from tests.factories.core.unit_factory import StandardUnitFactory, SmallUnitFactory
+from koalixcrm.contracts.models.commercial_document_position import (
+    CommercialDocumentPosition,
+)
 from koalixcrm.global_support_functions import make_date_utc
-from koalixcrm.contracts.models.commercial_document_position import CommercialDocumentPosition
+from tests.factories.contacts.customer_factory import StandardCustomerFactory
+from tests.factories.contacts.customer_group_factory import (
+    AdvancedCustomerGroupFactory,
+    StandardCustomerGroupFactory,
+)
+from tests.factories.contracts.commercial_document_position_factory import (
+    StandardCommercialDocumentPositionFactory,
+)
+from tests.factories.contracts.quotation_factory import StandardQuotationFactory
+from tests.factories.core.currency_factory import StandardCurrencyFactory
+from tests.factories.core.tax_factory import StandardTaxFactory
+from tests.factories.core.unit_factory import SmallUnitFactory, StandardUnitFactory
+from tests.factories.products.product_price_factory import StandardPriceFactory
+from tests.factories.products.product_type_factory import StandardProductTypeFactory
 
 
 class DocumentCommercialDocumentPosition(TestCase):

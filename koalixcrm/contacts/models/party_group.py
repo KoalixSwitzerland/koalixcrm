@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
 from django.db import models
 from django.utils.translation import gettext as _
 
@@ -22,5 +24,5 @@ class PartyGroup(WorkspaceScopedModel):
         verbose_name = _("Party group")
         verbose_name_plural = _("Party groups")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name

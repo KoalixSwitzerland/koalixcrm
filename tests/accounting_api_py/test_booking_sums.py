@@ -19,7 +19,6 @@ from django.test import LiveServerTestCase
 from koalixcrm.accounting.models import Account, AccountingPeriod, Booking
 from koalixcrm.global_support_functions import make_date_utc
 
-
 API_BASE = '/koalixcrm_accounting/api/v1/1'
 
 

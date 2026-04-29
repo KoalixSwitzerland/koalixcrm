@@ -16,7 +16,10 @@ The XSL reads:
   - ``object[@model='crm.work']``
   - ``user_extension/user``
 """
+from __future__ import annotations
+
 import datetime
+from typing import Any
 
 from dateutil.relativedelta import relativedelta
 from rest_framework import serializers
@@ -74,7 +77,7 @@ class HumanResourceWorkReportSerializer(serializers.Serializer):
     month_project_buckets = _BucketAggregateSerializer(many=True)
 
 
-def _isokeys(d: datetime.date):
+def _isokeys(d: datetime.date) -> dict[str, str]:
     iso = d.isocalendar()
     return {
         "day": str(d.day),
@@ -94,12 +97,12 @@ class WorkReportBuilder:
     """
 
     def __init__(self, human_resource: HumanResource,
-                 date_from: datetime.date, date_to: datetime.date):
+                 date_from: datetime.date, date_to: datetime.date) -> None:
         self.hr = human_resource
         self.date_from = date_from
         self.date_to = date_to
 
-    def build(self) -> dict:
+    def build(self) -> dict[str, Any]:
         hr = self.hr
         date_from, date_to = self.date_from, self.date_to
         date_first_of_month = date_from.replace(day=1)
@@ -166,7 +169,7 @@ class WorkReportBuilder:
                 project_id, {'effort': 0, 'project_id': project_id})
             month_pe_entry['effort'] += hours
 
-        def _flatten_day_pe():
+        def _flatten_day_pe() -> list[dict[str, Any]]:
             rows = []
             for day_key in sorted(days.keys()):
                 meta = days[day_key]
@@ -180,7 +183,7 @@ class WorkReportBuilder:
                     })
             return rows
 
-        def _flatten_days():
+        def _flatten_days() -> list[dict[str, Any]]:
             return [{
                 'effort': str(meta['effort']),
                 'day': meta['day'], 'week': meta['week'],
@@ -188,7 +191,7 @@ class WorkReportBuilder:
                 'month': meta['month'], 'year': meta['year'],
             } for _, meta in sorted(days.items())]
 
-        def _flatten_week_or_month_pe(buckets, kind):
+        def _flatten_week_or_month_pe(buckets: dict[str, Any], kind: str) -> list[dict[str, Any]]:
             rows = []
             for _, meta in buckets.items():
                 for pid, pe in meta['project_efforts'].items():
@@ -204,7 +207,7 @@ class WorkReportBuilder:
                     rows.append(row)
             return rows
 
-        def _flatten_week_or_month(buckets, kind):
+        def _flatten_week_or_month(buckets: dict[str, Any], kind: str) -> list[dict[str, Any]]:
             rows = []
             for _, meta in buckets.items():
                 row = {'effort': str(meta['effort']), 'year': meta['year']}

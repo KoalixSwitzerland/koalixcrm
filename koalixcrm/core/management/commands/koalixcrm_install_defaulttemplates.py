@@ -1,37 +1,41 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 
 from os import path
+from typing import Any
 
-from koalixcrm import crm
-from koalixcrm import djangoUserExtension
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
-from filebrowser.base import FileObject
 from django.utils.translation import gettext as _
-from django.conf import settings
+from filebrowser.base import FileObject
 
-DEFAULT_FILE = 'dashboard.py'
+from koalixcrm import crm, djangoUserExtension
+
+DEFAULT_FILE = "dashboard.py"
 
 
 class Command(BaseCommand):
     help = (
-    'This Command is going to install the default Templates, given by the koalixcrm base installation, in your django instance. Be sure you first run syncdb')
-    args = '[]'
-    label = 'application name'
+        "This Command is going to install the default Templates, given by the koalixcrm base installation, "
+        "in your django instance. Be sure you first run syncdb"
+    )
+    args = "[]"
+    label = "application name"
 
     @staticmethod
-    def store_default_template_xsl_file(language, file_name):
+    def store_default_template_xsl_file(language: str, file_name: str) -> Any:
         file_path = Command.path_of_default_template_file(language, file_name)
         xsl_file = Command.store_xsl_file(file_path)
         return xsl_file
 
     @staticmethod
-    def path_of_default_template_file(language, file_name):
+    def path_of_default_template_file(language: str, file_name: str) -> str:
         file_path = path.join(settings.STATIC_ROOT, "default_templates", language, file_name)
-        f = None;
+        f = None
         try:
-            f = open(file_path,'r')
-        except (FileNotFoundError) as e:
+            f = open(file_path, "r")
+        except FileNotFoundError:
             print(_("File not found:") + file_path)
             print(_("Run collectstatic command and fix potential errors"))
         finally:
@@ -40,32 +44,37 @@ class Command(BaseCommand):
         return file_path
 
     @staticmethod
-    def store_xsl_file(xsl_file_path):
+    def store_xsl_file(xsl_file_path: str) -> Any:
         xsl_file = djangoUserExtension.models.XSLFile()
         xsl_file.title = path.basename(xsl_file_path)
         xsl_file.xslfile = FileObject(xsl_file_path)
         xsl_file.save()
         return xsl_file
 
-    def handle(self, *args, **options):
+    def handle(self, *args: Any, **options: Any) -> None:
         template_set = djangoUserExtension.models.TemplateSet()
-        template_set.title = 'default_template_set'
+        template_set.title = "default_template_set"
         template_set.invoiceXSLFile = Command.store_default_template_xsl_file("en", "invoice.xsl")
         template_set.quotationXSLFile = Command.store_default_template_xsl_file("en", "quotation.xsl")
         template_set.salesorderXSLFile = Command.store_default_template_xsl_file("en", "salesorder.xsl")
         template_set.purchaseorderXSLFile = Command.store_default_template_xsl_file("en", "purchaseorder.xsl")
         template_set.despatchadviceXSLFile = Command.store_default_template_xsl_file("en", "despatchadvice.xsl")
 
-        if 'koalixcrm.accounting' in settings.INSTALLED_APPS:
-            template_set.profitLossStatementXSLFile = Command.store_default_template_xsl_file("en", "profitlossstatement.xsl")
+        if "koalixcrm.accounting" in settings.INSTALLED_APPS:
+            template_set.profitLossStatementXSLFile = Command.store_default_template_xsl_file(
+                "en", "profitlossstatement.xsl"
+            )
             template_set.balancesheetXSLFile = Command.store_default_template_xsl_file("en", "balancesheet.xsl")
 
         template_set.logo = FileObject(Command.path_of_default_template_file("generic", "logo.jpg"))
-        template_set.fopConfigurationFile = FileObject(Command.path_of_default_template_file("generic", "fontconfig.xml"))
+        template_set.fopConfigurationFile = FileObject(
+            Command.path_of_default_template_file("generic", "fontconfig.xml")
+        )
         template_set.bankingaccountref = "xx-xxxxxx-x"
         template_set.addresser = _("John Smit, Sample Company, 8976 Smallville")
         template_set.headerTextsalesorders = _(
-            "According to your wishes the contract consists of the following positions:")
+            "According to your wishes the contract consists of the following positions:"
+        )
         template_set.footerTextsalesorders = _("Thank you for your interest in our company \n Best regards")
         template_set.headerTextpurchaseorders = _("We would like to order the following positions:")
         template_set.footerTextpurchaseorders = _("Best regards")
@@ -78,12 +87,13 @@ class Command(BaseCommand):
         currency.rounding = "0.10"
         currency.save()
         from koalixcrm.contacts.models.address import Address
-        from koalixcrm.contacts.models.phone_number import PhoneNumber
         from koalixcrm.contacts.models.party_email import PartyEmail
+        from koalixcrm.contacts.models.phone_number import PhoneNumber
         from koalixcrm.core.models.workspace import Workspace
-        ws, _ = Workspace.objects.get_or_create(
-            name='Default Workspace',
-            defaults={'is_active': True},
+
+        ws, _created = Workspace.objects.get_or_create(
+            name="Default Workspace",
+            defaults={"is_active": True},
         )
         user = User.objects.all()[0]
         user_extension = djangoUserExtension.models.UserExtension()
@@ -94,7 +104,8 @@ class Command(BaseCommand):
         user_extension.save()
         address = Address.objects.create(
             workspace=ws,
-            address_line_1="Ave 1",
+            street="Ave",
+            number="1",
             zip_code="899887",
             town="Smallville",
         )
@@ -102,7 +113,7 @@ class Command(BaseCommand):
             workspace=ws,
             user=user,
             address=address,
-            purpose='primary',
+            purpose="primary",
             is_primary=True,
         )
         phone = PhoneNumber.objects.create(
@@ -113,7 +124,7 @@ class Command(BaseCommand):
             workspace=ws,
             user=user,
             phone_number=phone,
-            purpose='primary',
+            purpose="primary",
             is_primary=True,
         )
         email = PartyEmail.objects.create(
@@ -124,6 +135,6 @@ class Command(BaseCommand):
             workspace=ws,
             user=user,
             email=email,
-            purpose='primary',
+            purpose="primary",
             is_primary=True,
         )

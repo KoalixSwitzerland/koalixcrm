@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
-from koalixcrm.shared.base_model_view_set import BaseModelViewSet
+from __future__ import annotations
+
 from koalixcrm.reporting.models.agreement_status import AgreementStatus
-from koalixcrm.reporting.serializers.agreement_status_serializer import AgreementStatusJSONSerializer
+from koalixcrm.reporting.serializers.agreement_status_serializer import (
+    AgreementStatusJSONSerializer,
+)
+from koalixcrm.shared.base_model_view_set import BaseModelViewSet
 
 
 class AgreementStatusViewSet(BaseModelViewSet):

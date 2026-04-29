@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 
-import factory
 import datetime
-from koalixcrm.products.models.product_price import ProductPrice
-from tests.factories.products.product_factory import StandardProductFactory
-from tests.factories.core.unit_factory import StandardUnitFactory
-from tests.factories.core.currency_factory import StandardCurrencyFactory
-from tests.factories.contacts.customer_group_factory import StandardCustomerGroupFactory
-from tests.factories.core.workspace_factory import DefaultWorkspaceFactory
+
+import factory
+
 from koalixcrm.global_support_functions import make_date_utc
+from koalixcrm.products.models.product_price import ProductPrice
+from tests.factories.contacts.customer_group_factory import StandardCustomerGroupFactory
+from tests.factories.core.currency_factory import StandardCurrencyFactory
+from tests.factories.core.unit_factory import StandardUnitFactory
+from tests.factories.core.workspace_factory import DefaultWorkspaceFactory
+from tests.factories.products.product_factory import StandardProductFactory
 
 
 class StandardPriceFactory(factory.django.DjangoModelFactory):

@@ -1,12 +1,21 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
+from typing import Any
+
 from rest_framework import serializers
+
 from koalixcrm.reporting.models.estimation import Estimation
 from koalixcrm.reporting.models.estimation_status import EstimationStatus
 from koalixcrm.reporting.models.resource import Resource
 from koalixcrm.reporting.models.task import Task
+from koalixcrm.reporting.serializers.estimation_status_serializer import (
+    OptionEstimationStatusJSONSerializer,
+)
+from koalixcrm.reporting.serializers.resource_serializer import (
+    OptionResourceJSONSerializer,
+)
 from koalixcrm.reporting.serializers.task_serializer import OptionTaskJSONSerializer
-from koalixcrm.reporting.serializers.estimation_status_serializer import OptionEstimationStatusJSONSerializer
-from koalixcrm.reporting.serializers.resource_serializer import OptionResourceJSONSerializer
 
 
 class EstimationJSONSerializer(serializers.ModelSerializer):
@@ -28,8 +37,10 @@ class EstimationJSONSerializer(serializers.ModelSerializer):
                   'status',
                   'reporting_period')
 
-    def create(self, validated_data):
+    def create(self, validated_data: dict[str, Any]) -> Estimation:
         estimation = Estimation()
+        if 'workspace' in validated_data:
+            estimation.workspace = validated_data.pop('workspace')
         estimation.amount = validated_data['amount']
         estimation.date_from = validated_data['date_from']
         estimation.date_until = validated_data['date_until']
@@ -62,7 +73,7 @@ class EstimationJSONSerializer(serializers.ModelSerializer):
         estimation.save()
         return estimation
 
-    def update(self, estimation, validated_data):
+    def update(self, estimation: Estimation, validated_data: dict[str, Any]) -> Estimation:
         estimation.amount = validated_data['amount']
         estimation.date_from = validated_data['date_from']
         estimation.date_until = validated_data['date_until']

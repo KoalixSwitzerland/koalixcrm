@@ -1,16 +1,27 @@
 """
 CustomerGroupTransformViewSet for koalixcrm products
 """
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from koalixcrm.shared.base_model_view_set import BaseModelViewSet
+
 from ..models.customer_group_transform import CustomerGroupTransform
-from ..serializers.customer_group_transform_serializer import CustomerGroupTransformJSONSerializer
+from ..serializers.customer_group_transform_serializer import (
+    CustomerGroupTransformJSONSerializer,
+)
+
+if TYPE_CHECKING:
+    from django.db.models import QuerySet
+    from rest_framework.serializers import BaseSerializer
 
 
 class CustomerGroupTransformViewSet(BaseModelViewSet):
     serializer_class = CustomerGroupTransformJSONSerializer
     queryset = CustomerGroupTransform.objects.all()
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet[CustomerGroupTransform]:
         active = getattr(self.request, 'active_workspace', None)
         if active is not None:
             return CustomerGroupTransform.objects.filter(workspace=active)
@@ -18,7 +29,7 @@ class CustomerGroupTransformViewSet(BaseModelViewSet):
             return CustomerGroupTransform.objects.all()
         return CustomerGroupTransform.objects.none()
 
-    def perform_create(self, serializer):
+    def perform_create(self, serializer: BaseSerializer) -> None:
         from koalixcrm.core.models.workspace import Workspace
         active = getattr(self.request, 'active_workspace', None)
         if active is None and self.request.user.is_superuser:

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 
 from koalixcrm.reporting.models.agreement import Agreement
 from koalixcrm.reporting.models.agreement_status import AgreementStatus

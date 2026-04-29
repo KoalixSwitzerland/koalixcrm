@@ -1,24 +1,24 @@
 # -*- coding: utf-8 -*-
 from koalixcrm.contacts.serializers.customer_billing_cycle_serializer import (
-    OptionCustomerBillingCycleJSONSerializer,
     CustomerBillingCycleJSONSerializer,
+    OptionCustomerBillingCycleJSONSerializer,
 )
 from koalixcrm.contacts.serializers.party_serializers import (
-    PartyJSONSerializer,
+    AddressAssignmentJSONSerializer,
+    AddressJSONSerializer,
+    EmailAssignmentJSONSerializer,
     OrganizationJSONSerializer,
-    PartyContactJSONSerializer,
-    PartyIdentificationJSONSerializer,
-    PartyRoleJSONSerializer,
     OrganizationMembershipJSONSerializer,
     OrganizationRelationshipJSONSerializer,
-    AddressJSONSerializer,
-    AddressAssignmentJSONSerializer,
-    PhoneNumberJSONSerializer,
-    PhoneAssignmentJSONSerializer,
+    PartyContactJSONSerializer,
     PartyEmailJSONSerializer,
-    EmailAssignmentJSONSerializer,
     PartyGroupJSONSerializer,
     PartyGroupMembershipJSONSerializer,
+    PartyIdentificationJSONSerializer,
+    PartyJSONSerializer,
+    PartyRoleJSONSerializer,
+    PhoneAssignmentJSONSerializer,
+    PhoneNumberJSONSerializer,
 )
 
 __all__ = [

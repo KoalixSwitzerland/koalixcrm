@@ -14,28 +14,31 @@ before invoking FOP. (FOP can technically follow ``http(s)://`` URLs in
 ``<fo:external-graphic>``, but bearer-token auth and presigned URL TTLs
 make that fragile — keeping the rewrite in the orchestrator is simpler.)
 """
+from __future__ import annotations
+
 import io
 import os
 import uuid
+from typing import Any
 
 import matplotlib
+
 matplotlib.use('Agg')  # headless backend for worker / API processes
 import matplotlib.dates as mdates  # noqa: E402
-from matplotlib import pyplot  # noqa: E402
 import pandas  # noqa: E402
+from matplotlib import pyplot  # noqa: E402
 
 from koalixcrm_utils.aws_clients import get_s3_client
-
 
 CHART_KEY_PREFIX = os.getenv("S3_REPORT_CHART_PREFIX", "report-charts")
 PRESIGNED_URL_EXPIRES_IN = int(os.getenv("PRESIGNED_URL_EXPIRES_IN", "300"))
 
 
-def _bucket():
+def _bucket() -> str:
     return os.getenv("S3_PDF_BUCKET", "koalixcrm-pdf-exports")
 
 
-def build_project_cost_overview_svg_bytes(project) -> bytes:
+def build_project_cost_overview_svg_bytes(project: Any) -> bytes:
     """Produce the same SVG the legacy ``Project.create_project_cost_overview_illustration``
     wrote to disk, but as in-memory bytes. No filesystem I/O.
     """
@@ -113,7 +116,7 @@ def build_project_cost_overview_svg_bytes(project) -> bytes:
     return buf.getvalue()
 
 
-def upload_project_cost_overview_svg(project) -> str:
+def upload_project_cost_overview_svg(project: Any) -> str:
     """Render + upload the SVG, return a presigned GET URL the Java
     orchestrator can fetch without bearer auth.
     """

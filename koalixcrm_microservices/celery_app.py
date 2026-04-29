@@ -1,10 +1,10 @@
+import logging
 import os
 import threading
-import logging
 
 import boto3
 from celery import Celery
-from celery.signals import worker_ready, task_unknown
+from celery.signals import task_unknown, worker_ready
 
 # SQS broker URL format: sqs://aws_access_key_id:aws_secret_access_key@
 CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')

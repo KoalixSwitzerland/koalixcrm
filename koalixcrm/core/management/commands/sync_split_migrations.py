@@ -19,14 +19,15 @@ Safe to run on fresh databases: if tables don't exist, nothing is
 recorded and normal `migrate` proceeds as usual. Idempotent on already-
 current databases: migrations already recorded as applied are skipped.
 """
+from __future__ import annotations
 
 import re
+from typing import Any
 
 from django.core.management.base import BaseCommand
 from django.db import connection
 from django.db.migrations.loader import MigrationLoader
 from django.db.migrations.recorder import MigrationRecorder
-
 
 CREATE_MODEL_OP_NAMES = ("CreateModel", "CreateModelIfNotExists")
 
@@ -52,7 +53,7 @@ LEGACY_PTR_ID_RE = re.compile(
 class Command(BaseCommand):
     help = "Reconcile django_migrations for legacy/mid-refactor deployments."
 
-    def handle(self, *args, **options):
+    def handle(self, *args: Any, **options: Any) -> None:
         recorder = MigrationRecorder(connection)
         self._upgrade_migrations_table_if_legacy()
         self._upgrade_legacy_id_columns()
@@ -77,7 +78,7 @@ class Command(BaseCommand):
             self._record_applied(app, name)
             applied.add(key)
 
-    def _upgrade_migrations_table_if_legacy(self):
+    def _upgrade_migrations_table_if_legacy(self) -> None:
         """Rebuild django_migrations if it uses the pre-Django-1.9 schema.
 
         Legacy deployments have an `id` column without auto-increment, which
@@ -115,7 +116,7 @@ class Command(BaseCommand):
                 rows,
             )
 
-    def _upgrade_legacy_id_columns(self):
+    def _upgrade_legacy_id_columns(self) -> None:
         """SQLite-only: rebuild tables whose `id` isn't `INTEGER PRIMARY KEY`.
 
         Pre-Django-1.9 schemas declared `id integer NOT NULL` without making
@@ -140,7 +141,7 @@ class Command(BaseCommand):
                 continue
             self._rebuild_sqlite_table(table_name, create_sql)
 
-    def _needs_id_upgrade(self, table_name, create_sql):
+    def _needs_id_upgrade(self, table_name: str, create_sql: str) -> bool:
         """True if the table is missing a proper INTEGER PRIMARY KEY column.
 
         Two shapes trigger a rebuild:
@@ -165,7 +166,7 @@ class Command(BaseCommand):
             return bool(LEGACY_PTR_ID_RE.search(create_sql))
         return False
 
-    def _rebuild_sqlite_table(self, table_name, create_sql):
+    def _rebuild_sqlite_table(self, table_name: str, create_sql: str) -> None:
         new_create_sql, count = LEGACY_ID_RE.subn(
             "id INTEGER PRIMARY KEY AUTOINCREMENT", create_sql, count=1,
         )
@@ -218,8 +219,8 @@ class Command(BaseCommand):
             finally:
                 cursor.execute("PRAGMA foreign_keys=ON")
 
-    def _tables_created_by(self, migration, app_label):
-        tables = []
+    def _tables_created_by(self, migration: Any, app_label: str) -> list[str]:
+        tables: list[str] = []
         for op in migration.operations:
             if type(op).__name__ not in CREATE_MODEL_OP_NAMES:
                 continue
@@ -230,6 +231,6 @@ class Command(BaseCommand):
             tables.append(options.get("db_table") or f"{app_label}_{model_name.lower()}")
         return tables
 
-    def _record_applied(self, app, name):
+    def _record_applied(self, app: str, name: str) -> None:
         MigrationRecorder(connection).record_applied(app, name)
         self.stdout.write(self.style.SUCCESS(f"Recorded {app}.{name} as applied."))

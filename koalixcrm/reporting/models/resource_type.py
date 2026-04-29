@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 
 from django.db import models
 from django.utils.translation import gettext as _
@@ -14,7 +15,7 @@ class ResourceType(models.Model):
                                    blank=True,
                                    null=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return str(self.id) + " " + str(self.title)
 
     class Meta:

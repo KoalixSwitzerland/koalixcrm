@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import factory
+
 from koalixcrm.reporting.models.reporting_period_status import ReportingPeriodStatus
 
 

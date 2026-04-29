@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 
 from django.db import models
 from django.utils.translation import gettext as _
@@ -6,26 +7,24 @@ from django.utils.translation import gettext as _
 
 class Unit(models.Model):
     id = models.BigAutoField(primary_key=True)
-    description = models.CharField(verbose_name=_("Description"),
-                                   max_length=100)
-    short_name = models.CharField(verbose_name=_("Displayed Name After Quantity In The Position"),
-                                  max_length=3)
-    is_a_fraction_of = models.ForeignKey('self',
-                                         on_delete=models.CASCADE,
-                                         blank=True,
-                                         null=True,
-                                         verbose_name=_("Is A Fraction Of"))
-    fraction_factor_to_next_higher_unit = models.DecimalField(verbose_name=_("Factor Between This And Next Higher Unit"),
-                                                              max_digits=20,
-                                                              decimal_places=10,
-                                                              blank=True,
-                                                              null=True)
+    description = models.CharField(verbose_name=_("Description"), max_length=100)
+    short_name = models.CharField(verbose_name=_("Displayed Name After Quantity In The Position"), max_length=3)
+    is_a_fraction_of = models.ForeignKey(
+        "self", on_delete=models.CASCADE, blank=True, null=True, verbose_name=_("Is A Fraction Of")
+    )
+    fraction_factor_to_next_higher_unit = models.DecimalField(
+        verbose_name=_("Factor Between This And Next Higher Unit"),
+        max_digits=20,
+        decimal_places=10,
+        blank=True,
+        null=True,
+    )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.short_name
 
     class Meta:
         app_label = "core"
         db_table = "crm_unit"
-        verbose_name = _('Unit')
-        verbose_name_plural = _('Units')
+        verbose_name = _("Unit")
+        verbose_name_plural = _("Units")

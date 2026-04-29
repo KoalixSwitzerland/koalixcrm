@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import factory
+
 from koalixcrm.reporting.models.resource_type import ResourceType
 
 

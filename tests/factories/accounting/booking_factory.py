@@ -1,12 +1,19 @@
 # -*- coding: utf-8 -*-
 
-import factory
 import datetime
+
+import factory
+
 from koalixcrm.accounting.models import Booking
-from tests.factories.accounting.account_factory import StandardAccountFactory, OpenInterestAccountFactory
-from tests.factories.accounting.accounting_period_factory import StandardAccountingPeriodFactory
-from tests.factories.contacts.user_factory import StaffUserFactory
 from koalixcrm.global_support_functions import make_date_utc
+from tests.factories.accounting.account_factory import (
+    OpenInterestAccountFactory,
+    StandardAccountFactory,
+)
+from tests.factories.accounting.accounting_period_factory import (
+    StandardAccountingPeriodFactory,
+)
+from tests.factories.contacts.user_factory import StaffUserFactory
 
 
 class StandardBookingFactory(factory.django.DjangoModelFactory):

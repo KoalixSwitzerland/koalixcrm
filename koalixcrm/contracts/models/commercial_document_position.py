@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
+from typing import Any
 
 from django.apps import apps
-from django.contrib import admin
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.translation import gettext as _
+
 from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
 
 
@@ -61,10 +64,10 @@ class Position(models.Model):
                                               blank=True,
                                               null=True)
 
-    def clean(self):
+    def clean(self) -> None:
         super().clean()
         if self.product_type_id is None:
-            errors = {}
+            errors: dict[str, Any] = {}
             if not self.overwrite_product_price:
                 errors['overwrite_product_price'] = _(
                     "Required when no product type is set on the position."
@@ -82,8 +85,8 @@ class Position(models.Model):
                 ),
             })
 
-    def __str__(self):
-        return _("Position") + ": " + self.id.__str__()
+    def __str__(self) -> str:
+        return _("Position") + ": " + str(self.id)
 
     class Meta:
         app_label = "contract_object_management"
@@ -103,9 +106,9 @@ class CommercialDocumentPosition(WorkspaceScopedModel, Position):
         verbose_name_plural = _('Positions Commercial Document')
 
     @staticmethod
-    def add_positions(position_class, object_to_create_pdf):
+    def add_positions(position_class: type[models.Model], object_to_create_pdf: models.Model) -> list[models.Model]:
         from koalixcrm.core.models.unit import Unit
-        product_type_model = None
+        product_type_model: type[models.Model] | None = None
         if apps.is_installed('koalixcrm.products'):
             product_type_model = apps.get_model('products', 'ProductType')
         objects = list(position_class.objects.filter(commercial_document=object_to_create_pdf.id))
@@ -117,7 +120,7 @@ class CommercialDocumentPosition(WorkspaceScopedModel, Position):
                 objects += list(Unit.objects.filter(id=position.unit_id))
         return objects
 
-    def create_position(self, calling_model, attach_to_model):
+    def create_position(self, calling_model: Position, attach_to_model: models.Model) -> None:
         """Copies all the content of the calling model and attaches
         links itself to the attach_to_model, this function is usually
         used within the create invoice, quotation, reminder,... functions"""
@@ -138,9 +141,9 @@ class CommercialDocumentPosition(WorkspaceScopedModel, Position):
         self.commercial_document = attach_to_model
         self.save()
 
-    def __str__(self):
+    def __str__(self) -> str:
         return _("Commercial Document Position") + ": " + str(self.id)
 
     class NoPriceFound(Exception):
-        def __str__(self):
+        def __str__(self) -> str:
             return _("There is no Price set for the commercial document position")

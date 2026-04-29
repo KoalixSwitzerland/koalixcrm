@@ -1,19 +1,22 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
 from django.contrib import admin
+
 from koalixcrm.djangoUserExtension.models import (
-    SalesOrderTemplate,
     MonthlyProjectSummaryTemplate,
+    SalesOrderTemplate,
     WorkReportTemplate,
 )
 from koalixcrm.djangoUserExtension.models.document_template import (
-    InvoiceTemplate,
-    QuotationTemplate,
-    DespatchAdviceTemplate,
-    PaymentReminderTemplate,
-    PurchaseOrderTemplate,
-    ProfitLossStatementTemplate,
     BalanceSheetTemplate,
+    DespatchAdviceTemplate,
+    InvoiceTemplate,
     OptionDocumentTemplate,
+    PaymentReminderTemplate,
+    ProfitLossStatementTemplate,
+    PurchaseOrderTemplate,
+    QuotationTemplate,
 )
 
 admin.site.register(InvoiceTemplate, OptionDocumentTemplate)

@@ -1,56 +1,94 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
+from datetime import date
+from typing import TYPE_CHECKING
+
 from django.contrib import admin
 from django.db import models
 from django.utils.translation import gettext as _
 
+if TYPE_CHECKING:
+    from django.forms import ModelForm
+    from django.http import HttpRequest
+
 
 class Booking(models.Model):
     id = models.BigAutoField(primary_key=True)
-    from_account = models.ForeignKey('Account', on_delete=models.CASCADE, verbose_name=_("From Account"), related_name="db_booking_fromaccount")
-    to_account = models.ForeignKey('Account', on_delete=models.CASCADE, verbose_name=_("To Account"), related_name="db_booking_toaccount")
+    from_account = models.ForeignKey(
+        "Account", on_delete=models.CASCADE, verbose_name=_("From Account"), related_name="db_booking_fromaccount"
+    )
+    to_account = models.ForeignKey(
+        "Account", on_delete=models.CASCADE, verbose_name=_("To Account"), related_name="db_booking_toaccount"
+    )
     amount = models.DecimalField(max_digits=20, decimal_places=2, verbose_name=_("Amount"))
     description = models.CharField(verbose_name=_("Description"), max_length=120, null=True, blank=True)
-    booking_reference = models.ForeignKey('contract_object_management.Invoice', on_delete=models.CASCADE, verbose_name=_("Booking Reference"), null=True, blank=True)
+    booking_reference = models.ForeignKey(
+        "contract_object_management.Invoice",
+        on_delete=models.CASCADE,
+        verbose_name=_("Booking Reference"),
+        null=True,
+        blank=True,
+    )
     booking_date = models.DateTimeField(verbose_name=_("Booking at"))
-    accounting_period = models.ForeignKey('AccountingPeriod', on_delete=models.CASCADE, verbose_name=_("AccountingPeriod"))
-    staff = models.ForeignKey('auth.User', on_delete=models.CASCADE, limit_choices_to={'is_staff': True}, blank=True,
-                              verbose_name=_("Reference Staff"), related_name="db_booking_refstaff")
+    accounting_period = models.ForeignKey(
+        "AccountingPeriod", on_delete=models.CASCADE, verbose_name=_("AccountingPeriod")
+    )
+    staff = models.ForeignKey(
+        "auth.User",
+        on_delete=models.CASCADE,
+        limit_choices_to={"is_staff": True},
+        blank=True,
+        verbose_name=_("Reference Staff"),
+        related_name="db_booking_refstaff",
+    )
     date_of_creation = models.DateTimeField(verbose_name=_("Created at"), auto_now=True)
     last_modification = models.DateTimeField(verbose_name=_("Last modified"), auto_now_add=True)
-    last_modified_by = models.ForeignKey('auth.User', on_delete=models.CASCADE, limit_choices_to={'is_staff': True}, blank=True,
-                                         verbose_name=_("Last modified by"), related_name="db_booking_lstmodified")
+    last_modified_by = models.ForeignKey(
+        "auth.User",
+        on_delete=models.CASCADE,
+        limit_choices_to={"is_staff": True},
+        blank=True,
+        verbose_name=_("Last modified by"),
+        related_name="db_booking_lstmodified",
+    )
 
-    def booking_date_only(self):
+    def booking_date_only(self) -> date:
         return self.booking_date.date()
 
-    booking_date_only.short_description = _("Date");
+    booking_date_only.short_description = _("Date")
 
-    def __str__(self):
-        return self.from_account.__str__() + " " + self.to_account.__str__() + " " + self.amount.__str__()
+    def __str__(self) -> str:
+        return f"{self.from_account} {self.to_account} {self.amount}"
 
     class Meta:
         app_label = "accounting"
-        verbose_name = _('Booking')
-        verbose_name_plural = _('Bookings')
+        verbose_name = _("Booking")
+        verbose_name_plural = _("Bookings")
 
 
 class OptionBooking(admin.ModelAdmin):
-    list_display = ('from_account',
-                    'to_account',
-                    'amount',
-                    'booking_date_only',
-                    'staff')
-    fieldsets = ((_('Basic'), {'fields': ('from_account',
-                                          'to_account',
-                                          'amount',
-                                          'booking_date',
-                                          'staff',
-                                          'description',
-                                          'booking_reference',
-                                          'accounting_period')}),)
+    list_display = ("from_account", "to_account", "amount", "booking_date_only", "staff")
+    fieldsets = (
+        (
+            _("Basic"),
+            {
+                "fields": (
+                    "from_account",
+                    "to_account",
+                    "amount",
+                    "booking_date",
+                    "staff",
+                    "description",
+                    "booking_reference",
+                    "accounting_period",
+                )
+            },
+        ),
+    )
     save_as = True
 
-    def save_model(self, request, obj, form, change):
+    def save_model(self, request: HttpRequest, obj: Booking, form: ModelForm, change: bool) -> None:
         if change:
             obj.last_modified_by = request.user
         else:
@@ -62,16 +100,21 @@ class OptionBooking(admin.ModelAdmin):
 class InlineBookings(admin.TabularInline):
     model = Booking
     extra = 1
-    classes = ['collapse']
+    classes = ["collapse"]
     fieldsets = (
-        ('Basics', {
-            'fields': ('from_account',
-                       'to_account',
-                       'description',
-                       'amount',
-                       'booking_date',
-                       'staff',
-                       'booking_reference',)
-        }),
+        (
+            "Basics",
+            {
+                "fields": (
+                    "from_account",
+                    "to_account",
+                    "description",
+                    "amount",
+                    "booking_date",
+                    "staff",
+                    "booking_reference",
+                )
+            },
+        ),
     )
     allow_add = False

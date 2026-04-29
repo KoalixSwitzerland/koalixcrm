@@ -8,6 +8,7 @@ Authentication strategy:
   when CELERY_WORKER_M2M_OIDC_ISSUER is set, otherwise fall back to BasicAuth
 """
 import os
+
 import pytest
 
 

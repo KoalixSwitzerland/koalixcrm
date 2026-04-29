@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 
 import factory
+
 from koalixcrm.djangoUserExtension.models import (
-    QuotationTemplate,
-    InvoiceTemplate,
-    DespatchAdviceTemplate,
-    PaymentReminderTemplate,
-    PurchaseOrderTemplate,
-    SalesOrderTemplate,
     BalanceSheetTemplate,
-    ProfitLossStatementTemplate,
+    DespatchAdviceTemplate,
+    InvoiceTemplate,
     MonthlyProjectSummaryTemplate,
+    PaymentReminderTemplate,
+    ProfitLossStatementTemplate,
+    PurchaseOrderTemplate,
+    QuotationTemplate,
+    SalesOrderTemplate,
 )
 from tests.factories.core.workspace_factory import DefaultWorkspaceFactory
 

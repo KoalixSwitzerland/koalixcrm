@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
 from django.db import models
 from django.utils.translation import gettext as _
 
-from koalixcrm.contacts.models.party import Party
 from koalixcrm.contacts.models.address import Address
+from koalixcrm.contacts.models.party import Party
 from koalixcrm.core.const.party import ASSIGNMENT_PURPOSE_CHOICES
 from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
 
@@ -34,5 +36,5 @@ class AddressAssignment(WorkspaceScopedModel):
         verbose_name = _("Address assignment")
         verbose_name_plural = _("Address assignments")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.party_id}-{self.purpose}-{self.address_id}"

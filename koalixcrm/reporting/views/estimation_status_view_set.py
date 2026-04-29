@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
-from koalixcrm.shared.base_model_view_set import BaseModelViewSet
+from __future__ import annotations
+
 from koalixcrm.reporting.models.estimation_status import EstimationStatus
-from koalixcrm.reporting.serializers.estimation_status_serializer import EstimationStatusJSONSerializer
+from koalixcrm.reporting.serializers.estimation_status_serializer import (
+    EstimationStatusJSONSerializer,
+)
+from koalixcrm.shared.base_model_view_set import BaseModelViewSet
 
 
 class EstimationStatusViewSet(BaseModelViewSet):

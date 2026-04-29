@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, Http404
-from django.shortcuts import render
-from django.template.context_processors import csrf
 from django.contrib.admin import helpers
 from django.contrib.admin.widgets import *
+from django.contrib.auth.decorators import login_required
+from django.http import Http404, HttpRequest, HttpResponse, HttpResponseRedirect
+from django.shortcuts import render
+from django.template.context_processors import csrf
+
 from koalixcrm.djangoUserExtension.exceptions import TooManyUserExtensionsAvailable
 
 
@@ -20,7 +22,7 @@ class ReportingPeriodMissingForm(forms.Form):
 
 
 @login_required
-def user_is_not_human_resource(request):
+def user_is_not_human_resource(request: HttpRequest) -> HttpResponse:
     try:
         if request.POST.get('post'):
             if 'confirm_selection' in request.POST:

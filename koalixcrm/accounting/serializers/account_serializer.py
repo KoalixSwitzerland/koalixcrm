@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
+from decimal import Decimal
+
 from rest_framework import serializers
 
 from koalixcrm.accounting.models.account import Account
+from koalixcrm.accounting.models.accounting_period import AccountingPeriod
 
 
 class OptionAccountJSONSerializer(serializers.ModelSerializer):
@@ -11,9 +16,7 @@ class OptionAccountJSONSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Account
-        fields = ('id',
-                  'account_number',
-                  'title')
+        fields = ("id", "account_number", "title")
 
 
 class AccountBookingSumsSerializer(serializers.ModelSerializer):
@@ -24,6 +27,7 @@ class AccountBookingSumsSerializer(serializers.ModelSerializer):
     pdf-export-service to build balancesheet / profitlossstatement XML
     without re-implementing the booking arithmetic.
     """
+
     sum_within_accounting_period = serializers.SerializerMethodField()
     sum_through_now = serializers.SerializerMethodField()
     sum_before_accounting_period = serializers.SerializerMethodField()
@@ -31,28 +35,30 @@ class AccountBookingSumsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Account
-        fields = ('id',
-                  'account_number',
-                  'title',
-                  'account_type',
-                  'sum_within_accounting_period',
-                  'sum_through_now',
-                  'sum_before_accounting_period',
-                  'sum_total')
+        fields = (
+            "id",
+            "account_number",
+            "title",
+            "account_type",
+            "sum_within_accounting_period",
+            "sum_through_now",
+            "sum_before_accounting_period",
+            "sum_total",
+        )
 
-    def _period(self):
-        return self.context['accounting_period']
+    def _period(self) -> AccountingPeriod:
+        return self.context["accounting_period"]
 
-    def get_sum_within_accounting_period(self, obj):
+    def get_sum_within_accounting_period(self, obj: Account) -> Decimal:
         return obj.sum_of_all_bookings_within_accounting_period(self._period())
 
-    def get_sum_through_now(self, obj):
+    def get_sum_through_now(self, obj: Account) -> Decimal:
         return obj.sum_of_all_bookings_through_now(self._period())
 
-    def get_sum_before_accounting_period(self, obj):
+    def get_sum_before_accounting_period(self, obj: Account) -> Decimal:
         return obj.sum_of_all_bookings_before_accounting_period(self._period())
 
-    def get_sum_total(self, obj):
+    def get_sum_total(self, obj: Account) -> Decimal:
         return obj.sum_of_all_bookings()
 
 
@@ -66,13 +72,15 @@ class AccountJSONSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Account
-        fields = ('id',
-                  'account_number',
-                  'title',
-                  'account_type',
-                  'description',
-                  'is_open_reliabilities_account',
-                  'is_open_interest_account',
-                  'is_product_inventory_activa',
-                  'is_a_customer_payment_account')
+        fields = (
+            "id",
+            "account_number",
+            "title",
+            "account_type",
+            "description",
+            "is_open_reliabilities_account",
+            "is_open_interest_account",
+            "is_product_inventory_activa",
+            "is_a_customer_payment_account",
+        )
         depth = 1

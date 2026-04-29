@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
+from typing import Any
+
 from rest_framework import serializers
 
 from koalixcrm.contacts.models.party_group import PartyGroup
@@ -38,8 +42,10 @@ class ResourcePricesSONSerializer(serializers.ModelSerializer):
         fields = ('price', 'currency', 'unit',
                   'valid_from', 'valid_until', 'party_group')
 
-    def create(self, validated_data):
+    def create(self, validated_data: dict[str, Any]) -> ResourcePrice:
         resource_price = ResourcePrice()
+        if 'workspace' in validated_data:
+            resource_price.workspace = validated_data.pop('workspace')
         currency = validated_data.pop('currency')
         if currency and currency.get('id'):
             resource_price.currency = Currency.objects.get(id=currency['id'])
@@ -53,7 +59,7 @@ class ResourcePricesSONSerializer(serializers.ModelSerializer):
         resource_price.save()
         return resource_price
 
-    def update(self, resource_price, validated_data):
+    def update(self, resource_price: ResourcePrice, validated_data: dict[str, Any]) -> ResourcePrice:
         currency = validated_data.pop('currency')
         if currency and currency.get('id'):
             resource_price.currency = Currency.objects.get(id=currency['id'])

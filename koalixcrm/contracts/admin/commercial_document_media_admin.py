@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
+from typing import Any
 
 from django.contrib import admin
-from django.utils.translation import gettext as _
-from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
+
 from koalixcrm.contracts.models.commercial_document_media import CommercialDocumentMedia
+from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
 
 
 class CommercialDocumentMediaAdmin(WorkspaceScopedModelAdmin, admin.ModelAdmin):
@@ -43,5 +46,5 @@ class CommercialDocumentMediaInline(admin.TabularInline):
     can_delete = False
     show_change_link = True
 
-    def has_add_permission(self, request, obj=None):
+    def has_add_permission(self, request: Any, obj: Any = None) -> bool:
         return False

@@ -1,9 +1,16 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
+from decimal import Decimal
+from typing import TYPE_CHECKING
 
 from django.db import models
 from django.utils.translation import gettext as _
 
 from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
+
+if TYPE_CHECKING:
+    from koalixcrm.contacts.models.party_group import PartyGroup
 
 
 class CustomerGroupTransform(WorkspaceScopedModel):
@@ -27,17 +34,17 @@ class CustomerGroupTransform(WorkspaceScopedModel):
                                  max_digits=17,
                                  decimal_places=2,)
 
-    def transform(self, party_group):
+    def transform(self, party_group: PartyGroup) -> PartyGroup | None:
         """Return `to_party_group` if the given party_group matches this
         transform's `from_party_group`, else None."""
         if self.from_party_group == party_group:
             return self.to_party_group
         return None
 
-    def get_transform_factor(self):
+    def get_transform_factor(self) -> Decimal:
         return self.factor
 
-    def __str__(self):
+    def __str__(self) -> str:
         return "From " + self.from_party_group.name + " to " + self.to_party_group.name
 
     class Meta:

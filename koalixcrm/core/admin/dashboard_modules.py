@@ -7,6 +7,9 @@ RoleInWorkspace row, with a switch action and an active-workspace marker.
 
 CR-8 §8.6.
 """
+from __future__ import annotations
+
+from typing import Any
 
 from django.utils.translation import gettext_lazy as _
 from grappelli.dashboard import modules
@@ -40,7 +43,7 @@ class WorkspaceSwitcherModule(modules.DashboardModule):
     workspace_rows = None
     no_access = False
 
-    def init_with_context(self, context):
+    def init_with_context(self, context: dict[str, Any]) -> None:
         request = context['request']
         user = request.user
 
@@ -95,6 +98,6 @@ class WorkspaceSwitcherModule(modules.DashboardModule):
             # Ensure is_empty() returns False.
             self.children = self.workspace_rows
 
-    def is_empty(self):
+    def is_empty(self) -> bool:
         # Always render the module so the switcher is always visible.
         return False

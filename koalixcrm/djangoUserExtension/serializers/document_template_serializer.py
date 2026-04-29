@@ -6,6 +6,8 @@ Used by the PDF worker: returns template metadata plus ``*_href`` sub-resource
 URLs that 302-redirect to short-lived presigned S3 download URLs. The binary
 assets themselves are never embedded in the JSON payload.
 """
+from __future__ import annotations
+
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 
@@ -21,7 +23,7 @@ class DocumentTemplateJSONSerializer(serializers.ModelSerializer):
         model = DocumentTemplate
         fields = ("id", "title", "xsl_href", "fop_config_href", "logo_href")
 
-    def _detail_url(self, instance, action):
+    def _detail_url(self, instance: DocumentTemplate, action: str) -> str:
         request = self.context.get("request")
         # Under CR-002 the basename is `document-template` (kebab-case) and the
         # URL carries a `workspace_id` path arg. Pull it from the resolver
@@ -39,11 +41,11 @@ class DocumentTemplateJSONSerializer(serializers.ModelSerializer):
             request=request,
         )
 
-    def get_xsl_href(self, instance):
+    def get_xsl_href(self, instance: DocumentTemplate) -> str:
         return self._detail_url(instance, "xsl")
 
-    def get_fop_config_href(self, instance):
+    def get_fop_config_href(self, instance: DocumentTemplate) -> str:
         return self._detail_url(instance, "fop-config")
 
-    def get_logo_href(self, instance):
+    def get_logo_href(self, instance: DocumentTemplate) -> str:
         return self._detail_url(instance, "logo")

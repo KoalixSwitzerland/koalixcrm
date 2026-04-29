@@ -10,6 +10,7 @@ Usually this will be called "koalixcrm.wsgi".
 """
 
 import os
+
 from django.core.wsgi import get_wsgi_application
 
 # The settings module that Django uses. By convention, it is usually in the form "myproject.settings.production"

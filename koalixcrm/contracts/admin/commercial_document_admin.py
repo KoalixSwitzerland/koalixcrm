@@ -1,20 +1,37 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 
-from datetime import *
+from datetime import date
+from typing import TYPE_CHECKING
+
+from django.apps import apps
 from django.contrib import admin, messages
 from django.utils.translation import gettext as _
-from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
-from koalixcrm.contracts.models.commercial_document import (
-    TextParagraphInCommercialDocument,
-    CommercialDocumentAddressAssignment,
-    CommercialDocumentPhoneAssignment,
-    CommercialDocumentEmailAssignment,
-)
-from koalixcrm.contracts.models.commercial_document_position import CommercialDocumentPosition
-from koalixcrm.contracts.admin.commercial_document_position_admin import CommercialDocumentInlinePosition
-from koalixcrm.contracts.admin.commercial_document_media_admin import CommercialDocumentMediaInline
-from django.apps import apps
+
 import koalixcrm.contracts.models.calculations
+from koalixcrm.contracts.admin.commercial_document_media_admin import (
+    CommercialDocumentMediaInline,
+)
+from koalixcrm.contracts.admin.commercial_document_position_admin import (
+    CommercialDocumentInlinePosition,
+)
+from koalixcrm.contracts.models.commercial_document import (
+    CommercialDocumentAddressAssignment,
+    CommercialDocumentEmailAssignment,
+    CommercialDocumentPhoneAssignment,
+    TextParagraphInCommercialDocument,
+)
+from koalixcrm.contracts.models.commercial_document_position import (
+    CommercialDocumentPosition,
+)
+from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
+
+if TYPE_CHECKING:
+    from django.db.models import QuerySet
+    from django.forms import ModelForm
+    from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+
+    from koalixcrm.contracts.models.commercial_document import CommercialDocument as CommercialDocumentModel
 
 
 class CommercialDocumentTextParagraph(admin.StackedInline):
@@ -105,7 +122,8 @@ class OptionCommercialDocument(WorkspaceScopedModelAdmin, admin.ModelAdmin):
                        'currency',
                        'discount',
                        'staff',
-                       'external_reference',
+                       'party_reference',
+                       'ext_business_appl_references',
                        'template_set',
                        'custom_date_field')
         }),
@@ -115,18 +133,22 @@ class OptionCommercialDocument(WorkspaceScopedModelAdmin, admin.ModelAdmin):
                CommercialDocumentPostalAddress, CommercialDocumentPhoneAddress,
                CommercialDocumentEmailAddress, CommercialDocumentMediaInline]
 
-    def response_add(self, request, obj, post_url_continue=None):
+    def response_add(
+        self, request: HttpRequest, obj: CommercialDocumentModel, post_url_continue: str | None = None
+    ) -> HttpResponse:
         new_obj = self.after_saving_model_and_related_inlines(request, obj)
         new_obj.custom_date_field = date.today().__str__()
         return super(OptionCommercialDocument, self).response_add(request=request,
                                                              obj=new_obj,
                                                              post_url_continue=post_url_continue)
 
-    def response_change(self, request, new_object):
+    def response_change(self, request: HttpRequest, new_object: CommercialDocumentModel) -> HttpResponse:
         obj = self.after_saving_model_and_related_inlines(request, new_object)
         return super(OptionCommercialDocument, self).response_change(request, obj)
 
-    def after_saving_model_and_related_inlines(self, request, obj):
+    def after_saving_model_and_related_inlines(
+        self, request: HttpRequest, obj: CommercialDocumentModel
+    ) -> CommercialDocumentModel:
         no_price_errors = (CommercialDocumentPosition.NoPriceFound,)
         if apps.is_installed('koalixcrm.products'):
             product_type_model = apps.get_model('products', 'ProductType')
@@ -138,15 +160,17 @@ class OptionCommercialDocument(WorkspaceScopedModelAdmin, admin.ModelAdmin):
             self.message_user(request, "Unsuccessful in updating the Prices " + e.__str__(), level=messages.ERROR)
         return obj
 
-    def save_model(self, request, obj, form, change):
+    def save_model(
+        self, request: HttpRequest, obj: CommercialDocumentModel, form: ModelForm, change: bool
+    ) -> None:
         if change:
             obj.last_modified_by = request.user
         else:
             obj.last_modified_by = request.user
             obj.staff = request.user
-        obj.save()
+        super().save_model(request, obj, form, change)
 
-    def create_quotation(self, request, queryset):
+    def create_quotation(self, request: HttpRequest, queryset: QuerySet[CommercialDocumentModel]) -> HttpResponse | HttpResponseRedirect | None:
         from koalixcrm.contracts.views.newdocument import CreateNewDocumentView
         for obj in queryset:
             response = CreateNewDocumentView.create_new_document(self,
@@ -158,7 +182,7 @@ class OptionCommercialDocument(WorkspaceScopedModelAdmin, admin.ModelAdmin):
 
     create_quotation.short_description = _("Create Quotation")
 
-    def create_invoice(self, request, queryset):
+    def create_invoice(self, request: HttpRequest, queryset: QuerySet[CommercialDocumentModel]) -> HttpResponse | HttpResponseRedirect | None:
         from koalixcrm.contracts.views.newdocument import CreateNewDocumentView
         for obj in queryset:
             response = CreateNewDocumentView.create_new_document(self,
@@ -170,7 +194,7 @@ class OptionCommercialDocument(WorkspaceScopedModelAdmin, admin.ModelAdmin):
 
     create_invoice.short_description = _("Create Invoice")
 
-    def create_sales_order(self, request, queryset):
+    def create_sales_order(self, request: HttpRequest, queryset: QuerySet[CommercialDocumentModel]) -> HttpResponse | HttpResponseRedirect | None:
         from koalixcrm.contracts.views.newdocument import CreateNewDocumentView
         for obj in queryset:
             response = CreateNewDocumentView.create_new_document(self,
@@ -182,7 +206,7 @@ class OptionCommercialDocument(WorkspaceScopedModelAdmin, admin.ModelAdmin):
 
     create_sales_order.short_description = _("Create Sales Order")
 
-    def create_despatch_advice(self, request, queryset):
+    def create_despatch_advice(self, request: HttpRequest, queryset: QuerySet[CommercialDocumentModel]) -> HttpResponse | HttpResponseRedirect | None:
         from koalixcrm.contracts.views.newdocument import CreateNewDocumentView
         for obj in queryset:
             response = CreateNewDocumentView.create_new_document(self,
@@ -194,7 +218,7 @@ class OptionCommercialDocument(WorkspaceScopedModelAdmin, admin.ModelAdmin):
 
     create_despatch_advice.short_description = _("Create Despatch Advice")
 
-    def create_payment_reminder(self, request, queryset):
+    def create_payment_reminder(self, request: HttpRequest, queryset: QuerySet[CommercialDocumentModel]) -> HttpResponse | HttpResponseRedirect | None:
         from koalixcrm.contracts.views.newdocument import CreateNewDocumentView
         for obj in queryset:
             response = CreateNewDocumentView.create_new_document(self,
@@ -206,7 +230,7 @@ class OptionCommercialDocument(WorkspaceScopedModelAdmin, admin.ModelAdmin):
 
     create_payment_reminder.short_description = _("Create Payment Reminder")
 
-    def create_purchase_order(self, request, queryset):
+    def create_purchase_order(self, request: HttpRequest, queryset: QuerySet[CommercialDocumentModel]) -> HttpResponse | HttpResponseRedirect | None:
         from koalixcrm.contracts.views.newdocument import CreateNewDocumentView
         for obj in queryset:
             response = CreateNewDocumentView.create_new_document(self,
@@ -218,7 +242,7 @@ class OptionCommercialDocument(WorkspaceScopedModelAdmin, admin.ModelAdmin):
 
     create_purchase_order.short_description = _("Create Purchase Order")
 
-    def create_pdf_async(self, request, queryset):
+    def create_pdf_async(self, request: HttpRequest, queryset: QuerySet[CommercialDocumentModel]) -> None:
         from koalixcrm.core.models.pdf_export_process import PDFExportProcess
         queued = 0
         for obj in queryset:
@@ -247,7 +271,9 @@ class OptionCommercialDocument(WorkspaceScopedModelAdmin, admin.ModelAdmin):
     create_pdf_async.short_description = _("Create PDF")
 
     if apps.is_installed('koalixcrm.reporting'):
-        def create_project(self, request, queryset):
+        def create_project(
+            self, request: HttpRequest, queryset: QuerySet[CommercialDocumentModel]
+        ) -> HttpResponse | HttpResponseRedirect | None:
             from koalixcrm.reporting.views.create_task import CreateTaskView
             for obj in queryset:
                 response = CreateTaskView.create_project(

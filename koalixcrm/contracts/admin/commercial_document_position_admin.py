@@ -2,11 +2,14 @@
 
 from django.apps import apps
 from django.contrib import admin
-from koalixcrm.contracts.models.commercial_document_position import CommercialDocumentPosition
+
+from koalixcrm.contracts.models.commercial_document_position import (
+    CommercialDocumentPosition,
+)
 
 
-def _position_fields():
-    base = [
+def _position_fields() -> tuple[str, ...]:
+    base: list[str] = [
         'position_number',
         'quantity',
         'unit',

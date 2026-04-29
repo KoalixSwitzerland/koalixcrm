@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
 from django.db import models
 from django.utils.translation import gettext as _
 
@@ -18,5 +20,5 @@ class PartyEmail(WorkspaceScopedModel):
         verbose_name = _("Email address")
         verbose_name_plural = _("Email addresses")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.email

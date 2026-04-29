@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 
 from django.contrib import admin
 from django.utils.translation import gettext as _
+
 from koalixcrm.core.models.pdf_export_process import PDFExportProcess
 
 

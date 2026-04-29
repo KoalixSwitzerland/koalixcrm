@@ -1,15 +1,20 @@
+from __future__ import annotations
+
 import json
 import logging
-from urllib.request import urlopen, Request
+from typing import Any
+from urllib.request import Request, urlopen
 
 import jwt
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AbstractBaseUser
 from django.db import IntegrityError, transaction
+from django.http import HttpRequest
 from rest_framework.authentication import BaseAuthentication
 from rest_framework.exceptions import AuthenticationFailed
 
-from .oidc_utils import get_token_auth_header, get_jwks, get_oidc_discovery
+from .oidc_utils import get_jwks, get_oidc_discovery, get_token_auth_header
 
 logger = logging.getLogger(__name__)
 UserModel = get_user_model()
@@ -26,7 +31,7 @@ class OIDCAccessTokenAuthentication(BaseAuthentication):
     Auto-provisions users on first login if email is available in the token.
     """
 
-    def authenticate(self, request):
+    def authenticate(self, request: HttpRequest) -> tuple[AbstractBaseUser, dict[str, Any]] | None:
         token = get_token_auth_header(request)
         if not token:
             return None
@@ -108,7 +113,7 @@ class OIDCAccessTokenAuthentication(BaseAuthentication):
         return (user, payload)
 
     @staticmethod
-    def _fetch_email_from_userinfo(issuer, access_token):
+    def _fetch_email_from_userinfo(issuer: str, access_token: str) -> str | None:
         """Call the OIDC userinfo endpoint to get the user's email."""
         config = get_oidc_discovery(issuer)
         userinfo_endpoint = config.get('userinfo_endpoint') if config else None
@@ -127,7 +132,7 @@ class OIDCAccessTokenAuthentication(BaseAuthentication):
             return None
 
     @staticmethod
-    def _find_or_create_user(email, payload):
+    def _find_or_create_user(email: str, payload: dict[str, Any]) -> AbstractBaseUser:
         """Find an existing user by email or auto-provision a new one."""
         try:
             user = UserModel.objects.get(email=email)

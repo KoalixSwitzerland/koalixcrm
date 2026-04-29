@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
+from decimal import Decimal
 
 from django.apps import apps
 from django.core.exceptions import ValidationError
@@ -19,10 +22,10 @@ class Tax(models.Model):
     name = models.CharField(verbose_name=_("Taxname"),
                             max_length=100)
 
-    def get_tax_rate(self):
+    def get_tax_rate(self) -> Decimal:
         return self.tax_rate
 
-    def clean(self):
+    def clean(self) -> None:
         super().clean()
         if not apps.is_installed('koalixcrm.accounting'):
             return
@@ -40,7 +43,7 @@ class Tax(models.Model):
                 )
             )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
     class Meta:

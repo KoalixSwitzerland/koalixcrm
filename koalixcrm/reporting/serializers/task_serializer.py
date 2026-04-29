@@ -1,11 +1,20 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
+from typing import Any
+
 from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
-from koalixcrm.reporting.models.task import Task
+
 from koalixcrm.reporting.models.project import Project
+from koalixcrm.reporting.models.task import Task
 from koalixcrm.reporting.models.task_status import TaskStatus
-from koalixcrm.reporting.serializers.project_serializer import OptionProjectJSONSerializer
-from koalixcrm.reporting.serializers.task_status_serializer import OptionTaskStatusJSONSerializer
+from koalixcrm.reporting.serializers.project_serializer import (
+    OptionProjectJSONSerializer,
+)
+from koalixcrm.reporting.serializers.task_status_serializer import (
+    OptionTaskStatusJSONSerializer,
+)
 
 
 class OptionTaskJSONSerializer(serializers.ModelSerializer):
@@ -26,7 +35,7 @@ class OptionTaskJSONSerializer(serializers.ModelSerializer):
                   'is_reporting_allowed',)
 
     @extend_schema_field(str)
-    def get_is_reporting_allowed(self, obj):
+    def get_is_reporting_allowed(self, obj: Task) -> str:
         if obj.is_reporting_allowed():
             return "True"
         else:
@@ -50,14 +59,16 @@ class TaskJSONSerializer(serializers.ModelSerializer):
                   'is_reporting_allowed',)
 
     @extend_schema_field(str)
-    def get_is_reporting_allowed(self, obj):
+    def get_is_reporting_allowed(self, obj: Task) -> str:
         if obj.is_reporting_allowed():
             return "True"
         else:
             return "False"
 
-    def create(self, validated_data):
+    def create(self, validated_data: dict[str, Any]) -> Task:
         task = Task()
+        if 'workspace' in validated_data:
+            task.workspace = validated_data.pop('workspace')
         # Deserialize project
         project = validated_data.pop('project')
         if project:
@@ -78,7 +89,7 @@ class TaskJSONSerializer(serializers.ModelSerializer):
         task.save()
         return task
 
-    def update(self, task, validated_data):
+    def update(self, task: Task, validated_data: dict[str, Any]) -> Task:
         # Deserialize project
         project = validated_data.pop('project')
         if project:

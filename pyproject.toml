@@ -1,0 +1,25 @@
+[tool.ruff]
+# Django's contributing guide recommends 119 chars; we adopt that here.
+line-length = 119
+target-version = "py311"
+extend-exclude = [
+    "venv_linux",
+    "venv",
+    ".venv",
+    "build",
+    "dist",
+    "node_modules",
+    "*/migrations/*",  # auto-generated; reformatting causes noisy diffs
+]
+
+[tool.ruff.lint]
+# Conservative starter set; can be expanded later.
+select = ["E", "F", "W", "I"]
+ignore = [
+    "E203",  # whitespace before ':' — conflicts with formatter
+    "E501",  # line-too-long is handled by the formatter, not the linter
+]
+
+[tool.ruff.format]
+# Match the formatter's line-length to the linter's.
+line-ending = "lf"

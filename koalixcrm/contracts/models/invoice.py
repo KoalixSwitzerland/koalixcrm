@@ -1,22 +1,26 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 
-from datetime import *
-from django import forms
+from datetime import date, timedelta
+from decimal import Decimal
+from typing import TYPE_CHECKING
+
 from django.db import models
-from django.contrib import admin
-from django.http import HttpResponseRedirect
-from django.utils.translation import gettext as _
 from django.utils.html import format_html
-from django.contrib.admin import helpers
-from django.shortcuts import render
-from django.contrib import messages
-from django.template.context_processors import csrf
+from django.utils.translation import gettext as _
+
+from koalixcrm.contracts.models.commercial_document import CommercialDocument
+from koalixcrm.contracts.models.commercial_document_position import (
+    CommercialDocumentPosition,
+)
 from koalixcrm.core.const.status import *
 from koalixcrm.core.exceptions import *
-from koalixcrm import accounting
-from koalixcrm.contracts.models.commercial_document import CommercialDocument
-from koalixcrm.contracts.models.commercial_document_position import CommercialDocumentPosition
 from koalixcrm.global_support_functions import limit_string_length
+
+if TYPE_CHECKING:
+    from django.http import HttpRequest
+
+    from koalixcrm.accounting.models.account import Account
 
 
 class Invoice(CommercialDocument):
@@ -25,7 +29,7 @@ class Invoice(CommercialDocument):
                                               null=True)
     status = models.CharField(max_length=1, choices=INVOICESTATUS)
 
-    def link_to_invoice(self):
+    def link_to_invoice(self) -> str:
         if self.id:
             return format_html("<a href='/admin/contract_object_management/invoice/%s' >%s</a>" % (str(self.id),
                                                                             limit_string_length(str(self.description),
@@ -34,7 +38,7 @@ class Invoice(CommercialDocument):
             return "Not present"
     link_to_invoice.short_description = _("Invoice")
 
-    def create_from_reference(self, calling_model):
+    def create_from_reference(self, calling_model: models.Model) -> None:
         self.create_commercial_document(calling_model)
         self.status = 'C'
         cycle = self.party.default_billing_cycle
@@ -45,7 +49,8 @@ class Invoice(CommercialDocument):
         self.attach_commercial_document_positions(calling_model)
         self.attach_text_paragraphs()
 
-    def register_invoice_in_accounting(self, request):
+    def register_invoice_in_accounting(self, request: HttpRequest) -> None:
+        from koalixcrm import accounting  # local import: accounting is an optional plugin
         dict_prices = dict()
         dict_tax = dict()
         current_valid_accounting_period = accounting.models.AccountingPeriod.get_current_valid_accounting_period()
@@ -74,7 +79,10 @@ class Invoice(CommercialDocument):
             booking.lastmodifiedby = request.user
             booking.save()
 
-    def register_payment_in_accounting(self, request, amount, payment_account):
+    def register_payment_in_accounting(
+        self, request: HttpRequest, amount: Decimal, payment_account: Account
+    ) -> None:
+        from koalixcrm import accounting  # local import: accounting is an optional plugin
         current_valid_accounting_period = accounting.models.AccountingPeriod.get_current_valid_accounting_period()
         activa_account = accounting.models.Account.objects.filter(isopeninterestaccount=True)
         booking = accounting.models.Booking()
@@ -88,8 +96,8 @@ class Invoice(CommercialDocument):
         booking.lastmodifiedby = request.user
         booking.save()
 
-    def __str__(self):
-        return _("Invoice") + ": " + self.id.__str__() + " " + _("from Contract") + ": " + self.contract.id.__str__()
+    def __str__(self) -> str:
+        return _("Invoice") + ": " + str(self.id) + " " + _("from Contract") + ": " + str(self.contract.id)
 
     class Meta:
         app_label = "contract_object_management"

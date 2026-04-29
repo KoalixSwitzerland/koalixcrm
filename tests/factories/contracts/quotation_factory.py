@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from koalixcrm.contracts.models.quotation import Quotation
-from tests.factories.contracts.commercial_document_factory import StandardCommercialDocumentFactory
+from tests.factories.contracts.commercial_document_factory import (
+    StandardCommercialDocumentFactory,
+)
 
 
 class StandardQuotationFactory(StandardCommercialDocumentFactory):

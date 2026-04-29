@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
 from django.db import models
 from django.utils.translation import gettext as _
 
@@ -28,5 +30,5 @@ class PartyRole(WorkspaceScopedModel):
         verbose_name = _("Party role")
         verbose_name_plural = _("Party roles")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.party_id}:{self.role_type}"

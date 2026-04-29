@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import factory
+
 from koalixcrm.core.models.currency_transform import CurrencyTransform
-from tests.factories.core.currency_factory import StandardCurrencyFactory, SecondStandardCurrencyFactory
+from tests.factories.core.currency_factory import (
+    SecondStandardCurrencyFactory,
+    StandardCurrencyFactory,
+)
 from tests.factories.products.product_type_factory import StandardProductTypeFactory
 
 

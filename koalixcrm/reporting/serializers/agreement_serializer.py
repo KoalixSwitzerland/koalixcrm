@@ -1,18 +1,31 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
+from typing import Any
+
 from rest_framework import serializers
-from koalixcrm.reporting.models.agreement import Agreement
-from koalixcrm.reporting.models.agreement_type import AgreementType
-from koalixcrm.reporting.models.agreement_status import AgreementStatus
-from koalixcrm.reporting.models.resource_price import ResourcePrice
-from koalixcrm.reporting.models.resource import Resource
-from koalixcrm.reporting.models.task import Task
+
 from koalixcrm.core.models.unit import Unit
-from koalixcrm.reporting.serializers.task_serializer import OptionTaskJSONSerializer
 from koalixcrm.core.serializers.unit_serializer import OptionUnitJSONSerializer
-from koalixcrm.reporting.serializers.resource_price_serializer import OptionResourcePriceJSONSerializer
-from koalixcrm.reporting.serializers.agreement_type_serializer import OptionAgreementTypeJSONSerializer
-from koalixcrm.reporting.serializers.agreement_status_serializer import OptionAgreementStatusJSONSerializer
-from koalixcrm.reporting.serializers.resource_serializer import OptionResourceJSONSerializer
+from koalixcrm.reporting.models.agreement import Agreement
+from koalixcrm.reporting.models.agreement_status import AgreementStatus
+from koalixcrm.reporting.models.agreement_type import AgreementType
+from koalixcrm.reporting.models.resource import Resource
+from koalixcrm.reporting.models.resource_price import ResourcePrice
+from koalixcrm.reporting.models.task import Task
+from koalixcrm.reporting.serializers.agreement_status_serializer import (
+    OptionAgreementStatusJSONSerializer,
+)
+from koalixcrm.reporting.serializers.agreement_type_serializer import (
+    OptionAgreementTypeJSONSerializer,
+)
+from koalixcrm.reporting.serializers.resource_price_serializer import (
+    OptionResourcePriceJSONSerializer,
+)
+from koalixcrm.reporting.serializers.resource_serializer import (
+    OptionResourceJSONSerializer,
+)
+from koalixcrm.reporting.serializers.task_serializer import OptionTaskJSONSerializer
 
 
 class AgreementJSONSerializer(serializers.ModelSerializer):
@@ -36,8 +49,10 @@ class AgreementJSONSerializer(serializers.ModelSerializer):
                   'type',
                   'status')
 
-    def create(self, validated_data):
+    def create(self, validated_data: dict[str, Any]) -> Agreement:
         agreement = Agreement()
+        if 'workspace' in validated_data:
+            agreement.workspace = validated_data.pop('workspace')
         agreement.amount = validated_data['amount']
         agreement.date_from = validated_data['date_from']
         agreement.date_until = validated_data['date_until']
@@ -87,7 +102,7 @@ class AgreementJSONSerializer(serializers.ModelSerializer):
         agreement.save()
         return agreement
 
-    def update(self, agreement, validated_data):
+    def update(self, agreement: Agreement, validated_data: dict[str, Any]) -> Agreement:
         agreement.amount = validated_data['amount']
         agreement.date_from = validated_data['date_from']
         agreement.date_until = validated_data['date_until']

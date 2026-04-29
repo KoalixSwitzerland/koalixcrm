@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
 from django.db import models
 from django.utils.translation import gettext as _
+
 from koalixcrm.subscriptions.const.events import *
 
 
@@ -14,7 +17,7 @@ class SubscriptionEvent(models.Model):
     event = models.CharField(max_length=1, choices=SUBSCRITIONEVENTS,
                              verbose_name=_('Event'))
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.event
 
     class Meta:

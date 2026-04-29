@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
 from django.db import models
 from django.utils.translation import gettext as _
 
-from koalixcrm.contacts.models.organization import Organization
 from koalixcrm.contacts.models.natural_person import PartyContact
+from koalixcrm.contacts.models.organization import Organization
 from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
 
 
@@ -37,5 +39,5 @@ class OrganizationMembership(WorkspaceScopedModel):
         verbose_name = _("Organization membership")
         verbose_name_plural = _("Organization memberships")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.contact_id}@{self.organization_id}"

@@ -7,13 +7,16 @@ from koalixcrm.accounting.models.tax_account_assignment import TaxAccountAssignm
 
 @admin.register(TaxAccountAssignment)
 class TaxAccountAssignmentAdmin(admin.ModelAdmin):
-    list_display = ('id', 'tax', 'activa_account', 'passiva_account')
-    list_display_links = ('id',)
-    search_fields = ('tax__name',)
+    list_display = ("id", "tax", "activa_account", "passiva_account")
+    list_display_links = ("id",)
+    search_fields = ("tax__name",)
     fieldsets = (
-        (_('Basics'), {
-            'fields': ('tax', 'activa_account', 'passiva_account'),
-        }),
+        (
+            _("Basics"),
+            {
+                "fields": ("tax", "activa_account", "passiva_account"),
+            },
+        ),
     )
 
 
@@ -23,7 +26,10 @@ class TaxAccountAssignmentInline(admin.StackedInline):
     max_num = 1
     can_delete = True
     fieldsets = (
-        (_('Accounting'), {
-            'fields': ('activa_account', 'passiva_account'),
-        }),
+        (
+            _("Accounting"),
+            {
+                "fields": ("activa_account", "passiva_account"),
+            },
+        ),
     )

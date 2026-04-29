@@ -14,7 +14,6 @@ import pytest
 
 from koalixcrm_mq_commands.envelope import CommandEnvelope
 
-
 pytestmark = pytest.mark.integration
 
 
@@ -78,8 +77,8 @@ def test_elasticmq_envelope_roundtrip(sqs_client):
 def test_django_backend_reachable():
     """Django is up and admin endpoint responds (basic cross-component check)."""
     import time
-    import urllib.request
     import urllib.error
+    import urllib.request
 
     # Don't follow redirects: /admin/login/ 302s into the OIDC flow which
     # terminates at an external Keycloak that this test has no business

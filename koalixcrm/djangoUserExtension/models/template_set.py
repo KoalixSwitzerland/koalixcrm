@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 
-from django.db import models
 from django.contrib import admin
+from django.db import models
 from django.utils.translation import gettext as _
 
-from koalixcrm.global_support_functions import xstr
+from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
 from koalixcrm.core.exceptions import *
 from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
-from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
+from koalixcrm.global_support_functions import xstr
 
 
 class TemplateSet(WorkspaceScopedModel):
@@ -57,10 +58,10 @@ class TemplateSet(WorkspaceScopedModel):
         verbose_name = _('Template-set')
         verbose_name_plural = _('Template-sets')
 
-    def __str__(self):
+    def __str__(self) -> str:
         return xstr(self.id) + ' ' + xstr(self.title)
 
-    def get_template_set(self, required_template_set):
+    def get_template_set(self, required_template_set: str) -> "DocumentTemplate":
         mapping_class_to_templates = {"Invoice": self.invoice_template,
                                       "Quotation": self.quotation_template,
                                       "DespatchAdvice": self.despatch_advice_template,

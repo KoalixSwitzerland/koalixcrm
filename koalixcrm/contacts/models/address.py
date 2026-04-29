@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
 from django.db import models
 from django.utils.translation import gettext as _
 
@@ -8,21 +10,25 @@ from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
 
 class Address(WorkspaceScopedModel):
     id = models.BigAutoField(primary_key=True)
-    address_line_1 = models.CharField(
+    street = models.CharField(
         max_length=200, blank=True, null=True,
-        verbose_name=_("Address line 1"),
+        verbose_name=_("Street"),
     )
-    address_line_2 = models.CharField(
-        max_length=200, blank=True, null=True,
-        verbose_name=_("Address line 2"),
+    number = models.CharField(
+        max_length=16, blank=True, null=True,
+        verbose_name=_("Number"),
     )
-    address_line_3 = models.CharField(
+    additional_address_line_1 = models.CharField(
         max_length=200, blank=True, null=True,
-        verbose_name=_("Address line 3"),
+        verbose_name=_("Additional address line 1"),
     )
-    address_line_4 = models.CharField(
+    additional_address_line_2 = models.CharField(
         max_length=200, blank=True, null=True,
-        verbose_name=_("Address line 4"),
+        verbose_name=_("Additional address line 2"),
+    )
+    additional_address_line_3 = models.CharField(
+        max_length=200, blank=True, null=True,
+        verbose_name=_("Additional address line 3"),
     )
     zip_code = models.CharField(
         max_length=16, blank=True, null=True,
@@ -52,6 +58,7 @@ class Address(WorkspaceScopedModel):
         verbose_name = _("Address")
         verbose_name_plural = _("Addresses")
 
-    def __str__(self):
-        parts = [self.address_line_1, self.zip_code, self.town, self.country]
+    def __str__(self) -> str:
+        line = " ".join(p for p in [self.street, self.number] if p)
+        parts = [line, self.zip_code, self.town, self.country]
         return ' '.join(p for p in parts if p)

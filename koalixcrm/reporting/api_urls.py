@@ -8,30 +8,32 @@ Note: this module is **not** named ``urls.py`` because ``koalixcrm/reporting/url
 already serves the legacy server-rendered reporting views (mounted at
 ``/koalixcrm/crm/reporting/``). See CR-002 §3.5.
 """
+from __future__ import annotations
+
 from rest_framework.routers import DefaultRouter
 
 from koalixcrm.reporting_api_py.reporting_api import (
-    TaskViewSet,
-    TaskStatusViewSet,
-    ProjectViewSet,
-    ProjectStatusViewSet,
-    AgreementViewSet,
-    WorkViewSet,
-    EstimationViewSet,
-    EstimationStatusViewSet,
-    HumanResourceViewSet,
-    ResourceViewSet,
-    ResourceTypeViewSet,
-    ResourceManagerViewSet,
-    ResourcePriceViewSet,
-    ReportingPeriodViewSet,
-    ReportingPeriodStatusViewSet,
     AgreementStatusViewSet,
     AgreementTypeViewSet,
-    ProjectLinkTypeViewSet,
-    TaskLinkTypeViewSet,
+    AgreementViewSet,
+    EstimationStatusViewSet,
+    EstimationViewSet,
     GenericProjectLinkViewSet,
     GenericTaskLinkViewSet,
+    HumanResourceViewSet,
+    ProjectLinkTypeViewSet,
+    ProjectStatusViewSet,
+    ProjectViewSet,
+    ReportingPeriodStatusViewSet,
+    ReportingPeriodViewSet,
+    ResourceManagerViewSet,
+    ResourcePriceViewSet,
+    ResourceTypeViewSet,
+    ResourceViewSet,
+    TaskLinkTypeViewSet,
+    TaskStatusViewSet,
+    TaskViewSet,
+    WorkViewSet,
 )
 
 router = DefaultRouter()

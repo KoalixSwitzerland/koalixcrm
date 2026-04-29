@@ -12,11 +12,10 @@ from the root conftest.
 import pytest
 from django.contrib.auth.models import Group, User
 
-from koalixcrm.core.models.workspace import Workspace
-from koalixcrm.core.models.access import Role, RoleInWorkspace
-from koalixcrm.core.models.workspace_switch_event import WorkspaceSwitchEvent
 from koalixcrm.core.access import effective_roles, permissions_for_role, user_workspaces
-
+from koalixcrm.core.models.access import Role, RoleInWorkspace
+from koalixcrm.core.models.workspace import Workspace
+from koalixcrm.core.models.workspace_switch_event import WorkspaceSwitchEvent
 
 # ---------------------------------------------------------------------------
 # Helpers / fixtures

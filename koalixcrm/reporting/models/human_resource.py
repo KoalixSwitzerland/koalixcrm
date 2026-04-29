@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
+import datetime
 
 from django.db import models
 from django.utils.translation import gettext as _
+
 from koalixcrm.djangoUserExtension.models.user_extension import UserExtension
 from koalixcrm.reporting.models.resource import Resource
 from koalixcrm.reporting.models.work import Work
@@ -12,10 +16,10 @@ class HumanResource(Resource):
                              on_delete=models.CASCADE,
                              verbose_name=_("User"))
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.user.__str__()
 
-    def resource_contribution_project(self, date_from, date_to):
+    def resource_contribution_project(self, date_from: datetime.date, date_to: datetime.date) -> list:
         works = Work.objects.filter(human_resource=self,
                                     date__range=(date_from, date_to))
         projects = []

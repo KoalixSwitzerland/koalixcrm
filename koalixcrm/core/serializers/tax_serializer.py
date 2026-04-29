@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+from typing import Any
+
 from rest_framework import serializers
 
 from koalixcrm.core.models.tax import Tax
@@ -26,14 +30,14 @@ class TaxJSONSerializer(serializers.ModelSerializer):
                   'tax_rate',
                   'name')
 
-    def create(self, validated_data):
+    def create(self, validated_data: dict[str, Any]) -> Tax:
         tax = Tax()
         tax.tax_rate = validated_data['tax_rate']
         tax.name = validated_data['name']
         tax.save()
         return tax
 
-    def update(self, instance, validated_data):
+    def update(self, instance: Tax, validated_data: dict[str, Any]) -> Tax:
         instance.tax_rate = validated_data['tax_rate']
         instance.name = validated_data['name']
         instance.save()

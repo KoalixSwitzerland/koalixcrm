@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from rest_framework import serializers
 
 from koalixcrm.contacts.models.customer_billing_cycle import CustomerBillingCycle

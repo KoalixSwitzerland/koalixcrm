@@ -1,28 +1,34 @@
 # -*- coding: utf-8 -*-
-from django.http import Http404
-from django.http import HttpResponseRedirect
-from django.shortcuts import render
-from django.core.exceptions import ObjectDoesNotExist
-from django.utils.translation import gettext as _
+from __future__ import annotations
+
+from datetime import date
+from typing import Any
+
 from django.contrib.contenttypes.models import ContentType
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import Http404, HttpResponseRedirect
+from django.shortcuts import render
+from django.utils.translation import gettext as _
+
+from koalixcrm.contracts.models.commercial_document import CommercialDocument
+from koalixcrm.contracts.models.commercial_document_position import (
+    CommercialDocumentPosition,
+)
 from koalixcrm.core.exceptions import *
 from koalixcrm.djangoUserExtension.exceptions import *
-from koalixcrm.contracts.models.commercial_document import CommercialDocument
-from koalixcrm.contracts.models.commercial_document_position import CommercialDocumentPosition
-from koalixcrm.reporting.models.task import Task
+from koalixcrm.global_support_functions import *
 from koalixcrm.reporting.models.generic_task_link import GenericTaskLink
 from koalixcrm.reporting.models.project import Project
-from koalixcrm.global_support_functions import *
-from datetime import date
+from koalixcrm.reporting.models.task import Task
 
 
 class CreateTaskView:
 
     @staticmethod
-    def create_task_from_commercial_document_position(commercial_document_position,
-                                                 user,
-                                                 document,
-                                                 project):
+    def create_task_from_commercial_document_position(commercial_document_position: CommercialDocumentPosition,
+                                                 user: Any,
+                                                 document: CommercialDocument,
+                                                 project: Project) -> Task:
         date_now = date.today()
         content_type_commercial_document_position = ContentType.objects.get_for_model(CommercialDocumentPosition)
         task_title = limit_string_length(commercial_document_position.description, 30)
@@ -42,24 +48,27 @@ class CreateTaskView:
                 title=task_title,
                 project=project,
                 description=commercial_document_position.description,
-                last_status_change=date_now
+                last_status_change=date_now,
+                workspace=project.workspace,
             )
             GenericTaskLink.objects.create(
                 task=task,
                 content_type=content_type_commercial_document_position,
                 object_id=commercial_document_position.id,
-                last_modified_by=user
+                last_modified_by=user,
+                workspace=project.workspace,
             )
             GenericTaskLink.objects.create(
                     task=task,
                     content_type=ContentType.objects.get_for_model(CommercialDocument),
                     object_id=document.id,
-                    last_modified_by=user
+                    last_modified_by=user,
+                    workspace=project.workspace,
                 )
         return task
 
     @staticmethod
-    def create_project_from_document(user, document):
+    def create_project_from_document(user: Any, document: CommercialDocument) -> Project:
         commercial_document_positions = CommercialDocumentPosition.objects.filter(commercial_document=document)
         project_name = limit_string_length(document.contract.description, 30)
         project = Project.objects.create(project_manager=user,
@@ -69,7 +78,8 @@ class CreateTaskView:
                                          date_of_creation=date.today(),
                                          last_modification=date.today(),
                                          last_modified_by=user,
-                                         default_currency=document.currency)
+                                         default_currency=document.currency,
+                                         workspace=document.workspace)
         for commercial_document_position in commercial_document_positions:
             CreateTaskView.create_task_from_commercial_document_position(commercial_document_position,
                                                                     user,
@@ -78,7 +88,7 @@ class CreateTaskView:
         return project
 
     @staticmethod
-    def create_project(calling_model_admin, request, document, redirect_to):
+    def create_project(calling_model_admin: Any, request: Any, document: CommercialDocument, redirect_to: str) -> Any:
         """This method creates tasks from the positions of a commercial document
 
             Args:

@@ -1,10 +1,18 @@
+from __future__ import annotations
+
+from typing import Any
+
 from rest_framework import serializers
 
 from koalixcrm.reporting.models.resource import Resource
-from koalixcrm.reporting.models.resource_type import ResourceType
 from koalixcrm.reporting.models.resource_manager import ResourceManager
-from koalixcrm.reporting.serializers.resource_manager_serializer import OptionResourceManagerJSONSerializer
-from koalixcrm.reporting.serializers.resource_type_serializer import OptionResourceTypeJSONSerializer
+from koalixcrm.reporting.models.resource_type import ResourceType
+from koalixcrm.reporting.serializers.resource_manager_serializer import (
+    OptionResourceManagerJSONSerializer,
+)
+from koalixcrm.reporting.serializers.resource_type_serializer import (
+    OptionResourceTypeJSONSerializer,
+)
 
 
 class OptionResourceJSONSerializer(serializers.ModelSerializer):
@@ -28,8 +36,10 @@ class ResourceJSONSerializer(serializers.ModelSerializer):
         fields = ('resource_type',
                   'resource_manager')
 
-    def create(self, validated_data):
+    def create(self, validated_data: dict[str, Any]) -> None:
         resource = Resource()
+        if 'workspace' in validated_data:
+            resource.workspace = validated_data.pop('workspace')
         # Deserialize resource_type
         resource_type = validated_data.pop('resource_type')
         if resource_type:
@@ -45,7 +55,7 @@ class ResourceJSONSerializer(serializers.ModelSerializer):
             else:
                 resource.resource_manager = None
 
-    def update(self, resource, validated_data):
+    def update(self, resource: Resource, validated_data: dict[str, Any]) -> None:
         # Deserialize resource_type
         resource_type = validated_data.pop('resource_type')
         if resource_type:

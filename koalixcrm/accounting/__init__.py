@@ -1,1 +1,1 @@
-default_app_config = 'koalixcrm.accounting.apps.AccountingConfig'
+default_app_config = "koalixcrm.accounting.apps.AccountingConfig"

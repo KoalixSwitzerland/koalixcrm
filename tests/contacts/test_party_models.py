@@ -9,21 +9,21 @@ import datetime
 
 from django.test import TestCase
 
-from koalixcrm.contacts.models.party import Party
-from koalixcrm.contacts.models.organization import Organization
-from koalixcrm.contacts.models.natural_person import PartyContact
-from koalixcrm.contacts.models.party_identification import PartyIdentification
-from koalixcrm.contacts.models.party_role import PartyRole
-from koalixcrm.contacts.models.organization_membership import OrganizationMembership
-from koalixcrm.contacts.models.organization_relationship import OrganizationRelationship
 from koalixcrm.contacts.models.address import Address
 from koalixcrm.contacts.models.address_assignment import AddressAssignment
-from koalixcrm.contacts.models.phone_number import PhoneNumber
-from koalixcrm.contacts.models.phone_assignment import PhoneAssignment
-from koalixcrm.contacts.models.party_email import PartyEmail
 from koalixcrm.contacts.models.email_assignment import EmailAssignment
+from koalixcrm.contacts.models.natural_person import PartyContact
+from koalixcrm.contacts.models.organization import Organization
+from koalixcrm.contacts.models.organization_membership import OrganizationMembership
+from koalixcrm.contacts.models.organization_relationship import OrganizationRelationship
+from koalixcrm.contacts.models.party import Party
+from koalixcrm.contacts.models.party_email import PartyEmail
 from koalixcrm.contacts.models.party_group import PartyGroup
 from koalixcrm.contacts.models.party_group_membership import PartyGroupMembership
+from koalixcrm.contacts.models.party_identification import PartyIdentification
+from koalixcrm.contacts.models.party_role import PartyRole
+from koalixcrm.contacts.models.phone_assignment import PhoneAssignment
+from koalixcrm.contacts.models.phone_number import PhoneNumber
 from koalixcrm.core.models.workspace import Workspace
 
 
@@ -153,7 +153,7 @@ class AddressModelTest(TestCase):
 
     def test_address_create(self):
         addr = Address.objects.create(
-            address_line_1="Bahnhofstrasse 1",
+            street="Bahnhofstrasse", number="1",
             zip_code="8001",
             town="Zürich",
             country='CH',
@@ -171,7 +171,7 @@ class AddressAssignmentModelTest(TestCase):
     def test_address_assignment_create(self):
         party = Party.objects.create(display_name="ACME AG", workspace=self.ws)
         addr = Address.objects.create(
-            address_line_1="Bahnhofstrasse 1", zip_code="8001", town="Zürich", country='CH',
+            street="Bahnhofstrasse", number="1", zip_code="8001", town="Zürich", country='CH',
             workspace=self.ws,
         )
         assignment = AddressAssignment.objects.create(

@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 
-from django.db import models
 from django.contrib import admin
+from django.db import models
 from django.utils.translation import gettext as _
 
 from koalixcrm.core.const.purpose import *
@@ -20,7 +21,7 @@ class TextParagraphInDocumentTemplate(WorkspaceScopedModel):
         verbose_name = _('TextParagraphInDocumentTemplate')
         verbose_name_plural = _('TextParagraphInDocumentTemplates')
 
-    def __str__(self):
+    def __str__(self) -> str:
         return str(self.id)
 
 

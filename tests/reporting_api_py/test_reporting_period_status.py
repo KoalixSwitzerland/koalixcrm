@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
-from django.test import LiveServerTestCase
 from django.contrib.auth.models import User
+from django.test import LiveServerTestCase
 
 from koalixcrm.reporting_api_py.reporting_api_client import KoalixCRMReportingAPIClient
-from tests.factories.reporting.reporting_period_status_factory import ReportingReportingPeriodStatusFactory
+from tests.factories.reporting.reporting_period_status_factory import (
+    ReportingReportingPeriodStatusFactory,
+)
 
 
 class ReportingPeriodStatusAPITest(LiveServerTestCase):

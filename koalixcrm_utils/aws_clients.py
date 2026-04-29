@@ -5,8 +5,8 @@ When S3_ENDPOINT_URL or SQS_ENDPOINT_URL environment variables are set,
 boto3 clients are configured to use local alternatives (MinIO, ElasticMQ)
 instead of real AWS services. When unset, clients use standard AWS endpoints.
 """
-import os
 import logging
+import os
 
 import boto3
 from botocore.config import Config

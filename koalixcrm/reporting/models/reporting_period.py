@@ -1,15 +1,24 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 
+import datetime
 from datetime import timedelta
-from django.db import models
-from django.utils.translation import gettext as _
-from koalixcrm.core.exceptions import ReportingPeriodNotFound
-from rest_framework import serializers
+from typing import TYPE_CHECKING
+
 from django.core.exceptions import ValidationError
+from django.db import models
 from django.forms import ModelForm
+from django.utils.translation import gettext as _
+from rest_framework import serializers
+
+from koalixcrm.core.exceptions import ReportingPeriodNotFound
+from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
+
+if TYPE_CHECKING:
+    from koalixcrm.reporting.models.project import Project
 
 
-class ReportingPeriod(models.Model):
+class ReportingPeriod(WorkspaceScopedModel):
     """The reporting period is referred in the work, in the expenses and purchase orders, it is used as a
        supporting object to generate project reports"""
     id = models.BigAutoField(primary_key=True)
@@ -35,7 +44,7 @@ class ReportingPeriod(models.Model):
                                null=True)
 
     @staticmethod
-    def get_reporting_period(project, search_date):
+    def get_reporting_period(project: 'Project', search_date: datetime.date) -> 'ReportingPeriod':
         """Returns the reporting period that is currently valid. Valid is a reporting period when the provided date
           lies between begin and end of the reporting period
 
@@ -55,7 +64,7 @@ class ReportingPeriod(models.Model):
             raise ReportingPeriodNotFound("Reporting Period does not exist")
 
     @staticmethod
-    def get_latest_reporting_period(project):
+    def get_latest_reporting_period(project: 'Project') -> 'ReportingPeriod':
         """Returns the latest reporting period
 
         Args:
@@ -79,7 +88,7 @@ class ReportingPeriod(models.Model):
         return latest_reporting_period
 
     @staticmethod
-    def get_predecessor(target_reporting_period, project):
+    def get_predecessor(target_reporting_period: 'ReportingPeriod', project: 'Project') -> 'ReportingPeriod':
         """Returns the reporting period which was valid right before the provided target_reporting_period
 
         Args:
@@ -104,7 +113,7 @@ class ReportingPeriod(models.Model):
         return predecessor_reporting_period
 
     @staticmethod
-    def get_all_predecessors(target_reporting_period, project):
+    def get_all_predecessors(target_reporting_period: 'ReportingPeriod', project: 'Project') -> list['ReportingPeriod']:
         """Returns all reporting periods which have been valid before the provided target_reporting_period
 
         Args:
@@ -122,7 +131,7 @@ class ReportingPeriod(models.Model):
                 predecessor_reporting_periods.append(reporting_period)
         return predecessor_reporting_periods
 
-    def is_reporting_allowed(self):
+    def is_reporting_allowed(self) -> bool:
         """Returns True when the reporting period is available for reporting,
         Returns False when the reporting period is not available for reporting,
         The decision whether the reporting period is available for reporting is purely depending
@@ -146,7 +155,7 @@ class ReportingPeriod(models.Model):
             allowed = False
         return allowed
 
-    def __str__(self):
+    def __str__(self) -> str:
         return str(self.id)+" "+self.title
 
     class Meta:
@@ -157,7 +166,7 @@ class ReportingPeriod(models.Model):
 
 
 class ReportingPeriodAdminForm(ModelForm):
-    def clean(self):
+    def clean(self) -> None:
         """Check that the begin of the new reporting period is not located within an existing
         reporting period, Checks that the begin date earlier than the end date. Verify that in case there
         is already a predecessor or a successor reporting period, the reporting periods are in direct contact

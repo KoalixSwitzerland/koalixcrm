@@ -1,15 +1,23 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
+from typing import Any
+
 from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
-from koalixcrm.reporting.models.project import Project
+
 from koalixcrm.core.models.currency import Currency
-from koalixcrm.reporting.models.project_status import ProjectStatus
-from koalixcrm.reporting.serializers.project_status_serializer import OptionProjectStatusJSONSerializer
 from koalixcrm.core.serializers.currency_serializer import CurrencyJSONSerializer
-from koalixcrm.djangoUserExtension.serializers.user_rest import UserSerializer
-from koalixcrm.djangoUserExtension.serializers.template_set_rest import OptionTemplateSetJSONSerializer
 from koalixcrm.djangoUserExtension.models.template_set import TemplateSet
-import koalixcrm
+from koalixcrm.djangoUserExtension.serializers.template_set_rest import (
+    OptionTemplateSetJSONSerializer,
+)
+from koalixcrm.djangoUserExtension.serializers.user_rest import UserSerializer
+from koalixcrm.reporting.models.project import Project
+from koalixcrm.reporting.models.project_status import ProjectStatus
+from koalixcrm.reporting.serializers.project_status_serializer import (
+    OptionProjectStatusJSONSerializer,
+)
 
 
 class OptionProjectJSONSerializer(serializers.ModelSerializer):
@@ -22,7 +30,7 @@ class OptionProjectJSONSerializer(serializers.ModelSerializer):
     is_reporting_allowed = serializers.SerializerMethodField()
 
     @extend_schema_field(str)
-    def get_is_reporting_allowed(self, obj):
+    def get_is_reporting_allowed(self, obj: Project) -> str:
         if obj.is_reporting_allowed():
             return "True"
         else:
@@ -61,20 +69,22 @@ class ProjectJSONSerializer(serializers.ModelSerializer):
                   'is_reporting_allowed',
                   'tasks')
 
-    def get_tasks(self, obj):
+    def get_tasks(self, obj: Project) -> Any:
         from koalixcrm.reporting.serializers.task_serializer import TaskJSONSerializer
         tasks = obj.tasks.all()
         return TaskJSONSerializer(tasks, many=True, context=self.context).data
 
     @extend_schema_field(str)
-    def get_is_reporting_allowed(self, obj):
+    def get_is_reporting_allowed(self, obj: Project) -> str:
         if obj.is_reporting_allowed():
             return "True"
         else:
             return "False"
 
-    def create(self, validated_data):
+    def create(self, validated_data: dict[str, Any]) -> Project:
         project = Project()
+        if 'workspace' in validated_data:
+            project.workspace = validated_data.pop('workspace')
         # Deserialize default currency
         default_currency = validated_data.pop('default_currency')
         if default_currency:
@@ -106,7 +116,7 @@ class ProjectJSONSerializer(serializers.ModelSerializer):
         project.save()
         return project
 
-    def update(self, project, validated_data):
+    def update(self, project: Project, validated_data: dict[str, Any]) -> Project:
         # Deserialize default currency
         default_currency = validated_data.pop('default_currency')
         if default_currency:

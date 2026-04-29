@@ -10,8 +10,14 @@ Note: superuser bypass and request integration are CR-9 territory.
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING, Any
 
-def effective_roles(user, obj) -> set[str]:
+if TYPE_CHECKING:
+    from django.contrib.auth.models import AbstractBaseUser
+    from django.db.models import QuerySet
+
+
+def effective_roles(user: AbstractBaseUser | None, obj: Any) -> set[str]:
     """Return the set of Role codes this user holds on ``obj``.
 
     Returns workspace-level grants only (via ``obj.workspace``).  The safety
@@ -44,7 +50,7 @@ def effective_roles(user, obj) -> set[str]:
     )
 
 
-def user_workspaces(user):
+def user_workspaces(user: AbstractBaseUser | None) -> QuerySet:
     """Return the queryset of Workspace rows the user has any role in.
 
     Used by the dashboard switcher and the switch view's authorisation check.

@@ -1,19 +1,23 @@
 # -*- coding: utf-8 -*-
-import pytest
 import os
+
+import pytest
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
-from tests.contracts.test_support_functions import *
-from tests.factories.contracts.contract_factory import StandardContractFactory
-from tests.factories.contracts.quotation_factory import StandardQuotationFactory
-from tests.factories.contacts.user_factory import AdminUserFactory
-from tests.factories.contacts.customer_group_factory import StandardCustomerGroupFactory
-from tests.factories.djangoUserExtension.factory_document_template import StandardQuotationTemplateFactory
-from tests.factories.djangoUserExtension.factory_document_template import StandardInvoiceTemplateFactory
-from tests.factories.djangoUserExtension.factory_document_template import StandardPurchaseOrderTemplateFactory
-from koalixcrm.contracts.models.quotation import Quotation
+
 from koalixcrm.contracts.models.invoice import Invoice
 from koalixcrm.contracts.models.purchase_order import PurchaseOrder
+from koalixcrm.contracts.models.quotation import Quotation
+from tests.contracts.test_support_functions import *
+from tests.factories.contacts.customer_group_factory import StandardCustomerGroupFactory
+from tests.factories.contacts.user_factory import AdminUserFactory
+from tests.factories.contracts.contract_factory import StandardContractFactory
+from tests.factories.contracts.quotation_factory import StandardQuotationFactory
+from tests.factories.djangoUserExtension.factory_document_template import (
+    StandardInvoiceTemplateFactory,
+    StandardPurchaseOrderTemplateFactory,
+    StandardQuotationTemplateFactory,
+)
 
 
 class CreateSalesDocumentFromContract(StaticLiveServerTestCase):
@@ -21,9 +25,11 @@ class CreateSalesDocumentFromContract(StaticLiveServerTestCase):
     @classmethod
     def setUpClass(cls):
         super(CreateSalesDocumentFromContract, cls).setUpClass()
-        firefox_options = webdriver.firefox.options.Options()
-        firefox_options.add_argument("--headless")
-        cls.selenium = webdriver.Firefox(options=firefox_options)
+        chrome_options = webdriver.chrome.options.Options()
+        chrome_options.add_argument("--headless=new")
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        cls.selenium = webdriver.Chrome(options=chrome_options)
         cls.selenium.implicitly_wait(10)
         cls.test_user = AdminUserFactory.create()
         cls.test_customer_group = StandardCustomerGroupFactory.create()
@@ -39,11 +45,17 @@ class CreateSalesDocumentFromContract(StaticLiveServerTestCase):
         super(CreateSalesDocumentFromContract, cls).tearDownClass()
 
     def tearDown(self):
-        if len(self._outcome.errors) > 0:
-            directory = os.getcwd() + "/test_results/Screenshots/"
-            if not os.path.exists(directory):
-                os.makedirs(directory)
-            self.selenium.save_screenshot(directory + "%s.png" % "test_name")
+        directory = os.getcwd() + "/test_results/Screenshots/"
+        os.makedirs(directory, exist_ok=True)
+        try:
+            name = self._testMethodName
+            self.selenium.save_screenshot(directory + "%s.png" % name)
+            with open(directory + "%s.html" % name, "w") as fh:
+                fh.write(self.selenium.page_source)
+            with open(directory + "%s.url" % name, "w") as fh:
+                fh.write(self.selenium.current_url)
+        except Exception:
+            pass
         super(CreateSalesDocumentFromContract, self).tearDown()
 
     @pytest.mark.front_end_tests

@@ -1,10 +1,16 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
+from decimal import Decimal
+from typing import Any
 
 from rest_framework import serializers
 
-from koalixcrm.accounting.models.accounting_period import AccountingPeriod
 from koalixcrm.accounting.models import Account
-from koalixcrm.accounting.serializers.account_serializer import AccountBookingSumsSerializer
+from koalixcrm.accounting.models.accounting_period import AccountingPeriod
+from koalixcrm.accounting.serializers.account_serializer import (
+    AccountBookingSumsSerializer,
+)
 
 
 class OptionAccountingPeriodJSONSerializer(serializers.ModelSerializer):
@@ -13,17 +19,13 @@ class OptionAccountingPeriodJSONSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Account
-        fields = ('id',
-                  'title')
+        fields = ("id", "title")
 
 
 class AccountingPeriodJSONSerializer(serializers.ModelSerializer):
     class Meta:
         model = AccountingPeriod
-        fields = ('id',
-                  'title',
-                  'begin',
-                  'end')
+        fields = ("id", "title", "begin", "end")
         depth = 1
 
 
@@ -34,6 +36,7 @@ class AccountingPeriodReportSerializer(serializers.ModelSerializer):
     sums for every account so the pdf-export-service can build the XML in a
     single fetch.
     """
+
     overall_earnings = serializers.SerializerMethodField()
     overall_spendings = serializers.SerializerMethodField()
     overall_assets = serializers.SerializerMethodField()
@@ -42,32 +45,32 @@ class AccountingPeriodReportSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AccountingPeriod
-        fields = ('id',
-                  'title',
-                  'begin',
-                  'end',
-                  'template_set_balance_sheet',
-                  'template_profit_loss_statement',
-                  'overall_earnings',
-                  'overall_spendings',
-                  'overall_assets',
-                  'overall_liabilities',
-                  'accounts')
+        fields = (
+            "id",
+            "title",
+            "begin",
+            "end",
+            "template_set_balance_sheet",
+            "template_profit_loss_statement",
+            "overall_earnings",
+            "overall_spendings",
+            "overall_assets",
+            "overall_liabilities",
+            "accounts",
+        )
 
-    def get_overall_earnings(self, obj):
+    def get_overall_earnings(self, obj: AccountingPeriod) -> Decimal:
         return obj.overall_earnings()
 
-    def get_overall_spendings(self, obj):
+    def get_overall_spendings(self, obj: AccountingPeriod) -> Decimal:
         return obj.overall_spendings()
 
-    def get_overall_assets(self, obj):
+    def get_overall_assets(self, obj: AccountingPeriod) -> Decimal:
         return obj.overall_assets()
 
-    def get_overall_liabilities(self, obj):
+    def get_overall_liabilities(self, obj: AccountingPeriod) -> Decimal:
         return obj.overall_liabilities()
 
-    def get_accounts(self, obj):
+    def get_accounts(self, obj: AccountingPeriod) -> list[dict[str, Any]]:
         accounts = Account.objects.all()
-        return AccountBookingSumsSerializer(
-            accounts, many=True, context={'accounting_period': obj}
-        ).data
+        return AccountBookingSumsSerializer(accounts, many=True, context={"accounting_period": obj}).data

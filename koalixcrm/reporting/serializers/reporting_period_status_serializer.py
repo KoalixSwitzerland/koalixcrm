@@ -1,4 +1,7 @@
+from __future__ import annotations
+
 from rest_framework import serializers
+
 from koalixcrm.reporting.models.reporting_period_status import ReportingPeriodStatus
 
 

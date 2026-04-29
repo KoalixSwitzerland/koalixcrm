@@ -12,6 +12,10 @@ pdf-export-service.
 Aggregate field names are snake_cased here; Java maps them back to the
 PascalCase XML element names the XSL queries.
 """
+from __future__ import annotations
+
+from typing import Any
+
 from rest_framework import serializers
 
 from koalixcrm.reporting.models.project import Project
@@ -53,10 +57,10 @@ class _ReportTaskSerializer(serializers.ModelSerializer):
                   'effective_duration',
                   'planned_duration')
 
-    def _period(self):
+    def _period(self) -> Any:
         return self.context.get('reporting_period')
 
-    def get_works(self, obj):
+    def get_works(self, obj: Task) -> Any:
         period = self._period()
         if period:
             qs = Work.objects.filter(task=obj.id, reporting_period=period)
@@ -64,32 +68,32 @@ class _ReportTaskSerializer(serializers.ModelSerializer):
             qs = Work.objects.filter(task=obj.id)
         return _ReportWorkSerializer(qs, many=True).data
 
-    def get_effective_costs_confirmed_overall(self, obj):
+    def get_effective_costs_confirmed_overall(self, obj: Task) -> Any:
         return obj.effective_costs_confirmed()
 
-    def get_effective_costs_not_confirmed_overall(self, obj):
+    def get_effective_costs_not_confirmed_overall(self, obj: Task) -> Any:
         return obj.effective_costs_not_confirmed()
 
-    def get_effective_effort_overall(self, obj):
+    def get_effective_effort_overall(self, obj: Task) -> Any:
         return obj.effective_effort(reporting_period=None)
 
-    def get_effective_costs_in_period(self, obj):
+    def get_effective_costs_in_period(self, obj: Task) -> Any:
         period = self._period()
         return obj.effective_costs(reporting_period=period) if period else None
 
-    def get_effective_effort_in_period(self, obj):
+    def get_effective_effort_in_period(self, obj: Task) -> Any:
         period = self._period()
         return obj.effective_effort(reporting_period=period) if period else None
 
-    def get_planned_effort(self, obj):
+    def get_planned_effort(self, obj: Task) -> Any:
         # Mirrors the legacy serialize_to_xml which intentionally calls
         # ``planned_costs()`` (not ``planned_effort()``) for this element.
         return obj.planned_costs()
 
-    def get_effective_duration(self, obj):
+    def get_effective_duration(self, obj: Task) -> Any:
         return obj.effective_duration()
 
-    def get_planned_duration(self, obj):
+    def get_planned_duration(self, obj: Task) -> Any:
         return obj.planned_duration()
 
 
@@ -153,18 +157,18 @@ class ProjectReportSerializer(serializers.ModelSerializer):
 
     # ---- helpers --------------------------------------------------------
 
-    def _period(self):
+    def _period(self) -> Any:
         return self.context.get('reporting_period')
 
     # ---- fields ---------------------------------------------------------
 
-    def get_reporting_period(self, obj):
+    def get_reporting_period(self, obj: Project) -> Any:
         period = self._period()
         if not period:
             return None
         return _ReportingPeriodRefSerializer(period).data
 
-    def get_user_extension(self, obj):
+    def get_user_extension(self, obj: Project) -> Any:
         from koalixcrm.djangoUserExtension.models.user_extension import UserExtension
         ref_user = obj.project_manager
         if ref_user is None:
@@ -178,39 +182,39 @@ class ProjectReportSerializer(serializers.ModelSerializer):
             'username': ref_user.username,
         }).data
 
-    def get_tasks(self, obj):
+    def get_tasks(self, obj: Project) -> Any:
         tasks = Task.objects.filter(project=obj.id)
         return _ReportTaskSerializer(
             tasks, many=True, context={'reporting_period': self._period()}
         ).data
 
-    def get_effective_costs_confirmed(self, obj):
+    def get_effective_costs_confirmed(self, obj: Project) -> Any:
         return obj.effective_costs_confirmed()
 
-    def get_effective_costs_not_confirmed(self, obj):
+    def get_effective_costs_not_confirmed(self, obj: Project) -> Any:
         return obj.effective_costs_not_confirmed()
 
-    def get_effective_effort_overall(self, obj):
+    def get_effective_effort_overall(self, obj: Project) -> Any:
         return obj.effective_effort(reporting_period=None)
 
-    def get_effective_costs_in_period(self, obj):
+    def get_effective_costs_in_period(self, obj: Project) -> Any:
         period = self._period()
         return obj.effective_costs(reporting_period=period) if period else None
 
-    def get_effective_effort_in_period(self, obj):
+    def get_effective_effort_in_period(self, obj: Project) -> Any:
         period = self._period()
         return obj.effective_effort(reporting_period=period) if period else None
 
-    def get_planned_total_costs(self, obj):
+    def get_planned_total_costs(self, obj: Project) -> Any:
         return obj.planned_total_costs()
 
-    def get_effective_duration(self, obj):
+    def get_effective_duration(self, obj: Project) -> Any:
         return obj.effective_duration()
 
-    def get_planned_duration(self, obj):
+    def get_planned_duration(self, obj: Project) -> Any:
         return obj.planned_duration()
 
-    def get_project_cost_overview_url(self, obj):
+    def get_project_cost_overview_url(self, obj: Project) -> str:
         # Lazy import: matplotlib pulls in heavy deps at import time and is
         # not needed for any other reporting endpoint.
         from koalixcrm.reporting.services.chart_storage import (

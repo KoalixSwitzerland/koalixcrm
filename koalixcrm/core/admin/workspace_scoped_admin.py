@@ -5,14 +5,22 @@ WorkspaceScopedModel.
 
 CR-9 §9.5.
 """
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any
 
 from django.core.exceptions import PermissionDenied
+
+if TYPE_CHECKING:
+    from django.db.models import Model, QuerySet
+    from django.forms import ModelForm
+    from django.http import HttpRequest
 
 
 class WorkspaceScopedModelAdmin:
     """Mixin to scope ModelAdmin to the request's active workspace."""
 
-    def get_queryset(self, request):
+    def get_queryset(self, request: HttpRequest) -> QuerySet[Any]:
         qs = super().get_queryset(request)
         if request.user.is_superuser:
             return qs
@@ -21,7 +29,7 @@ class WorkspaceScopedModelAdmin:
             return qs.filter(workspace=active)
         return qs
 
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+    def formfield_for_foreignkey(self, db_field: Any, request: HttpRequest, **kwargs: Any) -> Any:
         active = getattr(request, 'active_workspace', None)
         if active is not None:
             related_model = db_field.related_model
@@ -29,7 +37,7 @@ class WorkspaceScopedModelAdmin:
                 kwargs['queryset'] = related_model.objects.filter(workspace=active)
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
-    def save_model(self, request, obj, form, change):
+    def save_model(self, request: HttpRequest, obj: Model, form: ModelForm, change: bool) -> None:
         active = getattr(request, 'active_workspace', None)
 
         # Assign workspace if not yet set.

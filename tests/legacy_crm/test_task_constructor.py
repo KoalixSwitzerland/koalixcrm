@@ -1,14 +1,22 @@
 import datetime
+
 import pytest
 from django.test import TestCase
-from tests.factories.contacts.user_factory import AdminUserFactory
-from tests.factories.contacts.customer_billing_cycle_factory import StandardCustomerBillingCycleFactory
+
+from koalixcrm.reporting.models.task import Task
+from tests.factories.contacts.customer_billing_cycle_factory import (
+    StandardCustomerBillingCycleFactory,
+)
 from tests.factories.contacts.customer_factory import StandardCustomerFactory
 from tests.factories.contacts.customer_group_factory import StandardCustomerGroupFactory
+from tests.factories.contacts.user_factory import AdminUserFactory
 from tests.factories.core.currency_factory import StandardCurrencyFactory
-from tests.factories.reporting.reporting_period_factory import StandardReportingPeriodFactory
-from tests.factories.djangoUserExtension.factory_user_extension import StandardUserExtensionFactory
-from koalixcrm.reporting.models.task import Task
+from tests.factories.djangoUserExtension.factory_user_extension import (
+    StandardUserExtensionFactory,
+)
+from tests.factories.reporting.reporting_period_factory import (
+    StandardReportingPeriodFactory,
+)
 
 
 @pytest.fixture()
@@ -67,12 +75,14 @@ class TaskConstructorTest(TestCase):
         self._freeze.freeze(datetime.date(2024, 6, 2))
         task_minimal_1 = Task.objects.create(
             project=self.test_reporting_period.project,
+            workspace=self.test_reporting_period.workspace,
         )
         task_minimal_1.save()
         self.assertEqual(task_minimal_1.last_status_change, datetime.date(2024, 6, 2))
         self._freeze.freeze(datetime.date(2018, 6, 15))
         task_minimal_2 = Task.objects.create(
             project=self.test_reporting_period.project,
+            workspace=self.test_reporting_period.workspace,
         )
         task_minimal_2.save()
         self.assertEqual(task_minimal_2.last_status_change, datetime.date(2018, 6, 15))

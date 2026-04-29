@@ -1,9 +1,14 @@
 """
 CurrencyTransformViewSet for koalixcrm settings
 """
-from koalixcrm.shared.base_model_view_set import BaseModelViewSet
+
+from __future__ import annotations
+
 from koalixcrm.core.models.currency_transform import CurrencyTransform
-from koalixcrm.core.serializers.currency_transform_serializer import CurrencyTransformJSONSerializer
+from koalixcrm.core.serializers.currency_transform_serializer import (
+    CurrencyTransformJSONSerializer,
+)
+from koalixcrm.shared.base_model_view_set import BaseModelViewSet
 
 
 class CurrencyTransformViewSet(BaseModelViewSet):

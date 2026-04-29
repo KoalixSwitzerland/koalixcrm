@@ -2,7 +2,10 @@
 """
 CustomerGroupTransformInlineAdmin for koalixcrm products
 """
+from __future__ import annotations
+
 from django.contrib import admin
+
 from koalixcrm.products.models.customer_group_transform import CustomerGroupTransform
 
 

@@ -1,12 +1,22 @@
+from __future__ import annotations
+
+from typing import Any
+
 from rest_framework import serializers
 
 from koalixcrm.djangoUserExtension.models.user_extension import UserExtension
+from koalixcrm.djangoUserExtension.serializers.user_extension_rest import (
+    OptionUserExtensionJSONSerializer,
+)
 from koalixcrm.reporting.models.human_resource import HumanResource
-from koalixcrm.reporting.models.resource_type import ResourceType
 from koalixcrm.reporting.models.resource_manager import ResourceManager
-from koalixcrm.djangoUserExtension.serializers.user_extension_rest import OptionUserExtensionJSONSerializer
-from koalixcrm.reporting.serializers.resource_manager_serializer import OptionResourceManagerJSONSerializer
-from koalixcrm.reporting.serializers.resource_type_serializer import OptionResourceTypeJSONSerializer
+from koalixcrm.reporting.models.resource_type import ResourceType
+from koalixcrm.reporting.serializers.resource_manager_serializer import (
+    OptionResourceManagerJSONSerializer,
+)
+from koalixcrm.reporting.serializers.resource_type_serializer import (
+    OptionResourceTypeJSONSerializer,
+)
 
 
 class OptionHumanResourceJSONSerializer(serializers.ModelSerializer):
@@ -36,8 +46,10 @@ class HumanResourceJSONSerializer(serializers.ModelSerializer):
                   'resource_type',
                   'resource_manager')
 
-    def create(self, validated_data):
+    def create(self, validated_data: dict[str, Any]) -> HumanResource:
         resource = HumanResource()
+        if 'workspace' in validated_data:
+            resource.workspace = validated_data.pop('workspace')
         # Deserialize resource_type
         resource_type = validated_data.pop('resource_type')
         if resource_type:
@@ -62,7 +74,7 @@ class HumanResourceJSONSerializer(serializers.ModelSerializer):
         resource.save()
         return resource
 
-    def update(self, resource, validated_data):
+    def update(self, resource: HumanResource, validated_data: dict[str, Any]) -> HumanResource:
         # Deserialize resource_type
         resource_type = validated_data.pop('resource_type')
         if resource_type:

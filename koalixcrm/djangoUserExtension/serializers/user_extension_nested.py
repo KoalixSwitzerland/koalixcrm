@@ -10,16 +10,19 @@ of the issuing user — plus the user's default currency.
 Shape is additive over the legacy :class:`OptionUserExtensionJSONSerializer`:
 the legacy one stays in place for the existing Python clients.
 """
-from rest_framework import serializers
+from __future__ import annotations
+
+from typing import Any
 
 from django.contrib.auth.models import User
+from rest_framework import serializers
 
 from koalixcrm.core.serializers.currency_serializer import CurrencyJSONSerializer
 from koalixcrm.djangoUserExtension.models.user_extension import (
-    UserExtension,
     UserAddressAssignment,
-    UserPhoneAssignment,
     UserEmailAssignment,
+    UserExtension,
+    UserPhoneAssignment,
 )
 
 
@@ -30,10 +33,11 @@ class UserMinimalSerializer(serializers.ModelSerializer):
 
 
 class UserAddressAssignmentSerializer(serializers.ModelSerializer):
-    address_line_1 = serializers.CharField(source='address.address_line_1', read_only=True)
-    address_line_2 = serializers.CharField(source='address.address_line_2', read_only=True)
-    address_line_3 = serializers.CharField(source='address.address_line_3', read_only=True)
-    address_line_4 = serializers.CharField(source='address.address_line_4', read_only=True)
+    street = serializers.CharField(source='address.street', read_only=True)
+    number = serializers.CharField(source='address.number', read_only=True)
+    additional_address_line_1 = serializers.CharField(source='address.additional_address_line_1', read_only=True)
+    additional_address_line_2 = serializers.CharField(source='address.additional_address_line_2', read_only=True)
+    additional_address_line_3 = serializers.CharField(source='address.additional_address_line_3', read_only=True)
     zip_code = serializers.CharField(source='address.zip_code', read_only=True)
     town = serializers.CharField(source='address.town', read_only=True)
     state = serializers.CharField(source='address.state', read_only=True)
@@ -48,10 +52,11 @@ class UserAddressAssignmentSerializer(serializers.ModelSerializer):
             "is_primary",
             "valid_from",
             "valid_to",
-            "address_line_1",
-            "address_line_2",
-            "address_line_3",
-            "address_line_4",
+            "street",
+            "number",
+            "additional_address_line_1",
+            "additional_address_line_2",
+            "additional_address_line_3",
             "zip_code",
             "town",
             "state",
@@ -95,14 +100,14 @@ class UserExtensionNestedSerializer(serializers.ModelSerializer):
             "email_addresses",
         )
 
-    def get_postal_addresses(self, instance):
+    def get_postal_addresses(self, instance: UserExtension) -> list[dict[str, Any]]:
         rows = UserAddressAssignment.objects.filter(user=instance.user_id)
         return UserAddressAssignmentSerializer(rows, many=True).data
 
-    def get_phone_addresses(self, instance):
+    def get_phone_addresses(self, instance: UserExtension) -> list[dict[str, Any]]:
         rows = UserPhoneAssignment.objects.filter(user=instance.user_id)
         return UserPhoneAssignmentSerializer(rows, many=True).data
 
-    def get_email_addresses(self, instance):
+    def get_email_addresses(self, instance: UserExtension) -> list[dict[str, Any]]:
         rows = UserEmailAssignment.objects.filter(user=instance.user_id)
         return UserEmailAssignmentSerializer(rows, many=True).data

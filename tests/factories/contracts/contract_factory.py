@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 
 import factory
+
 from koalixcrm.contracts.models.contract import Contract
-from tests.factories.contacts.user_factory import StaffUserFactory
 from tests.factories.contacts.customer_factory import StandardCustomerFactory
+from tests.factories.contacts.user_factory import StaffUserFactory
 from tests.factories.core.currency_factory import StandardCurrencyFactory
 from tests.factories.core.workspace_factory import DefaultWorkspaceFactory
-from tests.factories.djangoUserExtension.factory_template_set import StandardTemplateSetFactory
+from tests.factories.djangoUserExtension.factory_template_set import (
+    StandardTemplateSetFactory,
+)
 
 
 class StandardContractFactory(factory.django.DjangoModelFactory):

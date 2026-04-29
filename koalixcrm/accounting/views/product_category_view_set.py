@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
-from koalixcrm.shared.base_model_view_set import BaseModelViewSet
 from koalixcrm.accounting.models import ProductCategory
-from koalixcrm.accounting.serializers.product_category_serializer import ProductCategoryJSONSerializer
+from koalixcrm.accounting.serializers.product_category_serializer import (
+    ProductCategoryJSONSerializer,
+)
+from koalixcrm.shared.base_model_view_set import BaseModelViewSet
 
 
 class ProductCategoryViewSet(BaseModelViewSet):

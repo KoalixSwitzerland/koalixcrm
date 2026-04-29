@@ -1,15 +1,19 @@
 # -*- coding: utf-8 -*-
 
-import factory
 import datetime
-from koalixcrm.global_support_functions import make_date_utc
+
+import factory
+
 from koalixcrm.contracts.models.commercial_document import CommercialDocument
+from koalixcrm.global_support_functions import make_date_utc
+from tests.factories.contacts.customer_factory import StandardCustomerFactory
 from tests.factories.contacts.user_factory import StaffUserFactory
 from tests.factories.contracts.contract_factory import StandardContractFactory
-from tests.factories.contacts.customer_factory import StandardCustomerFactory
 from tests.factories.core.currency_factory import StandardCurrencyFactory
 from tests.factories.core.workspace_factory import DefaultWorkspaceFactory
-from tests.factories.djangoUserExtension.factory_document_template import StandardQuotationTemplateFactory
+from tests.factories.djangoUserExtension.factory_document_template import (
+    StandardQuotationTemplateFactory,
+)
 
 
 class StandardCommercialDocumentFactory(factory.django.DjangoModelFactory):
@@ -18,7 +22,7 @@ class StandardCommercialDocumentFactory(factory.django.DjangoModelFactory):
 
     workspace = factory.SubFactory(DefaultWorkspaceFactory)
     contract = factory.SubFactory(StandardContractFactory)
-    external_reference = "This is an external Reference"
+    party_reference = "This is a party Reference"
     discount = "0"
     description = "This is the description of a commercial document"
     last_pricing_date = make_date_utc(datetime.datetime(2018, 5, 1, 00))

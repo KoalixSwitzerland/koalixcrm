@@ -5,6 +5,7 @@ active workspace via the dashboard module or the header switcher.
 
 CR-8 §8.6.
 """
+from __future__ import annotations
 
 from django.conf import settings
 from django.db import models
@@ -36,7 +37,7 @@ class WorkspaceSwitchEvent(models.Model):
     )
     timestamp = models.DateTimeField(auto_now_add=True, verbose_name=_('Timestamp'))
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'{self.user}: {self.from_workspace} → {self.to_workspace} at {self.timestamp}'
 
     class Meta:

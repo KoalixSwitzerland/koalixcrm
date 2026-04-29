@@ -1,15 +1,21 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
+from typing import Any
 
 from django.contrib import admin
+from django.http import HttpRequest
 from django.utils.translation import gettext as _
-from koalixcrm.reporting.models.task import Task
+
+from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
 from koalixcrm.reporting.admin.agreement_admin import AgreementInlineAdminView
 from koalixcrm.reporting.admin.estimation_admin import EstimationInlineAdminView
 from koalixcrm.reporting.admin.generic_task_link_admin import InlineGenericTaskLink
 from koalixcrm.reporting.admin.work_admin import WorkInlineAdminView
+from koalixcrm.reporting.models.task import Task
 
 
-class TaskAdminView(admin.ModelAdmin):
+class TaskAdminView(WorkspaceScopedModelAdmin, admin.ModelAdmin):
     list_display = ('link_to_task',
                     'planned_start',
                     'planned_end',
@@ -71,8 +77,8 @@ class TaskInlineAdminView(admin.TabularInline):
     )
     extra = 1
 
-    def has_add_permission(self, request, obj=None):
+    def has_add_permission(self, request: HttpRequest, obj: Any = None) -> bool:
         return True
 
-    def has_delete_permission(self, request, obj=None):
+    def has_delete_permission(self, request: HttpRequest, obj: Any = None) -> bool:
         return False

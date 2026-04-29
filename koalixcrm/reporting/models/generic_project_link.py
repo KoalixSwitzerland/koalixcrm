@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 
-from django.db import models
-from django.utils.translation import gettext as _
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from django.db import models
+from django.utils.translation import gettext as _
+
+from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
 
 
-class GenericProjectLink(models.Model):
+class GenericProjectLink(WorkspaceScopedModel):
     id = models.BigAutoField(primary_key=True)
     project = models.ForeignKey("Project",
                                 on_delete=models.CASCADE,
@@ -30,7 +33,7 @@ class GenericProjectLink(models.Model):
                                          verbose_name=_("Last modified by"),
                                          related_name="db_project_link_last_modified")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return _("Link to") + " " + str(self.project)
 
     class Meta:

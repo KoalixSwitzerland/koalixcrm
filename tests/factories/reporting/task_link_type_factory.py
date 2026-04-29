@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import factory
+
 from koalixcrm.reporting.models.task_link_type import TaskLinkType
 
 

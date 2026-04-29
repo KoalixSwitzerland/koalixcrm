@@ -2,7 +2,10 @@
 """
 TaxAdmin for koalixcrm settings
 """
+from __future__ import annotations
+
 from django.contrib import admin
+
 from koalixcrm.core.models.tax import Tax
 
 

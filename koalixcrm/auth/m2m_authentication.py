@@ -1,8 +1,13 @@
+from __future__ import annotations
+
 import logging
+from typing import Any
 
 import jwt
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AbstractBaseUser
+from django.http import HttpRequest
 from rest_framework.authentication import BaseAuthentication
 from rest_framework.exceptions import AuthenticationFailed
 
@@ -20,7 +25,7 @@ class CeleryWorkerM2MAuthentication(BaseAuthentication):
     the client_id claim to a Django service user by username.
     """
 
-    def authenticate(self, request):
+    def authenticate(self, request: HttpRequest) -> tuple[AbstractBaseUser, dict[str, Any]] | None:
         token = get_token_auth_header(request)
         if not token:
             return None

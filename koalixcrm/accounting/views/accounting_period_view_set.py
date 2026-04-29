@@ -1,21 +1,26 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
+from typing import Any
+
 from rest_framework.decorators import action
+from rest_framework.request import Request
 from rest_framework.response import Response
 
-from koalixcrm.shared.base_model_view_set import BaseModelViewSet
 from koalixcrm.accounting.models import AccountingPeriod
 from koalixcrm.accounting.serializers.accounting_period_serializer import (
     AccountingPeriodJSONSerializer,
     AccountingPeriodReportSerializer,
 )
+from koalixcrm.shared.base_model_view_set import BaseModelViewSet
 
 
 class AccountingPeriodViewSet(BaseModelViewSet):
     queryset = AccountingPeriod.objects.all()
     serializer_class = AccountingPeriodJSONSerializer
 
-    @action(detail=True, methods=['get'], url_path='report-data')
-    def report_data(self, request, pk=None, **kwargs):
+    @action(detail=True, methods=["get"], url_path="report-data")
+    def report_data(self, request: Request, pk: int | None = None, **kwargs: Any) -> Response:
         """Self-contained snapshot for FOP balancesheet / profitlossstatement:
         period header + four overall aggregates + per-account sums for every
         account, in a single payload.

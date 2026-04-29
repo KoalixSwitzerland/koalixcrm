@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
-from django.http import HttpResponseRedirect, Http404
-from django.shortcuts import render
-from django.template.context_processors import csrf
+from __future__ import annotations
+
 from django.contrib.admin import helpers
 from django.contrib.admin.widgets import *
+from django.http import Http404, HttpRequest, HttpResponse, HttpResponseRedirect
+from django.shortcuts import render
+from django.template.context_processors import csrf
+
 from koalixcrm.djangoUserExtension.exceptions import TooManyUserExtensionsAvailable
 
 
@@ -17,7 +20,7 @@ class UserExtensionMissingForm(forms.Form):
                                    choices=NEXT_STEPS)
 
 
-def user_extension_missing(request):
+def user_extension_missing(request: HttpRequest) -> HttpResponse:
     try:
         if request.POST.get('post'):
             if 'confirm_selection' in request.POST:

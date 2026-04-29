@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 
-from datetime import *
+from datetime import date, timedelta
+
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils.translation import gettext as _
-from koalixcrm.core.const.status import *
-from django.core.validators import MaxValueValidator, MinValueValidator
+
 from koalixcrm.contracts.models.commercial_document import CommercialDocument
+from koalixcrm.core.const.status import *
 
 
 class PaymentReminder(CommercialDocument):
@@ -22,7 +25,7 @@ class PaymentReminder(CommercialDocument):
     status = models.CharField(max_length=1,
                               choices=INVOICESTATUS)
 
-    def create_from_reference(self, calling_model):
+    def create_from_reference(self, calling_model: models.Model) -> None:
         self.create_commercial_document(calling_model)
         self.status = 'C'
         self.iteration_number = 1
@@ -34,9 +37,9 @@ class PaymentReminder(CommercialDocument):
         self.attach_text_paragraphs()
         self.staff = calling_model.staff
 
-    def __str__(self):
-        return _("Payment Reminder") + ": " + self.id.__str__() + \
-               " " + _("from Contract") + ": " + self.contract.id.__str__()
+    def __str__(self) -> str:
+        return _("Payment Reminder") + ": " + str(self.id) + \
+               " " + _("from Contract") + ": " + str(self.contract.id)
 
     class Meta:
         app_label = "contract_object_management"

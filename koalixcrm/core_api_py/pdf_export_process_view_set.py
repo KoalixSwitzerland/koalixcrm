@@ -5,6 +5,9 @@ ViewSet exposing :class:`PDFExportProcess` to the PDF microservice.
 Only the lifecycle columns (``status`` / ``result_url`` / ``error_message``)
 are writable. Creation happens via the admin action; deletion is not allowed.
 """
+
+from __future__ import annotations
+
 from rest_framework import mixins, viewsets
 from rest_framework.permissions import IsAuthenticated
 

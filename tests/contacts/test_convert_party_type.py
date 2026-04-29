@@ -33,7 +33,7 @@ class ConvertOrganizationToContactTest(TestCase):
             workspace=self.ws,
         )
         self.address = Address.objects.create(
-            address_line_1='Bahnhofstrasse 1', zip_code='8001',
+            street='Bahnhofstrasse', number='1', zip_code='8001',
             town='Zürich', country='CH',
             workspace=self.ws,
         )

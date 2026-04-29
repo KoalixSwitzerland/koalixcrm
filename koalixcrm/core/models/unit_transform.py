@@ -1,6 +1,13 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
+from decimal import Decimal
+from typing import TYPE_CHECKING
 
 from django.db import models
+
+if TYPE_CHECKING:
+    from koalixcrm.core.models.unit import Unit
 from django.utils.translation import gettext as _
 
 
@@ -29,16 +36,16 @@ class UnitTransform(models.Model):
                                  max_digits=17,
                                  decimal_places=2,)
 
-    def transform(self, unit):
+    def transform(self, unit: 'Unit') -> 'Unit | None':
         if self.from_unit == unit:
             return self.to_unit
         else:
             return None
 
-    def get_transform_factor(self):
+    def get_transform_factor(self) -> Decimal:
         return self.factor
 
-    def __str__(self):
+    def __str__(self) -> str:
         return "From " + self.from_unit.short_name + " to " + self.to_unit.short_name
 
     class Meta:

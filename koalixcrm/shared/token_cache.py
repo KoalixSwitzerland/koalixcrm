@@ -6,9 +6,11 @@ Ported from qq_workflow_support_webapp_backend.
 Simplified version without SSM Parameter Store dependency.
 Uses local file persistence only.
 """
+from __future__ import annotations
+
+import logging
 import os
 import time
-import logging
 from typing import Optional, Tuple
 
 logger = logging.getLogger(__name__)
@@ -33,7 +35,7 @@ class TokenCache:
 
     ENV_TOKEN_FILE = "m2m_token.env"
 
-    def __new__(cls):
+    def __new__(cls) -> TokenCache:
         if cls._instance is None:
             cls._instance = super().__new__(cls)
             cls._instance._load_from_file()
@@ -64,7 +66,7 @@ class TokenCache:
             logger.error("Error loading token from %s: %s", self.ENV_TOKEN_FILE, e)
         return False
 
-    def save_to_file(self):
+    def save_to_file(self) -> bool:
         if not self._access_token or not self._expires_at:
             return False
         try:
@@ -96,7 +98,7 @@ class TokenCache:
         token_type: str,
         identity_token: Optional[str] = None,
         save_to_env: bool = False,
-    ):
+    ) -> None:
         """Cache a token and optionally persist to file."""
         self._access_token = access_token
         self._identity_token = identity_token
@@ -116,14 +118,14 @@ class TokenCache:
         if save_to_env:
             self.save_to_file()
 
-    def store_token(self, access_token: str, token_type: str, expires_in: int):
+    def store_token(self, access_token: str, token_type: str, expires_in: int) -> None:
         """Store a token with an explicit expires_in (seconds)."""
         self._access_token = access_token
         self._token_type = token_type
         self._expires_at = int(time.time()) + expires_in - 60
         self.save_to_file()
 
-    def clear(self):
+    def clear(self) -> None:
         """Clear cached token from memory and local file."""
         self._access_token = None
         self._identity_token = None

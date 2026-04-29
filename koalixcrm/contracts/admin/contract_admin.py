@@ -1,24 +1,35 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 from django.contrib import admin
 from django.utils.translation import gettext as _
-from koalixcrm.plugin import *
-from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
-from koalixcrm.contracts.models.contract import (
-    ContractAddressAssignment,
-    ContractPhoneAssignment,
-    ContractEmailAssignment,
-)
-from koalixcrm.contracts.admin.quotation_admin import InlineQuotation
-from koalixcrm.contracts.admin.invoice_admin import InlineInvoice
-from koalixcrm.contracts.admin.credit_note_admin import InlineCreditNote
-import koalixcrm.contracts.models.quotation
+
 import koalixcrm.contracts.models.credit_note
-import koalixcrm.contracts.models.invoice
-import koalixcrm.contracts.models.sales_order
 import koalixcrm.contracts.models.despatch_advice
+import koalixcrm.contracts.models.invoice
 import koalixcrm.contracts.models.payment_reminder
 import koalixcrm.contracts.models.purchase_order
+import koalixcrm.contracts.models.quotation
+import koalixcrm.contracts.models.sales_order
+from koalixcrm.contracts.admin.credit_note_admin import InlineCreditNote
+from koalixcrm.contracts.admin.invoice_admin import InlineInvoice
+from koalixcrm.contracts.admin.quotation_admin import InlineQuotation
+from koalixcrm.contracts.models.contract import (
+    ContractAddressAssignment,
+    ContractEmailAssignment,
+    ContractPhoneAssignment,
+)
+from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
+from koalixcrm.plugin import *
+
+if TYPE_CHECKING:
+    from django.db.models import QuerySet
+    from django.forms import ModelForm
+    from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+
+    from koalixcrm.contracts.models.contract import Contract
 
 
 class ContractPostalAddress(admin.StackedInline):
@@ -104,7 +115,7 @@ class OptionContract(WorkspaceScopedModelAdmin, admin.ModelAdmin):
     pluginProcessor = PluginProcessor()
     inlines.extend(pluginProcessor.getPluginAdditions("contractInlines"))
 
-    def create_quotation(self, request, queryset):
+    def create_quotation(self, request: HttpRequest, queryset: QuerySet[Contract]) -> HttpResponse | HttpResponseRedirect | None:
         from koalixcrm.contracts.views.newdocument import CreateNewDocumentView
         for obj in queryset:
             response = CreateNewDocumentView.create_new_document(self,
@@ -116,7 +127,7 @@ class OptionContract(WorkspaceScopedModelAdmin, admin.ModelAdmin):
 
     create_quotation.short_description = _("Create Quotation")
 
-    def create_invoice(self, request, queryset):
+    def create_invoice(self, request: HttpRequest, queryset: QuerySet[Contract]) -> HttpResponse | HttpResponseRedirect | None:
         from koalixcrm.contracts.views.newdocument import CreateNewDocumentView
         for obj in queryset:
             response = CreateNewDocumentView.create_new_document(self,
@@ -128,7 +139,7 @@ class OptionContract(WorkspaceScopedModelAdmin, admin.ModelAdmin):
 
     create_invoice.short_description = _("Create Invoice")
 
-    def create_sales_order(self, request, queryset):
+    def create_sales_order(self, request: HttpRequest, queryset: QuerySet[Contract]) -> HttpResponse | HttpResponseRedirect | None:
         from koalixcrm.contracts.views.newdocument import CreateNewDocumentView
         for obj in queryset:
             response = CreateNewDocumentView.create_new_document(self,
@@ -140,7 +151,7 @@ class OptionContract(WorkspaceScopedModelAdmin, admin.ModelAdmin):
 
     create_sales_order.short_description = _("Create Sales Order")
 
-    def create_despatch_advice(self, request, queryset):
+    def create_despatch_advice(self, request: HttpRequest, queryset: QuerySet[Contract]) -> HttpResponse | HttpResponseRedirect | None:
         from koalixcrm.contracts.views.newdocument import CreateNewDocumentView
         for obj in queryset:
             response = CreateNewDocumentView.create_new_document(self,
@@ -152,7 +163,7 @@ class OptionContract(WorkspaceScopedModelAdmin, admin.ModelAdmin):
 
     create_despatch_advice.short_description = _("Create Despatch Advice")
 
-    def create_payment_reminder(self, request, queryset):
+    def create_payment_reminder(self, request: HttpRequest, queryset: QuerySet[Contract]) -> HttpResponse | HttpResponseRedirect | None:
         from koalixcrm.contracts.views.newdocument import CreateNewDocumentView
         for obj in queryset:
             response = CreateNewDocumentView.create_new_document(self,
@@ -164,7 +175,7 @@ class OptionContract(WorkspaceScopedModelAdmin, admin.ModelAdmin):
 
     create_payment_reminder.short_description = _("Create Payment Reminder")
 
-    def create_purchase_order(self, request, queryset):
+    def create_purchase_order(self, request: HttpRequest, queryset: QuerySet[Contract]) -> HttpResponse | HttpResponseRedirect | None:
         from koalixcrm.contracts.views.newdocument import CreateNewDocumentView
         for obj in queryset:
             response = CreateNewDocumentView.create_new_document(self,
@@ -176,7 +187,7 @@ class OptionContract(WorkspaceScopedModelAdmin, admin.ModelAdmin):
 
     create_purchase_order.short_description = _("Create Purchase Order")
 
-    def save_model(self, request, obj, form, change):
+    def save_model(self, request: HttpRequest, obj: Contract, form: ModelForm, change: bool) -> None:
         if change:
             obj.last_modified_by = request.user
         else:
@@ -184,7 +195,7 @@ class OptionContract(WorkspaceScopedModelAdmin, admin.ModelAdmin):
             obj.staff = request.user
         obj.save()
 
-    def create_credit_note(self, request, queryset):
+    def create_credit_note(self, request: HttpRequest, queryset: QuerySet[Contract]) -> HttpResponse | HttpResponseRedirect | None:
         from koalixcrm.contracts.views.newdocument import CreateNewDocumentView
         for obj in queryset:
             response = CreateNewDocumentView.create_new_document(self,

@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
 from django.db import models
 from django.utils.translation import gettext as _
 
@@ -32,5 +34,5 @@ class OrganizationRelationship(WorkspaceScopedModel):
         verbose_name = _("Organization relationship")
         verbose_name_plural = _("Organization relationships")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.parent_id}-{self.relationship_type}->{self.child_id}"

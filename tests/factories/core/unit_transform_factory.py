@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import factory
+
 from koalixcrm.core.models.unit_transform import UnitTransform
-from tests.factories.core.unit_factory import StandardUnitFactory, SmallUnitFactory
+from tests.factories.core.unit_factory import SmallUnitFactory, StandardUnitFactory
 from tests.factories.products.product_type_factory import StandardProductTypeFactory
 
 

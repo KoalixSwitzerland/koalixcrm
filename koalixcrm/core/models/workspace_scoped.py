@@ -4,6 +4,7 @@ WorkspaceScopedModel — abstract base for all tenant-scoped models.
 
 CR-9 §9.1.
 """
+from __future__ import annotations
 
 from django.db import models
 

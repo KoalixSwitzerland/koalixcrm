@@ -4,6 +4,7 @@ Admin registration for RoleInWorkspace.
 
 CR-8 §8.3.
 """
+from __future__ import annotations
 
 from django.contrib import admin
 

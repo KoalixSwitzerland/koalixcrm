@@ -1,12 +1,18 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 
-from django.contrib import admin
+from typing import Any
+
+from django.contrib import admin, messages
+from django.db.models import QuerySet
+from django.http import HttpRequest
 from django.utils.translation import gettext as _
-from django.contrib import messages
+
+from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
 from koalixcrm.reporting.models.work import Work
 
 
-class WorkAdminView(admin.ModelAdmin):
+class WorkAdminView(WorkspaceScopedModelAdmin, admin.ModelAdmin):
     list_display = ('link_to_work',
                     'human_resource',
                     'task',
@@ -36,7 +42,7 @@ class WorkAdminView(admin.ModelAdmin):
 
     actions = ['delete_work', ]
 
-    def delete_work(self, request, queryset):
+    def delete_work(self, request: HttpRequest, queryset: QuerySet[Any]) -> None:
         for obj in queryset:
             if obj.reporting_period.status.is_done:
                 self.message_user(request, _("Delete is not allowed because the work"
@@ -73,8 +79,8 @@ class WorkInlineAdminView(admin.TabularInline):
     )
     extra = 0
 
-    def has_add_permission(self, request, obj=None):
+    def has_add_permission(self, request: HttpRequest, obj: Any = None) -> bool:
         return False
 
-    def has_delete_permission(self, request, obj=None):
+    def has_delete_permission(self, request: HttpRequest, obj: Any = None) -> bool:
         return False

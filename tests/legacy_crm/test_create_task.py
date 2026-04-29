@@ -2,14 +2,17 @@
 
 import pytest
 from django.test import TestCase
-from tests.factories.contracts.commercial_document_position_factory import StandardCommercialDocumentPositionFactory
-from tests.factories.core.currency_factory import StandardCurrencyFactory
-from tests.factories.contracts.quotation_factory import StandardQuotationFactory
-from tests.factories.contacts.user_factory import StaffUserFactory
-from tests.factories.products.product_type_factory import StandardProductTypeFactory
-from tests.factories.products.product_price_factory import StandardPriceFactory
+
 from koalixcrm.reporting.models.task import Task
 from koalixcrm.reporting.views.create_task import CreateTaskView
+from tests.factories.contacts.user_factory import StaffUserFactory
+from tests.factories.contracts.commercial_document_position_factory import (
+    StandardCommercialDocumentPositionFactory,
+)
+from tests.factories.contracts.quotation_factory import StandardQuotationFactory
+from tests.factories.core.currency_factory import StandardCurrencyFactory
+from tests.factories.products.product_price_factory import StandardPriceFactory
+from tests.factories.products.product_type_factory import StandardProductTypeFactory
 
 
 class DocumentCalculationsTest(TestCase):
