@@ -2,6 +2,7 @@
 import datetime
 
 import pytest
+from selenium.webdriver.support.ui import Select
 
 from koalixcrm.reporting.models.work import Work
 from tests.contracts.test_support_functions import *
@@ -83,16 +84,20 @@ class TimeTrackingWorkEntry(UITests):
         datetime_stop_date = selenium.find_element("xpath", '//*[@id="id_form-0-datetime_stop_0"]')
         datetime_stop_time = selenium.find_element("xpath", '//*[@id="id_form-0-datetime_stop_1"]')
         description = selenium.find_element("xpath", '//*[@id="id_form-0-description"]')
-        project.send_keys(self.test_reporting_period.project.id.__str__())
+        Select(project).select_by_value(str(self.test_reporting_period.project.id))
         datetime_start_date.send_keys(datetime.date.today().__str__())
         datetime_stop_date.send_keys(datetime.date.today().__str__())
         datetime_start_time.send_keys(datetime.time(11, 55).__str__())
         datetime_stop_time.send_keys(datetime.time(12, 55).__str__())
         description.send_keys("This is a test work entered through the front-end")
-        task = selenium.find_element(
-            "xpath", '//*[@id="id_form-0-task"]/option[text()="' + self.test_1st_task.title + '"]'
+        # Tasks are populated via AJAX after a project is selected — wait for the option to land.
+        task_option_xpath = '//*[@id="id_form-0-task"]/option[text()="' + self.test_1st_task.title + '"]'
+        WebDriverWait(selenium, timeout).until(
+            expected_conditions.presence_of_element_located((By.XPATH, task_option_xpath))
         )
-        task.click()
+        Select(selenium.find_element("xpath", '//*[@id="id_form-0-task"]')).select_by_visible_text(
+            self.test_1st_task.title
+        )
         save_button = selenium.find_element("name", "save")
         save_button.send_keys(Keys.RETURN)
         time.sleep(1)

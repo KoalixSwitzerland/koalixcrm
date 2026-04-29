@@ -66,7 +66,7 @@ def create_commercial_document_from_reference(test_case,
         '//*[@id="id_'+template_name+'"]/option[@value="' +
         template_to_select.id.__str__() + '"]')
     document_type_template.click()
-    save_button = selenium.find_element('xpath', '/html/body/div/article/div/form/div/footer/ul/li[2]/input')
+    save_button = selenium.find_element('xpath', '//input[@name="_save"]')
     save_button.send_keys(Keys.RETURN)
     time.sleep(1)
     selenium.get('%s%s' % (test_case.live_server_url, '/admin/contract_object_management/'+reference_type+'/'))

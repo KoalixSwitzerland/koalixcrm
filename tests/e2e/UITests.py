@@ -26,7 +26,15 @@ class UITests(StaticLiveServerTestCase):
                 )
             else:
                 errors = []
-        if len(errors) > 0:
-            test_method_name = self._testMethodName
+        import os
+        os.makedirs("test_results/Screenshots", exist_ok=True)
+        test_method_name = self._testMethodName
+        try:
             self.selenium.save_screenshot("test_results/Screenshots/%s.png" % test_method_name)
+            with open("test_results/Screenshots/%s.html" % test_method_name, "w") as fh:
+                fh.write(self.selenium.page_source)
+            with open("test_results/Screenshots/%s.url" % test_method_name, "w") as fh:
+                fh.write(self.selenium.current_url)
+        except Exception:
+            pass
         self.selenium.quit()
