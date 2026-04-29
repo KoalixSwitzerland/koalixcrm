@@ -12,7 +12,8 @@ from django.db.models import QuerySet
 from django.utils.translation import gettext as _
 
 from koalixcrm.accounting.exceptions import AccountingPeriodNotFound
-from koalixcrm.accounting.models import Account, InlineBookings
+from koalixcrm.accounting.models.account import Account
+from koalixcrm.accounting.models.booking import InlineBookings
 
 if TYPE_CHECKING:
     from django.http import HttpRequest
