@@ -5,9 +5,11 @@ from selenium import webdriver
 class UITests(StaticLiveServerTestCase):
 
     def setUp(self):
-        firefox_options = webdriver.firefox.options.Options()
-        firefox_options.add_argument("--headless")
-        self.selenium = webdriver.Firefox(options=firefox_options)
+        chrome_options = webdriver.chrome.options.Options()
+        chrome_options.add_argument("--headless=new")
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        self.selenium = webdriver.Chrome(options=chrome_options)
         self.selenium.implicitly_wait(10)
 
     def tearDown(self):

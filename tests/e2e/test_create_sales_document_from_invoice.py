@@ -29,9 +29,11 @@ class CreateSalesDocumentFromContract(StaticLiveServerTestCase):
     @classmethod
     def setUpClass(cls):
         super(CreateSalesDocumentFromContract, cls).setUpClass()
-        firefox_options = webdriver.firefox.options.Options()
-        firefox_options.add_argument("--headless")
-        cls.selenium = webdriver.Firefox(options=firefox_options)
+        chrome_options = webdriver.chrome.options.Options()
+        chrome_options.add_argument("--headless=new")
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        cls.selenium = webdriver.Chrome(options=chrome_options)
         cls.selenium.implicitly_wait(10)
         cls.test_user = AdminUserFactory.create()
         cls.test_customer_group = StandardCustomerGroupFactory.create()
