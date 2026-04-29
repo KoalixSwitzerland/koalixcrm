@@ -9,6 +9,7 @@ from django.forms import ModelForm
 from django.http import HttpRequest
 from django.utils.translation import gettext as _
 
+from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
 from koalixcrm.reporting.admin.generic_project_link_admin import (
     GenericLinkInlineAdminView,
 )
@@ -19,7 +20,7 @@ from koalixcrm.reporting.admin.task_admin import TaskInlineAdminView
 from koalixcrm.reporting.models.project import Project
 
 
-class ProjectAdminView(admin.ModelAdmin):
+class ProjectAdminView(WorkspaceScopedModelAdmin, admin.ModelAdmin):
     list_display = ('id',
                     'project_name',
                     'project_manager',
@@ -57,7 +58,7 @@ class ProjectAdminView(admin.ModelAdmin):
         else:
             obj.last_modified_by = request.user
             obj.staff = request.user
-        obj.save()
+        super().save_model(request, obj, form, change)
 
     def create_report_pdf(self, request: HttpRequest, queryset: QuerySet[Any]) -> None:
         """Enqueue an async PDFExportProcess per selected project. The Java

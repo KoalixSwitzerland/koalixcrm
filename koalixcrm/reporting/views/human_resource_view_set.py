@@ -17,9 +17,10 @@ from koalixcrm.reporting.serializers.human_resource_serializer import (
     HumanResourceJSONSerializer,
 )
 from koalixcrm.shared.base_model_view_set import BaseModelViewSet
+from koalixcrm.shared.workspace_scoped_view_set import WorkspaceScopedViewSetMixin
 
 
-class HumanResourceViewSet(BaseModelViewSet):
+class HumanResourceViewSet(WorkspaceScopedViewSetMixin, BaseModelViewSet):
     queryset = HumanResource.objects.all()
     serializer_class = HumanResourceJSONSerializer
 

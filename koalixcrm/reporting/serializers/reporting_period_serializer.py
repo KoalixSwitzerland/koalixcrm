@@ -52,6 +52,8 @@ class ReportingPeriodJSONSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data: dict[str, Any]) -> ReportingPeriod:
         reporting_period = ReportingPeriod()
+        if 'workspace' in validated_data:
+            reporting_period.workspace = validated_data.pop('workspace')
         # Deserialize project
         project = validated_data.pop('project')
         if project:

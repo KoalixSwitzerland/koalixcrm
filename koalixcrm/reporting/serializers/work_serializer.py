@@ -69,6 +69,8 @@ class WorkJSONSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data: dict[str, Any]) -> Work:
         work = Work()
+        if 'workspace' in validated_data:
+            work.workspace = validated_data.pop('workspace')
         # Deserialize human_resource
         human_resource = validated_data.pop('human_resource')
         if human_resource:

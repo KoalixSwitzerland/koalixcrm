@@ -9,11 +9,12 @@ from django.db import models
 from django.utils.html import format_html
 from django.utils.translation import gettext as _
 
+from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
 from koalixcrm.reporting.models.reporting_period import ReportingPeriod
 from koalixcrm.reporting.models.task import Task
 
 
-class Project(models.Model):
+class Project(WorkspaceScopedModel):
     id = models.BigAutoField(primary_key=True)
     project_manager = models.ForeignKey(
         "auth.User",

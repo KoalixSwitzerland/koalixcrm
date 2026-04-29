@@ -7,6 +7,7 @@ import factory
 from koalixcrm.global_support_functions import make_date_utc
 from koalixcrm.reporting.models.agreement import Agreement
 from tests.factories.core.unit_factory import StandardUnitFactory
+from tests.factories.core.workspace_factory import DefaultWorkspaceFactory
 from tests.factories.reporting.agreement_status_factory import (
     AgreedAgreementStatusFactory,
 )
@@ -27,6 +28,7 @@ class StandardAgreementToTaskFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Agreement
 
+    workspace = factory.SubFactory(DefaultWorkspaceFactory)
     date_from = make_date_utc(datetime.datetime(2018, 6, 15, 00))
     date_until = make_date_utc(datetime.datetime(2024, 6, 15, 00))
     amount = "112.50"
@@ -42,6 +44,7 @@ class StandardHumanResourceAgreementToTaskFactory(factory.django.DjangoModelFact
     class Meta:
         model = Agreement
 
+    workspace = factory.SubFactory(DefaultWorkspaceFactory)
     date_from = make_date_utc(datetime.datetime(2018, 6, 15, 00))
     date_until = make_date_utc(datetime.datetime(2024, 6, 15, 00))
     amount = "112.50"

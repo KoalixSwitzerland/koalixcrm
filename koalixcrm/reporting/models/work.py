@@ -9,10 +9,11 @@ from django.utils.html import format_html
 from django.utils.translation import gettext as _
 
 from koalixcrm.core.exceptions import ReportingPeriodDoneDeleteNotPossible
+from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
 from koalixcrm.global_support_functions import *
 
 
-class Work(models.Model):
+class Work(WorkspaceScopedModel):
     id = models.BigAutoField(primary_key=True)
     human_resource = models.ForeignKey("HumanResource", on_delete=models.CASCADE)
     date = models.DateField(verbose_name=_("Date"),

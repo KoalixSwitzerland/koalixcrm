@@ -115,6 +115,7 @@ class WorkEntry(forms.Form):
                 work.delete()
             else:
                 work.task = self.cleaned_data["task"]
+                work.workspace = self.cleaned_data["task"].workspace
                 work.reporting_period = ReportingPeriod.get_reporting_period(
                     project=self.cleaned_data["task"].project, search_date=self.cleaned_data["datetime_start"].date()
                 )

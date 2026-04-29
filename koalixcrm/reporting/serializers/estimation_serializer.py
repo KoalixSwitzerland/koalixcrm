@@ -39,6 +39,8 @@ class EstimationJSONSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data: dict[str, Any]) -> Estimation:
         estimation = Estimation()
+        if 'workspace' in validated_data:
+            estimation.workspace = validated_data.pop('workspace')
         estimation.amount = validated_data['amount']
         estimation.date_from = validated_data['date_from']
         estimation.date_until = validated_data['date_until']

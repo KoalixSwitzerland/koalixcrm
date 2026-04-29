@@ -6,13 +6,14 @@ from typing import TYPE_CHECKING
 from django.db import models
 from django.utils.translation import gettext as _
 
+from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
 from koalixcrm.reporting.models.resource_price import ResourcePrice
 
 if TYPE_CHECKING:
     from koalixcrm.reporting.models.work import Work
 
 
-class Agreement(models.Model):
+class Agreement(WorkspaceScopedModel):
     """The Agreement describes the contract between the steer-co or the customer with the project manager"""
     id = models.BigAutoField(primary_key=True)
     task = models.ForeignKey("Task",

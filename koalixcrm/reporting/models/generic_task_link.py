@@ -6,8 +6,10 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.utils.translation import gettext as _
 
+from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
 
-class GenericTaskLink(models.Model):
+
+class GenericTaskLink(WorkspaceScopedModel):
     id = models.BigAutoField(primary_key=True)
     task = models.ForeignKey("Task",
                              on_delete=models.CASCADE,

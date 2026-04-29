@@ -83,6 +83,8 @@ class ProjectJSONSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data: dict[str, Any]) -> Project:
         project = Project()
+        if 'workspace' in validated_data:
+            project.workspace = validated_data.pop('workspace')
         # Deserialize default currency
         default_currency = validated_data.pop('default_currency')
         if default_currency:

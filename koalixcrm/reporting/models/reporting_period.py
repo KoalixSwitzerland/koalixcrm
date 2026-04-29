@@ -12,12 +12,13 @@ from django.utils.translation import gettext as _
 from rest_framework import serializers
 
 from koalixcrm.core.exceptions import ReportingPeriodNotFound
+from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
 
 if TYPE_CHECKING:
     from koalixcrm.reporting.models.project import Project
 
 
-class ReportingPeriod(models.Model):
+class ReportingPeriod(WorkspaceScopedModel):
     """The reporting period is referred in the work, in the expenses and purchase orders, it is used as a
        supporting object to generate project reports"""
     id = models.BigAutoField(primary_key=True)

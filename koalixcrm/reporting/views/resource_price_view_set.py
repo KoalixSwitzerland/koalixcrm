@@ -6,8 +6,9 @@ from koalixcrm.reporting.serializers.resource_price_serializer import (
     ResourcePricesSONSerializer,
 )
 from koalixcrm.shared.base_model_view_set import BaseModelViewSet
+from koalixcrm.shared.workspace_scoped_view_set import WorkspaceScopedViewSetMixin
 
 
-class ResourcePriceViewSet(BaseModelViewSet):
+class ResourcePriceViewSet(WorkspaceScopedViewSetMixin, BaseModelViewSet):
     queryset = ResourcePrice.objects.all()
     serializer_class = ResourcePricesSONSerializer

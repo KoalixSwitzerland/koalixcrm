@@ -11,10 +11,11 @@ from django.forms import BaseInlineFormSet
 from django.utils.translation import gettext as _
 
 from koalixcrm.core.exceptions import ReportingPeriodNotFound
+from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
 from koalixcrm.reporting.models.resource_price import ResourcePrice
 
 
-class Estimation(models.Model):
+class Estimation(WorkspaceScopedModel):
     """The estimation describes the estimated amount of resources which is still required to finish a task
     the estimation is done within a reporting period that is not yet closed. The estimation is done only considering
     all effective efforts that was reported in the previous and closed reporting periods"""

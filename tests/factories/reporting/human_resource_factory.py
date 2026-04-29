@@ -3,6 +3,7 @@
 import factory
 
 from koalixcrm.reporting.models.human_resource import HumanResource
+from tests.factories.core.workspace_factory import DefaultWorkspaceFactory
 from tests.factories.djangoUserExtension.factory_user_extension import (
     StandardUserExtensionFactory,
 )
@@ -16,6 +17,7 @@ class StandardHumanResourceFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = HumanResource
 
+    workspace = factory.SubFactory(DefaultWorkspaceFactory)
     user = factory.SubFactory(StandardUserExtensionFactory)
     resource_type = factory.SubFactory(StandardResourceTypeFactory)
     resource_manager = factory.SubFactory(StandardResourceManagerFactory)

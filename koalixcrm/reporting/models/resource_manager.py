@@ -4,10 +4,11 @@ from __future__ import annotations
 from django.db import models
 from django.utils.translation import gettext as _
 
+from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
 from koalixcrm.djangoUserExtension.models.user_extension import UserExtension
 
 
-class ResourceManager(models.Model):
+class ResourceManager(WorkspaceScopedModel):
     id = models.BigAutoField(primary_key=True)
     user = models.ForeignKey(UserExtension,
                              on_delete=models.CASCADE,

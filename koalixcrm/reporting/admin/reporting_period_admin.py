@@ -9,6 +9,7 @@ from django.forms import ModelForm
 from django.http import HttpRequest
 from django.utils.translation import gettext as _
 
+from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
 from koalixcrm.reporting.admin.work_admin import WorkInlineAdminView
 from koalixcrm.reporting.models.reporting_period import (
     ReportingPeriod,
@@ -16,7 +17,7 @@ from koalixcrm.reporting.models.reporting_period import (
 )
 
 
-class ReportingPeriodAdmin(admin.ModelAdmin):
+class ReportingPeriodAdmin(WorkspaceScopedModelAdmin, admin.ModelAdmin):
     form = ReportingPeriodAdminForm
     list_display = ('id',
                     'project',
@@ -47,7 +48,7 @@ class ReportingPeriodAdmin(admin.ModelAdmin):
         else:
             obj.last_modified_by = request.user
             obj.staff = request.user
-        obj.save()
+        super().save_model(request, obj, form, change)
 
     def create_report_pdf(self, request: HttpRequest, queryset: QuerySet[Any]) -> None:
         """Enqueue an async PDFExportProcess per selected reporting period.

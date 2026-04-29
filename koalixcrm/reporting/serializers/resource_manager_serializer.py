@@ -30,6 +30,8 @@ class ResourceManagerJSONSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data: dict[str, Any]) -> None:
         resource_manager = ResourceManager()
+        if 'workspace' in validated_data:
+            resource_manager.workspace = validated_data.pop('workspace')
         # Deserialize user
         user = validated_data.pop('user')
         if user:

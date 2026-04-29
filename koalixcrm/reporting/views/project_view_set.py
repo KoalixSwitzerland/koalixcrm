@@ -8,6 +8,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from koalixcrm.shared.base_model_view_set import BaseModelViewSet
+from koalixcrm.shared.workspace_scoped_view_set import WorkspaceScopedViewSetMixin
 
 from ..models.project import Project
 from ..models.reporting_period import ReportingPeriod
@@ -15,7 +16,7 @@ from ..serializers.project_report_serializer import ProjectReportSerializer
 from ..serializers.project_serializer import ProjectJSONSerializer
 
 
-class ProjectViewSet(BaseModelViewSet):
+class ProjectViewSet(WorkspaceScopedViewSetMixin, BaseModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectJSONSerializer
 

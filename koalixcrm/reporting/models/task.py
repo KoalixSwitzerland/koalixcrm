@@ -10,13 +10,14 @@ from django.utils.translation import gettext as _
 
 from koalixcrm import global_support_functions
 from koalixcrm.core.exceptions import ReportingPeriodNotFound
+from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
 from koalixcrm.reporting.models.agreement import Agreement
 from koalixcrm.reporting.models.estimation import Estimation
 from koalixcrm.reporting.models.resource_price import ResourcePrice
 from koalixcrm.reporting.models.work import Work
 
 
-class Task(models.Model):
+class Task(WorkspaceScopedModel):
     """The Task model"""
 
     id = models.BigAutoField(primary_key=True)

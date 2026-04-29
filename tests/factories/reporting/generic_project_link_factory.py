@@ -5,6 +5,7 @@ from django.contrib.contenttypes.models import ContentType
 
 from koalixcrm.reporting.models.generic_project_link import GenericProjectLink
 from tests.factories.contacts.user_factory import StaffUserFactory
+from tests.factories.core.workspace_factory import DefaultWorkspaceFactory
 from tests.factories.reporting.project_factory import StandardProjectFactory
 from tests.factories.reporting.task_factory import StandardTaskFactory
 from tests.factories.reporting.task_link_type_factory import (
@@ -16,6 +17,7 @@ class StandardGenericTaskLinkFactory(factory.django.DjangoModelFactory):
     class Meta:
         exclude = ['generic_crm_object']
 
+    workspace = factory.SubFactory(DefaultWorkspaceFactory)
     task = factory.SubFactory(StandardProjectFactory)
     task_link_type = factory.SubFactory(RelatedToTaskLinkTypeFactory)
     content_type = factory.LazyAttribute(

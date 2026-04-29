@@ -48,19 +48,22 @@ class CreateTaskView:
                 title=task_title,
                 project=project,
                 description=commercial_document_position.description,
-                last_status_change=date_now
+                last_status_change=date_now,
+                workspace=project.workspace,
             )
             GenericTaskLink.objects.create(
                 task=task,
                 content_type=content_type_commercial_document_position,
                 object_id=commercial_document_position.id,
-                last_modified_by=user
+                last_modified_by=user,
+                workspace=project.workspace,
             )
             GenericTaskLink.objects.create(
                     task=task,
                     content_type=ContentType.objects.get_for_model(CommercialDocument),
                     object_id=document.id,
-                    last_modified_by=user
+                    last_modified_by=user,
+                    workspace=project.workspace,
                 )
         return task
 
@@ -75,7 +78,8 @@ class CreateTaskView:
                                          date_of_creation=date.today(),
                                          last_modification=date.today(),
                                          last_modified_by=user,
-                                         default_currency=document.currency)
+                                         default_currency=document.currency,
+                                         workspace=document.workspace)
         for commercial_document_position in commercial_document_positions:
             CreateTaskView.create_task_from_commercial_document_position(commercial_document_position,
                                                                     user,

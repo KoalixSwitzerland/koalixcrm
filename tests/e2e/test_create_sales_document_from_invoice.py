@@ -51,11 +51,17 @@ class CreateSalesDocumentFromContract(StaticLiveServerTestCase):
         super(CreateSalesDocumentFromContract, cls).tearDownClass()
 
     def tearDown(self):
-        if len(self._outcome.errors) > 0:
-            directory = os.getcwd() + "/test_results/Screenshots/"
-            if not os.path.exists(directory):
-                os.makedirs(directory)
-            self.selenium.save_screenshot(directory + "%s.png" % "test_name")
+        directory = os.getcwd() + "/test_results/Screenshots/"
+        os.makedirs(directory, exist_ok=True)
+        try:
+            name = self._testMethodName
+            self.selenium.save_screenshot(directory + "%s.png" % name)
+            with open(directory + "%s.html" % name, "w") as fh:
+                fh.write(self.selenium.page_source)
+            with open(directory + "%s.url" % name, "w") as fh:
+                fh.write(self.selenium.current_url)
+        except Exception:
+            pass
         super(CreateSalesDocumentFromContract, self).tearDown()
 
     @pytest.mark.front_end_tests

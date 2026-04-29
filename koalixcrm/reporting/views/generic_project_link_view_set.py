@@ -6,8 +6,9 @@ from koalixcrm.reporting.serializers.generic_project_link_serializer import (
     GenericProjectLinkJSONSerializer,
 )
 from koalixcrm.shared.base_model_view_set import BaseModelViewSet
+from koalixcrm.shared.workspace_scoped_view_set import WorkspaceScopedViewSetMixin
 
 
-class GenericProjectLinkViewSet(BaseModelViewSet):
+class GenericProjectLinkViewSet(WorkspaceScopedViewSetMixin, BaseModelViewSet):
     queryset = GenericProjectLink.objects.all()
     serializer_class = GenericProjectLinkJSONSerializer

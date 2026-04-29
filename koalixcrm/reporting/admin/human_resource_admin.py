@@ -8,10 +8,11 @@ from django.db.models import QuerySet
 from django.http import HttpRequest
 from django.utils.translation import gettext as _
 
+from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
 from koalixcrm.reporting.admin.resource_price_admin import ResourcePriceInlineAdminView
 
 
-class HumanResourceAdminView(admin.ModelAdmin):
+class HumanResourceAdminView(WorkspaceScopedModelAdmin, admin.ModelAdmin):
     list_display = ('id',
                     'user',
                     'resource_manager',

@@ -67,6 +67,8 @@ class TaskJSONSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data: dict[str, Any]) -> Task:
         task = Task()
+        if 'workspace' in validated_data:
+            task.workspace = validated_data.pop('workspace')
         # Deserialize project
         project = validated_data.pop('project')
         if project:

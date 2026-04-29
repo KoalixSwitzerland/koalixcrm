@@ -44,6 +44,8 @@ class ResourcePricesSONSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data: dict[str, Any]) -> ResourcePrice:
         resource_price = ResourcePrice()
+        if 'workspace' in validated_data:
+            resource_price.workspace = validated_data.pop('workspace')
         currency = validated_data.pop('currency')
         if currency and currency.get('id'):
             resource_price.currency = Currency.objects.get(id=currency['id'])

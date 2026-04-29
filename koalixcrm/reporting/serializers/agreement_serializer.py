@@ -51,6 +51,8 @@ class AgreementJSONSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data: dict[str, Any]) -> Agreement:
         agreement = Agreement()
+        if 'workspace' in validated_data:
+            agreement.workspace = validated_data.pop('workspace')
         agreement.amount = validated_data['amount']
         agreement.date_from = validated_data['date_from']
         agreement.date_until = validated_data['date_until']

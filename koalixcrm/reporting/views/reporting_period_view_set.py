@@ -14,9 +14,10 @@ from koalixcrm.reporting.serializers.reporting_period_serializer import (
     ReportingPeriodJSONSerializer,
 )
 from koalixcrm.shared.base_model_view_set import BaseModelViewSet
+from koalixcrm.shared.workspace_scoped_view_set import WorkspaceScopedViewSetMixin
 
 
-class ReportingPeriodViewSet(BaseModelViewSet):
+class ReportingPeriodViewSet(WorkspaceScopedViewSetMixin, BaseModelViewSet):
     queryset = ReportingPeriod.objects.all()
     serializer_class = ReportingPeriodJSONSerializer
 

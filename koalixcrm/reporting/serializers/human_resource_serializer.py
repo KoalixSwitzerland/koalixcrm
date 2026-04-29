@@ -48,6 +48,8 @@ class HumanResourceJSONSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data: dict[str, Any]) -> HumanResource:
         resource = HumanResource()
+        if 'workspace' in validated_data:
+            resource.workspace = validated_data.pop('workspace')
         # Deserialize resource_type
         resource_type = validated_data.pop('resource_type')
         if resource_type:
