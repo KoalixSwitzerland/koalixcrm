@@ -19,7 +19,7 @@ from koalixcrm.djangoUserExtension.models import (
 class TextParagraphInCommercialDocument(WorkspaceScopedModel):
     id = models.BigAutoField(primary_key=True)
     commercial_document = models.ForeignKey("CommercialDocument", on_delete=models.CASCADE)
-    purpose = models.CharField(verbose_name=_("Purpose"), max_length=2, choices=PURPOSESTEXTPARAGRAPHINDOCUMENTS)
+    purpose = models.CharField(verbose_name=_("Purpose"), max_length=32, choices=PURPOSESTEXTPARAGRAPHINDOCUMENTS)
     text_paragraph = models.TextField(verbose_name=_("Text"), blank=False, null=False)
 
     def create_paragraph(

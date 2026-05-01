@@ -61,16 +61,6 @@ class CommercialDocumentMedia(WorkspaceScopedModel):
         help_text=_("MIME type of the stored file"),
     )
 
-    pdf_export_process = models.ForeignKey(
-        "core.PDFExportProcess",
-        on_delete=models.SET_NULL,
-        verbose_name=_("PDF Export Process"),
-        related_name="media_files",
-        null=True,
-        blank=True,
-        help_text=_("The async export process that created this media"),
-    )
-
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
