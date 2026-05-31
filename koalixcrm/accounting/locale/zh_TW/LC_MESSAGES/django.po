@@ -1,0 +1,242 @@
+# Translations for the koalixcrm accounting app.
+# Copyright (C) 2026 koalix
+# This file is distributed under the same license as the koalixcrm package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: koalixcrm\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-04-15 20:27+0000\n"
+"PO-Revision-Date: 2026-06-01 02:39+0800\n"
+"Last-Translator: Peter Dave Hello <hsu@peterdavehello.org>\n"
+"Language-Team: \n"
+"Language: zh_TW\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: const/accountTypeChoices.py:6
+msgid "Earnings"
+msgstr "收入"
+
+#: const/accountTypeChoices.py:7
+msgid "Spendings"
+msgstr "支出"
+
+#: const/accountTypeChoices.py:8
+msgid "Liabilities"
+msgstr "負債"
+
+#: const/accountTypeChoices.py:9
+msgid "Assets"
+msgstr "資產"
+
+#: models/account.py:14
+msgid "Account Number"
+msgstr "帳戶號碼"
+
+#: models/account.py:15
+msgid "Account Title"
+msgstr "帳戶名稱"
+
+#: models/account.py:17
+msgid "Account Type"
+msgstr "帳戶類型"
+
+#: models/account.py:20 models/booking.py:12
+msgid "Description"
+msgstr "說明"
+
+#: models/account.py:21
+msgid "Is The Open Liabilities Account"
+msgstr "為未結負債帳戶"
+
+#: models/account.py:22
+msgid "Is The Open Interests Account"
+msgstr "為未結應收帳戶"
+
+#: models/account.py:23
+msgid "Is a Product Inventory Account"
+msgstr "為產品庫存帳戶"
+
+#: models/account.py:24
+msgid "Is a Customer Payment Account"
+msgstr "為客戶收款帳戶"
+
+#: models/account.py:32
+msgid "Value"
+msgstr "金額"
+
+#: models/account.py:115 models/account.py:116
+msgid "Account"
+msgstr "帳戶"
+
+#: models/account.py:134
+#| msgid "The open liabilites account must be a liabities account"
+msgid "The open liabilities account must be a liabities account"
+msgstr "未結負債帳戶必須為負債類型帳戶"
+
+#: models/account.py:136
+msgid "There may only be one open liablities account in the system"
+msgstr "系統中僅能有一個未結負債帳戶"
+
+#: models/account.py:140
+#| msgid "The open liabilites account must be a liabities account"
+msgid "The open interests account must be an asset account"
+msgstr "未結應收帳戶必須為資產類型帳戶"
+
+#: models/account.py:142
+msgid "There may only be one open intrests account in the system"
+msgstr "系統中僅能有一個未結應收帳戶"
+
+#: models/account.py:145
+msgid "A customer payment account must be an asset account"
+msgstr "客戶收款帳戶必須為資產類型帳戶"
+
+#: models/account.py:148
+msgid "A product inventory account must be an asset account"
+msgstr "產品庫存帳戶必須為資產類型帳戶"
+
+#: models/account.py:163 models/booking.py:43
+msgid "Basic"
+msgstr "基本"
+
+#: models/accounting_period.py:20
+msgid "Title"
+msgstr "標題"
+
+#: models/accounting_period.py:21
+msgid "Begin"
+msgstr "開始"
+
+#: models/accounting_period.py:22
+msgid "End"
+msgstr "結束"
+
+#: models/accounting_period.py:25
+#| msgid "Create PDF of Balance Sheet"
+msgid "Referred template for balance sheet"
+msgstr "資產負債表參照範本"
+
+#: models/accounting_period.py:31
+#| msgid "Create PDF of Profit Loss Statement Sheet"
+msgid "Referred template for profit, loss statement"
+msgstr "損益表參照範本"
+
+#: models/accounting_period.py:41
+msgid "Template Set for balance sheet is missing in Accounting Period"
+msgstr "會計期間缺少資產負債表的範本集"
+
+#: models/accounting_period.py:47
+msgid "Template Set for profit loss statement is missing in Accounting Period"
+msgstr "會計期間缺少損益表的範本集"
+
+#: models/accounting_period.py:166
+msgid "Accounting Period"
+msgstr "會計期間"
+
+#: models/accounting_period.py:167
+msgid "Accounting Periods"
+msgstr "會計期間"
+
+#: models/accounting_period.py:183
+msgid "The begin date cannot be later than the end date."
+msgstr "開始日期不得晚於結束日期。"
+
+#: models/accounting_period.py:185
+msgid "The begin and the end date may not be empty"
+msgstr "開始與結束日期不得為空白"
+
+#: models/accounting_period.py:203 models/product_category.py:40
+msgid "Basics"
+msgstr "基本資料"
+
+#: models/accounting_period.py:236
+msgid "Create PDF of Balance Sheet"
+msgstr "產生資產負債表 PDF"
+
+#: models/accounting_period.py:248
+msgid "Create PDF of Profit Loss Statement Sheet"
+msgstr "產生損益表 PDF"
+
+#: models/booking.py:9
+msgid "From Account"
+msgstr "借方帳戶"
+
+#: models/booking.py:10
+msgid "To Account"
+msgstr "貸方帳戶"
+
+#: models/booking.py:11
+msgid "Amount"
+msgstr "金額"
+
+#: models/booking.py:13
+msgid "Booking Reference"
+msgstr "記帳參考編號"
+
+#: models/booking.py:14
+msgid "Booking at"
+msgstr "記帳日期"
+
+#: models/booking.py:15
+msgid "AccountingPeriod"
+msgstr "會計期間"
+
+#: models/booking.py:17
+msgid "Reference Staff"
+msgstr "負責人員"
+
+#: models/booking.py:18
+msgid "Created at"
+msgstr "建立時間"
+
+#: models/booking.py:19
+msgid "Last modified"
+msgstr "最後修改時間"
+
+#: models/booking.py:21
+msgid "Last modified by"
+msgstr "最後修改者"
+
+#: models/booking.py:26
+msgid "Date"
+msgstr "日期"
+
+#: models/booking.py:33
+msgid "Booking"
+msgstr "記帳"
+
+#: models/booking.py:34
+msgid "Bookings"
+msgstr "記帳"
+
+#: models/product_category.py:10
+#| msgid "Product Categorie Title"
+msgid "Product Category Title"
+msgstr "產品類別名稱"
+
+#: models/product_category.py:14
+msgid "Profit Account"
+msgstr "收益帳戶"
+
+#: models/product_category.py:19
+msgid "Loss Account"
+msgstr "損失帳戶"
+
+#: models/product_category.py:25
+#| msgid "Product Categorie"
+msgid "Product Category"
+msgstr "產品類別"
+
+#: models/product_category.py:26
+msgid "Product Categories"
+msgstr "產品類別"
+
+#: views/document_export.py:35 views/document_export.py:67
+msgid "User Extension Missing"
+msgstr "缺少使用者擴充設定"
+
+#: views/document_export.py:38 views/document_export.py:70
+msgid "Templateset Missing"
+msgstr "缺少範本集"

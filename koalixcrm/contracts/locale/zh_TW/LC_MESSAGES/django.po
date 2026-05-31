@@ -1,0 +1,517 @@
+# Translations for the koalixcrm contracts app.
+# Copyright (C) 2026 koalix
+# This file is distributed under the same license as the koalixcrm package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: koalixcrm\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-04-15 20:28+0000\n"
+"PO-Revision-Date: 2026-06-01 02:39+0800\n"
+"Last-Translator: Peter Dave Hello <hsu@peterdavehello.org>\n"
+"Language-Team: \n"
+"Language: zh_TW\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: admin/commercial_document_admin.py:103
+msgid "Sales Contract"
+msgstr "銷售合約"
+
+#: admin/commercial_document_admin.py:157 admin/contract_admin.py:118
+msgid "Create Quotation"
+msgstr "建立報價單"
+
+#: admin/commercial_document_admin.py:169 admin/contract_admin.py:130
+msgid "Create Invoice"
+msgstr "建立發票"
+
+#: admin/commercial_document_admin.py:181 admin/contract_admin.py:142
+msgid "Create Sales Order"
+msgstr "建立銷售訂單"
+
+#: admin/commercial_document_admin.py:193 admin/contract_admin.py:154
+msgid "Create Despatch Advice"
+msgstr "建立出貨通知"
+
+#: admin/commercial_document_admin.py:205 admin/contract_admin.py:166
+msgid "Create Payment Reminder"
+msgstr "建立付款提醒"
+
+#: admin/commercial_document_admin.py:217 admin/contract_admin.py:178
+msgid "Create Purchase Order"
+msgstr "建立採購單"
+
+#: admin/commercial_document_admin.py:229
+#: admin/commercial_document_admin.py:256
+msgid "Create PDF"
+msgstr "產生 PDF"
+
+#: admin/commercial_document_admin.py:238
+#, python-format
+msgid "Template-set missing for %(doc)s"
+msgstr "%(doc)s 缺少範本集"
+
+#: admin/commercial_document_admin.py:252
+#, python-format
+msgid ""
+"%(count)d PDF export job(s) queued. Check PDF Export Processes for status."
+msgstr "已排入 %(count)d 個 PDF 匯出作業。請至 PDF 匯出作業檢視狀態。"
+
+#: admin/commercial_document_admin.py:267
+msgid "Create Project"
+msgstr "建立專案"
+
+#: admin/contract_admin.py:90
+msgid "Basics"
+msgstr "基本資料"
+
+#: admin/contract_admin.py:198
+msgid "Create Credit Note"
+msgstr "建立折讓單"
+
+#: admin/credit_note_admin.py:15
+msgid "Credit Note specific"
+msgstr "折讓單詳細資料"
+
+#: admin/credit_note_admin.py:25
+msgid "Successfully registered Credit Note in the Accounting"
+msgstr "已成功將折讓單入帳"
+
+#: admin/credit_note_admin.py:34
+msgid "Register Credit Note in Accounting"
+msgstr "將折讓單入帳"
+
+#: admin/credit_note_admin.py:57 models/credit_note.py:41
+#: models/credit_note.py:88 models/credit_note.py:100
+msgid "Credit Note"
+msgstr "折讓單"
+
+#: admin/despatch_advice_admin.py:13
+msgid "Despatch Advice specific"
+msgstr "出貨通知詳細資料"
+
+#: admin/invoice_admin.py:23
+msgid "Invoice specific"
+msgstr "發票詳細資料"
+
+#: admin/invoice_admin.py:38
+msgid "Successfully registered Invoice in the Accounting"
+msgstr "已成功將發票入帳"
+
+#: admin/invoice_admin.py:47
+msgid "Register Invoice in Accounting"
+msgstr "將發票入帳"
+
+#: admin/invoice_admin.py:53
+msgid "Canceled registration of payment in the accounting"
+msgstr "已取消付款入帳"
+
+#: admin/invoice_admin.py:62
+msgid "Successfully registered Payment in the Accounting"
+msgstr "已成功將付款入帳"
+
+#: admin/invoice_admin.py:72
+msgid "Register Payment in Accounting"
+msgstr "將付款入帳"
+
+#: admin/invoice_admin.py:87
+msgid "Create Credit Note from Invoice"
+msgstr "從發票建立折讓單"
+
+#: admin/invoice_admin.py:123 models/invoice.py:35 models/invoice.py:92
+#: models/invoice.py:97
+msgid "Invoice"
+msgstr "發票"
+
+#: admin/payment_reminder_admin.py:16
+msgid "Payment Reminder specific"
+msgstr "付款提醒詳細資料"
+
+#: admin/purchase_order_admin.py:14
+msgid "Purchase Order specific"
+msgstr "採購單詳細資料"
+
+#: admin/quotation_admin.py:17
+msgid "Quotation specific"
+msgstr "報價單詳細資料"
+
+#: admin/quotation_admin.py:53 models/quotation.py:24 models/quotation.py:37
+#: models/quotation.py:42
+msgid "Quotation"
+msgstr "報價單"
+
+#: models/commercial_document.py:23 models/commercial_document.py:206
+#: models/commercial_document.py:220 models/commercial_document.py:234
+#: models/contract.py:22 models/contract.py:36 models/contract.py:50
+msgid "Purpose"
+msgstr "用途"
+
+#: models/commercial_document.py:24
+msgid "Text"
+msgstr "內文"
+
+#: models/commercial_document.py:36
+msgid "Text Paragraph In Commercial Document"
+msgstr "商業文件中的段落文字"
+
+#: models/commercial_document.py:37
+msgid "Text Paragraphs In Commercial Documents"
+msgstr "商業文件中的段落文字"
+
+#: models/commercial_document.py:46 models/commercial_document_position.py:64
+#: models/contract.py:106 models/contract.py:142
+msgid "Contract"
+msgstr "合約"
+
+#: models/commercial_document.py:47
+msgid "External Reference"
+msgstr "外部參考編號"
+
+#: models/commercial_document.py:52 models/commercial_document_position.py:18
+msgid "Discount"
+msgstr "折扣"
+
+#: models/commercial_document.py:55 models/commercial_document_position.py:15
+#: models/contract.py:72
+msgid "Description"
+msgstr "說明"
+
+#: models/commercial_document.py:59
+msgid "Pricing Date"
+msgstr "定價日期"
+
+#: models/commercial_document.py:64
+msgid "Price without Tax "
+msgstr "未稅價格 "
+
+#: models/commercial_document.py:69
+msgid "Tax"
+msgstr "稅額"
+
+#: models/commercial_document.py:74
+msgid "Customer"
+msgstr "客戶"
+
+#: models/commercial_document.py:79 models/contract.py:68
+msgid "Staff"
+msgstr "人員"
+
+#: models/commercial_document.py:82
+msgid "Currency"
+msgstr "幣別"
+
+#: models/commercial_document.py:84 models/contract.py:93
+msgid "Created at"
+msgstr "建立時間"
+
+#: models/commercial_document.py:86
+msgid "Custom Date"
+msgstr "自訂日期"
+
+#: models/commercial_document.py:89 models/contract.py:95
+msgid "Last modified"
+msgstr "最後修改時間"
+
+#: models/commercial_document.py:92 models/contract.py:100
+msgid "Last modified by"
+msgstr "最後修改者"
+
+#: models/commercial_document.py:98
+msgid "Referred Template"
+msgstr "參照範本"
+
+#: models/commercial_document.py:105
+msgid "Last printed"
+msgstr "最後列印時間"
+
+#: models/commercial_document.py:112 models/commercial_document.py:202
+#: models/commercial_document_media.py:30
+msgid "Commercial Document"
+msgstr "商業文件"
+
+#: models/commercial_document.py:113
+msgid "Commercial Documents"
+msgstr "商業文件"
+
+#: models/commercial_document.py:191
+msgid "Template Set missing in Commercial Document"
+msgstr "商業文件中缺少範本集"
+
+#: models/commercial_document.py:202 models/credit_note.py:92
+#: models/despatch_advice.py:22 models/invoice.py:92
+#: models/payment_reminder.py:39 models/purchase_order.py:23
+#: models/quotation.py:37 models/sales_order.py:17
+msgid "from Contract"
+msgstr "來自合約"
+
+#: models/commercial_document.py:212 models/commercial_document.py:213
+msgid "Postal Address For Commercial Documents"
+msgstr "商業文件的通訊地址"
+
+#: models/commercial_document.py:226 models/commercial_document.py:227
+msgid "Email Address For Commercial Documents"
+msgstr "商業文件的電子郵件地址"
+
+#: models/commercial_document.py:240 models/commercial_document.py:241
+msgid "Phone Address For Commercial Documents"
+msgstr "商業文件的電話號碼"
+
+#: models/commercial_document_media.py:19
+msgid "Pending"
+msgstr "待處理"
+
+#: models/commercial_document_media.py:20
+msgid "Processing"
+msgstr "處理中"
+
+#: models/commercial_document_media.py:21
+msgid "Completed"
+msgstr "已完成"
+
+#: models/commercial_document_media.py:22
+msgid "Failed"
+msgstr "失敗"
+
+#: models/commercial_document_media.py:35
+msgid "S3 URL"
+msgstr "S3 URL"
+
+#: models/commercial_document_media.py:37
+msgid "Full URL to the file in S3 / MinIO"
+msgstr "檔案在 S3 / MinIO 中的完整 URL"
+
+#: models/commercial_document_media.py:41
+msgid "S3 Key"
+msgstr "S3 Key"
+
+#: models/commercial_document_media.py:45
+msgid "Object key inside the S3 bucket"
+msgstr "S3 bucket 中的物件金鑰"
+
+#: models/commercial_document_media.py:49 models/quotation.py:15
+msgid "Status"
+msgstr "狀態"
+
+#: models/commercial_document_media.py:56
+msgid "Media Type"
+msgstr "媒體類型"
+
+#: models/commercial_document_media.py:59
+msgid "MIME type of the stored file"
+msgstr "已儲存檔案的 MIME 類型"
+
+#: models/commercial_document_media.py:65
+msgid "PDF Export Process"
+msgstr "PDF 匯出作業"
+
+#: models/commercial_document_media.py:69
+msgid "The async export process that created this media"
+msgstr "建立此媒體的非同步 PDF 匯出作業"
+
+#: models/commercial_document_media.py:75
+msgid "Created By"
+msgstr "建立者"
+
+#: models/commercial_document_media.py:82
+msgid "Created At"
+msgstr "建立時間"
+
+#: models/commercial_document_media.py:88
+msgid "Last Updated At"
+msgstr "最後更新時間"
+
+#: models/commercial_document_media.py:95
+#: models/commercial_document_media.py:96
+msgid "Commercial Document Media"
+msgstr "商業文件媒體"
+
+#: models/commercial_document_position.py:10
+msgid "Position Number"
+msgstr "品項編號"
+
+#: models/commercial_document_position.py:12
+msgid "Quantity"
+msgstr "數量"
+
+#: models/commercial_document_position.py:23
+msgid "Product"
+msgstr "產品"
+
+#: models/commercial_document_position.py:28
+msgid "Unit"
+msgstr "單位"
+
+#: models/commercial_document_position.py:31
+msgid "Shipment on"
+msgstr "出貨日期"
+
+#: models/commercial_document_position.py:34
+msgid "Overwrite Product Price"
+msgstr "覆寫產品價格"
+
+#: models/commercial_document_position.py:35
+msgid "Price Per Unit"
+msgstr "單價"
+
+#: models/commercial_document_position.py:39
+msgid "Last Pricing Date"
+msgstr "最後定價日期"
+
+#: models/commercial_document_position.py:44
+msgid "Last Calculated Price"
+msgstr "最後計算價格"
+
+#: models/commercial_document_position.py:48
+msgid "Last Calculated Tax"
+msgstr "最後計算稅額"
+
+#: models/commercial_document_position.py:53
+#: models/commercial_document_position.py:59
+msgid "Position"
+msgstr "品項"
+
+#: models/commercial_document_position.py:60
+msgid "Positions"
+msgstr "品項"
+
+#: models/commercial_document_position.py:69
+msgid "Position in Commercial Document"
+msgstr "商業文件品項"
+
+#: models/commercial_document_position.py:70
+msgid "Positions Commercial Document"
+msgstr "商業文件品項"
+
+#: models/commercial_document_position.py:104
+msgid "Commercial Document Position"
+msgstr "商業文件品項"
+
+#: models/commercial_document_position.py:108
+msgid "There is no Price set for the commercial document position"
+msgstr "此商業文件品項尚未定價"
+
+#: models/contract.py:28 models/contract.py:29
+msgid "Postal Address For Contracts"
+msgstr "合約的通訊地址"
+
+#: models/contract.py:42 models/contract.py:43
+msgid "Phone Address For Contracts"
+msgstr "合約的電話號碼"
+
+#: models/contract.py:56 models/contract.py:57
+msgid "Email Address For Contracts"
+msgstr "合約的電子郵件地址"
+
+#: models/contract.py:75
+msgid "Default Customer"
+msgstr "預設客戶"
+
+#: models/contract.py:80
+msgid "Default Supplier"
+msgstr "預設供應商"
+
+#: models/contract.py:85
+msgid "Default Currency"
+msgstr "預設幣別"
+
+#: models/contract.py:90
+msgid "Default Template Set"
+msgstr "預設範本集"
+
+#: models/contract.py:107
+msgid "Contracts"
+msgstr "合約"
+
+#: models/credit_note.py:19
+msgid "Corrects Invoice"
+msgstr "更正發票"
+
+#: models/credit_note.py:24
+msgid "Issue Date"
+msgstr "開立日期"
+
+#: models/credit_note.py:26
+msgid "Reason"
+msgstr "原因"
+
+#: models/credit_note.py:62
+msgid "Complete credit note and run price recalculation. Price may not be Zero"
+msgstr "請完成折讓單並重新計算價格。價格不得為零"
+
+#: models/credit_note.py:64 models/invoice.py:56
+msgid "Please specify one open interest account in the accounting"
+msgstr "請在會計帳務中指定一個未結應收帳戶"
+
+#: models/credit_note.py:101
+msgid "Credit Notes"
+msgstr "折讓單"
+
+#: models/despatch_advice.py:10
+msgid "Tracking Reference"
+msgstr "物流追蹤編號"
+
+#: models/despatch_advice.py:22 models/despatch_advice.py:27
+msgid "Despatch Advice"
+msgstr "出貨通知"
+
+#: models/despatch_advice.py:28
+msgid "Despatch Advices"
+msgstr "出貨通知"
+
+#: models/invoice.py:23 models/payment_reminder.py:12
+msgid "To pay until"
+msgstr "付款期限"
+
+#: models/invoice.py:24 models/payment_reminder.py:13
+msgid "Payment Bank Reference"
+msgstr "付款銀行參考編號"
+
+#: models/invoice.py:54
+msgid "Complete invoice and run price recalculation. Price may not be Zero"
+msgstr "請完成發票並重新計算價格。價格不得為零"
+
+#: models/invoice.py:98
+msgid "Invoices"
+msgstr "發票"
+
+#: models/payment_reminder.py:19
+msgid "Iteration Number"
+msgstr "催款次數"
+
+#: models/payment_reminder.py:38 models/payment_reminder.py:44
+msgid "Payment Reminder"
+msgstr "付款提醒"
+
+#: models/payment_reminder.py:45
+msgid "Payment Reminders"
+msgstr "付款提醒"
+
+#: models/purchase_order.py:10
+msgid "Supplier"
+msgstr "供應商"
+
+#: models/purchase_order.py:23 models/purchase_order.py:28
+msgid "Purchase Order"
+msgstr "採購單"
+
+#: models/purchase_order.py:29
+msgid "Purchase Orders"
+msgstr "採購單"
+
+#: models/quotation.py:14
+msgid "Valid until"
+msgstr "有效期限"
+
+#: models/quotation.py:43
+msgid "Quotations"
+msgstr "報價單"
+
+#: models/sales_order.py:17 models/sales_order.py:22
+msgid "Sales Order"
+msgstr "銷售訂單"
+
+#: models/sales_order.py:23
+msgid "Sales Orders"
+msgstr "銷售訂單"

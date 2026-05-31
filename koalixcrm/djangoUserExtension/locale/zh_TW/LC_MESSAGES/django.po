@@ -1,0 +1,275 @@
+# Translations for the koalixcrm djangoUserExtension app.
+# Copyright (C) 2026 koalix
+# This file is distributed under the same license as the koalixcrm package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: koalixcrm\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-04-15 20:28+0000\n"
+"PO-Revision-Date: 2026-06-01 02:39+0800\n"
+"Last-Translator: Peter Dave Hello <hsu@peterdavehello.org>\n"
+"Language-Team: \n"
+"Language: zh_TW\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: const/purpose.py:6
+msgid "Private"
+msgstr "私人"
+
+#: const/purpose.py:7
+msgid "Business"
+msgstr "商務"
+
+#: const/purpose.py:8
+msgid "Mobile Private"
+msgstr "私人行動電話"
+
+#: const/purpose.py:9
+msgid "Mobile Business"
+msgstr "商務行動電話"
+
+#: models/document_template.py:14 models/template_set.py:13
+msgid "Title"
+msgstr "標題"
+
+#: models/document_template.py:18
+msgid "XSL File"
+msgstr "XSL 檔案"
+
+#: models/document_template.py:22
+msgid "FOP Configuration File"
+msgstr "FOP 設定檔"
+
+#: models/document_template.py:28
+msgid "Logo for the PDF generation"
+msgstr "產生 PDF 時使用的 Logo"
+
+#: models/document_template.py:39
+msgid "Fop Config File missing in Document Template"
+msgstr "文件範本中缺少 FOP 設定檔"
+
+#: models/document_template.py:45
+msgid "XSL Template missing in Document Template"
+msgstr "文件範本中缺少 XSL 範本"
+
+#: models/document_template.py:49
+msgid "Document template"
+msgstr "文件範本"
+
+#: models/document_template.py:50
+msgid "Document templates"
+msgstr "文件範本"
+
+#: models/document_template.py:59
+msgid "Invoice template"
+msgstr "發票範本"
+
+#: models/document_template.py:60
+msgid "Invoice templates"
+msgstr "發票範本"
+
+#: models/document_template.py:66
+msgid "Quote template"
+msgstr "報價單範本"
+
+#: models/document_template.py:67
+#| msgid "Templateset"
+msgid "Quote templates"
+msgstr "報價單範本"
+
+#: models/document_template.py:73
+msgid "Delivery note template"
+msgstr "出貨單範本"
+
+#: models/document_template.py:74
+msgid "Delivery note templates"
+msgstr "出貨單範本"
+
+#: models/document_template.py:80
+msgid "Payment reminder template"
+msgstr "付款提醒範本"
+
+#: models/document_template.py:81
+msgid "Payment reminder templates"
+msgstr "付款提醒範本"
+
+#: models/document_template.py:87
+msgid "Purchase order template"
+msgstr "採購單範本"
+
+#: models/document_template.py:88
+msgid "Purchase order templates"
+msgstr "採購單範本"
+
+#: models/document_template.py:94
+#| msgid "XSL File for Purchaseorder"
+msgid "Purchase confirmation template"
+msgstr "採購確認範本"
+
+#: models/document_template.py:95
+#| msgid "XSL File for Purchaseorder"
+msgid "Purchase confirmation templates"
+msgstr "採購確認範本"
+
+#: models/document_template.py:101
+msgid "Profit loss statement template"
+msgstr "損益表範本"
+
+#: models/document_template.py:102
+msgid "Profit loss statement templates"
+msgstr "損益表範本"
+
+#: models/document_template.py:108
+msgid "Balance sheet template"
+msgstr "資產負債表範本"
+
+#: models/document_template.py:109
+msgid "Balance sheet templates"
+msgstr "資產負債表範本"
+
+#: models/document_template.py:115
+msgid "Monthly project summary template"
+msgstr "每月專案摘要範本"
+
+#: models/document_template.py:116
+msgid "Monthly project summary templates"
+msgstr "每月專案摘要範本"
+
+#: models/document_template.py:122
+#| msgid "Templateset"
+msgid "Work report template"
+msgstr "工作報告範本"
+
+#: models/document_template.py:123
+#| msgid "Templateset"
+msgid "Work report templates"
+msgstr "工作報告範本"
+
+#: models/document_template.py:132 models/template_set.py:88
+#: models/text_paragraph.py:30 models/user_extension.py:124
+#: models/user_extension.py:148 models/user_extension.py:161
+#: models/user_extension.py:182
+msgid "Basics"
+msgstr "基本資料"
+
+#: models/template_set.py:55
+#| msgid "Templateset"
+msgid "Template-set"
+msgstr "範本集"
+
+#: models/template_set.py:56
+#| msgid "Templatesets"
+msgid "Template-sets"
+msgstr "範本集"
+
+#: models/text_paragraph.py:13 models/user_extension.py:81
+#: models/user_extension.py:94 models/user_extension.py:107
+msgid "Purpose"
+msgstr "用途"
+
+#: models/text_paragraph.py:14
+msgid "Text"
+msgstr "內文"
+
+#: models/text_paragraph.py:18
+msgid "TextParagraphInDocumentTemplate"
+msgstr "文件範本中的段落文字"
+
+#: models/text_paragraph.py:19
+msgid "TextParagraphInDocumentTemplates"
+msgstr "文件範本中的段落文字"
+
+#: models/user_extension.py:32 models/user_extension.py:36
+#: models/user_extension.py:40
+msgid "During "
+msgstr "期間 "
+
+#: models/user_extension.py:50
+msgid "More than one User Extension define for user "
+msgstr "已為該使用者定義多個使用者擴充設定 "
+
+#: models/user_extension.py:52
+msgid "No User Extension define for user "
+msgstr "尚未為該使用者定義使用者擴充設定 "
+
+#: models/user_extension.py:60
+msgid "Template Set for work report is missing for User Extension"
+msgstr "使用者擴充設定中缺少工作報告的範本集"
+
+#: models/user_extension.py:73 models/user_extension.py:74
+#| msgid "User Extention"
+msgid "User Extension"
+msgstr "使用者擴充設定"
+
+#: models/user_extension.py:89 models/user_extension.py:90
+#| msgid "Djang User Extention"
+msgid "Postal Address for User Extension"
+msgstr "使用者擴充設定的通訊地址"
+
+#: models/user_extension.py:102 models/user_extension.py:103
+#| msgid "Djang User Extention"
+msgid "Phone number for User Extension"
+msgstr "使用者擴充設定的電話號碼"
+
+#: models/user_extension.py:115 models/user_extension.py:116
+#| msgid "Djang User Extention"
+msgid "Email Address for User Extension"
+msgstr "使用者擴充設定的電子郵件地址"
+
+#: models/user_extension.py:194
+msgid "Work Report PDF"
+msgstr "工作報告 PDF"
+
+#~ msgid "User Extentions"
+#~ msgstr "使用者擴充設定"
+
+#~ msgid "XSL Files"
+#~ msgstr "XSL 檔案"
+
+#~ msgid "Name of the Organisation"
+#~ msgstr "組織名稱"
+
+#~ msgid "XSL File for Invoice"
+#~ msgstr "發票用 XSL 檔案"
+
+#~ msgid "XSL File for Quote"
+#~ msgstr "報價單用 XSL 檔案"
+
+#~ msgid "XSL File for Purchaseorder"
+#~ msgstr "採購單用 XSL 檔案"
+
+#~ msgid "XSL File for Deilvery Order"
+#~ msgstr "出貨單用 XSL 檔案"
+
+#~ msgid "XSL File for Profit Loss Statement"
+#~ msgstr "損益表用 XSL 檔案"
+
+#~ msgid "XSL File for Balancesheet"
+#~ msgstr "資產負債表用 XSL 檔案"
+
+#~ msgid "Reference to Banking Account"
+#~ msgstr "銀行帳戶參照"
+
+#~ msgid "Addresser"
+#~ msgstr "寄件人"
+
+#~ msgid "Footer Text On Salesorders"
+#~ msgstr "銷售訂單頁尾文字"
+
+#~ msgid "Header Text On Salesorders"
+#~ msgstr "銷售訂單頁首文字"
+
+#~ msgid "Header Text On Purchaseorders"
+#~ msgstr "採購單頁首文字"
+
+#~ msgid "Footer Text On Purchaseorders"
+#~ msgstr "採購單頁尾文字"
+
+#~ msgid "Page Footer Left"
+#~ msgstr "頁尾左側"
+
+#~ msgid "Page Footer Middle"
+#~ msgstr "頁尾中間"
