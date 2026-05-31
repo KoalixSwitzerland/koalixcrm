@@ -1,0 +1,113 @@
+# Translations for the koalixcrm subscriptions app.
+# Copyright (C) 2026 koalix
+# This file is distributed under the same license as the koalixcrm package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: koalixcrm\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-04-15 20:29+0000\n"
+"PO-Revision-Date: 2026-06-01 02:39+0800\n"
+"Last-Translator: Peter Dave Hello <hsu@peterdavehello.org>\n"
+"Language-Team: \n"
+"Language: zh_TW\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: admin/subscription_admin.py:29 admin/subscription_admin.py:48
+#: admin/subscription_admin.py:88
+msgid "Basics"
+msgstr "基本資料"
+
+#: admin/subscription_admin.py:62
+msgid "Create Invoice"
+msgstr "建立發票"
+
+#: admin/subscription_admin.py:108
+#| msgid "Subscription"
+msgid "Create Subscription"
+msgstr "建立訂閱"
+
+#: const/events.py:6
+msgid "Offered"
+msgstr "已報價"
+
+#: const/events.py:7
+msgid "Canceled"
+msgstr "已取消"
+
+#: const/events.py:8
+msgid "Signed"
+msgstr "已簽署"
+
+#: models/subscription.py:10 models/subscription.py:11
+#: models/subscription_type.py:37
+msgid "Subscription Type"
+msgstr "訂閱類型"
+
+#: models/subscription.py:47 models/subscription_event.py:11
+msgid "Subscription"
+msgstr "訂閱"
+
+#: models/subscription.py:48
+msgid "Subscriptions"
+msgstr "訂閱"
+
+#: models/subscription_event.py:12
+msgid "Event Date"
+msgstr "事件日期"
+
+#: models/subscription_event.py:15
+msgid "Event"
+msgstr "事件"
+
+#: models/subscription_event.py:22
+msgid "Subscription Event"
+msgstr "訂閱事件"
+
+#: models/subscription_event.py:23
+msgid "Subscription Events"
+msgstr "訂閱事件"
+
+#: models/subscription_type.py:10
+msgid "Product Type"
+msgstr "產品類型"
+
+#: models/subscription_type.py:14
+#| msgid "Cancelation Period (months)"
+msgid "Cancellation Period (months)"
+msgstr "取消期限 (月)"
+
+#: models/subscription_type.py:17
+msgid "Automatic Contract Extension (months)"
+msgstr "自動續約期限 (月)"
+
+#: models/subscription_type.py:21
+#| msgid "Automatic Contract Extensoin Reminder (days)"
+msgid "Automatic Contract Extension Reminder (days)"
+msgstr "自動續約提醒天數 (天)"
+
+#: models/subscription_type.py:24
+msgid "Minimum Contract Duration"
+msgstr "最短合約期限"
+
+#: models/subscription_type.py:27
+#| msgid "Payment Intervall (days)"
+msgid "Payment Interval (days)"
+msgstr "付款間隔 (天)"
+
+#: models/subscription_type.py:30
+msgid "Contract Documents"
+msgstr "合約文件"
+
+#: models/subscription_type.py:38
+msgid "Subscription Types"
+msgstr "訂閱類型"
+
+#~ msgid "Start Date"
+#~ msgstr "開始日期"
+
+#~ msgid "Canceling Date"
+#~ msgstr "取消日期"
