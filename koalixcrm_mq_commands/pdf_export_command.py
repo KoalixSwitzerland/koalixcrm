@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
 
 @dataclass
@@ -16,6 +16,8 @@ class PDFExportCommand:
     - source_id: int (id of the source object)
     - template_set_id: int (id of the DocumentTemplate)
     - printed_by_user_id: int (id of the User who triggered the export)
+    - workspace_id: int (id of the Workspace owning the process; required for the
+      worker to construct workspace-scoped REST URLs against the backend)
     """
 
     process_id: int
@@ -23,6 +25,7 @@ class PDFExportCommand:
     source_id: int
     template_set_id: int
     printed_by_user_id: int
+    workspace_id: int
 
     TYPE: str = "PDFExportCommand"
 
@@ -35,6 +38,7 @@ class PDFExportCommand:
                 "source_id": self.source_id,
                 "template_set_id": self.template_set_id,
                 "printed_by_user_id": self.printed_by_user_id,
+                "workspace_id": self.workspace_id,
             },
         }
 
@@ -56,6 +60,7 @@ class PDFExportCommand:
             source_id=int(p["source_id"]),
             template_set_id=int(p["template_set_id"]),
             printed_by_user_id=int(p["printed_by_user_id"]),
+            workspace_id=int(p["workspace_id"]),
         )
 
     @classmethod
