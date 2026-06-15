@@ -62,3 +62,22 @@ celerybeat-schedule-*
 
 # Gradle build cache (Java PDF service)
 .gradle/
+/test_results/Screenshots/test_add_new_row.html
+/test_results/Screenshots/test_add_new_row.png
+/test_results/Screenshots/test_add_new_row.url
+/test_results/Screenshots/test_create_sales_document_from_contract.html
+/test_results/Screenshots/test_create_sales_document_from_contract.png
+/test_results/Screenshots/test_create_sales_document_from_contract.url
+/test_results/Screenshots/test_create_sales_document_from_quote.html
+/test_results/Screenshots/test_create_sales_document_from_quote.png
+/test_results/Screenshots/test_create_sales_document_from_quote.url
+/test_results/Screenshots/test_delete_of_new_blank_row.html
+/test_results/Screenshots/test_delete_of_new_blank_row.png
+/test_results/Screenshots/test_delete_of_new_blank_row.url
+/tests/unit/test_pdf_export_command.py
+/test_results/Screenshots/test_project_admin.html
+/test_results/Screenshots/test_project_admin.png
+/test_results/Screenshots/test_project_admin.url
+/test_results/Screenshots/test_registration_of_work.html
+/test_results/Screenshots/test_registration_of_work.png
+/test_results/Screenshots/test_registration_of_work.url
