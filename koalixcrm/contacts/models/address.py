@@ -16,7 +16,7 @@ class Address(WorkspaceScopedModel):
     )
     number = models.CharField(
         max_length=16, blank=True, null=True,
-        verbose_name=_("Number"),
+        verbose_name=_("House Number"),
     )
     additional_address_line_1 = models.CharField(
         max_length=200, blank=True, null=True,
@@ -59,6 +59,6 @@ class Address(WorkspaceScopedModel):
         verbose_name_plural = _("Addresses")
 
     def __str__(self) -> str:
-        line = " ".join(p for p in [self.street, self.number] if p)
-        parts = [line, self.zip_code, self.town, self.country]
+        street_part = ' '.join(p for p in (self.street, self.number) if p)
+        parts = [street_part or None, self.zip_code, self.town, self.country]
         return ' '.join(p for p in parts if p)

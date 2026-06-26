@@ -3,8 +3,10 @@ Signal for PDFExportProcess: on creation, dispatch a PDFExportCommand via
 the configured dispatcher (see CR-4 / KOALIXCRM_PDF_EXPORT_DISPATCHER).
 """
 import logging
+
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+
 from koalixcrm.core.models.pdf_export_process import PDFExportProcess
 from koalixcrm_mq_commands import PDFExportCommand
 
@@ -27,6 +29,7 @@ def trigger_pdf_export(sender, instance, created, **kwargs):
         source_id=instance.source_id,
         template_set_id=instance.template_set_id if instance.template_set else 0,
         printed_by_user_id=instance.triggered_by_id if instance.triggered_by else 0,
+        workspace_id=instance.workspace_id,
     )
 
     try:

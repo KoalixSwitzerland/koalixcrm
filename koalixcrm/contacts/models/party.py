@@ -36,6 +36,13 @@ class Party(WorkspaceScopedModel):
         blank=True, null=True,
         verbose_name=_("Default billing cycle"),
     )
+    # REQ-WS-012: stores opaque key→value references to external business
+    # applications (e.g. {"customer_erp_id": "266"} written by the PDF importer).
+    ext_business_appl_references = models.JSONField(
+        verbose_name=_("External Business Application References"),
+        default=dict,
+        blank=True,
+    )
 
     class Meta:
         app_label = "contacts"
