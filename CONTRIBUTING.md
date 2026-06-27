@@ -5,6 +5,20 @@ email, or any other method with the owners of this repository before making a ch
 
 Please note we have a code of conduct, please follow it in all your interactions with the project.
 
+## Licensing of Contributions
+
+This project is released under the BSD 3-Clause License (see [LICENSE](LICENSE)).
+
+By submitting a contribution (for example, a pull request), you agree that:
+
+- your contribution is licensed to the project and to all downstream users
+  under the same BSD 3-Clause License; and
+- you have the right to license it under those terms — for example, it is your
+  own original work, or you otherwise hold the rights needed to submit it.
+
+You keep the copyright to your contribution; this is a license grant, not a
+transfer of ownership.
+
 ## Pull Request Process
 
 1. Ensure any install or build dependencies are removed before the end of the layer when doing a 
