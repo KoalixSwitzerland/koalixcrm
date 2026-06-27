@@ -12,7 +12,6 @@ class CommercialDocumentMediaJSONSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "commercial_document",
-            "pdf_export_process",
             "s3_url",
             "s3_key",
             "status",
