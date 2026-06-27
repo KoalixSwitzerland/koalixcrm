@@ -13,6 +13,11 @@ export DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE:-projectsettings.settings
 python manage.py sync_split_migrations
 python manage.py migrate --noinput
 
+# Compile gettext message catalogs (.po -> .mo). Done at startup rather than
+# image build because the source tree (incl. the .po files) is bind-mounted
+# over the image at runtime, which would shadow any .mo built into the image.
+python manage.py compilemessages
+
 python manage.py collectstatic --noinput
 
 # Start Django runserver under debugpy.

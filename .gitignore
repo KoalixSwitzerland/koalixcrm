@@ -1,5 +1,9 @@
 *.py[co]
 
+# Compiled gettext message catalogs — generated from the .po sources at image
+# build (prod) or container startup (dev) via `compilemessages`, never committed.
+*.mo
+
 # Packages
 *.egg
 *.egg-info
