@@ -1,5 +1,5 @@
 # Translations for the koalixcrm crm app.
-# Copyright (C) 2026 koalix
+# Copyright (C) 2026 Aaron Riedener
 # This file is distributed under the same license as the koalixcrm package.
 #
 msgid ""
