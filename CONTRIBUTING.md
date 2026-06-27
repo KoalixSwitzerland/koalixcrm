@@ -19,6 +19,11 @@ By submitting a contribution (for example, a pull request), you agree that:
 You keep the copyright to your contribution; this is a license grant, not a
 transfer of ownership.
 
+If a file you add or change carries a copyright header (for example, the header
+block of a gettext `.po` file), please make it match the project's
+[LICENSE](LICENSE) — `Copyright (c) <year> Aaron Riedener` — rather than
+"koalix" or any other organisation name.
+
 ## Pull Request Process
 
 1. Ensure any install or build dependencies are removed before the end of the layer when doing a 
