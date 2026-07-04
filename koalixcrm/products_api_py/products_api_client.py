@@ -9,8 +9,11 @@ from koalixcrm.products_api_py.dto.customer_group_transform import (
     CustomerGroupTransform,
 )
 from koalixcrm.products_api_py.dto.product import Product
+from koalixcrm.products_api_py.dto.product_family import ProductFamily
+from koalixcrm.products_api_py.dto.product_media import ProductMedia
 from koalixcrm.products_api_py.dto.product_price import ProductPrice
-from koalixcrm.products_api_py.dto.product_type import ProductType
+from koalixcrm.products_api_py.dto.product_translation import ProductTranslation
+from koalixcrm.products_api_py.dto.product_variant import ProductVariant
 from koalixcrm.shared.api_client import BaseAPIClient
 
 
@@ -29,46 +32,112 @@ class KoalixCRMProductsAPIClient(BaseAPIClient):
         super().__init__(api_url=api_url, username=username, password=password, workspace_id=workspace_id)
 
     # ------------------------------------------------------------------
-    # ProductType (endpoint: /products)
+    # Product (endpoint: /products) — renamed from ProductType,
+    # ADR-0003 Amendment 2026-06-27.
     # ------------------------------------------------------------------
 
-    def get_product_type(self, object_id: int) -> ProductType | None:
-        return self._get_object(ProductType, "/products", object_id)
+    def get_product_type(self, object_id: int) -> Product | None:
+        return self._get_object(Product, "/products", object_id)
 
-    def get_product_type_list(self) -> list[ProductType]:
-        return self._get_object_list(ProductType, "/products/")
+    def get_product_type_list(self) -> list[Product]:
+        return self._get_object_list(Product, "/products/")
 
-    def create_product_type(self, data: dict[str, Any]) -> ProductType | None:
+    def create_product_type(self, data: dict[str, Any]) -> Product | None:
         response_data = self._make_request("/products/", method="POST", data=data)
-        if response_data:
-            obj = ProductType(response_data, self)
-            self._cache.set(ProductType, obj.id, obj)
-            return obj
-        return None
-
-    def update_product_type(self, object_id: int, data: dict[str, Any]) -> ProductType | None:
-        return self._put_full_update(ProductType, "/products", object_id, data)
-
-    # ------------------------------------------------------------------
-    # Product (endpoint: /product_items)
-    # ------------------------------------------------------------------
-
-    def get_product(self, object_id: int) -> Product | None:
-        return self._get_object(Product, "/product-items", object_id)
-
-    def get_product_list(self) -> list[Product]:
-        return self._get_object_list(Product, "/product-items/")
-
-    def create_product(self, data: dict[str, Any]) -> Product | None:
-        response_data = self._make_request("/product-items/", method="POST", data=data)
         if response_data:
             obj = Product(response_data, self)
             self._cache.set(Product, obj.id, obj)
             return obj
         return None
 
-    def update_product(self, object_id: int, data: dict[str, Any]) -> Product | None:
-        return self._put_full_update(Product, "/product-items", object_id, data)
+    def update_product_type(self, object_id: int, data: dict[str, Any]) -> Product | None:
+        return self._put_full_update(Product, "/products", object_id, data)
+
+    # ------------------------------------------------------------------
+    # ProductFamily (endpoint: /product-families)
+    # ------------------------------------------------------------------
+
+    def get_product_family(self, object_id: int) -> ProductFamily | None:
+        return self._get_object(ProductFamily, "/product-families", object_id)
+
+    def get_product_family_list(self) -> list[ProductFamily]:
+        return self._get_object_list(ProductFamily, "/product-families/")
+
+    def create_product_family(self, data: dict[str, Any]) -> ProductFamily | None:
+        response_data = self._make_request("/product-families/", method="POST", data=data)
+        if response_data:
+            obj = ProductFamily(response_data, self)
+            self._cache.set(ProductFamily, obj.id, obj)
+            return obj
+        return None
+
+    def update_product_family(self, object_id: int, data: dict[str, Any]) -> ProductFamily | None:
+        return self._put_full_update(ProductFamily, "/product-families", object_id, data)
+
+    # ------------------------------------------------------------------
+    # ProductVariant (endpoint: /product-variants) — carries the
+    # identification role formerly held by the (now removed) hollow
+    # `Product` model.
+    # ------------------------------------------------------------------
+
+    def get_product_variant(self, object_id: int) -> ProductVariant | None:
+        return self._get_object(ProductVariant, "/product-variants", object_id)
+
+    def get_product_variant_list(self) -> list[ProductVariant]:
+        return self._get_object_list(ProductVariant, "/product-variants/")
+
+    def create_product_variant(self, data: dict[str, Any]) -> ProductVariant | None:
+        response_data = self._make_request("/product-variants/", method="POST", data=data)
+        if response_data:
+            obj = ProductVariant(response_data, self)
+            self._cache.set(ProductVariant, obj.id, obj)
+            return obj
+        return None
+
+    def update_product_variant(self, object_id: int, data: dict[str, Any]) -> ProductVariant | None:
+        return self._put_full_update(ProductVariant, "/product-variants", object_id, data)
+
+    # ------------------------------------------------------------------
+    # ProductTranslation (endpoint: /product-translations)
+    # ------------------------------------------------------------------
+
+    def get_product_translation(self, object_id: int) -> ProductTranslation | None:
+        return self._get_object(ProductTranslation, "/product-translations", object_id)
+
+    def get_product_translation_list(self) -> list[ProductTranslation]:
+        return self._get_object_list(ProductTranslation, "/product-translations/")
+
+    def create_product_translation(self, data: dict[str, Any]) -> ProductTranslation | None:
+        response_data = self._make_request("/product-translations/", method="POST", data=data)
+        if response_data:
+            obj = ProductTranslation(response_data, self)
+            self._cache.set(ProductTranslation, obj.id, obj)
+            return obj
+        return None
+
+    def update_product_translation(self, object_id: int, data: dict[str, Any]) -> ProductTranslation | None:
+        return self._put_full_update(ProductTranslation, "/product-translations", object_id, data)
+
+    # ------------------------------------------------------------------
+    # ProductMedia (endpoint: /product-media)
+    # ------------------------------------------------------------------
+
+    def get_product_media(self, object_id: int) -> ProductMedia | None:
+        return self._get_object(ProductMedia, "/product-media", object_id)
+
+    def get_product_media_list(self) -> list[ProductMedia]:
+        return self._get_object_list(ProductMedia, "/product-media/")
+
+    def create_product_media(self, data: dict[str, Any]) -> ProductMedia | None:
+        response_data = self._make_request("/product-media/", method="POST", data=data)
+        if response_data:
+            obj = ProductMedia(response_data, self)
+            self._cache.set(ProductMedia, obj.id, obj)
+            return obj
+        return None
+
+    def update_product_media(self, object_id: int, data: dict[str, Any]) -> ProductMedia | None:
+        return self._put_full_update(ProductMedia, "/product-media", object_id, data)
 
     # ------------------------------------------------------------------
     # ProductPrice (endpoint: /product_prices)

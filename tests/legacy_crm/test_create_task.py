@@ -13,6 +13,7 @@ from tests.factories.contracts.quotation_factory import StandardQuotationFactory
 from tests.factories.core.currency_factory import StandardCurrencyFactory
 from tests.factories.products.product_price_factory import StandardPriceFactory
 from tests.factories.products.product_type_factory import StandardProductTypeFactory
+from tests.factories.products.product_variant_factory import StandardProductVariantFactory
 
 
 class DocumentCalculationsTest(TestCase):
@@ -26,8 +27,12 @@ class DocumentCalculationsTest(TestCase):
                 title="This is a test product " + i.__str__(),
                 product_type_identifier=12334235+i,
             )
+            test_variant = StandardProductVariantFactory.create(
+                product=test_product,
+                sku="SKU-CREATE-TASK-" + i.__str__(),
+            )
             StandardPriceFactory.create(
-                product_type=test_product,
+                variant=test_variant,
             )
             StandardCommercialDocumentPositionFactory.create(
                 commercial_document=self.test_quotation,

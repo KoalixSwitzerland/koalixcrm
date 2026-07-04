@@ -63,6 +63,15 @@ products_swagger_settings = {
     'VERSION': '1.0.0',
 }
 
+stock_api_urls = [
+    path('koalixcrm_stock/api/v1/<int:workspace_id>/', include('koalixcrm.stock.urls')),
+]
+stock_swagger_settings = {
+    'TITLE': 'koalixcrm Stock API',
+    'DESCRIPTION': 'API documentation for the koalixcrm Stock (locations/batches/serial units) service.',
+    'VERSION': '1.0.0',
+}
+
 core_api_urls = [
     path('koalixcrm_core/api/v1/<int:workspace_id>/', include('koalixcrm.core.urls')),
 ]
@@ -117,6 +126,7 @@ urlpatterns = [
     path('koalixcrm_accounting/api/v1/<int:workspace_id>/', include('koalixcrm.accounting.urls')),
     path('koalixcrm_contacts/api/v1/<int:workspace_id>/',   include('koalixcrm.contacts.urls')),
     path('koalixcrm_products/api/v1/<int:workspace_id>/',   include('koalixcrm.products.urls')),
+    path('koalixcrm_stock/api/v1/<int:workspace_id>/',      include('koalixcrm.stock.urls')),
     path('koalixcrm_core/api/v1/<int:workspace_id>/',       include('koalixcrm.core.urls')),
     path('koalixcrm_contracts/api/v1/<int:workspace_id>/',  include('koalixcrm.contracts.urls')),
     path('koalixcrm_reporting/api/v1/<int:workspace_id>/',  include('koalixcrm.reporting.api_urls')),
@@ -151,6 +161,16 @@ urlpatterns = [
     path('koalixcrm_products/api/redoc/v1/', SpectacularRedocView.as_view(
         url_name='koalixcrm-products-api-schema',
     ), name='koalixcrm-products-redoc'),
+
+    path('koalixcrm_stock/api/schema/v1/', SpectacularAPIView.as_view(
+        urlconf=stock_api_urls, custom_settings=stock_swagger_settings,
+    ), name='koalixcrm-stock-api-schema'),
+    path('koalixcrm_stock/api/swagger/v1/', SpectacularSwaggerView.as_view(
+        url_name='koalixcrm-stock-api-schema',
+    ), name='koalixcrm-stock-swagger-ui'),
+    path('koalixcrm_stock/api/redoc/v1/', SpectacularRedocView.as_view(
+        url_name='koalixcrm-stock-api-schema',
+    ), name='koalixcrm-stock-redoc'),
 
     path('koalixcrm_core/api/schema/v1/', SpectacularAPIView.as_view(
         urlconf=core_api_urls, custom_settings=core_swagger_settings,

@@ -3,7 +3,8 @@
 from django.contrib.auth.models import User
 from django.test import LiveServerTestCase
 
-from koalixcrm.products.models.product_type import ProductType
+from koalixcrm.products.models.choices import ProductKind
+from koalixcrm.products.models.product import Product
 from koalixcrm.products_api_py.products_api_client import KoalixCRMProductsAPIClient
 from tests.factories.core.tax_factory import StandardTaxFactory
 from tests.factories.core.unit_factory import StandardUnitFactory
@@ -11,7 +12,8 @@ from tests.factories.products.product_type_factory import StandardProductTypeFac
 
 
 class ProductTypeAPITest(LiveServerTestCase):
-    """Test for the ProductType model API functionality."""
+    """Test for the Product model API functionality (renamed from
+    ProductType — ADR-0003 Amendment 2026-06-27)."""
 
     def setUp(self):
         self.admin_user = User.objects.create_superuser(
@@ -22,8 +24,8 @@ class ProductTypeAPITest(LiveServerTestCase):
         self.unit = StandardUnitFactory.create()
         self.tax = StandardTaxFactory.create()
         self.product_type = StandardProductTypeFactory.create(
-            default_unit=self.unit,
-            tax=self.tax,
+            base_uom=self.unit,
+            tax_class=self.tax,
             last_modified_by=self.admin_user,
         )
         self.api_client = KoalixCRMProductsAPIClient(
@@ -37,7 +39,7 @@ class ProductTypeAPITest(LiveServerTestCase):
         items = self.api_client.get_product_type_list()
         self.assertGreaterEqual(len(items), 1)
         found = any(item.id == self.product_type.id for item in items)
-        self.assertTrue(found, "Created ProductType not found in the list response")
+        self.assertTrue(found, "Created Product not found in the list response")
 
     def test_read(self):
         retrieved = self.api_client.get_product_type(self.product_type.id)
@@ -48,14 +50,15 @@ class ProductTypeAPITest(LiveServerTestCase):
         data = {
             "title": "New API Product Type",
             "product_type_identifier": "API-001",
-            "default_unit": {"id": self.unit.id},
-            "tax": {"id": self.tax.id},
+            "kind": ProductKind.TRADING_GOOD,
+            "base_uom": {"id": self.unit.id},
+            "tax_class": {"id": self.tax.id},
         }
         created = self.api_client.create_product_type(data)
         self.assertIsNotNone(created)
         self.assertIsNotNone(created.id)
 
-        db_obj = ProductType.objects.get(id=created.id)
+        db_obj = Product.objects.get(id=created.id)
         self.assertEqual(db_obj.title, "New API Product Type")
 
     def test_modify(self):

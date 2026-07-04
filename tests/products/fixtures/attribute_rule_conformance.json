@@ -1,0 +1,54 @@
+[
+  {
+    "description": "Coating example (ADR-0004): VOC content required if gloss level is matt.",
+    "rule": {
+      "key": "voc-required-if-matt",
+      "condition": {"attribute": "gloss_level", "op": "eq", "value": "matt"},
+      "then": {"attribute": "voc_content", "requirement": "required"}
+    },
+    "cases": [
+      {"values": {"gloss_level": "matt", "voc_content": 120}, "expect_violation": false},
+      {"values": {"gloss_level": "matt"}, "expect_violation": true},
+      {"values": {"gloss_level": "gloss"}, "expect_violation": false}
+    ]
+  },
+  {
+    "description": "Water-base and solvent-base fields are mutually exclusive.",
+    "rule": {
+      "key": "base-mutually-exclusive",
+      "condition": {"attribute": "base", "op": "exists"},
+      "then": {"attributes": ["water_base_ratio", "solvent_base_ratio"], "requirement": "mutually_exclusive"}
+    },
+    "cases": [
+      {"values": {"base": "water", "water_base_ratio": 1.0}, "expect_violation": false},
+      {"values": {"base": "water", "water_base_ratio": 1.0, "solvent_base_ratio": 0.5}, "expect_violation": true},
+      {"values": {}, "expect_violation": false}
+    ]
+  },
+  {
+    "description": "Hazard class forbidden unless regulated_substance is true.",
+    "rule": {
+      "key": "hazard-forbidden-unless-regulated",
+      "condition": {"attribute": "regulated_substance", "op": "neq", "value": true},
+      "then": {"attribute": "hazard_class", "requirement": "forbidden"}
+    },
+    "cases": [
+      {"values": {"regulated_substance": false, "hazard_class": "3"}, "expect_violation": true},
+      {"values": {"regulated_substance": true, "hazard_class": "3"}, "expect_violation": false},
+      {"values": {"regulated_substance": false}, "expect_violation": false}
+    ]
+  },
+  {
+    "description": "At least one of shelf_life_days or storage_temp_min_c required when is_lot_tracked.",
+    "rule": {
+      "key": "at-least-one-lot-metadata",
+      "condition": {"attribute": "is_lot_tracked", "op": "eq", "value": true},
+      "then": {"attributes": ["shelf_life_days", "storage_temp_min_c"], "requirement": "at_least_one"}
+    },
+    "cases": [
+      {"values": {"is_lot_tracked": true, "shelf_life_days": 30}, "expect_violation": false},
+      {"values": {"is_lot_tracked": true}, "expect_violation": true},
+      {"values": {"is_lot_tracked": false}, "expect_violation": false}
+    ]
+  }
+]

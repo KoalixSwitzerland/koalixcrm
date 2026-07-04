@@ -21,7 +21,7 @@ class CurrencyTransform(models.Model):
                                     null=False,
                                     verbose_name=_("To Currency"),
                                     related_name="db_reltransformtocurrency")
-    product_type = models.ForeignKey('products.ProductType',
+    product_type = models.ForeignKey('products.Product',
                                      on_delete=models.CASCADE,
                                      blank=False,
                                      null=False,

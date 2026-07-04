@@ -33,6 +33,7 @@ PROJECT_APPS = [
     'koalixcrm.core',
     'koalixcrm.contacts',
     'koalixcrm.products',
+    'koalixcrm.stock',
     'koalixcrm.contracts',
     'koalixcrm.reporting',
     'koalixcrm.accounting',

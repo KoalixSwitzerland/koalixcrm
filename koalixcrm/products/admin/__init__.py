@@ -1,4 +1,22 @@
 # -*- coding: utf-8 -*-
+from koalixcrm.products.admin.attribute_definition_admin import *  # noqa: F401, F403
+from koalixcrm.products.admin.attribute_group_admin import *  # noqa: F401, F403
+from koalixcrm.products.admin.attribute_set_admin import *  # noqa: F401, F403
+from koalixcrm.products.admin.bill_of_materials_admin import *  # noqa: F401, F403
+from koalixcrm.products.admin.classification_admin import *  # noqa: F401, F403
 from koalixcrm.products.admin.customer_group_transform_admin import *  # noqa: F401, F403
+from koalixcrm.products.admin.price_list_admin import *  # noqa: F401, F403
+from koalixcrm.products.admin.product_admin import *  # noqa: F401, F403
+from koalixcrm.products.admin.product_attribute_mapping_admin import *  # noqa: F401, F403
+from koalixcrm.products.admin.product_attribute_mirror_admin import *  # noqa: F401, F403
+from koalixcrm.products.admin.product_attribute_value_admin import *  # noqa: F401, F403
+from koalixcrm.products.admin.product_classification_admin import *  # noqa: F401, F403
+from koalixcrm.products.admin.product_family_admin import *  # noqa: F401, F403
+from koalixcrm.products.admin.product_media_admin import *  # noqa: F401, F403
+from koalixcrm.products.admin.product_passport_admin import *  # noqa: F401, F403
 from koalixcrm.products.admin.product_price_admin import *  # noqa: F401, F403
-from koalixcrm.products.admin.product_type_admin import *  # noqa: F401, F403
+from koalixcrm.products.admin.product_supply_admin import *  # noqa: F401, F403
+from koalixcrm.products.admin.product_translation_admin import *  # noqa: F401, F403
+from koalixcrm.products.admin.product_variant_admin import *  # noqa: F401, F403
+from koalixcrm.products.admin.service_profile_admin import *  # noqa: F401, F403
+from koalixcrm.products.admin.unit_of_measure_conversion_admin import *  # noqa: F401, F403

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-"""Attach accounting-owned inlines to `core.Tax` and `products.ProductType`
+"""Attach accounting-owned inlines to `core.Tax` and `products.Product`
 admins at startup, so users with the accounting app installed see the
 activa/passiva accounts and product category directly on the Tax /
-ProductType change pages (the pre-CR-2c UX).
+Product change pages (the pre-CR-2c UX).
 
 Runs from `AccountingConfig.ready()`. When the accounting app is not
 installed this module never loads, so the admins stay clean.
@@ -36,10 +36,10 @@ def _patch_product_type_admin() -> None:
     from koalixcrm.accounting.admin.product_category_assignment_admin import (
         ProductCategoryAssignmentInline,
     )
-    from koalixcrm.products.models.product_type import ProductType
+    from koalixcrm.products.models.product import Product
 
     try:
-        existing = admin.site._registry[ProductType]
+        existing = admin.site._registry[Product]
     except KeyError:
         return
     existing_cls = type(existing)

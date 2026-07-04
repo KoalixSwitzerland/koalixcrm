@@ -25,11 +25,11 @@ class UnitTransform(models.Model):
                                 blank=False,
                                 null=False,
                                 related_name="db_reltransfromtounit")
-    product_type = models.ForeignKey('products.ProductType',
+    product_type = models.ForeignKey('products.Product',
                                      on_delete=models.CASCADE,
                                      blank=False,
                                      null=False,
-                                     verbose_name=_("Product Type"))
+                                     verbose_name=_("Product"))
     factor = models.DecimalField(verbose_name=_("Factor between From and To Unit"),
                                  blank=False,
                                  null=False,

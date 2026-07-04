@@ -14,3 +14,16 @@ class ProductsConfig(AppConfig):
     def ready(self) -> None:
         from koalixcrm.core.app_checks import register_peer_check
         register_peer_check(self)
+
+        from koalixcrm.products.signals.attribute_mirror import (
+            register_attribute_mirror_signals,
+        )
+        register_attribute_mirror_signals()
+
+        from koalixcrm.products.signals.bom_version import register_bom_version_signals
+        register_bom_version_signals()
+
+        from koalixcrm.products.services.kind_lock_providers import (
+            register_stage3_lock_providers,
+        )
+        register_stage3_lock_providers()
