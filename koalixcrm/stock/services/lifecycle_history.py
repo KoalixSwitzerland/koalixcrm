@@ -9,6 +9,8 @@ table. Every function is read-only and never writes.
                              installing without a later removing.
 4. `who_held_it_when`      — holder timeline from disposition/owner_party.
 5. `where_was_it_when`     — location timeline from destination_location.
+
+Justification: framework — read-only ORM projections over the StockMovement log, exposed only as synchronous GET actions within the same app; still needed with the microservice fleet deleted.
 """
 from __future__ import annotations
 

@@ -14,7 +14,9 @@ Supports the AI combinations ADR-0016 needs:
 Accepts both a bracketed human-readable form (``"(01)04012345123456(21)000001"``)
 and the raw FNC1-style concatenation without brackets, as long as
 fixed-length AIs are used (all AIs in this table are fixed-length, so no
-FNC1 group-separator handling is required)."""
+FNC1 group-separator handling is required).
+
+Justification: framework — zero-DB parsing helper invoked synchronously inline by scan_resolve within a single request/response cycle; still needed with the microservice fleet deleted."""
 from __future__ import annotations
 
 import re

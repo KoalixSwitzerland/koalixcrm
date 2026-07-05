@@ -8,7 +8,9 @@ Workspace-scoping (ADR-0016 §Workspace-Scoping): every identifier type is
 workspace-scoped except `ProductVariant.gtin`, which is catalog-wide
 (Nachtrag 2026-07-04, OQ-0022) — a GTIN hit is looked up without a
 workspace filter. `ProductVariant.sku` free-text matching (Stufe 2, Regel
-3) *is* workspace-scoped."""
+3) *is* workspace-scoped.
+
+Justification: framework — GS1/free-text resolution invoked synchronously inline by the scan-resolve GET endpoint within a single request/response cycle, using workspace-scoped ORM queries; still needed with the microservice fleet deleted."""
 from __future__ import annotations
 
 from dataclasses import dataclass, field

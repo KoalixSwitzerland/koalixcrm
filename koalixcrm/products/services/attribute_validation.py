@@ -5,6 +5,8 @@ rules. Call `enforce_attribute_rules()` after writing a typed EAV value row
 usage pattern) to re-validate the product/variant's full effective
 attribute-value set against every active `AttributeValidationRule` bound
 through its applicable `AttributeSet`s.
+
+Justification: framework — re-validates the effective attribute-value set inside the same write transaction as the EAV row write, so a ValidationError blocks the commit; a post-hoc REST check could not prevent the write; still needed with the microservice fleet deleted.
 """
 from __future__ import annotations
 

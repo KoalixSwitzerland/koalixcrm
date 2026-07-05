@@ -4,6 +4,8 @@
 Familie-/AttributeSet-Standard. No effective value is ever materialized as
 its own row; this is a pure read-time function over the typed EAV value
 tables and `AttributeSetDefault`.
+
+Justification: framework — read-time cascade resolver over EAV tables, consumed inline wherever Django needs an effective attribute value (serializers, attribute_mirror); still needed with the microservice fleet deleted.
 """
 from __future__ import annotations
 

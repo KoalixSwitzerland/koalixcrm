@@ -3,7 +3,9 @@
 Amendment 2026-07-04): time-window ATP for serial-tracked rental/
 project-hold stock. `is_free()`/`free_windows()` are computed queries over
 the canonical `StockReservation` table — no materialized
-`UnitAvailabilityWindow` table."""
+`UnitAvailabilityWindow` table.
+
+Justification: framework — ORM-computed ATP query over StockReservation, exposed only as a synchronous GET read within the same Django app; still needed with the microservice fleet deleted since it serves an in-request availability check."""
 from __future__ import annotations
 
 import datetime

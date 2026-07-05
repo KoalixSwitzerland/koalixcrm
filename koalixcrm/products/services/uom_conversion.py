@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 """Conversion-factor lookup for `UnitOfMeasureConversion` (ADR-0005, REQ-0013
 AC-2): a stored `(product, A -> B, factor=f)` row also answers the reverse
-`(product, B -> A)` query with `1/f`, without a second stored row."""
+`(product, B -> A)` query with `1/f`, without a second stored row.
+
+Justification: framework — ORM lookup with reverse-factor derivation, consumed inline wherever a quantity conversion is needed; still needed with the microservice fleet deleted."""
 from __future__ import annotations
 
 from decimal import Decimal

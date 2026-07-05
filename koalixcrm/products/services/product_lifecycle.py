@@ -4,6 +4,8 @@
 ADR-0003 §Lifecycle-Status-Werte. Business logic lives here (not in the
 view/serializer) so it can be invoked identically from `Product.clean()`,
 the admin, and DRF serializers.
+
+Justification: framework — shared validation source invoked identically from Product.clean(), the admin and DRF serializers; still needed with the microservice fleet deleted.
 """
 from __future__ import annotations
 

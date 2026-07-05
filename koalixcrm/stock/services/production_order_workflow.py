@@ -19,6 +19,8 @@ state machine and its stock-flow side effects.
 
 All quantity-affecting steps happen inside one DB transaction per call,
 consistent with ADR-0011's synchronous-posting invariant.
+
+Justification: transactional integrity — complete() posts the finished-good TRANSFORMATION_EVENT plus AGGREGATION_EVENT rows and fulfils every component reservation in one DB transaction (ADR-0011 synchronous-posting invariant); still needed with the microservice fleet deleted. (Tier-2 GRANTED by architect.)
 """
 from __future__ import annotations
 

@@ -5,7 +5,9 @@ state machine. The `COMPLETED` transition posts exactly one `receiving`
 in the same DB transaction (via `services/movement_posting.post_movement`),
 consistent with the ADR-0011 invariant. `CANCELLED` never posts a movement
 (ADR-0017 §Consequences/Negative: a partially-booked-then-cancelled receipt
-needs a manual adjustment)."""
+needs a manual adjustment).
+
+Justification: transactional integrity — complete() posts the receiving StockMovement via movement_posting.post_movement in the same DB transaction as the state transition (ADR-0011 synchronous-posting invariant); still needed with the microservice fleet deleted. (Tier-2 GRANTED by architect.)"""
 from __future__ import annotations
 
 from typing import TYPE_CHECKING

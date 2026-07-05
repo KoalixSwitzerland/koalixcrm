@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """`BillOfMaterialsExplosion` — a precomputed, flattened BOM-explosion
 snapshot row (ADR-0014). Populated by `services/bom_explosion.py::explode()`
-(a plain, synchronous service function; a Celery task shell wraps it for
-async recompute-on-BOM-change, see `stock/tasks.py`). Soft depth limits:
+(a plain, synchronous service function; no async recompute-on-BOM-change
+path is built today — org ADR-0002 §2.4). Soft depth limits:
 depth <= 10 (warn), depth <= 20 (hard reject, `PREASSEMBLE` recommended)."""
 from __future__ import annotations
 

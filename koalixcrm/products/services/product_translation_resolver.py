@@ -12,6 +12,8 @@ Step 1 reads an optional `default_language` attribute off the product's
 workspace. `core.Workspace` does not (yet) carry that field in this stage;
 resolution degrades gracefully to step 2 when it is absent, per the ADR's
 "the product object itself is never suppressed" guarantee.
+
+Justification: framework — read-time fallback-chain composition consumed inline during Django's own response serialization; still needed with the microservice fleet deleted.
 """
 from __future__ import annotations
 

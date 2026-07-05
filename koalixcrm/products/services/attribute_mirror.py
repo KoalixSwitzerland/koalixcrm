@@ -3,6 +3,8 @@
 `koalixcrm.products.signals.attribute_mirror` on every typed EAV value
 table write/delete; keeps `ProductAttributeMirror` in lock-step with the
 source-of-truth typed value tables (no async/eventual-consistency window).
+
+Justification: framework — invoked from products.signals on every typed EAV value write/delete — a signal cascade, the textbook framework-coupling example; still needed with the microservice fleet deleted.
 """
 from __future__ import annotations
 

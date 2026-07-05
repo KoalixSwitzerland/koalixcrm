@@ -7,7 +7,9 @@ REQ-0012 AC-2), resolved against `ProductVariant` (ADR-0021 Amendment):
 3. `customer_group_transform` factor applied to the price found in 1 or 2.
 
 Pure function, no side effects; identical inputs always yield the same
-result (ADR-0005 determinism requirement)."""
+result (ADR-0005 determinism requirement).
+
+Justification: framework — deterministic ORM read over ProductPrice, resolved inline wherever a price must be frozen onto a document line; still needed with the microservice fleet deleted."""
 from __future__ import annotations
 
 import datetime

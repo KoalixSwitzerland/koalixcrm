@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """ADR-0014: read-only `BillOfMaterialsExplosion` ViewSet plus a
 `recompute` action that calls `services/bom_explosion.explode()`
-synchronously (the Celery task in `koalixcrm/stock/tasks.py` is an
-optional async entry point, not used by this endpoint)."""
+synchronously (no async recompute worker exists today; org ADR-0002 §2.4)."""
 from __future__ import annotations
 
 from django.core.exceptions import ValidationError as DjangoValidationError

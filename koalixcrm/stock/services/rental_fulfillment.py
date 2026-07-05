@@ -4,7 +4,9 @@ return. `RentalAssignment` is only ever created for a `StockReservation`
 that is already `FULFILLED` — this module performs both the reservation
 transition (`services/reservation_lifecycle.fulfill`) and the
 `StockMovement` posting (`disposition=in_possession` / `returned`) in the
-same transaction as the `RentalAssignment` row."""
+same transaction as the `RentalAssignment` row.
+
+Justification: transactional integrity — combines reservation_lifecycle.fulfill, movement_posting.post_movement and RentalAssignment creation in one DB transaction; still needed with the microservice fleet deleted. (Tier-2 GRANTED by architect.)"""
 from __future__ import annotations
 
 from typing import TYPE_CHECKING

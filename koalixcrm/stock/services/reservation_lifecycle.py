@@ -18,6 +18,8 @@ Offer status -> StockReservation coupling (ADR-0010 Amendment OQ-0012):
 | REJECTED     | CANCELLED           | -                                 |
 | EXPIRED      | CANCELLED           | -                                 |
 | CANCELLED    | CANCELLED           | -                                 |
+
+Justification: transactional integrity — mark_sent()'s first-SENT-wins concurrency rule requires an atomic compare-and-set inside one DB transaction; an idempotent CRUD-over-HTTP retry cannot express first-wins semantics; still needed with the microservice fleet deleted. (Tier-2 GRANTED by architect.)
 """
 from __future__ import annotations
 

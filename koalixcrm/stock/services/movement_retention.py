@@ -6,7 +6,9 @@ protection floor, not a deletion trigger. "Jede künftige
 Lösch-Werkzeug-Implementierung MUSS das Löschen von `StockMovement`-Zeilen
 verweigern, deren `occurred_at` die konfigurierte Untergrenze noch nicht
 unterschritten hat" (ADR-0011). `StockMovement.delete()` calls
-`assert_deletable()` so this refusal holds for every deletion path."""
+`assert_deletable()` so this refusal holds for every deletion path.
+
+Justification: framework — deletion guard invoked from StockMovement.delete() itself; enforcement happens inside Django's own delete lifecycle regardless of caller; still needed with the microservice fleet deleted."""
 from __future__ import annotations
 
 import datetime

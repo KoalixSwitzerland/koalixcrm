@@ -4,6 +4,8 @@ registers the existence of a `OnHandRecord`, `Batch`, `SerialUnit` or
 `ProductionOrder` row for a `Product` (reached transitively via
 `variant__product`/`product`) as a lock-set member via
 `ProductKindPolicy.register_lock_provider`.
+
+Justification: framework — registers .exists()-based lock-set providers at StockConfig.ready(); direct ORM access is forbidden to any microservice by ADR-0002 §1.3; still needed with the microservice fleet deleted.
 """
 from __future__ import annotations
 

@@ -4,6 +4,8 @@
 FEFO: 1. non-quarantined batches, 2. ascending `expiry_date` (nulls last),
 3. tie-break ascending `production_date`.
 FIFO fallback (no expiry dates): ascending `received_at`.
+
+Justification: framework — pure QuerySet ordering helper (order_by/F()) consumed inline by pick-list construction within the same app; still needed with the microservice fleet deleted.
 """
 from __future__ import annotations
 

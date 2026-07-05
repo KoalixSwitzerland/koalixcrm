@@ -4,7 +4,9 @@ put-away *suggestion* — not the put-away *strategy* the ADR leaves for a
 follow-up ADR. Heuristic: suggest the most recently used
 `target_location`/`destination_location` for this `ProductVariant` in this
 workspace (last-used-location heuristic). Returns `None` if no prior
-location is on record; callers must not treat the suggestion as binding."""
+location is on record; callers must not treat the suggestion as binding.
+
+Justification: framework — non-binding heuristic ORM query (order_by().first()) consumed inline by goods_receipt_workflow within the same app; still needed with the microservice fleet deleted."""
 from __future__ import annotations
 
 from typing import TYPE_CHECKING

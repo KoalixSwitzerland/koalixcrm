@@ -7,7 +7,9 @@ Lösch-Werkzeug-Implementierung MUSS das Löschen von `SerialUnit`-Zeilen
 verweigern, deren `decommissioned_at` die konfigurierte Untergrenze noch
 nicht unterschritten hat" (ADR-0012). `SerialUnit.delete()` calls
 `assert_deletable()` so this refusal holds for every deletion path today,
-not only a not-yet-built dedicated tool."""
+not only a not-yet-built dedicated tool.
+
+Justification: framework — deletion guard invoked from SerialUnit.delete() itself, same shape as movement_retention; still needed with the microservice fleet deleted."""
 from __future__ import annotations
 
 import datetime

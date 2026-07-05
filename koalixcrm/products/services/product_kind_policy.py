@@ -12,6 +12,8 @@ authoritative reference table from ADR-0019 — later stages consult
 checks. `register_lock_provider()` is the extension seam later stages use
 to add their own lock-set membership tests (e.g. "does a BillOfMaterials
 exist for this product") without this module knowing about their models.
+
+Justification: framework — lock-provider callbacks perform direct .objects.filter().exists() checks, categorically forbidden to a microservice by ADR-0002 §1.3; consulted inline from Product.clean()/admin/serializers; still needed with the microservice fleet deleted.
 """
 from __future__ import annotations
 

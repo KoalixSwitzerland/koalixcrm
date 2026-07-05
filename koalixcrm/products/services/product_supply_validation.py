@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 """ADR-0006 / REQ-0014 AC-2: `ProductSupply.supplier` must carry an active
 `PartyRole` with `role_type = 'supplier'`. Enforced in the application layer
-(serializer/service), not as a database constraint, per REQ-0014 AC-2."""
+(serializer/service), not as a database constraint, per REQ-0014 AC-2.
+
+Justification: framework — ORM PartyRole existence check enforced inline at write time in the serializer/service layer per REQ-0014 AC-2; still needed with the microservice fleet deleted."""
 from __future__ import annotations
 
 from typing import TYPE_CHECKING

@@ -1,16 +1,19 @@
 # -*- coding: utf-8 -*-
 """ADR-0014: flattened BOM-explosion snapshot computation. Plain,
 synchronous service function — the ADR mentions a Celery task for
-"recompute on BOM create/change"; `stock/tasks.py` wraps `explode()` in a
-thin `shared_task` shell for that async path, but every write path in this
-codebase (services, admin actions, the pick-time staleness check) calls
-`explode()` directly and synchronously. No Celery infrastructure (broker,
-worker config) exists in this repo yet, so the task shell is opt-in and not
-wired into any signal.
+"recompute on BOM create/change", but that async path is not built: every
+write path in this codebase (services, admin actions, the pick-time
+staleness check) calls `explode()` directly and synchronously. Celery/SQS
+infrastructure exists in this repo (`koalixcrm_microservices/celery_app.py`)
+and runs a live SQS poller, so an out-of-band recompute path could be added
+later as a Django-free worker that reads/writes via a `stock_api_py` client
+(org ADR-0002 §2.4); none exists today.
 
 Depth limits (ADR-0014): soft warning at depth > 10 (`ExplosionDepthWarning`
 returned in the result, `PREASSEMBLE` recommended); hard rejection at depth
 > 20 (`ExplosionDepthExceeded` raised, `PREASSEMBLE` enforced).
+
+Justification: performance — recursive BOM-tree traversal (bounded depth 20) invoked synchronously mid-request (pick-time staleness check); a REST-mediated microservice would need one round-trip per tree level/branch, turning a bounded local computation into unbounded chatty latency; still needed with the microservice fleet deleted, since the pick-time check must complete inline. (Tier-2 GRANTED by architect.)
 """
 from __future__ import annotations
 

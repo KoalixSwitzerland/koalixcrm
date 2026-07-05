@@ -13,6 +13,8 @@ Resolution order:
 Raises `ComponentVariantResolutionError` (a `ValidationError` subclass) if
 none of the three steps yields a variant (e.g. a multi-variant component
 Product with no `default_component_variant` and no explicit choice).
+
+Justification: transactional integrity — three-step variant resolution feeds directly into the same DB transaction that creates the StockReservation in production_order_workflow.start(); splitting it into a separate REST round-trip would let the reservation be created against a variant no longer guaranteed current; still needed with the microservice fleet deleted. (Tier-2 GRANTED by architect.)
 """
 from __future__ import annotations
 

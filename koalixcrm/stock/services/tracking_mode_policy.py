@@ -11,6 +11,8 @@ consistent with the referenced `ProductVariant.tracking_mode`:
 "The database schema alone offers no structural guarantee" (ADR-0012) —
 this module is the enforcement point referenced by ADR-0012's Consequences
 section and REQ-0022 AC-5.
+
+Justification: framework — FK-consistency invariant enforced at Django model validation time (ADR-0012/ADR-0021), not expressible as a DB constraint; still needed with the microservice fleet deleted.
 """
 from __future__ import annotations
 

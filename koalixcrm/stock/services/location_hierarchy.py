@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 """ADR-0009 / REQ-0018: `Location` n-level hierarchy helpers — cycle
 detection for `clean()` and a single recursive-CTE breadcrumb query
-(root -> node) for UC-0008/UC-0009 barcode resolution."""
+(root -> node) for UC-0008/UC-0009 barcode resolution.
+
+Justification: framework — raw WITH RECURSIVE SQL via django.db.connection; direct DB access is categorically forbidden to a microservice by ADR-0002 §1.3, so this cannot be reproduced outside Django; still needed with the microservice fleet deleted."""
 from __future__ import annotations
 
 from typing import TYPE_CHECKING

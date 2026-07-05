@@ -22,6 +22,8 @@ documents (dedicated ADR pending); `qty_booked`/`qty_reserved_for_document`
 await a decision on whether reservation transitions mutate the balance
 directly or emit log events (`StockReservation` rows themselves are fully
 maintained by `services/reservation_lifecycle.py`).
+
+Justification: transactional integrity — the sole authorized StockMovement write path; every posting updates OnHandRecord/StockBalance synchronously in one DB transaction (ADR-0011); still needed with the microservice fleet deleted. (Tier-2 GRANTED by architect.)
 """
 from __future__ import annotations
 

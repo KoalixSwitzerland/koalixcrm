@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 """ADR-0009 Standards-Verankerung: `HandlingUnit.sscc` is a GS1 SSCC-18 —
 an 18-digit numeric string (extension digit + GS1 company prefix + serial
-reference + check digit)."""
+reference + check digit).
+
+Justification: framework — pure regex validator wired as a Django field/model validator inside full_clean(); still needed with the microservice fleet deleted."""
 from __future__ import annotations
 
 import re

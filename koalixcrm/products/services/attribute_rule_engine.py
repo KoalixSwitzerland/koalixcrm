@@ -17,6 +17,8 @@ This is a deliberately small, pragmatic seed grammar scoped to the
 ADR-0004/0018/0019 use cases; ADR-0020 itself defers the concrete grammar
 to a follow-up ADR — escalate to `dev-kxcrm-architect` before extending
 the operator set.
+
+Justification: framework — pure evaluator invoked synchronously inside attribute_validation's enforcement hook, which runs inside the same clean()/write cycle as the EAV row it validates; still needed with the microservice fleet deleted.
 """
 from __future__ import annotations
 

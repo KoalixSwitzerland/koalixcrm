@@ -15,6 +15,8 @@ Two kinds of canonical key:
     `koalix.country_of_origin` -> `Product.country_of_origin`.
   * **eav-backed** — resolved through the ADR-0004 cascade against the
     `AttributeDefinition` whose `canonical_key` matches.
+
+Justification: framework — column-backed reads go straight to ORM model attributes; EAV-backed reads delegate to attribute_cascade; still needed with the microservice fleet deleted.
 """
 from __future__ import annotations
 

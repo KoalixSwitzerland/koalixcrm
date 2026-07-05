@@ -3,7 +3,9 @@
 registers `BillOfMaterials` and `ServiceProfile` existence as lock-set
 members via `ProductKindPolicy.register_lock_provider`. `ProductionOrder`
 and the stock-fact lock-set members (`StockMovement`/`SerialUnit`/`Batch`/
-`OnHandRecord`) are later stages' responsibility."""
+`OnHandRecord`) are later stages' responsibility.
+
+Justification: framework — registers .exists()-based lock-set providers at ProductsConfig.ready(); direct ORM access is forbidden to any microservice by ADR-0002 §1.3; still needed with the microservice fleet deleted."""
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
