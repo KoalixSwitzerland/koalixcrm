@@ -35,4 +35,9 @@ COPY koalixcrm_microservices /usr/src/app/koalixcrm_microservices
 COPY koalixcrm_mq_commands /usr/src/app/koalixcrm_mq_commands
 COPY koalixcrm_utils /usr/src/app/koalixcrm_utils
 
+# Belt-and-suspenders: strip any test packages that slipped past .dockerignore
+# (e.g. koalixcrm_mq_commands/tests) so test-only imports never enter the prod
+# image (org ADR-0012).
+RUN find /usr/src/app -type d -name tests -prune -exec rm -rf {} +
+
 CMD ["celery", "-A", "koalixcrm_microservices.celery_app", "worker", "-l", "info", "-B"]
