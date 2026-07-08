@@ -5,7 +5,7 @@ from django.test import LiveServerTestCase
 
 from koalixcrm.core.models.currency import Currency
 from koalixcrm.core_api_py.core_api_client import KoalixCRMCoreAPIClient
-from tests.factories.core.currency_factory import StandardCurrencyFactory
+from koalixcrm.core.tests.factories.currency_factory import StandardCurrencyFactory
 
 
 class CurrencyAPITest(LiveServerTestCase):

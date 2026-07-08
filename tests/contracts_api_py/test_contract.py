@@ -5,12 +5,12 @@ from django.test import LiveServerTestCase
 
 from koalixcrm.contracts.models.contract import Contract
 from koalixcrm.contracts_api_py.contracts_api_client import KoalixCRMContractsAPIClient
-from tests.factories.contacts.customer_billing_cycle_factory import (
+from koalixcrm.contacts.tests.factories.customer_billing_cycle_factory import (
     StandardCustomerBillingCycleFactory,
 )
-from tests.factories.contacts.customer_factory import StandardCustomerFactory
-from tests.factories.contracts.contract_factory import StandardContractFactory
-from tests.factories.core.currency_factory import StandardCurrencyFactory
+from koalixcrm.contacts.tests.factories.customer_factory import StandardCustomerFactory
+from koalixcrm.contracts.tests.factories.contract_factory import StandardContractFactory
+from koalixcrm.core.tests.factories.currency_factory import StandardCurrencyFactory
 
 
 class ContractAPITest(LiveServerTestCase):

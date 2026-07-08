@@ -5,7 +5,7 @@ from django.test import LiveServerTestCase
 
 from koalixcrm.core.models.tax import Tax
 from koalixcrm.core_api_py.core_api_client import KoalixCRMCoreAPIClient
-from tests.factories.core.tax_factory import StandardTaxFactory
+from koalixcrm.core.tests.factories.tax_factory import StandardTaxFactory
 
 
 class TaxAPITest(LiveServerTestCase):

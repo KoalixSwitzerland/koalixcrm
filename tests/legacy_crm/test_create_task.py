@@ -5,14 +5,14 @@ from django.test import TestCase
 
 from koalixcrm.reporting.models.task import Task
 from koalixcrm.reporting.views.create_task import CreateTaskView
-from tests.factories.contacts.user_factory import StaffUserFactory
-from tests.factories.contracts.commercial_document_position_factory import (
+from koalixcrm.contacts.tests.factories.user_factory import StaffUserFactory
+from koalixcrm.contracts.tests.factories.commercial_document_position_factory import (
     StandardCommercialDocumentPositionFactory,
 )
-from tests.factories.contracts.quotation_factory import StandardQuotationFactory
-from tests.factories.core.currency_factory import StandardCurrencyFactory
-from tests.factories.products.product_price_factory import StandardPriceFactory
-from tests.factories.products.product_type_factory import StandardProductTypeFactory
+from koalixcrm.contracts.tests.factories.quotation_factory import StandardQuotationFactory
+from koalixcrm.core.tests.factories.currency_factory import StandardCurrencyFactory
+from koalixcrm.products.tests.factories.product_price_factory import StandardPriceFactory
+from koalixcrm.products.tests.factories.product_type_factory import StandardProductTypeFactory
 
 
 class DocumentCalculationsTest(TestCase):

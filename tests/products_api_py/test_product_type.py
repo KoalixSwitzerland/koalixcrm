@@ -5,9 +5,9 @@ from django.test import LiveServerTestCase
 
 from koalixcrm.products.models.product_type import ProductType
 from koalixcrm.products_api_py.products_api_client import KoalixCRMProductsAPIClient
-from tests.factories.core.tax_factory import StandardTaxFactory
-from tests.factories.core.unit_factory import StandardUnitFactory
-from tests.factories.products.product_type_factory import StandardProductTypeFactory
+from koalixcrm.core.tests.factories.tax_factory import StandardTaxFactory
+from koalixcrm.core.tests.factories.unit_factory import StandardUnitFactory
+from koalixcrm.products.tests.factories.product_type_factory import StandardProductTypeFactory
 
 
 class ProductTypeAPITest(LiveServerTestCase):

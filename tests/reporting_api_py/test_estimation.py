@@ -3,15 +3,15 @@ from django.contrib.auth.models import User
 from django.test import LiveServerTestCase
 
 from koalixcrm.reporting_api_py.reporting_api_client import KoalixCRMReportingAPIClient
-from tests.factories.reporting.estimation_factory import StandardEstimationToTaskFactory
-from tests.factories.reporting.estimation_status_factory import (
+from koalixcrm.reporting.tests.factories.estimation_factory import StandardEstimationToTaskFactory
+from koalixcrm.reporting.tests.factories.estimation_status_factory import (
     StartedEstimationStatusFactory,
 )
-from tests.factories.reporting.reporting_period_factory import (
+from koalixcrm.reporting.tests.factories.reporting_period_factory import (
     StandardReportingPeriodFactory,
 )
-from tests.factories.reporting.resource_factory import StandardResourceFactory
-from tests.factories.reporting.task_factory import StandardTaskFactory
+from koalixcrm.reporting.tests.factories.resource_factory import StandardResourceFactory
+from koalixcrm.reporting.tests.factories.task_factory import StandardTaskFactory
 
 
 class EstimationAPITest(LiveServerTestCase):

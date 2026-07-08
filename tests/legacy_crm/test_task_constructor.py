@@ -4,17 +4,17 @@ import pytest
 from django.test import TestCase
 
 from koalixcrm.reporting.models.task import Task
-from tests.factories.contacts.customer_billing_cycle_factory import (
+from koalixcrm.contacts.tests.factories.customer_billing_cycle_factory import (
     StandardCustomerBillingCycleFactory,
 )
-from tests.factories.contacts.customer_factory import StandardCustomerFactory
-from tests.factories.contacts.customer_group_factory import StandardCustomerGroupFactory
-from tests.factories.contacts.user_factory import AdminUserFactory
-from tests.factories.core.currency_factory import StandardCurrencyFactory
-from tests.factories.djangoUserExtension.factory_user_extension import (
+from koalixcrm.contacts.tests.factories.customer_factory import StandardCustomerFactory
+from koalixcrm.contacts.tests.factories.customer_group_factory import StandardCustomerGroupFactory
+from koalixcrm.contacts.tests.factories.user_factory import AdminUserFactory
+from koalixcrm.core.tests.factories.currency_factory import StandardCurrencyFactory
+from koalixcrm.djangoUserExtension.tests.factories.user_extension_factory import (
     StandardUserExtensionFactory,
 )
-from tests.factories.reporting.reporting_period_factory import (
+from koalixcrm.reporting.tests.factories.reporting_period_factory import (
     StandardReportingPeriodFactory,
 )
 

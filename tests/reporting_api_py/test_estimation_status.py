@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.test import LiveServerTestCase
 
 from koalixcrm.reporting_api_py.reporting_api_client import KoalixCRMReportingAPIClient
-from tests.factories.reporting.estimation_status_factory import (
+from koalixcrm.reporting.tests.factories.estimation_status_factory import (
     StartedEstimationStatusFactory,
 )
 

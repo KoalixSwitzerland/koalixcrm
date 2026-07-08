@@ -81,7 +81,7 @@ class TestPDFExportProcessEndpoint:
 class TestDocumentTemplateEndpoint:
     @pytest.fixture
     def document_template(self, db):
-        from tests.factories.djangoUserExtension.factory_document_template import (
+        from koalixcrm.djangoUserExtension.tests.factories.document_template_factory import (
             StandardQuotationTemplateFactory,
         )
 
@@ -125,7 +125,7 @@ class TestDocumentTemplateEndpoint:
 @pytest.mark.django_db
 class TestCommercialDocumentMediaEndpoint:
     def test_post_creates_row(self, api_client, pdf_export_process):
-        from tests.factories.contracts.invoice_factory import StandardInvoiceFactory
+        from koalixcrm.contracts.tests.factories.invoice_factory import StandardInvoiceFactory
 
         invoice = StandardInvoiceFactory()
         resp = api_client.post(

@@ -5,7 +5,7 @@ from django.test import LiveServerTestCase
 
 from koalixcrm.core.models.unit import Unit
 from koalixcrm.core_api_py.core_api_client import KoalixCRMCoreAPIClient
-from tests.factories.core.unit_factory import StandardUnitFactory
+from koalixcrm.core.tests.factories.unit_factory import StandardUnitFactory
 
 
 class UnitAPITest(LiveServerTestCase):

@@ -7,7 +7,7 @@ from koalixcrm.accounting.models import AccountingPeriod
 from koalixcrm.accounting_api_py.accounting_api_client import (
     KoalixCRMAccountingAPIClient,
 )
-from tests.factories.accounting.accounting_period_factory import (
+from koalixcrm.accounting.tests.factories.accounting_period_factory import (
     StandardAccountingPeriodFactory,
 )
 

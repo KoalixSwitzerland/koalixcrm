@@ -7,7 +7,7 @@ from koalixcrm.accounting.models import Account
 from koalixcrm.accounting_api_py.accounting_api_client import (
     KoalixCRMAccountingAPIClient,
 )
-from tests.factories.accounting.account_factory import StandardAccountFactory
+from koalixcrm.accounting.tests.factories.account_factory import StandardAccountFactory
 
 
 class AccountAPITest(LiveServerTestCase):

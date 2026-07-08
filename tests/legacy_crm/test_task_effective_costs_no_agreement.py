@@ -4,28 +4,28 @@ import pytest
 from django.test import TestCase
 
 from koalixcrm.global_support_functions import make_date_utc
-from tests.factories.contacts.customer_billing_cycle_factory import (
+from koalixcrm.contacts.tests.factories.customer_billing_cycle_factory import (
     StandardCustomerBillingCycleFactory,
 )
-from tests.factories.contacts.customer_factory import StandardCustomerFactory
-from tests.factories.contacts.customer_group_factory import StandardCustomerGroupFactory
-from tests.factories.contacts.user_factory import AdminUserFactory
-from tests.factories.core.currency_factory import StandardCurrencyFactory
-from tests.factories.core.unit_factory import StandardUnitFactory
-from tests.factories.reporting.estimation_factory import (
+from koalixcrm.contacts.tests.factories.customer_factory import StandardCustomerFactory
+from koalixcrm.contacts.tests.factories.customer_group_factory import StandardCustomerGroupFactory
+from koalixcrm.contacts.tests.factories.user_factory import AdminUserFactory
+from koalixcrm.core.tests.factories.currency_factory import StandardCurrencyFactory
+from koalixcrm.core.tests.factories.unit_factory import StandardUnitFactory
+from koalixcrm.reporting.tests.factories.estimation_factory import (
     StandardHumanResourceEstimationToTaskFactory,
 )
-from tests.factories.reporting.human_resource_factory import (
+from koalixcrm.reporting.tests.factories.human_resource_factory import (
     StandardHumanResourceFactory,
 )
-from tests.factories.reporting.reporting_period_factory import (
+from koalixcrm.reporting.tests.factories.reporting_period_factory import (
     StandardReportingPeriodFactory,
 )
-from tests.factories.reporting.resource_price_factory import (
+from koalixcrm.reporting.tests.factories.resource_price_factory import (
     StandardResourcePriceFactory,
 )
-from tests.factories.reporting.task_factory import StandardTaskFactory
-from tests.factories.reporting.work_factory import StandardWorkFactory
+from koalixcrm.reporting.tests.factories.task_factory import StandardTaskFactory
+from koalixcrm.reporting.tests.factories.work_factory import StandardWorkFactory
 
 
 class TaskEffectiveCostsWithoutAgreement(TestCase):

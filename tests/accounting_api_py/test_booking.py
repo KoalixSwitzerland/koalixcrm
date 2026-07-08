@@ -7,14 +7,14 @@ from koalixcrm.accounting.models import Booking
 from koalixcrm.accounting_api_py.accounting_api_client import (
     KoalixCRMAccountingAPIClient,
 )
-from tests.factories.accounting.account_factory import (
+from koalixcrm.accounting.tests.factories.account_factory import (
     OpenInterestAccountFactory,
     StandardAccountFactory,
 )
-from tests.factories.accounting.accounting_period_factory import (
+from koalixcrm.accounting.tests.factories.accounting_period_factory import (
     StandardAccountingPeriodFactory,
 )
-from tests.factories.accounting.booking_factory import StandardBookingFactory
+from koalixcrm.accounting.tests.factories.booking_factory import StandardBookingFactory
 
 
 class BookingAPITest(LiveServerTestCase):

@@ -3,11 +3,11 @@ from django.contrib.auth.models import User
 from django.test import LiveServerTestCase
 
 from koalixcrm.reporting_api_py.reporting_api_client import KoalixCRMReportingAPIClient
-from tests.factories.reporting.project_factory import StandardProjectFactory
-from tests.factories.reporting.reporting_period_factory import (
+from koalixcrm.reporting.tests.factories.project_factory import StandardProjectFactory
+from koalixcrm.reporting.tests.factories.reporting_period_factory import (
     StandardReportingPeriodFactory,
 )
-from tests.factories.reporting.reporting_period_status_factory import (
+from koalixcrm.reporting.tests.factories.reporting_period_status_factory import (
     ReportingReportingPeriodStatusFactory,
 )
 
