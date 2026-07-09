@@ -1,0 +1,55 @@
+# -*- coding: utf-8 -*-
+from django.contrib.auth.models import User
+from django.test import LiveServerTestCase
+
+from koalixcrm.reporting_api_py.reporting_api_client import KoalixCRMReportingAPIClient
+from koalixcrm.djangoUserExtension.tests.factories.user_extension_factory import (
+    StandardUserExtensionFactory,
+)
+from koalixcrm.reporting.tests.factories.human_resource_factory import (
+    StandardHumanResourceFactory,
+)
+from koalixcrm.reporting.tests.factories.resource_manager_factory import (
+    StandardResourceManagerFactory,
+)
+from koalixcrm.reporting.tests.factories.resource_type_factory import StandardResourceTypeFactory
+
+
+class HumanResourceAPITest(LiveServerTestCase):
+
+    def setUp(self):
+        self.admin_user = User.objects.create_superuser(
+            username='admin', email='admin@example.com', password='adminpassword'
+        )
+        self.human_resource = StandardHumanResourceFactory.create()
+        self.api_client = KoalixCRMReportingAPIClient(
+            self.live_server_url, username='admin', password='adminpassword', workspace_id=1)
+
+    def test_list(self):
+        items = self.api_client.get_human_resource_list()
+        self.assertGreaterEqual(len(items), 1)
+
+    def test_read(self):
+        retrieved = self.api_client.get_human_resource(self.human_resource.id)
+        self.assertIsNotNone(retrieved)
+        self.assertEqual(retrieved.id, self.human_resource.id)
+
+    def test_write(self):
+        user_extension = StandardUserExtensionFactory.create()
+        resource_type = StandardResourceTypeFactory.create()
+        resource_manager = StandardResourceManagerFactory.create()
+        data = {
+            "user": {"id": user_extension.id},
+            "resource_type": {"id": resource_type.id},
+            "resource_manager": {"id": resource_manager.id},
+        }
+        created = self.api_client.create_human_resource(data)
+        self.assertIsNotNone(created)
+
+    def test_modify(self):
+        new_resource_type = StandardResourceTypeFactory.create()
+        updated = self.api_client.update_human_resource(
+            self.human_resource.id,
+            {"resource_type": {"id": new_resource_type.id}}
+        )
+        self.assertIsNotNone(updated)

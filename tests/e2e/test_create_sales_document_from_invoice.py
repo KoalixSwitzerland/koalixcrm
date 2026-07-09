@@ -10,12 +10,12 @@ from koalixcrm.contracts.models.invoice import Invoice
 from koalixcrm.contracts.models.payment_reminder import PaymentReminder
 from koalixcrm.contracts.models.purchase_order import PurchaseOrder
 from koalixcrm.contracts.models.quotation import Quotation
-from tests.contracts.test_support_functions import *
-from tests.factories.contacts.customer_group_factory import StandardCustomerGroupFactory
-from tests.factories.contacts.user_factory import AdminUserFactory
-from tests.factories.contracts.contract_factory import StandardContractFactory
-from tests.factories.contracts.invoice_factory import StandardInvoiceFactory
-from tests.factories.djangoUserExtension.factory_document_template import (
+from tests.e2e.support_functions import *
+from koalixcrm.contacts.tests.factories.customer_group_factory import StandardCustomerGroupFactory
+from koalixcrm.contacts.tests.factories.user_factory import AdminUserFactory
+from koalixcrm.contracts.tests.factories.contract_factory import StandardContractFactory
+from koalixcrm.contracts.tests.factories.invoice_factory import StandardInvoiceFactory
+from koalixcrm.djangoUserExtension.tests.factories.document_template_factory import (
     StandardDespatchAdviceTemplateFactory,
     StandardInvoiceTemplateFactory,
     StandardPaymentReminderTemplateFactory,

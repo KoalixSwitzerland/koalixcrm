@@ -1,0 +1,7 @@
+# Keep test code out of the production image (org ADR-0012). The prod
+# Dockerfiles COPY the package tree in; excluding tests here strips
+# factory_boy / Faker and other test-only imports from what ships.
+# Dev/e2e runners bind-mount the working tree, so they are unaffected.
+**/tests/
+**/__pycache__/
+*.pyc

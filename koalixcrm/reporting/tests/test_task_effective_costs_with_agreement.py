@@ -1,0 +1,149 @@
+import datetime
+
+import pytest
+from django.test import TestCase
+
+from koalixcrm.global_support_functions import make_date_utc
+from koalixcrm.contacts.tests.factories.customer_billing_cycle_factory import (
+    StandardCustomerBillingCycleFactory,
+)
+from koalixcrm.contacts.tests.factories.customer_factory import StandardCustomerFactory
+from koalixcrm.contacts.tests.factories.customer_group_factory import StandardCustomerGroupFactory
+from koalixcrm.contacts.tests.factories.user_factory import AdminUserFactory
+from koalixcrm.core.tests.factories.currency_factory import StandardCurrencyFactory
+from koalixcrm.core.tests.factories.unit_factory import StandardUnitFactory
+from koalixcrm.reporting.tests.factories.agreement_factory import StandardAgreementToTaskFactory
+from koalixcrm.reporting.tests.factories.estimation_factory import (
+    StandardHumanResourceEstimationToTaskFactory,
+)
+from koalixcrm.reporting.tests.factories.human_resource_factory import (
+    StandardHumanResourceFactory,
+)
+from koalixcrm.reporting.tests.factories.reporting_period_factory import (
+    StandardReportingPeriodFactory,
+)
+from koalixcrm.reporting.tests.factories.resource_price_factory import (
+    StandardResourcePriceFactory,
+)
+from koalixcrm.reporting.tests.factories.task_factory import StandardTaskFactory
+from koalixcrm.reporting.tests.factories.work_factory import StandardWorkFactory
+
+
+class TaskEffectiveCostsWithAgreement(TestCase):
+    def setUp(self):
+        datetime_now = make_date_utc(datetime.datetime(2024, 1, 1, 0, 00))
+        start_date = (datetime_now - datetime.timedelta(days=30)).date()
+        end_date_first_task = (datetime_now + datetime.timedelta(days=30)).date()
+        end_date_second_task = (datetime_now + datetime.timedelta(days=60)).date()
+
+        self.test_billing_cycle = StandardCustomerBillingCycleFactory.create()
+        self.test_user = AdminUserFactory.create()
+        self.test_unit = StandardUnitFactory.create()
+        self.test_customer_group = StandardCustomerGroupFactory.create()
+        self.test_customer = StandardCustomerFactory.create(is_member_of=(self.test_customer_group,))
+        self.test_currency = StandardCurrencyFactory.create(
+            rounding="0.05"
+        )
+        self.human_resource = StandardHumanResourceFactory.create()
+        self.human_resource_two = StandardHumanResourceFactory.create()
+        self.resource_price = StandardResourcePriceFactory.create(
+            resource=self.human_resource,
+            unit=self.test_unit,
+            currency=self.test_currency,
+            party_group=self.test_customer_group,
+            price="120",
+        )
+        self.resource_price_agreement = StandardResourcePriceFactory.create(
+            resource=self.human_resource_two,
+            unit=self.test_unit,
+            currency=self.test_currency,
+            party_group=self.test_customer_group,
+            price="90",
+        )
+        self.test_reporting_period = StandardReportingPeriodFactory.create()
+        self.test_1st_task = StandardTaskFactory.create(
+            title="1st Test Task",
+            project=self.test_reporting_period.project
+        )
+        self.agreement_1st_task = StandardAgreementToTaskFactory(
+            amount="3.50",
+            task=self.test_1st_task,
+            resource=self.human_resource,
+            unit=self.test_unit,
+            costs=self.resource_price_agreement
+        )
+        self.estimation_1st_task = StandardHumanResourceEstimationToTaskFactory(
+            resource=self.human_resource,
+            task=self.test_1st_task,
+            date_from=start_date,
+            date_until=end_date_first_task,
+            amount=20
+        )
+        self.test_2nd_task = StandardTaskFactory.create(
+            title="2nd Test Task",
+            project=self.test_reporting_period.project
+        )
+        self.estimation_2nd_task = StandardHumanResourceEstimationToTaskFactory(
+            resource=self.human_resource,
+            task=self.test_2nd_task,
+            date_from=start_date,
+            date_until=end_date_second_task,
+            amount=30
+        )
+
+    @pytest.mark.back_end_tests
+    def test_task_effective_costs_with_agreement(self):
+        datetime_now = make_date_utc(datetime.datetime(2024, 1, 1, 0, 00))
+        datetime_later_1 = make_date_utc(datetime.datetime(2024, 1, 1, 2, 00))
+        datetime_later_2 = make_date_utc(datetime.datetime(2024, 1, 1, 3, 30))
+        datetime_later_3 = make_date_utc(datetime.datetime(2024, 1, 1, 5, 45))
+        datetime_later_4 = make_date_utc(datetime.datetime(2024, 1, 1, 6, 15))
+        date_now = datetime_now.date()
+        self.assertEqual(
+            (self.test_1st_task.planned_duration()).__str__(), "60")
+        self.assertEqual(
+            (self.test_1st_task.planned_costs()).__str__(), "2400.0000")
+        self.assertEqual(
+            (self.test_2nd_task.planned_duration()).__str__(), "90")
+        self.assertEqual(
+            (self.test_2nd_task.planned_costs()).__str__(), "3600.0000")
+        StandardWorkFactory.create(
+            human_resource=self.human_resource,
+            date=date_now,
+            start_time=datetime_now,
+            stop_time=datetime_later_1,
+            task=self.test_1st_task,
+            reporting_period=self.test_reporting_period
+        )
+        StandardWorkFactory.create(
+            human_resource=self.human_resource,
+            date=date_now,
+            start_time=datetime_later_1,
+            stop_time=datetime_later_2,
+            task=self.test_1st_task,
+            reporting_period=self.test_reporting_period
+        )
+        StandardWorkFactory.create(
+            human_resource=self.human_resource,
+            date=date_now,
+            start_time=datetime_now,
+            stop_time=datetime_later_3,
+            task=self.test_2nd_task,
+            reporting_period=self.test_reporting_period
+        )
+        StandardWorkFactory.create(
+            human_resource=self.human_resource,
+            date=date_now,
+            start_time=datetime_now,
+            stop_time=datetime_later_4,
+            task=self.test_2nd_task,
+            reporting_period=self.test_reporting_period
+        )
+        self.assertEqual(
+            (self.test_1st_task.effective_effort(reporting_period=None)).__str__(), "3.5")
+        self.assertEqual(
+            (self.test_1st_task.effective_costs(reporting_period=None, confirmed=False)).__str__(), "315.00")
+        self.assertEqual(
+            (self.test_2nd_task.effective_effort(reporting_period=None)).__str__(), "12")
+        self.assertEqual(
+            (self.test_2nd_task.effective_costs(reporting_period=None, confirmed=False)).__str__(), "1440.00")
