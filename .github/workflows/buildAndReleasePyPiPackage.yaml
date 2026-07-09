@@ -48,6 +48,28 @@ jobs:
           KOALIXCRM_VERSION: ${{ steps.version.outputs.pep440 }}
         run: python setup.py sdist bdist_wheel
 
+      - name: Fail if any test code leaked into the artifacts (org ADR-0012)
+        run: |
+          set -euo pipefail
+          leaked=0
+          for sdist in dist/*.tar.gz; do
+            if tar tzf "$sdist" | grep -E '/tests/|/tests$' ; then
+              echo "::error::test code found in sdist $sdist"
+              leaked=1
+            fi
+          done
+          for wheel in dist/*.whl; do
+            if unzip -l "$wheel" | grep -E '/tests/|/tests$' ; then
+              echo "::error::test code found in wheel $wheel"
+              leaked=1
+            fi
+          done
+          if [ "$leaked" -ne 0 ]; then
+            echo "::error::PyPI artifacts must not ship test packages"
+            exit 1
+          fi
+          echo "No test code in sdist or wheel."
+
       - name: Install twine
         run: pip install twine
 

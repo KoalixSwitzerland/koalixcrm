@@ -41,6 +41,11 @@ COPY koalixcrm_utils /usr/src/app/koalixcrm_utils
 COPY projectsettings /usr/src/app/projectsettings
 COPY manage.py /usr/src/app/manage.py
 
+# Belt-and-suspenders: strip any test packages that slipped past .dockerignore
+# so factory_boy / Faker and other test-only imports never enter the prod image
+# (org ADR-0012).
+RUN find /usr/src/app -type d -name tests -prune -exec rm -rf {} +
+
 # Stamp the resolved version into the Python package so `koalixcrm.version`
 # reports the same value as the image label / KOALIXCRM_VERSION env var.
 RUN printf 'KOALIXCRM_VERSION = "%s"\n' "${APP_VERSION}" > /usr/src/app/koalixcrm/version.py

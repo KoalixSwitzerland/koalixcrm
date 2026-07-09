@@ -9,3 +9,7 @@ recursive-include koalixcrm/subscriptions/locale *
 recursive-include koalixcrm/djangoUserExtension/static *
 recursive-include koalixcrm/djangoUserExtension/locale *
 
+# Keep test code out of the sdist (org ADR-0012). find_packages already drops
+# the tests packages from the wheel; these rules stop the sdist carrying them.
+prune tests
+global-exclude */tests/* */tests/factories/*
