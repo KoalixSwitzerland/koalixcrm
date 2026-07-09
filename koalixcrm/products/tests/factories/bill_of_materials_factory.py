@@ -5,9 +5,9 @@ import factory
 from koalixcrm.products.models.bill_of_materials import BillOfMaterials
 from koalixcrm.products.models.bom_item import BomItem
 from koalixcrm.products.models.choices import ProductKind
-from tests.factories.core.unit_factory import StandardUnitFactory
-from tests.factories.core.workspace_factory import DefaultWorkspaceFactory
-from tests.factories.products.product_type_factory import StandardProductTypeFactory
+from koalixcrm.core.tests.factories.unit_factory import StandardUnitFactory
+from koalixcrm.core.tests.factories.workspace_factory import DefaultWorkspaceFactory
+from koalixcrm.products.tests.factories.product_type_factory import StandardProductTypeFactory
 
 
 class StandardBillOfMaterialsFactory(factory.django.DjangoModelFactory):

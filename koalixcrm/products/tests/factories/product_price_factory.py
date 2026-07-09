@@ -6,11 +6,11 @@ import factory
 
 from koalixcrm.global_support_functions import make_date_utc
 from koalixcrm.products.models.product_price import ProductPrice
-from tests.factories.contacts.customer_group_factory import StandardCustomerGroupFactory
-from tests.factories.core.currency_factory import StandardCurrencyFactory
-from tests.factories.core.unit_factory import StandardUnitFactory
-from tests.factories.core.workspace_factory import DefaultWorkspaceFactory
-from tests.factories.products.product_variant_factory import StandardProductVariantFactory
+from koalixcrm.contacts.tests.factories.customer_group_factory import StandardCustomerGroupFactory
+from koalixcrm.core.tests.factories.currency_factory import StandardCurrencyFactory
+from koalixcrm.core.tests.factories.unit_factory import StandardUnitFactory
+from koalixcrm.core.tests.factories.workspace_factory import DefaultWorkspaceFactory
+from koalixcrm.products.tests.factories.product_variant_factory import StandardProductVariantFactory
 
 
 class StandardPriceFactory(factory.django.DjangoModelFactory):

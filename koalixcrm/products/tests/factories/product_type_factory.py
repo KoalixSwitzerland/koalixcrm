@@ -7,10 +7,10 @@ import factory
 from koalixcrm.global_support_functions import make_date_utc
 from koalixcrm.products.models.choices import ProductKind
 from koalixcrm.products.models.product import Product
-from tests.factories.contacts.user_factory import StaffUserFactory
-from tests.factories.core.tax_factory import StandardTaxFactory
-from tests.factories.core.unit_factory import StandardUnitFactory
-from tests.factories.core.workspace_factory import DefaultWorkspaceFactory
+from koalixcrm.contacts.tests.factories.user_factory import StaffUserFactory
+from koalixcrm.core.tests.factories.tax_factory import StandardTaxFactory
+from koalixcrm.core.tests.factories.unit_factory import StandardUnitFactory
+from koalixcrm.core.tests.factories.workspace_factory import DefaultWorkspaceFactory
 
 
 class StandardProductTypeFactory(factory.django.DjangoModelFactory):

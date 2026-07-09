@@ -3,8 +3,8 @@
 import factory
 
 from koalixcrm.products.models.attribute_validation_rule import AttributeValidationRule
-from tests.factories.core.workspace_factory import DefaultWorkspaceFactory
-from tests.factories.products.attribute_set_factory import StandardAttributeSetFactory
+from koalixcrm.core.tests.factories.workspace_factory import DefaultWorkspaceFactory
+from koalixcrm.products.tests.factories.attribute_set_factory import StandardAttributeSetFactory
 
 
 class StandardAttributeValidationRuleFactory(factory.django.DjangoModelFactory):

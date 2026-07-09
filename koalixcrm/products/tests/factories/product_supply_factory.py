@@ -3,18 +3,18 @@
 import factory
 
 from koalixcrm.products.models.product_supply import ProductSupply
-from tests.factories.core.workspace_factory import DefaultWorkspaceFactory
-from tests.factories.products.product_type_factory import StandardProductTypeFactory
+from koalixcrm.core.tests.factories.workspace_factory import DefaultWorkspaceFactory
+from koalixcrm.products.tests.factories.product_type_factory import StandardProductTypeFactory
 
 # Referenced by dotted string path (not a direct module-level import) to
-# avoid a circular import: tests.factories.products.__init__ pulls in this
-# module, and tests.factories.contacts.supplier_factory transitively pulls
-# in tests.factories.contacts.__init__, which (via contact_factory ->
+# avoid a circular import: koalixcrm.products.tests.factories.__init__ pulls in this
+# module, and koalixcrm.contacts.tests.factories.supplier_factory transitively pulls
+# in koalixcrm.contacts.tests.factories.__init__, which (via contact_factory ->
 # core.workspace_factory -> core.__init__ -> product_type_factory) reaches
-# back into tests.factories.products.__init__ before it has finished
+# back into koalixcrm.products.tests.factories.__init__ before it has finished
 # initializing. factory.SubFactory resolves a dotted string lazily at
 # instantiation time, sidestepping the import-time cycle.
-_SUPPLIER_FACTORY_PATH = "tests.factories.contacts.supplier_factory.StandardSupplierFactory"
+_SUPPLIER_FACTORY_PATH = "koalixcrm.contacts.tests.factories.supplier_factory.StandardSupplierFactory"
 
 
 class StandardProductSupplyFactory(factory.django.DjangoModelFactory):

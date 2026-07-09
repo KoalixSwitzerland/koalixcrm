@@ -3,8 +3,8 @@
 import factory
 
 from koalixcrm.products.models.attribute_set import AttributeSet, AttributeSetGroup
-from tests.factories.core.workspace_factory import DefaultWorkspaceFactory
-from tests.factories.products.attribute_group_factory import (
+from koalixcrm.core.tests.factories.workspace_factory import DefaultWorkspaceFactory
+from koalixcrm.products.tests.factories.attribute_group_factory import (
     StandardAttributeGroupFactory,
 )
 

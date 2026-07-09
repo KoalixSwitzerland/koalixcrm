@@ -3,8 +3,8 @@
 import factory
 
 from koalixcrm.products.models.product_translation import ProductTranslation
-from tests.factories.core.workspace_factory import DefaultWorkspaceFactory
-from tests.factories.products.product_type_factory import StandardProductTypeFactory
+from koalixcrm.core.tests.factories.workspace_factory import DefaultWorkspaceFactory
+from koalixcrm.products.tests.factories.product_type_factory import StandardProductTypeFactory
 
 
 class StandardProductTranslationFactory(factory.django.DjangoModelFactory):

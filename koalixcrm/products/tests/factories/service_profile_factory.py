@@ -4,8 +4,8 @@ import factory
 
 from koalixcrm.products.models.choices import ProductKind, ServiceBillingModel
 from koalixcrm.products.models.service_profile import ServiceProfile
-from tests.factories.core.workspace_factory import DefaultWorkspaceFactory
-from tests.factories.products.product_type_factory import StandardProductTypeFactory
+from koalixcrm.core.tests.factories.workspace_factory import DefaultWorkspaceFactory
+from koalixcrm.products.tests.factories.product_type_factory import StandardProductTypeFactory
 
 
 class StandardServiceProfileFactory(factory.django.DjangoModelFactory):

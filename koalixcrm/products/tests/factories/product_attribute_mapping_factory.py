@@ -3,7 +3,7 @@
 import factory
 
 from koalixcrm.products.models.product_attribute_mapping import ProductAttributeMapping
-from tests.factories.core.workspace_factory import DefaultWorkspaceFactory
+from koalixcrm.core.tests.factories.workspace_factory import DefaultWorkspaceFactory
 
 
 class StandardProductAttributeMappingFactory(factory.django.DjangoModelFactory):

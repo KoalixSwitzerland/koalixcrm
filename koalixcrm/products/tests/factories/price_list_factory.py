@@ -3,7 +3,7 @@
 import factory
 
 from koalixcrm.products.models.price_list import PriceList
-from tests.factories.core.workspace_factory import DefaultWorkspaceFactory
+from koalixcrm.core.tests.factories.workspace_factory import DefaultWorkspaceFactory
 
 
 class StandardPriceListFactory(factory.django.DjangoModelFactory):

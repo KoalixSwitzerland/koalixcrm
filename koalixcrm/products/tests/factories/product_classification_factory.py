@@ -3,11 +3,11 @@
 import factory
 
 from koalixcrm.products.models.product_classification import ProductClassification
-from tests.factories.core.workspace_factory import DefaultWorkspaceFactory
-from tests.factories.products.classification_factory import (
+from koalixcrm.core.tests.factories.workspace_factory import DefaultWorkspaceFactory
+from koalixcrm.products.tests.factories.classification_factory import (
     StandardClassificationNodeFactory,
 )
-from tests.factories.products.product_type_factory import StandardProductTypeFactory
+from koalixcrm.products.tests.factories.product_type_factory import StandardProductTypeFactory
 
 
 class StandardProductClassificationFactory(factory.django.DjangoModelFactory):

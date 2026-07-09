@@ -12,11 +12,11 @@ from koalixcrm.products.models.product_attribute_reference import (
     ProductAttributeReference,
 )
 from koalixcrm.products.models.product_attribute_string import ProductAttributeString
-from tests.factories.core.workspace_factory import DefaultWorkspaceFactory
-from tests.factories.products.attribute_definition_factory import (
+from koalixcrm.core.tests.factories.workspace_factory import DefaultWorkspaceFactory
+from koalixcrm.products.tests.factories.attribute_definition_factory import (
     StandardAttributeDefinitionFactory,
 )
-from tests.factories.products.product_type_factory import StandardProductTypeFactory
+from koalixcrm.products.tests.factories.product_type_factory import StandardProductTypeFactory
 
 
 class StandardProductAttributeStringFactory(factory.django.DjangoModelFactory):

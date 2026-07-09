@@ -4,7 +4,7 @@ import factory
 
 from koalixcrm.products.models.attribute_group import AttributeGroup
 from koalixcrm.products.models.choices import AttributeScope
-from tests.factories.core.workspace_factory import DefaultWorkspaceFactory
+from koalixcrm.core.tests.factories.workspace_factory import DefaultWorkspaceFactory
 
 
 class StandardAttributeGroupFactory(factory.django.DjangoModelFactory):

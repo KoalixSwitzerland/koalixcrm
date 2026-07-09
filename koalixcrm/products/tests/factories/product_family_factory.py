@@ -3,7 +3,7 @@
 import factory
 
 from koalixcrm.products.models.product_family import ProductFamily
-from tests.factories.core.workspace_factory import DefaultWorkspaceFactory
+from koalixcrm.core.tests.factories.workspace_factory import DefaultWorkspaceFactory
 
 
 class StandardProductFamilyFactory(factory.django.DjangoModelFactory):

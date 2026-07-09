@@ -3,11 +3,11 @@
 import factory
 
 from koalixcrm.products.models.attribute_set_default import AttributeSetDefault
-from tests.factories.core.workspace_factory import DefaultWorkspaceFactory
-from tests.factories.products.attribute_definition_factory import (
+from koalixcrm.core.tests.factories.workspace_factory import DefaultWorkspaceFactory
+from koalixcrm.products.tests.factories.attribute_definition_factory import (
     StandardAttributeDefinitionFactory,
 )
-from tests.factories.products.attribute_set_factory import StandardAttributeSetFactory
+from koalixcrm.products.tests.factories.attribute_set_factory import StandardAttributeSetFactory
 
 
 class StandardAttributeSetDefaultFactory(factory.django.DjangoModelFactory):

@@ -5,9 +5,9 @@ import factory
 from koalixcrm.products.models.unit_of_measure_conversion import (
     UnitOfMeasureConversion,
 )
-from tests.factories.core.unit_factory import SmallUnitFactory, StandardUnitFactory
-from tests.factories.core.workspace_factory import DefaultWorkspaceFactory
-from tests.factories.products.product_type_factory import StandardProductTypeFactory
+from koalixcrm.core.tests.factories.unit_factory import SmallUnitFactory, StandardUnitFactory
+from koalixcrm.core.tests.factories.workspace_factory import DefaultWorkspaceFactory
+from koalixcrm.products.tests.factories.product_type_factory import StandardProductTypeFactory
 
 
 class StandardUnitOfMeasureConversionFactory(factory.django.DjangoModelFactory):
