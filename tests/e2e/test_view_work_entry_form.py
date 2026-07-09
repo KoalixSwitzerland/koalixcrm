@@ -5,7 +5,7 @@ import pytest
 from selenium.webdriver.support.ui import Select
 
 from koalixcrm.reporting.models.work import Work
-from tests.contracts.test_support_functions import *
+from tests.e2e.support_functions import *
 from tests.e2e.UITests import UITests
 from koalixcrm.contacts.tests.factories.customer_factory import StandardCustomerFactory
 from koalixcrm.contacts.tests.factories.customer_group_factory import StandardCustomerGroupFactory

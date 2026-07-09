@@ -3,7 +3,7 @@ import pytest
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 
-from tests.contracts.test_support_functions import *
+from tests.e2e.support_functions import *
 from tests.e2e.UITests import UITests
 from koalixcrm.contacts.tests.factories.user_factory import AdminUserFactory
 

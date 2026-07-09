@@ -5,7 +5,7 @@ import pytest
 from koalixcrm.contracts.models.invoice import Invoice
 from koalixcrm.contracts.models.purchase_order import PurchaseOrder
 from koalixcrm.contracts.models.quotation import Quotation
-from tests.contracts.test_support_functions import *
+from tests.e2e.support_functions import *
 from tests.e2e.UITests import UITests
 from koalixcrm.contacts.tests.factories.customer_group_factory import StandardCustomerGroupFactory
 from koalixcrm.contacts.tests.factories.user_factory import AdminUserFactory

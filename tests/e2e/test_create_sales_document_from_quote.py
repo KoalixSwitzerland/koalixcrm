@@ -8,7 +8,7 @@ from selenium import webdriver
 from koalixcrm.contracts.models.invoice import Invoice
 from koalixcrm.contracts.models.purchase_order import PurchaseOrder
 from koalixcrm.contracts.models.quotation import Quotation
-from tests.contracts.test_support_functions import *
+from tests.e2e.support_functions import *
 from koalixcrm.contacts.tests.factories.customer_group_factory import StandardCustomerGroupFactory
 from koalixcrm.contacts.tests.factories.user_factory import AdminUserFactory
 from koalixcrm.contracts.tests.factories.contract_factory import StandardContractFactory
