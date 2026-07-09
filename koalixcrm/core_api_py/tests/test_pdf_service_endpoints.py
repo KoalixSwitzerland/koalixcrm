@@ -124,7 +124,7 @@ class TestDocumentTemplateEndpoint:
 
 @pytest.mark.django_db
 class TestCommercialDocumentMediaEndpoint:
-    def test_post_creates_row(self, api_client, pdf_export_process):
+    def test_post_creates_row(self, api_client):
         from koalixcrm.contracts.tests.factories.invoice_factory import StandardInvoiceFactory
 
         invoice = StandardInvoiceFactory()
@@ -132,7 +132,6 @@ class TestCommercialDocumentMediaEndpoint:
             "/koalixcrm_contracts/api/v1/1/commercial-document-media/",
             {
                 "commercial_document": invoice.id,
-                "pdf_export_process": pdf_export_process.id,
                 "s3_url": "https://s3.test/bucket/key.pdf",
                 "s3_key": "pdf-exports/Invoice_1_42.pdf",
                 "status": "completed",

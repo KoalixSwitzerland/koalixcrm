@@ -1,0 +1,408 @@
+# Translations for the koalixcrm reporting app.
+# Copyright (C) 2026 Aaron Riedener
+# This file is distributed under the same license as the koalixcrm package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: koalixcrm\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-04-15 20:29+0000\n"
+"PO-Revision-Date: 2026-06-01 02:39+0800\n"
+"Last-Translator: Peter Dave Hello <hsu@peterdavehello.org>\n"
+"Language-Team: \n"
+"Language: zh_TW\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: admin/agreement_admin.py:11 admin/estimation_admin.py:12
+#: admin/task_admin.py:30 admin/work_admin.py:23 admin/work_admin.py:63
+#: models/work.py:52 models/work.py:95 models/work.py:139 models/work.py:140
+msgid "Work"
+msgstr "工作"
+
+#: admin/agreement_status_admin.py:14 admin/estimation_status_admin.py:14
+#: models/agreement_status.py:22 models/agreement_status.py:23
+msgid "Agreement Status"
+msgstr "協議狀態"
+
+#: admin/agreement_type_admin.py:13
+msgid "AgreementType"
+msgstr "協議類型"
+
+#: admin/human_resource_admin.py:20 admin/resource_manager_admin.py:11
+msgid "Basics"
+msgstr "基本資料"
+
+#: admin/human_resource_admin.py:32
+msgid "Work Report PDF"
+msgstr "工作報告 PDF"
+
+#: admin/project_admin.py:28 admin/project_admin.py:73
+#: models/generic_project_link.py:13 models/project.py:63 models/project.py:518
+#: models/reporting_period.py:19 models/task.py:27
+msgid "Project"
+msgstr "專案"
+
+#: admin/project_admin.py:61 admin/reporting_period_admin.py:52
+msgid "Create Report PDF"
+msgstr "產生報告 PDF"
+
+#: admin/project_link_type_admin.py:13
+msgid "ProjectLinkType"
+msgstr "專案連結類型"
+
+#: admin/project_status_admin.py:14 models/project.py:35
+#: models/project_status.py:22 models/project_status.py:23
+msgid "Project Status"
+msgstr "專案狀態"
+
+#: admin/reporting_period_admin.py:22 admin/reporting_period_admin.py:58
+msgid "ReportingPeriod"
+msgstr "報告期間"
+
+#: admin/reporting_period_status_admin.py:14 admin/task_status_admin.py:14
+#: models/task_status.py:17 models/task_status.py:18
+msgid "Task Status"
+msgstr "任務狀態"
+
+#: admin/resource_type_admin.py:13
+msgid "ResourceType"
+msgstr "資源類型"
+
+#: admin/task_admin.py:57 models/agreement.py:13 models/estimation.py:19
+#: models/generic_task_link.py:12 models/task.py:59 models/task.py:527
+#: models/work.py:38
+msgid "Task"
+msgstr "任務"
+
+#: admin/task_link_type_admin.py:13
+msgid "TaskLinkType"
+msgstr "任務連結類型"
+
+#: admin/work_admin.py:42
+msgid ""
+"Delete is not allowed because the work is used in a reporting period which "
+"is marked 'as done'"
+msgstr "無法刪除，因為該工作紀錄所屬的報告期間已標記為「完成」"
+
+#: admin/work_admin.py:49
+msgid "Delete Selected Work"
+msgstr "刪除所選的工作紀錄"
+
+#: models/agreement.py:21
+msgid "Agreement From"
+msgstr "協議開始"
+
+#: models/agreement.py:24
+msgid "Agreement To"
+msgstr "協議結束"
+
+#: models/agreement.py:27 models/estimation.py:30
+msgid "Amount"
+msgstr "數量"
+
+#: models/agreement.py:58
+msgid "Agreement of Resource Consumption"
+msgstr "資源耗用協議"
+
+#: models/agreement.py:63
+msgid "Agreement"
+msgstr "協議"
+
+#: models/agreement.py:64
+msgid "Agreements"
+msgstr "協議"
+
+#: models/agreement_status.py:10 models/agreement_type.py:9
+#: models/estimation_status.py:10 models/project_link_type.py:9
+#: models/project_status.py:10 models/reporting_period.py:23
+#: models/reporting_period_status.py:10 models/resource_type.py:9
+#: models/task.py:21 models/task_link_type.py:9 models/task_status.py:10
+msgid "Title"
+msgstr "標題"
+
+#: models/agreement_status.py:14 models/agreement_type.py:10
+#: models/estimation_status.py:14 models/project_link_type.py:10
+#: models/project_status.py:14 models/reporting_period_status.py:14
+#: models/resource_type.py:13 models/task_link_type.py:10
+#: models/task_status.py:11 models/work.py:33
+msgid "Text"
+msgstr "內文"
+
+#: models/agreement_status.py:17
+msgid "Status represents agreement exists"
+msgstr "此狀態代表協議已存在"
+
+#: models/agreement_type.py:15 models/agreement_type.py:16
+msgid "Agreement Type"
+msgstr "協議類型"
+
+#: models/estimation.py:24
+msgid "Estimation From"
+msgstr "估算開始"
+
+#: models/estimation.py:27
+msgid "Estimation Until"
+msgstr "估算截止"
+
+#: models/estimation.py:37
+msgid "Status of the estimation"
+msgstr "估算狀態"
+
+#: models/estimation.py:42
+msgid "Reporting Period based on which the estimation was done"
+msgstr "估算所依據的報告期間"
+
+#: models/estimation.py:108 models/estimation.py:113
+msgid "Estimation of Resource Consumption"
+msgstr "資源耗用估算"
+
+#: models/estimation.py:114
+msgid "Estimation of Resource Consumptions"
+msgstr "資源耗用估算"
+
+#: models/estimation_status.py:17
+msgid "Status represents estimation is obsolete"
+msgstr "此狀態代表估算已過時"
+
+#: models/estimation_status.py:22 models/estimation_status.py:23
+msgid "Estimation Status"
+msgstr "估算狀態"
+
+#: models/generic_project_link.py:18 models/project_link_type.py:15
+#: models/project_link_type.py:16
+msgid "Project Link Type"
+msgstr "專案連結類型"
+
+#: models/generic_project_link.py:25 models/generic_task_link.py:24
+#: models/project.py:48
+msgid "Created at"
+msgstr "建立時間"
+
+#: models/generic_project_link.py:30 models/generic_task_link.py:29
+#: models/project.py:55
+msgid "Last modified by"
+msgstr "最後修改者"
+
+#: models/generic_project_link.py:34
+msgid "Link to"
+msgstr "連結至"
+
+#: models/generic_project_link.py:39
+msgid "Project Link"
+msgstr "專案連結"
+
+#: models/generic_project_link.py:40
+msgid "Project Links"
+msgstr "專案連結"
+
+#: models/generic_task_link.py:16 models/task_link_type.py:15
+#: models/task_link_type.py:16
+msgid "Task Link Type"
+msgstr "任務連結類型"
+
+#: models/generic_task_link.py:38
+msgid "Task Link"
+msgstr "任務連結"
+
+#: models/generic_task_link.py:39
+msgid "Task Links"
+msgstr "任務連結"
+
+#: models/human_resource.py:16 models/resource_manager.py:12
+msgid "User"
+msgstr "使用者"
+
+#: models/project.py:22
+msgid "Staff"
+msgstr "人員"
+
+#: models/project.py:26
+msgid "Project name"
+msgstr "專案名稱"
+
+#: models/project.py:30 models/task.py:31
+msgid "Description"
+msgstr "說明"
+
+#: models/project.py:40
+msgid "Default Template Set"
+msgstr "預設範本集"
+
+#: models/project.py:45
+msgid "Default Currency"
+msgstr "預設幣別"
+
+#: models/project.py:50
+msgid "Last modified"
+msgstr "最後修改時間"
+
+#: models/project.py:74
+msgid "Template Set missing in Project"
+msgstr "專案中缺少範本集"
+
+#: models/project.py:256
+msgid "Effective Confirmed Costs"
+msgstr "已確認實際成本"
+
+#: models/project.py:261
+msgid "Effective Not Confirmed Costs"
+msgstr "未確認實際成本"
+
+#: models/project.py:269
+msgid "Effective Accumulated effort"
+msgstr "實際累計工時"
+
+#: models/project.py:315 models/task.py:247
+msgid "Planned Total Costs"
+msgstr "計畫總成本"
+
+#: models/project.py:347 models/task.py:272
+msgid "Effective Start"
+msgstr "實際開始"
+
+#: models/project.py:385 models/task.py:321
+msgid "Effective End"
+msgstr "實際結束"
+
+#: models/project.py:409 models/task.py:345
+msgid "Effective Duration [dys]"
+msgstr "實際工期 [天]"
+
+#: models/project.py:482 models/task.py:69
+msgid "Planned Duration [dys]"
+msgstr "計畫工期 [天]"
+
+#: models/project.py:519
+msgid "Projects"
+msgstr "專案"
+
+#: models/project_status.py:17
+msgid "Status represents project is done"
+msgstr "此狀態代表專案已完成"
+
+#: models/reporting_period.py:26
+msgid "Begin"
+msgstr "開始"
+
+#: models/reporting_period.py:29
+msgid "End"
+msgstr "結束"
+
+#: models/reporting_period.py:34 models/reporting_period_status.py:22
+#: models/reporting_period_status.py:23
+msgid "Reporting Period Status"
+msgstr "報告期間狀態"
+
+#: models/reporting_period.py:177 models/work.py:43
+msgid "Reporting Period"
+msgstr "報告期間"
+
+#: models/reporting_period.py:178
+msgid "Reporting Periods"
+msgstr "報告期間"
+
+#: models/reporting_period_status.py:17
+msgid "Status represents reporting period is closed"
+msgstr "此狀態代表報告期間已關閉"
+
+#: models/resource.py:10
+msgid "Manager"
+msgstr "管理者"
+
+#: models/resource.py:15
+msgid "Resource Type"
+msgstr "資源類型"
+
+#: models/resource_price.py:12
+msgid "Resource"
+msgstr "資源"
+
+#: models/resource_type.py:23 models/resource_type.py:24
+msgid "Resource Link Type"
+msgstr "資源連結類型"
+
+#: models/task.py:34
+msgid "Status"
+msgstr "狀態"
+
+#: models/task.py:37
+msgid "Last Status Change"
+msgstr "最後狀態變更"
+
+#: models/task.py:95
+msgid "Planned Start"
+msgstr "計畫開始"
+
+#: models/task.py:121
+msgid "Planned End"
+msgstr "計畫結束"
+
+#: models/task.py:160
+msgid "Planned Effort"
+msgstr "計畫工時"
+
+#: models/task.py:242
+msgid "Planned Costs"
+msgstr "計畫成本"
+
+#: models/task.py:396
+msgid "Effective Effort [hrs]"
+msgstr "實際工時 [小時]"
+
+#: models/task.py:484
+msgid "Effective costs confirmed"
+msgstr "已確認實際成本"
+
+#: models/task.py:490
+msgid "Effective costs not confirmed"
+msgstr "未確認實際成本"
+
+#: models/task.py:512
+msgid "Reporting"
+msgstr "報告"
+
+#: models/task.py:528
+msgid "Tasks"
+msgstr "任務"
+
+#: models/task_status.py:12
+msgid "Status represents task done"
+msgstr "此狀態代表任務已完成"
+
+#: models/work.py:15
+msgid "Date"
+msgstr "日期"
+
+#: models/work.py:18
+msgid "Start Time"
+msgstr "開始時間"
+
+#: models/work.py:21
+msgid "Stop Time"
+msgstr "結束時間"
+
+#: models/work.py:24
+msgid "Worked Hours"
+msgstr "工作時數"
+
+#: models/work.py:29
+msgid "Short Description"
+msgstr "簡述"
+
+#: models/work.py:60
+msgid "Please add description"
+msgstr "請填寫說明"
+
+#: models/work.py:61
+msgid "Short description"
+msgstr "簡述"
+
+#: models/work.py:95
+msgid "from Person"
+msgstr "工作人員"
+
+#: models/work.py:121
+msgid "Confirmed"
+msgstr "已確認"

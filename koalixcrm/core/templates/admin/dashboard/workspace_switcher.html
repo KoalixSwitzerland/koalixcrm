@@ -7,31 +7,34 @@
         {% trans "No workspace access — contact an administrator." %}
     </p>
 {% else %}
-    <ul class="grp-listing-small">
+    <ul class="grp-listing-small" style="width: 100%;">
         {% for row in module.workspace_rows %}
-            <li class="grp-row{% if row.is_active %} grp-selected{% endif %}">
+            <li class="grp-row{% if row.is_active %} grp-selected{% endif %}"
+                style="display: flex; align-items: center; flex-wrap: nowrap; gap: 4px; overflow: hidden;">
+
                 {# Color swatch #}
                 {% if row.color %}
                     <span style="
+                        flex-shrink: 0;
                         display: inline-block;
                         width: 12px;
                         height: 12px;
                         background-color: {{ row.color }};
                         border-radius: 2px;
-                        margin-right: 6px;
-                        vertical-align: middle;
                     " title="{{ row.color }}"></span>
                 {% endif %}
 
-                {# Workspace name — clicking submits the switch form #}
+                {# Workspace name — takes all remaining space, never truncated #}
                 {% if module.workspace_rows|length == 1 %}
-                    {# Single workspace: render inert (switch is a no-op) #}
-                    <span>{{ row.name }}</span>
+                    <span style="flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ row.name }}</span>
                 {% else %}
-                    <form method="post" action="{{ row.switch_url }}" style="display: inline;">
+                    <form method="post" action="{{ row.switch_url }}"
+                          style="flex: 1; min-width: 0; display: flex; margin: 0; padding: 0;">
                         {% csrf_token %}
                         <input type="hidden" name="workspace_id" value="{{ row.workspace_id }}">
                         <button type="submit" class="grp-button" style="
+                            flex: 1;
+                            min-width: 0;
                             background: none;
                             border: none;
                             padding: 0;
@@ -39,24 +42,29 @@
                             color: inherit;
                             font: inherit;
                             text-align: left;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
                         ">{{ row.name }}</button>
                     </form>
                 {% endif %}
 
-                {# Role badges #}
+                {# Role badges — <b> avoids Grappelli's span+span { display:block } rule #}
                 {% for role in row.roles %}
-                    <span class="grp-badge" style="
+                    <b style="
+                        flex-shrink: 0;
                         font-size: 0.75em;
+                        font-weight: normal;
                         background: #e0e0e0;
                         padding: 1px 5px;
                         border-radius: 3px;
-                        margin-left: 4px;
-                    ">{{ role }}</span>
+                        white-space: nowrap;
+                    ">{{ role }}</b>
                 {% endfor %}
 
-                {# Active marker #}
+                {# Active marker — always on the same line #}
                 {% if row.is_active %}
-                    <strong style="margin-left: 6px; color: #417690;">
+                    <strong style="flex-shrink: 0; color: #417690; white-space: nowrap;">
                         ({% trans "active" %})
                     </strong>
                 {% endif %}

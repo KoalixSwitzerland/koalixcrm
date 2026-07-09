@@ -19,7 +19,6 @@ DATABASES = {
     }
 }
 
-FOP_EXECUTABLE = "/usr/bin/fop-2.9/fop/fop"
 GRAPPELLI_INDEX_DASHBOARD = 'projectsettings.dashboard.CustomIndexDashboard'
 
 KOALIXCRM_REST_API_AUTH = True

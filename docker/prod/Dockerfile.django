@@ -14,6 +14,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq-dev \
     libcurl4-openssl-dev \
     libssl-dev \
+    gettext \
  && rm -rf /var/lib/apt/lists/*
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -48,6 +49,15 @@ RUN find /usr/src/app -type d -name tests -prune -exec rm -rf {} +
 # Stamp the resolved version into the Python package so `koalixcrm.version`
 # reports the same value as the image label / KOALIXCRM_VERSION env var.
 RUN printf 'KOALIXCRM_VERSION = "%s"\n' "${APP_VERSION}" > /usr/src/app/koalixcrm/version.py
+
+# Compile gettext message catalogs (.po -> .mo) at build time so the binary
+# .mo files do not need to be committed to git. Run per-app with django-admin
+# so no Django settings/env are required during the build.
+RUN for appdir in koalixcrm/*/; do \
+        if [ -d "${appdir}locale" ]; then \
+            (cd "$appdir" && django-admin compilemessages); \
+        fi; \
+    done
 
 EXPOSE 8000
 

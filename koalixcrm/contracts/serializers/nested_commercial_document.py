@@ -30,7 +30,10 @@ from koalixcrm.contacts.models.email_assignment import EmailAssignment
 from koalixcrm.contacts.models.natural_person import PartyContact
 from koalixcrm.contacts.models.organization import Organization
 from koalixcrm.contacts.models.phone_assignment import PhoneAssignment
-from koalixcrm.contracts.models.commercial_document import CommercialDocument
+from koalixcrm.contracts.models.commercial_document import (
+    CommercialDocument,
+    TextParagraphInCommercialDocument,
+)
 from koalixcrm.contracts.models.commercial_document_position import (
     CommercialDocumentPosition,
 )
@@ -230,6 +233,7 @@ class _BaseCommercialDocumentNestedSerializer(serializers.ModelSerializer):
     currency = CurrencyJSONSerializer(read_only=True)
     items = serializers.SerializerMethodField()
     tax_summary = serializers.SerializerMethodField()
+    text_paragraphs = serializers.SerializerMethodField()
     user_extension = serializers.SerializerMethodField()
 
     class Meta:
@@ -254,6 +258,7 @@ class _BaseCommercialDocumentNestedSerializer(serializers.ModelSerializer):
             "template_set",
             "items",
             "tax_summary",
+            "text_paragraphs",
             "user_extension",
         )
 
@@ -272,6 +277,21 @@ class _BaseCommercialDocumentNestedSerializer(serializers.ModelSerializer):
 
     def get_tax_summary(self, obj: CommercialDocumentModel) -> list[dict[str, str]]:
         return _compute_tax_summary(self._positions(obj))
+
+    def get_text_paragraphs(self, obj: CommercialDocumentModel) -> list[dict[str, str]]:
+        """Intro / mid / closing free-text blocks (purpose BS / AS / AT …).
+
+        The Java worker emits each as `<text_paragraph purpose="…">…` and the
+        XSL-FO templates switch on the purpose to place them around the
+        positions table.
+        """
+        rows = TextParagraphInCommercialDocument.objects.filter(
+            commercial_document=obj.id
+        ).order_by("id")
+        return [
+            {"purpose": row.purpose, "text_paragraph": row.text_paragraph}
+            for row in rows
+        ]
 
     def get_user_extension(self, obj: CommercialDocumentModel) -> int | None:
         if obj.staff_id is None:

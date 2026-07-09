@@ -14,7 +14,7 @@ from koalixcrm.core.const.postaladdressprefix import POSTALADDRESSPREFIX
 # in #395 after the legacy model is dropped.
 class PartyContact(Party):
     prefix = models.CharField(
-        max_length=1, choices=POSTALADDRESSPREFIX,
+        max_length=32, choices=POSTALADDRESSPREFIX,
         blank=True, null=True,
         verbose_name=_("Prefix"),
     )

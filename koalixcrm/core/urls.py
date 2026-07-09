@@ -7,15 +7,18 @@ module is inert — importing it has no effect on the running URL conf.
 from rest_framework.routers import DefaultRouter
 
 from koalixcrm.core_api_py.core_api import (
+    CurrencyTransformViewSet,
     CurrencyViewSet,
     TaxViewSet,
-    UnitViewSet,
-    CurrencyTransformViewSet,
     UnitTransformViewSet,
+    UnitViewSet,
 )
 from koalixcrm.core_api_py.pdf_export_process_view_set import PDFExportProcessViewSet
 from koalixcrm.djangoUserExtension.views.document_template_view_set import (
     DocumentTemplateViewSet,
+)
+from koalixcrm.djangoUserExtension.views.user_extension_view_set import (
+    UserExtensionViewSet,
 )
 
 router = DefaultRouter()
@@ -26,5 +29,6 @@ router.register(r'currency-transforms', CurrencyTransformViewSet, basename='curr
 router.register(r'unit-transforms', UnitTransformViewSet, basename='unit-transform')
 router.register(r'pdf-export-processes', PDFExportProcessViewSet, basename='pdf-export-process')
 router.register(r'document-templates', DocumentTemplateViewSet, basename='document-template')
+router.register(r'user-extensions', UserExtensionViewSet, basename='user-extension')
 
 urlpatterns = router.urls
