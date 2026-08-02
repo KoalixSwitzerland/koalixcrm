@@ -420,11 +420,25 @@ class BaseAPIClient:
             else:
                 current_endpoint = None
 
+        # Concatenating pages can yield the same row twice. A total ordering
+        # (ADR-0023) rules out the tie-nondeterminism case, but not offset
+        # shift: a row inserted ahead of the page boundary while this walk is
+        # in progress pushes every later row down one slot, so the next OFFSET
+        # re-serves the previous page's last row. That is inherent to
+        # LIMIT/OFFSET paging and cannot be fixed server-side.
+        #
+        # Keeps the first occurrence and preserves order. Items without a
+        # usable id are never dropped — only exact id duplicates are.
+        seen_ids: set = set()
         result: List[T] = []
         for item in all_items:
             if not isinstance(item, dict):
                 continue
             object_id = item.get('id')
+            if isinstance(object_id, (int, str)):
+                if object_id in seen_ids:
+                    continue
+                seen_ids.add(object_id)
             obj = model_class(item, self)
             if object_id is not None:
                 cache.set(model_class, object_id, obj)
