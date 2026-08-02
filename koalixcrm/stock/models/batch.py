@@ -4,7 +4,6 @@ Amendment 2026-07-04 rekeys the FK from `Product` to `ProductVariant` per
 ADR-0021). FEFO index on `(workspace, variant, expiry_date)`."""
 from __future__ import annotations
 
-from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext as _

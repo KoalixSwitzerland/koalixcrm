@@ -5,7 +5,6 @@ from django.utils import timezone
 from koalixcrm.stock.models.choices import ReservationLifecycleStatus
 from koalixcrm.stock.models.rental_assignment import RentalAssignment
 from koalixcrm.contacts.tests.factories.contact_factory import StandardContactFactory
-from koalixcrm.core.tests.factories.workspace_factory import DefaultWorkspaceFactory
 from koalixcrm.stock.tests.factories.stock_reservation_factory import RentalStockReservationFactory
 
 

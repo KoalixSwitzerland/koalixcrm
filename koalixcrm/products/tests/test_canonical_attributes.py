@@ -88,7 +88,10 @@ class CanonicalEavBackedKeyTest(TestCase):
     @pytest.mark.back_end_tests
     def test_import_applies_when_no_explicit_value_exists(self):
         product = StandardProductTypeFactory.create()
-        definition = StandardAttributeDefinitionFactory.create(
+        # Created for its side effect, not its handle: `import_canonical_value`
+        # looks the definition up by `canonical_key`, and raises if none backs
+        # the key in this workspace. Dropping the call would break the test.
+        StandardAttributeDefinitionFactory.create(
             key="shelf-life-import", canonical_key="koalix.shelf_life_days", data_type="int"
         )
         mapping = StandardProductAttributeMappingFactory.create(canonical_key="koalix.shelf_life_days")

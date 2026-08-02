@@ -17,6 +17,27 @@ if TYPE_CHECKING:
 
 _MAX_DEPTH_GUARD = 10_000
 
+#: `Location.Meta.db_table`. SQL cannot bind a table name as a parameter, so
+#: building the query below by interpolating `Model._meta.db_table` would mean
+#: constructing SQL from a string — safe here, but indistinguishable to a
+#: static analyser from the genuinely unsafe version, and a reviewer has to
+#: re-derive the argument every time. Naming the table as a literal makes the
+#: statement a constant with no construction at all; `test_location.py` asserts
+#: it still matches `Meta.db_table`, so a rename fails a test rather than
+#: producing a query against a table that no longer exists.
+LOCATION_TABLE = "stock_location"
+
+_ANCESTOR_PATH_SQL = """
+    WITH RECURSIVE ancestors(id, parent_id, depth) AS (
+        SELECT id, parent_id, 0 AS depth FROM stock_location WHERE id = %s
+        UNION ALL
+        SELECT l.id, l.parent_id, ancestors.depth + 1
+        FROM stock_location l
+        INNER JOIN ancestors ON l.id = ancestors.parent_id
+    )
+    SELECT id FROM ancestors ORDER BY depth DESC
+"""
+
 
 def assert_no_cycle(location: "Location") -> None:
     """Raise `ValidationError` if `location.parent` is `location` itself or
@@ -47,19 +68,8 @@ def get_ancestor_path(location: "Location") -> list["Location"]:
     if location.pk is None:
         return [location]
 
-    table = Location._meta.db_table
-    sql = f"""
-        WITH RECURSIVE ancestors(id, parent_id, depth) AS (
-            SELECT id, parent_id, 0 AS depth FROM {table} WHERE id = %s
-            UNION ALL
-            SELECT l.id, l.parent_id, ancestors.depth + 1
-            FROM {table} l
-            INNER JOIN ancestors ON l.id = ancestors.parent_id
-        )
-        SELECT id FROM ancestors ORDER BY depth DESC
-    """
     with connection.cursor() as cursor:
-        cursor.execute(sql, [location.pk])
+        cursor.execute(_ANCESTOR_PATH_SQL, [location.pk])
         ids_root_to_leaf = [row[0] for row in cursor.fetchall()]
 
     locations_by_id = {loc.pk: loc for loc in Location.objects.filter(pk__in=ids_root_to_leaf)}

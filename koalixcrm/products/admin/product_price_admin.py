@@ -11,7 +11,6 @@ is a second inline, on `PriceListAdmin`, grouping prices by channel/segment
 from __future__ import annotations
 
 from django.contrib import admin
-from django.utils.translation import gettext as _
 
 from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
 from koalixcrm.products.models.product_price import ProductPrice

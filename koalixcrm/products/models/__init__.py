@@ -1,32 +1,32 @@
 # -*- coding: utf-8 -*-
 
-from koalixcrm.products.models.attribute_definition import *
-from koalixcrm.products.models.attribute_group import *
-from koalixcrm.products.models.attribute_set import *
-from koalixcrm.products.models.attribute_set_default import *
-from koalixcrm.products.models.attribute_validation_rule import *
-from koalixcrm.products.models.bill_of_materials import *
-from koalixcrm.products.models.bom_item import *
-from koalixcrm.products.models.classification import *
-from koalixcrm.products.models.customer_group_transform import *
-from koalixcrm.products.models.price import *
-from koalixcrm.products.models.price_list import *
-from koalixcrm.products.models.product import *
-from koalixcrm.products.models.product_attribute_bool import *
-from koalixcrm.products.models.product_attribute_decimal import *
-from koalixcrm.products.models.product_attribute_enum import *
-from koalixcrm.products.models.product_attribute_int import *
-from koalixcrm.products.models.product_attribute_mapping import *
-from koalixcrm.products.models.product_attribute_mirror import *
-from koalixcrm.products.models.product_attribute_reference import *
-from koalixcrm.products.models.product_attribute_string import *
-from koalixcrm.products.models.product_classification import *
-from koalixcrm.products.models.product_family import *
-from koalixcrm.products.models.product_media import *
-from koalixcrm.products.models.product_passport import *
-from koalixcrm.products.models.product_price import *
-from koalixcrm.products.models.product_supply import *
-from koalixcrm.products.models.product_translation import *
-from koalixcrm.products.models.product_variant import *
-from koalixcrm.products.models.service_profile import *
-from koalixcrm.products.models.unit_of_measure_conversion import *
+from koalixcrm.products.models.attribute_definition import *  # noqa: F401, F403
+from koalixcrm.products.models.attribute_group import *  # noqa: F401, F403
+from koalixcrm.products.models.attribute_set import *  # noqa: F401, F403
+from koalixcrm.products.models.attribute_set_default import *  # noqa: F401, F403
+from koalixcrm.products.models.attribute_validation_rule import *  # noqa: F401, F403
+from koalixcrm.products.models.bill_of_materials import *  # noqa: F401, F403
+from koalixcrm.products.models.bom_item import *  # noqa: F401, F403
+from koalixcrm.products.models.classification import *  # noqa: F401, F403
+from koalixcrm.products.models.customer_group_transform import *  # noqa: F401, F403
+from koalixcrm.products.models.price import *  # noqa: F401, F403
+from koalixcrm.products.models.price_list import *  # noqa: F401, F403
+from koalixcrm.products.models.product import *  # noqa: F401, F403
+from koalixcrm.products.models.product_attribute_bool import *  # noqa: F401, F403
+from koalixcrm.products.models.product_attribute_decimal import *  # noqa: F401, F403
+from koalixcrm.products.models.product_attribute_enum import *  # noqa: F401, F403
+from koalixcrm.products.models.product_attribute_int import *  # noqa: F401, F403
+from koalixcrm.products.models.product_attribute_mapping import *  # noqa: F401, F403
+from koalixcrm.products.models.product_attribute_mirror import *  # noqa: F401, F403
+from koalixcrm.products.models.product_attribute_reference import *  # noqa: F401, F403
+from koalixcrm.products.models.product_attribute_string import *  # noqa: F401, F403
+from koalixcrm.products.models.product_classification import *  # noqa: F401, F403
+from koalixcrm.products.models.product_family import *  # noqa: F401, F403
+from koalixcrm.products.models.product_media import *  # noqa: F401, F403
+from koalixcrm.products.models.product_passport import *  # noqa: F401, F403
+from koalixcrm.products.models.product_price import *  # noqa: F401, F403
+from koalixcrm.products.models.product_supply import *  # noqa: F401, F403
+from koalixcrm.products.models.product_translation import *  # noqa: F401, F403
+from koalixcrm.products.models.product_variant import *  # noqa: F401, F403
+from koalixcrm.products.models.service_profile import *  # noqa: F401, F403
+from koalixcrm.products.models.unit_of_measure_conversion import *  # noqa: F401, F403

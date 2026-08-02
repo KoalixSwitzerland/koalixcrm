@@ -18,7 +18,6 @@ from koalixcrm.stock.services import production_order_workflow
 from koalixcrm.stock.services.movement_posting import post_movement
 from koalixcrm.core.tests.factories.unit_factory import StandardUnitFactory
 from koalixcrm.products.tests.factories.bill_of_materials_factory import (
-    StandardBillOfMaterialsFactory,
     StandardBomItemFactory,
 )
 from koalixcrm.products.tests.factories.product_variant_factory import StandardProductVariantFactory

@@ -166,8 +166,6 @@ def _get_or_create_on_hand_record(
 
 
 def _apply_on_hand_delta(movement: "StockMovement", item: OnHandDelta) -> None:
-    from koalixcrm.stock.models.on_hand_record import OnHandRecord
-
     record = _get_or_create_on_hand_record(
         workspace=movement.workspace,
         variant=movement.variant,

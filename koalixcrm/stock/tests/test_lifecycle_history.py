@@ -3,7 +3,6 @@
 hand-constructed StockMovement history."""
 import datetime
 import uuid
-from decimal import Decimal
 
 import pytest
 from django.test import TestCase

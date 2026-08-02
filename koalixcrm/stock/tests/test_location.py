@@ -8,6 +8,7 @@ from django.test import TestCase
 
 from koalixcrm.stock.models.choices import LocationType
 from koalixcrm.stock.models.location import Location
+from koalixcrm.stock.services import location_hierarchy
 from koalixcrm.core.tests.factories.workspace_factory import DefaultWorkspaceFactory
 from koalixcrm.stock.tests.factories.location_factory import StandardLocationFactory
 
@@ -79,3 +80,14 @@ class LocationHierarchyTest(TestCase):
         bin_ = StandardLocationFactory(code="BIN-2", parent=rack, is_active=False)
         path = bin_.get_ancestor_path()
         self.assertEqual([loc.code for loc in path], ["RACK-2", "BIN-2"])
+
+    @pytest.mark.back_end_tests
+    def test_recursive_cte_table_name_matches_the_model(self):
+        """`_ANCESTOR_PATH_SQL` names `stock_location` literally rather than
+        interpolating `Meta.db_table`, so that the statement is a constant and
+        no SQL is built from a string. That trade only holds while the literal
+        and the model agree — this is the check that keeps them agreeing."""
+        self.assertEqual(Location._meta.db_table, location_hierarchy.LOCATION_TABLE)
+        self.assertIn(
+            location_hierarchy.LOCATION_TABLE, location_hierarchy._ANCESTOR_PATH_SQL
+        )
