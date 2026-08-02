@@ -57,7 +57,7 @@ class ProductMedia(WorkspaceScopedModel):
         ordering = ["id"]
         constraints = [
             models.CheckConstraint(
-                check=(
+                condition=(
                     models.Q(product__isnull=False, variant__isnull=True)
                     | models.Q(product__isnull=True, variant__isnull=False)
                 ),
