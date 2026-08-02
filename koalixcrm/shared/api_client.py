@@ -16,13 +16,32 @@ import base64
 import http.client
 import json
 import logging
+import random
 import socket
+import time
 import urllib.parse
 from os import getenv
 from typing import Any, Dict, List, Optional, Type
 
 from koalixcrm.shared.object_cache import ObjectCache, T
 from koalixcrm.shared.token_cache import TokenCache
+
+
+class ListWalkIncompleteError(RuntimeError):
+    """Raised when a paginated list kept changing while being walked.
+
+    A total ordering (ADR-0023) removes tie nondeterminism, but not offset
+    shift: a row inserted or deleted ahead of the page boundary mid-walk moves
+    every later row by a slot, so one can be served twice or skipped entirely.
+    Deduplication catches the duplicate; nothing catches the loss, which is why
+    detecting the change and failing is better than returning a short list.
+    """
+
+
+#: One retry only — see the rationale at the retry site in `_get_object_list`.
+MAX_LIST_WALK_ATTEMPTS = 2
+_RETRY_DELAY_MIN_S = 0.10
+_RETRY_DELAY_MAX_S = 0.25
 
 logger = logging.getLogger(__name__)
 
@@ -381,11 +400,19 @@ class BaseAPIClient:
             return obj
         return None
 
-    def _get_object_list(self, model_class: Type[T], endpoint: str) -> List[T]:
-        """Get a list of objects from the API. Supports DRF pagination."""
-        cache = self._require_cache()
+    def _walk_object_pages(self, endpoint: str):
+        """Walk every page from `endpoint`, returning (items, changed_count).
+
+        `changed_count` is the differing `count` value if the list changed
+        underneath the walk, else None. Every page's `count` is compared
+        against the first page's: a difference proves rows were inserted or
+        deleted while we were paging, which under LIMIT/OFFSET means later
+        rows shifted position and one may be duplicated or skipped. The check
+        is free — the server runs that COUNT for every page anyway.
+        """
         all_items: List[Dict[str, Any]] = []
         current_endpoint = endpoint
+        expected_count: Optional[int] = None
 
         while current_endpoint:
             data = self._make_request(current_endpoint)
@@ -393,6 +420,13 @@ class BaseAPIClient:
                 break
 
             if isinstance(data, dict) and isinstance(data.get("results"), list):
+                page_count = data.get("count")
+                if isinstance(page_count, int):
+                    if expected_count is None:
+                        expected_count = page_count
+                    elif page_count != expected_count:
+                        return all_items, expected_count, page_count
+
                 all_items.extend(data.get("results", []))
                 next_url = data.get("next")
                 if next_url:
@@ -419,6 +453,39 @@ class BaseAPIClient:
                 current_endpoint = None
             else:
                 current_endpoint = None
+
+        return all_items, expected_count, None
+
+    def _get_object_list(self, model_class: Type[T], endpoint: str) -> List[T]:
+        """Get a list of objects from the API. Supports DRF pagination.
+
+        Raises ListWalkIncompleteError if the list kept changing while being
+        paged through. Failing here is deliberate: callers aggregate these
+        rows, and a silently short list yields a confidently wrong total.
+        """
+        cache = self._require_cache()
+
+        for attempt in range(1, MAX_LIST_WALK_ATTEMPTS + 1):
+            all_items, expected_count, changed_count = self._walk_object_pages(endpoint)
+            if changed_count is None:
+                break
+
+            if attempt < MAX_LIST_WALK_ATTEMPTS:
+                # One retry, not the usual several: this is contention, not a
+                # transient fault. Either writes are rare and the retry
+                # succeeds, or they are continuous and no retry count
+                # converges — while each attempt costs a full walk. The short
+                # randomised pause avoids restarting inside the same write
+                # burst; exponential backoff would be solving a different
+                # problem (server overload), which is not this one.
+                time.sleep(random.uniform(_RETRY_DELAY_MIN_S, _RETRY_DELAY_MAX_S))
+                continue
+
+            raise ListWalkIncompleteError(
+                f"{endpoint}: list changed while paging through it "
+                f"(count {expected_count} -> {changed_count}) after {attempt} attempts; "
+                f"the result would be missing or duplicating rows."
+            )
 
         # Concatenating pages can yield the same row twice. A total ordering
         # (ADR-0023) rules out the tie-nondeterminism case, but not offset
