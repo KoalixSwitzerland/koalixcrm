@@ -6,15 +6,50 @@ queries; the frontend calls this before saving a rental offer position."""
 from __future__ import annotations
 
 from django.utils.dateparse import parse_datetime
+from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from koalixcrm.products.models.product_variant import ProductVariant
+from koalixcrm.stock.serializers.scan_resolve_serializer import DetailSerializer
+from koalixcrm.stock.serializers.serial_unit_availability_serializer import (
+    SerialUnitAvailabilitySerializer,
+)
 from koalixcrm.stock.services.availability import free_windows
 
 
+@extend_schema(
+    tags=['availability'],
+    summary="Time-window availability for a variant's serial units",
+    description=(
+        "The sole authorized interface for time-window availability queries "
+        "(ADR-0010 Amendment 2026-05-04, OQ-0011). The frontend calls this "
+        "before saving a rental offer position."
+    ),
+    parameters=[
+        OpenApiParameter(
+            name='start',
+            type=str,
+            location=OpenApiParameter.QUERY,
+            required=True,
+            description="Window start as an ISO-8601 datetime.",
+        ),
+        OpenApiParameter(
+            name='end',
+            type=str,
+            location=OpenApiParameter.QUERY,
+            required=True,
+            description="Window end as an ISO-8601 datetime.",
+        ),
+    ],
+    responses={
+        200: SerialUnitAvailabilitySerializer(many=True),
+        400: DetailSerializer,
+        404: DetailSerializer,
+    },
+)
 class SerialUnitAvailabilityView(APIView):
     permission_classes = [IsAuthenticated]
 

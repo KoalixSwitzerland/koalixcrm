@@ -5,14 +5,37 @@ consistent with the app's router-based path shape). Delegates to
 `services/scan_resolve.py`."""
 from __future__ import annotations
 
+from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from koalixcrm.stock.serializers.scan_resolve_serializer import (
+    DetailSerializer,
+    ScanMatchSerializer,
+    ScanResolveConflictSerializer,
+    ScanResolveRequestSerializer,
+)
 from koalixcrm.stock.services import scan_resolve
 
 
+@extend_schema(
+    tags=['scan'],
+    summary="Resolve a scanned code to a stock entity",
+    description=(
+        "Two-stage resolution per ADR-0016: GS1 element-string parsing first, "
+        "then exact free-text match. GS1 always wins; free text is only "
+        "attempted when no GS1 AI prefix was recognized at all."
+    ),
+    request=ScanResolveRequestSerializer,
+    responses={
+        200: ScanMatchSerializer,
+        400: DetailSerializer,
+        404: DetailSerializer,
+        409: ScanResolveConflictSerializer,
+    },
+)
 class ScanResolveView(APIView):
     permission_classes = [IsAuthenticated]
 
