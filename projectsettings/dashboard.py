@@ -41,11 +41,74 @@ class CustomIndexDashboard(Dashboard):
                             'koalixcrm.contracts.models.payment_reminder.PaymentReminder',
                             'koalixcrm.contracts.models.purchase_order.PurchaseOrder',),
                     ),
+                    # ADR-0003 Amendment 2026-06-27 renamed `ProductType` ->
+                    # `Product` and moved it to `models/product.py`. This list
+                    # still pointed at the old module, and because
+                    # `modules.ModelList` silently drops patterns that match
+                    # nothing, the panel rendered empty rather than erroring.
                     modules.ModelList(
                         _('Products'),
                         column=1,
                         css_classes=('collapse closed',),
-                        models=('koalixcrm.products.models.product_type.ProductType',),
+                        models=('koalixcrm.products.models.product.Product',
+                                'koalixcrm.products.models.product_family.ProductFamily',
+                                'koalixcrm.products.models.product_variant.ProductVariant',
+                                'koalixcrm.products.models.product_media.ProductMedia',),
+                    ),
+                    # `ProductTranslation` and `CustomerGroupTransform` are
+                    # deliberately absent: both are registered as inlines
+                    # (on Product and PriceList respectively), not as
+                    # standalone ModelAdmins, so a ModelList entry for them
+                    # would never render.
+                    modules.ModelList(
+                        _('Pricing'),
+                        column=1,
+                        css_classes=('collapse closed',),
+                        models=('koalixcrm.products.models.price_list.PriceList',
+                                'koalixcrm.products.models.product_price.ProductPrice',
+                                'koalixcrm.products.models.unit_of_measure_conversion.'
+                                'UnitOfMeasureConversion',),
+                    ),
+                    modules.ModelList(
+                        _('Classification and Attributes'),
+                        column=1,
+                        css_classes=('collapse closed',),
+                        models=('koalixcrm.products.models.classification.Classification',
+                                'koalixcrm.products.models.classification.ClassificationNode',
+                                'koalixcrm.products.models.product_classification.ProductClassification',
+                                'koalixcrm.products.models.attribute_group.AttributeGroup',
+                                'koalixcrm.products.models.attribute_definition.AttributeDefinition',
+                                'koalixcrm.products.models.attribute_set.AttributeSet',
+                                'koalixcrm.products.models.attribute_validation_rule.'
+                                'AttributeValidationRule',
+                                'koalixcrm.products.models.product_attribute_mapping.'
+                                'ProductAttributeMapping',),
+                    ),
+                    modules.ModelList(
+                        _('Attribute Values (typed EAV tables)'),
+                        column=1,
+                        css_classes=('collapse closed',),
+                        models=('koalixcrm.products.models.product_attribute_string.'
+                                'ProductAttributeString',
+                                'koalixcrm.products.models.product_attribute_int.ProductAttributeInt',
+                                'koalixcrm.products.models.product_attribute_decimal.'
+                                'ProductAttributeDecimal',
+                                'koalixcrm.products.models.product_attribute_bool.ProductAttributeBool',
+                                'koalixcrm.products.models.product_attribute_enum.ProductAttributeEnum',
+                                'koalixcrm.products.models.product_attribute_reference.'
+                                'ProductAttributeReference',
+                                'koalixcrm.products.models.product_attribute_mirror.'
+                                'ProductAttributeMirror',),
+                    ),
+                    modules.ModelList(
+                        _('Sourcing, Manufacturing and Compliance'),
+                        column=1,
+                        css_classes=('collapse closed',),
+                        models=('koalixcrm.products.models.product_supply.ProductSupply',
+                                'koalixcrm.products.models.bill_of_materials.BillOfMaterials',
+                                'koalixcrm.products.models.bom_item.BomItem',
+                                'koalixcrm.products.models.service_profile.ServiceProfile',
+                                'koalixcrm.products.models.product_passport.ProductPassport',),
                     ),
                     modules.ModelList(
                         _('Parties'),
@@ -97,6 +160,63 @@ class CustomIndexDashboard(Dashboard):
                                    'external': False}]
                     )
 
+            ]
+        ))
+
+        # Stock domain (ADR-0009 … ADR-0017). Its own group rather than more
+        # entries in the group above: the stock backbone is a peer domain of
+        # products, not a subsection of it, and the combined list is long
+        # enough that one collapsed group per domain stays scannable.
+        # `GoodsReceiptLine` and `ProductionOrderComponent` are absent because
+        # they are inlines on their parent aggregate, as are the movement
+        # reason-code extensions.
+        self.children.append(modules.Group(
+            _('Stock'),
+            column=1,
+            collapsible=True,
+            children=[
+                modules.ModelList(
+                    _('Warehouse Structure'),
+                    column=1,
+                    css_classes=('collapse closed',),
+                    models=('koalixcrm.stock.models.location.Location',
+                            'koalixcrm.stock.models.handling_unit.HandlingUnit',),
+                ),
+                modules.ModelList(
+                    _('Tracked Units'),
+                    column=1,
+                    css_classes=('collapse closed',),
+                    models=('koalixcrm.stock.models.serial_unit.SerialUnit',
+                            'koalixcrm.stock.models.batch.Batch',),
+                ),
+                modules.ModelList(
+                    _('Stock Levels and Movements'),
+                    column=1,
+                    css_classes=('collapse closed',),
+                    models=('koalixcrm.stock.models.on_hand_record.OnHandRecord',
+                            'koalixcrm.stock.models.stock_balance.StockBalance',
+                            'koalixcrm.stock.models.stock_movement.StockMovement',
+                            'koalixcrm.stock.models.stock_reservation.StockReservation',),
+                ),
+                modules.ModelList(
+                    _('Stock Operations'),
+                    column=1,
+                    css_classes=('collapse closed',),
+                    models=('koalixcrm.stock.models.goods_receipt.GoodsReceipt',
+                            'koalixcrm.stock.models.production_order.ProductionOrder',
+                            'koalixcrm.stock.models.rental_assignment.RentalAssignment',
+                            'koalixcrm.stock.models.bill_of_materials_explosion.'
+                            'BillOfMaterialsExplosion',),
+                ),
+                modules.ModelList(
+                    _('Stock Settings'),
+                    column=1,
+                    css_classes=('collapse closed',),
+                    models=('koalixcrm.stock.models.movement_reason_code.MovementReasonCode',
+                            'koalixcrm.stock.models.movement_reason_code_extension.'
+                            'MovementReasonCodeExtension',
+                            'koalixcrm.stock.models.retention_policy.RetentionPolicy',),
+                ),
             ]
         ))
 
