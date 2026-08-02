@@ -1,0 +1,15 @@
+---
+# Codacy repository configuration.
+#
+# Bandit's B101 (assert_used) warns that `assert` is stripped under `python -O`.
+# That matters in shipped code, but test modules are exactly where bare
+# `assert` belongs — pytest rewrites them and they are never run optimised.
+# Excluding tests from Bandit only, so every other tool still analyses them.
+engines:
+  bandit:
+    exclude_paths:
+      - "**/tests/**"
+      - "**/test_*.py"
+      - "**/*_test.py"
+      - "conftest.py"
+      - "**/conftest.py"

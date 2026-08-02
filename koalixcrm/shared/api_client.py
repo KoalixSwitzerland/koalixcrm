@@ -478,7 +478,7 @@ class BaseAPIClient:
                 # randomised pause avoids restarting inside the same write
                 # burst; exponential backoff would be solving a different
                 # problem (server overload), which is not this one.
-                time.sleep(random.uniform(_RETRY_DELAY_MIN_S, _RETRY_DELAY_MAX_S))
+                time.sleep(random.uniform(_RETRY_DELAY_MIN_S, _RETRY_DELAY_MAX_S))  # nosec B311
                 continue
 
             raise ListWalkIncompleteError(
