@@ -13,6 +13,7 @@ from koalixcrm.contracts.tests.factories.quotation_factory import StandardQuotat
 from koalixcrm.core.tests.factories.currency_factory import StandardCurrencyFactory
 from koalixcrm.products.tests.factories.product_price_factory import StandardPriceFactory
 from koalixcrm.products.tests.factories.product_type_factory import StandardProductTypeFactory
+from koalixcrm.products.tests.factories.product_variant_factory import StandardProductVariantFactory
 
 
 class DocumentCalculationsTest(TestCase):
@@ -26,8 +27,12 @@ class DocumentCalculationsTest(TestCase):
                 title="This is a test product " + i.__str__(),
                 product_type_identifier=12334235+i,
             )
+            test_variant = StandardProductVariantFactory.create(
+                product=test_product,
+                sku="SKU-CREATE-TASK-" + i.__str__(),
+            )
             StandardPriceFactory.create(
-                product_type=test_product,
+                variant=test_variant,
             )
             StandardCommercialDocumentPositionFactory.create(
                 commercial_document=self.test_quotation,

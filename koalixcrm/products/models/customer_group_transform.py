@@ -23,9 +23,9 @@ class CustomerGroupTransform(WorkspaceScopedModel):
                                        on_delete=models.PROTECT,
                                        related_name='transforms_to',
                                        verbose_name=_("To Party Group"))
-    product_type = models.ForeignKey('ProductType',
+    product_type = models.ForeignKey('Product',
                                      on_delete=models.CASCADE,
-                                     verbose_name=_("Product Type"),
+                                     verbose_name=_("Product"),
                                      blank=False,
                                      null=False)
     factor = models.DecimalField(verbose_name=_("Factor between From and To Customer Group"),

@@ -33,6 +33,7 @@ PROJECT_APPS = [
     'koalixcrm.core',
     'koalixcrm.contacts',
     'koalixcrm.products',
+    'koalixcrm.stock',
     'koalixcrm.contracts',
     'koalixcrm.reporting',
     'koalixcrm.accounting',
@@ -133,7 +134,15 @@ FILEBROWSER_EXTENSIONS = {
 LOGIN_URL = "/auth/login/"
 
 REST_FRAMEWORK = {
-    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
+    'DEFAULT_FILTER_BACKENDS': ('koalixcrm.shared.filters.AutoFilterBackend',),
+    # ADR-0023 installed the total-ordering guarantee but left pagination off,
+    # noting that switching it on is a separate decision: it changes every list
+    # response from a bare JSON array to a {count, next, previous, results}
+    # envelope, which is breaking for consumers outside this project. That
+    # decision is taken here. The guarantee is why it is safe to take: page
+    # walks cannot double-serve or skip a tied row.
+    'DEFAULT_PAGINATION_CLASS': 'koalixcrm.shared.pagination.TotalOrderingPageNumberPagination',
+    'PAGE_SIZE': 50,
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'koalixcrm.auth.m2m_authentication.CeleryWorkerM2MAuthentication',
         'koalixcrm.auth.oidc_token_authentication.OIDCAccessTokenAuthentication',

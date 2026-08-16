@@ -24,7 +24,7 @@ class Position(models.Model):
                                    verbose_name=_("Discount"),
                                    blank=True,
                                    null=True)
-    product_type = models.ForeignKey("products.ProductType",
+    product_type = models.ForeignKey("products.Product",
                                      on_delete=models.CASCADE,
                                      verbose_name=_("Product"),
                                      blank=True,
@@ -110,7 +110,7 @@ class CommercialDocumentPosition(WorkspaceScopedModel, Position):
         from koalixcrm.core.models.unit import Unit
         product_type_model: type[models.Model] | None = None
         if apps.is_installed('koalixcrm.products'):
-            product_type_model = apps.get_model('products', 'ProductType')
+            product_type_model = apps.get_model('products', 'Product')
         objects = list(position_class.objects.filter(commercial_document=object_to_create_pdf.id))
         for position in list(position_class.objects.filter(commercial_document=object_to_create_pdf.id)):
             objects += list(Position.objects.filter(id=position.id))

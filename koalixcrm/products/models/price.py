@@ -19,7 +19,7 @@ from koalixcrm.products.models.customer_group_transform import CustomerGroupTran
 
 if TYPE_CHECKING:
     from koalixcrm.contacts.models.party import Party
-    from koalixcrm.products.models.product_type import ProductType
+    from koalixcrm.products.models.product import Product
 
 
 class Price(WorkspaceScopedModel):
@@ -105,7 +105,7 @@ class Price(WorkspaceScopedModel):
         else:
             return False
 
-    def get_currency_transform_factor(self, currency: Currency, product_type: ProductType | int) -> Decimal | int:
+    def get_currency_transform_factor(self, currency: Currency, product_type: Product | int) -> Decimal | int:
         """check currency conditions and factor"""
         currency_factor = 0
         if self.currency == currency:
@@ -118,7 +118,7 @@ class Price(WorkspaceScopedModel):
                 currency_factor = currency_transform.get_transform_factor()
         return currency_factor
 
-    def get_unit_transform_factor(self, unit: Unit, product_type: ProductType | int) -> Decimal | int:
+    def get_unit_transform_factor(self, unit: Unit, product_type: Product | int) -> Decimal | int:
         """check unit conditions and factor"""
         unit_factor = 0
         if self.unit == unit:
@@ -131,13 +131,13 @@ class Price(WorkspaceScopedModel):
                 unit_factor = unit_transform.get_transform_factor()
         return unit_factor
 
-    def get_party_group_transform_factor(self, party: Party | None, product_type: ProductType | int) -> Decimal | int:
+    def get_party_group_transform_factor(self, party: Party | None, product_type: Product | int) -> Decimal | int:
         """Search through all PartyGroup memberships the party belongs to.
         Return factor 1 for a perfect match, else the lowest transform factor.
 
         Args:
             party: koalixcrm.contacts.models.party.Party
-            product_type: koalixcrm.products.models.product_type.ProductType
+            product_type: koalixcrm.products.models.product.Product
 
         Returns:
             Decimal factor

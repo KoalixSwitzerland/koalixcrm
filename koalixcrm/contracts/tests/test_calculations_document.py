@@ -26,6 +26,7 @@ from koalixcrm.products.tests.factories.customer_group_transform_factory import 
 )
 from koalixcrm.products.tests.factories.product_price_factory import StandardPriceFactory
 from koalixcrm.products.tests.factories.product_type_factory import StandardProductTypeFactory
+from koalixcrm.products.tests.factories.product_variant_factory import StandardProductVariantFactory
 
 
 class DocumentCalculationsTest(TestCase):
@@ -50,42 +51,60 @@ class DocumentCalculationsTest(TestCase):
         self.alternative_unit = SmallUnitFactory.create()
         self.product_without_dates = StandardProductTypeFactory.create(
             product_type_identifier="A",
-            tax=self.tax
+            tax_class=self.tax
         )
         self.product_without_date_from = StandardProductTypeFactory.create(
             product_type_identifier="B",
-            tax=self.tax
+            tax_class=self.tax
         )
         self.product_without_date_until = StandardProductTypeFactory.create(
             product_type_identifier="C",
-            tax=self.tax
+            tax_class=self.tax
         )
         self.product_without_customer_group = StandardProductTypeFactory.create(
             product_type_identifier="D",
-            tax=self.tax
+            tax_class=self.tax
         )
         self.product_with_currency_rounding = StandardProductTypeFactory.create(
             product_type_identifier="E",
-            tax=self.tax
+            tax_class=self.tax
         )
         self.product_without_currency_rounding = StandardProductTypeFactory.create(
             product_type_identifier="F",
-            tax=self.tax
+            tax_class=self.tax
         )
         self.product_with_alternative_customer_group = StandardProductTypeFactory.create(
             product_type_identifier="G",
-            tax=self.tax
+            tax_class=self.tax
         )
         self.product_with_alternative_unit = StandardProductTypeFactory.create(
             product_type_identifier="H",
-            tax=self.tax
+            tax_class=self.tax
         )
         self.product_with_alternative_currency = StandardProductTypeFactory.create(
             product_type_identifier="I",
-            tax=self.tax
+            tax_class=self.tax
         )
+        self.variant_without_dates = StandardProductVariantFactory.create(
+            product=self.product_without_dates, sku="SKU-CALC-A")
+        self.variant_without_date_from = StandardProductVariantFactory.create(
+            product=self.product_without_date_from, sku="SKU-CALC-B")
+        self.variant_without_date_until = StandardProductVariantFactory.create(
+            product=self.product_without_date_until, sku="SKU-CALC-C")
+        self.variant_without_customer_group = StandardProductVariantFactory.create(
+            product=self.product_without_customer_group, sku="SKU-CALC-D")
+        self.variant_with_currency_rounding = StandardProductVariantFactory.create(
+            product=self.product_with_currency_rounding, sku="SKU-CALC-E")
+        self.variant_without_currency_rounding = StandardProductVariantFactory.create(
+            product=self.product_without_currency_rounding, sku="SKU-CALC-F")
+        self.variant_with_alternative_customer_group = StandardProductVariantFactory.create(
+            product=self.product_with_alternative_customer_group, sku="SKU-CALC-G")
+        self.variant_with_alternative_unit = StandardProductVariantFactory.create(
+            product=self.product_with_alternative_unit, sku="SKU-CALC-H")
+        self.variant_with_alternative_currency = StandardProductVariantFactory.create(
+            product=self.product_with_alternative_currency, sku="SKU-CALC-I")
         self.price_without_customer_group = StandardPriceFactory.create(
-            product_type=self.product_without_customer_group,
+            variant=self.variant_without_customer_group,
             party_group=None,
             price=100,
             unit=self.unit,
@@ -94,7 +113,7 @@ class DocumentCalculationsTest(TestCase):
             valid_until=end_date
         )
         self.price_without_dates = StandardPriceFactory.create(
-            product_type=self.product_without_dates,
+            variant=self.variant_without_dates,
             party_group=self.customer_group,
             valid_from=None,
             valid_until=None,
@@ -103,7 +122,7 @@ class DocumentCalculationsTest(TestCase):
             price=80
         )
         self.price_without_date_to = StandardPriceFactory.create(
-            product_type=self.product_without_date_until,
+            variant=self.variant_without_date_until,
             party_group=self.customer_group,
             valid_from=start_date,
             valid_until=None,
@@ -112,7 +131,7 @@ class DocumentCalculationsTest(TestCase):
             price=130
         )
         self.price_without_date_from = StandardPriceFactory.create(
-            product_type=self.product_without_date_from,
+            variant=self.variant_without_date_from,
             party_group=self.customer_group,
             valid_from=None,
             valid_until=end_date,
@@ -121,7 +140,7 @@ class DocumentCalculationsTest(TestCase):
             price=50
         )
         self.price_without_date_from = StandardPriceFactory.create(
-            product_type=self.product_without_currency_rounding,
+            variant=self.variant_without_currency_rounding,
             currency=self.test_currency_without_rounding,
             party_group=self.customer_group,
             price=25,
@@ -130,7 +149,7 @@ class DocumentCalculationsTest(TestCase):
             valid_until=end_date
         )
         self.price_without_date_from = StandardPriceFactory.create(
-            product_type=self.product_with_currency_rounding,
+            variant=self.variant_with_currency_rounding,
             currency=self.test_currency_with_rounding,
             party_group=self.customer_group,
             price=33,
@@ -139,7 +158,7 @@ class DocumentCalculationsTest(TestCase):
             valid_until=end_date
         )
         self.price_with_alternative_customer_group = StandardPriceFactory.create(
-            product_type=self.product_with_alternative_customer_group,
+            variant=self.variant_with_alternative_customer_group,
             party_group=self.alternative_customer_group,
             valid_from=start_date,
             valid_until=end_date,
@@ -154,7 +173,7 @@ class DocumentCalculationsTest(TestCase):
             factor=0.50
         )
         self.price_with_alternative_currency = StandardPriceFactory.create(
-            product_type=self.product_with_alternative_currency,
+            variant=self.variant_with_alternative_currency,
             party_group=self.customer_group,
             valid_from=start_date,
             valid_until=end_date,
@@ -169,7 +188,7 @@ class DocumentCalculationsTest(TestCase):
             factor=0.50
         )
         self.price_with_alternative_unit = StandardPriceFactory.create(
-            product_type=self.product_with_alternative_unit,
+            variant=self.variant_with_alternative_unit,
             party_group=self.customer_group,
             valid_from=start_date,
             valid_until=end_date,

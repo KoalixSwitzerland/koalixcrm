@@ -22,6 +22,7 @@ from koalixcrm.core.tests.factories.tax_factory import StandardTaxFactory
 from koalixcrm.core.tests.factories.unit_factory import SmallUnitFactory, StandardUnitFactory
 from koalixcrm.products.tests.factories.product_price_factory import StandardPriceFactory
 from koalixcrm.products.tests.factories.product_type_factory import StandardProductTypeFactory
+from koalixcrm.products.tests.factories.product_variant_factory import StandardProductVariantFactory
 
 
 class DocumentCommercialDocumentPosition(TestCase):
@@ -46,10 +47,14 @@ class DocumentCommercialDocumentPosition(TestCase):
         self.alternative_unit = SmallUnitFactory.create()
         self.product_without_dates = StandardProductTypeFactory.create(
             product_type_identifier="A",
-            tax=self.tax
+            tax_class=self.tax
+        )
+        self.variant_without_dates = StandardProductVariantFactory.create(
+            product=self.product_without_dates,
+            sku="SKU-INCOMPLETE-POSITION-A",
         )
         self.price_without_customer_group = StandardPriceFactory.create(
-            product_type=self.product_without_dates,
+            variant=self.variant_without_dates,
             party_group=None,
             price=100,
             unit=self.unit,

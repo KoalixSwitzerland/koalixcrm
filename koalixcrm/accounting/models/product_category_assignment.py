@@ -17,10 +17,10 @@ from koalixcrm.accounting.models.product_category import ProductCategory
 class ProductCategoryAssignment(models.Model):
     id = models.BigAutoField(primary_key=True)
     product_type = models.OneToOneField(
-        "products.ProductType",
+        "products.Product",
         on_delete=models.CASCADE,
         related_name="product_category_assignment",
-        verbose_name=_("Product Type"),
+        verbose_name=_("Product"),
     )
     category = models.ForeignKey(
         ProductCategory,

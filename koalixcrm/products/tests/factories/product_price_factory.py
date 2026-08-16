@@ -10,13 +10,13 @@ from koalixcrm.contacts.tests.factories.customer_group_factory import StandardCu
 from koalixcrm.core.tests.factories.currency_factory import StandardCurrencyFactory
 from koalixcrm.core.tests.factories.unit_factory import StandardUnitFactory
 from koalixcrm.core.tests.factories.workspace_factory import DefaultWorkspaceFactory
-from koalixcrm.products.tests.factories.product_factory import StandardProductFactory
+from koalixcrm.products.tests.factories.product_variant_factory import StandardProductVariantFactory
 
 
 class StandardPriceFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = ProductPrice
-        django_get_or_create = ('product_type',
+        django_get_or_create = ('variant',
                                 'unit',
                                 'currency',
                                 'party_group',
@@ -25,7 +25,7 @@ class StandardPriceFactory(factory.django.DjangoModelFactory):
                                 'valid_until')
 
     workspace = factory.SubFactory(DefaultWorkspaceFactory)
-    product_type = factory.SubFactory(StandardProductFactory)
+    variant = factory.SubFactory(StandardProductVariantFactory)
     unit = factory.SubFactory(StandardUnitFactory)
     currency = factory.SubFactory(StandardCurrencyFactory)
     party_group = factory.SubFactory(StandardCustomerGroupFactory)
@@ -39,7 +39,7 @@ class HighPriceFactory(factory.django.DjangoModelFactory):
         model = ProductPrice
 
     workspace = factory.SubFactory(DefaultWorkspaceFactory)
-    product_type = factory.SubFactory(StandardProductFactory)
+    variant = factory.SubFactory(StandardProductVariantFactory)
     unit = factory.SubFactory(StandardUnitFactory)
     currency = factory.SubFactory(StandardCurrencyFactory)
     party_group = factory.SubFactory(StandardCustomerGroupFactory)

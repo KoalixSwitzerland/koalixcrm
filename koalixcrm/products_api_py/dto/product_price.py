@@ -19,5 +19,7 @@ class ProductPrice(BaseModel):
         self.price = None
         self.valid_from = None
         self.valid_until = None
-        self.product_type = None
+        # ADR-0021 Amendment 2026-06-28: ProductPrice keys to ProductVariant.
+        self.variant = None
+        self.price_list = None
         super().__init__(data)
