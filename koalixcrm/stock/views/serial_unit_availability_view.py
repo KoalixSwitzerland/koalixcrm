@@ -13,6 +13,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from koalixcrm.products.models.product_variant import ProductVariant
+from koalixcrm.shared.permissions import ReadModelPermissions
+from koalixcrm.stock.models.serial_unit import SerialUnit
 from koalixcrm.stock.serializers.scan_resolve_serializer import DetailSerializer
 from koalixcrm.stock.serializers.serial_unit_availability_serializer import (
     SerialUnitAvailabilitySerializer,
@@ -51,7 +53,11 @@ from koalixcrm.stock.services.availability import free_windows
     },
 )
 class SerialUnitAvailabilityView(APIView):
-    permission_classes = [IsAuthenticated]
+    # Read-only, but `IsAuthenticated` alone expresses no model right
+    # (REQ-0028 AC-6). The queryset is declared only so the model permission
+    # class can name the model it guards; the view does not iterate it.
+    queryset = SerialUnit.objects.none()
+    permission_classes = [IsAuthenticated, ReadModelPermissions]
 
     def get(self, request, variant_id, workspace_id=None):
         start = parse_datetime(request.query_params.get('start', ''))
@@ -67,10 +73,13 @@ class SerialUnitAvailabilityView(APIView):
         except ProductVariant.DoesNotExist:
             return Response({"detail": "ProductVariant not found."}, status=status.HTTP_404_NOT_FOUND)
 
-        if not request.user.is_superuser:
-            active_workspace = getattr(request, 'active_workspace', None)
-            if active_workspace is None or variant.workspace_id != active_workspace.id:
-                return Response({"detail": "ProductVariant not found."}, status=status.HTTP_404_NOT_FOUND)
+        # The workspace filter applies to every caller, superusers included:
+        # passing the authorization gate does not widen the data space
+        # (REQ-0028 AC-9). `active_workspace` is the URL workspace here — the
+        # middleware gives that precedence over the session.
+        active_workspace = getattr(request, 'active_workspace', None)
+        if active_workspace is None or variant.workspace_id != active_workspace.id:
+            return Response({"detail": "ProductVariant not found."}, status=status.HTTP_404_NOT_FOUND)
 
         results = free_windows(variant, start, end)
         payload = [

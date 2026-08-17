@@ -13,14 +13,12 @@ from __future__ import annotations
 
 from typing import Any
 
-from django.db.models import QuerySet
 from django.db.models.fields.files import FieldFile
 from django.http import HttpResponseRedirect
 from rest_framework import mixins, viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import NotFound
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.serializers import BaseSerializer
 
 from koalixcrm.djangoUserExtension.models.document_template import DocumentTemplate
 from koalixcrm.djangoUserExtension.serializers.document_template_serializer import (
@@ -28,9 +26,11 @@ from koalixcrm.djangoUserExtension.serializers.document_template_serializer impo
 )
 from koalixcrm.shared.permissions import ModelPermissionsWithListView
 from koalixcrm_utils.presigned_urls import presigned_get_url_for_field
+from koalixcrm.shared.workspace_scoped_view_set import WorkspaceScopedViewSetMixin
 
 
 class DocumentTemplateViewSet(
+    WorkspaceScopedViewSetMixin,
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
     viewsets.GenericViewSet,
@@ -39,23 +39,6 @@ class DocumentTemplateViewSet(
     serializer_class = DocumentTemplateJSONSerializer
     permission_classes = [IsAuthenticated, ModelPermissionsWithListView]
     http_method_names = ["get", "head", "options"]
-
-    def get_queryset(self) -> QuerySet[DocumentTemplate]:
-        active = getattr(self.request, 'active_workspace', None)
-        if self.request.user.is_superuser:
-            return DocumentTemplate.objects.all()
-        if active is None:
-            return DocumentTemplate.objects.none()
-        return DocumentTemplate.objects.filter(workspace=active)
-
-    def perform_create(self, serializer: BaseSerializer) -> None:
-        from koalixcrm.core.models.workspace import Workspace
-        active = getattr(self.request, 'active_workspace', None)
-        if active is None and self.request.user.is_superuser:
-            active, _ = Workspace.objects.get_or_create(
-                name='Default Workspace', defaults={'is_active': True}
-            )
-        serializer.save(workspace=active)
 
     def _redirect_to_field(self, field_file: FieldFile, asset_name: str) -> HttpResponseRedirect:
         if not field_file:

@@ -8,12 +8,14 @@ from koalixcrm.contacts_api_py.contacts_api_client import KoalixCRMContactsAPICl
 from koalixcrm.contacts.tests.factories.customer_billing_cycle_factory import (
     StandardCustomerBillingCycleFactory,
 )
+from koalixcrm.core.tests.factories.workspace_factory import DefaultWorkspaceFactory
 
 
 class CustomerBillingCycleAPITest(LiveServerTestCase):
     """Test for the CustomerBillingCycle model API functionality."""
 
     def setUp(self):
+        self.workspace = DefaultWorkspaceFactory()
         self.admin_user = User.objects.create_superuser(
             username='admin',
             email='admin@example.com',
@@ -26,7 +28,7 @@ class CustomerBillingCycleAPITest(LiveServerTestCase):
             self.live_server_url,
             username='admin',
             password='adminpassword',
-            workspace_id=1,
+            workspace_id=self.workspace.pk,
         )
 
     def test_list(self):

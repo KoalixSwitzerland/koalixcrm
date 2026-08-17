@@ -9,6 +9,7 @@ from koalixcrm.products_api_py.products_api_client import KoalixCRMProductsAPICl
 from koalixcrm.core.tests.factories.tax_factory import StandardTaxFactory
 from koalixcrm.core.tests.factories.unit_factory import StandardUnitFactory
 from koalixcrm.products.tests.factories.product_type_factory import StandardProductTypeFactory
+from koalixcrm.core.tests.factories.workspace_factory import DefaultWorkspaceFactory
 
 
 class ProductTypeAPITest(LiveServerTestCase):
@@ -16,6 +17,7 @@ class ProductTypeAPITest(LiveServerTestCase):
     ProductType — ADR-0003 Amendment 2026-06-27)."""
 
     def setUp(self):
+        self.workspace = DefaultWorkspaceFactory()
         self.admin_user = User.objects.create_superuser(
             username='admin',
             email='admin@example.com',
@@ -32,7 +34,7 @@ class ProductTypeAPITest(LiveServerTestCase):
             self.live_server_url,
             username='admin',
             password='adminpassword',
-            workspace_id=1,
+            workspace_id=self.workspace.pk,
         )
 
     def test_list(self):

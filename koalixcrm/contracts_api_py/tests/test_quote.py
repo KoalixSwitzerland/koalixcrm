@@ -12,12 +12,14 @@ from koalixcrm.contacts.tests.factories.customer_factory import StandardCustomer
 from koalixcrm.contracts.tests.factories.contract_factory import StandardContractFactory
 from koalixcrm.contracts.tests.factories.quotation_factory import StandardQuotationFactory
 from koalixcrm.core.tests.factories.currency_factory import StandardCurrencyFactory
+from koalixcrm.core.tests.factories.workspace_factory import DefaultWorkspaceFactory
 
 
 class QuotationAPITest(LiveServerTestCase):
     """Test for the Quotation model API functionality."""
 
     def setUp(self):
+        self.workspace = DefaultWorkspaceFactory()
         self.admin_user = User.objects.create_superuser(
             username='admin',
             email='admin@example.com',
@@ -45,7 +47,7 @@ class QuotationAPITest(LiveServerTestCase):
             self.live_server_url,
             username='admin',
             password='adminpassword',
-            workspace_id=1,
+            workspace_id=self.workspace.pk,
         )
 
     def test_list(self):

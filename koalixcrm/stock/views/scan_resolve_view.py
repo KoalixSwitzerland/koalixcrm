@@ -11,6 +11,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from koalixcrm.shared.permissions import ReadModelPermissions
+from koalixcrm.stock.models.serial_unit import SerialUnit
 from koalixcrm.stock.serializers.scan_resolve_serializer import (
     DetailSerializer,
     ScanMatchSerializer,
@@ -37,23 +39,33 @@ from koalixcrm.stock.services import scan_resolve
     },
 )
 class ScanResolveView(APIView):
-    permission_classes = [IsAuthenticated]
+    # A POST that only reads, so the model right required is `view`, not `add`
+    # (REQ-0028 AC-6). The queryset names the model the permission guards;
+    # `SerialUnit` is the primary entity of the identifier space this resolves
+    # over. The view does not iterate it.
+    queryset = SerialUnit.objects.none()
+    permission_classes = [IsAuthenticated, ReadModelPermissions]
 
     def _resolve_workspace(self, request, workspace_id=None):
+        """The workspace in force, or None.
+
+        `active_workspace` is already the URL workspace — WorkspaceContext-
+        Middleware gives the `workspace_id` segment precedence over the
+        session. The kwarg is re-read only for stacks without that middleware.
+        There is no `Default Workspace` fallback: it used to be created here on
+        a superuser request, which is a write on a read path and a tenant the
+        operator never asked for (REQ-0028 AC-10).
+        """
         from koalixcrm.core.models.workspace import Workspace
 
         active = getattr(request, 'active_workspace', None)
         if active is not None:
             return active
         if workspace_id is not None:
-            ws = Workspace.objects.filter(pk=workspace_id, is_active=True).first()
-            if ws is not None:
-                return ws
-        if getattr(request.user, 'is_superuser', False):
-            ws, _ = Workspace.objects.get_or_create(
-                name='Default Workspace', defaults={'is_active': True},
-            )
-            return ws
+            try:
+                return Workspace.objects.filter(pk=workspace_id, is_active=True).first()
+            except (TypeError, ValueError):
+                return None
         return None
 
     def post(self, request, workspace_id=None):

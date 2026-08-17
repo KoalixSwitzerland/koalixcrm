@@ -17,9 +17,12 @@ from django.contrib.auth.models import User
 from django.test import LiveServerTestCase
 
 from koalixcrm.accounting.models import Account, AccountingPeriod, Booking
+from koalixcrm.core.tests.factories.workspace_factory import DefaultWorkspaceFactory
 from koalixcrm.global_support_functions import make_date_utc
 
-API_BASE = '/koalixcrm_accounting/api/v1/1'
+# REQ-0028: the `<workspace_id>` segment is authorized, so it has to name a
+# real active workspace rather than a hard-coded `1`.
+API_BASE_TEMPLATE = '/koalixcrm_accounting/api/v1/{workspace_id}'
 
 
 class _AccountingFixture:
@@ -68,6 +71,8 @@ class BookingSumsAPITest(LiveServerTestCase):
 
     def setUp(self):
         User.objects.create_superuser('admin', 'a@b.c', 'adminpassword')
+        self.workspace = DefaultWorkspaceFactory()
+        self.api_base = API_BASE_TEMPLATE.format(workspace_id=self.workspace.pk)
         self.fx = _AccountingFixture()
         self.fx.build()
         self.auth = ('admin', 'adminpassword')
@@ -78,21 +83,21 @@ class BookingSumsAPITest(LiveServerTestCase):
         return r.json()
 
     def test_account_booking_sums_requires_period(self):
-        url = self.live_server_url + f'{API_BASE}/accounts/{self.fx.asset.id}/booking-sums/'
+        url = self.live_server_url + f'{self.api_base}/accounts/{self.fx.asset.id}/booking-sums/'
         r = requests.get(url, auth=self.auth)
         self.assertEqual(r.status_code, 400)
 
     def test_account_booking_sums_unknown_period_is_404(self):
         r = requests.get(
             self.live_server_url +
-            f'{API_BASE}/accounts/{self.fx.asset.id}/booking-sums/?accounting_period=99999',
+            f'{self.api_base}/accounts/{self.fx.asset.id}/booking-sums/?accounting_period=99999',
             auth=self.auth,
         )
         self.assertEqual(r.status_code, 404)
 
     def test_account_booking_sums_asset(self):
         data = self._get(
-            f'{API_BASE}/accounts/{self.fx.asset.id}/booking-sums/'
+            f'{self.api_base}/accounts/{self.fx.asset.id}/booking-sums/'
             f'?accounting_period={self.fx.current.id}'
         )
         self.assertEqual(data['id'], self.fx.asset.id)
@@ -108,7 +113,7 @@ class BookingSumsAPITest(LiveServerTestCase):
         through the API so the Java side gets the same numbers as the legacy
         in-Django report."""
         data = self._get(
-            f'{API_BASE}/accounts/{self.fx.earnings.id}/booking-sums/'
+            f'{self.api_base}/accounts/{self.fx.earnings.id}/booking-sums/'
             f'?accounting_period={self.fx.current.id}'
         )
         self.assertEqual(data['account_type'], 'E')
@@ -119,7 +124,7 @@ class BookingSumsAPITest(LiveServerTestCase):
 
     def test_accounting_period_report_data(self):
         data = self._get(
-            f'{API_BASE}/accounting-periods/{self.fx.current.id}/report-data/'
+            f'{self.api_base}/accounting-periods/{self.fx.current.id}/report-data/'
         )
         self.assertEqual(data['id'], self.fx.current.id)
         # The two template FKs are exposed so the Java service can tell

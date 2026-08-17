@@ -11,17 +11,19 @@ from koalixcrm.reporting.tests.factories.reporting_period_factory import (
 )
 from koalixcrm.reporting.tests.factories.task_factory import StandardTaskFactory
 from koalixcrm.reporting.tests.factories.work_factory import StandardWorkFactory
+from koalixcrm.core.tests.factories.workspace_factory import DefaultWorkspaceFactory
 
 
 class WorkAPITest(LiveServerTestCase):
 
     def setUp(self):
+        self.workspace = DefaultWorkspaceFactory()
         self.admin_user = User.objects.create_superuser(
             username='admin', email='admin@example.com', password='adminpassword'
         )
         self.work = StandardWorkFactory.create()
         self.api_client = KoalixCRMReportingAPIClient(
-            self.live_server_url, username='admin', password='adminpassword', workspace_id=1)
+            self.live_server_url, username='admin', password='adminpassword', workspace_id=self.workspace.pk)
 
     def test_list(self):
         items = self.api_client.get_work_list()

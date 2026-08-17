@@ -182,10 +182,19 @@ class OptionAccountingPeriod(admin.ModelAdmin):
         watch the PDF Export Processes admin for status / result URL.
         """
         from koalixcrm.core.models.pdf_export_process import PDFExportProcess
-        from koalixcrm.core.models.workspace import Workspace
 
         queued = 0
-        workspace = getattr(request, "active_workspace", None) or Workspace.objects.first()
+        # No `or Workspace.objects.first()` fallback: attributing an export to
+        # whichever tenant happens to sort first is a wrong answer, not a
+        # lenient one (REQ-0028 AC-10).
+        workspace = getattr(request, "active_workspace", None)
+        if workspace is None:
+            self.message_user(
+                request,
+                _("No active workspace — switch to a workspace before exporting."),
+                level=messages.ERROR,
+            )
+            return
         for obj in queryset:
             template = getattr(obj, template_attr)
             if not template:

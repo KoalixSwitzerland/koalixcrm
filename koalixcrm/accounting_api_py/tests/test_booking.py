@@ -15,12 +15,14 @@ from koalixcrm.accounting.tests.factories.accounting_period_factory import (
     StandardAccountingPeriodFactory,
 )
 from koalixcrm.accounting.tests.factories.booking_factory import StandardBookingFactory
+from koalixcrm.core.tests.factories.workspace_factory import DefaultWorkspaceFactory
 
 
 class BookingAPITest(LiveServerTestCase):
     """Test for the Booking model API functionality."""
 
     def setUp(self):
+        self.workspace = DefaultWorkspaceFactory()
         self.admin_user = User.objects.create_superuser(
             username='admin',
             email='admin@example.com',
@@ -40,7 +42,7 @@ class BookingAPITest(LiveServerTestCase):
             self.live_server_url,
             username='admin',
             password='adminpassword',
-            workspace_id=1,
+            workspace_id=self.workspace.pk,
         )
 
     def test_list(self):
