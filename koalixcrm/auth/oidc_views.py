@@ -205,6 +205,8 @@ class OAuthCallbackView(View):
     def _normalize_claims(self, claims: dict[str, Any]) -> dict[str, Any]:
         return {
             'sub': claims.get('sub'),
+            # Carried through for the group sync's issuer check (koalixcrm#430).
+            'iss': claims.get('iss'),
             'email': claims.get('email'),
             'given_name': claims.get('given_name', ''),
             'family_name': claims.get('family_name', ''),

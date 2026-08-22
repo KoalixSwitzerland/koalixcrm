@@ -261,6 +261,19 @@ class CustomIndexDashboard(Dashboard):
                     css_classes=('collapse closed',),
                     models=('koalixcrm.core.models.workspace.Workspace',),
                 ),
+                # Superuser-only administration of the two authority signals:
+                # which IdP issuers may provision groups (koalixcrm#430) and
+                # which users are unrestricted service accounts (#432).
+                # Grappelli hides entries the current user has no module
+                # permission for, so this stays invisible to staff users.
+                modules.ModelList(
+                    _('Federated identity'),
+                    column=2,
+                    css_classes=('collapse closed',),
+                    models=('koalixcrm.core.models.oidc_tenant.OidcTenant',
+                            'koalixcrm.core.models.service_account_grant.'
+                            'ServiceAccountGrant',),
+                ),
                 modules.ModelList(
                     _('Contact settings'),
                     column=1,
