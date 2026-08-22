@@ -6,7 +6,7 @@ CommercialDocumentMediaViewSet is deliberately picked because it is the
 weakest case in the codebase: it does not inherit BaseModelViewSet (no
 OrderingFilter, no SearchFilter), it does not declare `ordering` or
 `ordering_fields` anywhere, and `get_queryset()` returns a bare
-`CommercialDocumentMedia.objects.all()` / `.filter(workspace=...)` with no
+`CommercialDocumentS3Media.objects.all()` / `.filter(workspace=...)` with no
 `.order_by()` call of its own. Whatever total-ordering guarantee this
 ViewSet has can only come from the pagination class — there is nothing else
 in the ViewSet for it to come from. `Meta.ordering = ['-created_at']` on the
@@ -43,7 +43,7 @@ import datetime
 from rest_framework.test import APIRequestFactory, force_authenticate
 
 from koalixcrm.contracts.models.commercial_document_media import (
-    CommercialDocumentMedia,
+    CommercialDocumentS3Media,
 )
 from koalixcrm.contracts.tests.factories.commercial_document_factory import (
     StandardCommercialDocumentFactory,
@@ -56,7 +56,7 @@ from koalixcrm.shared.tests.ordering_totality import OrderingTotalityTestCaseMix
 
 
 def _create_tied_media(count, commercial_document):
-    """Create `count` CommercialDocumentMedia rows with an identical
+    """Create `count` CommercialDocumentS3Media rows with an identical
     created_at, so they are a genuine tie under Meta.ordering = ['-created_at'].
 
     `.update()` is used because `auto_now_add` re-derives the timestamp on
@@ -64,18 +64,17 @@ def _create_tied_media(count, commercial_document):
     would be silently ignored.
     """
     rows = [
-        CommercialDocumentMedia.objects.create(
+        CommercialDocumentS3Media.objects.create(
             workspace=commercial_document.workspace,
             commercial_document=commercial_document,
-            s3_url=f"https://example-bucket.invalid/media-{i}.pdf",
-            s3_key=f"media-{i}.pdf",
+            s3_url=f"pdf-exports/media-{i}.pdf",
             status="completed",
             media_type="application/pdf",
         )
         for i in range(count)
     ]
     tie_time = rows[0].created_at
-    CommercialDocumentMedia.objects.filter(pk__in=[row.pk for row in rows]).update(created_at=tie_time)
+    CommercialDocumentS3Media.objects.filter(pk__in=[row.pk for row in rows]).update(created_at=tie_time)
     for row in rows:
         row.refresh_from_db()
     return rows
@@ -157,7 +156,7 @@ class TestPaginateQuerysetStructuralOrdering:
         assert order_by, "expected a non-empty effective ordering to reach DRF's paginate_queryset"
         final_entry = order_by[-1]
         assert isinstance(final_entry, str), f"final ordering entry is not a plain field reference: {final_entry!r}"
-        pk_name = CommercialDocumentMedia._meta.pk.name
+        pk_name = CommercialDocumentS3Media._meta.pk.name
         assert final_entry.removeprefix("-") in ("pk", pk_name), (
             f"final ordering entry {final_entry!r} does not resolve to the primary key "
             f"('pk' or {pk_name!r}) -- the queryset actually handed to DRF's paginator "
@@ -209,15 +208,14 @@ class TestOffsetShiftKnownLimitation:
         # Insert a row that sorts BEFORE the current page-1/page-2 boundary:
         # ordering is `-created_at` then pk, so a strictly later created_at
         # sorts first.
-        newest = CommercialDocumentMedia.objects.create(
+        newest = CommercialDocumentS3Media.objects.create(
             workspace=commercial_document.workspace,
             commercial_document=commercial_document,
-            s3_url="https://example-bucket.invalid/media-inserted.pdf",
-            s3_key="media-inserted.pdf",
+            s3_url="pdf-exports/media-inserted.pdf",
             status="completed",
             media_type="application/pdf",
         )
-        CommercialDocumentMedia.objects.filter(pk=newest.pk).update(
+        CommercialDocumentS3Media.objects.filter(pk=newest.pk).update(
             created_at=rows[0].created_at + datetime.timedelta(seconds=10)
         )
 

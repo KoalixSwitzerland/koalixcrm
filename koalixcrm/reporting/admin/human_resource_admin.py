@@ -9,6 +9,7 @@ from django.http import HttpRequest
 from django.utils.translation import gettext as _
 
 from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
+from koalixcrm.core.pdf_export_messages import pdf_export_queued_message
 from koalixcrm.reporting.admin.resource_price_admin import ResourcePriceInlineAdminView
 
 
@@ -76,7 +77,7 @@ class HumanResourceAdminView(WorkspaceScopedModelAdmin, admin.ModelAdmin):
         if queued:
             self.message_user(
                 request,
-                _("%(count)d work report job(s) queued.") % {'count': queued},
+                pdf_export_queued_message(queued, _("work report")),
                 level=messages.SUCCESS,
             )
 

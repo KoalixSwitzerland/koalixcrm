@@ -14,6 +14,7 @@ from django.utils.translation import gettext as _
 from koalixcrm.accounting.exceptions import AccountingPeriodNotFound
 from koalixcrm.accounting.models.account import Account
 from koalixcrm.accounting.models.booking import InlineBookings
+from koalixcrm.core.pdf_export_messages import pdf_export_queued_message
 
 if TYPE_CHECKING:
     from django.http import HttpRequest
@@ -215,8 +216,7 @@ class OptionAccountingPeriod(admin.ModelAdmin):
         if queued:
             self.message_user(
                 request,
-                _("%(count)d %(label)s job(s) queued. Check PDF Export Processes for status.")
-                % {"count": queued, "label": label},
+                pdf_export_queued_message(queued, label),
                 level=messages.SUCCESS,
             )
 

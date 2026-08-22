@@ -10,7 +10,7 @@ from django.utils.translation import gettext as _
 
 import koalixcrm.contracts.models.calculations
 from koalixcrm.contracts.admin.commercial_document_media_admin import (
-    CommercialDocumentMediaInline,
+    CommercialDocumentS3MediaInline,
 )
 from koalixcrm.contracts.admin.commercial_document_position_admin import (
     CommercialDocumentInlinePosition,
@@ -25,6 +25,7 @@ from koalixcrm.contracts.models.commercial_document_position import (
     CommercialDocumentPosition,
 )
 from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
+from koalixcrm.core.pdf_export_messages import pdf_export_queued_message
 
 if TYPE_CHECKING:
     from django.db.models import QuerySet
@@ -131,7 +132,7 @@ class OptionCommercialDocument(WorkspaceScopedModelAdmin, admin.ModelAdmin):
     save_as = True
     inlines = [CommercialDocumentInlinePosition, CommercialDocumentTextParagraph,
                CommercialDocumentPostalAddress, CommercialDocumentPhoneAddress,
-               CommercialDocumentEmailAddress, CommercialDocumentMediaInline]
+               CommercialDocumentEmailAddress, CommercialDocumentS3MediaInline]
 
     def response_add(
         self, request: HttpRequest, obj: CommercialDocumentModel, post_url_continue: str | None = None
@@ -264,7 +265,7 @@ class OptionCommercialDocument(WorkspaceScopedModelAdmin, admin.ModelAdmin):
         if queued:
             self.message_user(
                 request,
-                _("%(count)d PDF export job(s) queued. Check PDF Export Processes for status.") % {"count": queued},
+                pdf_export_queued_message(queued),
                 level=messages.SUCCESS,
             )
 
