@@ -13,17 +13,19 @@ from koalixcrm.reporting.tests.factories.resource_manager_factory import (
     StandardResourceManagerFactory,
 )
 from koalixcrm.reporting.tests.factories.resource_type_factory import StandardResourceTypeFactory
+from koalixcrm.core.tests.factories.workspace_factory import DefaultWorkspaceFactory
 
 
 class HumanResourceAPITest(LiveServerTestCase):
 
     def setUp(self):
+        self.workspace = DefaultWorkspaceFactory()
         self.admin_user = User.objects.create_superuser(
             username='admin', email='admin@example.com', password='adminpassword'
         )
         self.human_resource = StandardHumanResourceFactory.create()
         self.api_client = KoalixCRMReportingAPIClient(
-            self.live_server_url, username='admin', password='adminpassword', workspace_id=1)
+            self.live_server_url, username='admin', password='adminpassword', workspace_id=self.workspace.pk)
 
     def test_list(self):
         items = self.api_client.get_human_resource_list()

@@ -33,9 +33,11 @@ and implement:
 
 Requests are dispatched with `rest_framework.test.APIRequestFactory` directly
 against `viewset_class.as_view({'get': 'list'})`, bypassing the URLconf/router
-entirely — the mixin does not need `urls.py` to be wired up, and it does not
-need to know about workspace-scoped URL kwargs for ViewSets that don't use
-them. Authentication uses `force_authenticate` with the `admin_user` fixture
+entirely — the mixin does not need `urls.py` to be wired up. A ViewSet that
+is workspace-scoped does need its `workspace_id` URL kwarg, though: since
+REQ-0028 the object filter applies to superusers as well, so a call without
+the kwarg legitimately sees no rows. Such subclasses override `view_kwargs()`.
+Authentication uses `force_authenticate` with the `admin_user` fixture
 from the project's root conftest.py (a superuser, so `DjangoModelPermissions`
 checks pass regardless of the model's app_label/model_name).
 """
@@ -89,13 +91,22 @@ class OrderingTotalityTestCaseMixin:
             {"pagination_class": pagination_class},
         )
 
+    def view_kwargs(self):
+        """URL kwargs to dispatch with; override for workspace-scoped ViewSets.
+
+        Returning ``{'workspace_id': <pk>}`` reproduces how the ViewSet is
+        actually mounted. Without it a workspace-scoped ViewSet resolves no
+        workspace and correctly returns an empty queryset (REQ-0028 AC-9).
+        """
+        return {}
+
     def _list(self, admin_user, page=None):
         factory = APIRequestFactory()
         path = "/ordering-totality-test/" if page is None else f"/ordering-totality-test/?page={page}"
         request = factory.get(path)
         force_authenticate(request, user=admin_user)
         view = self._paginated_viewset_class().as_view({"get": "list"})
-        return view(request)
+        return view(request, **self.view_kwargs())
 
     # ------------------------------------------------------------------
     # Tests

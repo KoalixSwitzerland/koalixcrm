@@ -56,8 +56,17 @@ class ReportingPeriodAdmin(WorkspaceScopedModelAdmin, admin.ModelAdmin):
         for the period-scoped snapshot, then renders + uploads the PDF.
         """
         from koalixcrm.core.models.pdf_export_process import PDFExportProcess
-        from koalixcrm.core.models.workspace import Workspace
-        workspace = getattr(request, 'active_workspace', None) or Workspace.objects.first()
+        # No `or Workspace.objects.first()` fallback: attributing an export
+        # to whichever tenant happens to sort first is a wrong answer, not a
+        # lenient one (REQ-0028 AC-10).
+        workspace = getattr(request, 'active_workspace', None)
+        if workspace is None:
+            self.message_user(
+                request,
+                _('No active workspace \u2014 switch to a workspace before exporting.'),
+                level=messages.ERROR,
+            )
+            return
         queued = 0
         for obj in queryset:
             template_set = getattr(

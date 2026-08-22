@@ -16,17 +16,19 @@ from koalixcrm.reporting.tests.factories.resource_price_factory import (
     StandardResourcePriceFactory,
 )
 from koalixcrm.reporting.tests.factories.task_factory import StandardTaskFactory
+from koalixcrm.core.tests.factories.workspace_factory import DefaultWorkspaceFactory
 
 
 class AgreementAPITest(LiveServerTestCase):
 
     def setUp(self):
+        self.workspace = DefaultWorkspaceFactory()
         self.admin_user = User.objects.create_superuser(
             username='admin', email='admin@example.com', password='adminpassword'
         )
         self.agreement = StandardAgreementToTaskFactory.create()
         self.api_client = KoalixCRMReportingAPIClient(
-            self.live_server_url, username='admin', password='adminpassword', workspace_id=1)
+            self.live_server_url, username='admin', password='adminpassword', workspace_id=self.workspace.pk)
 
     def test_list(self):
         items = self.api_client.get_agreement_list()

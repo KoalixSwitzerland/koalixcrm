@@ -19,6 +19,7 @@ import pytest
 from django.contrib.auth.models import User
 from rest_framework.test import APIRequestFactory, force_authenticate
 
+from koalixcrm.core.tests.factories.workspace_factory import DefaultWorkspaceFactory
 from koalixcrm.products.models.product_translation import ProductTranslation
 from koalixcrm.products.models.product_variant import ProductVariant
 from koalixcrm.products.tests.factories.product_translation_factory import (
@@ -100,10 +101,16 @@ class TestFilteringAppliesToListResponses:
     """End-to-end: the parameter actually narrows the queryset."""
 
     @staticmethod
-    def _list(admin_user, query=''):
+    def _list(admin_user, query='', workspace=None):
+        # REQ-0028 AC-9: the workspace filter applies to superusers too, so the
+        # view has to be called the way it is mounted — with a `workspace_id`
+        # kwarg — rather than relying on a superuser bypass that no longer
+        # exists.
         request = APIRequestFactory().get(f'/filter-test/{query}')
         force_authenticate(request, user=admin_user)
-        return ProductTranslationViewSet.as_view({'get': 'list'})(request)
+        return ProductTranslationViewSet.as_view({'get': 'list'})(
+            request, workspace_id=workspace.pk
+        )
 
     @pytest.fixture
     def admin_user(self, db):
@@ -129,23 +136,25 @@ class TestFilteringAppliesToListResponses:
             'b': StandardProductTranslationFactory.create(product=product_b, language_code='fr'),
             'product_a': product_a,
             'product_b': product_b,
+            'workspace': DefaultWorkspaceFactory(),
         }
 
     @pytest.mark.back_end_tests
     def test_unfiltered_list_returns_both_rows(self, admin_user, translations):
-        response = self._list(admin_user)
+        response = self._list(admin_user, workspace=translations['workspace'])
         assert response.status_code == 200, response.data
         ids = {row['id'] for row in response.data['results']}
         assert {translations['a'].pk, translations['b'].pk} <= ids
 
     @pytest.mark.back_end_tests
     def test_foreign_key_filter_narrows_the_list(self, admin_user, translations):
-        response = self._list(admin_user, f"?product={translations['product_a'].pk}")
+        response = self._list(admin_user, f"?product={translations['product_a'].pk}",
+                             workspace=translations['workspace'])
         assert response.status_code == 200, response.data
         ids = {row['id'] for row in response.data['results']}
         assert ids == {translations['a'].pk}
 
     @pytest.mark.back_end_tests
     def test_list_response_is_paginated(self, admin_user, translations):
-        response = self._list(admin_user)
+        response = self._list(admin_user, workspace=translations['workspace'])
         assert set(response.data.keys()) == {'count', 'next', 'previous', 'results'}

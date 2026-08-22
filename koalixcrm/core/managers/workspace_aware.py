@@ -49,6 +49,25 @@ def workspace_context(ws: 'Workspace') -> Iterator['Workspace']:
         _active_workspace.reset(token)
 
 
+@contextmanager
+def all_workspaces() -> Iterator[None]:
+    """Suspend the ambient workspace scope for the duration of the block.
+
+    The inverse of :func:`workspace_context`: inside it, every
+    :class:`WorkspaceAwareManager` behaves as an ordinary manager again.
+
+    Needed by code that has been *told* which workspace to answer about — the
+    URL-supplied ``workspace_id`` of the authorization layer — rather than
+    inheriting one from the request. There the ambient scope can only narrow
+    the answer, never correct it, and narrowing it would be silent.
+    """
+    token = _active_workspace.set(None)
+    try:
+        yield
+    finally:
+        _active_workspace.reset(token)
+
+
 class WorkspaceAwareManager(models.Manager):
     raise_on_missing_context: bool = False
 

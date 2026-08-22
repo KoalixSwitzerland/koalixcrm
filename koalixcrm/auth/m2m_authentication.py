@@ -25,6 +25,17 @@ class CeleryWorkerM2MAuthentication(BaseAuthentication):
     the client_id claim to a Django service user by username.
     """
 
+    def authenticate_header(self, request: HttpRequest) -> str:
+        """Advertise the scheme so DRF answers 401 rather than 403.
+
+        ``APIView.handle_exception`` downgrades ``NotAuthenticated`` to 403
+        when the *first* configured authenticator returns no
+        ``WWW-Authenticate`` header — and this class is first. Without this,
+        an unauthenticated call to a workspace route was answered 403, which
+        REQ-0028 AC-7 rules out.
+        """
+        return 'Bearer realm="api"'
+
     def authenticate(self, request: HttpRequest) -> tuple[AbstractBaseUser, dict[str, Any]] | None:
         token = get_token_auth_header(request)
         if not token:

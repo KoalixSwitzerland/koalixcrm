@@ -2,8 +2,6 @@
 """DRF viewsets for the new Party data model (issue #394)."""
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
 from koalixcrm.contacts.models.address import Address
 from koalixcrm.contacts.models.address_assignment import AddressAssignment
 from koalixcrm.contacts.models.email_assignment import EmailAssignment
@@ -37,32 +35,11 @@ from koalixcrm.contacts.serializers.party_serializers import (
     PhoneNumberJSONSerializer,
 )
 from koalixcrm.shared.base_model_view_set import BaseModelViewSet
-
-if TYPE_CHECKING:
-    from django.db.models import QuerySet
-    from rest_framework.serializers import BaseSerializer
-
-
-class WorkspaceScopedViewSetMixin:
-    """Filter queryset by active_workspace; stamp workspace on create."""
-
-    def get_queryset(self) -> QuerySet:
-        qs = super().get_queryset()
-        active = getattr(self.request, 'active_workspace', None)
-        if active is not None:
-            return qs.filter(workspace=active)
-        if not self.request.user.is_superuser:
-            return qs.none()
-        return qs
-
-    def perform_create(self, serializer: BaseSerializer) -> None:
-        from koalixcrm.core.models.workspace import Workspace
-        active = getattr(self.request, 'active_workspace', None)
-        if active is None and self.request.user.is_superuser:
-            active, _ = Workspace.objects.get_or_create(
-                name='Default Workspace', defaults={'is_active': True}
-            )
-        serializer.save(workspace=active)
+# This module used to define its own `WorkspaceScopedViewSetMixin` — a shadow
+# copy that returned the *unfiltered* queryset to superusers and created a
+# 'Default Workspace' on write. REQ-0028 AC-9/AC-10 rule out both, and AC-5
+# wants one implementation, so it now uses the shared mixin.
+from koalixcrm.shared.workspace_scoped_view_set import WorkspaceScopedViewSetMixin
 
 
 class PartyViewSet(WorkspaceScopedViewSetMixin, BaseModelViewSet):

@@ -6,12 +6,14 @@ from django.test import LiveServerTestCase
 from koalixcrm.core.models.tax import Tax
 from koalixcrm.core_api_py.core_api_client import KoalixCRMCoreAPIClient
 from koalixcrm.core.tests.factories.tax_factory import StandardTaxFactory
+from koalixcrm.core.tests.factories.workspace_factory import DefaultWorkspaceFactory
 
 
 class TaxAPITest(LiveServerTestCase):
     """Test for the Tax model API functionality."""
 
     def setUp(self):
+        self.workspace = DefaultWorkspaceFactory()
         self.admin_user = User.objects.create_superuser(
             username='admin',
             email='admin@example.com',
@@ -22,7 +24,7 @@ class TaxAPITest(LiveServerTestCase):
             self.live_server_url,
             username='admin',
             password='adminpassword',
-            workspace_id=1,
+            workspace_id=self.workspace.pk,
         )
 
     def test_list(self):

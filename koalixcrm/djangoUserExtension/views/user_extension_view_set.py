@@ -7,19 +7,19 @@ block in the XSL-FO document.
 """
 from __future__ import annotations
 
-from django.db.models import QuerySet
 from rest_framework import mixins, viewsets
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.serializers import BaseSerializer
 
 from koalixcrm.djangoUserExtension.models.user_extension import UserExtension
 from koalixcrm.djangoUserExtension.serializers.user_extension_nested import (
     UserExtensionNestedSerializer,
 )
 from koalixcrm.shared.permissions import ModelPermissionsWithListView
+from koalixcrm.shared.workspace_scoped_view_set import WorkspaceScopedViewSetMixin
 
 
 class UserExtensionViewSet(
+    WorkspaceScopedViewSetMixin,
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
     viewsets.GenericViewSet,
@@ -28,20 +28,3 @@ class UserExtensionViewSet(
     serializer_class = UserExtensionNestedSerializer
     permission_classes = [IsAuthenticated, ModelPermissionsWithListView]
     http_method_names = ["get", "head", "options"]
-
-    def get_queryset(self) -> QuerySet[UserExtension]:
-        active = getattr(self.request, 'active_workspace', None)
-        if self.request.user.is_superuser:
-            return UserExtension.objects.all()
-        if active is None:
-            return UserExtension.objects.none()
-        return UserExtension.objects.filter(workspace=active)
-
-    def perform_create(self, serializer: BaseSerializer) -> None:
-        from koalixcrm.core.models.workspace import Workspace
-        active = getattr(self.request, 'active_workspace', None)
-        if active is None and self.request.user.is_superuser:
-            active, _ = Workspace.objects.get_or_create(
-                name='Default Workspace', defaults={'is_active': True}
-            )
-        serializer.save(workspace=active)

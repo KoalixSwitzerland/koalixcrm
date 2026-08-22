@@ -88,10 +88,15 @@ class TestCommercialDocumentMediaOrderingTotality(OrderingTotalityTestCaseMixin)
     pagination_page_size = 3
     tie_group_size = 7
 
-    @staticmethod
-    def create_tied_rows(count):
+    def create_tied_rows(self, count):
         commercial_document = StandardCommercialDocumentFactory.create()
+        # `CommercialDocumentMediaViewSet` is workspace-scoped, so the rows'
+        # workspace has to be the one the request addresses (REQ-0028).
+        self.workspace = commercial_document.workspace
         return _create_tied_media(count, commercial_document)
+
+    def view_kwargs(self):
+        return {'workspace_id': self.workspace.pk}
 
 
 class TestPaginateQuerysetStructuralOrdering:
@@ -192,7 +197,9 @@ class TestOffsetShiftKnownLimitation:
         def _list(page):
             request = factory.get(f"/ordering-totality-test/?page={page}")
             force_authenticate(request, user=admin_user)
-            return viewset_class.as_view({"get": "list"})(request)
+            return viewset_class.as_view({"get": "list"})(
+                request, workspace_id=commercial_document.workspace.pk
+            )
 
         page_1 = _list(1)
         assert page_1.status_code == 200

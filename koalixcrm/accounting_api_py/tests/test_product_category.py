@@ -7,12 +7,14 @@ from koalixcrm.accounting.models import Account, ProductCategory
 from koalixcrm.accounting_api_py.accounting_api_client import (
     KoalixCRMAccountingAPIClient,
 )
+from koalixcrm.core.tests.factories.workspace_factory import DefaultWorkspaceFactory
 
 
 class ProductCategoryAPITest(LiveServerTestCase):
     """Test for the ProductCategory model API functionality."""
 
     def setUp(self):
+        self.workspace = DefaultWorkspaceFactory()
         self.admin_user = User.objects.create_superuser(
             username='admin',
             email='admin@example.com',
@@ -48,7 +50,7 @@ class ProductCategoryAPITest(LiveServerTestCase):
             self.live_server_url,
             username='admin',
             password='adminpassword',
-            workspace_id=1,
+            workspace_id=self.workspace.pk,
         )
 
     def test_list(self):

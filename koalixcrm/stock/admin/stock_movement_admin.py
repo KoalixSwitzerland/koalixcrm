@@ -81,15 +81,12 @@ class StockMovementAdmin(admin.ModelAdmin):
         if change:
             raise PermissionDenied("StockMovement rows are immutable and append-only.")
 
+        # A superuser used to get a freshly created 'Default Workspace' here.
+        # REQ-0028 AC-10: no code path invents a tenant, and the absence of an
+        # active workspace is a refusal rather than a substitution.
         active = getattr(request, 'active_workspace', None)
         if active is None:
-            if request.user.is_superuser:
-                from koalixcrm.core.models.workspace import Workspace
-                active, _ = Workspace.objects.get_or_create(
-                    name='Default Workspace', defaults={'is_active': True}
-                )
-            else:
-                raise PermissionDenied('No active workspace.')
+            raise PermissionDenied('No active workspace.')
 
         movement = post_movement(
             workspace=active,

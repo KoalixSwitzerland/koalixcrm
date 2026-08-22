@@ -2,20 +2,30 @@
 """
 Shared mixin to make a DRF ViewSet workspace-aware.
 
-Resolves the active workspace in this order:
-  1. WorkspaceContextMiddleware (cookie-session admin/UI requests).
-  2. The ``<workspace_id>`` URL kwarg (REST API path).
-  3. Default Workspace fallback for superuser sessions.
+The workspace in force is decided by ``WorkspaceContextMiddleware``, which
+gives the ``<workspace_id>`` URL segment precedence over the session
+(REQ-0028). This mixin only consumes that decision; it re-reads the URL kwarg
+solely so it still behaves correctly when the middleware is not installed
+(bare ``APIRequestFactory`` tests, embedders running a reduced stack).
+
+There is no fallback workspace. A read must never create a tenant row, and a
+substituted tenant is a wrong answer rather than a lenient one: where no
+authorized workspace can be determined the answer is 403 (AC-10). Whether the
+caller may reach the workspace at all is not decided here either — that is
+``WorkspaceMembershipPermission``, injected centrally in ``CoreConfig.ready()``.
 
 Inheriting ViewSets get:
-  * ``get_queryset()`` filtered to the active workspace
-    (non-superusers; superusers see everything).
+  * ``get_queryset()`` filtered to that workspace — for *every* caller,
+    unrestricted actors included: passing the authorization gate does not
+    widen the data space (AC-9).
   * ``perform_create()`` that stamps ``workspace`` so serializer ``create()``
     methods can pick it up via ``validated_data``.
 """
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
+
+from rest_framework.exceptions import PermissionDenied
 
 if TYPE_CHECKING:
     from django.db.models import QuerySet
@@ -34,28 +44,27 @@ class WorkspaceScopedViewSetMixin:
         if active is not None:
             return active
 
-        ws_id = self.kwargs.get('workspace_id') if hasattr(self, 'kwargs') else None
-        if ws_id is not None:
-            ws = Workspace.objects.filter(pk=ws_id, is_active=True).first()
-            if ws is not None:
-                return ws
+        ws_id = (getattr(self, 'kwargs', None) or {}).get('workspace_id')
+        if ws_id is None:
+            return None
 
-        if getattr(self.request.user, 'is_superuser', False):
-            ws, _ = Workspace.objects.get_or_create(
-                name='Default Workspace', defaults={'is_active': True}
-            )
-            return ws
-        return None
+        try:
+            return Workspace.objects.filter(pk=ws_id, is_active=True).first()
+        except (TypeError, ValueError):
+            return None
 
     def get_queryset(self) -> QuerySet:
         qs = super().get_queryset()
-        if self.request.user.is_superuser:
-            return qs
         active = self._resolve_workspace()
-        if active is not None:
-            return qs.filter(workspace=active)
-        return qs.none()
+        if active is None:
+            return qs.none()
+        return qs.filter(workspace=active)
 
     def perform_create(self, serializer: BaseSerializer) -> None:
         active = self._resolve_workspace()
+        if active is None:
+            # Reached only if a route without a `workspace_id` kwarg mounts a
+            # workspace-scoped resource; there is no tenant to attribute the
+            # row to, and inventing one is what AC-10 forbids.
+            raise PermissionDenied('No authorized workspace for this request.')
         serializer.save(workspace=active)

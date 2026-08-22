@@ -10,6 +10,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from koalixcrm.shared.permissions import ModelPermissionsWithListView
 from koalixcrm.shared.workspace_scoped_view_set import WorkspaceScopedViewSetMixin
 from koalixcrm.stock.models.bill_of_materials_explosion import BillOfMaterialsExplosion
 from koalixcrm.stock.serializers.bill_of_materials_explosion_serializer import (
@@ -23,7 +24,10 @@ class BillOfMaterialsExplosionViewSet(WorkspaceScopedViewSetMixin,
                                       viewsets.GenericViewSet):
     serializer_class = BillOfMaterialsExplosionJSONSerializer
     queryset = BillOfMaterialsExplosion.objects.all()
-    permission_classes = [IsAuthenticated]
+    # `IsAuthenticated` alone answers neither "which model" nor "which
+    # tenant" (REQ-0028 AC-6). The tenant half is injected centrally by
+    # `CoreConfig.ready()`; the model half has to be declared here.
+    permission_classes = [IsAuthenticated, ModelPermissionsWithListView]
 
     @action(detail=False, methods=['post'], url_path='recompute')
     def recompute(self, request):

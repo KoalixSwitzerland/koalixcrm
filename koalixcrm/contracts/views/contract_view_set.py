@@ -3,32 +3,22 @@ ContractViewSet for koalixcrm contract_object_management
 """
 from __future__ import annotations
 
-from django.db.models import QuerySet
-from rest_framework.serializers import BaseSerializer
-
 from koalixcrm.shared.base_model_view_set import BaseModelViewSet
 
 from ..models.contract import Contract
 from ..serializers.contract_serializer import ContractJSONSerializer
+from koalixcrm.shared.workspace_scoped_view_set import WorkspaceScopedViewSetMixin
 
 
-class ContractViewSet(BaseModelViewSet):
+class ContractViewSet(WorkspaceScopedViewSetMixin, BaseModelViewSet):
+    """Contracts are workspace-scoped; the mixin owns the filter and the stamp.
+
+    It used to carry its own copy of both, including a superuser branch that
+    returned every workspace's contracts and a ``get_or_create('Default
+    Workspace')`` on the write path. REQ-0028 removes both: the object filter
+    applies to unrestricted actors too (AC-9), and no code path invents a
+    tenant (AC-10).
+    """
+
     queryset = Contract.objects.all()
     serializer_class = ContractJSONSerializer
-
-    def get_queryset(self) -> QuerySet[Contract]:
-        active = getattr(self.request, 'active_workspace', None)
-        if self.request.user.is_superuser:
-            return Contract.objects.all()
-        if active is not None:
-            return Contract.objects.filter(workspace=active)
-        return Contract.objects.none()
-
-    def perform_create(self, serializer: BaseSerializer) -> None:
-        from koalixcrm.core.models.workspace import Workspace
-        active = getattr(self.request, 'active_workspace', None)
-        if active is None and self.request.user.is_superuser:
-            active, _ = Workspace.objects.get_or_create(
-                name='Default Workspace', defaults={'is_active': True}
-            )
-        serializer.save(workspace=active)

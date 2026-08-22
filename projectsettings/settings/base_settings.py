@@ -174,3 +174,13 @@ AUTHENTICATION_BACKENDS = [
     'koalixcrm.auth.oidc_backend.OIDCAuthenticationBackend',
     'django.contrib.auth.backends.ModelBackend',
 ]
+
+# ---------------------------------------------------------------------------
+# Non-interactive service account (REQ-0028 AC-8)
+# ---------------------------------------------------------------------------
+# Name of the Django auth group whose members are recognised as the M2M
+# microservice account by `koalixcrm.core.access.is_unrestricted_actor()`.
+# The group is administered by hand per environment and is never created by
+# code: if this is unset, or names a group that does not exist, nobody is
+# recognised through that branch and nothing raises.
+M2M_MICROSERVICE_GROUP_NAME = os.environ.get('M2M_MICROSERVICE_GROUP_NAME', '')
