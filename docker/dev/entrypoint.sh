@@ -13,6 +13,16 @@ export DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE:-projectsettings.settings
 python manage.py sync_split_migrations
 python manage.py migrate --noinput
 
+# Upload the DocumentTemplate assets the DB already points at into object
+# storage. `minio-setup` only creates the bucket, so on a fresh stack (or a DB
+# carried over from the filesystem-era install) the PDF worker dies with
+# 404 .../koalixcrm-pdf-exports/templates/xsl/invoice.xsl. Idempotent: objects
+# that already exist are skipped. Non-fatal — a seeding problem should not stop
+# the whole dev stack from coming up, and the command reports what it could not
+# resolve.
+python manage.py seed_document_template_files || \
+    echo "WARNING: template seeding failed — PDF export may 404 on templates/" >&2
+
 # Compile gettext message catalogs (.po -> .mo). Done at startup rather than
 # image build because the source tree (incl. the .po files) is bind-mounted
 # over the image at runtime, which would shadow any .mo built into the image.

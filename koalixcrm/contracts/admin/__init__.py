@@ -5,8 +5,8 @@ from koalixcrm.contracts.admin.commercial_document_admin import (
     OptionCommercialDocument,  # noqa: F401
 )
 from koalixcrm.contracts.admin.commercial_document_media_admin import (  # noqa: F401
-    CommercialDocumentMediaAdmin,
-    CommercialDocumentMediaInline,
+    CommercialDocumentS3MediaAdmin,
+    CommercialDocumentS3MediaInline,
 )
 from koalixcrm.contracts.admin.commercial_document_position_admin import (
     CommercialDocumentInlinePosition,  # noqa: F401
@@ -34,7 +34,7 @@ from koalixcrm.contracts.admin.quotation_admin import (  # noqa: F401
     OptionQuotation,
 )
 from koalixcrm.contracts.admin.sales_order_admin import OptionSalesOrder  # noqa: F401
-from koalixcrm.contracts.models.commercial_document_media import CommercialDocumentMedia
+from koalixcrm.contracts.models.commercial_document_media import CommercialDocumentS3Media
 from koalixcrm.contracts.models.contract import Contract
 from koalixcrm.contracts.models.credit_note import CreditNote
 from koalixcrm.contracts.models.despatch_advice import DespatchAdvice
@@ -44,7 +44,7 @@ from koalixcrm.contracts.models.purchase_order import PurchaseOrder
 from koalixcrm.contracts.models.quotation import Quotation
 from koalixcrm.contracts.models.sales_order import SalesOrder
 
-admin.site.register(CommercialDocumentMedia, CommercialDocumentMediaAdmin)
+admin.site.register(CommercialDocumentS3Media, CommercialDocumentS3MediaAdmin)
 admin.site.register(Contract, OptionContract)
 admin.site.register(Quotation, OptionQuotation)
 admin.site.register(SalesOrder, OptionSalesOrder)

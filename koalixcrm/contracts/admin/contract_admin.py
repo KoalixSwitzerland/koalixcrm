@@ -4,6 +4,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from django.contrib import admin
+from django.utils.html import format_html, format_html_join
+from django.utils.safestring import SafeString
 from django.utils.translation import gettext as _
 
 import koalixcrm.contracts.models.credit_note
@@ -16,11 +18,13 @@ import koalixcrm.contracts.models.sales_order
 from koalixcrm.contracts.admin.credit_note_admin import InlineCreditNote
 from koalixcrm.contracts.admin.invoice_admin import InlineInvoice
 from koalixcrm.contracts.admin.quotation_admin import InlineQuotation
+from koalixcrm.contracts.models.commercial_document_media import CommercialDocumentS3Media
 from koalixcrm.contracts.models.contract import (
     ContractAddressAssignment,
     ContractEmailAssignment,
     ContractPhoneAssignment,
 )
+from koalixcrm.core.admin.s3_media_download import download_link_html
 from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
 from koalixcrm.plugin import *
 
@@ -96,6 +100,7 @@ class OptionContract(WorkspaceScopedModelAdmin, admin.ModelAdmin):
     ordering = ('id', )
     search_fields = ('id',
                      'contract')
+    readonly_fields = ('generated_documents',)
     fieldsets = (
         (_('Basics'), {
             'fields': ('description',
@@ -105,7 +110,41 @@ class OptionContract(WorkspaceScopedModelAdmin, admin.ModelAdmin):
                        'default_currency',
                        'default_template_set')
         }),
+        (_('Generated documents'), {
+            'classes': ('collapse',),
+            'fields': ('generated_documents',),
+        }),
     )
+
+    @admin.display(description=_('Generated PDFs'))
+    def generated_documents(self, obj: Contract | None) -> SafeString:
+        """Every PDF generated for this contract's commercial documents.
+
+        `CommercialDocumentS3Media` has no FK to Contract — it hangs off
+        CommercialDocument — so this cannot be an admin inline. Rendering the
+        aggregate here keeps the downloads one click from the contract.
+        """
+        if obj is None or obj.pk is None:
+            return format_html('—')
+
+        media = (
+            CommercialDocumentS3Media.objects
+            .filter(commercial_document__contract=obj)
+            .select_related('commercial_document')
+            .order_by('-created_at')
+        )
+        rows = [
+            format_html(
+                '<li>{} #{} — {}</li>',
+                m.commercial_document.__class__.__name__,
+                m.commercial_document_id,
+                download_link_html(m),
+            )
+            for m in media
+        ]
+        if not rows:
+            return format_html('—')
+        return format_html('<ul style="margin:0;padding-left:1.2em">{}</ul>', format_html_join('', '{}', ((r,) for r in rows)))
     inlines = [ContractPostalAddress,
                ContractPhoneAddress,
                ContractEmailAddress,

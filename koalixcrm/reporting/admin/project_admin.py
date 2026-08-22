@@ -10,6 +10,7 @@ from django.http import HttpRequest
 from django.utils.translation import gettext as _
 
 from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
+from koalixcrm.core.pdf_export_messages import pdf_export_queued_message
 from koalixcrm.reporting.admin.generic_project_link_admin import (
     GenericLinkInlineAdminView,
 )
@@ -100,7 +101,7 @@ class ProjectAdminView(WorkspaceScopedModelAdmin, admin.ModelAdmin):
         if queued:
             self.message_user(
                 request,
-                _("%(count)d project report job(s) queued.") % {'count': queued},
+                pdf_export_queued_message(queued, _("project report")),
                 level=messages.SUCCESS,
             )
 

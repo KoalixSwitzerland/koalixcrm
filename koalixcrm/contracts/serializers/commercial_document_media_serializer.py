@@ -2,18 +2,17 @@
 from rest_framework import serializers
 
 from koalixcrm.contracts.models.commercial_document_media import (
-    CommercialDocumentMedia,
+    CommercialDocumentS3Media,
 )
 
 
-class CommercialDocumentMediaJSONSerializer(serializers.ModelSerializer):
+class CommercialDocumentS3MediaJSONSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CommercialDocumentMedia
+        model = CommercialDocumentS3Media
         fields = (
             "id",
             "commercial_document",
             "s3_url",
-            "s3_key",
             "status",
             "media_type",
             "created_by",

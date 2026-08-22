@@ -132,8 +132,7 @@ class TestCommercialDocumentMediaEndpoint:
             "/koalixcrm_contracts/api/v1/1/commercial-document-media/",
             {
                 "commercial_document": invoice.id,
-                "s3_url": "https://s3.test/bucket/key.pdf",
-                "s3_key": "pdf-exports/Invoice_1_42.pdf",
+                "s3_url": "pdf-exports/Invoice_1_42.pdf",
                 "status": "completed",
                 "media_type": "application/pdf",
             },
@@ -141,5 +140,32 @@ class TestCommercialDocumentMediaEndpoint:
         )
         assert resp.status_code == 201, resp.content
         body = resp.json()
-        assert body["s3_key"] == "pdf-exports/Invoice_1_42.pdf"
+        assert body["s3_url"] == "pdf-exports/Invoice_1_42.pdf"
         assert body["status"] == "completed"
+
+    def test_post_rejects_absolute_s3_url(self, api_client):
+        """WFS ADR-7: the DB stores a relative key, never an absolute URI.
+
+        An absolute URL bakes the endpoint host into the row, which is exactly
+        what made the worker's write-back unusable from a browser.
+        """
+        from koalixcrm.contracts.tests.factories.invoice_factory import StandardInvoiceFactory
+
+        invoice = StandardInvoiceFactory()
+        for absolute in (
+            "http://minio:9000/koalixcrm-pdf-exports/pdf-exports/Invoice_1_42.pdf",
+            "s3://koalixcrm-pdf-exports/pdf-exports/Invoice_1_42.pdf",
+            "https://bucket.s3.amazonaws.com/key.pdf",
+        ):
+            resp = api_client.post(
+                "/koalixcrm_contracts/api/v1/1/commercial-document-media/",
+                {
+                    "commercial_document": invoice.id,
+                    "s3_url": absolute,
+                    "status": "completed",
+                    "media_type": "application/pdf",
+                },
+                format="json",
+            )
+            assert resp.status_code == 400, f"{absolute} should be rejected, got {resp.content}"
+            assert "s3_url" in resp.json()

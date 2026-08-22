@@ -304,6 +304,16 @@ class CustomIndexDashboard(Dashboard):
                             'koalixcrm.djangoUserExtension.models.template_set.TemplateSet',
                             'koalixcrm.djangoUserExtension.models.user_extension.*',),
                 ),
+                # Operational view on async PDF jobs. Without this entry the
+                # ModelAdmin is registered but unreachable from the dashboard,
+                # so the "job(s) queued" messages point nowhere.
+                modules.ModelList(
+                    _('PDF exports'),
+                    column=1,
+                    css_classes=('collapse closed',),
+                    models=('koalixcrm.core.models.pdf_export_process.'
+                            'PDFExportProcess',),
+                ),
             ]
         ))
 

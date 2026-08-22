@@ -22,6 +22,7 @@ from koalixcrm.contacts.models.phone_number import PhoneNumber
 from koalixcrm.core.admin.workspace_scoped_admin import WorkspaceScopedModelAdmin
 from koalixcrm.core.const.party import ASSIGNMENT_PURPOSE_CHOICES
 from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
+from koalixcrm.core.pdf_export_messages import pdf_export_queued_message
 from koalixcrm.djangoUserExtension.exceptions import *
 from koalixcrm.global_support_functions import xstr
 
@@ -247,7 +248,7 @@ class OptionUserExtension(WorkspaceScopedModelAdmin, admin.ModelAdmin):
         if queued:
             self.message_user(
                 request,
-                _("%(count)d work report job(s) queued.") % {"count": queued},
+                pdf_export_queued_message(queued, _("work report")),
                 level=messages.SUCCESS,
             )
 

@@ -85,7 +85,6 @@ class BaseAPIClient:
         self.api = api_url or getenv('KOALIXCRM_API_URL')
         self.workspace_id = workspace_id if self.uses_workspace_id else None
         self.agent_application_path = getenv(self.api_path_env_var, self.api_path_default)
-        self.scope = getenv('CELERY_WORKER_M2M_SCOPE')
 
         # Custom origin header validation configuration
         self.custom_origin_verification_enabled = getenv('X_CUSTOM_ORIGIN_VERIFICATION_ON', 'false').lower() == 'true'
@@ -191,8 +190,6 @@ class BaseAPIClient:
             'client_secret': self.client_secret,
             'grant_type': 'client_credentials',
         }
-        if self.scope:
-            payload_dict['scope'] = self.scope
         payload = urllib.parse.urlencode(payload_dict)
         headers = {'content-type': 'application/x-www-form-urlencoded'}
 

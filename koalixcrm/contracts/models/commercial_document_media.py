@@ -4,25 +4,21 @@ from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext as _
 
+from koalixcrm.core.models.s3_media import S3Media
 from koalixcrm.core.models.workspace_scoped import WorkspaceScopedModel
 
 
-class CommercialDocumentMedia(WorkspaceScopedModel):
+class CommercialDocumentS3Media(S3Media, WorkspaceScopedModel):
     """
     S3-stored media file linked to a CommercialDocument.
 
-    Follows the S3Media pattern (see qq_workflow_support.models.s3_media).
-    Created by the Celery PDF export task after successful FOP transformation
-    and S3 upload.  Reused across all commercial document types (Invoice, Quotation,
-    DespatchAdvice, PurchaseOrder, SalesOrder, PaymentReminder).
+    Extends the shared :class:`S3Media` base (ported from the Workflow Support
+    Webapp), which supplies ``s3_url`` / ``status`` / ``media_type`` and the
+    rule that ``s3_url`` holds a *relative object key*. Created by the PDF
+    export worker after successful FOP transformation and S3 upload. Reused
+    across all commercial document types (Invoice, Quotation, DespatchAdvice,
+    PurchaseOrder, SalesOrder, PaymentReminder, CreditNote).
     """
-
-    STATUS_CHOICES = [
-        ('pending', _('Pending')),
-        ('processing', _('Processing')),
-        ('completed', _('Completed')),
-        ('failed', _('Failed')),
-    ]
 
     id = models.BigAutoField(primary_key=True)
 
@@ -31,34 +27,6 @@ class CommercialDocumentMedia(WorkspaceScopedModel):
         on_delete=models.CASCADE,
         verbose_name=_("Commercial Document"),
         related_name="media_files",
-    )
-
-    s3_url = models.CharField(
-        verbose_name=_("S3 URL"),
-        max_length=500,
-        help_text=_("Full URL to the file in S3 / MinIO"),
-    )
-
-    s3_key = models.CharField(
-        verbose_name=_("S3 Key"),
-        max_length=500,
-        blank=True,
-        default="",
-        help_text=_("Object key inside the S3 bucket"),
-    )
-
-    status = models.CharField(
-        verbose_name=_("Status"),
-        max_length=20,
-        choices=STATUS_CHOICES,
-        default='pending',
-    )
-
-    media_type = models.CharField(
-        verbose_name=_("Media Type"),
-        max_length=50,
-        default='application/pdf',
-        help_text=_("MIME type of the stored file"),
     )
 
     created_by = models.ForeignKey(
@@ -89,4 +57,7 @@ class CommercialDocumentMedia(WorkspaceScopedModel):
         ordering = ['-created_at']
 
     def __str__(self) -> str:
-        return f"CommercialDocumentMedia #{self.id} [{self.status}] doc={self.commercial_document_id}"
+        return (
+            f"CommercialDocumentS3Media #{self.id} [{self.status}] "
+            f"doc={self.commercial_document_id}"
+        )

@@ -50,7 +50,12 @@ class PDFExportProcess(WorkspaceScopedModel):
         default='pending',
     )
 
-    result_url = models.URLField(
+    # CharField, not URLField: the value is a machine-generated S3/MinIO URL,
+    # never user input. Django's URLValidator requires a TLD or `localhost`, so
+    # it rejects container-network hostnames like `http://minio:9000/...` and the
+    # worker's status write-back fails with 400. Mirrors
+    # `CommercialDocumentS3Media.s3_url`, which carries the same value.
+    result_url = models.CharField(
         verbose_name=_("Result URL"),
         max_length=500,
         blank=True,
