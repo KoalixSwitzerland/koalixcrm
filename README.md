@@ -215,6 +215,22 @@ The upgrade requires three steps. Make sure you have a backup of your database b
 - The v2.0.0 codebase checked out
 - Python virtualenv activated
 
+> **Legacy assets are not stored in this repository.**
+> The v1 dump and the v1 `media/uploads/templatefiles` tree contain real
+> customer data — contacts, invoices, rendered PDFs, password hashes — plus a
+> hardcoded production `SECRET_KEY` from the old deployment. They are kept
+> outside the working tree. Two environment variables point the tooling at
+> them:
+>
+> | Variable | Used by | Contents |
+> |---|---|---|
+> | `KOALIXCRM_LEGACY_DUMP` | `koalixcrm_utils/pg2sqlite.py` | the v1 PostgreSQL dump |
+> | `KOALIXCRM_LEGACY_TEMPLATE_DIR` | `manage.py seed_document_template_files`, `tools/migrate_xsl_v1_to_v2.py` | the v1 XSL/FOP template files |
+>
+> When running the seeder inside Docker, the directory must also be bind-mounted
+> into the container — the environment variable names a path *inside* the
+> container, not on the host.
+
 **Step 1 -- Convert PostgreSQL dump to SQLite:**
 
 ```bash

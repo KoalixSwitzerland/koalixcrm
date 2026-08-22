@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Convert a PostgreSQL dump to SQLite3 database."""
 
+import os
 import re
 import sqlite3
 import sys
@@ -82,7 +83,19 @@ def parse_copy_block(lines, idx):
 
 
 def main():
-    input_file = sys.argv[1] if len(sys.argv) > 1 else '/app/koalixcrm/auftraegekoalixnet_20230101.sql'
+    # The v1 dump is real production data and is kept outside the repo working
+    # tree. Pass it explicitly, or set KOALIXCRM_LEGACY_DUMP.
+    default_input = os.environ.get('KOALIXCRM_LEGACY_DUMP')
+    if len(sys.argv) > 1:
+        input_file = sys.argv[1]
+    elif default_input:
+        input_file = default_input
+    else:
+        raise SystemExit(
+            'No input dump given. Pass it as the first argument or set '
+            'KOALIXCRM_LEGACY_DUMP. The v1 dump contains customer data and is '
+            'deliberately not stored in this repo.'
+        )
     output_file = sys.argv[2] if len(sys.argv) > 2 else '/app/koalixcrm/db.sqlite3'
 
     with open(input_file, 'r', encoding='utf-8') as f:

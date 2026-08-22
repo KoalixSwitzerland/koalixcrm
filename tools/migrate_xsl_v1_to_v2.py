@@ -14,13 +14,19 @@ from __future__ import annotations
 
 import argparse
 import difflib
+import os
 import re
 import sys
 from pathlib import Path
 
 REPO = Path("/app/koalixcrm")
+
+# The v1 templates live outside the repo (the tree that held them also held
+# customer data). Set KOALIXCRM_LEGACY_TEMPLATE_DIR to include them in --all;
+# without it, only the in-repo default templates are rewritten.
+_legacy = os.environ.get("KOALIXCRM_LEGACY_TEMPLATE_DIR")
 DEFAULT_ROOTS = [
-    REPO / "auftraegekoalixnet/media/uploads/templatefiles",
+    *([Path(_legacy)] if _legacy else []),
     REPO / "projectsettings/static/default_templates/de",
     REPO / "projectsettings/static/default_templates/en",
 ]
