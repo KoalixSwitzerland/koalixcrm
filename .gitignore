@@ -50,7 +50,11 @@ legacy_data.json
 celerybeat-schedule
 celerybeat-schedule-*
 
-# Legacy project tree restored from v1.x dumps
+# Legacy project tree restored from v1.x dumps.
+# Contains real customer data (contacts, invoices, 116 rendered PDFs,
+# password hashes) and an old production SECRET_KEY. It belongs outside
+# this working tree entirely — see KOALIXCRM_LEGACY_TEMPLATE_DIR in the
+# README. This entry stays as a backstop for checkouts that still have it.
 /auftraegekoalixnet/
 
 # Generated PDF/XML artifacts from document rendering

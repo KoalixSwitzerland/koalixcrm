@@ -13,12 +13,33 @@ from .oidc_utils import validate_jwt
 logger = logging.getLogger(__name__)
 UserModel = get_user_model()
 
+#: Namespace prefix for every group derived from an IdP claim (koalixcrm#430).
+OIDC_GROUP_PREFIX = 'oidc'
 
-def _sync_groups_from_provider(user: AbstractBaseUser, claims: dict[str, Any]) -> None:
+
+def _sync_groups_from_provider(
+    user: AbstractBaseUser, claims: dict[str, Any], issuer: str | None
+) -> None:
     """
     Additively sync groups from OIDC provider claims to Django groups.
 
-    Existing Django group assignments are never removed.
+    koalixcrm#430: every claim value is namespaced unconditionally as
+    ``oidc:<tenantAlias>:<claimValue>`` — never the raw claim value, and never
+    with a special case for any particular claim value. A claim can therefore
+    no longer syntactically name a locally meaningful group (notably the one
+    in ``settings.M2M_MICROSERVICE_GROUP_NAME``), whatever it contains, so no
+    allow-list, deny-list or sanitisation is needed to keep that property.
+
+    ``tenantAlias`` comes exclusively from ``core.OidcTenant.alias``, resolved
+    by ``issuer`` — the already-validated token issuer — never from claim
+    content. If no ``OidcTenant`` matches ``issuer`` (or no issuer was
+    established at all), the sync is skipped entirely for this request: no
+    group is created, no membership changed, no exception raised — the
+    caller's authentication continues on the user's pre-existing groups.
+    Registering the tenant row *is* the per-issuer opt-in.
+
+    Existing Django group assignments are never removed — Django remains the
+    authoritative source for group management.
 
     Supported claim locations:
     - 'cognito:groups' (Cognito)
@@ -37,16 +58,36 @@ def _sync_groups_from_provider(user: AbstractBaseUser, claims: dict[str, Any]) -
     if isinstance(provider_groups, str):
         provider_groups = [provider_groups]
 
+    if not issuer:
+        logger.info(
+            "No validated issuer available for this request — skipping group sync."
+        )
+        return
+
+    from koalixcrm.core.models.oidc_tenant import OidcTenant
+
+    tenant = OidcTenant.objects.filter(issuer=issuer).first()
+    if tenant is None:
+        logger.info(
+            "No core.OidcTenant registered for validated issuer %r — "
+            "skipping group sync for this request.", issuer,
+        )
+        return
+
+    namespaced_names = {f'{OIDC_GROUP_PREFIX}:{tenant.alias}:{value}' for value in provider_groups}
     existing_groups = set(user.groups.values_list('name', flat=True))
-    groups_to_add = set(provider_groups) - existing_groups
+    groups_to_add = namespaced_names - existing_groups
     if not groups_to_add:
         return
 
     for group_name in groups_to_add:
-        group, _ = Group.objects.get_or_create(name=group_name)
+        group, _created = Group.objects.get_or_create(name=group_name)
         user.groups.add(group)
 
-    logger.info(f"Added groups {groups_to_add} to user {user.email} from provider claims")
+    logger.info(
+        "Added groups %s to user %s from provider claims (tenant=%s)",
+        groups_to_add, user.email, tenant.alias,
+    )
 
 
 class OIDCAuthenticationBackend:
@@ -66,7 +107,15 @@ class OIDCAuthenticationBackend:
         **kwargs: Any,
     ) -> AbstractBaseUser | None:
         if provider and user_info:
-            return self._authenticate_with_user_info(provider, user_info)
+            # The interactive path is served by `oidc_views`, whose authlib
+            # client is configured from ADMIN_OIDC_ISSUER's discovery
+            # document — so that is the issuer this token was validated
+            # against (koalixcrm#430).
+            from django.conf import settings
+
+            return self._authenticate_with_user_info(
+                provider, user_info, validated_issuer=getattr(settings, 'ADMIN_OIDC_ISSUER', None)
+            )
 
         if id_token:
             return self._authenticate_with_id_token(id_token, **kwargs)
@@ -74,9 +123,16 @@ class OIDCAuthenticationBackend:
         return None
 
     def _authenticate_with_user_info(
-        self, provider: str, user_info: dict[str, Any]
+        self, provider: str, user_info: dict[str, Any], validated_issuer: str | None = None
     ) -> AbstractBaseUser | None:
-        """Authenticate using standardized user info from any OAuth provider."""
+        """Authenticate using standardized user info from any OAuth provider.
+
+        ``validated_issuer`` is the issuer this caller actually validated the
+        token against. It is required for group synchronisation and must never
+        be taken from the claims themselves — see
+        :func:`_sync_groups_from_provider`. Omitting it disables the sync for
+        the request rather than falling back to a claim.
+        """
         user_email = user_info.get('email')
         if not user_email:
             logger.error(f"User info missing 'email' for provider {provider}.")
@@ -96,7 +152,25 @@ class OIDCAuthenticationBackend:
                     user.last_name = family_name
                 user.save()
 
-                _sync_groups_from_provider(user, user_info)
+                # koalixcrm#430: the tenant alias must derive from the
+                # VALIDATED token's issuer, never from claim content. The
+                # caller tells us which issuer it validated against;
+                # cross-checking the token's own `iss` against it keeps that
+                # property true *for this request* rather than true only by
+                # construction. A mismatch — or a claim set that never carried
+                # `iss` — degrades the same way an unregistered OidcTenant
+                # does: skip the sync, log it, never block authentication.
+                token_issuer = user_info.get('iss')
+                if not validated_issuer or token_issuer != validated_issuer:
+                    logger.info(
+                        "Token issuer %r does not match the issuer this "
+                        "request was validated against (%r), or was not "
+                        "present in the claims — skipping group sync for "
+                        "user %s.",
+                        token_issuer, validated_issuer, user.email,
+                    )
+                else:
+                    _sync_groups_from_provider(user, user_info, issuer=validated_issuer)
 
             return user
         except Exception as e:
@@ -116,6 +190,9 @@ class OIDCAuthenticationBackend:
             payload = validate_jwt(id_token, authority_url=issuer, access_token=access_token)
 
             user_info = {
+                # `iss` is carried through so the group sync can resolve the
+                # OidcTenant from the validated issuer (koalixcrm#430).
+                'iss': payload.get('iss'),
                 'email': payload.get('email'),
                 'given_name': payload.get('given_name', ''),
                 'family_name': payload.get('family_name', ''),
@@ -124,7 +201,7 @@ class OIDCAuthenticationBackend:
                 'realm_access': payload.get('realm_access', {}),
             }
 
-            return self._authenticate_with_user_info('oidc', user_info)
+            return self._authenticate_with_user_info('oidc', user_info, validated_issuer=issuer)
         except Exception as e:
             logger.error(f"OIDC Authentication Error: {e}", exc_info=True)
             return None

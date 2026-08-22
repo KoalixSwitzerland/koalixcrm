@@ -77,13 +77,21 @@ def member_of_a_and_b(db, workspace_a, workspace_b) -> User:
 
 @pytest.fixture
 def service_account(db, settings) -> User:
-    """The non-interactive M2M account: group membership only, no role rows."""
+    """The non-interactive M2M account: a ServiceAccountGrant row, no role rows.
+
+    koalixcrm#432: the grant row is what confers unrestricted-actor status.
+    The group is still here, but only as a carrier of Django *model*
+    permissions — which is exactly the split the issue asks for.
+    """
+    from koalixcrm.core.models.service_account_grant import ServiceAccountGrant
+
     settings.M2M_MICROSERVICE_GROUP_NAME = 'koalixcrm-microservices'
     user = User.objects.create_user(username='svc-worker', password='pw')
     assert user.is_superuser is False
     group = Group.objects.create(name='koalixcrm-microservices')
     _grant_all_contract_model_permissions(group)
     user.groups.add(group)
+    ServiceAccountGrant.objects.create(user=user)
     return user
 
 
@@ -132,28 +140,45 @@ class TestRolesInWorkspace:
     def test_service_account_reaches_workspace_without_a_role_row(
         self, service_account, workspace_a
     ):
-        """AC-8: recognised by group membership, holds no RoleInWorkspace row."""
+        """AC-8: recognised by its grant row, holds no RoleInWorkspace row."""
         from koalixcrm.core.access import roles_in_workspace
         assert not RoleInWorkspace.objects.filter(
             group__in=service_account.groups.all()
         ).exists()
         assert roles_in_workspace(service_account, workspace_a.pk) == set(Role.values)
 
-    def test_unset_setting_confers_nothing(self, service_account, workspace_a, settings):
-        """AC-8: unset key → nobody is an unrestricted actor through that branch."""
+    def test_group_membership_alone_confers_nothing(self, workspace_a, settings):
+        """koalixcrm#432: the settings-named group no longer answers the question.
+
+        A user in a group whose name equals ``M2M_MICROSERVICE_GROUP_NAME``,
+        but with no ``ServiceAccountGrant`` row, is an ordinary user — which
+        is what closes the composition in koalixcrm#430, where an IdP claim
+        could put someone in exactly that group.
+        """
         from koalixcrm.core.access import is_unrestricted_actor, roles_in_workspace
-        settings.M2M_MICROSERVICE_GROUP_NAME = ''
+        settings.M2M_MICROSERVICE_GROUP_NAME = 'koalixcrm-microservices'
+        impostor = User.objects.create_user(username='impostor', password='pw')
+        group = Group.objects.create(name='koalixcrm-microservices')
+        impostor.groups.add(group)
+        assert is_unrestricted_actor(impostor) is False
+        assert roles_in_workspace(impostor, workspace_a.pk) == set()
+
+    def test_missing_grant_row_does_not_raise(self, workspace_a, member_of_a):
+        """AC-8: absence of a grant row is inert, not fatal."""
+        from koalixcrm.core.access import is_unrestricted_actor
+        assert is_unrestricted_actor(member_of_a) is False
+
+    def test_revoking_the_grant_removes_the_reach(self, service_account, workspace_a):
+        """The grant row is the whole signal — deleting it takes the reach away."""
+        from koalixcrm.core.access import is_unrestricted_actor, roles_in_workspace
+        from koalixcrm.core.models.service_account_grant import ServiceAccountGrant
+
+        ServiceAccountGrant.objects.filter(user=service_account).delete()
         assert is_unrestricted_actor(service_account) is False
         assert roles_in_workspace(service_account, workspace_a.pk) == set()
 
-    def test_nonexistent_group_name_does_not_raise(self, workspace_a, settings, member_of_a):
-        """AC-8: a settings key naming no existing group is inert, not fatal."""
-        from koalixcrm.core.access import is_unrestricted_actor
-        settings.M2M_MICROSERVICE_GROUP_NAME = 'no-such-group-anywhere'
-        assert is_unrestricted_actor(member_of_a) is False
-
     def test_non_member_gains_nothing_from_the_branch(self, member_of_a, workspace_b, settings):
-        """AC-8: a user outside the group is still refused workspace B."""
+        """AC-8: a user without a grant is still refused workspace B."""
         from koalixcrm.core.access import roles_in_workspace
         settings.M2M_MICROSERVICE_GROUP_NAME = 'koalixcrm-microservices'
         Group.objects.create(name='koalixcrm-microservices')

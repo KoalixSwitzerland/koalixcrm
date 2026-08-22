@@ -21,28 +21,31 @@ if TYPE_CHECKING:
 
 
 def _is_m2m_microservice_account(user: AbstractBaseUser) -> bool:
-    """Identify the non-interactive service account by group membership.
+    """Identify the non-interactive service account via ``core.ServiceAccountGrant``.
 
-    The group is named by ``settings.M2M_MICROSERVICE_GROUP_NAME`` and is
-    administered by hand in each environment, never created by code. If the
-    setting is unset, or names a group that does not exist in this database,
-    nobody is a member and this returns False — without raising (REQ-0028
-    AC-8).
+    A plain FK-existence lookup, independent of group membership and of any
+    group *name* (koalixcrm#432). The previous implementation compared against
+    ``settings.M2M_MICROSERVICE_GROUP_NAME`` and defended that on the grounds
+    that the group is "administered by hand in each environment, never created
+    by code" — a premise that does not hold here, because
+    ``koalixcrm/auth/oidc_backend.py`` creates groups from IdP claim values.
+    A group happening (or being made) to share that name now grants nothing by
+    itself.
+
+    ``M2M_MICROSERVICE_GROUP_NAME`` may still carry Django model permissions
+    for the permission-based modules; it just no longer answers this question.
 
     Deliberately *not* keyed on ``is_superuser`` (the service account carries
     ``is_superuser = False``) and deliberately not keyed on the M2M
     auto-provisioning path in ``koalixcrm/auth/m2m_authentication.py``, which
     creates a user from a ``client_id`` claim alone: a token is enough to be
     provisioned, so provisioning must not by itself confer cross-workspace
-    reach.
+    reach. Absence of a grant row must not raise — it only means this user is
+    not the service account, so this returns False (REQ-0028 AC-8).
     """
-    from django.conf import settings
+    from koalixcrm.core.models.service_account_grant import ServiceAccountGrant
 
-    group_name = getattr(settings, 'M2M_MICROSERVICE_GROUP_NAME', None)
-    if not group_name:
-        return False
-
-    return user.groups.filter(name=group_name).exists()
+    return ServiceAccountGrant.objects.filter(user=user).exists()
 
 
 def is_unrestricted_actor(user: AbstractBaseUser | None) -> bool:

@@ -255,11 +255,30 @@ class CustomIndexDashboard(Dashboard):
                     collapsible=False,
                     models=('django.contrib.*',),
                 ),
+                # `RoleInWorkspace` is the only place a group is bound to a
+                # workspace at a role — including the `oidc:<tenant>:<claim>`
+                # groups the IdP sync creates (koalixcrm#430). Its ModelAdmin
+                # was registered but listed nowhere here, so the binding step
+                # was unreachable from the dashboard.
                 modules.ModelList(
-                    _('Workspaces'),
+                    _('Workspaces and role grants'),
                     column=2,
                     css_classes=('collapse closed',),
-                    models=('koalixcrm.core.models.workspace.Workspace',),
+                    models=('koalixcrm.core.models.workspace.Workspace',
+                            'koalixcrm.core.models.access.RoleInWorkspace',),
+                ),
+                # Superuser-only administration of the two authority signals:
+                # which IdP issuers may provision groups (koalixcrm#430) and
+                # which users are unrestricted service accounts (#432).
+                # Grappelli hides entries the current user has no module
+                # permission for, so this stays invisible to staff users.
+                modules.ModelList(
+                    _('Federated identity'),
+                    column=2,
+                    css_classes=('collapse closed',),
+                    models=('koalixcrm.core.models.oidc_tenant.OidcTenant',
+                            'koalixcrm.core.models.service_account_grant.'
+                            'ServiceAccountGrant',),
                 ),
                 modules.ModelList(
                     _('Contact settings'),

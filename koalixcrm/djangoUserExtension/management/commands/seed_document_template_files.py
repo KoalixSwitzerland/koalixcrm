@@ -22,6 +22,7 @@ the stored names are treated as the source of truth and only storage is filled i
 """
 from __future__ import annotations
 
+import os
 import re
 from pathlib import Path
 from typing import Any
@@ -33,7 +34,13 @@ from koalixcrm.djangoUserExtension.models.document_template import DocumentTempl
 
 FILE_FIELDS = ("xsl_file", "fop_config_file", "logo")
 
-DEFAULT_SOURCE_DIR = "auftraegekoalixnet/media/uploads/templatefiles"
+# The v1 template files are legacy production assets and live OUTSIDE the repo
+# working tree, because that tree also carried customer data. Point
+# KOALIXCRM_LEGACY_TEMPLATE_DIR at wherever they are kept; the in-repo relative
+# path remains only as a fallback for a checkout that still has the old tree.
+LEGACY_TEMPLATE_DIR_ENV = "KOALIXCRM_LEGACY_TEMPLATE_DIR"
+FALLBACK_SOURCE_DIR = "auftraegekoalixnet/media/uploads/templatefiles"
+DEFAULT_SOURCE_DIR = os.environ.get(LEGACY_TEMPLATE_DIR_ENV) or FALLBACK_SOURCE_DIR
 
 # Django appends a 7-character random suffix on name collisions:
 # `fontconfig.xml` -> `fontconfig_tOYVu30.xml`.
