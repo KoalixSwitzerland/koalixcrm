@@ -4,7 +4,7 @@ olefile==0.47
 Pillow==12.3.0
 psycopg2-binary==2.9.12
 django-grappelli==4.0.4
-djangorestframework==3.17.1
+djangorestframework==3.17.2
 drf-spectacular==0.30.0
 djangorestframework-xml==2.0.0
 django-filter==26.1
