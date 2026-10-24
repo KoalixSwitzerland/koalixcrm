@@ -50,14 +50,6 @@ jobs:
             -f ./koalixcrm_system/docker-compose.yml \
             --profile unit-django run --rm unit-django-runner
 
-      - name: Upload coverage to Codacy
-        if: success() && hashFiles('test_report/coverage.xml') != ''
-        uses: codacy/codacy-coverage-reporter-action@v1
-        with:
-          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
-          coverage-reports: test_report/coverage.xml
-          language: Python
-
       - name: Upload coverage.xml as artifact
         if: always()
         uses: actions/upload-artifact@v4
@@ -125,6 +117,16 @@ jobs:
     steps:
       - name: Checkout koalixcrm
         uses: actions/checkout@v4
+
+      # The integration profile BUILDS pdf-service from a koalixcrm-fop-service
+      # checkout (KOALIXCRM_FOP_DIR, default ./../koalixcrm-fop-service from
+      # the compose file in koalixcrm_system/), so it has to sit next to
+      # koalixcrm_system/ in the workspace.
+      - name: Checkout koalixcrm-fop-service
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/koalixcrm-fop-service
+          path: koalixcrm-fop-service
 
       - name: Pull system config from GHCR
         env:
