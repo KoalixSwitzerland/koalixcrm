@@ -1,0 +1,432 @@
+# =============================================================================
+# GITHUB ACTIONS RELEASE PIPELINE FOR KOALIXCRM
+# =============================================================================
+# Automates version bumping, tagging and pushing a release, ported from the
+# Workflow Support Webapp backend's release.yml (same guards, same push order,
+# same idempotent retry). Steps:
+#  Guard: must be dispatched from develop, main must be an ancestor of develop
+#  Validate RELEASE_VERSION / DEVELOPMENT_VERSION (semver)
+#  Mint an installation token for the Koalix Release Bot GitHub App, used for
+#  checkout so every git push below is authored by the App, not the default
+#  GITHUB_TOKEN (see "GitHub App token" NOTE below)
+#  Build gate (Django unit tests, Celery unit tests, integration tests — the
+#  same three checks test.yml runs on every push/PR)
+#  Bump KOALIXCRM_VERSION in koalixcrm/version.py
+#  Push the release commit to develop, then to main (same SHA, recovery-safe
+#  order), then push the release tag, then commit & push the next development
+#  version
+#  Notify
+#
+# -----------------------------------------------------------------------------
+# WHAT DIFFERS FROM THE WFS BACKEND ORIGINAL, AND WHY
+# -----------------------------------------------------------------------------
+# 1. Version anchor. koalixcrm takes its version from the git tag
+#    (docker-*.yml bake the tag into APP_VERSION, buildAndReleasePyPiPackage
+#    stamps it into koalixcrm/version.py). The release commit therefore writes
+#    the plain release version into koalixcrm/version.py, so the tagged tree
+#    agrees with what CI stamps, and the dev-bump commit writes
+#    "v<DEVELOPMENT_VERSION>-develop" — still deliberately NOT PEP 440, so a
+#    develop checkout can never be uploaded to PyPI by accident (the
+#    placeholder's original purpose).
+#
+# 2. No release-build / cleanup jobs. The images and the PyPI package are
+#    built by docker-django.yml, docker-celery.yml and
+#    buildAndReleasePyPiPackage.yaml on their own `on.push.tags` triggers.
+#    Because the pushes below are authenticated as the GitHub App rather than
+#    GITHUB_TOKEN, the release tag push DOES fan out to those triggers. The
+#    build gate below fails the release early if the tests would fail.
+#
+# 3. ONE-TIME PREREQUISITE: when this workflow was added, origin/main was NOT
+#    an ancestor of origin/develop (the 1.14.x release commits exist only on
+#    main). The ancestor guard rejects every run until main has been merged
+#    into develop once with a real merge commit (a squash merge does not make
+#    main an ancestor). After that the invariant holds by construction,
+#    because this workflow pushes the identical commit SHA to both branches.
+#
+# 4. ONE-TIME PREREQUISITE: the GitHub App. The WFS "QuantalQ Release Bot" is
+#    installable only on the QuantalQ org, so KoalixSwitzerland needs its own
+#    App, set up exactly as described in the WFS backend repo's
+#    docs/RELEASE_BOT_SETUP.md (Contents: Read and write, installed on
+#    koalixcrm and koalixcrm-system), with
+#      variable KOALIX_RELEASE_BOT_APP_ID       = the App ID
+#      secret   KOALIX_RELEASE_BOT_PRIVATE_KEY  = the full .pem content
+#    and, if main/develop carry a pull-request rule, the App on that rule's
+#    bypass list.
+# -----------------------------------------------------------------------------
+#
+# NOTE on the GitHub App token: with the default GITHUB_TOKEN, a push to a
+# branch protected by a pull-request rule is rejected ("GH013: Repository rule
+# violations found"), and GitHub's loop-prevention does not fan out to other
+# workflows' `on.push` triggers for a GITHUB_TOKEN-authored push, so the
+# release tag would never build the images or publish to PyPI. A push
+# authenticated as a GitHub App installation has neither problem.
+#
+# Push order & recovery: the release commit is created once (on develop) and
+# pushed to develop BEFORE main, keeping "origin/main is an ancestor of
+# origin/develop" intact at every intermediate state:
+#   1. push release commit to develop -> main still its ancestor.
+#   2. push the SAME SHA to main (fast-forward).
+#   3. push the release tag at that SHA -> both branches contain it.
+#   4. commit the next development version on top and push develop again.
+# The tag is pushed before the dev-bump commit so that docker-django.yml's
+# develop build, which numbers its dev tag from the last release tag, already
+# sees the new release tag and counts from it (v1.15.0-dev1, not -dev57).
+# If any push fails the invariant still holds, so re-running is safe.
+#
+# Idempotent retry: "Detect existing release state" inspects version.py plus
+# the HEAD commit message on the freshly checked-out develop to tell which
+# commits a previous, partially-failed run already pushed, and every
+# commit-creating step is skipped accordingly. An existing release tag is
+# accepted only if it already points at exactly the release commit this run
+# resolved; any other existing tag hard-fails.
+# =============================================================================
+
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      RELEASE_VERSION:
+        description: 'Version number for the release (e.g. 1.15.0)'
+        required: true
+      DEVELOPMENT_VERSION:
+        description: 'Next development version (e.g. 1.15.1)'
+        required: true
+
+permissions:
+  contents: write # needed for tagging & pushing back
+  packages: read  # pulls the koalixcrm_system_config image for the build gate
+
+# Only one release may run at a time — two concurrent releases racing to push
+# main/develop/tags would corrupt the fast-forward invariant.
+concurrency:
+  group: koalixcrm-release
+  cancel-in-progress: false
+
+env:
+  REGISTRY: ghcr.io
+  # Same override test.yml uses: the compose file pulled into koalixcrm_system/
+  # defaults to sibling directories, this points it back at the checkout.
+  KOALIXCRM_DIR: ./..
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+
+    steps:
+      # --- Guard: releases must be dispatched from develop.
+      - name: Guard - must run on develop
+        run: |
+          set -euo pipefail
+          if [ "${{ github.ref_name }}" != "develop" ]; then
+            echo "::error::This workflow must be run from the 'develop' branch (got '${{ github.ref_name }}'). Select 'develop' as the branch when dispatching this workflow."
+            exit 1
+          fi
+
+      # --- Guard: validate inputs before anything touches git. Both are plain
+      # semver here: DEVELOPMENT_VERSION gets the "-develop" suffix itself
+      # (see point 1 at the top).
+      - name: Guard - validate version inputs
+        run: |
+          set -euo pipefail
+          RELEASE_VERSION="${{ github.event.inputs.RELEASE_VERSION }}"
+          DEVELOPMENT_VERSION="${{ github.event.inputs.DEVELOPMENT_VERSION }}"
+          SEMVER_RE='^[0-9]+\.[0-9]+\.[0-9]+$'
+
+          if ! [[ "$RELEASE_VERSION" =~ $SEMVER_RE ]]; then
+            echo "::error::RELEASE_VERSION '$RELEASE_VERSION' is not a plain semver version (expected e.g. 1.15.0)."
+            exit 1
+          fi
+          if ! [[ "$DEVELOPMENT_VERSION" =~ $SEMVER_RE ]]; then
+            echo "::error::DEVELOPMENT_VERSION '$DEVELOPMENT_VERSION' is not a plain semver version (expected e.g. 1.15.1)."
+            exit 1
+          fi
+
+          # Typo guard: DEVELOPMENT_VERSION must be numerically higher.
+          LOWER=$(printf '%s\n%s\n' "$RELEASE_VERSION" "$DEVELOPMENT_VERSION" | sort -V | head -n1)
+          if [ "$DEVELOPMENT_VERSION" == "$RELEASE_VERSION" ] || [ "$LOWER" != "$RELEASE_VERSION" ]; then
+            echo "::error::DEVELOPMENT_VERSION '$DEVELOPMENT_VERSION' is not higher than RELEASE_VERSION '$RELEASE_VERSION' — likely a typo."
+            exit 1
+          fi
+
+      # --- Mint a short-lived installation token for the Koalix Release Bot
+      # (see point 4 at the top). "Checkout code" persists it as the
+      # credential for every later plain `git push` in this job.
+      - name: Generate release bot app token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ vars.KOALIX_RELEASE_BOT_APP_ID }}
+          private-key: ${{ secrets.KOALIX_RELEASE_BOT_PRIVATE_KEY }}
+
+      # --- The App's bot user id, for its noreply commit-author email
+      # (<user-id>+<login>@users.noreply.github.com). An installation token
+      # cannot call `GET /user`, so look the bot user up by its public login.
+      - name: Resolve release bot user id
+        id: app-bot-user
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          set -euo pipefail
+          USER_ID=$(gh api "/users/${{ steps.app-token.outputs.app-slug }}[bot]" --jq '.id')
+          echo "user_id=$USER_ID" >> "$GITHUB_OUTPUT"
+
+      # --- Full history (tags & ancestor checks). v5, not v6: from v6 the
+      # token is no longer kept in the repo's git config, and this job relies
+      # on the checkout credential carrying every later `git push`.
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          ref: develop
+          token: ${{ steps.app-token.outputs.token }}
+
+      # --- Guard: main must be a fast-forward ancestor of develop, otherwise
+      # pushing the release commit to main would be rejected halfway through.
+      - name: Guard - main must be an ancestor of develop
+        run: |
+          set -euo pipefail
+          git fetch origin main develop
+          if ! git merge-base --is-ancestor origin/main origin/develop; then
+            echo "::error::origin/main is not an ancestor of origin/develop — branches have diverged."
+            echo "::error::Recovery: merge main into develop once with a real merge commit (not a squash merge), e.g. git checkout develop && git merge origin/main && git push origin develop, then re-run. See point 3 at the top of release.yml."
+            exit 1
+          fi
+
+      # --- Guard, part 1/2: record whether the tag already exists. Judged in
+      # part 2/2 once the expected release commit SHA is known.
+      - name: Guard - detect existing tag state
+        id: tag_state
+        run: |
+          set -euo pipefail
+          TAG="v${{ github.event.inputs.RELEASE_VERSION }}"
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "tag_exists=true" >> "$GITHUB_OUTPUT"
+            echo "existing_sha=$(git rev-list -n1 "$TAG")" >> "$GITHUB_OUTPUT"
+            echo "Tag $TAG already exists; judged after the release commit is resolved."
+          else
+            echo "tag_exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      # --- Detect whether a previous (failed) run of this exact release
+      # already pushed the release commit and/or the dev-bump commit.
+      - name: Detect existing release state
+        id: detect
+        run: |
+          set -euo pipefail
+          RELEASE_VERSION="${{ github.event.inputs.RELEASE_VERSION }}"
+          DEVELOPMENT_VERSION="${{ github.event.inputs.DEVELOPMENT_VERSION }}"
+          CURRENT_VERSION=$(sed -nE 's/^KOALIXCRM_VERSION = "(.*)"$/\1/p' koalixcrm/version.py)
+          if [ -z "$CURRENT_VERSION" ]; then
+            echo "::error::No 'KOALIXCRM_VERSION = \"...\"' line found in koalixcrm/version.py on develop."
+            exit 1
+          fi
+          HEAD_SUBJECT=$(git log -1 --format=%s)
+
+          RELEASE_COMMIT_PRESENT=false
+          DEV_COMMIT_PRESENT=false
+
+          if [ "$CURRENT_VERSION" == "v${DEVELOPMENT_VERSION}-develop" ]; then
+            if [ "$HEAD_SUBJECT" != "Release: Set next development version $DEVELOPMENT_VERSION" ]; then
+              echo "::error::version.py on develop already reads v${DEVELOPMENT_VERSION}-develop, but HEAD ('$HEAD_SUBJECT') is not the expected 'Release: Set next development version $DEVELOPMENT_VERSION' commit. Refusing to guess — resolve the develop branch manually before retrying."
+              exit 1
+            fi
+            PARENT_SUBJECT=$(git log -1 --format=%s HEAD^1)
+            if [ "$PARENT_SUBJECT" != "Release: Version $RELEASE_VERSION" ]; then
+              echo "::error::HEAD^1 ('$PARENT_SUBJECT') is not the expected 'Release: Version $RELEASE_VERSION' commit. Refusing to guess — resolve the develop branch manually before retrying."
+              exit 1
+            fi
+            RELEASE_COMMIT_PRESENT=true
+            DEV_COMMIT_PRESENT=true
+          elif [ "$CURRENT_VERSION" == "$RELEASE_VERSION" ]; then
+            if [ "$HEAD_SUBJECT" != "Release: Version $RELEASE_VERSION" ]; then
+              echo "::error::version.py on develop already reads $RELEASE_VERSION, but HEAD ('$HEAD_SUBJECT') is not the expected 'Release: Version $RELEASE_VERSION' commit. Refusing to guess — resolve the develop branch manually before retrying."
+              exit 1
+            fi
+            RELEASE_COMMIT_PRESENT=true
+          fi
+
+          echo "release_commit_present=$RELEASE_COMMIT_PRESENT" >> "$GITHUB_OUTPUT"
+          echo "dev_commit_present=$DEV_COMMIT_PRESENT" >> "$GITHUB_OUTPUT"
+          echo "Detected state: release_commit_present=$RELEASE_COMMIT_PRESENT dev_commit_present=$DEV_COMMIT_PRESENT"
+
+      # =======================================================================
+      # BUILD GATE — the three jobs of test.yml, condensed into this job so the
+      # retry state above stays in the same job as the push steps below. All
+      # three are hard gates: a release must not ship past a state that would
+      # have failed ordinary CI.
+      # =======================================================================
+      - name: Pull system config from GHCR
+        env:
+          CONFIG_IMAGE: ghcr.io/${{ github.repository_owner }}/koalixcrm_system_config
+        run: |
+          set -euo pipefail
+          CONFIG_IMAGE_LC=$(echo "$CONFIG_IMAGE" | tr '[:upper:]' '[:lower:]')
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
+          docker create --name tmp-config "${CONFIG_IMAGE_LC}:main" /dev/null
+          mkdir -p koalixcrm_system
+          docker cp tmp-config:/ koalixcrm_system/
+          docker rm tmp-config
+
+      # The unit profiles do not read secrets.env; the integration profile
+      # needs the real content (same secret test.yml uses).
+      - name: Prepare data directory
+        run: |
+          mkdir -p koalixcrm_data/db
+          echo "${{ secrets.KOALIXCRM_SECRETS_ENV }}" > koalixcrm_data/secrets.env
+
+      - name: Run Django unit tests
+        run: |
+          docker compose \
+            -f ./koalixcrm_system/docker-compose.yml \
+            --profile unit-django run --rm unit-django-runner
+
+      - name: Teardown Django unit test stack
+        if: always()
+        run: |
+          docker compose \
+            -f ./koalixcrm_system/docker-compose.yml \
+            --profile unit-django down -v
+
+      - name: Run Celery unit tests
+        run: |
+          docker compose \
+            -f ./koalixcrm_system/docker-compose.yml \
+            --profile unit-celery run --rm unit-celery-runner
+
+      - name: Teardown Celery unit test stack
+        if: always()
+        run: |
+          docker compose \
+            -f ./koalixcrm_system/docker-compose.yml \
+            --profile unit-celery down -v
+
+      - name: Run integration tests
+        run: |
+          docker compose \
+            -f ./koalixcrm_system/docker-compose.yml \
+            --profile integration run --rm integration-runner
+
+      - name: Teardown integration test stack
+        if: always()
+        run: |
+          docker compose \
+            -f ./koalixcrm_system/docker-compose.yml \
+            --profile integration down -v
+
+      # --- The test containers bind-mount the checkout. Whatever they write
+      # (reports, caches) is untracked, but a tracked file changed by a test
+      # run would silently end up in the release commit below — refuse that.
+      - name: Guard - build gate left tracked files untouched
+        run: |
+          set -euo pipefail
+          if [ -n "$(git status --porcelain --untracked-files=no)" ]; then
+            echo "::error::The build gate modified tracked files:"
+            git status --porcelain --untracked-files=no
+            exit 1
+          fi
+
+      - name: Configure Git user
+        run: |
+          set -euo pipefail
+          git config --global user.name "${{ steps.app-token.outputs.app-slug }}[bot]"
+          git config --global user.email "${{ steps.app-bot-user.outputs.user_id }}+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com"
+
+      - name: Set release version
+        if: steps.detect.outputs.release_commit_present != 'true'
+        run: |
+          set -euo pipefail
+          VERSION="${{ github.event.inputs.RELEASE_VERSION }}"
+          sed -i -E "s/^KOALIXCRM_VERSION = \".*\"$/KOALIXCRM_VERSION = \"$VERSION\"/" koalixcrm/version.py
+          grep -qx "KOALIXCRM_VERSION = \"$VERSION\"" koalixcrm/version.py
+          git add koalixcrm/version.py
+          git commit -m "Release: Version $VERSION"
+
+      # --- Resolve the release commit SHA explicitly: on a retry where the
+      # dev-bump commit is already present, HEAD is that commit and the
+      # release commit is HEAD^1.
+      - name: Resolve release commit SHA
+        id: release_sha
+        run: |
+          set -euo pipefail
+          if [ "${{ steps.detect.outputs.dev_commit_present }}" == "true" ]; then
+            SHA=$(git rev-parse HEAD^1)
+          else
+            SHA=$(git rev-parse HEAD)
+          fi
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+
+      # --- Guard, part 2/2: an existing tag is accepted only if it already
+      # points at exactly this release commit (idempotent retry).
+      - name: Guard - existing tag must match expected release commit
+        id: tag_guard
+        run: |
+          set -euo pipefail
+          TAG="v${{ github.event.inputs.RELEASE_VERSION }}"
+          EXPECTED_SHA="${{ steps.release_sha.outputs.sha }}"
+          if [ "${{ steps.tag_state.outputs.tag_exists }}" == "true" ]; then
+            EXISTING_SHA="${{ steps.tag_state.outputs.existing_sha }}"
+            if [ "$EXISTING_SHA" != "$EXPECTED_SHA" ]; then
+              echo "::error::Tag $TAG already exists but points at $EXISTING_SHA, not the expected release commit $EXPECTED_SHA. Refusing to guess — inspect 'git show $TAG' and resolve manually before retrying."
+              exit 1
+            fi
+            echo "tag_push_needed=false" >> "$GITHUB_OUTPUT"
+            echo "Tag $TAG already points at $EXPECTED_SHA — skipping tag creation/push (idempotent retry)."
+          else
+            echo "tag_push_needed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create Git tag (local only)
+        if: steps.tag_guard.outputs.tag_push_needed == 'true'
+        run: |
+          set -euo pipefail
+          git tag -a "v${{ github.event.inputs.RELEASE_VERSION }}" -m "Release ${{ github.event.inputs.RELEASE_VERSION }}" "${{ steps.release_sha.outputs.sha }}"
+
+      # --- Develop first (recovery-safe order, see the NOTE at the top). On
+      # retry the push is a harmless no-op.
+      - name: Push release commit to develop
+        run: |
+          set -euo pipefail
+          git push origin HEAD:develop
+
+      # --- Main by explicit SHA: main must only ever receive the release
+      # commit, never the dev-bump commit.
+      - name: Push release commit to main
+        run: |
+          set -euo pipefail
+          git push origin "${{ steps.release_sha.outputs.sha }}:main"
+
+      # --- Only the new tag, never --tags. This push triggers docker-django,
+      # docker-celery and the PyPI publish for the release.
+      - name: Push release tag
+        if: steps.tag_guard.outputs.tag_push_needed == 'true'
+        run: |
+          set -euo pipefail
+          git push origin "v${{ github.event.inputs.RELEASE_VERSION }}"
+
+      - name: Set next development version
+        if: steps.detect.outputs.dev_commit_present != 'true'
+        run: |
+          set -euo pipefail
+          VERSION="v${{ github.event.inputs.DEVELOPMENT_VERSION }}-develop"
+          sed -i -E "s/^KOALIXCRM_VERSION = \".*\"$/KOALIXCRM_VERSION = \"$VERSION\"/" koalixcrm/version.py
+          grep -qx "KOALIXCRM_VERSION = \"$VERSION\"" koalixcrm/version.py
+          git add koalixcrm/version.py
+          git commit -m "Release: Set next development version ${{ github.event.inputs.DEVELOPMENT_VERSION }}"
+
+      - name: Push develop
+        run: |
+          set -euo pipefail
+          git push origin HEAD:develop
+
+      # --- Deliberately not "ready to deploy": the images and the PyPI
+      # package are only now being built by their own workflow runs.
+      - name: Notify release commit/tag completion
+        run: |
+          set -euo pipefail
+          echo "koalixcrm Release ${{ github.event.inputs.RELEASE_VERSION }}: version bump + tag pushed."
+          echo "Tag v${{ github.event.inputs.RELEASE_VERSION }} pushed. Docker Django, Docker Celery and Build and Release PyPI Package now run for it — the release images and the PyPI package exist only once those runs have finished."
+          echo "Next development version: ${{ github.event.inputs.DEVELOPMENT_VERSION }} (develop)"
+          echo "Repository: ${{ github.repository }}"
+          echo "Run by: ${{ github.actor }}"
