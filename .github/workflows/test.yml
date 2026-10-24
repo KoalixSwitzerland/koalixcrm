@@ -50,14 +50,6 @@ jobs:
             -f ./koalixcrm_system/docker-compose.yml \
             --profile unit-django run --rm unit-django-runner
 
-      - name: Upload coverage to Codacy
-        if: success() && hashFiles('test_report/coverage.xml') != ''
-        uses: codacy/codacy-coverage-reporter-action@v1
-        with:
-          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
-          coverage-reports: test_report/coverage.xml
-          language: Python
-
       - name: Upload coverage.xml as artifact
         if: always()
         uses: actions/upload-artifact@v4
