@@ -1,4 +1,4 @@
-Django==5.2.14
+Django==5.2.17
 django-filebrowser==5.0.0
 olefile==0.47
 Pillow==13.0.0
