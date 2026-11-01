@@ -44,7 +44,7 @@ class Task(WorkspaceScopedModel):
 
     def link_to_task(self) -> str:
         if self.id:
-            return format_html("<a href='/admin/reporting/task/%s' >%s</a>" % (str(self.id), str(self.title)))
+            return format_html("<a href='/admin/reporting/task/{}' >{}</a>", str(self.id), str(self.title))
         else:
             return "Not present"
 

@@ -40,8 +40,9 @@ class CreditNote(CommercialDocument):
     def link_to_credit_note(self) -> str:
         if self.id:
             return format_html(
-                "<a href='/admin/contract_object_management/creditnote/%s' >%s</a>"
-                % (str(self.id), limit_string_length(str(self.description), 30))
+                "<a href='/admin/contract_object_management/creditnote/{}' >{}</a>",
+                str(self.id),
+                limit_string_length(str(self.description), 30),
             )
         else:
             return "Not present"

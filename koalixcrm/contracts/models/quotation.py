@@ -18,9 +18,9 @@ class Quotation(CommercialDocument):
 
     def link_to_quotation(self) -> str:
         if self.id:
-            return format_html("<a href='/admin/contract_object_management/quotation/%s' >%s</a>" % (str(self.id),
-                                                                          limit_string_length(str(self.description),
-                                                                                              30)))
+            return format_html("<a href='/admin/contract_object_management/quotation/{}' >{}</a>",
+                               str(self.id),
+                               limit_string_length(str(self.description), 30))
         else:
             return "Not present"
     link_to_quotation.short_description = _("Quotation")

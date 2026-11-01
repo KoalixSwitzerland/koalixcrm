@@ -50,7 +50,7 @@ class Work(WorkspaceScopedModel):
 
     def link_to_work(self) -> str:
         if self.id:
-            return format_html("<a href='/admin/reporting/work/%s' >%s</a>" % (str(self.id), str(self.id)))
+            return format_html("<a href='/admin/reporting/work/{}' >{}</a>", str(self.id), str(self.id))
         else:
             return "Not present"
     link_to_work.short_description = _("Work")

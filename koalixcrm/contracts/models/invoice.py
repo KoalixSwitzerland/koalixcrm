@@ -31,9 +31,9 @@ class Invoice(CommercialDocument):
 
     def link_to_invoice(self) -> str:
         if self.id:
-            return format_html("<a href='/admin/contract_object_management/invoice/%s' >%s</a>" % (str(self.id),
-                                                                            limit_string_length(str(self.description),
-                                                                                                30)))
+            return format_html("<a href='/admin/contract_object_management/invoice/{}' >{}</a>",
+                               str(self.id),
+                               limit_string_length(str(self.description), 30))
         else:
             return "Not present"
     link_to_invoice.short_description = _("Invoice")
