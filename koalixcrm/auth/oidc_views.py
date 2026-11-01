@@ -44,10 +44,21 @@ def _build_absolute_url(request: HttpRequest, path: str) -> str:
 
 
 def _safe_next(request: HttpRequest, url: str) -> str:
-    """Return ``url`` if it targets this host (or is relative), else an empty string."""
-    if url and url_has_allowed_host_and_scheme(
+    """Return ``url`` if it is a same-host path or absolute http(s) URL, else an empty string.
+
+    Bare tokens (``foo``, ``admin:index``, ``@host``) are rejected because
+    ``redirect()`` would resolve them as view names, and values with CR/LF
+    are rejected because they cannot be put into a ``Location`` header.
+    """
+    if not url or '\r' in url or '\n' in url:
+        return ''
+    # Django's check runs first: it returns False (instead of raising) for
+    # URLs that urlsplit() cannot parse, such as 'http://[x'.
+    if not url_has_allowed_host_and_scheme(
         url, allowed_hosts={request.get_host()}, require_https=request.is_secure()
     ):
+        return ''
+    if url.startswith('/') or urllib.parse.urlsplit(url).scheme in ('http', 'https'):
         return url
     return ''
 

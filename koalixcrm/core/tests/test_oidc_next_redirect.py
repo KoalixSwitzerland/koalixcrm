@@ -16,6 +16,7 @@ from django.urls import reverse
 User = get_user_model()
 
 EVIL = 'https://evil.example/'
+MALFORMED_NEXT = ['foo', 'admin:index', '@evil.example', '/admin/\nfoo', '/admin/\rfoo']
 VIEWS = 'koalixcrm.auth.oidc_views'
 
 
@@ -62,6 +63,13 @@ class TestLoginSelectionAuthenticated:
     def test_external_next_is_ignored_for_staff(self, client, staff, evil_next):
         client.force_login(staff)
         response = client.get(reverse('login-selection'), {'next': evil_next})
+        assert response.status_code == 302
+        assert _location(response) == reverse('admin:index')
+
+    @pytest.mark.parametrize('bad_next', MALFORMED_NEXT)
+    def test_malformed_next_falls_back_to_default(self, client, staff, bad_next):
+        client.force_login(staff)
+        response = client.get(reverse('login-selection'), {'next': bad_next})
         assert response.status_code == 302
         assert _location(response) == reverse('admin:index')
 
@@ -151,6 +159,12 @@ class TestOAuthCallback:
     @pytest.mark.parametrize('evil_next', [EVIL, '//evil.example/'])
     def test_external_session_next_is_ignored_for_staff(self, client, staff, fake_oauth, evil_next):
         response = self._callback(client, staff, fake_oauth, evil_next)
+        assert response.status_code == 302
+        assert _location(response) == reverse('admin:index')
+
+    @pytest.mark.parametrize('bad_next', MALFORMED_NEXT)
+    def test_malformed_session_next_falls_back_to_default(self, client, staff, fake_oauth, bad_next):
+        response = self._callback(client, staff, fake_oauth, bad_next)
         assert response.status_code == 302
         assert _location(response) == reverse('admin:index')
 
