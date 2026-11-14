@@ -53,7 +53,7 @@ class Project(WorkspaceScopedModel):
     def link_to_project(self) -> str:
         if self.id:
             return format_html(
-                "<a href='/admin/reporting/project/%s' >%s</a>" % (str(self.id), str(self.project_name))
+                "<a href='/admin/reporting/project/{}' >{}</a>", str(self.id), str(self.project_name)
             )
         else:
             return "Not present"
