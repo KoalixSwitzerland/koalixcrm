@@ -11,6 +11,7 @@ from django.contrib.auth.views import LogoutView
 from django.http import HttpRequest, HttpResponse, HttpResponseBase
 from django.shortcuts import redirect
 from django.urls import reverse
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.views import View
 
 logger = logging.getLogger(__name__)
@@ -42,6 +43,26 @@ def _build_absolute_url(request: HttpRequest, path: str) -> str:
     return request.build_absolute_uri(path)
 
 
+def _safe_next(request: HttpRequest, url: str) -> str:
+    """Return ``url`` if it is a same-host path or absolute http(s) URL, else an empty string.
+
+    Bare tokens (``foo``, ``admin:index``, ``@host``) are rejected because
+    ``redirect()`` would resolve them as view names, and values with CR/LF
+    are rejected because they cannot be put into a ``Location`` header.
+    """
+    if not url or '\r' in url or '\n' in url:
+        return ''
+    # Django's check runs first: it returns False (instead of raising) for
+    # URLs that urlsplit() cannot parse, such as 'http://[x'.
+    if not url_has_allowed_host_and_scheme(
+        url, allowed_hosts={request.get_host()}, require_https=request.is_secure()
+    ):
+        return ''
+    if url.startswith('/') or urllib.parse.urlsplit(url).scheme in ('http', 'https'):
+        return url
+    return ''
+
+
 class LoginSelectionView(View):
     """
     Admin login view. Redirects to the OIDC provider when configured;
@@ -49,7 +70,7 @@ class LoginSelectionView(View):
     local development and e2e tests work without a live Keycloak.
     """
     def get(self, request: HttpRequest) -> HttpResponseBase:
-        next_url = request.GET.get('next', '')
+        next_url = _safe_next(request, request.GET.get('next', ''))
 
         if request.user.is_authenticated:
             if next_url:
@@ -61,7 +82,7 @@ class LoginSelectionView(View):
         if hasattr(oauth, 'oidc'):
             oidc_url = reverse('oauth-login', kwargs={'provider': 'oidc'})
             if next_url:
-                oidc_url += f'?next={next_url}'
+                oidc_url += '?' + urllib.parse.urlencode({'next': next_url})
             return redirect(oidc_url)
 
         from django.contrib.admin.sites import site as _admin_site
@@ -99,10 +120,9 @@ class OAuthLoginView(View):
             return HttpResponse(f'Unsupported provider: {provider}', status=400)
 
         if request.user.is_authenticated:
-            next_url = request.GET.get('next', '/admin/')
-            return redirect(next_url)
+            return redirect(_safe_next(request, request.GET.get('next', '')) or '/admin/')
 
-        next_url = request.GET.get('next', '')
+        next_url = _safe_next(request, request.GET.get('next', ''))
         if next_url:
             request.session['login_next_url'] = next_url
 
@@ -155,7 +175,7 @@ class OAuthCallbackView(View):
             request.session['auth_provider'] = provider
             request.session['user_email'] = user.email
 
-            next_url = request.session.pop('login_next_url', None)
+            next_url = _safe_next(request, request.session.pop('login_next_url', None) or '')
 
             if next_url and '/admin' in next_url and not user.is_staff:
                 logout(request)
@@ -224,7 +244,9 @@ class MultiProviderLogoutView(LogoutView):
         logout(request)
 
         next_url = request.GET.get('next', '')
-        if next_url:
+        # Only a plain relative path may be appended to the site URL; anything
+        # else (e.g. '@host', absolute or scheme-relative URLs) is dropped.
+        if next_url and next_url.startswith('/') and _safe_next(request, next_url):
             post_logout_uri = _build_absolute_url(request, next_url)
         else:
             login_url = reverse('login-selection')
